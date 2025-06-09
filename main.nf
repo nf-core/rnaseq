@@ -9,11 +9,7 @@
 ----------------------------------------------------------------------------------------
 */
 
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    GENOME PARAMETER VALUES
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
+nextflow.preview.output = true
 
 params.fasta            = getGenomeAttribute('fasta')
 params.additional_fasta = getGenomeAttribute('additional_fasta')
@@ -29,30 +25,25 @@ params.hisat2_index     = getGenomeAttribute('hisat2')
 params.salmon_index     = getGenomeAttribute('salmon')
 params.kallisto_index   = getGenomeAttribute('kallisto')
 
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS / WORKFLOWS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
 include { RNASEQ                  } from './workflows/rnaseq'
 include { PREPARE_GENOME          } from './subworkflows/local/prepare_genome'
 include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { checkMaxContigSize      } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    NAMED WORKFLOWS FOR PIPELINE
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-//
-// WORKFLOW: Run main analysis pipeline
-//
-workflow NFCORE_RNASEQ {
+workflow {
 
     main:
+    //
+    // SUBWORKFLOW: Run initialisation tasks
+    //
+    PIPELINE_INITIALISATION (
+        params.version,
+        params.validate_params,
+        params.monochrome_logs,
+        args,
+        params.outdir
+    )
 
     //
     // SUBWORKFLOW: Prepare reference genome files
@@ -93,6 +84,27 @@ workflow NFCORE_RNASEQ {
             .map { checkMaxContigSize(it) }
     }
 
+    ch_genome = Channel.empty().mix(
+        PREPARE_GENOME.out.fasta,
+        PREPARE_GENOME.out.gtf,
+        PREPARE_GENOME.out.gff,
+        PREPARE_GENOME.out.add_fasta,
+        PREPARE_GENOME.out.gene_bed,
+        PREPARE_GENOME.out.transcript_fasta,
+        PREPARE_GENOME.out.fai,
+        PREPARE_GENOME.out.chrom_sizes,
+    )
+
+    ch_genome_index = Channel.empty().mix(
+        PREPARE_GENOME.out.splicesites,
+        PREPARE_GENOME.out.bbsplit_index,
+        PREPARE_GENOME.out.star_index,
+        PREPARE_GENOME.out.rsem_index,
+        PREPARE_GENOME.out.hisat2_index,
+        PREPARE_GENOME.out.salmon_index,
+        PREPARE_GENOME.out.kallisto_index,
+    )
+
     //
     // WORKFLOW: Run nf-core/rnaseq workflow
     //
@@ -116,38 +128,6 @@ workflow NFCORE_RNASEQ {
         PREPARE_GENOME.out.splicesites
     )
 
-    emit:
-    trim_status    = RNASEQ.out.trim_status    // channel: [id, boolean]
-    map_status     = RNASEQ.out.map_status     // channel: [id, boolean]
-    strand_status  = RNASEQ.out.strand_status  // channel: [id, boolean]
-    multiqc_report = RNASEQ.out.multiqc_report // channel: /path/to/multiqc_report.html
-}
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    RUN MAIN WORKFLOW
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-workflow {
-
-    main:
-    //
-    // SUBWORKFLOW: Run initialisation tasks
-    //
-    PIPELINE_INITIALISATION (
-        params.version,
-        params.validate_params,
-        params.monochrome_logs,
-        args,
-        params.outdir
-    )
-
-    //
-    // WORKFLOW: Run main workflow
-    //
-    NFCORE_RNASEQ ()
-
     //
     // SUBWORKFLOW: Run completion tasks
     //
@@ -158,18 +138,68 @@ workflow {
         params.outdir,
         params.monochrome_logs,
         params.hook_url,
-        NFCORE_RNASEQ.out.multiqc_report,
-        NFCORE_RNASEQ.out.trim_status,
-        NFCORE_RNASEQ.out.map_status,
-        NFCORE_RNASEQ.out.strand_status
+        RNASEQ.out.multiqc_report,
+        RNASEQ.out.trim_status,
+        RNASEQ.out.map_status,
+        RNASEQ.out.strand_status
     )
+
+    publish:
+    genome = ch_genome
+    genome_index = ch_genome_index
+    star_salmon = RNASEQ.out.star_salmon
+    star_salmon_deseq_qc = RNASEQ.out.star_salmon_deseq_qc
+    star_rsem = RNASEQ.out.star_rsem
+    star_rsem_deseq_qc = RNASEQ.out.star_rsem_deseq_qc
+    hisat2 = RNASEQ.out.hisat2
+    multiqc_report = RNASEQ.out.multiqc_report
+    multiqc_data = RNASEQ.out.multiqc_data
+    multiqc_plots = RNASEQ.out.multiqc_plots
 }
 
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    FUNCTIONS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
+output {
+    genome {
+        enabled params.save_reference
+        path 'genome'
+    }
+
+    genome_index {
+        enabled params.save_reference
+        path 'genome/index'
+    }
+
+    star_salmon {
+        path 'star_salmon'
+    }
+
+    star_salmon_deseq_qc {
+        path 'star_salmon/deseq2_qc'
+    }
+
+    star_rsem {
+        path 'star_rsem'
+    }
+
+    star_rsem_deseq_qc {
+        path 'star_rsem/deseq2_qc'
+    }
+
+    hisat2 {
+        path 'hisat2'
+    }
+
+    multiqc_report {
+        path params.skip_alignment ? 'multiqc' : "multiqc/${params.aligner}"
+    }
+
+    multiqc_data {
+        path params.skip_alignment ? 'multiqc' : "multiqc/${params.aligner}"
+    }
+
+    multiqc_plots {
+        path params.skip_alignment ? 'multiqc' : "multiqc/${params.aligner}"
+    }
+}
 
 //
 // Get attribute from genome config file e.g. fasta
@@ -183,9 +213,3 @@ def getGenomeAttribute(attribute) {
     }
     return null
 }
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    THE END
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/

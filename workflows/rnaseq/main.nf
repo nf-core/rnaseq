@@ -678,6 +678,8 @@ workflow RNASEQ {
     // MODULE: MultiQC
     //
     ch_multiqc_report = Channel.empty()
+    ch_multiqc_data = Channel.empty()
+    ch_multiqc_plots = Channel.empty()
 
     if (!params.skip_multiqc) {
 
@@ -737,13 +739,39 @@ workflow RNASEQ {
             []
         )
         ch_multiqc_report = MULTIQC.out.report
+        ch_multiqc_data = MULTIQC.out.data
+        ch_multiqc_plots = MULTIQC.out.plots
     }
 
     emit:
     trim_status    = ch_trim_status    // channel: [id, boolean]
     map_status     = ch_map_status     // channel: [id, boolean]
     strand_status  = ch_strand_status  // channel: [id, boolean]
-    multiqc_report = ch_multiqc_report // channel: /path/to/multiqc_report.html
+
+    // TODO: !params.skip_alignment && params.aligner == 'star_salmon'
+    star_salmon = QUANTIFY_STAR_SALMON.out.results
+    star_salmon_deseq_qc = DESEQ2_QC_STAR_SALMON.out
+
+    // TODO: !params.skip_alignment && params.aligner == 'star_rsem'
+    star_rsem = QUANTIFY_RSEM.out
+    star_rsem_deseq_qc = DESEQ2_QC_RSEM.out
+
+    // TODO: !params.skip_alignment && params.aligner == 'hisat2'
+    hisat2 = FASTQ_ALIGN_HISAT2.out
+
+    // TODO: are these per-sample or summary outputs?
+    // STRINGTIE_STRINGTIE.out             >> "${params.aligner}/stringtie"
+    // SUBREAD_FEATURECOUNTS.out           >> "${params.aligner}/featurecounts"
+    // MULTIQC_CUSTOM_BIOTYPE.out.tsv      >> "${params.aligner}/featurecounts"
+    // BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD.out.bigwig >> "${params.aligner}/bigwig"
+    // BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE.out.bigwig >> "${params.aligner}/bigwig"
+    // QUALIMAP_RNASEQ.out.results         >> "${params.aligner}/qualimap"
+    // DUPRADAR.out                     >> "${params.aligner}/dupradar"
+
+    multiqc_report = ch_multiqc_report
+    multiqc_data = ch_multiqc_data
+    multiqc_plots = ch_multiqc_plots
+
 }
 
 /*

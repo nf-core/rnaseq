@@ -77,7 +77,6 @@ workflow PREPARE_GENOME {
             ch_gtf = Channel.value(file(gtf, checkIfExists: true))
         }
     } else if (gff) {
-        def ch_gff
         if (gff.endsWith('.gz')) {
             ch_gff      = GUNZIP_GFF ([ [:], file(gff, checkIfExists: true) ]).gunzip
         } else {
@@ -375,6 +374,8 @@ workflow PREPARE_GENOME {
     emit:
     fasta            = ch_fasta                  // channel: path(genome.fasta)
     gtf              = ch_gtf                    // channel: path(genome.gtf)
+    gff              = ch_gff
+    add_fasta        = ch_add_fasta
     fai              = ch_fai                    // channel: path(genome.fai)
     gene_bed         = ch_gene_bed               // channel: path(gene.bed)
     transcript_fasta = ch_transcript_fasta       // channel: path(transcript.fasta)

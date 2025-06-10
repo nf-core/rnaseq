@@ -10,8 +10,8 @@
                     "python": "3.10.4"
                 },
                 "DESEQ2_QC_PSEUDO": {
-                    "r-base": "4.0.3",
-                    "bioconductor-deseq2": "1.28.0"
+                    "bioconductor-deseq2": "1.28.0",
+                    "r-base": "4.0.3"
                 },
                 "FASTQC": {
                     "fastqc": "0.12.1"
@@ -44,15 +44,12 @@
                     "bioconductor-summarizedexperiment": "1.32.0"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "0.6.10",
                     "cutadapt": 4.9,
-                    "pigz": 2.8
+                    "pigz": 2.8,
+                    "trimgalore": "0.6.10"
                 },
                 "TXIMETA_TXIMPORT": {
                     "bioconductor-tximeta": "1.20.1"
-                },
-                "Workflow": {
-                    "nf-core/rnaseq": "v3.19.0"
                 }
             },
             [

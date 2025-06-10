@@ -136,15 +136,15 @@ When running Salmon in mapping-based mode via `--pseudo_aligner salmon`, supplyi
 
 Two additional parameters `--extra_star_align_args` and `--extra_salmon_quant_args` were added in v3.10 of the pipeline that allow you to append any custom parameters to the STAR align and Salmon quant commands, respectively. Note, the `--seqBias` and `--gcBias` are not provided to Salmon quant by default so you can provide these via `--extra_salmon_quant_args '--seqBias --gcBias'` if required. You can now also supply additional arguments to Kallisto via `--extra_kallisto_quant_args`.
 
-> **NB:** You can use `--skip_alignment --skip_pseudo_alignment` if you only want to run the pre-processing QC steps in the pipeline like FastQ, trimming etc. This will skip alignment, pseudoalignment and any post-alignment processing steps.
+:::note
+You can use `--skip_alignment --skip_pseudo_alignment` if you only want to run the pre-processing QC steps in the pipeline like FastQ, trimming etc. This will skip alignment, pseudoalignment and any post-alignment processing steps.
+:::
 
 Note that `--skip_alignment` and `--skip_pseudo_alignment` prevent both the execution of alignment/pseudoalignment steps and the building of their corresponding indices. For example, using `--skip_alignment` with `--aligner star_salmon` will skip both STAR alignment and index building.
 
 ## Quantification options
 
 The current options align with STAR and quantify using either Salmon (`--aligner star_salmon`) / RSEM (`--aligner star_rsem`). You also have the option to pseudoalign and quantify your data with Salmon or Kallisto by providing the `--pseudo_aligner salmon` or `--pseudo_aligner kallisto` parameter, respectively.
-
-Note that `--skip_alignment` and `--skip_pseudo_alignment` affect both the execution of alignment/pseudoalignment steps and which indices are built during genome preparation. If you specify `--aligner star_salmon` but use `--skip_alignment`, the STAR index will not be built at all, as the skip parameter prevents both the index building and the alignment steps. This behavior helps save computational resources when you know you won't be using certain alignment methods.
 
 Since v3.0 of the pipeline, featureCounts is no longer used to perform gene/transcript quantification, however it is still used to generate QC metrics based on [biotype](http://www.ensembl.org/info/genome/genebuild/biotypes.html) information available within GFF/GTF genome annotation files. This decision was made primarily because of the limitations of featureCounts to appropriately quantify gene expression data. Please see [Zhao et al., 2015](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0141910#pone-0141910-t001) and [Soneson et al., 2015](https://f1000research.com/articles/4-1521/v1).
 
@@ -349,7 +349,9 @@ nextflow run \
 
 This is not usually recommended with Salmon unless you also supply a previously generated decoy-aware Salmon transcriptome index.
 
-> **NB:** Loading iGenomes configuration remains the default for reasons of consistency with other workflows, but should be disabled when not using iGenomes, applying the recommended usage above.
+:::note
+Loading iGenomes configuration remains the default for reasons of consistency with other workflows, but should be disabled when not using iGenomes, applying the recommended usage above.
+:::
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
 
@@ -366,8 +368,9 @@ If you wish to repeatedly use the same parameters for multiple runs, rather than
 
 Pipeline settings can be provided in a `yaml` or `json` file via `-params-file <file>`.
 
-> [!WARNING]
-> Do not use `-c <file>` to specify parameters as this will result in errors. Custom config files specified with `-c` must only be used for [tuning process resource specifications](https://nf-co.re/docs/usage/configuration#tuning-workflow-resources), other infrastructural tweaks (such as output directories), or module arguments (args).
+:::warning
+Do not use `-c <file>` to specify parameters as this will result in errors. Custom config files specified with `-c` must only be used for [tuning process resource specifications](https://nf-co.re/docs/usage/configuration#tuning-workflow-resources), other infrastructural tweaks (such as output directories), or module arguments (args).
+:::
 
 The above pipeline run specified with a params file in yaml format:
 

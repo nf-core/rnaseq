@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-# 3.20.0dev
+## 3.20.0dev
 
 ### Credits
 
@@ -16,7 +16,7 @@ Special thanks to the following for their contributions to the release:
 
 - [PR #1568](https://github.com/nf-core/rnaseq/pull/1568) - Bump version after release 3.19.0
 
-# 3.19.0 - 2025-06-06
+## [[3.19.0](https://github.com/nf-core/rnaseq/releases/tag/3.19.0)] - 2025-06-10
 
 ### Credits
 
@@ -55,7 +55,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1565](https://github.com/nf-core/rnaseq/pull/1565) - Improve reproducibility with Conda
 - [PR #1567](https://github.com/nf-core/rnaseq/pull/1567) - Prerelease 3.19.0 fixes
 
-# 3.18.0 - 2024-12-19
+## [[3.18.0](https://github.com/nf-core/rnaseq/releases/tag/3.18.0)] - 2024-12-19
 
 ### Credits
 

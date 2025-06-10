@@ -1,6 +1,4 @@
-bump_version: null
 lint:
-  actions_ci: false
   files_exist:
     - conf/modules.config
   files_unchanged:
@@ -12,8 +10,7 @@ lint:
   nextflow_config:
     - config_defaults:
         - params.ribo_database_manifest
-nf_core_version: 3.0.2
-org_path: null
+nf_core_version: 3.3.1
 repository_type: pipeline
 template:
   author: "Harshil Patel, Phil Ewels, Rickard Hammar\xE9n"
@@ -24,6 +21,4 @@ template:
   name: rnaseq
   org: nf-core
   outdir: .
-  skip_features: null
-  version: 3.17.0dev
-update: null
+  version: 3.19.0

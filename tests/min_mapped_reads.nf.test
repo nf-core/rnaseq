@@ -2,6 +2,7 @@ nextflow_pipeline {
 
     name "Test pipeline with a minimum mapped read threshold of 90"
     script "../main.nf"
+    tag "pipeline"
 
     test("Params: --min_mapped_reads 90") {
 

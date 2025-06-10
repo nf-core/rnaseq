@@ -2,6 +2,7 @@ nextflow_pipeline {
 
     name "Test pipeline with ribosomal RNA removal"
     script "../main.nf"
+    tag "pipeline"
 
     test("Params: --remove_ribo_rna") {
 

@@ -22,11 +22,8 @@ nextflow_process {
                 { assert snapshot(
                     process.out.dists_multiqc,
                     process.out.dists_txt,
-                    process.out.log,
                     process.out.pca_multiqc,
                     process.out.pca_txt,
-                    process.out.rdata,
-                    process.out.size_factors,
                     process.out.versions
                 ).match() }
             )

@@ -18,11 +18,15 @@ process GTF_FILTER {
     task.ext.when == null || task.ext.when
 
     script: // filter_gtf.py is bundled with the pipeline, in nf-core/rnaseq/bin/
+    fasta_text=''
+    if (fasta){
+        fasta_text="--fasta $fasta"
+    }
     """
     filter_gtf.py \\
         --gtf $gtf \\
-        --fasta $fasta \\
-        --prefix ${fasta.baseName}
+        $fasta_text \\
+        --prefix ${gtf.baseName}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

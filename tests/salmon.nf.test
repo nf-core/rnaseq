@@ -2,6 +2,7 @@ nextflow_pipeline {
 
     name "Test pipeline with Salmon, skipping both QC and alignment"
     script "../main.nf"
+    tag "pipeline"
 
     test("Params: --pseudo_aligner salmon --skip_qc --skip_alignment") {
 

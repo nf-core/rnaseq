@@ -27,7 +27,7 @@ output:
           type: file
           description: Compressed/uncompressed file
           pattern: "*.*"
-      - $gunzip:
+      - ${gunzip}:
           type: file
           description: Compressed/uncompressed file
           pattern: "*.*"

@@ -41,17 +41,17 @@
                 "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
             ],
             [
-                "versions.yml:md5,4c712eb456b8ca2f6c237a981d6bd4f4",
                 "versions.yml:md5,71252f1a221be05593361acccb99506b",
+                "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
                 "versions.yml:md5,cc8f32b7c37c35a075d38cb773004eaa",
                 "versions.yml:md5,ccf59b1e546d2b873f052f6a2d8a0d1a"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2024-10-21T14:42:50.037244182"
+        "timestamp": "2025-06-04T14:57:52.98761697"
     },
     "skip_pseudo_alignment - stub": {
         "content": [
@@ -95,18 +95,18 @@
                 "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
             ],
             [
-                "versions.yml:md5,4c712eb456b8ca2f6c237a981d6bd4f4",
                 "versions.yml:md5,71252f1a221be05593361acccb99506b",
                 "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
                 "versions.yml:md5,cc8f32b7c37c35a075d38cb773004eaa",
                 "versions.yml:md5,ccf59b1e546d2b873f052f6a2d8a0d1a"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2024-10-21T14:36:51.108422744"
+        "timestamp": "2025-06-04T14:53:39.775739141"
     },
     "skip_gtf_filter": {
         "content": [
@@ -151,16 +151,16 @@
             ],
             [
                 "versions.yml:md5,04400316552e6253e0008f052b20d866",
-                "versions.yml:md5,4c712eb456b8ca2f6c237a981d6bd4f4",
                 "versions.yml:md5,71252f1a221be05593361acccb99506b",
+                "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
                 "versions.yml:md5,ccf59b1e546d2b873f052f6a2d8a0d1a"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2024-10-21T14:21:35.428370538"
+        "timestamp": "2025-06-04T14:44:13.957481433"
     },
     "gencode = false - stub": {
         "content": [
@@ -204,18 +204,18 @@
                 "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
             ],
             [
-                "versions.yml:md5,4c712eb456b8ca2f6c237a981d6bd4f4",
                 "versions.yml:md5,71252f1a221be05593361acccb99506b",
                 "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
                 "versions.yml:md5,cc8f32b7c37c35a075d38cb773004eaa",
                 "versions.yml:md5,ccf59b1e546d2b873f052f6a2d8a0d1a"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2024-10-21T14:34:45.22576799"
+        "timestamp": "2025-06-04T14:52:08.436697444"
     },
     "gff = false - stub": {
         "content": [
@@ -259,18 +259,18 @@
                 "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
             ],
             [
-                "versions.yml:md5,4c712eb456b8ca2f6c237a981d6bd4f4",
                 "versions.yml:md5,71252f1a221be05593361acccb99506b",
                 "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
                 "versions.yml:md5,cc8f32b7c37c35a075d38cb773004eaa",
                 "versions.yml:md5,ccf59b1e546d2b873f052f6a2d8a0d1a"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2024-10-21T14:37:50.119432994"
+        "timestamp": "2025-06-04T14:54:27.239992911"
     },
     "skip_pseudoalignment = true - stub": {
         "content": [
@@ -314,18 +314,18 @@
                 "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
             ],
             [
-                "versions.yml:md5,4c712eb456b8ca2f6c237a981d6bd4f4",
                 "versions.yml:md5,71252f1a221be05593361acccb99506b",
                 "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
                 "versions.yml:md5,cc8f32b7c37c35a075d38cb773004eaa",
                 "versions.yml:md5,ccf59b1e546d2b873f052f6a2d8a0d1a"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2024-10-21T14:44:30.027925166"
+        "timestamp": "2025-06-04T14:59:01.558025917"
     },
     "featurecounts_group_type = 'gene_type' - stub": {
         "content": [
@@ -369,18 +369,18 @@
                 "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
             ],
             [
-                "versions.yml:md5,4c712eb456b8ca2f6c237a981d6bd4f4",
                 "versions.yml:md5,71252f1a221be05593361acccb99506b",
                 "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
                 "versions.yml:md5,cc8f32b7c37c35a075d38cb773004eaa",
                 "versions.yml:md5,ccf59b1e546d2b873f052f6a2d8a0d1a"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2024-10-21T14:42:09.256212794"
+        "timestamp": "2025-06-04T14:57:30.535714657"
     },
     "gtf = false": {
         "content": [
@@ -426,18 +426,18 @@
             [
                 "versions.yml:md5,04400316552e6253e0008f052b20d866",
                 "versions.yml:md5,2a3ed31ad34b8864fb9278dcdef596ec",
-                "versions.yml:md5,4c712eb456b8ca2f6c237a981d6bd4f4",
                 "versions.yml:md5,71252f1a221be05593361acccb99506b",
                 "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
                 "versions.yml:md5,961ab91198c4e6ec9d795b95e3f61fda",
+                "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
                 "versions.yml:md5,ccf59b1e546d2b873f052f6a2d8a0d1a"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2024-10-21T14:24:03.080886311"
+        "timestamp": "2025-06-04T14:45:56.724444373"
     },
     "gfp = false": {
         "content": [
@@ -451,13 +451,13 @@
                 "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/genome.fasta"
             ],
             [
-                "genome.filtered.gtf:md5,ef6fccd153a21c329670462d602ed2d0"
+                "genes_with_empty_tid.filtered.gtf:md5,ef6fccd153a21c329670462d602ed2d0"
             ],
             [
                 "genome.fasta.fai:md5,2cd76d936cbfa386b14154506c2041b2"
             ],
             [
-                "genome.filtered.bed:md5,e507dc33673e76c32abe344f4dc07952"
+                "genes_with_empty_tid.filtered.bed:md5,e507dc33673e76c32abe344f4dc07952"
             ],
             [
                 "genome.fasta.sizes:md5,29218009212157c49dbc6596621ec780"
@@ -481,17 +481,17 @@
                 
             ],
             [
-                "versions.yml:md5,4c712eb456b8ca2f6c237a981d6bd4f4",
                 "versions.yml:md5,71252f1a221be05593361acccb99506b",
                 "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
                 "versions.yml:md5,ccf59b1e546d2b873f052f6a2d8a0d1a"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2024-10-21T14:25:11.277955385"
+        "timestamp": "2025-06-04T14:46:47.57586012"
     },
     "skip_bbsplit = true": {
         "content": [
@@ -542,10 +542,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-10-21T14:32:08.044528172"
+        "timestamp": "2025-01-22T16:23:43.324382545"
     },
     "salmon_index = false - stub": {
         "content": [
@@ -589,18 +589,18 @@
                 "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
             ],
             [
-                "versions.yml:md5,4c712eb456b8ca2f6c237a981d6bd4f4",
                 "versions.yml:md5,71252f1a221be05593361acccb99506b",
                 "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
                 "versions.yml:md5,cc8f32b7c37c35a075d38cb773004eaa",
                 "versions.yml:md5,ccf59b1e546d2b873f052f6a2d8a0d1a"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2024-10-21T14:40:20.088184403"
+        "timestamp": "2025-06-04T14:56:20.77479328"
     },
     "skip_alignment": {
         "content": [
@@ -645,17 +645,17 @@
             ],
             [
                 "versions.yml:md5,04400316552e6253e0008f052b20d866",
-                "versions.yml:md5,4c712eb456b8ca2f6c237a981d6bd4f4",
                 "versions.yml:md5,71252f1a221be05593361acccb99506b",
                 "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
                 "versions.yml:md5,ccf59b1e546d2b873f052f6a2d8a0d1a"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2024-10-21T14:22:31.848885428"
+        "timestamp": "2025-06-04T14:45:01.819751959"
     },
     "gfp = false - stub": {
         "content": [
@@ -699,17 +699,17 @@
                 "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
             ],
             [
-                "versions.yml:md5,4c712eb456b8ca2f6c237a981d6bd4f4",
                 "versions.yml:md5,71252f1a221be05593361acccb99506b",
                 "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
                 "versions.yml:md5,ccf59b1e546d2b873f052f6a2d8a0d1a"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2024-10-21T14:38:24.011200927"
+        "timestamp": "2025-06-04T14:54:49.884282974"
     },
     "gencode = false": {
         "content": [
@@ -754,17 +754,17 @@
             ],
             [
                 "versions.yml:md5,04400316552e6253e0008f052b20d866",
-                "versions.yml:md5,4c712eb456b8ca2f6c237a981d6bd4f4",
                 "versions.yml:md5,71252f1a221be05593361acccb99506b",
                 "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
                 "versions.yml:md5,ccf59b1e546d2b873f052f6a2d8a0d1a"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2024-10-21T14:21:09.927667083"
+        "timestamp": "2025-06-04T14:43:49.834120448"
     },
     "default options": {
         "content": [
@@ -809,17 +809,17 @@
             ],
             [
                 "versions.yml:md5,04400316552e6253e0008f052b20d866",
-                "versions.yml:md5,4c712eb456b8ca2f6c237a981d6bd4f4",
                 "versions.yml:md5,71252f1a221be05593361acccb99506b",
                 "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
                 "versions.yml:md5,ccf59b1e546d2b873f052f6a2d8a0d1a"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2024-10-21T14:20:44.91884847"
+        "timestamp": "2025-06-04T14:43:23.956364009"
     },
     "gencode = true - stub": {
         "content": [
@@ -863,19 +863,19 @@
                 "transcriptome.fixed.fa:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
-                "versions.yml:md5,4c712eb456b8ca2f6c237a981d6bd4f4",
                 "versions.yml:md5,71252f1a221be05593361acccb99506b",
                 "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
                 "versions.yml:md5,961ab91198c4e6ec9d795b95e3f61fda",
+                "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
                 "versions.yml:md5,cc8f32b7c37c35a075d38cb773004eaa",
                 "versions.yml:md5,ccf59b1e546d2b873f052f6a2d8a0d1a"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2024-10-21T14:41:38.130901233"
+        "timestamp": "2025-06-04T14:57:07.558265667"
     },
     "skip_alignment - stub": {
         "content": [
@@ -919,18 +919,18 @@
                 "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
             ],
             [
-                "versions.yml:md5,4c712eb456b8ca2f6c237a981d6bd4f4",
                 "versions.yml:md5,71252f1a221be05593361acccb99506b",
                 "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
                 "versions.yml:md5,cc8f32b7c37c35a075d38cb773004eaa",
                 "versions.yml:md5,ccf59b1e546d2b873f052f6a2d8a0d1a"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2024-10-21T14:36:19.887113789"
+        "timestamp": "2025-06-04T14:53:16.702413442"
     },
     "skip_bbsplit = true - stub": {
         "content": [
@@ -1040,10 +1040,10 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-10-21T14:43:15.317916936"
+        "timestamp": "2025-01-22T16:31:58.139538299"
     },
     "transcriptome = false": {
         "content": [
@@ -1088,18 +1088,18 @@
             ],
             [
                 "versions.yml:md5,04400316552e6253e0008f052b20d866",
-                "versions.yml:md5,4c712eb456b8ca2f6c237a981d6bd4f4",
                 "versions.yml:md5,71252f1a221be05593361acccb99506b",
                 "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
                 "versions.yml:md5,918fe0b59c0986eb602ace85841c5ab3",
+                "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
                 "versions.yml:md5,ccf59b1e546d2b873f052f6a2d8a0d1a"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2024-10-21T14:26:03.082922797"
+        "timestamp": "2025-06-04T14:47:14.183598459"
     },
     "skip_pseudoalignment = true": {
         "content": [
@@ -1144,17 +1144,17 @@
             ],
             [
                 "versions.yml:md5,04400316552e6253e0008f052b20d866",
-                "versions.yml:md5,4c712eb456b8ca2f6c237a981d6bd4f4",
                 "versions.yml:md5,71252f1a221be05593361acccb99506b",
                 "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
                 "versions.yml:md5,ccf59b1e546d2b873f052f6a2d8a0d1a"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2024-10-21T14:33:32.945973388"
+        "timestamp": "2025-06-04T14:51:22.172487178"
     },
     "skip_gtf_filter - stub": {
         "content": [
@@ -1198,17 +1198,17 @@
                 "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
             ],
             [
-                "versions.yml:md5,4c712eb456b8ca2f6c237a981d6bd4f4",
                 "versions.yml:md5,71252f1a221be05593361acccb99506b",
+                "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
                 "versions.yml:md5,cc8f32b7c37c35a075d38cb773004eaa",
                 "versions.yml:md5,ccf59b1e546d2b873f052f6a2d8a0d1a"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2024-10-21T14:35:08.735012633"
+        "timestamp": "2025-06-04T14:52:31.530405585"
     },
     "gencode = true": {
         "content": [
@@ -1253,18 +1253,18 @@
             ],
             [
                 "versions.yml:md5,04400316552e6253e0008f052b20d866",
-                "versions.yml:md5,4c712eb456b8ca2f6c237a981d6bd4f4",
                 "versions.yml:md5,71252f1a221be05593361acccb99506b",
                 "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
                 "versions.yml:md5,961ab91198c4e6ec9d795b95e3f61fda",
+                "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
                 "versions.yml:md5,ccf59b1e546d2b873f052f6a2d8a0d1a"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2024-10-21T14:29:54.92546344"
+        "timestamp": "2025-06-04T14:49:20.128406093"
     },
     "hisat2_index = false": {
         "content": [
@@ -1309,17 +1309,17 @@
             ],
             [
                 "versions.yml:md5,04400316552e6253e0008f052b20d866",
-                "versions.yml:md5,4c712eb456b8ca2f6c237a981d6bd4f4",
                 "versions.yml:md5,71252f1a221be05593361acccb99506b",
                 "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
                 "versions.yml:md5,ccf59b1e546d2b873f052f6a2d8a0d1a"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2024-10-21T14:29:08.52615029"
+        "timestamp": "2025-06-04T14:48:54.242451442"
     },
     "rsem_index = false - stub": {
         "content": [
@@ -1363,18 +1363,18 @@
                 "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
             ],
             [
-                "versions.yml:md5,4c712eb456b8ca2f6c237a981d6bd4f4",
                 "versions.yml:md5,71252f1a221be05593361acccb99506b",
                 "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
                 "versions.yml:md5,cc8f32b7c37c35a075d38cb773004eaa",
                 "versions.yml:md5,ccf59b1e546d2b873f052f6a2d8a0d1a"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2024-10-21T14:39:53.29274644"
+        "timestamp": "2025-06-04T14:55:57.846202856"
     },
     "featurecounts_group_type = 'gene_type'": {
         "content": [
@@ -1419,17 +1419,17 @@
             ],
             [
                 "versions.yml:md5,04400316552e6253e0008f052b20d866",
-                "versions.yml:md5,4c712eb456b8ca2f6c237a981d6bd4f4",
                 "versions.yml:md5,71252f1a221be05593361acccb99506b",
                 "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
                 "versions.yml:md5,ccf59b1e546d2b873f052f6a2d8a0d1a"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2024-10-21T14:30:38.236090892"
+        "timestamp": "2025-06-04T14:49:45.433606158"
     },
     "with bed - stub": {
         "content": [
@@ -1473,17 +1473,17 @@
                 "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
             ],
             [
-                "versions.yml:md5,4c712eb456b8ca2f6c237a981d6bd4f4",
                 "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
                 "versions.yml:md5,cc8f32b7c37c35a075d38cb773004eaa",
                 "versions.yml:md5,ccf59b1e546d2b873f052f6a2d8a0d1a"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2024-10-21T14:39:24.95243753"
+        "timestamp": "2025-06-04T14:55:34.143684831"
     },
     "skip_pseudo_alignment": {
         "content": [
@@ -1528,17 +1528,17 @@
             ],
             [
                 "versions.yml:md5,04400316552e6253e0008f052b20d866",
-                "versions.yml:md5,4c712eb456b8ca2f6c237a981d6bd4f4",
                 "versions.yml:md5,71252f1a221be05593361acccb99506b",
                 "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
                 "versions.yml:md5,ccf59b1e546d2b873f052f6a2d8a0d1a"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2024-10-21T14:23:12.222452353"
+        "timestamp": "2025-06-04T14:45:27.101871042"
     },
     "skip_bbsplit": {
         "content": [
@@ -1589,10 +1589,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-10-21T14:22:04.417171396"
+        "timestamp": "2025-01-22T16:18:03.05536554"
     },
     "with bed": {
         "content": [
@@ -1637,16 +1637,16 @@
             ],
             [
                 "versions.yml:md5,04400316552e6253e0008f052b20d866",
-                "versions.yml:md5,4c712eb456b8ca2f6c237a981d6bd4f4",
                 "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
                 "versions.yml:md5,ccf59b1e546d2b873f052f6a2d8a0d1a"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2024-10-21T14:26:52.427274463"
+        "timestamp": "2025-06-04T14:47:38.077587168"
     },
     "gtf = false - stub": {
         "content": [
@@ -1691,19 +1691,19 @@
             ],
             [
                 "versions.yml:md5,2a3ed31ad34b8864fb9278dcdef596ec",
-                "versions.yml:md5,4c712eb456b8ca2f6c237a981d6bd4f4",
                 "versions.yml:md5,71252f1a221be05593361acccb99506b",
                 "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
                 "versions.yml:md5,961ab91198c4e6ec9d795b95e3f61fda",
+                "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
                 "versions.yml:md5,cc8f32b7c37c35a075d38cb773004eaa",
                 "versions.yml:md5,ccf59b1e546d2b873f052f6a2d8a0d1a"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2024-10-21T14:37:24.089579664"
+        "timestamp": "2025-06-04T14:54:03.877089997"
     },
     "gff = false": {
         "content": [
@@ -1748,17 +1748,17 @@
             ],
             [
                 "versions.yml:md5,04400316552e6253e0008f052b20d866",
-                "versions.yml:md5,4c712eb456b8ca2f6c237a981d6bd4f4",
                 "versions.yml:md5,71252f1a221be05593361acccb99506b",
                 "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
                 "versions.yml:md5,ccf59b1e546d2b873f052f6a2d8a0d1a"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2024-10-21T14:24:29.339763401"
+        "timestamp": "2025-06-04T14:46:21.818373651"
     },
     "default options - stub": {
         "content": [
@@ -1802,18 +1802,18 @@
                 "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
             ],
             [
-                "versions.yml:md5,4c712eb456b8ca2f6c237a981d6bd4f4",
                 "versions.yml:md5,71252f1a221be05593361acccb99506b",
                 "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
                 "versions.yml:md5,cc8f32b7c37c35a075d38cb773004eaa",
                 "versions.yml:md5,ccf59b1e546d2b873f052f6a2d8a0d1a"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2024-10-21T14:34:12.631669075"
+        "timestamp": "2025-06-04T14:51:45.456290803"
     },
     "salmon_index = false": {
         "content": [
@@ -1858,17 +1858,17 @@
             ],
             [
                 "versions.yml:md5,04400316552e6253e0008f052b20d866",
-                "versions.yml:md5,4c712eb456b8ca2f6c237a981d6bd4f4",
                 "versions.yml:md5,71252f1a221be05593361acccb99506b",
                 "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
                 "versions.yml:md5,ccf59b1e546d2b873f052f6a2d8a0d1a"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2024-10-21T14:28:32.12627675"
+        "timestamp": "2025-06-04T14:48:29.521043084"
     },
     "rsem_index = false": {
         "content": [
@@ -1913,17 +1913,17 @@
             ],
             [
                 "versions.yml:md5,04400316552e6253e0008f052b20d866",
-                "versions.yml:md5,4c712eb456b8ca2f6c237a981d6bd4f4",
                 "versions.yml:md5,71252f1a221be05593361acccb99506b",
                 "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
                 "versions.yml:md5,ccf59b1e546d2b873f052f6a2d8a0d1a"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2024-10-21T14:27:44.114765753"
+        "timestamp": "2025-06-04T14:48:03.354635622"
     },
     "skip_alignment = true - stub": {
         "content": [
@@ -1967,18 +1967,18 @@
                 "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
             ],
             [
-                "versions.yml:md5,4c712eb456b8ca2f6c237a981d6bd4f4",
                 "versions.yml:md5,71252f1a221be05593361acccb99506b",
                 "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
                 "versions.yml:md5,cc8f32b7c37c35a075d38cb773004eaa",
                 "versions.yml:md5,ccf59b1e546d2b873f052f6a2d8a0d1a"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2024-10-21T14:43:56.303595701"
+        "timestamp": "2025-06-04T14:58:38.931672786"
     },
     "transcriptome = false - stub": {
         "content": [
@@ -2022,19 +2022,19 @@
                 "genome.transcripts.fa:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
-                "versions.yml:md5,4c712eb456b8ca2f6c237a981d6bd4f4",
                 "versions.yml:md5,71252f1a221be05593361acccb99506b",
                 "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
                 "versions.yml:md5,918fe0b59c0986eb602ace85841c5ab3",
+                "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
                 "versions.yml:md5,cc8f32b7c37c35a075d38cb773004eaa",
                 "versions.yml:md5,ccf59b1e546d2b873f052f6a2d8a0d1a"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2024-10-21T14:38:52.064137724"
+        "timestamp": "2025-06-04T14:55:12.976388984"
     },
     "skip_alignment = true": {
         "content": [
@@ -2079,17 +2079,17 @@
             ],
             [
                 "versions.yml:md5,04400316552e6253e0008f052b20d866",
-                "versions.yml:md5,4c712eb456b8ca2f6c237a981d6bd4f4",
                 "versions.yml:md5,71252f1a221be05593361acccb99506b",
                 "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
                 "versions.yml:md5,ccf59b1e546d2b873f052f6a2d8a0d1a"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2024-10-21T14:32:57.856332379"
+        "timestamp": "2025-06-04T14:50:56.910297541"
     },
     "skip_gtf_filter = true": {
         "content": [
@@ -2134,16 +2134,16 @@
             ],
             [
                 "versions.yml:md5,04400316552e6253e0008f052b20d866",
-                "versions.yml:md5,4c712eb456b8ca2f6c237a981d6bd4f4",
                 "versions.yml:md5,71252f1a221be05593361acccb99506b",
+                "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
                 "versions.yml:md5,ccf59b1e546d2b873f052f6a2d8a0d1a"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2024-10-21T14:31:25.686724069"
+        "timestamp": "2025-06-04T14:50:09.889765699"
     },
     "hisat2_index = false - stub": {
         "content": [
@@ -2187,18 +2187,18 @@
                 "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
             ],
             [
-                "versions.yml:md5,4c712eb456b8ca2f6c237a981d6bd4f4",
                 "versions.yml:md5,71252f1a221be05593361acccb99506b",
                 "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
+                "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
                 "versions.yml:md5,cc8f32b7c37c35a075d38cb773004eaa",
                 "versions.yml:md5,ccf59b1e546d2b873f052f6a2d8a0d1a"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2024-10-21T14:40:52.285127199"
+        "timestamp": "2025-06-04T14:56:44.165842743"
     },
     "skip_bbsplit - stub": {
         "content": [
@@ -2308,9 +2308,9 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-10-21T14:35:46.545484011"
+        "timestamp": "2025-01-22T16:25:54.053589157"
     }
 }

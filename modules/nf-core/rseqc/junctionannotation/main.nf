@@ -33,7 +33,7 @@ process RSEQC_JUNCTIONANNOTATION {
         -r $bed \\
         -o $prefix \\
         $args \\
-        2> >(grep -v 'E::idx_find_and_load' | tee ${prefix}.junction_annotation.log >&2)
+        2>| >(grep -v 'E::idx_find_and_load' | tee ${prefix}.junction_annotation.log >&2)
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -3,6 +3,44 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# 3.19.0 - 2025-06-06
+
+### Credits
+
+Special thanks to the following for their contributions to the release:
+
+- [Alena Nikolaeva](https://github.com/AlenaNik)
+- [Anabella Trigila](https://github.com/atrigila)
+- [Angel Pizarro](https://github.com/delagoya)
+- [Ben Sherman](https://github.com/bentsherman)
+- [Dave Carlson](https://github.com/davidecarlson)
+- [Gabriel Lichtenstein](https://github.com/glichtenstein)
+- [Lorenzo Fontana](https://github.com/fntlnz)
+- [Matthias Hörtenhuber](https://github.com/mashehu)
+- [Milos Micik](https://github.com/milos7250)
+- [Maxime Garcia](https://github.com/maxulysse)
+
+### Enhancements & fixes
+
+- [PR #1480](https://github.com/nf-core/rnaseq/pull/1480) - Bump version after release 3.18.0
+- [PR #1482](https://github.com/nf-core/rnaseq/pull/1482) - Update trimgalore module for save_unpaired fix
+- [PR #1486](https://github.com/nf-core/rnaseq/pull/1486) - Bump STAR build for multiprocessing fix
+- [PR #1490](https://github.com/nf-core/rnaseq/pull/1490) - Make genomic FASTA input optional
+- [PR #1496](https://github.com/nf-core/rnaseq/pull/1496) - Template update for nf-core/tools v3.2.0
+- [PR #1499](https://github.com/nf-core/rnaseq/pull/1499) - Bump MultiQC module to 1.27
+- [PR #1508](https://github.com/nf-core/rnaseq/pull/1508) - Fix missing Bracken results in the MultiQC report
+- [PR #1528](https://github.com/nf-core/rnaseq/pull/1528) - Improve JSON schema validation files
+- [PR #1523](https://github.com/nf-core/rnaseq/pull/1523) - Update preprocessing subworkflow to fix linting block on trimming
+- [PR #1521](https://github.com/nf-core/rnaseq/pull/1521) - Updated Perl conda package version for local module gtf2bed for Arm compatibility.
+- [PR #1550](https://github.com/nf-core/rnaseq/pull/1550) - Simplify `SummarizedExperiment` outputs.
+- [PR #1553](https://github.com/nf-core/rnaseq/pull/1553) - Make jobs automatically resubmit for exit code 175
+- [PR #1556](https://github.com/nf-core/rnaseq/pull/1556) - Update index docs to remove references to 'indexing only mode'
+- [PR #1558](https://github.com/nf-core/rnaseq/pull/1558) - Remove patches and bump modules for ARM compat
+- [PR #1560](https://github.com/nf-core/rnaseq/pull/1560) - General modules update, include updating subworkflows for stats fixes
+- [PR #1563](https://github.com/nf-core/rnaseq/pull/1563) - Version bumps ahead of 3.19.0 release
+- [PR #1565](https://github.com/nf-core/rnaseq/pull/1565) - Improve reproducibility with Conda
+- [PR #1567](https://github.com/nf-core/rnaseq/pull/1567) - Prerelease 3.19.0 fixes
+
 # 3.18.0 - 2024-12-19
 
 ### Credits
@@ -30,6 +68,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1474](https://github.com/nf-core/rnaseq/pull/1474) - Bump versions to 3.18.0
 - [PR #1475](https://github.com/nf-core/rnaseq/pull/1475) - Fix log publishing around umitools/ umicollapse
 - [PR #1447](https://github.com/nf-core/rnaseq/pull/1447) - Add tutorial series for analysing count data
+- [PR #1518](https://github.com/nf-core/rnaseq/pull/1518) - Remove duplicated text in README.md
 
 ## Parameters
 

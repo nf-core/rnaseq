@@ -2,8 +2,6 @@
 // Subworkflow with functionality specific to the nf-core/rnaseq pipeline
 //
 
-import groovy.json.JsonSlurper
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS
@@ -80,10 +78,6 @@ workflow PIPELINE_INITIALISATION {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-def pass_mapped_reads  = [:]
-def pass_trimmed_reads = [:]
-def pass_strand_check  = [:]
-
 workflow PIPELINE_COMPLETION {
 
     take:
@@ -99,7 +93,12 @@ workflow PIPELINE_COMPLETION {
     strand_status      // map: pass/fail status per sample for strandedness check
 
     main:
+    def pass_mapped_reads  = [:]
+    def pass_trimmed_reads = [:]
+    def pass_strand_check  = [:]
+
     summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
+    def multiqc_reports = multiqc_report.toList()
 
     trim_status
         .map{
@@ -116,8 +115,6 @@ workflow PIPELINE_COMPLETION {
             id, status -> pass_strand_check[id] = status
         }
 
-    def multiqc_report_list = multiqc_report.toList()
-
     //
     // Completion email and summary
     //
@@ -130,11 +127,11 @@ workflow PIPELINE_COMPLETION {
                 plaintext_email,
                 outdir,
                 monochrome_logs,
-                multiqc_report_list.getVal()
+                multiqc_reports.getVal(),
             )
         }
 
-        rnaseqSummary(monochrome_logs=monochrome_logs, pass_mapped_reads=pass_mapped_reads, pass_trimmed_reads=pass_trimmed_reads, pass_strand_check=pass_strand_check)
+        rnaseqSummary(monochrome_logs, pass_mapped_reads, pass_trimmed_reads, pass_strand_check)
 
         if (hook_url) {
             imNotification(summary_params, hook_url)
@@ -180,8 +177,14 @@ def validateInputParameters() {
 
     genomeExistsError()
 
-    if (!params.fasta) {
-        error("Genome fasta file not specified with e.g. '--fasta genome.fa' or via a detectable config file.")
+    if (
+        !params.fasta &&
+        (
+            ! params.skip_alignment ||  // Alignment needs fasta
+            ! params.transcript_fasta // Dynamically making a transcript fasta needs the fasta
+        )
+    ) {
+        error("Genome fasta file not specified with e.g. '--fasta genome.fa' or via a detectable config file. You must supply a genome FASTA file or use --skip_alignment and provide your own transcript fasta using --transcript_fasta for use in quantification.")
     }
 
     if (!params.gtf && !params.gff) {
@@ -294,7 +297,7 @@ def validateInputParameters() {
 
     // Check rRNA databases for sortmerna
     if (params.remove_ribo_rna) {
-        ch_ribo_db = file(params.ribo_database_manifest)
+        def ch_ribo_db = file(params.ribo_database_manifest)
         if (ch_ribo_db.isEmpty()) {
             error("File provided with --ribo_database_manifest is empty: ${ch_ribo_db.getName()}!")
         }
@@ -302,7 +305,7 @@ def validateInputParameters() {
 
     // Check if file with list of fastas is provided when running BBSplit
     if (!params.skip_bbsplit && !params.bbsplit_index && params.bbsplit_fasta_list) {
-        ch_bbsplit_fasta_list = file(params.bbsplit_fasta_list)
+        def ch_bbsplit_fasta_list = file(params.bbsplit_fasta_list)
         if (ch_bbsplit_fasta_list.isEmpty()) {
             error("File provided with --bbsplit_fasta_list is empty: ${ch_bbsplit_fasta_list.getName()}!")
         }
@@ -352,7 +355,7 @@ def toolBibliographyText() {
 }
 
 def methodsDescriptionText(mqc_methods_yaml) {
-    // Convert  to a named map so can be used as with familar NXF ${workflow} variable syntax in the MultiQC YML file
+    // Convert  to a named map so can be used as with familiar NXF ${workflow} variable syntax in the MultiQC YML file
     def meta = [:]
     meta.workflow = workflow.toMap()
     meta["manifest_map"] = workflow.manifest.toMap()
@@ -647,4 +650,3 @@ def rnaseqSummary(monochrome_logs=true, pass_mapped_reads=[:], pass_trimmed_read
         log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} Pipeline completed with errors${colors.reset}-"
     }
 }
-

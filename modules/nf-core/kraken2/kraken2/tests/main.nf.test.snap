@@ -11,14 +11,14 @@
                 ]
             ],
             [
-                "versions.yml:md5,79adf2ca1cfc625cb77e391b27142c43"
+                "versions.yml:md5,ed58d544fca4d012d5477858c986d741"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
         },
-        "timestamp": "2024-04-04T18:47:03.745692"
+        "timestamp": "2025-06-02T13:05:44.695905"
     },
     "sarscov2 illumina paired end [fastq]": {
         "content": [
@@ -32,14 +32,14 @@
                 ]
             ],
             [
-                "versions.yml:md5,79adf2ca1cfc625cb77e391b27142c43"
+                "versions.yml:md5,ed58d544fca4d012d5477858c986d741"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
         },
-        "timestamp": "2024-04-04T18:47:13.75649"
+        "timestamp": "2025-06-02T13:05:56.337945"
     },
     "sarscov2 illumina single end [fastq] + save_reads_assignment": {
         "content": [
@@ -62,13 +62,13 @@
                 ]
             ],
             [
-                "versions.yml:md5,79adf2ca1cfc625cb77e391b27142c43"
+                "versions.yml:md5,ed58d544fca4d012d5477858c986d741"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
         },
-        "timestamp": "2024-04-04T18:47:22.459465"
+        "timestamp": "2025-06-02T13:06:07.865635"
     }
 }

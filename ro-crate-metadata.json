@@ -1,0 +1,581 @@
+{
+    "@context": [
+        "https://w3id.org/ro/crate/1.1/context",
+        {
+            "GithubService": "https://w3id.org/ro/terms/test#GithubService",
+            "JenkinsService": "https://w3id.org/ro/terms/test#JenkinsService",
+            "PlanemoEngine": "https://w3id.org/ro/terms/test#PlanemoEngine",
+            "TestDefinition": "https://w3id.org/ro/terms/test#TestDefinition",
+            "TestInstance": "https://w3id.org/ro/terms/test#TestInstance",
+            "TestService": "https://w3id.org/ro/terms/test#TestService",
+            "TestSuite": "https://w3id.org/ro/terms/test#TestSuite",
+            "TravisService": "https://w3id.org/ro/terms/test#TravisService",
+            "definition": "https://w3id.org/ro/terms/test#definition",
+            "engineVersion": "https://w3id.org/ro/terms/test#engineVersion",
+            "instance": "https://w3id.org/ro/terms/test#instance",
+            "resource": "https://w3id.org/ro/terms/test#resource",
+            "runsOn": "https://w3id.org/ro/terms/test#runsOn"
+        }
+    ],
+    "@graph": [
+        {
+            "@id": "./",
+            "@type": "Dataset",
+            "creativeWorkStatus": "Stable",
+            "datePublished": "2025-06-06T08:45:36+00:00",
+            "description": "<h1>\n  <picture>\n    <source media=\"(prefers-color-scheme: dark)\" srcset=\"docs/images/nf-core-rnaseq_logo_dark.png\">\n    <img alt=\"nf-core/rnaseq\" src=\"docs/images/nf-core-rnaseq_logo_light.png\">\n  </picture>\n</h1>\n\n[![GitHub Actions CI Status](https://github.com/nf-core/rnaseq/actions/workflows/ci.yml/badge.svg)](https://github.com/nf-core/rnaseq/actions/workflows/ci.yml)\n[![GitHub Actions Linting Status](https://github.com/nf-core/rnaseq/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-core/rnaseq/actions/workflows/linting.yml)[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/rnaseq/results)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.1400710-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.1400710)[![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)\n\n[![Nextflow](https://img.shields.io/badge/version-%E2%89%A524.04.2-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)\n[![nf-core template version](https://img.shields.io/badge/nf--core_template-3.3.1-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/3.3.1)\n[![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)\n[![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)\n[![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)\n[![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/nf-core/rnaseq)\n\n[![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23rnaseq-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/rnaseq)[![Follow on Bluesky](https://img.shields.io/badge/bluesky-%40nf__core-1185fe?labelColor=000000&logo=bluesky)](https://bsky.app/profile/nf-co.re)[![Follow on Mastodon](https://img.shields.io/badge/mastodon-nf__core-6364ff?labelColor=FFFFFF&logo=mastodon)](https://mstdn.science/@nf_core)[![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core)\n\n## Introduction\n\n**nf-core/rnaseq** is a bioinformatics pipeline that can be used to analyse RNA sequencing data obtained from organisms with a reference genome and annotation. It takes a samplesheet and FASTQ files as input, performs quality control (QC), trimming and (pseudo-)alignment, and produces a gene expression matrix and extensive QC report.\n\n![nf-core/rnaseq metro map](docs/images/nf-core-rnaseq_metro_map_grey_animated.svg)\n\n> In case the image above is not loading, please have a look at the [static version](docs/images/nf-core-rnaseq_metro_map_grey.png).\n\n1. Merge re-sequenced FastQ files ([`cat`](http://www.linfo.org/cat.html))\n2. Auto-infer strandedness by subsampling and pseudoalignment ([`fq`](https://github.com/stjude-rust-labs/fq), [`Salmon`](https://combine-lab.github.io/salmon/))\n3. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))\n4. UMI extraction ([`UMI-tools`](https://github.com/CGATOxford/UMI-tools))\n5. Adapter and quality trimming ([`Trim Galore!`](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/))\n6. Removal of genome contaminants ([`BBSplit`](http://seqanswers.com/forums/showthread.php?t=41288))\n7. Removal of ribosomal RNA ([`SortMeRNA`](https://github.com/biocore/sortmerna))\n8. Choice of multiple alignment and quantification routes:\n   1. [`STAR`](https://github.com/alexdobin/STAR) -> [`Salmon`](https://combine-lab.github.io/salmon/)\n   2. [`STAR`](https://github.com/alexdobin/STAR) -> [`RSEM`](https://github.com/deweylab/RSEM)\n   3. [`HiSAT2`](https://ccb.jhu.edu/software/hisat2/index.shtml) -> **NO QUANTIFICATION**\n9. Sort and index alignments ([`SAMtools`](https://sourceforge.net/projects/samtools/files/samtools/))\n10. UMI-based deduplication ([`UMI-tools`](https://github.com/CGATOxford/UMI-tools))\n11. Duplicate read marking ([`picard MarkDuplicates`](https://broadinstitute.github.io/picard/))\n12. Transcript assembly and quantification ([`StringTie`](https://ccb.jhu.edu/software/stringtie/))\n13. Create bigWig coverage files ([`BEDTools`](https://github.com/arq5x/bedtools2/), [`bedGraphToBigWig`](http://hgdownload.soe.ucsc.edu/admin/exe/))\n14. Extensive quality control:\n    1. [`RSeQC`](http://rseqc.sourceforge.net/)\n    2. [`Qualimap`](http://qualimap.bioinfo.cipf.es/)\n    3. [`dupRadar`](https://bioconductor.org/packages/release/bioc/html/dupRadar.html)\n    4. [`Preseq`](http://smithlabresearch.org/software/preseq/)\n    5. [`DESeq2`](https://bioconductor.org/packages/release/bioc/html/DESeq2.html)\n    6. [`Kraken2`](https://ccb.jhu.edu/software/kraken2/) -> [`Bracken`](https://ccb.jhu.edu/software/bracken/) on unaligned sequences; _optional_\n15. Pseudoalignment and quantification ([`Salmon`](https://combine-lab.github.io/salmon/) or ['Kallisto'](https://pachterlab.github.io/kallisto/); _optional_)\n16. Present QC for raw read, alignment, gene biotype, sample similarity, and strand-specificity checks ([`MultiQC`](http://multiqc.info/), [`R`](https://www.r-project.org/))\n\n> **Note**\n> The SRA download functionality has been removed from the pipeline (`>=3.2`) and ported to an independent workflow called [nf-core/fetchngs](https://nf-co.re/fetchngs). You can provide `--nf_core_pipeline rnaseq` when running nf-core/fetchngs to download and auto-create a samplesheet containing publicly available samples that can be accepted directly as input by this pipeline.\n\n> **Warning**\n> Quantification isn't performed if using `--aligner hisat2` due to the lack of an appropriate option to calculate accurate expression estimates from HISAT2 derived genomic alignments. However, you can use this route if you have a preference for the alignment, QC and other types of downstream analysis compatible with the output of HISAT2.\n\n## Usage\n\n> [!NOTE]\n> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.\n\nFirst, prepare a samplesheet with your input data that looks as follows:\n\n**samplesheet.csv**:\n\n```csv\nsample,fastq_1,fastq_2,strandedness\nCONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz,auto\nCONTROL_REP1,AEG588A1_S1_L003_R1_001.fastq.gz,AEG588A1_S1_L003_R2_001.fastq.gz,auto\nCONTROL_REP1,AEG588A1_S1_L004_R1_001.fastq.gz,AEG588A1_S1_L004_R2_001.fastq.gz,auto\n```\n\nEach row represents a fastq file (single-end) or a pair of fastq files (paired end). Rows with the same sample identifier are considered technical replicates and merged automatically. The strandedness refers to the library preparation and will be automatically inferred if set to `auto`.\n\n> [!WARNING]\n> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/usage/getting_started/configuration#custom-configuration-files).\n\nNow, you can run the pipeline using:\n\n```bash\nnextflow run nf-core/rnaseq \\\n    --input <SAMPLESHEET> \\\n    --outdir <OUTDIR> \\\n    --gtf <GTF> \\\n    --fasta <GENOME FASTA> \\\n    -profile <docker/singularity/.../institute>\n```\n\nFor more details and further functionality, please refer to the [usage documentation](https://nf-co.re/rnaseq/usage) and the [parameter documentation](https://nf-co.re/rnaseq/parameters).\n\n## Pipeline output\n\nTo see the results of an example test run with a full size dataset refer to the [results](https://nf-co.re/rnaseq/results) tab on the nf-core website pipeline page.\nFor more details about the output files and reports, please refer to the\n[output documentation](https://nf-co.re/rnaseq/output).\n\nThis pipeline quantifies RNA-sequenced reads relative to genes/transcripts in the genome and normalizes the resulting data. It does not compare the samples statistically in order to assign significance in the form of FDR or P-values. For downstream analyses, the output files from this pipeline can be analysed directly in statistical environments like [R](https://www.r-project.org/), [Julia](https://julialang.org/) or via the [nf-core/differentialabundance](https://github.com/nf-core/differentialabundance/) pipeline.\n\n## Online videos\n\nA short talk about the history, current status and functionality on offer in this pipeline was given by Harshil Patel ([@drpatelh](https://github.com/drpatelh)) on [8th February 2022](https://nf-co.re/events/2022/bytesize-32-nf-core-rnaseq) as part of the nf-core/bytesize series.\n\nYou can find numerous talks on the [nf-core events page](https://nf-co.re/events) from various topics including writing pipelines/modules in Nextflow DSL2, using nf-core tooling, running nf-core pipelines as well as more generic content like contributing to Github. Please check them out!\n\n## Credits\n\nThese scripts were originally written for use at the [National Genomics Infrastructure](https://ngisweden.scilifelab.se), part of [SciLifeLab](http://www.scilifelab.se/) in Stockholm, Sweden, by Phil Ewels ([@ewels](https://github.com/ewels)) and Rickard Hammar\u00e9n ([@Hammarn](https://github.com/Hammarn)).\n\nThe pipeline was re-written in Nextflow DSL2 and is primarily maintained by Harshil Patel ([@drpatelh](https://github.com/drpatelh)) from [Seqera Labs, Spain](https://seqera.io/).\n\nThe pipeline workflow diagram was initially designed by Sarah Guinchard ([@G-Sarah](https://github.com/G-Sarah)) and James Fellows Yates ([@jfy133](https://github.com/jfy133)), further modifications where made by Harshil Patel ([@drpatelh](https://github.com/drpatelh)) and Maxime Garcia ([@maxulysse](https://github.com/maxulysse)).\n\nMany thanks to other who have helped out along the way too, including (but not limited to):\n\n- [Alex Peltzer](https://github.com/apeltzer)\n- [Colin Davenport](https://github.com/colindaven)\n- [Denis Moreno](https://github.com/Galithil)\n- [Edmund Miller](https://github.com/edmundmiller)\n- [Gregor Sturm](https://github.com/grst)\n- [Jacki Buros Novik](https://github.com/jburos)\n- [Lorena Pantano](https://github.com/lpantano)\n- [Matthias Zepper](https://github.com/MatthiasZepper)\n- [Maxime Garcia](https://github.com/maxulysse)\n- [Olga Botvinnik](https://github.com/olgabot)\n- [@orzechoj](https://github.com/orzechoj)\n- [Paolo Di Tommaso](https://github.com/pditommaso)\n- [Rob Syme](https://github.com/robsyme)\n\n## Contributions and Support\n\nIf you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).\n\nFor further information or help, don't hesitate to get in touch on the [Slack `#rnaseq` channel](https://nfcore.slack.com/channels/rnaseq) (you can join with [this invite](https://nf-co.re/join/slack)).\n\n## Citations\n\nIf you use nf-core/rnaseq for your analysis, please cite it using the following doi: [10.5281/zenodo.1400710](https://doi.org/10.5281/zenodo.1400710)\n\nAn extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.\n\nYou can cite the `nf-core` publication as follows:\n\n> **The nf-core framework for community-curated bioinformatics pipelines.**\n>\n> Philip Ewels, Alexander Peltzer, Sven Fillinger, Harshil Patel, Johannes Alneberg, Andreas Wilm, Maxime Ulysse Garcia, Paolo Di Tommaso & Sven Nahnsen.\n>\n> _Nat Biotechnol._ 2020 Feb 13. doi: [10.1038/s41587-020-0439-x](https://dx.doi.org/10.1038/s41587-020-0439-x).\n",
+            "hasPart": [
+                {
+                    "@id": "main.nf"
+                },
+                {
+                    "@id": "docs/images/nf-core-rnaseq_metro_map_grey.png"
+                },
+                {
+                    "@id": "assets/"
+                },
+                {
+                    "@id": "bin/"
+                },
+                {
+                    "@id": "conf/"
+                },
+                {
+                    "@id": "docs/"
+                },
+                {
+                    "@id": "docs/images/"
+                },
+                {
+                    "@id": "modules/"
+                },
+                {
+                    "@id": "modules/local/"
+                },
+                {
+                    "@id": "modules/nf-core/"
+                },
+                {
+                    "@id": "workflows/"
+                },
+                {
+                    "@id": "subworkflows/"
+                },
+                {
+                    "@id": "nextflow.config"
+                },
+                {
+                    "@id": "README.md"
+                },
+                {
+                    "@id": "nextflow_schema.json"
+                },
+                {
+                    "@id": "CHANGELOG.md"
+                },
+                {
+                    "@id": "LICENSE"
+                },
+                {
+                    "@id": "CODE_OF_CONDUCT.md"
+                },
+                {
+                    "@id": "CITATIONS.md"
+                },
+                {
+                    "@id": "modules.json"
+                },
+                {
+                    "@id": "docs/usage.md"
+                },
+                {
+                    "@id": "docs/output.md"
+                },
+                {
+                    "@id": ".nf-core.yml"
+                },
+                {
+                    "@id": ".pre-commit-config.yaml"
+                },
+                {
+                    "@id": ".prettierignore"
+                }
+            ],
+            "isBasedOn": "https://github.com/nf-core/rnaseq",
+            "license": "MIT",
+            "mainEntity": {
+                "@id": "main.nf"
+            },
+            "mentions": [
+                {
+                    "@id": "#ae1587a7-b640-4951-835d-3d579ba3fbfd"
+                }
+            ],
+            "name": "nf-core/rnaseq"
+        },
+        {
+            "@id": "ro-crate-metadata.json",
+            "@type": "CreativeWork",
+            "about": {
+                "@id": "./"
+            },
+            "conformsTo": [
+                {
+                    "@id": "https://w3id.org/ro/crate/1.1"
+                },
+                {
+                    "@id": "https://w3id.org/workflowhub/workflow-ro-crate/1.0"
+                }
+            ]
+        },
+        {
+            "@id": "main.nf",
+            "@type": [
+                "File",
+                "SoftwareSourceCode",
+                "ComputationalWorkflow"
+            ],
+            "creator": [
+                {
+                    "@id": "https://orcid.org/0000-0002-3859-3249"
+                },
+                {
+                    "@id": "#zhoupenggeni@gmail.com"
+                },
+                {
+                    "@id": "https://orcid.org/0009-0009-7515-5000"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0002-5748-9594"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0002-6503-2180"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0002-8721-2350"
+                },
+                {
+                    "@id": "#jonathan.manning@seqera.io"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0003-3220-0253"
+                },
+                {
+                    "@id": "#drpatelh@users.noreply.github.com"
+                },
+                {
+                    "@id": "#phil.ewels@seqera.io"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0003-4412-7970"
+                },
+                {
+                    "@id": "#sven.fillinger@qbic.uni-tuebingen.de"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0003-0603-7907"
+                },
+                {
+                    "@id": "#31933289+amayer21@users.noreply.github.com"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0001-9584-7842"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0003-3966-8481"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0002-1968-2270"
+                },
+                {
+                    "@id": "#chuan.wang@scilifelab.se"
+                },
+                {
+                    "@id": "#zhenfeng.liu1@gmail.com"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0002-8824-1946"
+                },
+                {
+                    "@id": "#omeally@gmail.com"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0001-9017-591X"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0002-2798-9870"
+                },
+                {
+                    "@id": "#42973691+d4straub@users.noreply.github.com"
+                }
+            ],
+            "dateCreated": "",
+            "dateModified": "2025-06-06T09:45:36Z",
+            "dct:conformsTo": "https://bioschemas.org/profiles/ComputationalWorkflow/1.0-RELEASE/",
+            "image": {
+                "@id": "docs/images/nf-core-rnaseq_metro_map_grey.png"
+            },
+            "keywords": [
+                "nf-core",
+                "nextflow",
+                "rna",
+                "rna-seq"
+            ],
+            "license": [
+                "MIT"
+            ],
+            "maintainer": [
+                {
+                    "@id": "https://orcid.org/0000-0002-6503-2180"
+                },
+                {
+                    "@id": "#jonathan.manning@seqera.io"
+                },
+                {
+                    "@id": "#drpatelh@users.noreply.github.com"
+                },
+                {
+                    "@id": "#phil.ewels@seqera.io"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0003-4412-7970"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0001-9017-591X"
+                }
+            ],
+            "name": [
+                "nf-core/rnaseq"
+            ],
+            "programmingLanguage": {
+                "@id": "https://w3id.org/workflowhub/workflow-ro-crate#nextflow"
+            },
+            "sdPublisher": {
+                "@id": "https://nf-co.re/"
+            },
+            "url": [
+                "https://github.com/nf-core/rnaseq",
+                "https://nf-co.re/rnaseq/3.19.0/"
+            ],
+            "version": [
+                "3.19.0"
+            ]
+        },
+        {
+            "@id": "https://w3id.org/workflowhub/workflow-ro-crate#nextflow",
+            "@type": "ComputerLanguage",
+            "identifier": {
+                "@id": "https://www.nextflow.io/"
+            },
+            "name": "Nextflow",
+            "url": {
+                "@id": "https://www.nextflow.io/"
+            },
+            "version": "!>=24.04.2"
+        },
+        {
+            "@id": "docs/images/nf-core-rnaseq_metro_map_grey.png",
+            "@type": [
+                "File",
+                "ImageObject"
+            ],
+            "name": "Workflow diagram"
+        },
+        {
+            "@id": "#ae1587a7-b640-4951-835d-3d579ba3fbfd",
+            "@type": "TestSuite",
+            "instance": [
+                {
+                    "@id": "#83e3a026-3fd3-4641-8c4c-6780c8c1d2fc"
+                }
+            ],
+            "mainEntity": {
+                "@id": "main.nf"
+            },
+            "name": "Test suite for nf-core/rnaseq"
+        },
+        {
+            "@id": "#83e3a026-3fd3-4641-8c4c-6780c8c1d2fc",
+            "@type": "TestInstance",
+            "name": "GitHub Actions workflow for testing nf-core/rnaseq",
+            "resource": "repos/nf-core/rnaseq/actions/workflows/nf-test.yml",
+            "runsOn": {
+                "@id": "https://w3id.org/ro/terms/test#GithubService"
+            },
+            "url": "https://api.github.com"
+        },
+        {
+            "@id": "https://w3id.org/ro/terms/test#GithubService",
+            "@type": "TestService",
+            "name": "Github Actions",
+            "url": {
+                "@id": "https://github.com"
+            }
+        },
+        {
+            "@id": "assets/",
+            "@type": "Dataset",
+            "description": "Additional files"
+        },
+        {
+            "@id": "bin/",
+            "@type": "Dataset",
+            "description": "Scripts that must be callable from a pipeline process"
+        },
+        {
+            "@id": "conf/",
+            "@type": "Dataset",
+            "description": "Configuration files"
+        },
+        {
+            "@id": "docs/",
+            "@type": "Dataset",
+            "description": "Markdown files for documenting the pipeline"
+        },
+        {
+            "@id": "docs/images/",
+            "@type": "Dataset",
+            "description": "Images for the documentation files"
+        },
+        {
+            "@id": "modules/",
+            "@type": "Dataset",
+            "description": "Modules used by the pipeline"
+        },
+        {
+            "@id": "modules/local/",
+            "@type": "Dataset",
+            "description": "Pipeline-specific modules"
+        },
+        {
+            "@id": "modules/nf-core/",
+            "@type": "Dataset",
+            "description": "nf-core modules"
+        },
+        {
+            "@id": "workflows/",
+            "@type": "Dataset",
+            "description": "Main pipeline workflows to be executed in main.nf"
+        },
+        {
+            "@id": "subworkflows/",
+            "@type": "Dataset",
+            "description": "Smaller subworkflows"
+        },
+        {
+            "@id": "nextflow.config",
+            "@type": "File",
+            "description": "Main Nextflow configuration file"
+        },
+        {
+            "@id": "README.md",
+            "@type": "File",
+            "description": "Basic pipeline usage information"
+        },
+        {
+            "@id": "nextflow_schema.json",
+            "@type": "File",
+            "description": "JSON schema for pipeline parameter specification"
+        },
+        {
+            "@id": "CHANGELOG.md",
+            "@type": "File",
+            "description": "Information on changes made to the pipeline"
+        },
+        {
+            "@id": "LICENSE",
+            "@type": "File",
+            "description": "The license - should be MIT"
+        },
+        {
+            "@id": "CODE_OF_CONDUCT.md",
+            "@type": "File",
+            "description": "The nf-core code of conduct"
+        },
+        {
+            "@id": "CITATIONS.md",
+            "@type": "File",
+            "description": "Citations needed when using the pipeline"
+        },
+        {
+            "@id": "modules.json",
+            "@type": "File",
+            "description": "Version information for modules from nf-core/modules"
+        },
+        {
+            "@id": "docs/usage.md",
+            "@type": "File",
+            "description": "Usage documentation"
+        },
+        {
+            "@id": "docs/output.md",
+            "@type": "File",
+            "description": "Output documentation"
+        },
+        {
+            "@id": ".nf-core.yml",
+            "@type": "File",
+            "description": "nf-core configuration file, configuring template features and linting rules"
+        },
+        {
+            "@id": ".pre-commit-config.yaml",
+            "@type": "File",
+            "description": "Configuration file for pre-commit hooks"
+        },
+        {
+            "@id": ".prettierignore",
+            "@type": "File",
+            "description": "Ignore file for prettier"
+        },
+        {
+            "@id": "https://nf-co.re/",
+            "@type": "Organization",
+            "name": "nf-core",
+            "url": "https://nf-co.re/"
+        },
+        {
+            "@id": "https://orcid.org/0000-0002-3859-3249",
+            "@type": "Person",
+            "email": "lorena.pantano@gmail.com",
+            "name": "Lorena Pantano"
+        },
+        {
+            "@id": "#zhoupenggeni@gmail.com",
+            "@type": "Person",
+            "email": "zhoupenggeni@gmail.com",
+            "name": "Peng Zhou"
+        },
+        {
+            "@id": "https://orcid.org/0009-0009-7515-5000",
+            "@type": "Person",
+            "email": "sofia.haglund@scilifelab.se",
+            "name": "Sofia Haglund"
+        },
+        {
+            "@id": "https://orcid.org/0000-0002-5748-9594",
+            "@type": "Person",
+            "email": "pranathi93.vemuri@gmail.com",
+            "name": "Pranathi Vemuri"
+        },
+        {
+            "@id": "https://orcid.org/0000-0002-6503-2180",
+            "@type": "Person",
+            "email": "apeltzer@users.noreply.github.com",
+            "name": "Alexander Peltzer"
+        },
+        {
+            "@id": "https://orcid.org/0000-0002-8721-2350",
+            "@type": "Person",
+            "email": "rob.syme@gmail.com",
+            "name": "Robert Syme"
+        },
+        {
+            "@id": "#jonathan.manning@seqera.io",
+            "@type": "Person",
+            "email": "jonathan.manning@seqera.io",
+            "name": "Jonathan Manning"
+        },
+        {
+            "@id": "https://orcid.org/0000-0003-3220-0253",
+            "@type": "Person",
+            "email": "paolo.ditommaso@gmail.com",
+            "name": "Paolo Di Tommaso"
+        },
+        {
+            "@id": "#drpatelh@users.noreply.github.com",
+            "@type": "Person",
+            "email": "drpatelh@users.noreply.github.com",
+            "name": "Harshil Patel"
+        },
+        {
+            "@id": "#phil.ewels@seqera.io",
+            "@type": "Person",
+            "email": "phil.ewels@seqera.io",
+            "name": "Phil Ewels"
+        },
+        {
+            "@id": "https://orcid.org/0000-0003-4412-7970",
+            "@type": "Person",
+            "email": "olga.botvinnik@gmail.com",
+            "name": "Olga Botvinnik"
+        },
+        {
+            "@id": "#sven.fillinger@qbic.uni-tuebingen.de",
+            "@type": "Person",
+            "email": "sven.fillinger@qbic.uni-tuebingen.de",
+            "name": "Sven F"
+        },
+        {
+            "@id": "https://orcid.org/0000-0003-0603-7907",
+            "@type": "Person",
+            "email": "sabrina.krakau@qbic.uni-tuebingen.de",
+            "name": "Sabrina Krakau"
+        },
+        {
+            "@id": "#31933289+amayer21@users.noreply.github.com",
+            "@type": "Person",
+            "email": "31933289+amayer21@users.noreply.github.com",
+            "name": "Alice Mayer"
+        },
+        {
+            "@id": "https://orcid.org/0000-0001-9584-7842",
+            "@type": "Person",
+            "email": "mail@gregor-sturm.de",
+            "name": "Gregor Sturm"
+        },
+        {
+            "@id": "https://orcid.org/0000-0003-3966-8481",
+            "@type": "Person",
+            "email": "pcantalupo@gmail.com",
+            "name": "Paul Cantalupo"
+        },
+        {
+            "@id": "https://orcid.org/0000-0002-1968-2270",
+            "@type": "Person",
+            "email": "anandasanil@gmail.com",
+            "name": "Anandashankar Anil"
+        },
+        {
+            "@id": "#chuan.wang@scilifelab.se",
+            "@type": "Person",
+            "email": "chuan.wang@scilifelab.se",
+            "name": "Chuan Wang"
+        },
+        {
+            "@id": "#zhenfeng.liu1@gmail.com",
+            "@type": "Person",
+            "email": "zhenfeng.liu1@gmail.com",
+            "name": "Zhenfeng Liu"
+        },
+        {
+            "@id": "https://orcid.org/0000-0002-8824-1946",
+            "@type": "Person",
+            "email": "gisela.gabernet@gmail.com",
+            "name": "Gisela Gabernet Garriga"
+        },
+        {
+            "@id": "#omeally@gmail.com",
+            "@type": "Person",
+            "email": "omeally@gmail.com",
+            "name": "Denis OMeally"
+        },
+        {
+            "@id": "https://orcid.org/0000-0001-9017-591X",
+            "@type": "Person",
+            "email": "rickard.hammaren@scilifelab.se",
+            "name": "Rickard Hammar\u00e9n"
+        },
+        {
+            "@id": "https://orcid.org/0000-0002-2798-9870",
+            "@type": "Person",
+            "email": "silvia.morini01@gmail.com",
+            "name": "Silvia Morini"
+        },
+        {
+            "@id": "#42973691+d4straub@users.noreply.github.com",
+            "@type": "Person",
+            "email": "42973691+d4straub@users.noreply.github.com",
+            "name": "Daniel Straub"
+        }
+    ]
+}

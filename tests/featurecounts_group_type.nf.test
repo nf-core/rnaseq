@@ -2,6 +2,7 @@ nextflow_pipeline {
 
     name "Test pipeline without a group type for featureCounts"
     script "../main.nf"
+    tag "pipeline"
 
     test("Params: --featurecounts_group_type false") {
 

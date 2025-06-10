@@ -4,6 +4,7 @@ nextflow_process {
     process "BEDTOOLS_GENOMECOV"
     config "./nextflow.config"
 
+
     test("sarscov2 - no scale") {
         when {
             process {

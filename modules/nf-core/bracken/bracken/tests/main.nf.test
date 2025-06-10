@@ -4,7 +4,6 @@ nextflow_process {
     script "../main.nf"
     process "BRACKEN_BRACKEN"
 
-
     setup {
         run ("UNTAR") {
             script "../../../untar/main.nf"

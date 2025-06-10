@@ -2,6 +2,7 @@ nextflow_pipeline {
 
     name "Test pipeline by skipping trimming options"
     script "../main.nf"
+    tag "pipeline"
 
     test("Params: --skip_trimming") {
 

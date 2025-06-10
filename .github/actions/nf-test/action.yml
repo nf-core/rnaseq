@@ -59,8 +59,6 @@ runs:
     - name: Run nf-test
       shell: bash
       env:
-        NFT_DIFF: ${{ env.NFT_DIFF }}
-        NFT_DIFF_ARGS: ${{ env.NFT_DIFF_ARGS }}
         NFT_WORKDIR: ${{ env.NFT_WORKDIR }}
       run: |
         nf-test test \

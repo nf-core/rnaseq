@@ -15,7 +15,7 @@ Special thanks to the following for their contributions to the release:
 ### Enhancements & fixes
 
 - [PR #1568](https://github.com/nf-core/rnaseq/pull/1568) - Bump version after release 3.19.0
-- [PR #1570](https://github.com/nf-core/rnaseq/pull/1570) - For umitools use only umi_dedup.sorted.log in multiqc_report
+- [PR #1571](https://github.com/nf-core/rnaseq/pull/1571) - For umitools use only umi_dedup.sorted.log in multiqc_report
 
 ## [[3.19.0](https://github.com/nf-core/rnaseq/releases/tag/3.19.0)] - 2025-06-10
 

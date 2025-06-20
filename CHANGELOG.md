@@ -15,7 +15,7 @@ Special thanks to the following for their contributions to the release:
 ### Enhancements & fixes
 
 - [PR #1568](https://github.com/nf-core/rnaseq/pull/1568) - Bump version after release 3.19.0
-- [PR #]() - Fix salmon.merged.SummarizedExperiment.rds name collision
+- [PR #1573](https://github.com/nf-core/rnaseq/pull/1573) - Fix salmon.merged.SummarizedExperiment.rds name collision
 
 ## [[3.19.0](https://github.com/nf-core/rnaseq/releases/tag/3.19.0)] - 2025-06-10
 

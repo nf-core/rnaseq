@@ -54,13 +54,9 @@ runs:
         conda-solver: libmamba
         conda-remove-defaults: true
 
-      # TODO Skip failing conda tests and document their failures
-      # https://github.com/nf-core/modules/issues/7017
     - name: Run nf-test
       shell: bash
       env:
-        NFT_DIFF: ${{ env.NFT_DIFF }}
-        NFT_DIFF_ARGS: ${{ env.NFT_DIFF_ARGS }}
         NFT_WORKDIR: ${{ env.NFT_WORKDIR }}
       run: |
         nf-test test \

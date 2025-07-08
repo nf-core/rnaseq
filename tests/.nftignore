@@ -1,5 +1,6 @@
 .DS_Store
 multiqc/multiqc_data/fastqc_top_overrepresented_sequences_table.txt
+multiqc/multiqc_data/BETA-multiqc.parquet
 multiqc/multiqc_data/multiqc.log
 multiqc/multiqc_data/multiqc_data.json
 multiqc/multiqc_data/multiqc_sources.txt

@@ -40,7 +40,7 @@ jobs:
             {
               "hook_url": "${{ secrets.MEGATESTS_ALERTS_SLACK_HOOK_URL }}",
               "aligner": "${{ matrix.aligner }}",
-              "outdir": "s3://${{ secrets.AWS_S3_BUCKET }}/rnaseq/results-${{ steps.revision.outputs.revision }}"
+              "outdir": "s3://${{ secrets.AWS_S3_BUCKET }}/rnaseq/results-${{ steps.revision.outputs.revision }}/aligner_${{ matrix.aligner }}/"
             }
           profiles: test_full
 

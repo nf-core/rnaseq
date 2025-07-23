@@ -15,7 +15,7 @@ Special thanks to the following for their contributions to the release:
 ### Enhancements & fixes
 
 - [PR #1568](https://github.com/nf-core/rnaseq/pull/1568) - Bump version after release 3.19.0
-- [PR #1585](https://github.com/nf-core/rnaseq/pull/1585) - Update awsfulltest.yml to restore aligner-wise output
+- [PR #1585](https://github.com/nf-core/rnaseq/pull/1585) - Update awsfulltest.yml to restore aligner-wise outputs
 
 ## [[3.19.0](https://github.com/nf-core/rnaseq/releases/tag/3.19.0)] - 2025-06-10
 

@@ -3,6 +3,12 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# 3.20.0 - xxxx-xx-xx
+
+### Enhancements & fixes
+
+- [PR #1585](https://github.com/nf-core/rnaseq/pull/1585) - Update awsfulltest.yml to restore aligner-wise output
+
 # 3.19.0 - 2025-06-06
 
 ### Credits

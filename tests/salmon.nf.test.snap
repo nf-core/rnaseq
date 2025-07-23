@@ -46,18 +46,15 @@
                     "bioconductor-summarizedexperiment": "1.32.0"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "0.6.10",
                     "cutadapt": 4.9,
-                    "pigz": 2.8
+                    "pigz": 2.8,
+                    "trimgalore": "0.6.10"
                 },
                 "TXIMETA_TXIMPORT": {
                     "bioconductor-tximeta": "1.20.1"
                 },
                 "UNTAR_SALMON_INDEX": {
                     "untar": 1.34
-                },
-                "Workflow": {
-                    "nf-core/rnaseq": "v3.19.0"
                 }
             },
             [
@@ -385,15 +382,12 @@
                     "gunzip": 1.13
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "0.6.10",
                     "cutadapt": 4.9,
-                    "pigz": 2.8
+                    "pigz": 2.8,
+                    "trimgalore": "0.6.10"
                 },
                 "UNTAR_SALMON_INDEX": {
                     "untar": 1.34
-                },
-                "Workflow": {
-                    "nf-core/rnaseq": "v3.19.0"
                 }
             },
             [

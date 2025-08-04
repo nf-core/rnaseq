@@ -22,7 +22,6 @@ workflow BAM_DEDUP_UMI {
     ch_transcript_fasta   // channel: [ val(meta), path(fasta) ]
 
     main:
-    ch_versions = Channel.empty()
 
     if (umi_dedup_tool != "umicollapse" && umi_dedup_tool != "umitools"){
         error("Unknown umi_dedup_tool '${umi_dedup_tool}'")
@@ -113,12 +112,6 @@ workflow BAM_DEDUP_UMI {
         .transpose()
         .map{it[1]}
 
-    // Record versions
-
-    ch_versions = UMI_DEDUP_GENOME.out.versions
-        .mix(BAM_SORT_STATS_SAMTOOLS.out.versions)
-        .mix(UMITOOLS_PREPAREFORRSEM.out.versions)
-
     emit:
     bam                = UMI_DEDUP_GENOME.out.bam                                                // channel: [ val(meta), path(bam) ]
     bai                = bam_csi_index ? UMI_DEDUP_GENOME.out.csi : UMI_DEDUP_GENOME.out.bai     // channel: [ val(meta), path(bai) ]
@@ -128,5 +121,4 @@ workflow BAM_DEDUP_UMI {
     idxstats           = UMI_DEDUP_GENOME.out.idxstats.mix(UMI_DEDUP_TRANSCRIPTOME.out.idxstats) // channel: [ val(meta), path(idxstats)]
     multiqc_files      = ch_multiqc_files                                                        // channel: file
     transcriptome_bam  = ch_dedup_transcriptome_bam                                              // channel: [ val(meta), path(bam) ]
-    versions            = ch_versions                                                            // channel: [ path(versions.yml) ]
 }

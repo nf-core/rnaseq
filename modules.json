@@ -217,6 +217,11 @@
                         "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
                         "installed_by": ["bam_stats_samtools"]
                     },
+                    "sentieon/staralign": {
+                        "branch": "master",
+                        "git_sha": "73d3ab1ac411843ae643b5bc310a4aec9ae7ab3a",
+                        "installed_by": ["modules"]
+                    },
                     "sortmerna": {
                         "branch": "master",
                         "git_sha": "d4a425ce59fc803a11e520f16680ede9af09761f",

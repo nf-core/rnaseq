@@ -1,7 +1,7 @@
 //
 // Alignment with STAR
 //
-
+include { SENTIEON_STARALIGN      } from '../../../modules/nf-core/sentieon/staralign/main'
 include { STAR_ALIGN              } from '../../../modules/nf-core/star/align'
 include { STAR_ALIGN_IGENOMES     } from '../../../modules/local/star_align_igenomes'
 include { BAM_SORT_STATS_SAMTOOLS } from '../../nf-core/bam_sort_stats_samtools'
@@ -15,6 +15,7 @@ workflow ALIGN_STAR {
     seq_platform        // string : sequencing platform
     seq_center          // string : sequencing center
     is_aws_igenome      // boolean: whether the genome files are from AWS iGenomes
+    is_sentieon         // boolean: whether star alignment is accelerated with Sentieon
     fasta               // channel: /path/to/fasta
 
     main:
@@ -44,16 +45,32 @@ workflow ALIGN_STAR {
         ch_tab            = STAR_ALIGN_IGENOMES.out.tab
         ch_versions       = ch_versions.mix(STAR_ALIGN_IGENOMES.out.versions.first())
     } else {
-        STAR_ALIGN ( reads, index, gtf, star_ignore_sjdbgtf, seq_platform, seq_center )
-        ch_orig_bam       = STAR_ALIGN.out.bam
-        ch_log_final      = STAR_ALIGN.out.log_final
-        ch_log_out        = STAR_ALIGN.out.log_out
-        ch_log_progress   = STAR_ALIGN.out.log_progress
-        ch_bam_sorted     = STAR_ALIGN.out.bam_sorted
-        ch_bam_transcript = STAR_ALIGN.out.bam_transcript
-        ch_fastq          = STAR_ALIGN.out.fastq
-        ch_tab            = STAR_ALIGN.out.tab
-        ch_versions       = ch_versions.mix(STAR_ALIGN.out.versions.first())
+
+        if(is_sentieon) {
+            SENTIEON_STARALIGN ( reads, index, gtf, star_ignore_sjdbgtf, seq_platform, seq_center )
+            ch_orig_bam       = STAR_ALIGN.out.bam
+            ch_log_final      = STAR_ALIGN.out.log_final
+            ch_log_out        = STAR_ALIGN.out.log_out
+            ch_log_progress   = STAR_ALIGN.out.log_progress
+            ch_bam_sorted     = STAR_ALIGN.out.bam_sorted
+            ch_bam_transcript = STAR_ALIGN.out.bam_transcript
+            ch_fastq          = STAR_ALIGN.out.fastq
+            ch_tab            = STAR_ALIGN.out.tab
+            ch_versions       = ch_versions.mix(STAR_ALIGN.out.versions.first())
+
+        }else{
+            STAR_ALIGN ( reads, index, gtf, star_ignore_sjdbgtf, seq_platform, seq_center )
+            ch_orig_bam       = STAR_ALIGN.out.bam
+            ch_log_final      = STAR_ALIGN.out.log_final
+            ch_log_out        = STAR_ALIGN.out.log_out
+            ch_log_progress   = STAR_ALIGN.out.log_progress
+            ch_bam_sorted     = STAR_ALIGN.out.bam_sorted
+            ch_bam_transcript = STAR_ALIGN.out.bam_transcript
+            ch_fastq          = STAR_ALIGN.out.fastq
+            ch_tab            = STAR_ALIGN.out.tab
+            ch_versions       = ch_versions.mix(STAR_ALIGN.out.versions.first())
+        }
+
     }
 
     //

@@ -5,12 +5,14 @@
 include { RSEM_CALCULATEEXPRESSION } from '../../../modules/nf-core/rsem/calculateexpression'
 include { RSEM_MERGE_COUNTS        } from '../../../modules/local/rsem_merge_counts'
 include { BAM_SORT_STATS_SAMTOOLS  } from '../../nf-core/bam_sort_stats_samtools'
+include { SENTIEON_RSEM_CALCULATEEXPRESSION } from '../../../modules/local/sentieon_rsem_calculateexpression'
 
 workflow QUANTIFY_RSEM {
     take:
     reads // channel: [ val(meta), [ reads ] ]
     index // channel: /path/to/rsem/index/
     fasta // channel: [ val(meta), [ fasta ] ]
+    use_sentieon // boolean: determines whether RSEM is run with Sentieon accelerated STAR
 
     main:
 
@@ -19,32 +21,54 @@ workflow QUANTIFY_RSEM {
     //
     // Quantify reads with RSEM
     //
-    RSEM_CALCULATEEXPRESSION ( reads, index )
-    ch_versions = ch_versions.mix(RSEM_CALCULATEEXPRESSION.out.versions.first())
+    if (use_sentieon){
 
+        SENTIEON_RSEM_CALCULATEEXPRESSION ( reads, index )
+
+        ch_bam_star = SENTIEON_RSEM_CALCULATEEXPRESSION.out.bam_star
+        ch_counts_gene = SENTIEON_RSEM_CALCULATEEXPRESSION.out.counts_gene
+        ch_counts_transcript = SENTIEON_RSEM_CALCULATEEXPRESSION.out.counts_transcript
+        ch_stat = SENTIEON_RSEM_CALCULATEEXPRESSION.out.stat
+        ch_logs = SENTIEON_RSEM_CALCULATEEXPRESSION.out.logs
+        ch_bam_genome = SENTIEON_RSEM_CALCULATEEXPRESSION.out.bam_genome
+        ch_bam_transcript = SENTIEON_RSEM_CALCULATEEXPRESSION.out.bam_transcript
+        ch_versions = ch_versions.mix(SENTIEON_RSEM_CALCULATEEXPRESSION.out.versions.first())
+
+    } else {
+        RSEM_CALCULATEEXPRESSION ( reads, index )
+
+        ch_bam_star = RSEM_CALCULATEEXPRESSION.out.bam_star
+        ch_counts_gene = RSEM_CALCULATEEXPRESSION.out.counts_gene
+        ch_counts_transcript = RSEM_CALCULATEEXPRESSION.out.counts_transcript
+        ch_stat = RSEM_CALCULATEEXPRESSION.out.stat
+        ch_logs = RSEM_CALCULATEEXPRESSION.out.logs
+        ch_bam_genome = RSEM_CALCULATEEXPRESSION.out.bam_genome
+        ch_bam_transcript = RSEM_CALCULATEEXPRESSION.out.bam_transcript
+        ch_versions = ch_versions.mix(RSEM_CALCULATEEXPRESSION.out.versions.first())
+    }
     //
     // Sort, index BAM file and run samtools stats, flagstat and idxstats
     //
-    BAM_SORT_STATS_SAMTOOLS ( RSEM_CALCULATEEXPRESSION.out.bam_star, fasta )
+    BAM_SORT_STATS_SAMTOOLS ( ch_bam_star, fasta )
     ch_versions = ch_versions.mix(BAM_SORT_STATS_SAMTOOLS.out.versions)
 
     //
     // Merge counts across samples
     //
     RSEM_MERGE_COUNTS (
-        RSEM_CALCULATEEXPRESSION.out.counts_gene.collect{it[1]},       // [meta, counts]: Collect the second element (counts files) in the channel across all samples
-        RSEM_CALCULATEEXPRESSION.out.counts_transcript.collect{it[1]}
+        ch_counts_gene.collect{it[1]},       // [meta, counts]: Collect the second element (counts files) in the channel across all samples
+        ch_counts_transcript.collect{it[1]}
     )
     ch_versions = ch_versions.mix(RSEM_MERGE_COUNTS.out.versions)
 
     emit:
-    counts_gene              = RSEM_CALCULATEEXPRESSION.out.counts_gene       // channel: [ val(meta), counts ]
-    counts_transcript        = RSEM_CALCULATEEXPRESSION.out.counts_transcript // channel: [ val(meta), counts ]
-    stat                     = RSEM_CALCULATEEXPRESSION.out.stat              // channel: [ val(meta), stat ]
-    logs                     = RSEM_CALCULATEEXPRESSION.out.logs              // channel: [ val(meta), logs ]
-    bam_star                 = RSEM_CALCULATEEXPRESSION.out.bam_star          // channel: [ val(meta), bam ]
-    bam_genome               = RSEM_CALCULATEEXPRESSION.out.bam_genome        // channel: [ val(meta), bam ]
-    bam_transcript           = RSEM_CALCULATEEXPRESSION.out.bam_transcript    // channel: [ val(meta), bam ]
+    counts_gene              = ch_counts_gene       // channel: [ val(meta), counts ]
+    counts_transcript        = ch_counts_transcript // channel: [ val(meta), counts ]
+    stat                     = ch_stat              // channel: [ val(meta), stat ]
+    logs                     = ch_logs              // channel: [ val(meta), logs ]
+    bam_star                 = ch_bam_star          // channel: [ val(meta), bam ]
+    bam_genome               = ch_bam_genome        // channel: [ val(meta), bam ]
+    bam_transcript           = ch_bam_transcript    // channel: [ val(meta), bam ]
 
     bam                      = BAM_SORT_STATS_SAMTOOLS.out.bam                // channel: [ val(meta), [ bam ] ]
     bai                      = BAM_SORT_STATS_SAMTOOLS.out.bai                // channel: [ val(meta), [ bai ] ]

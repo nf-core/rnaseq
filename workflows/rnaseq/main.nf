@@ -281,7 +281,8 @@ workflow RNASEQ {
         QUANTIFY_RSEM (
             ch_strand_inferred_filtered_fastq,
             ch_rsem_index,
-            ch_fasta.map { [ [:], it ] }
+            ch_fasta.map { [ [:], it ] },
+            params.use_sentieon
         )
         ch_genome_bam       = QUANTIFY_RSEM.out.bam
         ch_genome_bam_index = QUANTIFY_RSEM.out.bai

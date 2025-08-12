@@ -1207,8 +1207,6 @@
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,54743154d0e8858980acffeb5b6f6a97",
                 "multiqc_featurecounts_biotype_plot.txt:md5,4ae746bfab7f24c39085661271ab3c57",
                 "multiqc_samtools_idxstats.txt:md5,58f19b28617037a2825f812d58d55e2e",
-                "multiqc_star_salmon_deseq2_clustering.txt:md5,7a04f82456c7f4594896e1f899bcba6e",
-                "multiqc_star_salmon_deseq2_pca.txt:md5,38aac4f79f8f58286ced85e93873ce72",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",

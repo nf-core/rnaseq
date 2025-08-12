@@ -1,3 +1,4 @@
+
 .DS_Store
 bbsplit/*.stats.txt
 fastqc/*/*.{html,zip}
@@ -67,6 +68,8 @@ umitools/*.umi_extract.log
 {multiqc,multiqc/**}/multiqc_report_data/multiqc_sortmerna.txt
 {multiqc,multiqc/**}/multiqc_report_data/multiqc_sources.txt
 {multiqc,multiqc/**}/multiqc_report_data/multiqc_star.txt
+{multiqc,multiqc/**}/multiqc_report_data/multiqc_star_salmon_deseq2_clustering.txt
+{multiqc,multiqc/**}/multiqc_report_data/multiqc_star_salmon_deseq2_pca.txt
 {multiqc,multiqc/**}/multiqc_report_data/multiqc_umitools_dedup.txt
 {multiqc,multiqc/**}/multiqc_report_data/picard_deduplication.txt
 {multiqc,multiqc/**}/multiqc_report_data/qualimap_genomic_origin.txt

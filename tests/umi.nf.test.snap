@@ -1328,8 +1328,6 @@
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,a8a003b61b03295c416f3eb66c1cca65",
                 "multiqc_featurecounts_biotype_plot.txt:md5,263834175c1a124e529c686b433fd005",
                 "multiqc_samtools_idxstats.txt:md5,bdf185faa6d15d22efedb39d38c84943",
-                "multiqc_star_salmon_deseq2_clustering.txt:md5,660b6dc84dfe7a6f5966fa5f1186dc31",
-                "multiqc_star_salmon_deseq2_pca.txt:md5,c11f602f270d823d35d22a1e08d253c1",
                 "multiqc_umitools_extract.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "qualimap_gene_coverage_profile_Counts.txt:md5,48d6c0b4df0f6f535a4526fc74b0fd47",
                 "qualimap_gene_coverage_profile_Normalised.txt:md5,8974b37cbdbbc2a23ca103a3a4c10dd4",

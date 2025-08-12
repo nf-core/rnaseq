@@ -167,6 +167,7 @@
                 "multiqc/multiqc_report_data/fastqc_trimmed_sequence_duplication_levels_plot.txt",
                 "multiqc/multiqc_report_data/fastqc_trimmed_top_overrepresented_sequences_table.txt",
                 "multiqc/multiqc_report_data/kallisto_alignment.txt",
+                "multiqc/multiqc_report_data/llms-full.txt",
                 "multiqc/multiqc_report_data/multiqc.log",
                 "multiqc/multiqc_report_data/multiqc_citations.txt",
                 "multiqc/multiqc_report_data/multiqc_cutadapt.txt",
@@ -270,9 +271,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.2"
+            "nextflow": "25.04.6"
         },
-        "timestamp": "2025-06-03T15:00:01.384299008"
+        "timestamp": "2025-08-12T11:53:08.867813862"
     },
     "Params: --pseudo_aligner kallisto --skip_qc --skip_alignment - stub": {
         "content": [

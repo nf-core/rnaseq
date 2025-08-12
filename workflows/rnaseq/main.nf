@@ -195,8 +195,8 @@ workflow RNASEQ {
             '',
             params.seq_center ?: '',
             is_aws_igenome,
-            params.use_sentieon,
-            ch_fasta.map { [ [:], it ] }
+            ch_fasta.map { [ [:], it ] },
+            params.use_sentieon
         )
         ch_genome_bam          = ALIGN_STAR.out.bam
         ch_genome_bam_index    = ALIGN_STAR.out.bai

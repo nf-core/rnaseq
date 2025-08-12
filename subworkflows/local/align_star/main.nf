@@ -33,31 +33,8 @@ workflow ALIGN_STAR {
     ch_bam_transcript = Channel.empty()
     ch_fastq = Channel.empty()
     ch_tab = Channel.empty()
-    if (is_aws_igenome) {
 
-        if (use_sentieon) {
-
-            // TODO: create a similar local copy for Sentieon acceleration
-
-        }
-        else {
-
-            STAR_ALIGN_IGENOMES(reads, index, gtf, star_ignore_sjdbgtf, seq_platform, seq_center)
-            ch_orig_bam = STAR_ALIGN_IGENOMES.out.bam
-            ch_log_final = STAR_ALIGN_IGENOMES.out.log_final
-            ch_log_out = STAR_ALIGN_IGENOMES.out.log_out
-            ch_log_progress = STAR_ALIGN_IGENOMES.out.log_progress
-            ch_bam_sorted = STAR_ALIGN_IGENOMES.out.bam_sorted
-            ch_bam_transcript = STAR_ALIGN_IGENOMES.out.bam_transcript
-            ch_fastq = STAR_ALIGN_IGENOMES.out.fastq
-            ch_tab = STAR_ALIGN_IGENOMES.out.tab
-            ch_versions = ch_versions.mix(STAR_ALIGN_IGENOMES.out.versions.first())
-
-        }
-    }
-    else {
-
-        if (use_sentieon) {
+    if (use_sentieon) {
 
             SENTIEON_STAR_ALIGN(reads, index, gtf, star_ignore_sjdbgtf, seq_platform, seq_center)
             ch_orig_bam = SENTIEON_STAR_ALIGN.out.bam
@@ -70,8 +47,22 @@ workflow ALIGN_STAR {
             ch_tab = SENTIEON_STAR_ALIGN.out.tab
             ch_versions = ch_versions.mix(SENTIEON_STAR_ALIGN.out.versions.first())
 
-        }
-        else {
+    } else {
+
+        if (is_aws_igenome) {
+
+            STAR_ALIGN_IGENOMES(reads, index, gtf, star_ignore_sjdbgtf, seq_platform, seq_center)
+            ch_orig_bam = STAR_ALIGN_IGENOMES.out.bam
+            ch_log_final = STAR_ALIGN_IGENOMES.out.log_final
+            ch_log_out = STAR_ALIGN_IGENOMES.out.log_out
+            ch_log_progress = STAR_ALIGN_IGENOMES.out.log_progress
+            ch_bam_sorted = STAR_ALIGN_IGENOMES.out.bam_sorted
+            ch_bam_transcript = STAR_ALIGN_IGENOMES.out.bam_transcript
+            ch_fastq = STAR_ALIGN_IGENOMES.out.fastq
+            ch_tab = STAR_ALIGN_IGENOMES.out.tab
+            ch_versions = ch_versions.mix(STAR_ALIGN_IGENOMES.out.versions.first())
+
+        } else {
 
             STAR_ALIGN(reads, index, gtf, star_ignore_sjdbgtf, seq_platform, seq_center)
             ch_orig_bam = STAR_ALIGN.out.bam

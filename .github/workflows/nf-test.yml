@@ -18,6 +18,8 @@ concurrency:
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  NFT_DIFF: "pdiff"
+  NFT_DIFF_ARGS: "--line-numbers --width 120 --expand-tabs=2"
   NFT_VER: "0.9.2"
   NFT_WORKDIR: "~"
   NXF_ANSI_LOG: false
@@ -50,7 +52,7 @@ jobs:
         env:
           NFT_VER: ${{ env.NFT_VER }}
         with:
-          max_shards: 7
+          max_shards: 14
 
       - name: debug
         run: |

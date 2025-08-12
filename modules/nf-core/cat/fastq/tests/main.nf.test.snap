@@ -1,0 +1,416 @@
+{
+    "test_cat_fastq_paired_end_no_files - stub": {
+        "content": [
+            "  Could not find any FASTQ file pairs to concatenate in the process input"
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
+        },
+        "timestamp": "2025-02-25T17:14:51.248685461"
+    },
+    "test_cat_fastq_single_end_single_file": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.merged.fastq.gz:md5,4161df271f9bfcd25d5845a1e220dbec"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,6ef4fd28546a005865b9454bbedbf81a"
+                ],
+                "reads": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.merged.fastq.gz:md5,4161df271f9bfcd25d5845a1e220dbec"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,6ef4fd28546a005865b9454bbedbf81a"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
+        },
+        "timestamp": "2025-02-25T17:24:04.902821069"
+    },
+    "test_cat_fastq_paired_end_same_name": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test_1.merged.fastq.gz:md5,3ad9406595fafec8172368f9cd0b6a22",
+                            "test_2.merged.fastq.gz:md5,a52cab0b840c7178b0ea83df1fdbe8d5"
+                        ]
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,6ef4fd28546a005865b9454bbedbf81a"
+                ],
+                "reads": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test_1.merged.fastq.gz:md5,3ad9406595fafec8172368f9cd0b6a22",
+                            "test_2.merged.fastq.gz:md5,a52cab0b840c7178b0ea83df1fdbe8d5"
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,6ef4fd28546a005865b9454bbedbf81a"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
+        },
+        "timestamp": "2025-02-25T17:23:57.476357974"
+    },
+    "test_cat_fastq_paired_end_same_name - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test_1.merged.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test_2.merged.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                        ]
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,6ef4fd28546a005865b9454bbedbf81a"
+                ],
+                "reads": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test_1.merged.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test_2.merged.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,6ef4fd28546a005865b9454bbedbf81a"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
+        },
+        "timestamp": "2025-02-25T17:24:34.615815265"
+    },
+    "test_cat_fastq_single_end": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.merged.fastq.gz:md5,ee314a9bd568d06617171b0c85f508da"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,6ef4fd28546a005865b9454bbedbf81a"
+                ],
+                "reads": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.merged.fastq.gz:md5,ee314a9bd568d06617171b0c85f508da"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,6ef4fd28546a005865b9454bbedbf81a"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
+        },
+        "timestamp": "2025-02-25T17:23:32.489874386"
+    },
+    "test_cat_fastq_single_end_same_name": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.merged.fastq.gz:md5,3ad9406595fafec8172368f9cd0b6a22"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,6ef4fd28546a005865b9454bbedbf81a"
+                ],
+                "reads": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.merged.fastq.gz:md5,3ad9406595fafec8172368f9cd0b6a22"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,6ef4fd28546a005865b9454bbedbf81a"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
+        },
+        "timestamp": "2025-02-25T17:23:49.184759506"
+    },
+    "test_cat_fastq_single_end - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.merged.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,6ef4fd28546a005865b9454bbedbf81a"
+                ],
+                "reads": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.merged.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,6ef4fd28546a005865b9454bbedbf81a"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
+        },
+        "timestamp": "2025-02-25T17:24:12.857293744"
+    },
+    "test_cat_fastq_paired_end_no_files": {
+        "content": [
+            "  Could not find any FASTQ file pairs to concatenate in the process input"
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
+        },
+        "timestamp": "2025-02-25T17:14:40.806088747"
+    },
+    "test_cat_fastq_single_end_no_files - stub": {
+        "content": [
+            "  Could not find any FASTQ files to concatenate in the process input"
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
+        },
+        "timestamp": "2025-02-25T17:14:45.852365218"
+    },
+    "test_cat_fastq_single_end_same_name - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.merged.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,6ef4fd28546a005865b9454bbedbf81a"
+                ],
+                "reads": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.merged.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,6ef4fd28546a005865b9454bbedbf81a"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
+        },
+        "timestamp": "2025-02-25T17:24:27.816080065"
+    },
+    "test_cat_fastq_paired_end": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test_1.merged.fastq.gz:md5,3ad9406595fafec8172368f9cd0b6a22",
+                            "test_2.merged.fastq.gz:md5,a52cab0b840c7178b0ea83df1fdbe8d5"
+                        ]
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,6ef4fd28546a005865b9454bbedbf81a"
+                ],
+                "reads": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test_1.merged.fastq.gz:md5,3ad9406595fafec8172368f9cd0b6a22",
+                            "test_2.merged.fastq.gz:md5,a52cab0b840c7178b0ea83df1fdbe8d5"
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,6ef4fd28546a005865b9454bbedbf81a"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
+        },
+        "timestamp": "2025-02-25T17:23:41.739469187"
+    },
+    "test_cat_fastq_single_end_no_files": {
+        "content": [
+            "  Could not find any FASTQ files to concatenate in the process input"
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
+        },
+        "timestamp": "2025-02-25T17:14:35.695192409"
+    },
+    "test_cat_fastq_paired_end - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test_1.merged.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test_2.merged.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                        ]
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,6ef4fd28546a005865b9454bbedbf81a"
+                ],
+                "reads": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test_1.merged.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test_2.merged.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,6ef4fd28546a005865b9454bbedbf81a"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
+        },
+        "timestamp": "2025-02-25T17:24:21.178950408"
+    },
+    "test_cat_fastq_single_end_single_file - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.merged.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,6ef4fd28546a005865b9454bbedbf81a"
+                ],
+                "reads": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.merged.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,6ef4fd28546a005865b9454bbedbf81a"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
+        },
+        "timestamp": "2025-02-25T17:24:40.851404993"
+    }
+}

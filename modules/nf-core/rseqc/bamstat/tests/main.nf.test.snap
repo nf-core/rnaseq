@@ -1,0 +1,68 @@
+{
+    "sarscov2 - [meta] - bam - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bam_stat.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,58f74a7ff9d2966142c81a4a4735dbf3"
+                ],
+                "txt": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bam_stat.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,58f74a7ff9d2966142c81a4a4735dbf3"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-21T09:16:13.970299"
+    },
+    "sarscov2 - [meta] - bam": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bam_stat.txt:md5,2675857864c1d1139b2a19d25dc36b09"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,58f74a7ff9d2966142c81a4a4735dbf3"
+                ],
+                "txt": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bam_stat.txt:md5,2675857864c1d1139b2a19d25dc36b09"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,58f74a7ff9d2966142c81a4a4735dbf3"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2023-12-14T17:00:23.830276754"
+    }
+}

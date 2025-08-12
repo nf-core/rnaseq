@@ -1,0 +1,184 @@
+nextflow_process {
+
+    name "Test Process UMITOOLS_DEDUP"
+    script "../main.nf"
+    process "UMITOOLS_DEDUP"
+
+
+    test("se - no stats") {
+        config "./nextflow.config"
+
+        when {
+            process {
+                """
+                get_output_stats = false
+
+                input[0] = [
+                    [ id:'test', single_end:true ], // meta map
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.single_end.umi.sorted.bam", checkIfExists: true),
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.single_end.umi.sorted.bam.bai", checkIfExists: true)
+                ]
+                input[1] = get_output_stats
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert path("${process.out.log[0][1]}").exists() },
+                { assert snapshot(
+                    bam(process.out.bam[0][1]).getSamLinesMD5(),
+                    process.out.versions).match() }
+            )
+        }
+    }
+
+    test("pe - no stats") {
+        config "./nextflow.config"
+
+        when {
+            process {
+                """
+                get_output_stats = false
+
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam", checkIfExists: true),
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam.bai", checkIfExists: true)
+                ]
+                input[1] = get_output_stats
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert path("${process.out.log[0][1]}").exists() },
+                { assert snapshot(
+                    bam(process.out.bam[0][1]).getSamLinesMD5(),
+                    process.out.versions).match() }
+            )
+        }
+    }
+
+    test("pe - with stats") {
+        config "./nextflow.config"
+
+        when {
+            process {
+                """
+                get_output_stats = true
+
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam", checkIfExists: true),
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam.bai", checkIfExists: true)
+                ]
+                input[1] = get_output_stats
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert path("${process.out.log[0][1]}").exists() },
+                { assert snapshot(
+                    bam(process.out.bam[0][1]).getSamLinesMD5(),
+                    process.out.tsv_edit_distance,
+                    process.out.tsv_per_umi,
+                    process.out.tsv_umi_per_position,
+                    process.out.versions).match() }
+            )
+        }
+    }
+
+    test("se - no stats - stub") {
+
+        options "-stub"
+
+        config "./nextflow.config"
+
+        when {
+            process {
+                """
+                get_output_stats = false
+
+                input[0] = [
+                    [ id:'test', single_end:true ], // meta map
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.single_end.umi.sorted.bam", checkIfExists: true),
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.single_end.umi.sorted.bam.bai", checkIfExists: true)
+                ]
+                input[1] = get_output_stats
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.bam).match() }
+            )
+        }
+    }
+
+    test("pe - no stats - stub") {
+
+        options "-stub"
+
+        config "./nextflow.config"
+
+        when {
+            process {
+                """
+                get_output_stats = false
+
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam", checkIfExists: true),
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam.bai", checkIfExists: true)
+                ]
+                input[1] = get_output_stats
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.bam).match() }
+            )
+        }
+    }
+
+    test("pe - with stats - stub") {
+
+        options "-stub"
+
+        config "./nextflow.config"
+
+        when {
+            process {
+                """
+                get_output_stats = true
+
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam", checkIfExists: true),
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam.bai", checkIfExists: true)
+                ]
+                input[1] = get_output_stats
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.bam).match() }
+            )
+        }
+    }
+}

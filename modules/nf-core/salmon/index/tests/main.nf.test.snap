@@ -1,0 +1,41 @@
+{
+    "sarscov2 stub": {
+        "content": [
+            "[complete_ref_lens.bin, ctable.bin, ctg_offsets.bin, duplicate_clusters.tsv, info.json, mphf.bin, pos.bin, pre_indexing.log, rank.bin, refAccumLengths.bin, ref_indexing.log, reflengths.bin, refseq.bin, seq.bin, versionInfo.json]",
+            [
+                "versions.yml:md5,85337fa0a286ea35073ee5260974e307"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2025-01-20T12:57:51.498323"
+    },
+    "sarscov2": {
+        "content": [
+            "[complete_ref_lens.bin, ctable.bin, ctg_offsets.bin, duplicate_clusters.tsv, info.json, mphf.bin, pos.bin, pre_indexing.log, rank.bin, refAccumLengths.bin, ref_indexing.log, reflengths.bin, refseq.bin, seq.bin, versionInfo.json]",
+            [
+                "versions.yml:md5,85337fa0a286ea35073ee5260974e307"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2025-01-20T12:57:33.474302"
+    },
+    "sarscov2 transcriptome only": {
+        "content": [
+            "[complete_ref_lens.bin, ctable.bin, ctg_offsets.bin, duplicate_clusters.tsv, info.json, mphf.bin, pos.bin, pre_indexing.log, rank.bin, refAccumLengths.bin, ref_indexing.log, reflengths.bin, refseq.bin, seq.bin, versionInfo.json]",
+            [
+                "versions.yml:md5,85337fa0a286ea35073ee5260974e307"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2025-01-20T12:57:42.420247"
+    }
+}

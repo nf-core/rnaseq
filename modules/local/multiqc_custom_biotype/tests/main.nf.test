@@ -1,0 +1,56 @@
+nextflow_process {
+
+    name "Test Process MULTIQC_CUSTOM_BIOTYPE"
+    script "../main.nf"
+    process "MULTIQC_CUSTOM_BIOTYPE"
+
+    test("test sarscov2 count data succesfully completes") {
+
+        when {
+            process {
+                """
+                input[0] = Channel.of(
+                    [
+                        [ id: 'test' ],
+                        file(params.pipelines_testdata_base_path + 'multiqc_custom_biotype/test.featureCounts.txt', checkIfExists: true)
+                    ]
+                )
+                input[1] = file(params.pipelines_testdata_base_path + 'multiqc_custom_biotype/biotypes_header.txt', checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success},
+                { assert snapshot(process.out).match()}
+            )
+        }
+    }
+
+    test("test sarscov2 count data - stub") {
+
+    options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = Channel.of(
+                    [
+                        [ id: 'test' ],
+                        file(params.pipelines_testdata_base_path + 'multiqc_custom_biotype/test.featureCounts.txt', checkIfExists: true)
+                    ]
+                )
+                input[1] = file(params.pipelines_testdata_base_path + 'multiqc_custom_biotype/biotypes_header.txt', checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success},
+                { assert snapshot(process.out).match()}
+            )
+        }
+    }
+}

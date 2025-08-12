@@ -1,0 +1,196 @@
+{
+    "sarscov2 paired-end": {
+        "content": [
+            "abundance.tsv:md5,f0a9a2543f8fc0c8442be0a939d70f66",
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.log:md5,cb46ef02463f63fec5aac31a4adcac94"
+                ]
+            ],
+            [
+                "versions.yml:md5,9956d7fa99ceece8d7ea0ec3e780d970"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-19T16:46:09.603634413"
+    },
+    "sarscov2 paired-end - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            
+                        ]
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.run_info.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    "versions.yml:md5,9956d7fa99ceece8d7ea0ec3e780d970"
+                ],
+                "json_info": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.run_info.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "log": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "results": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,9956d7fa99ceece8d7ea0ec3e780d970"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-19T16:46:38.620702213"
+    },
+    "sarscov2 single-end - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        [
+                            
+                        ]
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.run_info.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    "versions.yml:md5,9956d7fa99ceece8d7ea0ec3e780d970"
+                ],
+                "json_info": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.run_info.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "log": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "results": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        [
+                            
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,9956d7fa99ceece8d7ea0ec3e780d970"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-19T16:46:24.255840154"
+    },
+    "sarscov2 single-end": {
+        "content": [
+            "abundance.tsv:md5,8a4afe91e6a75b4e619daaf664eb7d9b",
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.log:md5,0cad96e4108b2ea1c152ad063198b21f"
+                ]
+            ],
+            [
+                "versions.yml:md5,9956d7fa99ceece8d7ea0ec3e780d970"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-19T16:45:56.782215718"
+    }
+}

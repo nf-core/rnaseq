@@ -1,0 +1,43 @@
+// nf-core subworkflows test bam_dedup_stats_samtools_umicollapse
+nextflow_workflow {
+
+    name "Test Subworkflow BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE"
+    script "../main.nf"
+    workflow "BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE"
+
+
+    test("sarscov2_bam_bai") {
+
+        when {
+            config "./paired-end-umis.config"
+            params {
+                outdir   = "$outputDir"
+            }
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'test'], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam.bai', checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(bam(workflow.out.bam[0][1]).getSamLinesMD5()).match("test_bam_dedup_stats_samtools_umicollapse_bam")},  // separate, because of linting error otherwise
+                { assert snapshot(workflow.out.versions).match("test_bam_dedup_stats_samtools_umicollapse_versions") },
+                { assert workflow.out.bam.get(0).get(1) ==~ ".*.bam"},
+                { assert workflow.out.bai.get(0).get(1) ==~ ".*.bai"},
+                { assert workflow.out.dedup_stats.get(0).get(1) ==~ ".*_UMICollapse.log"},
+                { assert snapshot(workflow.out.stats).match("test_bam_dedup_stats_samtools_umicollapse_stats") },
+                { assert snapshot(workflow.out.flagstat).match("test_bam_dedup_stats_samtools_umicollapse_flagstats") },
+                { assert snapshot(workflow.out.idxstats).match("test_bam_dedup_stats_samtools_umicollapse_idxstats") }
+            )
+        }
+
+}
+}
+

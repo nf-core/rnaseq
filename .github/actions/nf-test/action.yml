@@ -54,12 +54,22 @@ runs:
         conda-solver: libmamba
         conda-remove-defaults: true
 
+     # Set up secrets
+    - name: Set up Nextflow secrets
+      if: env.SENTIEON_ENCRYPTION_KEY != '' && env.SENTIEON_LICENSE_MESSAGE != ''
+      shell: bash
+      run: |
+        python -m pip install cryptography
+        nextflow secrets set SENTIEON_AUTH_DATA $(python3 bin/license_message.py encrypt --key "$SENTIEON_ENCRYPTION_KEY" --message "$SENTIEON_LICENSE_MESSAGE")
+
       # TODO Skip failing conda tests and document their failures
       # https://github.com/nf-core/modules/issues/7017
     - name: Run nf-test
       shell: bash
       env:
         NFT_WORKDIR: ${{ env.NFT_WORKDIR }}
+        SENTIEON_LICSRVR_IP: ${{ env.SENTIEON_LICSRVR_IP }}
+        SENTIEON_AUTH_MECH: "GitHub Actions - token"
       run: |
         nf-test test \
           --profile=+${{ inputs.profile }} \

@@ -386,8 +386,6 @@
                 "multiqc_cutadapt.txt:md5,583b7b9ba76b26162bb9610ed746454b",
                 "multiqc_fastqc_fastqc_raw.txt:md5,81c3c1a2575a1891a7f2a9637a0f2cc0",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,54743154d0e8858980acffeb5b6f6a97",
-                "multiqc_salmon_deseq2_clustering.txt:md5,2217f4bc1a92653b9455a671b4cdb682",
-                "multiqc_salmon_deseq2_pca.txt:md5,7c2e8d3774e16dc14b07f827e269ef80",
                 "ambig_info.tsv:md5,5e9128e825dd0173d1eda78709cebb47",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",

@@ -1081,8 +1081,6 @@
                 "multiqc_fastqc_fastqc_raw.txt:md5,81c3c1a2575a1891a7f2a9637a0f2cc0",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,54743154d0e8858980acffeb5b6f6a97",
                 "multiqc_featurecounts_biotype_plot.txt:md5,7023aeba8868687d17107a265791f096",
-                "multiqc_salmon_deseq2_clustering.txt:md5,24fe64e01002094b98b0cdd9536b1ffa",
-                "multiqc_salmon_deseq2_pca.txt:md5,fa953c552a460277f903dd1ab6ce888c",
                 "multiqc_samtools_idxstats.txt:md5,8b8f6cb092004918c18319a8cd64eb4c",
                 "multiqc_star_salmon_deseq2_clustering.txt:md5,aa63abb48aa85fff688ee4039b5cbb9c",
                 "multiqc_star_salmon_deseq2_pca.txt:md5,f7bb8aaa16052604786eef05b5790e72",

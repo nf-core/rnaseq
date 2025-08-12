@@ -1,15 +1,4 @@
 .DS_Store
-<<<<<<< HEAD
-multiqc/multiqc_data/fastqc_top_overrepresented_sequences_table.txt
-multiqc/multiqc_data/BETA-multiqc.parquet
-multiqc/multiqc_data/multiqc.log
-multiqc/multiqc_data/multiqc_data.json
-multiqc/multiqc_data/multiqc_sources.txt
-multiqc/multiqc_data/multiqc_software_versions.txt
-multiqc/multiqc_plots/{svg,pdf,png}/*.{svg,pdf,png}
-multiqc/multiqc_report.html
-fastqc/*_fastqc.{html,zip}
-=======
 fq_lint/*/*.fq_lint.txt
 bbsplit/*.stats.txt
 fastqc/*/*.{html,zip}
@@ -18,7 +7,6 @@ kallisto/*/abundance.{h5,tsv}
 kallisto/*/kallisto_quant.log
 kallisto/*/run_info.json
 kallisto/kallisto.*
->>>>>>> dev
 pipeline_info/*.{html,json,txt,yml}
 sortmerna/*.sortmerna.log
 star_rsem/*.stat/*.{cnt,model,theta}

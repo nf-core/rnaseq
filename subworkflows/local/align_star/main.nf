@@ -15,8 +15,8 @@ workflow ALIGN_STAR {
     seq_platform // string : sequencing platform
     seq_center // string : sequencing center
     is_aws_igenome // boolean: whether the genome files are from AWS iGenomes
-    use_sentieon // boolean: whether star alignment is accelerated with Sentieon
     fasta // channel: /path/to/fasta
+    use_sentieon // boolean: whether star alignment is accelerated with Sentieon
 
     main:
 
@@ -60,15 +60,15 @@ workflow ALIGN_STAR {
         if (use_sentieon) {
 
             SENTIEON_STAR_ALIGN(reads, index, gtf, star_ignore_sjdbgtf, seq_platform, seq_center)
-            ch_orig_bam = STAR_ALIGN.out.bam
-            ch_log_final = STAR_ALIGN.out.log_final
-            ch_log_out = STAR_ALIGN.out.log_out
-            ch_log_progress = STAR_ALIGN.out.log_progress
-            ch_bam_sorted = STAR_ALIGN.out.bam_sorted
-            ch_bam_transcript = STAR_ALIGN.out.bam_transcript
-            ch_fastq = STAR_ALIGN.out.fastq
-            ch_tab = STAR_ALIGN.out.tab
-            ch_versions = ch_versions.mix(STAR_ALIGN.out.versions.first())
+            ch_orig_bam = SENTIEON_STAR_ALIGN.out.bam
+            ch_log_final = SENTIEON_STAR_ALIGN.out.log_final
+            ch_log_out = SENTIEON_STAR_ALIGN.out.log_out
+            ch_log_progress = SENTIEON_STAR_ALIGN.out.log_progress
+            ch_bam_sorted = SENTIEON_STAR_ALIGN.out.bam_sorted
+            ch_bam_transcript = SENTIEON_STAR_ALIGN.out.bam_transcript
+            ch_fastq = SENTIEON_STAR_ALIGN.out.fastq
+            ch_tab = SENTIEON_STAR_ALIGN.out.tab
+            ch_versions = ch_versions.mix(SENTIEON_STAR_ALIGN.out.versions.first())
 
         }
         else {

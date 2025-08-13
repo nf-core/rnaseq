@@ -183,9 +183,17 @@ workflow PREPARE_GENOME {
             ch_versions         = ch_versions.mix(PREPROCESS_TRANSCRIPTS_FASTA_GENCODE.out.versions)
         }
     } else if (fasta_provided) {
-        // Build transcripts from genome if we have it
-        ch_transcript_fasta = MAKE_TRANSCRIPTS_FASTA(ch_fasta, ch_gtf).transcript_fasta
-        ch_versions         = ch_versions.mix(MAKE_TRANSCRIPTS_FASTA.out.versions)
+
+        if(use_sentieon){
+            // Build transcripts from genome if we have it
+            ch_transcript_fasta = SENTIEON_MAKE_TRANSCRIPTS_FASTA(ch_fasta, ch_gtf).transcript_fasta
+            ch_versions         = ch_versions.mix(SENTIEON_MAKE_TRANSCRIPTS_FASTA.out.versions)
+        } else {
+            // Build transcripts from genome if we have it
+            ch_transcript_fasta = MAKE_TRANSCRIPTS_FASTA(ch_fasta, ch_gtf).transcript_fasta
+            ch_versions         = ch_versions.mix(MAKE_TRANSCRIPTS_FASTA.out.versions)
+        }
+
     }
 
     //-------------------------------------------------------

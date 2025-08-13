@@ -22,7 +22,7 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                use_sentieon        = true
+                use_sentieon        = false
 
                 input[0] = Channel.of([
                     [ id:'test', strandedness: 'forward' ], // meta map
@@ -146,7 +146,7 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                use_sentieon        = true
+                use_sentieon        = false
 
                 input[0] = Channel.of([
                     [ id:'test', strandedness: 'forward' ], // meta map

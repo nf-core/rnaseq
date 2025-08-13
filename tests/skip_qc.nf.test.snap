@@ -251,6 +251,7 @@
                 "multiqc/star_salmon/multiqc_report_data/fastqc_trimmed_sequence_counts_plot.txt",
                 "multiqc/star_salmon/multiqc_report_data/fastqc_trimmed_sequence_duplication_levels_plot.txt",
                 "multiqc/star_salmon/multiqc_report_data/fastqc_trimmed_top_overrepresented_sequences_table.txt",
+                "multiqc/star_salmon/multiqc_report_data/llms-full.txt",
                 "multiqc/star_salmon/multiqc_report_data/multiqc.log",
                 "multiqc/star_salmon/multiqc_report_data/multiqc_citations.txt",
                 "multiqc/star_salmon/multiqc_report_data/multiqc_cutadapt.txt",
@@ -809,8 +810,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.2"
+            "nextflow": "25.04.6"
         },
-        "timestamp": "2025-06-03T18:32:24.98419919"
+        "timestamp": "2025-08-12T12:29:14.739888067"
     }
 }

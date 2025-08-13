@@ -808,6 +808,7 @@
                 "multiqc/hisat2/multiqc_report_data/hisat2_se_plot.txt",
                 "multiqc/hisat2/multiqc_report_data/junction_saturation_known.txt",
                 "multiqc/hisat2/multiqc_report_data/junction_saturation_novel.txt",
+                "multiqc/hisat2/multiqc_report_data/llms-full.txt",
                 "multiqc/hisat2/multiqc_report_data/multiqc.log",
                 "multiqc/hisat2/multiqc_report_data/multiqc_citations.txt",
                 "multiqc/hisat2/multiqc_report_data/multiqc_cutadapt.txt",
@@ -825,8 +826,8 @@
                 "multiqc/hisat2/multiqc_report_data/multiqc_rseqc_junction_annotation.txt",
                 "multiqc/hisat2/multiqc_report_data/multiqc_rseqc_read_distribution.txt",
                 "multiqc/hisat2/multiqc_report_data/multiqc_salmon.txt",
-                "multiqc/hisat2/multiqc_report_data/multiqc_sample-relationships.txt",
-                "multiqc/hisat2/multiqc_report_data/multiqc_sample-relationships_1.txt",
+                "multiqc/hisat2/multiqc_report_data/multiqc_salmon_deseq2_clustering.txt",
+                "multiqc/hisat2/multiqc_report_data/multiqc_salmon_deseq2_pca.txt",
                 "multiqc/hisat2/multiqc_report_data/multiqc_samtools_flagstat.txt",
                 "multiqc/hisat2/multiqc_report_data/multiqc_samtools_idxstats.txt",
                 "multiqc/hisat2/multiqc_report_data/multiqc_samtools_stats.txt",
@@ -921,8 +922,9 @@
                 "multiqc/hisat2/multiqc_report_plots/pdf/rseqc_read_distribution_plot-cnt.pdf",
                 "multiqc/hisat2/multiqc_report_plots/pdf/rseqc_read_distribution_plot-pct.pdf",
                 "multiqc/hisat2/multiqc_report_plots/pdf/rseqc_read_dups_plot.pdf",
+                "multiqc/hisat2/multiqc_report_plots/pdf/salmon_deseq2_clustering.pdf",
+                "multiqc/hisat2/multiqc_report_plots/pdf/salmon_deseq2_pca.pdf",
                 "multiqc/hisat2/multiqc_report_plots/pdf/salmon_plot.pdf",
-                "multiqc/hisat2/multiqc_report_plots/pdf/sample-relationships.pdf",
                 "multiqc/hisat2/multiqc_report_plots/pdf/samtools-flagstat-pct-table.pdf",
                 "multiqc/hisat2/multiqc_report_plots/pdf/samtools-flagstat-table.pdf",
                 "multiqc/hisat2/multiqc_report_plots/pdf/samtools-idxstats-mapped-reads-plot_Normalised_Counts-cnt.pdf",
@@ -991,8 +993,9 @@
                 "multiqc/hisat2/multiqc_report_plots/png/rseqc_read_distribution_plot-cnt.png",
                 "multiqc/hisat2/multiqc_report_plots/png/rseqc_read_distribution_plot-pct.png",
                 "multiqc/hisat2/multiqc_report_plots/png/rseqc_read_dups_plot.png",
+                "multiqc/hisat2/multiqc_report_plots/png/salmon_deseq2_clustering.png",
+                "multiqc/hisat2/multiqc_report_plots/png/salmon_deseq2_pca.png",
                 "multiqc/hisat2/multiqc_report_plots/png/salmon_plot.png",
-                "multiqc/hisat2/multiqc_report_plots/png/sample-relationships.png",
                 "multiqc/hisat2/multiqc_report_plots/png/samtools-flagstat-pct-table.png",
                 "multiqc/hisat2/multiqc_report_plots/png/samtools-flagstat-table.png",
                 "multiqc/hisat2/multiqc_report_plots/png/samtools-idxstats-mapped-reads-plot_Normalised_Counts-cnt.png",
@@ -1061,8 +1064,9 @@
                 "multiqc/hisat2/multiqc_report_plots/svg/rseqc_read_distribution_plot-cnt.svg",
                 "multiqc/hisat2/multiqc_report_plots/svg/rseqc_read_distribution_plot-pct.svg",
                 "multiqc/hisat2/multiqc_report_plots/svg/rseqc_read_dups_plot.svg",
+                "multiqc/hisat2/multiqc_report_plots/svg/salmon_deseq2_clustering.svg",
+                "multiqc/hisat2/multiqc_report_plots/svg/salmon_deseq2_pca.svg",
                 "multiqc/hisat2/multiqc_report_plots/svg/salmon_plot.svg",
-                "multiqc/hisat2/multiqc_report_plots/svg/sample-relationships.svg",
                 "multiqc/hisat2/multiqc_report_plots/svg/samtools-flagstat-pct-table.svg",
                 "multiqc/hisat2/multiqc_report_plots/svg/samtools-flagstat-table.svg",
                 "multiqc/hisat2/multiqc_report_plots/svg/samtools-idxstats-mapped-reads-plot_Normalised_Counts-cnt.svg",
@@ -1328,8 +1332,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.2"
+            "nextflow": "25.04.6"
         },
-        "timestamp": "2025-06-04T11:42:03.435738205"
+        "timestamp": "2025-08-12T11:48:58.018707447"
     }
 }

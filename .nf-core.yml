@@ -10,7 +10,7 @@ lint:
   nextflow_config:
     - config_defaults:
         - params.ribo_database_manifest
-nf_core_version: 3.3.1
+nf_core_version: 3.3.2
 repository_type: pipeline
 template:
   author: "Harshil Patel, Phil Ewels, Rickard Hammarén"

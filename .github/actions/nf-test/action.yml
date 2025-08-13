@@ -60,7 +60,7 @@ runs:
       shell: bash
       run: |
         python -m pip install cryptography
-        nextflow secrets set SENTIEON_AUTH_DATA $(python3 bin/license_message.py encrypt --key "$SENTIEON_ENCRYPTION_KEY" --message "$SENTIEON_LICENSE_MESSAGE")
+        nextflow secrets set SENTIEON_AUTH_DATA $(python3 .github/actions/nf-test/license_message.py encrypt --key "$SENTIEON_ENCRYPTION_KEY" --message "$SENTIEON_LICENSE_MESSAGE")
 
     - name: Run nf-test
       shell: bash

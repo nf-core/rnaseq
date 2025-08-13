@@ -70,7 +70,7 @@ nextflow_workflow {
         tag "sentieon"
         setup {
             run("SENTIEON_RSEMPREPAREREFERENCE") {
-                script "../../../../modules/nf-core/rsem/preparereference/main.nf"
+                script "../../../../modules/nf-core/sentieon/rsempreparereference/main.nf"
                 process {
                     """
                     input[0] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
@@ -176,7 +176,7 @@ nextflow_workflow {
 
         setup {
             run("SENTIEON_RSEMPREPAREREFERENCE") {
-                script "../../../../modules/nf-core/rsem/preparereference/main.nf"
+                script "../../../../modules/nf-core/sentieon/rsempreparereference/main.nf"
                 process {
                     """
                     input[0] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))

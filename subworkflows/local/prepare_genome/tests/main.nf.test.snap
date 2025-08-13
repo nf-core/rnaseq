@@ -2313,7 +2313,7 @@
         },
         "timestamp": "2025-01-22T16:25:54.053589157"
     },
-    "use_sentieon": {
+    "use_sentieon = true": {
         "content": [
             [
                 "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"

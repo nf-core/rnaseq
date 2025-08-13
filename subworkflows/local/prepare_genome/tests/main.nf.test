@@ -87,7 +87,8 @@ nextflow_workflow {
                 skip_bbsplit             = false
                 skip_sortmerna           = true
                 skip_alignment           = false
-                skip_pseudo_alignment    = false\nuse_sentieon             = false
+                skip_pseudo_alignment    = false
+                use_sentieon             = false
                 use_sentieon             = false
 
                 input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
@@ -156,7 +157,7 @@ nextflow_workflow {
                 skip_bbsplit             = false
                 skip_sortmerna           = true
                 skip_alignment           = false
-                skip_pseudo_alignment    = false\nuse_sentieon             = false
+                skip_pseudo_alignment    = false
                 use_sentieon             = false
 
                 input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
@@ -225,7 +226,7 @@ nextflow_workflow {
                 skip_bbsplit             = true
                 skip_sortmerna           = true
                 skip_alignment           = false
-                skip_pseudo_alignment    = false\nuse_sentieon             = false
+                skip_pseudo_alignment    = false
                 use_sentieon             = false
 
                 input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)

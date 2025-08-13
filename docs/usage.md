@@ -143,7 +143,7 @@ Note that `--skip_alignment` and `--skip_pseudo_alignment` prevent both the exec
 
 The STAR aligner can be accelerated through its Sentieon implemention using the parameter `--use_sentieon`.
 
-Sentieon is a commercial solution to process genomics data. Sentieon's tooling contains an accelerated version of the [`STAR` aligner](https://support.sentieon.com/manual/usages/general/?highlight=star#star-binary), which nf-core/rnaseq support. In order to use those functions, the user will need to supply a license for Sentieon.
+Sentieon is a commercial solution to process genomics data, requiring a paid license. Sentieon's tooling contains an accelerated version of the [`STAR` aligner](https://support.sentieon.com/manual/usages/general/?highlight=star#star-binary), which nf-core/rnaseq supports. In order to use those functions, the user will need to supply a license for Sentieon.
 
 Sentieon supply license in the form of a string-value (a url) or a file. It should be base64-encoded and stored in a nextflow secret named `SENTIEON_LICENSE_BASE64`. If a license string (url) is supplied, then the nextflow secret should be set like this:
 

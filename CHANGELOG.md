@@ -12,10 +12,14 @@ Special thanks to the following for their contributions to the release:
 - [Jonathan Manning](https://github.com/pinin4fjords)
 - [Maxime Garcia](https://github.com/maxulysse)
 - [Friederike Hanssen](https://github.com/friederikehanssen)
+- [Ido Tamir](https://github.com/idot)
+- [Usman Rashid](https://github.com/GallVp)
 
 ### Enhancements & fixes
 
 - [PR #1568](https://github.com/nf-core/rnaseq/pull/1568) - Bump version after release 3.19.0
+- [PR #1571](https://github.com/nf-core/rnaseq/pull/1571) - For umitools use only umi_dedup.sorted.log in multiqc_report
+- [PR #1573](https://github.com/nf-core/rnaseq/pull/1573) - Fix salmon.merged.SummarizedExperiment.rds name collision
 - [PR #1585](https://github.com/nf-core/rnaseq/pull/1585) - Update awsfulltest.yml to restore aligner-wise outputs
 - [PR #1580](https://github.com/nf-core/rnaseq/pull/1580) - Template update for nf-core/tools v3.3.2
 - [PR #1590](https://github.com/nf-core/rnaseq/pull/1590) - Addition of Sentieon STAR

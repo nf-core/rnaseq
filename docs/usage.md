@@ -46,19 +46,16 @@ If you set the strandedness value to `auto`, the pipeline will sub-sample the in
 #### Usage Examples
 
 1. **Forward Stranded Sample:**
-
    - Forward fraction: 0.85
    - Reverse fraction: 0.15
    - **Classification:** Forward stranded
 
 2. **Reverse Stranded Sample:**
-
    - Forward fraction: 0.1
    - Reverse fraction: 0.9
    - **Classification:** Reverse stranded
 
 3. **Unstranded Sample:**
-
    - Forward fraction: 0.45
    - Reverse fraction: 0.55
    - **Classification:** Unstranded

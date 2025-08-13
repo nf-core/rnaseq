@@ -372,8 +372,8 @@
             "nextflow": "24.04.2"
         },
         "timestamp": "2024-07-03T19:53:14.561568"
-    }
-     "homo_sapiens - sentieon": {
+    },
+    "homo_sapiens - sentieon": {
         "content": [
             "test.log",
             [

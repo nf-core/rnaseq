@@ -29,6 +29,8 @@ include { SALMON_INDEX                      } from '../../../modules/nf-core/sal
 include { KALLISTO_INDEX                    } from '../../../modules/nf-core/kallisto/index'
 include { RSEM_PREPAREREFERENCE as RSEM_PREPAREREFERENCE_GENOME } from '../../../modules/nf-core/rsem/preparereference'
 include { RSEM_PREPAREREFERENCE as MAKE_TRANSCRIPTS_FASTA       } from '../../../modules/nf-core/rsem/preparereference'
+include { SENTIEON_RSEMPREPAREREFERENCE as SENTIEON_RSEM_PREPAREREFERENCE_GENOME } from '../../../modules/nf-core/sentieon/rsempreparereference'
+include { SENTIEON_RSEMPREPAREREFERENCE as SENTIEON_MAKE_TRANSCRIPTS_FASTA       } from '../../../modules/nf-core/sentieon/rsempreparereference'
 
 include { PREPROCESS_TRANSCRIPTS_FASTA_GENCODE } from '../../../modules/local/preprocess_transcripts_fasta_gencode'
 include { GTF2BED                              } from '../../../modules/local/gtf2bed'
@@ -63,6 +65,7 @@ workflow PREPARE_GENOME {
     skip_sortmerna           // boolean: Skip sortmerna for removal of reads mapping to sequences in sortmerna_fasta_list
     skip_alignment           // boolean: Skip all of the alignment-based processes within the pipeline
     skip_pseudo_alignment    // boolean: Skip all of the pseudoalignment-based processes within the pipeline
+    use_sentieon             // boolean: whether to use sentieon STAR version
 
     main:
     // Versions collector
@@ -320,8 +323,15 @@ workflow PREPARE_GENOME {
             }
         }
         else if (fasta_provided) {
-            ch_rsem_index = RSEM_PREPAREREFERENCE_GENOME(ch_fasta, ch_gtf).index
-            ch_versions   = ch_versions.mix(RSEM_PREPAREREFERENCE_GENOME.out.versions)
+
+            if(use_sentieon){
+                ch_rsem_index = SENTIEON_RSEM_PREPAREREFERENCE_GENOME(ch_fasta, ch_gtf).index
+                ch_versions   = ch_versions.mix(SENTIEON_RSEM_PREPAREREFERENCE_GENOME.out.versions)
+            }else{
+                ch_rsem_index = RSEM_PREPAREREFERENCE_GENOME(ch_fasta, ch_gtf).index
+                ch_versions   = ch_versions.mix(RSEM_PREPAREREFERENCE_GENOME.out.versions)
+            }
+
         }
     }
 

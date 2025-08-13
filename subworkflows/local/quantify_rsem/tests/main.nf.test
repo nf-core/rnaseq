@@ -69,7 +69,7 @@ nextflow_workflow {
     test("homo_sapiens - sentieon") {
         tag "sentieon"
         setup {
-            run("RSEM_PREPAREREFERENCE") {
+            run("SENTIEON_RSEMPREPAREREFERENCE") {
                 script "../../../../modules/nf-core/rsem/preparereference/main.nf"
                 process {
                     """
@@ -92,7 +92,7 @@ nextflow_workflow {
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
                 ])
-                input[1] = RSEM_PREPAREREFERENCE.out.index
+                input[1] = SENTIEON_RSEMPREPAREREFERENCE.out.index
                 input[2] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
                 input[3] = use_sentieon
                 """
@@ -175,7 +175,7 @@ nextflow_workflow {
         options "-stub"
 
         setup {
-            run("RSEM_PREPAREREFERENCE") {
+            run("SENTIEON_RSEMPREPAREREFERENCE") {
                 script "../../../../modules/nf-core/rsem/preparereference/main.nf"
                 process {
                     """
@@ -198,7 +198,7 @@ nextflow_workflow {
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
                 ])
-                input[1] = RSEM_PREPAREREFERENCE.out.index
+                input[1] = SENTIEON_RSEMPREPAREREFERENCE.out.index
                 input[2] = Channel.of([[id:'test'], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)])
                 input[3] = use_sentieon
                 """

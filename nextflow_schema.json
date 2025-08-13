@@ -388,7 +388,7 @@
                     "fa_icon": "fas fa-map-signs",
                     "enum": ["star_salmon", "star_rsem", "hisat2"]
                 },
-                "use_sentieon": {
+                "use_sentieon_star": {
                     "type": "boolean",
                     "description": "Optionally accelerate STAR with Sentieon",
                     "fa_icon": "fas fa-running"

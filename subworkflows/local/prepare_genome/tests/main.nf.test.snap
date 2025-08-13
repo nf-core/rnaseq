@@ -2313,7 +2313,7 @@
         },
         "timestamp": "2025-01-22T16:25:54.053589157"
     },
-    "use_sentieon = true": {
+    "use_sentieon_star = true": {
         "content": [
             [
                 "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
@@ -2368,7 +2368,7 @@
         },
         "timestamp": "2025-06-04T14:43:23.956364009"
     },
-    "use_sentieon - stub": {
+    "use_sentieon_star - stub": {
         "content": [
             [
                 "genome_transcriptome.fasta.sizes:md5,d41d8cd98f00b204e9800998ecf8427e"

@@ -65,7 +65,7 @@ workflow PREPARE_GENOME {
     skip_sortmerna           // boolean: Skip sortmerna for removal of reads mapping to sequences in sortmerna_fasta_list
     skip_alignment           // boolean: Skip all of the alignment-based processes within the pipeline
     skip_pseudo_alignment    // boolean: Skip all of the pseudoalignment-based processes within the pipeline
-    use_sentieon             // boolean: whether to use sentieon STAR version
+    use_sentieon_star             // boolean: whether to use sentieon STAR version
 
     main:
     // Versions collector
@@ -184,7 +184,7 @@ workflow PREPARE_GENOME {
         }
     } else if (fasta_provided) {
 
-        if(use_sentieon){
+        if(use_sentieon_star){
             // Build transcripts from genome if we have it
             ch_transcript_fasta = SENTIEON_MAKE_TRANSCRIPTS_FASTA(ch_fasta, ch_gtf).transcript_fasta
             ch_versions         = ch_versions.mix(SENTIEON_MAKE_TRANSCRIPTS_FASTA.out.versions)
@@ -332,7 +332,7 @@ workflow PREPARE_GENOME {
         }
         else if (fasta_provided) {
 
-            if(use_sentieon){
+            if(use_sentieon_star){
                 ch_rsem_index = SENTIEON_RSEM_PREPAREREFERENCE_GENOME(ch_fasta, ch_gtf).index
                 ch_versions   = ch_versions.mix(SENTIEON_RSEM_PREPAREREFERENCE_GENOME.out.versions)
             }else{

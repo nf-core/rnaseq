@@ -141,7 +141,7 @@ Note that `--skip_alignment` and `--skip_pseudo_alignment` prevent both the exec
 
 ### Sentieon acceleration for STAR
 
-The STAR aligner can be accelerated through its Sentieon implemention using the parameter `--use_sentieon`.
+The STAR aligner can be accelerated through its Sentieon implemention using the parameter `--use_sentieon_star`.
 
 Sentieon is a commercial solution to process genomics data, requiring a paid license. Sentieon's tooling contains an accelerated version of the [`STAR` aligner](https://support.sentieon.com/manual/usages/general/?highlight=star#star-binary), which nf-core/rnaseq supports. In order to use those functions, the user will need to supply a license for Sentieon.
 

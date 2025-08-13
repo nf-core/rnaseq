@@ -1,5 +1,5 @@
 {
-    "Params: default --use_sentieon - stub": {
+    "Params: default --use_sentieon_star - stub": {
         "content": [
             27,
             {
@@ -100,7 +100,7 @@
         },
         "timestamp": "2025-01-28T13:26:07.890871152"
     },
-    "Params: default --use_sentieon": {
+    "Params: default --use_sentieon_star": {
         "content": [
             209,
             {

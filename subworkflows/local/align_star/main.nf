@@ -16,7 +16,7 @@ workflow ALIGN_STAR {
     seq_center          // string : sequencing center
     is_aws_igenome      // boolean: whether the genome files are from AWS iGenomes
     fasta               // channel: /path/to/fasta
-    use_sentieon        // boolean: whether star alignment is accelerated with Sentieon
+    use_sentieon_star   // boolean: whether star alignment is accelerated with Sentieon
 
     main:
 
@@ -34,7 +34,7 @@ workflow ALIGN_STAR {
     ch_fastq = Channel.empty()
     ch_tab = Channel.empty()
 
-    if (use_sentieon) {
+    if (use_sentieon_star) {
 
         SENTIEON_STAR_ALIGN(reads, index, gtf, star_ignore_sjdbgtf, seq_platform, seq_center)
         ch_orig_bam = SENTIEON_STAR_ALIGN.out.bam

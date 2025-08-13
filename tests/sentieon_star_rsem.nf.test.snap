@@ -1,5 +1,5 @@
 {
-    "Params: --aligner star_rsem --use_sentieon": {
+    "Params: --aligner star_rsem --use_sentieon_star": {
         "content": [
             201,
             {
@@ -1297,7 +1297,7 @@
         },
         "timestamp": "2025-08-12T12:46:35.67191347"
     },
-    "Params: --aligner star_rsem --use_sentieon - stub": {
+    "Params: --aligner star_rsem --use_sentieon_star - stub": {
         "content": [
             27,
             {

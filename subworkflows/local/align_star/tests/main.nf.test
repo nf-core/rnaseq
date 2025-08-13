@@ -32,7 +32,7 @@ nextflow_workflow {
                 seq_platform        = 'illumina'
                 seq_center          = false
                 is_aws_igenome      = false
-                use_sentieon        = false
+                use_sentieon_star   = false
 
                 input[0] = Channel.of([
                     [ id:'test', single_end:false ], // meta map
@@ -54,7 +54,7 @@ nextflow_workflow {
                     [ id:'test_fasta' ],
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
                 ])
-                input[8] = use_sentieon
+                input[8] = use_sentieon_star
                 """
             }
         }
@@ -107,7 +107,7 @@ nextflow_workflow {
                 seq_platform        = 'illumina'
                 seq_center          = false
                 is_aws_igenome      = false
-                use_sentieon        = true
+                use_sentieon_star   = true
 
                 input[0] = Channel.of([
                     [ id:'test', single_end:false ], // meta map
@@ -129,7 +129,7 @@ nextflow_workflow {
                     [ id:'test_fasta' ],
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
                 ])
-                input[8] = use_sentieon
+                input[8] = use_sentieon_star
                 """
             }
         }
@@ -176,7 +176,7 @@ nextflow_workflow {
                 seq_platform        = 'illumina'
                 seq_center          = false
                 is_aws_igenome      = true
-                use_sentieon        = false
+                use_sentieon_star   = false
 
                 input[0] = Channel.of([
                     [ id:'test', single_end:false ], // meta map
@@ -198,7 +198,7 @@ nextflow_workflow {
                     [ id:'test_fasta' ],
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
                 ])
-                input[8] = use_sentieon
+                input[8] = use_sentieon_star
                 """
             }
         }
@@ -253,7 +253,7 @@ nextflow_workflow {
                 seq_platform        = 'illumina'
                 seq_center          = false
                 is_aws_igenome      = false
-                use_sentieon        = false
+                use_sentieon_star   = false
 
                 input[0] = Channel.of([
                     [ id:'test', single_end:false ], // meta map
@@ -275,7 +275,7 @@ nextflow_workflow {
                     [ id:'test_fasta' ],
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
                 ])
-                input[8] = use_sentieon
+                input[8] = use_sentieon_star
                 """
             }
         }
@@ -331,7 +331,7 @@ nextflow_workflow {
                 seq_platform        = 'illumina'
                 seq_center          = false
                 is_aws_igenome      = false
-                use_sentieon        = true
+                use_sentieon_star   = true
 
                 input[0] = Channel.of([
                     [ id:'test', single_end:false ], // meta map
@@ -353,7 +353,7 @@ nextflow_workflow {
                     [ id:'test_fasta' ],
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
                 ])
-                input[8] = use_sentieon
+                input[8] = use_sentieon_star
                 """
             }
         }
@@ -403,7 +403,7 @@ nextflow_workflow {
                 seq_platform        = 'illumina'
                 seq_center          = false
                 is_aws_igenome      = true
-                use_sentieon        = false
+                use_sentieon_star   = false
 
                 input[0] = Channel.of([
                     [ id:'test', single_end:false ], // meta map
@@ -425,7 +425,7 @@ nextflow_workflow {
                     [ id:'test_fasta' ],
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
                 ])
-                input[8] = use_sentieon
+                input[8] = use_sentieon_star
                 """
             }
         }

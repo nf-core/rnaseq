@@ -12,7 +12,7 @@ workflow QUANTIFY_RSEM {
     reads        // channel: [ val(meta), [ reads ] ]
     index        // channel: /path/to/rsem/index/
     fasta        // channel: [ val(meta), [ fasta ] ]
-    use_sentieon // boolean: determines whether RSEM is run with Sentieon accelerated STAR
+    use_sentieon_star // boolean: determines whether RSEM is run with Sentieon accelerated STAR
 
     main:
 
@@ -21,7 +21,7 @@ workflow QUANTIFY_RSEM {
     //
     // Quantify reads with RSEM
     //
-    if (use_sentieon){
+    if (use_sentieon_star){
 
         SENTIEON_RSEMCALCULATEEXPRESSION ( reads, index )
 

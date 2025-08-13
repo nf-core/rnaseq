@@ -22,7 +22,7 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                use_sentieon        = false
+                use_sentieon_star        = false
 
                 input[0] = Channel.of([
                     [ id:'test', strandedness: 'forward' ], // meta map
@@ -33,7 +33,7 @@ nextflow_workflow {
                 ])
                 input[1] = RSEM_PREPAREREFERENCE.out.index
                 input[2] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
-                input[3] = use_sentieon
+                input[3] = use_sentieon_star
                 """
             }
         }
@@ -83,7 +83,7 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                use_sentieon        = true
+                use_sentieon_star        = true
 
                 input[0] = Channel.of([
                     [ id:'test', strandedness: 'forward' ], // meta map
@@ -94,7 +94,7 @@ nextflow_workflow {
                 ])
                 input[1] = SENTIEON_RSEMPREPAREREFERENCE.out.index
                 input[2] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
-                input[3] = use_sentieon
+                input[3] = use_sentieon_star
                 """
             }
         }
@@ -146,7 +146,7 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                use_sentieon        = false
+                use_sentieon_star        = false
 
                 input[0] = Channel.of([
                     [ id:'test', strandedness: 'forward' ], // meta map
@@ -157,7 +157,7 @@ nextflow_workflow {
                 ])
                 input[1] = RSEM_PREPAREREFERENCE.out.index
                 input[2] = Channel.of([[id:'test'], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)])
-                input[3] = use_sentieon
+                input[3] = use_sentieon_star
                 """
             }
         }
@@ -189,7 +189,7 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                use_sentieon        = true
+                use_sentieon_star        = true
 
                 input[0] = Channel.of([
                     [ id:'test', strandedness: 'forward' ], // meta map
@@ -200,7 +200,7 @@ nextflow_workflow {
                 ])
                 input[1] = SENTIEON_RSEMPREPAREREFERENCE.out.index
                 input[2] = Channel.of([[id:'test'], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)])
-                input[3] = use_sentieon
+                input[3] = use_sentieon_star
                 """
             }
         }

@@ -4,13 +4,13 @@ nextflow_pipeline {
     script "../main.nf"
     tag "pipeline"
 
-    test("Params: --aligner star_rsem --use_sentieon") {
+    test("Params: --aligner star_rsem --use_sentieon_star") {
 
         when {
             params {
                 outdir = "$outputDir"
                 aligner = 'star_rsem'
-                use_sentieon = true
+                use_sentieon_star = true
             }
         }
 
@@ -35,7 +35,7 @@ nextflow_pipeline {
         }
     }
 
-    test("Params: --aligner star_rsem --use_sentieon - stub") {
+    test("Params: --aligner star_rsem --use_sentieon_star - stub") {
 
         options "-stub"
 
@@ -43,7 +43,7 @@ nextflow_pipeline {
             params {
                 outdir = "$outputDir"
                 aligner = 'star_rsem'
-                use_sentieon = true
+                use_sentieon_star = true
             }
         }
 

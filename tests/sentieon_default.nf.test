@@ -4,12 +4,12 @@ nextflow_pipeline {
     script "../main.nf"
     tag "pipeline"
 
-    test("Params: default --use_sentieon") {
+    test("Params: default --use_sentieon_star") {
 
         when {
             params {
                 outdir = "$outputDir"
-                use_sentieon = true
+                use_sentieon_star= true
             }
         }
 
@@ -34,14 +34,14 @@ nextflow_pipeline {
         }
     }
 
-    test("Params: default --use_sentieon - stub") {
+    test("Params: default --use_sentieon_star - stub") {
 
         options "-stub"
 
         when {
             params {
                 outdir = "$outputDir"
-                use_sentieon = true
+                use_sentieon_star = true
             }
         }
 

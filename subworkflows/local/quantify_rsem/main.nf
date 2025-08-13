@@ -9,9 +9,9 @@ include { SENTIEON_RSEMCALCULATEEXPRESSION } from '../../../modules/nf-core/sent
 
 workflow QUANTIFY_RSEM {
     take:
-    reads // channel: [ val(meta), [ reads ] ]
-    index // channel: /path/to/rsem/index/
-    fasta // channel: [ val(meta), [ fasta ] ]
+    reads        // channel: [ val(meta), [ reads ] ]
+    index        // channel: /path/to/rsem/index/
+    fasta        // channel: [ val(meta), [ fasta ] ]
     use_sentieon // boolean: determines whether RSEM is run with Sentieon accelerated STAR
 
     main:

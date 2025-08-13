@@ -1,22 +1,22 @@
 //
 // Alignment with STAR
 //
-include { SENTIEON_STARALIGN as SENTIEON_STAR_ALIGN} from '../../../modules/nf-core/sentieon/staralign/main'
+include { SENTIEON_STARALIGN as SENTIEON_STAR_ALIGN } from '../../../modules/nf-core/sentieon/staralign/main'
 include { STAR_ALIGN } from '../../../modules/nf-core/star/align'
 include { STAR_ALIGN_IGENOMES } from '../../../modules/local/star_align_igenomes'
 include { BAM_SORT_STATS_SAMTOOLS } from '../../nf-core/bam_sort_stats_samtools'
 
 workflow ALIGN_STAR {
     take:
-    reads // channel: [ val(meta), [ reads ] ]
-    index // channel: [ val(meta), [ index ] ]
-    gtf // channel: [ val(meta), [ gtf ] ]
+    reads               // channel: [ val(meta), [ reads ] ]
+    index               // channel: [ val(meta), [ index ] ]
+    gtf                 // channel: [ val(meta), [ gtf ] ]
     star_ignore_sjdbgtf // boolean: when using pre-built STAR indices do not re-extract and use splice junctions from the GTF file
-    seq_platform // string : sequencing platform
-    seq_center // string : sequencing center
-    is_aws_igenome // boolean: whether the genome files are from AWS iGenomes
-    fasta // channel: /path/to/fasta
-    use_sentieon // boolean: whether star alignment is accelerated with Sentieon
+    seq_platform        // string : sequencing platform
+    seq_center          // string : sequencing center
+    is_aws_igenome      // boolean: whether the genome files are from AWS iGenomes
+    fasta               // channel: /path/to/fasta
+    use_sentieon        // boolean: whether star alignment is accelerated with Sentieon
 
     main:
 
@@ -36,18 +36,18 @@ workflow ALIGN_STAR {
 
     if (use_sentieon) {
 
-            SENTIEON_STAR_ALIGN(reads, index, gtf, star_ignore_sjdbgtf, seq_platform, seq_center)
-            ch_orig_bam = SENTIEON_STAR_ALIGN.out.bam
-            ch_log_final = SENTIEON_STAR_ALIGN.out.log_final
-            ch_log_out = SENTIEON_STAR_ALIGN.out.log_out
-            ch_log_progress = SENTIEON_STAR_ALIGN.out.log_progress
-            ch_bam_sorted = SENTIEON_STAR_ALIGN.out.bam_sorted
-            ch_bam_transcript = SENTIEON_STAR_ALIGN.out.bam_transcript
-            ch_fastq = SENTIEON_STAR_ALIGN.out.fastq
-            ch_tab = SENTIEON_STAR_ALIGN.out.tab
-            ch_versions = ch_versions.mix(SENTIEON_STAR_ALIGN.out.versions.first())
-
-    } else {
+        SENTIEON_STAR_ALIGN(reads, index, gtf, star_ignore_sjdbgtf, seq_platform, seq_center)
+        ch_orig_bam = SENTIEON_STAR_ALIGN.out.bam
+        ch_log_final = SENTIEON_STAR_ALIGN.out.log_final
+        ch_log_out = SENTIEON_STAR_ALIGN.out.log_out
+        ch_log_progress = SENTIEON_STAR_ALIGN.out.log_progress
+        ch_bam_sorted = SENTIEON_STAR_ALIGN.out.bam_sorted
+        ch_bam_transcript = SENTIEON_STAR_ALIGN.out.bam_transcript
+        ch_fastq = SENTIEON_STAR_ALIGN.out.fastq
+        ch_tab = SENTIEON_STAR_ALIGN.out.tab
+        ch_versions = ch_versions.mix(SENTIEON_STAR_ALIGN.out.versions.first())
+    }
+    else {
 
         if (is_aws_igenome) {
 
@@ -61,8 +61,8 @@ workflow ALIGN_STAR {
             ch_fastq = STAR_ALIGN_IGENOMES.out.fastq
             ch_tab = STAR_ALIGN_IGENOMES.out.tab
             ch_versions = ch_versions.mix(STAR_ALIGN_IGENOMES.out.versions.first())
-
-        } else {
+        }
+        else {
 
             STAR_ALIGN(reads, index, gtf, star_ignore_sjdbgtf, seq_platform, seq_center)
             ch_orig_bam = STAR_ALIGN.out.bam
@@ -84,19 +84,19 @@ workflow ALIGN_STAR {
     ch_versions = ch_versions.mix(BAM_SORT_STATS_SAMTOOLS.out.versions)
 
     emit:
-    orig_bam = ch_orig_bam // channel: [ val(meta), bam            ]
-    log_final = ch_log_final // channel: [ val(meta), log_final      ]
-    log_out = ch_log_out // channel: [ val(meta), log_out        ]
-    log_progress = ch_log_progress // channel: [ val(meta), log_progress   ]
-    bam_sorted = ch_bam_sorted // channel: [ val(meta), bam_sorted     ]
-    bam_transcript = ch_bam_transcript // channel: [ val(meta), bam_transcript ]
-    fastq = ch_fastq // channel: [ val(meta), fastq          ]
-    tab = ch_tab // channel: [ val(meta), tab            ]
-    bam = BAM_SORT_STATS_SAMTOOLS.out.bam // channel: [ val(meta), [ bam ] ]
-    bai = BAM_SORT_STATS_SAMTOOLS.out.bai // channel: [ val(meta), [ bai ] ]
-    csi = BAM_SORT_STATS_SAMTOOLS.out.csi // channel: [ val(meta), [ csi ] ]
-    stats = BAM_SORT_STATS_SAMTOOLS.out.stats // channel: [ val(meta), [ stats ] ]
+    orig_bam = ch_orig_bam                          // channel: [ val(meta), bam            ]
+    log_final = ch_log_final                        // channel: [ val(meta), log_final      ]
+    log_out = ch_log_out                            // channel: [ val(meta), log_out        ]
+    log_progress = ch_log_progress                  // channel: [ val(meta), log_progress   ]
+    bam_sorted = ch_bam_sorted                      // channel: [ val(meta), bam_sorted     ]
+    bam_transcript = ch_bam_transcript              // channel: [ val(meta), bam_transcript ]
+    fastq = ch_fastq                                // channel: [ val(meta), fastq          ]
+    tab = ch_tab                                    // channel: [ val(meta), tab            ]
+    bam = BAM_SORT_STATS_SAMTOOLS.out.bam           // channel: [ val(meta), [ bam ] ]
+    bai = BAM_SORT_STATS_SAMTOOLS.out.bai           // channel: [ val(meta), [ bai ] ]
+    csi = BAM_SORT_STATS_SAMTOOLS.out.csi           // channel: [ val(meta), [ csi ] ]
+    stats = BAM_SORT_STATS_SAMTOOLS.out.stats       // channel: [ val(meta), [ stats ] ]
     flagstat = BAM_SORT_STATS_SAMTOOLS.out.flagstat // channel: [ val(meta), [ flagstat ] ]
     idxstats = BAM_SORT_STATS_SAMTOOLS.out.idxstats // channel: [ val(meta), [ idxstats ] ]
-    versions = ch_versions // channel: [ versions.yml ]
+    versions = ch_versions                          // channel: [ versions.yml ]
 }

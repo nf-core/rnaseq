@@ -6,7 +6,7 @@ nextflow_workflow {
     config "./nextflow.config"
 
     test("homo_sapiens") {
-
+        tag "test"
         setup {
             run("RSEM_PREPAREREFERENCE") {
                 script "../../../../modules/nf-core/rsem/preparereference/main.nf"

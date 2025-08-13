@@ -1,6 +1,7 @@
-process SENTIEON_RSEM_CALCULATEEXPRESSION {
+process SENTIEON_RSEMCALCULATEEXPRESSION {
     tag "$meta.id"
     label 'process_high'
+    label 'sentieon'
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -61,6 +62,7 @@ process SENTIEON_RSEM_CALCULATEEXPRESSION {
     "${task.process}":
         rsem: \$(rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g")
         star: \$(STAR --version | sed -e "s/STAR_//g")
+        sentieon: \$(echo \$(sentieon driver --version 2>&1) | sed -e "s/sentieon-genomics-//g")
     END_VERSIONS
     """
 
@@ -79,6 +81,7 @@ process SENTIEON_RSEM_CALCULATEEXPRESSION {
     "${task.process}":
         rsem: \$(rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g")
         star: \$(STAR --version | sed -e "s/STAR_//g")
+        sentieon: \$(echo \$(sentieon driver --version 2>&1) | sed -e "s/sentieon-genomics-//g")
     END_VERSIONS
     """
 }

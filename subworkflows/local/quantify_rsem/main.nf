@@ -5,7 +5,7 @@
 include { RSEM_CALCULATEEXPRESSION } from '../../../modules/nf-core/rsem/calculateexpression'
 include { RSEM_MERGE_COUNTS        } from '../../../modules/local/rsem_merge_counts'
 include { BAM_SORT_STATS_SAMTOOLS  } from '../../nf-core/bam_sort_stats_samtools'
-include { SENTIEON_RSEM_CALCULATEEXPRESSION } from '../../../modules/local/sentieon_rsem_calculateexpression'
+include { SENTIEON_RSEMCALCULATEEXPRESSION } from '../../../modules/nf-core/sentieon/rsemcalculateexpression'
 
 workflow QUANTIFY_RSEM {
     take:
@@ -23,16 +23,16 @@ workflow QUANTIFY_RSEM {
     //
     if (use_sentieon){
 
-        SENTIEON_RSEM_CALCULATEEXPRESSION ( reads, index )
+        SENTIEON_RSEMCALCULATEEXPRESSION ( reads, index )
 
-        ch_bam_star = SENTIEON_RSEM_CALCULATEEXPRESSION.out.bam_star
-        ch_counts_gene = SENTIEON_RSEM_CALCULATEEXPRESSION.out.counts_gene
-        ch_counts_transcript = SENTIEON_RSEM_CALCULATEEXPRESSION.out.counts_transcript
-        ch_stat = SENTIEON_RSEM_CALCULATEEXPRESSION.out.stat
-        ch_logs = SENTIEON_RSEM_CALCULATEEXPRESSION.out.logs
-        ch_bam_genome = SENTIEON_RSEM_CALCULATEEXPRESSION.out.bam_genome
-        ch_bam_transcript = SENTIEON_RSEM_CALCULATEEXPRESSION.out.bam_transcript
-        ch_versions = ch_versions.mix(SENTIEON_RSEM_CALCULATEEXPRESSION.out.versions.first())
+        ch_bam_star = SENTIEON_RSEMCALCULATEEXPRESSION.out.bam_star
+        ch_counts_gene = SENTIEON_RSEMCALCULATEEXPRESSION.out.counts_gene
+        ch_counts_transcript = SENTIEON_RSEMCALCULATEEXPRESSION.out.counts_transcript
+        ch_stat = SENTIEON_RSEMCALCULATEEXPRESSION.out.stat
+        ch_logs = SENTIEON_RSEMCALCULATEEXPRESSION.out.logs
+        ch_bam_genome = SENTIEON_RSEMCALCULATEEXPRESSION.out.bam_genome
+        ch_bam_transcript = SENTIEON_RSEMCALCULATEEXPRESSION.out.bam_transcript
+        ch_versions = ch_versions.mix(SENTIEON_RSEMCALCULATEEXPRESSION.out.versions.first())
 
     } else {
         RSEM_CALCULATEEXPRESSION ( reads, index )

@@ -62,10 +62,6 @@
                 "QUALIMAP_RNASEQ": {
                     "qualimap": 2.3
                 },
-                "RSEM_CALCULATEEXPRESSION": {
-                    "rsem": "1.3.1",
-                    "star": "2.7.10a"
-                },
                 "RSEM_MERGE_COUNTS": {
                     "sed": 4.7
                 },
@@ -107,6 +103,10 @@
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
+                },
+                "SENTIEON_RSEM_CALCULATEEXPRESSION": {                         
+                    "rsem": "1.3.1",    
+                    "star": "2.7.10b"   
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -1227,7 +1227,7 @@
                 "RAP1_IAA_30M_REP1_dupMatrix.txt:md5,8da31020df3c5b25167345609c6d08c5",
                 "RAP1_UNINDUCED_REP1_dupMatrix.txt:md5,3f269a6b2e9c8eaab66582e31d208dfc",
                 "RAP1_UNINDUCED_REP2_dupMatrix.txt:md5,7d96d6ddf1d12d43837b105865aeaafa",
-                "WT_REP1_dupMatrix.txt:md5,802dd0de10d9118943869239f8659c78",
+                "WT_REP1_dupMatrix.txt:md5,d90a112d68091e75ff3f6ddcdb0c1344",
                 "WT_REP2_dupMatrix.txt:md5,e97a3c8d2e606d7d4b40cd33eb0b96c4",
                 "RAP1_IAA_30M_REP1.biotype_counts_mqc.tsv:md5,5a7a4291e8ff6cc25a4eb72dfdf06b51",
                 "RAP1_IAA_30M_REP1.biotype_counts_rrna_mqc.tsv:md5,dde2de0cb90e10d0195c726f768e9941",

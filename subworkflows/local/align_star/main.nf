@@ -25,7 +25,7 @@ workflow ALIGN_STAR {
     //
     // Map reads with STAR
     //
-    ch_star_out = Channel.empty
+    ch_star_out = Channel.empty()
     if (use_sentieon_star) {
 
         SENTIEON_STAR_ALIGN(reads, index, gtf, star_ignore_sjdbgtf, seq_platform, seq_center)

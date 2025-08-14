@@ -139,6 +139,34 @@ You can use `--skip_alignment --skip_pseudo_alignment` if you only want to run t
 
 Note that `--skip_alignment` and `--skip_pseudo_alignment` prevent both the execution of alignment/pseudoalignment steps and the building of their corresponding indices. For example, using `--skip_alignment` with `--aligner star_salmon` will skip both STAR alignment and index building.
 
+### Sentieon acceleration for STAR
+
+The STAR aligner can be accelerated through its Sentieon implemention using the parameter `--use_sentieon_star`.
+
+Sentieon is a commercial solution to process genomics data, requiring a paid license. Sentieon's tooling contains an accelerated version of the [`STAR` aligner](https://support.sentieon.com/manual/usages/general/?highlight=star#star-binary), which nf-core/rnaseq supports. In order to use those functions, the user will need to supply a license for Sentieon.
+
+Sentieon supply license in the form of a string-value (a url) or a file. It should be base64-encoded and stored in a nextflow secret named `SENTIEON_LICENSE_BASE64`. If a license string (url) is supplied, then the nextflow secret should be set like this:
+
+```bash
+nextflow secrets set SENTIEON_LICENSE_BASE64 $(echo -n <sentieon_license_string> | base64 -w 0)
+```
+
+:::note
+<sentieon_license_string> is formatted as `IP:Port` for example: `12.12.12.12:8990`
+:::
+
+If a license file is supplied, then the nextflow secret should be set like this:
+
+```bash
+nextflow secrets set SENTIEON_LICENSE_BASE64 \$(cat <sentieon_license_file.lic> | base64 -w 0)
+```
+
+:::note
+If you're looking for documentation on how the nf-core Sentieon GitHub Actions and Sentieon License Server are set up: [Here be dragons.](https://github.com/nf-core/ops/blob/main/pulumi/sentieon_license_server/README.md)
+
+For detailed instructions on how to test the modules and subworkflows separately, see [here](https://github.com/nf-core/modules/blob/master/modules/nf-core/sentieon/README.md).
+:::
+
 ## Quantification options
 
 The current options align with STAR and quantify using either Salmon (`--aligner star_salmon`) / RSEM (`--aligner star_rsem`). You also have the option to pseudoalign and quantify your data with Salmon or Kallisto by providing the `--pseudo_aligner salmon` or `--pseudo_aligner kallisto` parameter, respectively.

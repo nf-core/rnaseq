@@ -21,11 +21,10 @@ workflow QUANTIFY_RSEM {
     //
     // Quantify reads with RSEM
     //
+    ch_rsem_out = Channel.empty
     if (use_sentieon_star){
-
         SENTIEON_RSEMCALCULATEEXPRESSION ( reads, index )
         ch_rsem_out = SENTIEON_RSEMCALCULATEEXPRESSION
-
     } else {
         RSEM_CALCULATEEXPRESSION ( reads, index )
         ch_rsem_out = RSEM_CALCULATEEXPRESSION

@@ -23,7 +23,7 @@ workflow QUANTIFY_RSEM {
     //
     if (use_sentieon_star){
 
-        RSEM_CALCULATEEXPRESSION = SENTIEON_RSEMCALCULATEEXPRESSION
+        RSEM = SENTIEON_RSEMCALCULATEEXPRESSION
         // SENTIEON_RSEMCALCULATEEXPRESSION ( reads, index )
 
         // ch_bam_star = SENTIEON_RSEMCALCULATEEXPRESSION.out.bam_star
@@ -35,18 +35,20 @@ workflow QUANTIFY_RSEM {
         // ch_bam_transcript = SENTIEON_RSEMCALCULATEEXPRESSION.out.bam_transcript
         // ch_versions = ch_versions.mix(SENTIEON_RSEMCALCULATEEXPRESSION.out.versions.first())
 
+    } else {
+        RSEM = RSEM_CALCULATEEXPRESSION
     }
 
-    RSEM_CALCULATEEXPRESSION ( reads, index )
+    RSEM ( reads, index )
 
-    ch_bam_star = RSEM_CALCULATEEXPRESSION.out.bam_star
-    ch_counts_gene = RSEM_CALCULATEEXPRESSION.out.counts_gene
-    ch_counts_transcript = RSEM_CALCULATEEXPRESSION.out.counts_transcript
-    ch_stat = RSEM_CALCULATEEXPRESSION.out.stat
-    ch_logs = RSEM_CALCULATEEXPRESSION.out.logs
-    ch_bam_genome = RSEM_CALCULATEEXPRESSION.out.bam_genome
-    ch_bam_transcript = RSEM_CALCULATEEXPRESSION.out.bam_transcript
-    ch_versions = ch_versions.mix(RSEM_CALCULATEEXPRESSION.out.versions.first())
+    ch_bam_star = RSEM.out.bam_star
+    ch_counts_gene = RSEM.out.counts_gene
+    ch_counts_transcript = RSEM.out.counts_transcript
+    ch_stat = RSEM.out.stat
+    ch_logs = RSEM.out.logs
+    ch_bam_genome = RSEM.out.bam_genome
+    ch_bam_transcript = RSEM.out.bam_transcript
+    ch_versions = ch_versions.mix(RSEM.out.versions.first())
 
     //
     // Sort, index BAM file and run samtools stats, flagstat and idxstats

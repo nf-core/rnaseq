@@ -1426,7 +1426,7 @@ nextflow_workflow {
                 input[22] = skip_sortmerna
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon
+                input[25] = use_sentieon_star
                 """
             }
         }

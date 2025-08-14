@@ -1,6 +1,6 @@
 nextflow_pipeline {
 
-    name "Test pipeline with default settings"
+    name "Test pipeline with sentieon"
     script "../main.nf"
     tag "pipeline"
 

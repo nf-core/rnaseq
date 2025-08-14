@@ -14,11 +14,11 @@ nf_core_version: 3.3.2
 repository_type: pipeline
 template:
   author: "Harshil Patel, Phil Ewels, Rickard Hammarén"
-  description: RNA sequencing analysis pipeline for gene/isoform quantification and
-    extensive quality control.
+  description: RNA sequencing analysis pipeline for gene/isoform quantification
+    and extensive quality control.
   force: false
   is_nfcore: true
   name: rnaseq
   org: nf-core
   outdir: .
-  version: 3.20.0dev
+  version: 3.20.0

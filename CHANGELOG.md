@@ -24,6 +24,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1580](https://github.com/nf-core/rnaseq/pull/1580) - Template update for nf-core/tools v3.3.2
 - [PR #1590](https://github.com/nf-core/rnaseq/pull/1590) - Addition of Sentieon STAR
 - [PR #1594](https://github.com/nf-core/rnaseq/pull/1594) - Exclude star rsem pca from snaps
+- [PR #1595](https://github.com/nf-core/rnaseq/pull/1595) - Exclude unstable star_rsem clusterings from snaps
 
 ### Software dependencies
 

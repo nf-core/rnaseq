@@ -9,10 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Special thanks to the following for their contributions to the release:
 
-- [Jonathan Manning](https://github.com/pinin4fjords)
-- [Maxime Garcia](https://github.com/maxulysse)
 - [Friederike Hanssen](https://github.com/friederikehanssen)
 - [Ido Tamir](https://github.com/idot)
+- [Jonathan Manning](https://github.com/pinin4fjords)
+- [Maxime Garcia](https://github.com/maxulysse)
 - [Usman Rashid](https://github.com/GallVp)
 
 ### Enhancements & fixes
@@ -23,6 +23,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1585](https://github.com/nf-core/rnaseq/pull/1585) - Update awsfulltest.yml to restore aligner-wise outputs
 - [PR #1580](https://github.com/nf-core/rnaseq/pull/1580) - Template update for nf-core/tools v3.3.2
 - [PR #1590](https://github.com/nf-core/rnaseq/pull/1590) - Addition of Sentieon STAR
+- [PR #1594](https://github.com/nf-core/rnaseq/pull/1594) - Exclude star rsem pca from snaps
 
 ### Software dependencies
 

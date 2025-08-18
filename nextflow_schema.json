@@ -388,6 +388,11 @@
                     "fa_icon": "fas fa-map-signs",
                     "enum": ["star_salmon", "star_rsem", "hisat2"]
                 },
+                "use_sentieon_star": {
+                    "type": "boolean",
+                    "description": "Optionally accelerate STAR with Sentieon",
+                    "fa_icon": "fas fa-running"
+                },
                 "pseudo_aligner": {
                     "type": "string",
                     "description": "Specifies the pseudo aligner to use - available options are 'salmon'. Runs in addition to '--aligner'.",

@@ -52,7 +52,7 @@
                     },
                     "fastqc": {
                         "branch": "master",
-                        "git_sha": "b1966f36ec9de31927b2603d8f499960b2a4c294",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["fastq_fastqc_umitools_fastp", "fastq_fastqc_umitools_trimgalore"]
                     },
                     "fq/lint": {
@@ -108,7 +108,7 @@
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "471cf3ca1617271b9b6fea09ea2ebdee78b874de",
+                        "git_sha": "c9a31c472ef2d86802eb44f27322955849859361",
                         "installed_by": ["modules"]
                     },
                     "picard/markduplicates": {
@@ -216,6 +216,21 @@
                         "branch": "master",
                         "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
                         "installed_by": ["bam_stats_samtools"]
+                    },
+                    "sentieon/rsemcalculateexpression": {
+                        "branch": "master",
+                        "git_sha": "2779d18605e9923332155d671f45ed37fa185ff4",
+                        "installed_by": ["modules"]
+                    },
+                    "sentieon/rsempreparereference": {
+                        "branch": "master",
+                        "git_sha": "2779d18605e9923332155d671f45ed37fa185ff4",
+                        "installed_by": ["modules"]
+                    },
+                    "sentieon/staralign": {
+                        "branch": "master",
+                        "git_sha": "73d3ab1ac411843ae643b5bc310a4aec9ae7ab3a",
+                        "installed_by": ["modules"]
                     },
                     "sortmerna": {
                         "branch": "master",

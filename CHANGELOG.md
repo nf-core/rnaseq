@@ -3,7 +3,37 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-# 3.19.0 - 2025-06-06
+## 3.20.0
+
+### Credits
+
+Special thanks to the following for their contributions to the release:
+
+- [Friederike Hanssen](https://github.com/friederikehanssen)
+- [Ido Tamir](https://github.com/idot)
+- [Jonathan Manning](https://github.com/pinin4fjords)
+- [Maxime Garcia](https://github.com/maxulysse)
+- [Usman Rashid](https://github.com/GallVp)
+
+### Enhancements & fixes
+
+- [PR #1568](https://github.com/nf-core/rnaseq/pull/1568) - Bump version after release 3.19.0
+- [PR #1571](https://github.com/nf-core/rnaseq/pull/1571) - For umitools use only umi_dedup.sorted.log in multiqc_report
+- [PR #1573](https://github.com/nf-core/rnaseq/pull/1573) - Fix salmon.merged.SummarizedExperiment.rds name collision
+- [PR #1585](https://github.com/nf-core/rnaseq/pull/1585) - Update awsfulltest.yml to restore aligner-wise outputs
+- [PR #1580](https://github.com/nf-core/rnaseq/pull/1580) - Template update for nf-core/tools v3.3.2
+- [PR #1590](https://github.com/nf-core/rnaseq/pull/1590) - Addition of Sentieon STAR
+- [PR #1594](https://github.com/nf-core/rnaseq/pull/1594) - Exclude star rsem pca from snaps
+- [PR #1595](https://github.com/nf-core/rnaseq/pull/1595) - Exclude unstable star_rsem clusterings from snaps
+
+### Software dependencies
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| `MultiQC`  | 1.29        | 1.30        |
+| `Sentieon` |             | 202503.01   |
+
+## [[3.19.0](https://github.com/nf-core/rnaseq/releases/tag/3.19.0)] - 2025-06-10
 
 ### Credits
 
@@ -15,6 +45,7 @@ Special thanks to the following for their contributions to the release:
 - [Ben Sherman](https://github.com/bentsherman)
 - [Dave Carlson](https://github.com/davidecarlson)
 - [Gabriel Lichtenstein](https://github.com/glichtenstein)
+- [Jonathan Manning](https://github.com/pinin4fjords)
 - [Lorenzo Fontana](https://github.com/fntlnz)
 - [Matthias Hörtenhuber](https://github.com/mashehu)
 - [Milos Micik](https://github.com/milos7250)
@@ -41,7 +72,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1565](https://github.com/nf-core/rnaseq/pull/1565) - Improve reproducibility with Conda
 - [PR #1567](https://github.com/nf-core/rnaseq/pull/1567) - Prerelease 3.19.0 fixes
 
-# 3.18.0 - 2024-12-19
+## [[3.18.0](https://github.com/nf-core/rnaseq/releases/tag/3.18.0)] - 2024-12-19
 
 ### Credits
 

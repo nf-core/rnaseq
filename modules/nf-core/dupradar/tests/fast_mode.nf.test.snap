@@ -1,0 +1,261 @@
+{
+    "sarscov2 - bam - single_end - fast_mode": {
+        "content": [
+            "test_fast_duprateExpBoxplot.pdf",
+            "test_fast_expressionHist.pdf",
+            "test_fast_duprateExpDens.pdf",
+            [
+                [
+                    {
+                        "id": "test_fast",
+                        "single_end": true,
+                        "strandedness": "forward"
+                    },
+                    "test_fast_dupMatrix.txt:md5,5e4c8179e4ce2a005075c261c025ba24"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test_fast",
+                        "single_end": true,
+                        "strandedness": "forward"
+                    },
+                    "test_fast_intercept_slope.txt:md5,65d911b726b4c2b2cb6a906781ff6b86"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test_fast",
+                        "single_end": true,
+                        "strandedness": "forward"
+                    },
+                    [
+                        "test_fast_dup_intercept_mqc.txt:md5,6b8da27fd6020ff1277395d0e54f7bab",
+                        "test_fast_duprateExpDensCurve_mqc.txt:md5,490e2d26d4d38a78859ba3fb8f211e59"
+                    ]
+                ]
+            ],
+            [
+                "versions.yml:md5,81a6e6277f58d108f2f3ce1771b46184"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-08-19T21:42:45.736342"
+    },
+    "sarscov2 - bam - single_end - fast_mode - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test_fast",
+                            "single_end": true,
+                            "strandedness": "forward"
+                        },
+                        "test_fast_duprateExpDens.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test_fast",
+                            "single_end": true,
+                            "strandedness": "forward"
+                        },
+                        "test_fast_duprateExpBoxplot.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test_fast",
+                            "single_end": true,
+                            "strandedness": "forward"
+                        },
+                        "test_fast_expressionHist.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test_fast",
+                            "single_end": true,
+                            "strandedness": "forward"
+                        },
+                        "test_fast_dupMatrix.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "4": [
+                    [
+                        {
+                            "id": "test_fast",
+                            "single_end": true,
+                            "strandedness": "forward"
+                        },
+                        "test_fast_intercept_slope.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "5": [
+                    [
+                        {
+                            "id": "test_fast",
+                            "single_end": true,
+                            "strandedness": "forward"
+                        },
+                        [
+                            "test_fast_dup_intercept_mqc.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test_fast_duprateExpDensCurve_mqc.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "6": [
+                    [
+                        {
+                            "id": "test_fast",
+                            "single_end": true,
+                            "strandedness": "forward"
+                        },
+                        "test_fast.R_sessionInfo.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "7": [
+                    "versions.yml:md5,81a6e6277f58d108f2f3ce1771b46184"
+                ],
+                "boxplot": [
+                    [
+                        {
+                            "id": "test_fast",
+                            "single_end": true,
+                            "strandedness": "forward"
+                        },
+                        "test_fast_duprateExpBoxplot.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "dupmatrix": [
+                    [
+                        {
+                            "id": "test_fast",
+                            "single_end": true,
+                            "strandedness": "forward"
+                        },
+                        "test_fast_dupMatrix.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "hist": [
+                    [
+                        {
+                            "id": "test_fast",
+                            "single_end": true,
+                            "strandedness": "forward"
+                        },
+                        "test_fast_expressionHist.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "intercept_slope": [
+                    [
+                        {
+                            "id": "test_fast",
+                            "single_end": true,
+                            "strandedness": "forward"
+                        },
+                        "test_fast_intercept_slope.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "multiqc": [
+                    [
+                        {
+                            "id": "test_fast",
+                            "single_end": true,
+                            "strandedness": "forward"
+                        },
+                        [
+                            "test_fast_dup_intercept_mqc.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test_fast_duprateExpDensCurve_mqc.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "scatter2d": [
+                    [
+                        {
+                            "id": "test_fast",
+                            "single_end": true,
+                            "strandedness": "forward"
+                        },
+                        "test_fast_duprateExpDens.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "session_info": [
+                    [
+                        {
+                            "id": "test_fast",
+                            "single_end": true,
+                            "strandedness": "forward"
+                        },
+                        "test_fast.R_sessionInfo.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,81a6e6277f58d108f2f3ce1771b46184"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-08-19T20:34:13.672375"
+    },
+    "sarscov2 - bam - paired_end - fast_mode": {
+        "content": [
+            "test_fast_duprateExpBoxplot.pdf",
+            "test_fast_expressionHist.pdf",
+            "test_fast_duprateExpDens.pdf",
+            [
+                [
+                    {
+                        "id": "test_fast",
+                        "single_end": false,
+                        "strandedness": "forward"
+                    },
+                    "test_fast_dupMatrix.txt:md5,34f87d2697a0b0e01246cf34c857c419"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test_fast",
+                        "single_end": false,
+                        "strandedness": "forward"
+                    },
+                    "test_fast_intercept_slope.txt:md5,65d911b726b4c2b2cb6a906781ff6b86"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test_fast",
+                        "single_end": false,
+                        "strandedness": "forward"
+                    },
+                    [
+                        "test_fast_dup_intercept_mqc.txt:md5,6b8da27fd6020ff1277395d0e54f7bab",
+                        "test_fast_duprateExpDensCurve_mqc.txt:md5,490e2d26d4d38a78859ba3fb8f211e59"
+                    ]
+                ]
+            ],
+            [
+                "versions.yml:md5,81a6e6277f58d108f2f3ce1771b46184"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-08-19T21:43:00.706956"
+    }
+}

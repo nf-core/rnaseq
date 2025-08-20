@@ -38,8 +38,8 @@ process BBMAP_BBSPLIT {
     }
 
     def other_refs = []
-    other_ref_names.eachWithIndex { name, index ->
-        other_refs << "ref_${name}=${other_ref_paths[index]}"
+    other_ref_names.eachWithIndex { name, index_ ->
+        other_refs << "ref_${name}=${other_ref_paths[index_]}"
     }
 
     def fastq_in=''
@@ -107,7 +107,7 @@ process BBMAP_BBSPLIT {
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     def other_refs = ''
-    other_ref_names.eachWithIndex { name, index ->
+    other_ref_names.each { name ->
         other_refs += "echo '' | gzip > ${prefix}_${name}.fastq.gz"
     }
     """

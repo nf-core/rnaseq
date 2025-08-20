@@ -73,8 +73,8 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
                 .out
                 .reads
                 .map {
-                    meta, reads ->
-                        meta.single_end ? [ meta, reads ] : [ meta + [single_end: true], reads[umi_discard_read % 2] ]
+                    meta, reads_ ->
+                        meta.single_end ? [ meta, reads_ ] : [ meta + [single_end: true], reads_[umi_discard_read % 2] ]
                 }
                 .set { umi_reads }
         }
@@ -113,16 +113,16 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
             .out
             .reads
             .join(trim_json)
-            .map { meta, reads, json -> [ meta, reads, getFastpReadsAfterFiltering(json, min_trimmed_reads.toLong()) ] }
+            .map { meta, reads_, json -> [ meta, reads_, getFastpReadsAfterFiltering(json, min_trimmed_reads.toLong()) ] }
             .set { ch_num_trimmed_reads }
 
         ch_num_trimmed_reads
-            .filter { meta, reads, num_reads -> num_reads >= min_trimmed_reads.toLong() }
-            .map { meta, reads, num_reads -> [ meta, reads ] }
+            .filter { meta, reads_, num_reads -> num_reads >= min_trimmed_reads.toLong() }
+            .map { meta, reads_, num_reads -> [ meta, reads_ ] }
             .set { trim_reads }
 
         ch_num_trimmed_reads
-            .map { meta, reads, num_reads -> [ meta, num_reads ] }
+            .map { meta, reads_, num_reads -> [ meta, num_reads ] }
             .set { trim_read_count }
 
         trim_json

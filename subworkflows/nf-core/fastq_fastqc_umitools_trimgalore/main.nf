@@ -56,8 +56,8 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
                     .out
                     .reads
                     .map {
-                        meta, reads ->
-                            meta.single_end ? [ meta, reads ] : [ meta + ['single_end': true], reads[umi_discard_read % 2] ]
+                        meta, reads_ ->
+                            meta.single_end ? [ meta, reads_ ] : [ meta + ['single_end': true], reads_[umi_discard_read % 2] ]
                     }
                     .set { umi_reads }
             }
@@ -85,23 +85,23 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
             .reads
             .join(trim_log, remainder: true)
             .map {
-                meta, reads, trim_log ->
-                    if (trim_log) {
-                        def num_reads = getTrimGaloreReadsAfterFiltering(meta.single_end ? trim_log : trim_log[-1])
-                        [ meta, reads, num_reads ]
+                meta, reads_, trim_log_ ->
+                    if (trim_log_) {
+                        def num_reads = getTrimGaloreReadsAfterFiltering(meta.single_end ? trim_log_ : trim_log_[-1])
+                        [ meta, reads_, num_reads ]
                     } else {
-                        [ meta, reads, min_trimmed_reads.toFloat() + 1 ]
+                        [ meta, reads_, min_trimmed_reads.toFloat() + 1 ]
                     }
             }
             .set { ch_num_trimmed_reads }
 
         ch_num_trimmed_reads
-            .filter { meta, reads, num_reads -> num_reads >= min_trimmed_reads.toFloat() }
-            .map { meta, reads, num_reads -> [ meta, reads ] }
+            .filter { meta, reads_, num_reads -> num_reads >= min_trimmed_reads.toFloat() }
+            .map { meta, reads_, num_reads -> [ meta, reads_ ] }
             .set { trim_reads }
 
         ch_num_trimmed_reads
-            .map { meta, reads, num_reads -> [ meta, num_reads ] }
+            .map { meta, reads_, num_reads -> [ meta, num_reads ] }
             .set { trim_read_count }
     }
 

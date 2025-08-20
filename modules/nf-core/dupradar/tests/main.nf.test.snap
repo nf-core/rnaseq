@@ -14,7 +14,16 @@
                     "test_dupMatrix.txt:md5,2beda4c140548a2b8c91bf6bde01ddc6"
                 ]
             ],
-            null,
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true,
+                        "strandedness": "forward"
+                    },
+                    "test_intercept_slope.txt:md5,6af503d11e39d5aca6bd14b77065f4ae"
+                ]
+            ],
             [
                 [
                     {
@@ -232,7 +241,16 @@
                     "test_dupMatrix.txt:md5,5a327feaba56e5ea96a2cb7e8577e196"
                 ]
             ],
-            null,
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false,
+                        "strandedness": "forward"
+                    },
+                    "test_intercept_slope.txt:md5,e5ce6ae599867b8859865e9edbf899b5"
+                ]
+            ],
             [
                 [
                     {

@@ -14,7 +14,7 @@ workflow QUANTIFY_RSEM {
 
     main:
 
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     //
     // Quantify reads with RSEM

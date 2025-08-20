@@ -12,7 +12,7 @@ workflow BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG {
 
     main:
 
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     //
     // Clip bedGraph file

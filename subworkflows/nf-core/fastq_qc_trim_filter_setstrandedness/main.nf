@@ -112,11 +112,11 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
 
     main:
 
-    ch_versions        = Channel.empty()
-    ch_filtered_reads  = Channel.empty()
-    ch_trim_read_count = Channel.empty()
-    ch_multiqc_files   = Channel.empty()
-    ch_lint_log        = Channel.empty()
+    ch_versions        = channel.empty()
+    ch_filtered_reads  = channel.empty()
+    ch_trim_read_count = channel.empty()
+    ch_multiqc_files   = channel.empty()
+    ch_lint_log        = channel.empty()
 
     ch_reads
         .branch {

@@ -21,12 +21,12 @@ workflow BAM_RSEQC {
 
     bam = bam_bai.map{ [ it[0], it[1] ] }
 
-    versions = Channel.empty()
+    versions = channel.empty()
 
     //
     // Run RSeQC bam_stat.py
     //
-    bamstat_txt = Channel.empty()
+    bamstat_txt = channel.empty()
 
     if ('bam_stat' in rseqc_modules) {
         RSEQC_BAMSTAT(bam)
@@ -37,12 +37,12 @@ workflow BAM_RSEQC {
     //
     // Run RSeQC inner_distance.py
     //
-    innerdistance_all      = Channel.empty()
-    innerdistance_distance = Channel.empty()
-    innerdistance_freq     = Channel.empty()
-    innerdistance_mean     = Channel.empty()
-    innerdistance_pdf      = Channel.empty()
-    innerdistance_rscript  = Channel.empty()
+    innerdistance_all      = channel.empty()
+    innerdistance_distance = channel.empty()
+    innerdistance_freq     = channel.empty()
+    innerdistance_mean     = channel.empty()
+    innerdistance_pdf      = channel.empty()
+    innerdistance_rscript  = channel.empty()
 
     if ('inner_distance' in rseqc_modules) {
         RSEQC_INNERDISTANCE(bam, bed)
@@ -58,7 +58,7 @@ workflow BAM_RSEQC {
     //
     // Run RSeQC infer_experiment.py
     //
-    inferexperiment_txt = Channel.empty()
+    inferexperiment_txt = channel.empty()
     if ('infer_experiment' in rseqc_modules) {
         RSEQC_INFEREXPERIMENT(bam, bed)
         inferexperiment_txt = RSEQC_INFEREXPERIMENT.out.txt
@@ -68,14 +68,14 @@ workflow BAM_RSEQC {
     //
     // Run RSeQC junction_annotation.py
     //
-    junctionannotation_all          = Channel.empty()
-    junctionannotation_bed          = Channel.empty()
-    junctionannotation_interact_bed = Channel.empty()
-    junctionannotation_xls          = Channel.empty()
-    junctionannotation_pdf          = Channel.empty()
-    junctionannotation_events_pdf   = Channel.empty()
-    junctionannotation_rscript      = Channel.empty()
-    junctionannotation_log          = Channel.empty()
+    junctionannotation_all          = channel.empty()
+    junctionannotation_bed          = channel.empty()
+    junctionannotation_interact_bed = channel.empty()
+    junctionannotation_xls          = channel.empty()
+    junctionannotation_pdf          = channel.empty()
+    junctionannotation_events_pdf   = channel.empty()
+    junctionannotation_rscript      = channel.empty()
+    junctionannotation_log          = channel.empty()
 
     if ('junction_annotation' in rseqc_modules) {
         RSEQC_JUNCTIONANNOTATION(bam, bed)
@@ -93,9 +93,9 @@ workflow BAM_RSEQC {
     //
     // Run RSeQC junction_saturation.py
     //
-    junctionsaturation_all     = Channel.empty()
-    junctionsaturation_pdf     = Channel.empty()
-    junctionsaturation_rscript = Channel.empty()
+    junctionsaturation_all     = channel.empty()
+    junctionsaturation_pdf     = channel.empty()
+    junctionsaturation_rscript = channel.empty()
 
     if ('junction_saturation' in rseqc_modules) {
         RSEQC_JUNCTIONSATURATION(bam, bed)
@@ -108,7 +108,7 @@ workflow BAM_RSEQC {
     //
     // Run RSeQC read_distribution.py
     //
-    readdistribution_txt = Channel.empty()
+    readdistribution_txt = channel.empty()
 
     if ('read_distribution' in rseqc_modules) {
         RSEQC_READDISTRIBUTION(bam, bed)
@@ -119,11 +119,11 @@ workflow BAM_RSEQC {
     //
     // Run RSeQC read_duplication.py
     //
-    readduplication_all     = Channel.empty()
-    readduplication_seq_xls = Channel.empty()
-    readduplication_pos_xls = Channel.empty()
-    readduplication_pdf     = Channel.empty()
-    readduplication_rscript = Channel.empty()
+    readduplication_all     = channel.empty()
+    readduplication_seq_xls = channel.empty()
+    readduplication_pos_xls = channel.empty()
+    readduplication_pdf     = channel.empty()
+    readduplication_rscript = channel.empty()
 
     if ('read_duplication' in rseqc_modules) {
         RSEQC_READDUPLICATION(bam )
@@ -138,7 +138,7 @@ workflow BAM_RSEQC {
     //
     // Run RSeQC tin.py
     //
-    tin_txt = Channel.empty()
+    tin_txt = channel.empty()
 
     if ('tin' in rseqc_modules) {
         RSEQC_TIN(bam_bai, bed)

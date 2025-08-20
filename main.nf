@@ -54,7 +54,7 @@ workflow NFCORE_RNASEQ {
 
     main:
 
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     //
     // SUBWORKFLOW: Prepare reference genome files
@@ -99,7 +99,7 @@ workflow NFCORE_RNASEQ {
     //
     // WORKFLOW: Run nf-core/rnaseq workflow
     //
-    ch_samplesheet = Channel.value(file(params.input, checkIfExists: true))
+    ch_samplesheet = channel.value(file(params.input, checkIfExists: true))
     RNASEQ (
         ch_samplesheet,
         ch_versions,

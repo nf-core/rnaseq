@@ -22,7 +22,7 @@ workflow BAM_DEDUP_UMI {
     ch_transcript_fasta   // channel: [ val(meta), path(fasta) ]
 
     main:
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     if (umi_dedup_tool != "umicollapse" && umi_dedup_tool != "umitools"){
         error("Unknown umi_dedup_tool '${umi_dedup_tool}'")

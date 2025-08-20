@@ -15,7 +15,7 @@ workflow BAM_MARKDUPLICATES_PICARD {
 
     main:
 
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     PICARD_MARKDUPLICATES ( ch_reads, ch_fasta, ch_fai )
     ch_versions = ch_versions.mix(PICARD_MARKDUPLICATES.out.versions.first())

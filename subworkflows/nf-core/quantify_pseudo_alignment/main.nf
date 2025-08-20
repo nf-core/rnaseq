@@ -28,7 +28,7 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
     kallisto_quant_fraglen_sd //     val: Estimated standard error for fragment length required by Kallisto in single-end mode
 
     main:
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     //
     // Quantify and merge counts across samples

@@ -45,9 +45,9 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
     min_trimmed_reads // integer: > 0
 
     main:
-    ch_versions = Channel.empty()
-    fastqc_raw_html = Channel.empty()
-    fastqc_raw_zip  = Channel.empty()
+    ch_versions = channel.empty()
+    fastqc_raw_html = channel.empty()
+    fastqc_raw_zip  = channel.empty()
     if (!skip_fastqc) {
         FASTQC_RAW (
             reads
@@ -58,7 +58,7 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
     }
 
     umi_reads = reads
-    umi_log   = Channel.empty()
+    umi_log   = channel.empty()
     if (with_umi && !skip_umi_extract) {
         UMITOOLS_EXTRACT (
             reads
@@ -81,15 +81,15 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
     }
 
     trim_reads        = umi_reads
-    trim_json         = Channel.empty()
-    trim_html         = Channel.empty()
-    trim_log          = Channel.empty()
-    trim_reads_fail   = Channel.empty()
-    trim_reads_merged = Channel.empty()
-    fastqc_trim_html  = Channel.empty()
-    fastqc_trim_zip   = Channel.empty()
-    trim_read_count   = Channel.empty()
-    adapter_seq       = Channel.empty()
+    trim_json         = channel.empty()
+    trim_html         = channel.empty()
+    trim_log          = channel.empty()
+    trim_reads_fail   = channel.empty()
+    trim_reads_merged = channel.empty()
+    fastqc_trim_html  = channel.empty()
+    fastqc_trim_zip   = channel.empty()
+    trim_read_count   = channel.empty()
+    adapter_seq       = channel.empty()
 
     if (!skip_trimming) {
         FASTP (

@@ -13,7 +13,7 @@ workflow BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS {
 
     main:
 
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     //
     // UMI-tools dedup

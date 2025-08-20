@@ -100,15 +100,15 @@ workflow RNASEQ {
     ch_biotypes_header_multiqc      = file("$projectDir/workflows/rnaseq/assets/multiqc/biotypes_header.txt", checkIfExists: true)
     ch_dummy_file                   = ch_pca_header_multiqc
 
-    ch_multiqc_files = Channel.empty()
-    ch_trim_status = Channel.empty()
-    ch_map_status = Channel.empty()
-    ch_strand_status = Channel.empty()
+    ch_multiqc_files = channel.empty()
+    ch_trim_status = channel.empty()
+    ch_map_status = channel.empty()
+    ch_strand_status = channel.empty()
 
     //
     // Create channel from input file provided through params.input
     //
-    Channel
+    channel
         .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
         .map {
             meta, fastq_1, fastq_2 ->
@@ -173,11 +173,11 @@ workflow RNASEQ {
     //
     // SUBWORKFLOW: Alignment with STAR and gene/transcript quantification with Salmon
     //
-    ch_genome_bam          = Channel.empty()
-    ch_genome_bam_index    = Channel.empty()
-    ch_star_log            = Channel.empty()
-    ch_unaligned_sequences = Channel.empty()
-    ch_transcriptome_bam   = Channel.empty()
+    ch_genome_bam          = channel.empty()
+    ch_genome_bam_index    = channel.empty()
+    ch_star_log            = channel.empty()
+    ch_unaligned_sequences = channel.empty()
+    ch_transcriptome_bam   = channel.empty()
 
     if (!params.skip_alignment && params.aligner == 'star_salmon') {
         // Check if an AWS iGenome has been provided to use the appropriate version of STAR
@@ -701,24 +701,24 @@ workflow RNASEQ {
     //
     // MODULE: MultiQC
     //
-    ch_multiqc_report = Channel.empty()
+    ch_multiqc_report = channel.empty()
 
     if (!params.skip_multiqc) {
 
         // Load MultiQC configuration files
-        ch_multiqc_config        = Channel.fromPath("$projectDir/workflows/rnaseq/assets/multiqc/multiqc_config.yml", checkIfExists: true)
-        ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
-        ch_multiqc_logo          = params.multiqc_logo   ? Channel.fromPath(params.multiqc_logo)   : Channel.empty()
+        ch_multiqc_config        = channel.fromPath("$projectDir/workflows/rnaseq/assets/multiqc/multiqc_config.yml", checkIfExists: true)
+        ch_multiqc_custom_config = params.multiqc_config ? channel.fromPath(params.multiqc_config) : channel.empty()
+        ch_multiqc_logo          = params.multiqc_logo   ? channel.fromPath(params.multiqc_logo)   : channel.empty()
 
         // Prepare the workflow summary
-        ch_workflow_summary = Channel.value(
+        ch_workflow_summary = channel.value(
             paramsSummaryMultiqc(
                 paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
             )
         ).collectFile(name: 'workflow_summary_mqc.yaml')
 
         // Prepare the methods section
-        ch_methods_description = Channel.value(
+        ch_methods_description = channel.value(
             methodsDescriptionText(
                 params.multiqc_methods_description
                     ? file(params.multiqc_methods_description)

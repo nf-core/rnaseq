@@ -11,7 +11,7 @@ workflow FASTQ_ALIGN_HISAT2 {
 
     main:
 
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
 
     //

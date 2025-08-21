@@ -3,11 +3,11 @@ process DUPRADAR {
     label 'process_long'
 
     conda "${
-        def use_fast_mode = task.ext.use_fast_dupradar ?: false
+        def use_fast_mode = task.ext.use_fast_dupradar ?: true
         use_fast_mode ? "${moduleDir}/environment_fast.yml" : "${moduleDir}/environment.yml"
     }"
     container "${
-        def use_fast_mode = task.ext.use_fast_dupradar ?: false
+        def use_fast_mode = task.ext.use_fast_dupradar ?: true
         // For fast mode, use pre-built Wave container with featureCounts
         use_fast_mode ? 'community.wave.seqera.io/library/subread_python_matplotlib_numpy_pruned:70e1e046570ad3a3' : (
             workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -34,7 +34,7 @@ process DUPRADAR {
     task.ext.when == null || task.ext.when
 
     script:
-    def use_fast_mode = task.ext.use_fast_dupradar ?: false
+    def use_fast_mode = task.ext.use_fast_dupradar ?: true
     if (!use_fast_mode) {
         template 'dupradar.r'
     } else {
@@ -158,7 +158,7 @@ EOF
     }
 
     stub:
-    def use_fast_mode = task.ext.use_fast_dupradar ?: false
+    def use_fast_mode = task.ext.use_fast_dupradar ?: true
     if (use_fast_mode) {
         """
         touch ${meta.id}_duprateExpDens.pdf

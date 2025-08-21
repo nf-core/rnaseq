@@ -1,6 +1,7 @@
 process RSEM_CALCULATEEXPRESSION {
     tag "$meta.id"
     label 'process_high'
+    scratch true
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -28,6 +29,7 @@ process RSEM_CALCULATEEXPRESSION {
     script:
     def args = task.ext.args   ?: ''
     prefix   = task.ext.prefix ?: "${meta.id}"
+    def temp_dir = task.ext.temp_dir ?: '/tmp'
 
     def strandedness = ''
     if (meta.strandedness == 'forward') {
@@ -59,7 +61,7 @@ process RSEM_CALCULATEEXPRESSION {
 
     rsem-calculate-expression \\
         --num-threads $task.cpus \\
-        --temporary-folder ./tmp/ \\
+        --temporary-folder ${temp_dir}/ \\
         $alignment_mode \\
         $strandedness \\
         \$PAIRED_END_FLAG \\

@@ -2,6 +2,7 @@ process SENTIEON_RSEMCALCULATEEXPRESSION {
     tag "$meta.id"
     label 'process_high'
     label 'sentieon'
+    scratch true
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -29,6 +30,7 @@ process SENTIEON_RSEMCALCULATEEXPRESSION {
     script:
     def args = task.ext.args   ?: ''
     prefix   = task.ext.prefix ?: "${meta.id}"
+    def temp_dir = task.ext.temp_dir ?: '/tmp'
 
     def strandedness = ''
     if (meta.strandedness == 'forward') {
@@ -50,7 +52,7 @@ process SENTIEON_RSEMCALCULATEEXPRESSION {
 
     rsem-calculate-expression \\
         --num-threads $task.cpus \\
-        --temporary-folder ./tmp/ \\
+        --temporary-folder ${temp_dir}/ \\
         $strandedness \\
         $paired_end \\
         $args \\

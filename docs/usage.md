@@ -46,16 +46,19 @@ If you set the strandedness value to `auto`, the pipeline will sub-sample the in
 #### Usage Examples
 
 1. **Forward Stranded Sample:**
+
    - Forward fraction: 0.85
    - Reverse fraction: 0.15
    - **Classification:** Forward stranded
 
 2. **Reverse Stranded Sample:**
+
    - Forward fraction: 0.1
    - Reverse fraction: 0.9
    - **Classification:** Reverse stranded
 
 3. **Unstranded Sample:**
+
    - Forward fraction: 0.45
    - Reverse fraction: 0.55
    - **Classification:** Unstranded
@@ -138,6 +141,54 @@ You can use `--skip_alignment --skip_pseudo_alignment` if you only want to run t
 :::
 
 Note that `--skip_alignment` and `--skip_pseudo_alignment` prevent both the execution of alignment/pseudoalignment steps and the building of their corresponding indices. For example, using `--skip_alignment` with `--aligner star_salmon` will skip both STAR alignment and index building.
+
+## Quality Control Configuration
+
+### Performance-Optimized Defaults (v4.0+)
+
+Starting in version 4.0, several QC steps are disabled by default to improve pipeline performance and reduce compute costs for typical bulk RNA-seq analysis:
+
+- **`--skip_dupradar true`** - Disable dupRadar analysis (limited utility for bulk RNA-seq experiments)
+- **`--skip_qualimap true`** - Disable Qualimap alignment QC (resource-intensive step)
+- **`--skip_rseqc true`** - Disable RSeQC analysis suite (7 comprehensive RNA-seq modules)
+- **`--skip_stringtie true`** - Disable StringTie transcriptome assembly (additional processing overhead)
+- **`--skip_bigwig true`** - Disable BigWig coverage track generation (large output files)
+
+These changes can significantly reduce pipeline runtime and computational requirements while preserving essential QC metrics through FastQC, MultiQC, and basic alignment statistics.
+
+### Enabling Comprehensive QC
+
+For detailed quality control analysis, you can re-enable any or all QC steps:
+
+```bash
+# Enable all QC steps (restore pre-v4.0 behavior)
+nextflow run nf-core/rnaseq \
+  --skip_dupradar false \
+  --skip_qualimap false \
+  --skip_rseqc false \
+  --skip_stringtie false \
+  --skip_bigwig false
+
+# Enable specific QC modules only
+nextflow run nf-core/rnaseq --skip_qualimap false --skip_rseqc false
+
+# Use the master QC toggle to enable most QC steps
+nextflow run nf-core/rnaseq --skip_qc false
+```
+
+### When to Enable Extended QC
+
+Consider enabling additional QC steps when:
+
+- Working with novel samples, non-standard protocols, or unusual experimental designs
+- Troubleshooting alignment, quantification, or data quality issues
+- Publishing datasets that require comprehensive QC documentation
+- Optimizing library preparation or sequencing protocols
+- Performing method comparisons or validation studies
+
+:::note
+Essential QC steps like FastQC, MultiQC, and alignment metrics remain enabled by default and provide sufficient quality assessment for most RNA-seq analyses.
+:::
 
 ### Sentieon acceleration for STAR
 

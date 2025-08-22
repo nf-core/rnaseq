@@ -677,12 +677,14 @@
                 "skip_bigwig": {
                     "type": "boolean",
                     "fa_icon": "fas fa-fast-forward",
-                    "description": "Skip bigWig file creation."
+                    "description": "Skip bigWig file creation.",
+                    "default": true
                 },
                 "skip_stringtie": {
                     "type": "boolean",
                     "fa_icon": "fas fa-fast-forward",
-                    "description": "Skip StringTie."
+                    "description": "Skip StringTie.",
+                    "default": true
                 },
                 "skip_fastqc": {
                     "type": "boolean",
@@ -698,17 +700,20 @@
                 "skip_dupradar": {
                     "type": "boolean",
                     "fa_icon": "fas fa-fast-forward",
-                    "description": "Skip dupRadar."
+                    "description": "Skip dupRadar.",
+                    "default": true
                 },
                 "skip_qualimap": {
                     "type": "boolean",
                     "fa_icon": "fas fa-fast-forward",
-                    "description": "Skip Qualimap."
+                    "description": "Skip Qualimap.",
+                    "default": true
                 },
                 "skip_rseqc": {
                     "type": "boolean",
                     "fa_icon": "fas fa-fast-forward",
-                    "description": "Skip RSeQC."
+                    "description": "Skip RSeQC.",
+                    "default": true
                 },
                 "skip_biotype_qc": {
                     "type": "boolean",

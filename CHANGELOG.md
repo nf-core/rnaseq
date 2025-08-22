@@ -14,6 +14,9 @@ Special thanks to the following for their contributions to the release:
 ### Enhancements & fixes
 
 - [PR #1597](https://github.com/nf-core/rnaseq/pull/1597) - Bump version after release 3.20.0
+- **BREAKING:** Optimize default QC steps for performance - `skip_dupradar`, `skip_qualimap`, `skip_rseqc`, `skip_stringtie`, and `skip_bigwig` now default to `true` to improve pipeline runtime and reduce compute costs. Use `--skip_[tool] false` to restore previous behavior
+- Optimize RSEM performance for Fusion filesystem by using local temporary storage and scratch directive
+- Add fast mode optimization to dupRadar module for improved performance
 
 ## [[3.20.0](https://github.com/nf-core/rnaseq/releases/tag/3.20.0)] - 2025-08-18
 

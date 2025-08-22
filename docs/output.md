@@ -381,6 +381,10 @@ Unless you are using [UMIs](https://emea.illumina.com/science/sequencing-method-
 
 ### StringTie
 
+:::note
+StringTie is disabled by default starting in v4.0 to improve pipeline performance. Enable with `--skip_stringtie false`.
+:::
+
 <details markdown="1">
 <summary>Output files</summary>
 
@@ -396,6 +400,10 @@ Unless you are using [UMIs](https://emea.illumina.com/science/sequencing-method-
 
 ### BEDTools and bedGraphToBigWig
 
+:::note
+BigWig generation is disabled by default starting in v4.0 to reduce output file sizes and improve performance. Enable with `--skip_bigwig false`.
+:::
+
 <details markdown="1">
 <summary>Output files</summary>
 
@@ -410,6 +418,10 @@ The [bigWig](https://genome.ucsc.edu/goldenpath/help/bigWig.html) format is an i
 ## Quality control
 
 ### RSeQC
+
+:::note
+RSeQC analysis is disabled by default starting in v4.0 to improve pipeline performance. Enable with `--skip_rseqc false`.
+:::
 
 [RSeQC](<(http://rseqc.sourceforge.net/)>) is a package of scripts designed to evaluate the quality of RNA-seq data. This pipeline runs several, but not all RSeQC scripts. You can tweak the supported scripts you would like to run by adjusting the `--rseqc_modules` parameter which by default will run all of the following: `bam_stat.py`, `inner_distance.py`, `infer_experiment.py`, `junction_annotation.py`, `junction_saturation.py`,`read_distribution.py` and `read_duplication.py`.
 
@@ -591,6 +603,10 @@ RSeQC documentation: [tin.py](http://rseqc.sourceforge.net/#tin-py)
 
 ### Qualimap
 
+:::note
+Qualimap analysis is disabled by default starting in v4.0 due to its resource-intensive nature. Enable with `--skip_qualimap false`.
+:::
+
 <details markdown="1">
 <summary>Output files</summary>
 
@@ -615,6 +631,10 @@ The [Qualimap RNA-seq QC module](http://qualimap.bioinfo.cipf.es/doc_html/analys
 ![MultiQC - Qualimap genomic origin plot](images/mqc_qualimap_features.png)
 
 ### dupRadar
+
+:::note
+dupRadar analysis is disabled by default starting in v4.0 as it provides limited utility for bulk RNA-seq experiments. Enable with `--skip_dupradar false`.
+:::
 
 <details markdown="1">
 <summary>Output files</summary>

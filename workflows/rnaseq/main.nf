@@ -46,6 +46,7 @@ include { BRACKEN_BRACKEN as BRACKEN } from '../../modules/nf-core/bracken/brack
 include { MULTIQC                    } from '../../modules/nf-core/multiqc'
 include { BEDTOOLS_GENOMECOV as BEDTOOLS_GENOMECOV_FW          } from '../../modules/nf-core/bedtools/genomecov'
 include { BEDTOOLS_GENOMECOV as BEDTOOLS_GENOMECOV_REV         } from '../../modules/nf-core/bedtools/genomecov'
+include { SAMTOOLS_INDEX                                       } from '../../modules/nf-core/samtools/index'
 
 //
 // SUBWORKFLOW: Consisting entirely of nf-core/modules
@@ -110,18 +111,38 @@ workflow RNASEQ {
     Channel
         .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
         .map {
-            meta, fastq_1, fastq_2 ->
+            meta, fastq_1, fastq_2, genome_bam, transcriptome_bam ->
                 if (!fastq_2) {
-                    return [ meta.id, meta + [ single_end:true ], [ fastq_1 ] ]
+                    return [ meta.id, meta + [ single_end:true ], [ fastq_1 ], genome_bam, transcriptome_bam ]
                 } else {
-                    return [ meta.id, meta + [ single_end:false ], [ fastq_1, fastq_2 ] ]
+                    return [ meta.id, meta + [ single_end:false ], [ fastq_1, fastq_2 ], genome_bam, transcriptome_bam ]
                 }
         }
         .groupTuple()
         .map { samplesheet ->
             checkSamplesAfterGrouping(samplesheet)
         }
-        .set { ch_fastq }
+        .branch {
+            meta, reads, genome_bam, transcriptome_bam ->
+                genome_bam: genome_bam
+                    return [ meta, reads, genome_bam ]
+                transcriptome_bam: transcriptome_bam
+                    return [ meta, reads, transcriptome_bam ]
+                fastq: true
+                    return [ meta, reads ]
+        }
+        .set { ch_input_branched }
+
+    ch_fastq = ch_input_branched.fastq
+    ch_genome_bam = ch_input_branched.genome_bam.map { meta, reads, bam -> [ meta, bam ] }
+    ch_transcriptome_bam = ch_input_branched.transcriptome_bam.map { meta, reads, bam -> [ meta, bam ] }
+
+    // Index pre-aligned input BAM files
+    SAMTOOLS_INDEX (
+        ch_genome_bam
+    )
+    ch_genome_bam_index = params.bam_csi_index ? SAMTOOLS_INDEX.out.csi : SAMTOOLS_INDEX.out.bai
+    ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
 
     //
     // Run RNA-seq FASTQ preprocessing subworkflow
@@ -172,11 +193,8 @@ workflow RNASEQ {
     //
     // SUBWORKFLOW: Alignment with STAR and gene/transcript quantification with Salmon
     //
-    ch_genome_bam          = Channel.empty()
-    ch_genome_bam_index    = Channel.empty()
     ch_star_log            = Channel.empty()
     ch_unaligned_sequences = Channel.empty()
-    ch_transcriptome_bam   = Channel.empty()
 
     if (!params.skip_alignment && params.aligner == 'star_salmon') {
         // Check if an AWS iGenome has been provided to use the appropriate version of STAR
@@ -198,16 +216,13 @@ workflow RNASEQ {
             ch_fasta.map { [ [:], it ] },
             params.use_sentieon_star
         )
-        ch_genome_bam          = ALIGN_STAR.out.bam
-        ch_genome_bam_index    = ALIGN_STAR.out.bai
-        ch_transcriptome_bam   = ALIGN_STAR.out.bam_transcript
+        ch_genome_bam          = ch_genome_bam.mix(ALIGN_STAR.out.bam)
+        ch_genome_bam_index    = ch_genome_bam_index.mix(params.bam_csi_index ? ALIGN_STAR.out.csi : ALIGN_STAR.out.bai)
+        ch_transcriptome_bam   = ch_transcriptome_bam.mix(ALIGN_STAR.out.bam_transcript)
         ch_star_log            = ALIGN_STAR.out.log_final
         ch_unaligned_sequences = ALIGN_STAR.out.fastq
         ch_multiqc_files = ch_multiqc_files.mix(ch_star_log.collect{it[1]})
 
-        if (params.bam_csi_index) {
-            ch_genome_bam_index = ALIGN_STAR.out.csi
-        }
         ch_versions = ch_versions.mix(ALIGN_STAR.out.versions)
 
         //
@@ -225,9 +240,9 @@ workflow RNASEQ {
                 ch_transcript_fasta.map { [ [:], it ] }
             )
 
-            ch_genome_bam        = BAM_DEDUP_UMI_STAR.out.bam
-            ch_transcriptome_bam = BAM_DEDUP_UMI_STAR.out.transcriptome_bam
-            ch_genome_bam_index  = BAM_DEDUP_UMI_STAR.out.bai
+            ch_genome_bam        = ch_genome_bam.mix(BAM_DEDUP_UMI_STAR.out.bam)
+            ch_transcriptome_bam = ch_transcriptome_bam.mix(BAM_DEDUP_UMI_STAR.out.transcriptome_bam)
+            ch_genome_bam_index  = ch_genome_bam_index.mix(params.bam_csi_index ? BAM_DEDUP_UMI_STAR.out.csi : BAM_DEDUP_UMI_STAR.out.bai)
             ch_versions          = ch_versions.mix(BAM_DEDUP_UMI_STAR.out.versions)
 
             ch_multiqc_files = ch_multiqc_files
@@ -284,8 +299,8 @@ workflow RNASEQ {
             ch_fasta.map { [ [:], it ] },
             params.use_sentieon_star
         )
-        ch_genome_bam       = QUANTIFY_RSEM.out.bam
-        ch_genome_bam_index = QUANTIFY_RSEM.out.bai
+        ch_genome_bam       = ch_genome_bam.mix(QUANTIFY_RSEM.out.bam)
+        ch_genome_bam_index = ch_genome_bam_index.mix(params.bam_csi_index ? QUANTIFY_RSEM.out.csi : QUANTIFY_RSEM.out.bai)
         ch_star_log         = QUANTIFY_RSEM.out.logs
         ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_RSEM.out.stats.collect{it[1]})
         ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_RSEM.out.flagstat.collect{it[1]})
@@ -293,9 +308,6 @@ workflow RNASEQ {
         ch_multiqc_files = ch_multiqc_files.mix(ch_star_log.collect{it[1]})
         ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_RSEM.out.stat.collect{it[1]})
 
-        if (params.bam_csi_index) {
-            ch_genome_bam_index = QUANTIFY_RSEM.out.csi
-        }
         ch_versions = ch_versions.mix(QUANTIFY_RSEM.out.versions)
 
         if (!params.skip_qc & !params.skip_deseq2_qc) {
@@ -320,14 +332,11 @@ workflow RNASEQ {
             ch_splicesites.map { [ [:], it ] },
             ch_fasta.map { [ [:], it ] }
         )
-        ch_genome_bam          = FASTQ_ALIGN_HISAT2.out.bam
-        ch_genome_bam_index    = FASTQ_ALIGN_HISAT2.out.bai
+        ch_genome_bam          = ch_genome_bam.mix(FASTQ_ALIGN_HISAT2.out.bam)
+        ch_genome_bam_index    = ch_genome_bam_index.mix(params.bam_csi_index ? FASTQ_ALIGN_HISAT2.out.csi : FASTQ_ALIGN_HISAT2.out.bai)
         ch_unaligned_sequences = FASTQ_ALIGN_HISAT2.out.fastq
         ch_multiqc_files = ch_multiqc_files.mix(FASTQ_ALIGN_HISAT2.out.summary.collect{it[1]})
 
-        if (params.bam_csi_index) {
-            ch_genome_bam_index = FASTQ_ALIGN_HISAT2.out.csi
-        }
         ch_versions = ch_versions.mix(FASTQ_ALIGN_HISAT2.out.versions)
 
         //
@@ -346,8 +355,8 @@ workflow RNASEQ {
                 ch_transcript_fasta.map { [ [:], it ] }
             )
 
-            ch_genome_bam        = BAM_DEDUP_UMI_HISAT2.out.bam
-            ch_genome_bam_index  = BAM_DEDUP_UMI_HISAT2.out.bai
+            ch_genome_bam        = ch_genome_bam.mix(BAM_DEDUP_UMI_HISAT2.out.bam)
+            ch_genome_bam_index  = ch_genome_bam_index.mix(params.bam_csi_index ? BAM_DEDUP_UMI_HISAT2.out.csi : BAM_DEDUP_UMI_HISAT2.out.bai)
             ch_versions          = ch_versions.mix(BAM_DEDUP_UMI_HISAT2.out.versions)
 
             ch_multiqc_files = ch_multiqc_files
@@ -429,16 +438,13 @@ workflow RNASEQ {
             ch_fasta.map { [ [:], it ] },
             ch_fai.map { [ [:], it ] }
         )
-        ch_genome_bam       = BAM_MARKDUPLICATES_PICARD.out.bam
-        ch_genome_bam_index = BAM_MARKDUPLICATES_PICARD.out.bai
+        ch_genome_bam       = ch_genome_bam.mix(BAM_MARKDUPLICATES_PICARD.out.bam)
+        ch_genome_bam_index = ch_genome_bam_index.mix(params.bam_csi_index ? BAM_MARKDUPLICATES_PICARD.out.csi : BAM_MARKDUPLICATES_PICARD.out.bai)
         ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.stats.collect{it[1]})
         ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.flagstat.collect{it[1]})
         ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.idxstats.collect{it[1]})
         ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.metrics.collect{it[1]})
 
-        if (params.bam_csi_index) {
-            ch_genome_bam_index = BAM_MARKDUPLICATES_PICARD.out.csi
-        }
         ch_versions = ch_versions.mix(BAM_MARKDUPLICATES_PICARD.out.versions)
     }
 

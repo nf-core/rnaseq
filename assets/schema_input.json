@@ -32,6 +32,20 @@
                 "errorMessage": "Strandedness must be provided and be one of 'auto', 'forward', 'reverse' or 'unstranded'",
                 "enum": ["forward", "reverse", "unstranded", "auto"],
                 "meta": ["strandedness"]
+            },
+            "genome_bam": {
+                "type": "string",
+                "format": "file-path",
+                "exists": true,
+                "pattern": "^([\\S\\s]*\\/)?[^\\s\\/]+\\.(bam|BAM)$",
+                "errorMessage": "Genome BAM file cannot contain spaces and must have extension '.bam'"
+            },
+            "transcriptome_bam": {
+                "type": "string",
+                "format": "file-path", 
+                "exists": true,
+                "pattern": "^([\\S\\s]*\\/)?[^\\s\\/]+\\.(bam|BAM)$",
+                "errorMessage": "Transcriptome BAM file cannot contain spaces and must have extension '.bam'"
             }
         },
         "required": ["sample", "fastq_1", "strandedness"]

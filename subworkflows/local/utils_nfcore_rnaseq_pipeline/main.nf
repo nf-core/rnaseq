@@ -153,7 +153,12 @@ workflow PIPELINE_COMPLETION {
 // Function to check samples are internally consistent after being grouped
 //
 def checkSamplesAfterGrouping(input) {
-    def (metas, fastqs) = input[1..2]
+    // Handle both old format [id, metas, fastqs] and new format with BAMs [id, metas, fastqs, genome_bams, transcriptome_bams]
+    def id = input[0]
+    def metas = input[1]
+    def fastqs = input[2]
+    def genome_bams = input.size() > 3 ? input[3] : null
+    def transcriptome_bams = input.size() > 4 ? input[4] : null
 
     // Check that multiple runs of the same sample are of the same strandedness
     def strandedness_ok = metas.collect{ it.strandedness }.unique().size == 1
@@ -167,7 +172,21 @@ def checkSamplesAfterGrouping(input) {
         error("Please check input samplesheet -> Multiple runs of a sample must be of the same datatype i.e. single-end or paired-end: ${metas[0].id}")
     }
 
-    return [ metas[0], fastqs ]
+    // Return format depends on whether BAM data was provided
+    if (genome_bams != null || transcriptome_bams != null) {
+        def genome_bam = genome_bams?.find { it != null }
+        def transcriptome_bam = transcriptome_bams?.find { it != null }
+        
+        // Add BAM flags to meta
+        def meta_with_bams = metas[0] + [
+            has_genome_bam: genome_bam ? true : false,
+            has_transcriptome_bam: transcriptome_bam ? true : false
+        ]
+        
+        return [ meta_with_bams, fastqs, genome_bam, transcriptome_bam ]
+    } else {
+        return [ metas[0], fastqs ]
+    }
 }
 
 //

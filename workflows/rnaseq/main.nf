@@ -263,7 +263,6 @@ workflow RNASEQ {
         //
         // SUBWORKFLOW: Count reads from BAM alignments using Salmon
         //
-        ch_transcriptome_bam.view()
         QUANTIFY_STAR_SALMON (
             ch_samplesheet.map { [ [:], it ] },
             ch_transcriptome_bam,

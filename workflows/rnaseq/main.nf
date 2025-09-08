@@ -135,8 +135,8 @@ workflow RNASEQ {
         .set { ch_input_branched }
 
     ch_fastq = ch_input_branched.fastq
-    ch_genome_bam = ch_input_branched.genome_bam.map { meta, reads, bam -> [ meta, bam ] }
-    ch_transcriptome_bam = ch_input_branched.transcriptome_bam.map { meta, reads, bam -> [ meta, bam ] }
+    ch_genome_bam = ch_input_branched.genome_bam.map { meta, reads, bam -> [ meta, bam ] }.distinct()
+    ch_transcriptome_bam = ch_input_branched.transcriptome_bam.map { meta, reads, bam -> [ meta, bam ] }.distinct()
 
     // Index pre-aligned input BAM files
     SAMTOOLS_INDEX (
@@ -217,12 +217,13 @@ workflow RNASEQ {
             ch_fasta.map { [ [:], it ] },
             params.use_sentieon_star
         )
-        ch_genome_bam          = ch_genome_bam.mix(ALIGN_STAR.out.bam)
-        ch_genome_bam_index    = ch_genome_bam_index.mix(params.bam_csi_index ? ALIGN_STAR.out.csi : ALIGN_STAR.out.bai)
-        ch_transcriptome_bam   = ch_transcriptome_bam.mix(ALIGN_STAR.out.bam_transcript)
-        ch_star_log            = ALIGN_STAR.out.log_final
-        ch_unaligned_sequences = ALIGN_STAR.out.fastq
-        ch_multiqc_files = ch_multiqc_files.mix(ch_star_log.collect{it[1]})
+        ch_genome_bam                    = ch_genome_bam.mix(ALIGN_STAR.out.bam)
+        ch_genome_bam_index              = ch_genome_bam_index.mix(params.bam_csi_index ? ALIGN_STAR.out.csi : ALIGN_STAR.out.bai)
+        ch_transcriptome_bam             = ch_transcriptome_bam.mix(ALIGN_STAR.out.bam_transcript)
+        ch_unprocessed_bams              = ch_genome_bam.join(ch_transcriptome_bam)
+        ch_star_log                      = ALIGN_STAR.out.log_final
+        ch_unaligned_sequences           = ALIGN_STAR.out.fastq
+        ch_multiqc_files                 = ch_multiqc_files.mix(ch_star_log.collect{it[1]})
 
         ch_versions = ch_versions.mix(ALIGN_STAR.out.versions)
 
@@ -241,9 +242,9 @@ workflow RNASEQ {
                 ch_transcript_fasta.map { [ [:], it ] }
             )
 
-            ch_genome_bam        = ch_genome_bam.mix(BAM_DEDUP_UMI_STAR.out.bam)
-            ch_transcriptome_bam = ch_transcriptome_bam.mix(BAM_DEDUP_UMI_STAR.out.transcriptome_bam)
-            ch_genome_bam_index  = ch_genome_bam_index.mix(params.bam_csi_index ? BAM_DEDUP_UMI_STAR.out.csi : BAM_DEDUP_UMI_STAR.out.bai)
+            ch_genome_bam        = BAM_DEDUP_UMI_STAR.out.bam
+            ch_transcriptome_bam = BAM_DEDUP_UMI_STAR.out.transcriptome_bam
+            ch_genome_bam_index  = params.bam_csi_index ? BAM_DEDUP_UMI_STAR.out.csi : BAM_DEDUP_UMI_STAR.out.bai
             ch_versions          = ch_versions.mix(BAM_DEDUP_UMI_STAR.out.versions)
 
             ch_multiqc_files = ch_multiqc_files
@@ -300,9 +301,11 @@ workflow RNASEQ {
             ch_fasta.map { [ [:], it ] },
             params.use_sentieon_star
         )
-        ch_genome_bam       = ch_genome_bam.mix(QUANTIFY_RSEM.out.bam)
-        ch_genome_bam_index = ch_genome_bam_index.mix(params.bam_csi_index ? QUANTIFY_RSEM.out.csi : QUANTIFY_RSEM.out.bai)
-        ch_star_log         = QUANTIFY_RSEM.out.logs
+        ch_genome_bam        = ch_genome_bam.mix(QUANTIFY_RSEM.out.bam)
+        ch_transcriptome_bam = ch_transcriptome_bam.mix(QUANTIFY_RSEM.out.bam_transcript)
+        ch_unprocessed_bams  = ch_genome_bam.join(ch_transcriptome_bam)
+        ch_genome_bam_index  = ch_genome_bam_index.mix(params.bam_csi_index ? QUANTIFY_RSEM.out.csi : QUANTIFY_RSEM.out.bai)
+        ch_star_log          = QUANTIFY_RSEM.out.logs
         ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_RSEM.out.stats.collect{it[1]})
         ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_RSEM.out.flagstat.collect{it[1]})
         ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_RSEM.out.idxstats.collect{it[1]})
@@ -335,6 +338,7 @@ workflow RNASEQ {
         )
         ch_genome_bam          = ch_genome_bam.mix(FASTQ_ALIGN_HISAT2.out.bam)
         ch_genome_bam_index    = ch_genome_bam_index.mix(params.bam_csi_index ? FASTQ_ALIGN_HISAT2.out.csi : FASTQ_ALIGN_HISAT2.out.bai)
+        ch_unprocessed_bams    = ch_genome_bam.map { meta, bam -> [ meta, bam, '' ] }
         ch_unaligned_sequences = FASTQ_ALIGN_HISAT2.out.fastq
         ch_multiqc_files = ch_multiqc_files.mix(FASTQ_ALIGN_HISAT2.out.summary.collect{it[1]})
 
@@ -356,8 +360,8 @@ workflow RNASEQ {
                 ch_transcript_fasta.map { [ [:], it ] }
             )
 
-            ch_genome_bam        = ch_genome_bam.mix(BAM_DEDUP_UMI_HISAT2.out.bam)
-            ch_genome_bam_index  = ch_genome_bam_index.mix(params.bam_csi_index ? BAM_DEDUP_UMI_HISAT2.out.csi : BAM_DEDUP_UMI_HISAT2.out.bai)
+            ch_genome_bam        = BAM_DEDUP_UMI_HISAT2.out.bam
+            ch_genome_bam_index  = params.bam_csi_index ? BAM_DEDUP_UMI_HISAT2.out.csi : BAM_DEDUP_UMI_HISAT2.out.bai
             ch_versions          = ch_versions.mix(BAM_DEDUP_UMI_HISAT2.out.versions)
 
             ch_multiqc_files = ch_multiqc_files
@@ -439,8 +443,8 @@ workflow RNASEQ {
             ch_fasta.map { [ [:], it ] },
             ch_fai.map { [ [:], it ] }
         )
-        ch_genome_bam       = ch_genome_bam.mix(BAM_MARKDUPLICATES_PICARD.out.bam)
-        ch_genome_bam_index = ch_genome_bam_index.mix(params.bam_csi_index ? BAM_MARKDUPLICATES_PICARD.out.csi : BAM_MARKDUPLICATES_PICARD.out.bai)
+        ch_genome_bam       = BAM_MARKDUPLICATES_PICARD.out.bam
+        ch_genome_bam_index = params.bam_csi_index ? BAM_MARKDUPLICATES_PICARD.out.csi : BAM_MARKDUPLICATES_PICARD.out.bai
         ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.stats.collect{it[1]})
         ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.flagstat.collect{it[1]})
         ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.idxstats.collect{it[1]})
@@ -760,31 +764,30 @@ workflow RNASEQ {
             .flatten()
             .collectFile(name: 'name_replacement.txt', newLine: true)
 
-        MULTIQC (
-            ch_multiqc_files.collect(),
-            ch_multiqc_config.toList(),
-            ch_multiqc_custom_config.toList(),
-            ch_multiqc_logo.toList(),
-            ch_name_replacements,
-            []
-        )
-        ch_multiqc_report = MULTIQC.out.report
+        //MULTIQC (
+         //   ch_multiqc_files.collect(),
+        //    ch_multiqc_config.toList(),
+        //    ch_multiqc_custom_config.toList(),
+        //    ch_multiqc_logo.toList(),
+        //    ch_name_replacements,
+        //    []
+        //)
+       // ch_multiqc_report = MULTIQC.out.report
     }
 
     //
     // Generate samplesheet with BAM paths for future runs
     //
-    if (!params.skip_alignment) {
+
+    ch_samplesheet_with_bams = Channel.empty()
+    if (!params.skip_alignment && params.save_align_intermeds) {
         // Create channel with original input info and BAM paths
-        ch_fastq
-            .join(ch_genome_bam, by: 0, remainder: true)
-            .join(ch_transcriptome_bam, by: 0, remainder: true)
-            .map { meta, reads, genome_bam, transcriptome_bam ->
-                // Extract FASTQ paths
-                def fastq_1 = reads && reads.size() > 0 ? reads[0] : ''
-                def fastq_2 = reads && reads.size() > 1 ? reads[1] : ''
+        ch_fastq.map { meta, reads -> [ meta.id, meta, reads ] }
+            .join(ch_unprocessed_bams.map { meta, genome_bam, transcriptome_bam -> [ meta.id, meta, genome_bam, transcriptome_bam ] })
+            .transpose()
+            .map { id, fastq_meta, reads, meta, genome_bam, transcriptome_bam ->
                 
-                // Handle BAM paths - use original input paths for BAM input samples, published paths for FASTQ-derived samples
+                // Handle BAM paths (same for all runs of this sample)
                 def genome_bam_published = meta.has_genome_bam ? 
                     (meta.original_genome_bam ?: '') : 
                     mapBamToPublishedPath(genome_bam, meta.id, params.aligner, params.outdir)
@@ -793,12 +796,14 @@ workflow RNASEQ {
                     (meta.original_transcriptome_bam ?: '') : 
                     mapBamToPublishedPath(transcriptome_bam, meta.id, params.aligner, params.outdir)
                 
-                // Return CSV line
+                def fastq_1 = reads[0]
+                def fastq_2 = reads.size() > 1 ? reads[1] : ''
+                
                 return "${meta.id},${fastq_1},${fastq_2},${meta.strandedness},${genome_bam_published},${transcriptome_bam_published}"
             }
             .collectFile(
                 name: 'samplesheet_with_bams.csv',
-                storeDir: "${params.outdir}/pipeline_info",
+                storeDir: "${params.outdir}/samplesheets",
                 newLine: true,
                 seed: 'sample,fastq_1,fastq_2,strandedness,genome_bam,transcriptome_bam'
             )

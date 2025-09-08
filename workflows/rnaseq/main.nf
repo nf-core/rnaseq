@@ -125,18 +125,18 @@ workflow RNASEQ {
         }
         .branch {
             meta, reads, genome_bam, transcriptome_bam ->
-                genome_bam: genome_bam
-                    return [ meta, reads, genome_bam ]
-                transcriptome_bam: transcriptome_bam
-                    return [ meta, reads, transcriptome_bam ]
-                fastq: true
+                bam: genome_bam || transcriptome_bam
+                    return [ meta, genome_bam, transcriptome_bam ]
+                fastq: reads.size() > 0 && reads[0]
                     return [ meta, reads ]
         }
         .set { ch_input_branched }
 
+    // Get inputs for FASTQ and BAM processing paths
+
     ch_fastq = ch_input_branched.fastq
-    ch_genome_bam = ch_input_branched.genome_bam.map { meta, reads, bam -> [ meta, bam ] }.distinct()
-    ch_transcriptome_bam = ch_input_branched.transcriptome_bam.map { meta, reads, bam -> [ meta, bam ] }.distinct()
+    ch_genome_bam = ch_input_branched.bam.map { meta, genome_bam, transcriptome_bam -> [ meta, genome_bam ] }.distinct()
+    ch_transcriptome_bam = ch_input_branched.bam.map { meta, genome_bam, transcriptome_bam -> [ meta, transcriptome_bam ] }.distinct()
 
     // Index pre-aligned input BAM files
     SAMTOOLS_INDEX (
@@ -263,6 +263,7 @@ workflow RNASEQ {
         //
         // SUBWORKFLOW: Count reads from BAM alignments using Salmon
         //
+        ch_transcriptome_bam.view()
         QUANTIFY_STAR_SALMON (
             ch_samplesheet.map { [ [:], it ] },
             ch_transcriptome_bam,
@@ -764,15 +765,15 @@ workflow RNASEQ {
             .flatten()
             .collectFile(name: 'name_replacement.txt', newLine: true)
 
-        //MULTIQC (
-         //   ch_multiqc_files.collect(),
-        //    ch_multiqc_config.toList(),
-        //    ch_multiqc_custom_config.toList(),
-        //    ch_multiqc_logo.toList(),
-        //    ch_name_replacements,
-        //    []
-        //)
-       // ch_multiqc_report = MULTIQC.out.report
+        MULTIQC (
+           ch_multiqc_files.collect(),
+            ch_multiqc_config.toList(),
+            ch_multiqc_custom_config.toList(),
+            ch_multiqc_logo.toList(),
+            ch_name_replacements,
+            []
+        )
+        ch_multiqc_report = MULTIQC.out.report
     }
 
     //
@@ -796,8 +797,8 @@ workflow RNASEQ {
                     (meta.original_transcriptome_bam ?: '') : 
                     mapBamToPublishedPath(transcriptome_bam, meta.id, params.aligner, params.outdir)
                 
-                def fastq_1 = reads[0]
-                def fastq_2 = reads.size() > 1 ? reads[1] : ''
+                def fastq_1 = reads[0].toUriString()
+                def fastq_2 = reads.size() > 1 ? reads[1].toUriString() : ''
                 
                 return "${meta.id},${fastq_1},${fastq_2},${meta.strandedness},${genome_bam_published},${transcriptome_bam_published}"
             }

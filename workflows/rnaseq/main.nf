@@ -26,6 +26,7 @@ include { getStarPercentMapped           } from '../../subworkflows/local/utils_
 include { biotypeInGtf                   } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { getInferexperimentStrandedness } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { methodsDescriptionText         } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { mapBamToPublishedPath          } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -768,6 +769,39 @@ workflow RNASEQ {
             []
         )
         ch_multiqc_report = MULTIQC.out.report
+    }
+
+    //
+    // Generate samplesheet with BAM paths for future runs
+    //
+    if (!params.skip_alignment) {
+        // Create channel with original input info and BAM paths
+        ch_fastq
+            .join(ch_genome_bam, by: 0, remainder: true)
+            .join(ch_transcriptome_bam, by: 0, remainder: true)
+            .map { meta, reads, genome_bam, transcriptome_bam ->
+                // Extract FASTQ paths
+                def fastq_1 = reads && reads.size() > 0 ? reads[0] : ''
+                def fastq_2 = reads && reads.size() > 1 ? reads[1] : ''
+                
+                // Handle BAM paths - use original input paths for BAM input samples, published paths for FASTQ-derived samples
+                def genome_bam_published = meta.has_genome_bam ? 
+                    (meta.original_genome_bam ?: '') : 
+                    mapBamToPublishedPath(genome_bam, meta.id, params.aligner, params.outdir)
+                    
+                def transcriptome_bam_published = meta.has_transcriptome_bam ? 
+                    (meta.original_transcriptome_bam ?: '') : 
+                    mapBamToPublishedPath(transcriptome_bam, meta.id, params.aligner, params.outdir)
+                
+                // Return CSV line
+                return "${meta.id},${fastq_1},${fastq_2},${meta.strandedness},${genome_bam_published},${transcriptome_bam_published}"
+            }
+            .collectFile(
+                name: 'samplesheet_with_bams.csv',
+                storeDir: "${params.outdir}/pipeline_info",
+                newLine: true,
+                seed: 'sample,fastq_1,fastq_2,strandedness,genome_bam,transcriptome_bam'
+            )
     }
 
     emit:

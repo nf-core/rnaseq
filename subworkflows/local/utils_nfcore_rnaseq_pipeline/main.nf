@@ -177,15 +177,24 @@ def checkSamplesAfterGrouping(input) {
         def genome_bam = genome_bams?.find { it != null }
         def transcriptome_bam = transcriptome_bams?.find { it != null }
         
-        // Add BAM flags to meta
+        // Add BAM flags and original paths to meta
         def meta_with_bams = metas[0] + [
             has_genome_bam: genome_bam ? true : false,
-            has_transcriptome_bam: transcriptome_bam ? true : false
+            has_transcriptome_bam: transcriptome_bam ? true : false,
+            original_genome_bam: genome_bam ?: null,
+            original_transcriptome_bam: transcriptome_bam ?: null
         ]
         
         return [ meta_with_bams, fastqs, genome_bam, transcriptome_bam ]
     } else {
-        return [ metas[0], fastqs ]
+        // Add null BAM fields to meta for consistency
+        def meta_no_bams = metas[0] + [
+            has_genome_bam: false,
+            has_transcriptome_bam: false,
+            original_genome_bam: null,
+            original_transcriptome_bam: null
+        ]
+        return [ meta_no_bams, fastqs ]
     }
 }
 
@@ -633,6 +642,36 @@ def getInferexperimentStrandedness(inferexperiment_file, stranded_threshold = 0.
 
     // Use shared calculation function to determine strandedness
     return calculateStrandedness(forwardFragments, reverseFragments, unstrandedFragments, stranded_threshold, unstranded_threshold)
+}
+
+//
+// Function to map work directory BAM paths to published paths
+//
+def mapBamToPublishedPath(bam_path, sample_id, aligner, outdir) {
+    if (!bam_path) return ''
+    
+    def filename = file(bam_path).getName()
+    def base_dir = "${outdir}/${aligner}"
+    
+    // Map based on aligner type and filename patterns
+    if (aligner == 'star_salmon') {
+        if (filename.contains('Aligned.out.bam')) {
+            return "${base_dir}/${sample_id}.Aligned.out.bam"
+        } else if (filename.contains('toTranscriptome')) {
+            return "${base_dir}/${sample_id}.Aligned.toTranscriptome.out.bam"
+        }
+    } else if (aligner == 'star_rsem') {
+        if (filename.contains('genome.bam')) {
+            return "${base_dir}/${sample_id}.STAR.genome.bam"
+        } else if (filename.contains('transcript.bam')) {
+            return "${base_dir}/${sample_id}.transcript.bam"
+        }
+    } else if (aligner == 'hisat2') {
+        return "${base_dir}/${sample_id}.bam"
+    }
+    
+    // Fallback to original filename
+    return "${base_dir}/${filename}"
 }
 
 //

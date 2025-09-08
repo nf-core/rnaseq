@@ -129,6 +129,7 @@ SAMPLE2,sample2_R1.fastq.gz,sample2_R2.fastq.gz,forward,,
 - When using BAM input, you can leave the FASTQ columns empty or omit them
 - Mixed samplesheets (some samples with FASTQ, others with BAM) are supported
 - For BAM file locations from pipeline outputs, see the [output documentation](https://nf-co.re/rnaseq/output)
+- **Automated samplesheet generation**: The pipeline automatically generates a `samplesheet_with_bams.csv` file in the `pipeline_info/` directory containing all samples with their BAM file paths. For FASTQ-derived samples, this includes paths to newly generated BAMs; for BAM input samples, it preserves the original input paths. This complete samplesheet can be used directly for future pipeline runs
 
 ## FASTQ sampling
 

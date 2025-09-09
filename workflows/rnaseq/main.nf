@@ -399,9 +399,12 @@ workflow RNASEQ {
         }
         .multiMap { meta, bam, index, percent_mapped, pass ->
             bam: [ meta, bam, index, pass ]
-            percent_mapped: [ meta.id, percent_mapped, pass ]
+            percent_mapped: [ meta.id, percent_mapped ]
+            percent_mapped_pass: [ meta.id, percent_mapped, pass ]
             status: [ meta.id, pass ]
         }
+
+    ch_percent_mapped = ch_genome_bam_bai_mapping.percent_mapped
 
     // Save mapping status for workflow summary where present
 
@@ -409,7 +412,7 @@ workflow RNASEQ {
         .filter { id, pass -> pass != null }
 
     // Save status for MultiQC report
-    ch_fail_mapping_multiqc = ch_genome_bam_bai_mapping.percent_mapped
+    ch_fail_mapping_multiqc = ch_genome_bam_bai_mapping.percent_mapped_pass
         .filter { id, percent_mapped, pass -> !pass }
         .map { id, percent_mapped, pass -> [ "${id}\t${percent_mapped}" ] }
         .collect()
@@ -796,8 +799,9 @@ workflow RNASEQ {
         // Create channel with original input info and BAM paths
         ch_fastq.map { meta, reads -> [ meta.id, meta, reads ] }
             .join(ch_unprocessed_bams.map { meta, genome_bam, transcriptome_bam -> [ meta.id, meta, genome_bam, transcriptome_bam ] })
+            .join(ch_percent_mapped)
             .transpose()
-            .map { id, fastq_meta, reads, meta, genome_bam, transcriptome_bam ->
+            .map { id, fastq_meta, reads, meta, genome_bam, transcriptome_bam, percent_mapped ->
                 
                 // Handle BAM paths (same for all runs of this sample)
                 def genome_bam_published = meta.has_genome_bam ? 
@@ -810,7 +814,7 @@ workflow RNASEQ {
                 
                 def fastq_1 = reads[0].toUriString()
                 def fastq_2 = reads.size() > 1 ? reads[1].toUriString() : ''
-                def mapped = meta.percent_mapped ?: ''
+                def mapped = percent_mapped != null ? percent_mapped : ''
                 
                 return "${meta.id},${fastq_1},${fastq_2},${meta.strandedness},${genome_bam_published},${mapped},${transcriptome_bam_published}"
             }

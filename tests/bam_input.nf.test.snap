@@ -613,7 +613,6 @@
             [
                 "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055",
                 "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28",
-                "multiqc.parquet:md5,d6ab65abe0f7dd113e41ba25f051a129",
                 "multiqc_citations.txt:md5,564145971ac42922310b2f992a6dcb70",
                 "multiqc_featurecounts_biotype_plot.txt:md5,b633d12b9d6c5993350f45177b103243",
                 "multiqc_samtools_idxstats.txt:md5,14838fa75205d1b87bb387784e7a56ab",
@@ -698,6 +697,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-09-09T15:52:15.029127"
+        "timestamp": "2025-09-09T17:43:37.233952"
     }
 }

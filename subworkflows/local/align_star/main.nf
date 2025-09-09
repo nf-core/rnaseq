@@ -6,6 +6,23 @@ include { STAR_ALIGN                                } from '../../../modules/nf-
 include { STAR_ALIGN_IGENOMES                       } from '../../../modules/local/star_align_igenomes'
 include { BAM_SORT_STATS_SAMTOOLS                   } from '../../nf-core/bam_sort_stats_samtools'
 
+
+//
+// Function that parses and returns the alignment rate from the STAR log output
+//
+def getStarPercentMapped(params, align_log) {
+    def percent_aligned = 0
+    def pattern = /Uniquely mapped reads %\s*\|\s*([\d\.]+)%/
+    align_log.eachLine { line ->
+        def matcher = line =~ pattern
+        if (matcher) {
+            percent_aligned = matcher[0][1].toFloat()
+        }
+    }
+
+    return percent_aligned
+}
+
 workflow ALIGN_STAR {
     take:
     reads               // channel: [ val(meta), [ reads ] ]
@@ -52,6 +69,7 @@ workflow ALIGN_STAR {
     ch_fastq = ch_star_out.out.fastq
     ch_tab = ch_star_out.out.tab
     ch_versions = ch_versions.mix(ch_star_out.out.versions.first())
+    ch_percent_mapped = ch_log_final.map { meta, log -> [ meta, getStarPercentMapped(params, log) ] }
 
     //
     // Sort, index BAM file and run samtools stats, flagstat and idxstats
@@ -74,5 +92,6 @@ workflow ALIGN_STAR {
     stats = BAM_SORT_STATS_SAMTOOLS.out.stats       // channel: [ val(meta), [ stats ] ]
     flagstat = BAM_SORT_STATS_SAMTOOLS.out.flagstat // channel: [ val(meta), [ flagstat ] ]
     idxstats = BAM_SORT_STATS_SAMTOOLS.out.idxstats // channel: [ val(meta), [ idxstats ] ]
+    percent_mapped = ch_percent_mapped              // channel: [ val(meta), percent_mapped ]
     versions = ch_versions                          // channel: [ versions.yml ]
 }

@@ -46,6 +46,13 @@
                 "exists": true,
                 "pattern": "^([\\S\\s]*\\/)?[^\\s\\/]+\\.(bam|BAM)$",
                 "errorMessage": "Transcriptome BAM file cannot contain spaces and must have extension '.bam'"
+            },
+            "percent_mapped": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 100,
+                "errorMessage": "Percent mapped must be a number between 0 and 100",
+                "meta": "percent_mapped"
             }
         },
         "required": ["sample", "fastq_1", "strandedness"]

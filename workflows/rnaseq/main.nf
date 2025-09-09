@@ -22,7 +22,6 @@ include { BAM_DEDUP_UMI as BAM_DEDUP_UMI_HISAT2 } from '../../subworkflows/nf-co
 
 include { checkSamplesAfterGrouping      } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { multiqcTsvFromList             } from '../../subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness'
-include { getStarPercentMapped           } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { biotypeInGtf                   } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { getInferexperimentStrandedness } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { methodsDescriptionText         } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
@@ -105,6 +104,7 @@ workflow RNASEQ {
     ch_trim_status = Channel.empty()
     ch_map_status = Channel.empty()
     ch_strand_status = Channel.empty()
+    ch_percent_mapped = Channel.empty()
 
     //
     // Create channel from input file provided through params.input
@@ -128,7 +128,7 @@ workflow RNASEQ {
                 bam: genome_bam || transcriptome_bam
                     return [ meta, genome_bam, transcriptome_bam ]
                 fastq: reads.size() > 0 && reads[0]
-                    return [ meta, reads ]
+                    return [ meta.findAll {it.key != 'percent_mapped'}, reads ]
         }
         .set { ch_input_branched }
 
@@ -137,6 +137,12 @@ workflow RNASEQ {
     ch_fastq = ch_input_branched.fastq
     ch_genome_bam = ch_input_branched.bam.map { meta, genome_bam, transcriptome_bam -> [ meta, genome_bam ] }.distinct()
     ch_transcriptome_bam = ch_input_branched.bam.map { meta, genome_bam, transcriptome_bam -> [ meta, transcriptome_bam ] }.distinct()
+
+    // Derive mapping percentages if supplied with input
+
+    ch_percent_mapped = ch_input_branched.bam
+        .filter{ meta, genome_bam, transcriptome_bam -> meta.percent_mapped }
+        .map { meta, genome_bam, transcriptome_bam -> [ meta, meta.percent_mapped ] }
 
     // Index pre-aligned input BAM files
     SAMTOOLS_INDEX (
@@ -217,9 +223,11 @@ workflow RNASEQ {
             ch_fasta.map { [ [:], it ] },
             params.use_sentieon_star
         )
+        
         ch_genome_bam                    = ch_genome_bam.mix(ALIGN_STAR.out.bam)
         ch_genome_bam_index              = ch_genome_bam_index.mix(params.bam_csi_index ? ALIGN_STAR.out.csi : ALIGN_STAR.out.bai)
         ch_transcriptome_bam             = ch_transcriptome_bam.mix(ALIGN_STAR.out.bam_transcript)
+        ch_percent_mapped                = ch_percent_mapped.mix(ALIGN_STAR.out.percent_mapped)
         ch_unprocessed_bams              = ch_genome_bam.join(ch_transcriptome_bam)
         ch_star_log                      = ALIGN_STAR.out.log_final
         ch_unaligned_sequences           = ALIGN_STAR.out.fastq
@@ -377,51 +385,53 @@ workflow RNASEQ {
         }
     }
 
-    //
-    // Filter channels to get samples that passed STAR minimum mapping percentage
-    //
-    if (!params.skip_alignment && params.aligner.contains('star')) {
-        ch_star_log
-            .map { meta, align_log -> [ meta ] + getStarPercentMapped(params, align_log) }
-            .set { ch_percent_mapped }
+    // Filter bam and index by percent mapped being present in the meta
 
-        // Save status for workflow summary
-        ch_map_status = ch_percent_mapped
-            .map {
-                meta, mapped, pass ->
-                    return [ meta.id, pass ]
-            }
+    ch_genome_bam_bai_mapping = ch_genome_bam
+        .join(ch_genome_bam_index)
+        .join(ch_percent_mapped, remainder: true)
+        .map{ row ->
+            def (meta, bam, index) = row[0..2]
+            def has_percent_mapped = row.size() == 4
+            def percent_mapped = has_percent_mapped ? row[3] : null
+            def pass = has_percent_mapped ? percent_mapped >= params.min_mapped_reads.toFloat() : null
+            return [ meta, bam, index, pass ]
+        }
+        .multiMap { meta, bam, index, pass ->
+            bam: [ meta, bam, index, pass ]
+            status: [ meta.id, pass ]
+        }
 
-        ch_genome_bam
-            .join(ch_percent_mapped, by: [0])
-            .map { meta, ofile, mapped, pass -> if (pass) [ meta, ofile ] }
-            .set { ch_genome_bam }
+    // Save mapping status for workflow summary where present
 
-        ch_genome_bam_index
-            .join(ch_percent_mapped, by: [0])
-            .map { meta, ofile, mapped, pass -> if (pass) [ meta, ofile ] }
-            .set { ch_genome_bam_index }
+    ch_map_status = ch_genome_bam_bai_mapping.status
+        .filter { id, pass -> pass != null }
 
-        ch_percent_mapped
-            .branch { meta, mapped, pass ->
-                pass: pass
-                    return [ "$meta.id\t$mapped" ]
-                fail: !pass
-                    return [ "$meta.id\t$mapped" ]
-            }
-            .set { ch_pass_fail_mapped }
+    // Save status for MultiQC report
+    ch_fail_mapping_multiqc = ch_map_status
+        .filter { meta, pass -> !pass }
+        .map { meta, pass -> [ "$meta.id\t${meta.percent_mapped}" ] }
+        .collect()
+        .map {
+            tsv_data ->
+                def header = ["Sample", "STAR uniquely mapped reads (%)"]
+                sample_status_header_multiqc.text + multiqcTsvFromList(tsv_data, header)
+        }
+        .collectFile(name: 'fail_mapped_samples_mqc.tsv')
 
-        ch_pass_fail_mapped
-            .fail
-            .collect()
-            .map {
-                tsv_data ->
-                    def header = ["Sample", "STAR uniquely mapped reads (%)"]
-                    sample_status_header_multiqc.text + multiqcTsvFromList(tsv_data, header)
-            }
-            .set { ch_fail_mapping_multiqc }
-        ch_multiqc_files = ch_multiqc_files.mix(ch_fail_mapping_multiqc.collectFile(name: 'fail_mapped_samples_mqc.tsv'))
-    }
+    ch_multiqc_files = ch_multiqc_files.mix(ch_fail_mapping_multiqc)
+
+    // Where a percent mapping is present, use it to filter bam and index
+
+    map_filtered_genome_bam_bai = ch_genome_bam_bai_mapping.bam
+        .filter { meta, bam, index, pass -> pass || pass == null }
+        .multiMap { meta, bam, index, pass ->
+            bam: [ meta, bam ]
+            index: [ meta, index ]
+        }
+    
+    ch_genome_bam = map_filtered_genome_bam_bai.bam
+    ch_genome_bam_index = map_filtered_genome_bam_bai.index
 
     //
     // MODULE: Run Preseq
@@ -763,6 +773,7 @@ workflow RNASEQ {
             }
             .flatten()
             .collectFile(name: 'name_replacement.txt', newLine: true)
+            .ifEmpty([])
 
         MULTIQC (
             ch_multiqc_files.collect(),
@@ -798,14 +809,15 @@ workflow RNASEQ {
                 
                 def fastq_1 = reads[0].toUriString()
                 def fastq_2 = reads.size() > 1 ? reads[1].toUriString() : ''
+                def mapped = meta.percent_mapped ?: ''
                 
-                return "${meta.id},${fastq_1},${fastq_2},${meta.strandedness},${genome_bam_published},${transcriptome_bam_published}"
+                return "${meta.id},${fastq_1},${fastq_2},${meta.strandedness},${genome_bam_published},${mapped},${transcriptome_bam_published}"
             }
             .collectFile(
                 name: 'samplesheet_with_bams.csv',
                 storeDir: "${params.outdir}/samplesheets",
                 newLine: true,
-                seed: 'sample,fastq_1,fastq_2,strandedness,genome_bam,transcriptome_bam'
+                seed: 'sample,fastq_1,fastq_2,strandedness,genome_bam,percent_mapped,transcriptome_bam'
             )
     }
 

@@ -176,7 +176,7 @@ def checkSamplesAfterGrouping(input) {
     if (genome_bams != null || transcriptome_bams != null) {
         def genome_bam = genome_bams?.find { it != null }
         def transcriptome_bam = transcriptome_bams?.find { it != null }
-        
+
         // Add BAM flags and original paths to meta
         def meta_with_bams = metas[0] + [
             has_genome_bam: genome_bam ? true : false,
@@ -184,7 +184,7 @@ def checkSamplesAfterGrouping(input) {
             original_genome_bam: genome_bam ?: null,
             original_transcriptome_bam: transcriptome_bam ?: null
         ]
-        
+
         return [ meta_with_bams, fastqs, genome_bam, transcriptome_bam ]
     } else {
         // Add null BAM fields to meta for consistency
@@ -629,10 +629,10 @@ def getInferexperimentStrandedness(inferexperiment_file, stranded_threshold = 0.
 //
 def mapBamToPublishedPath(bam_path, sample_id, aligner, outdir) {
     if (!bam_path) return ''
-    
+
     def filename = file(bam_path).getName()
     def base_dir = "${outdir}/${aligner}"
-    
+
     // Map based on aligner type and filename patterns
     if (aligner == 'star_salmon') {
         if (filename.contains('Aligned.out.bam')) {
@@ -649,7 +649,7 @@ def mapBamToPublishedPath(bam_path, sample_id, aligner, outdir) {
     } else if (aligner == 'hisat2') {
         return "${base_dir}/${sample_id}.bam"
     }
-    
+
     // Fallback to original filename
     return "${base_dir}/${filename}"
 }

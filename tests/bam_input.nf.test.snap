@@ -619,7 +619,6 @@
                 "multiqc_samtools_idxstats.txt:md5,14838fa75205d1b87bb387784e7a56ab",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "qualimap_gene_coverage_profile_Counts.txt:md5,4f590ba744c92053ca4abc8c9f136f07",
                 "qualimap_gene_coverage_profile_Normalised.txt:md5,8af17646df87d026f0d120d7bde8e6e0",

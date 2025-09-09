@@ -392,9 +392,8 @@ workflow RNASEQ {
         .join(ch_percent_mapped, remainder: true)
         .map{ row ->
             def (meta, bam, index) = row[0..2]
-            def has_percent_mapped = row.size() == 4
-            def percent_mapped = has_percent_mapped ? row[3] : null
-            def pass = has_percent_mapped ? percent_mapped >= params.min_mapped_reads.toFloat() : null
+            def percent_mapped = row.size() == 4 ? row[3] : null
+            def pass = percent_mapped != null ? percent_mapped >= params.min_mapped_reads.toFloat() : null
             return [ meta, bam, index, percent_mapped, pass ]
         }
         .multiMap { meta, bam, index, percent_mapped, pass ->

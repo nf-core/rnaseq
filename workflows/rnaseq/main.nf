@@ -395,10 +395,11 @@ workflow RNASEQ {
             def has_percent_mapped = row.size() == 4
             def percent_mapped = has_percent_mapped ? row[3] : null
             def pass = has_percent_mapped ? percent_mapped >= params.min_mapped_reads.toFloat() : null
-            return [ meta, bam, index, pass ]
+            return [ meta, bam, index, percent_mapped, pass ]
         }
-        .multiMap { meta, bam, index, pass ->
+        .multiMap { meta, bam, index, percent_mapped, pass ->
             bam: [ meta, bam, index, pass ]
+            percent_mapped: [ meta.id, percent_mapped, pass ]
             status: [ meta.id, pass ]
         }
 
@@ -408,9 +409,9 @@ workflow RNASEQ {
         .filter { id, pass -> pass != null }
 
     // Save status for MultiQC report
-    ch_fail_mapping_multiqc = ch_map_status
-        .filter { meta, pass -> !pass }
-        .map { meta, pass -> [ "$meta.id\t${meta.percent_mapped}" ] }
+    ch_fail_mapping_multiqc = ch_genome_bam_bai_mapping.percent_mapped
+        .filter { id, percent_mapped, pass -> !pass }
+        .map { id, percent_mapped, pass -> [ "${id}\t${percent_mapped}" ] }
         .collect()
         .map {
             tsv_data ->

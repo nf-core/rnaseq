@@ -439,7 +439,7 @@ workflow RNASEQ {
     //
     // MODULE: Run Preseq
     //
-    if (!params.skip_alignment && !params.skip_qc && !params.skip_preseq) {
+    if (!params.skip_qc && !params.skip_preseq) {
         PRESEQ_LCEXTRAP (
             ch_genome_bam
         )
@@ -450,7 +450,7 @@ workflow RNASEQ {
     //
     // SUBWORKFLOW: Mark duplicate reads
     //
-    if (!params.skip_alignment && !params.skip_markduplicates && !params.with_umi) {
+    if (!params.skip_markduplicates && !params.with_umi) {
         BAM_MARKDUPLICATES_PICARD (
             ch_genome_bam,
             ch_fasta.map { [ [:], it ] },
@@ -469,7 +469,7 @@ workflow RNASEQ {
     //
     // MODULE: STRINGTIE
     //
-    if (!params.skip_alignment && !params.skip_stringtie) {
+    if (!params.skip_stringtie) {
         STRINGTIE_STRINGTIE (
             ch_genome_bam,
             ch_gtf
@@ -481,7 +481,7 @@ workflow RNASEQ {
     // MODULE: Feature biotype QC using featureCounts
     //
     def biotype = params.gencode ? "gene_type" : params.featurecounts_group_type
-    if (!params.skip_alignment && !params.skip_qc && !params.skip_biotype_qc && biotype) {
+    if (!params.skip_qc && !params.skip_biotype_qc && biotype) {
 
         ch_gtf
             .map { biotypeInGtf(it, biotype) }
@@ -511,7 +511,7 @@ workflow RNASEQ {
     //
     // MODULE: Genome-wide coverage with BEDTools
     //
-    if (!params.skip_alignment && !params.skip_bigwig) {
+    if (!params.skip_bigwig) {
 
         ch_genomecov_input = ch_genome_bam.map { meta, bam -> [ meta, bam, 1 ] }
 
@@ -548,7 +548,7 @@ workflow RNASEQ {
     //
     // MODULE: Downstream QC steps
     //
-    if (!params.skip_alignment && !params.skip_qc) {
+    if (!params.skip_qc) {
         if (!params.skip_qualimap) {
             QUALIMAP_RNASEQ (
                 ch_genome_bam,

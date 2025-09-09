@@ -46,16 +46,19 @@ If you set the strandedness value to `auto`, the pipeline will sub-sample the in
 #### Usage Examples
 
 1. **Forward Stranded Sample:**
+
    - Forward fraction: 0.85
    - Reverse fraction: 0.15
    - **Classification:** Forward stranded
 
 2. **Reverse Stranded Sample:**
+
    - Forward fraction: 0.1
    - Reverse fraction: 0.9
    - **Classification:** Reverse stranded
 
 3. **Unstranded Sample:**
+
    - Forward fraction: 0.45
    - Reverse fraction: 0.55
    - **Classification:** Unstranded
@@ -92,13 +95,13 @@ TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,,reverse
 TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,,reverse
 ```
 
-| Column         | Description                                                                                                                                                                            |
-| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `sample`       | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
-| `fastq_1`      | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
-| `fastq_2`      | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
-| `strandedness` | Sample strand-specificity. Must be one of `unstranded`, `forward`, `reverse` or `auto`.                                                                                                |
-| `genome_bam`   | **Optional**. Full path to genome-aligned BAM file. Typically from previous pipeline runs (see [output documentation](https://nf-co.re/rnaseq/output#star-salmon-and-kallisto) or [STAR/RSEM](https://nf-co.re/rnaseq/output#star-via-rsem)).                     |
+| Column              | Description                                                                                                                                                                                                                                          |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `sample`            | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`).                                                               |
+| `fastq_1`           | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                                                                                           |
+| `fastq_2`           | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                                                                                           |
+| `strandedness`      | Sample strand-specificity. Must be one of `unstranded`, `forward`, `reverse` or `auto`.                                                                                                                                                              |
+| `genome_bam`        | **Optional**. Full path to genome-aligned BAM file. Typically from previous pipeline runs (see [output documentation](https://nf-co.re/rnaseq/output#star-salmon-and-kallisto) or [STAR/RSEM](https://nf-co.re/rnaseq/output#star-via-rsem)).        |
 | `transcriptome_bam` | **Optional**. Full path to transcriptome-aligned BAM file. Typically from previous pipeline runs (see [output documentation](https://nf-co.re/rnaseq/output#star-salmon-and-kallisto) or [STAR/RSEM](https://nf-co.re/rnaseq/output#star-via-rsem)). |
 
 An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.

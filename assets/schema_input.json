@@ -42,7 +42,7 @@
             },
             "transcriptome_bam": {
                 "type": "string",
-                "format": "file-path", 
+                "format": "file-path",
                 "exists": true,
                 "pattern": "^([\\S\\s]*\\/)?[^\\s\\/]+\\.(bam|BAM)$",
                 "errorMessage": "Transcriptome BAM file cannot contain spaces and must have extension '.bam'"

@@ -223,7 +223,7 @@ workflow RNASEQ {
             ch_fasta.map { [ [:], it ] },
             params.use_sentieon_star
         )
-        
+
         ch_genome_bam                    = ch_genome_bam.mix(ALIGN_STAR.out.bam)
         ch_genome_bam_index              = ch_genome_bam_index.mix(params.bam_csi_index ? ALIGN_STAR.out.csi : ALIGN_STAR.out.bai)
         ch_transcriptome_bam             = ch_transcriptome_bam.mix(ALIGN_STAR.out.bam_transcript)
@@ -433,7 +433,7 @@ workflow RNASEQ {
             bam: [ meta, bam ]
             index: [ meta, index ]
         }
-    
+
     ch_genome_bam = map_filtered_genome_bam_bai.bam
     ch_genome_bam_index = map_filtered_genome_bam_bai.index
 
@@ -802,20 +802,20 @@ workflow RNASEQ {
             .join(ch_percent_mapped)
             .transpose()
             .map { id, fastq_meta, reads, meta, genome_bam, transcriptome_bam, percent_mapped ->
-                
+
                 // Handle BAM paths (same for all runs of this sample)
-                def genome_bam_published = meta.has_genome_bam ? 
-                    (meta.original_genome_bam ?: '') : 
+                def genome_bam_published = meta.has_genome_bam ?
+                    (meta.original_genome_bam ?: '') :
                     mapBamToPublishedPath(genome_bam, meta.id, params.aligner, params.outdir)
-                    
-                def transcriptome_bam_published = meta.has_transcriptome_bam ? 
-                    (meta.original_transcriptome_bam ?: '') : 
+
+                def transcriptome_bam_published = meta.has_transcriptome_bam ?
+                    (meta.original_transcriptome_bam ?: '') :
                     mapBamToPublishedPath(transcriptome_bam, meta.id, params.aligner, params.outdir)
-                
+
                 def fastq_1 = reads[0].toUriString()
                 def fastq_2 = reads.size() > 1 ? reads[1].toUriString() : ''
                 def mapped = percent_mapped != null ? percent_mapped : ''
-                
+
                 return "${meta.id},${fastq_1},${fastq_2},${meta.strandedness},${genome_bam_published},${mapped},${transcriptome_bam_published}"
             }
             .collectFile(

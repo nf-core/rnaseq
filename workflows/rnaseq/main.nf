@@ -412,7 +412,7 @@ workflow RNASEQ {
 
     // Save status for MultiQC report
     ch_fail_mapping_multiqc = ch_genome_bam_bai_mapping.percent_mapped_pass
-        .filter { id, percent_mapped, pass -> !pass }
+        .filter { id, percent_mapped, pass -> pass != null && !pass }
         .map { id, percent_mapped, pass -> [ "${id}\t${percent_mapped}" ] }
         .collect()
         .map {

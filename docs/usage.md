@@ -46,16 +46,19 @@ If you set the strandedness value to `auto`, the pipeline will sub-sample the in
 #### Usage Examples
 
 1. **Forward Stranded Sample:**
+
    - Forward fraction: 0.85
    - Reverse fraction: 0.15
    - **Classification:** Forward stranded
 
 2. **Reverse Stranded Sample:**
+
    - Forward fraction: 0.1
    - Reverse fraction: 0.9
    - **Classification:** Reverse stranded
 
 3. **Unstranded Sample:**
+
    - Forward fraction: 0.45
    - Reverse fraction: 0.55
    - **Classification:** Unstranded
@@ -100,6 +103,7 @@ TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,,reverse
 | `strandedness`      | Sample strand-specificity. Must be one of `unstranded`, `forward`, `reverse` or `auto`.                                                                                                                                                              |
 | `genome_bam`        | **Optional**. Full path to genome-aligned BAM file. Typically from previous pipeline runs (see [output documentation](https://nf-co.re/rnaseq/output#star-salmon-and-kallisto) or [STAR/RSEM](https://nf-co.re/rnaseq/output#star-via-rsem)).        |
 | `transcriptome_bam` | **Optional**. Full path to transcriptome-aligned BAM file. Typically from previous pipeline runs (see [output documentation](https://nf-co.re/rnaseq/output#star-salmon-and-kallisto) or [STAR/RSEM](https://nf-co.re/rnaseq/output#star-via-rsem)). |
+| `percent_mapped`    | **Optional**. Percentage of reads that mapped during alignment (0-100). Useful for quality assessment and filtering.                                                                                                                                 |
 
 An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
 
@@ -130,6 +134,23 @@ SAMPLE2,sample2_R1.fastq.gz,sample2_R2.fastq.gz,forward,,
 - Mixed samplesheets (some samples with FASTQ, others with BAM) are supported
 - For BAM file locations from pipeline outputs, see the [output documentation](https://nf-co.re/rnaseq/output)
 - **Automated samplesheet generation**: When using `--save_align_intermeds`, the pipeline automatically generates a `samplesheet_with_bams.csv` file in the `samplesheets/` directory containing all samples with their BAM file paths. For FASTQ-derived samples, this includes paths to newly generated BAMs; for BAM input samples, it preserves the original input paths. This complete samplesheet can be used directly for future pipeline runs
+
+### Reprocessing workflow with BAM input
+
+When reprocessing data using the auto-generated `samplesheet_with_bams.csv` from a previous run:
+
+1. **Use the generated samplesheet**: The `samplesheet_with_bams.csv` contains all necessary BAM file paths
+2. **Skip alignment steps**: Add `--skip_alignment` to prevent unnecessary index generation and alignment processing
+3. **Example command**:
+   ```bash
+   nextflow run nf-core/rnaseq \
+     --input samplesheets/samplesheet_with_bams.csv \
+     --skip_alignment \
+     --outdir results_reprocessed \
+     -profile docker
+   ```
+
+This approach allows you to efficiently reprocess data for downstream analysis (quantification, differential expression, QC) without repeating the time-consuming alignment steps.
 
 ## FASTQ sampling
 

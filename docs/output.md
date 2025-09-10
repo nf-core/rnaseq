@@ -10,6 +10,10 @@ nextflow run nf-core/rnaseq -profile test_full,<docker/singularity/institute>
 
 The directories listed below will be created in the results directory after the pipeline has finished. All paths are relative to the top-level results directory.
 
+:::tip
+Many of the BAM files produced by this pipeline can be reused as input for future runs. This is particularly useful for reprocessing data or running downstream analysis steps without repeating computationally expensive alignment. See the [usage documentation](https://nf-co.re/rnaseq/usage#using-bam-files-as-input) for details on using BAM files as input.
+:::
+
 ## Pipeline overview
 
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
@@ -213,8 +217,8 @@ When `--remove_ribo_rna` is specified, the pipeline uses [SortMeRNA](https://git
 <summary>Output files</summary>
 
 - `star_salmon/`
-  - `*.Aligned.out.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the reference genome will be placed in this directory.
-  - `*.Aligned.toTranscriptome.out.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the transcriptome will be placed in this directory.
+  - `*.Aligned.out.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the reference genome will be placed in this directory. These files can be reused as `genome_bam` input in future pipeline runs.
+  - `*.Aligned.toTranscriptome.out.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the transcriptome will be placed in this directory. These files can be reused as `transcriptome_bam` input in future pipeline runs.
   - `salmon.merged.gene_counts.tsv`: Matrix of gene-level raw counts across all samples.
   - `salmon.merged.gene_tpm.tsv`: Matrix of gene-level TPM values across all samples.
   - `salmon.merged.gene.SummarizedExperiment.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the abundance TPM (`tpm`), estimated counts (`counts`) and gene length (`length`), estimated library size-scaled counts (`counts_scaled`), estimated length-scaled counts (`counts_length_scaled`) in the assays slot for genes.
@@ -276,8 +280,8 @@ The STAR section of the MultiQC report shows a bar plot with alignment rates: go
   - `rsem.merged.transcript_tpm.tsv`: Matrix of isoform-level TPM values across all samples.
   - `*.genes.results`: RSEM gene-level quantification results for each sample.
   - `*.isoforms.results`: RSEM isoform-level quantification results for each sample.
-  - `*.STAR.genome.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the reference genome will be placed in this directory.
-  - `*.transcript.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the transcriptome will be placed in this directory.
+  - `*.STAR.genome.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the reference genome will be placed in this directory. These files can be reused as `genome_bam` input in future pipeline runs.
+  - `*.transcript.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the transcriptome will be placed in this directory. These files can be reused as `transcriptome_bam` input in future pipeline runs.
 - `star_rsem/<SAMPLE>.stat/`
   - `*.cnt`, `*.model`, `*.theta`: RSEM counts and statistics for each sample.
   - `star_rsem/log/`
@@ -299,7 +303,7 @@ You can choose to align and quantify your data with RSEM by providing the `--ali
 <summary>Output files</summary>
 
 - `hisat2/`
-  - `<SAMPLE>.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the reference genome will be placed in this directory.
+  - `<SAMPLE>.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the reference genome will be placed in this directory. These files can be reused as `genome_bam` input in future pipeline runs.
 - `hisat2/log/`
   - `*.log`: HISAT2 alignment report containing the mapping results summary.
 - `hisat2/unmapped/`
@@ -323,7 +327,7 @@ The pipeline has been written in a way where all the files generated downstream 
 <summary>Output files</summary>
 
 - `<ALIGNER>/`
-  - `<SAMPLE>.sorted.bam`: If `--save_align_intermeds` is specified the original coordinate sorted BAM file containing read alignments will be placed in this directory.
+  - `<SAMPLE>.sorted.bam`: If `--save_align_intermeds` is specified the original coordinate sorted BAM file containing read alignments will be placed in this directory. These files can be reused as `genome_bam` input in future pipeline runs.
   - `<SAMPLE>.sorted.bam.bai`: If `--save_align_intermeds` is specified the BAI index file for the original coordinate sorted BAM file will be placed in this directory.
   - `<SAMPLE>.sorted.bam.csi`: If `--save_align_intermeds --bam_csi_index` is specified the CSI index file for the original coordinate sorted BAM file will be placed in this directory.
 - `<ALIGNER>/samtools_stats/`
@@ -864,6 +868,8 @@ A number of genome-specific files are generated by the pipeline because they are
   - Reports generated by the pipeline: `pipeline_report.html`, `pipeline_report.txt` and `software_versions.yml`. The `pipeline_report*` files will only be present if the `--email` / `--email_on_fail` parameter's are used when running the pipeline.
   - Reformatted samplesheet files used as input to the pipeline: `samplesheet.valid.csv`.
   - Parameters used by the pipeline run: `params.json`.
+- `samplesheets/`
+  - `samplesheet_with_bams.csv`: **Auto-generated complete samplesheet** (only created when using `--save_align_intermeds`) containing all samples with BAM file paths. For samples processed from FASTQ, includes paths to newly generated BAMs; for samples that were BAM input, preserves the original input paths. This comprehensive samplesheet can be used directly for future pipeline runs, enabling efficient reprocessing without re-alignment.
 
 </details>
 

@@ -53,3 +53,5 @@ reports:
     display: "All samples STAR RSEM merged transcript raw counts"
   "**/star_rsem/rsem.merged.transcript_tpm.tsv":
     display: "All samples STAR RSEM merged transcript TPM counts"
+  "**/samplesheets/samplesheet_with_bams.csv":
+    display: "Samplesheet with BAM paths for reanalysis"

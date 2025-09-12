@@ -14,7 +14,16 @@
                     "test_dupMatrix.txt:md5,2beda4c140548a2b8c91bf6bde01ddc6"
                 ]
             ],
-            null,
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true,
+                        "strandedness": "forward"
+                    },
+                    "test_intercept_slope.txt:md5,6af503d11e39d5aca6bd14b77065f4ae"
+                ]
+            ],
             [
                 [
                     {
@@ -33,10 +42,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.6"
         },
-        "timestamp": "2024-07-11T11:21:44.31238184"
+        "timestamp": "2025-08-19T20:07:27.951867"
     },
     "sarscov2 - bam - single_end - stub": {
         "content": [
@@ -216,7 +225,16 @@
                     "test_dupMatrix.txt:md5,5a327feaba56e5ea96a2cb7e8577e196"
                 ]
             ],
-            null,
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false,
+                        "strandedness": "forward"
+                    },
+                    "test_intercept_slope.txt:md5,e5ce6ae599867b8859865e9edbf899b5"
+                ]
+            ],
             [
                 [
                     {
@@ -235,10 +253,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.6"
         },
-        "timestamp": "2024-07-11T11:22:10.053957095"
+        "timestamp": "2025-08-19T20:07:52.71823"
     },
     "sarscov2 - bam - paired_end - stub": {
         "content": [

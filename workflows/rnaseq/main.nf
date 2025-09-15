@@ -203,7 +203,7 @@ workflow RNASEQ {
     ch_star_log            = Channel.empty()
     ch_unaligned_sequences = Channel.empty()
 
-    if (!params.skip_alignment && params.aligner == 'star_salmon') {
+    if (!params.skip_alignment && (params.aligner == 'star_salmon' || params.aligner == 'star_rsem')) {
         // Check if an AWS iGenome has been provided to use the appropriate version of STAR
         def is_aws_igenome = false
         if (params.fasta && params.gtf) {
@@ -267,6 +267,29 @@ workflow RNASEQ {
                 .mix(ALIGN_STAR.out.flagstat.collect{it[1]})
                 .mix(ALIGN_STAR.out.idxstats.collect{it[1]})
         }
+    }
+
+    if (params.aligner == 'star_rsem') {
+
+        QUANTIFY_RSEM (
+            ch_transcriptome_bam,
+            ch_rsem_index,
+            params.use_sentieon_star
+        )
+        ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_RSEM.out.stat.collect{it[1]})
+
+        if (!params.skip_qc & !params.skip_deseq2_qc) {
+            DESEQ2_QC_RSEM (
+                QUANTIFY_RSEM.out.merged_counts_gene,
+                ch_pca_header_multiqc,
+                ch_clustering_header_multiqc
+            )
+            ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_RSEM.out.pca_multiqc.collect())
+            ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_RSEM.out.dists_multiqc.collect())
+            ch_versions = ch_versions.mix(DESEQ2_QC_RSEM.out.versions)
+        }
+
+    } else if (params.aligner == 'star_salmon') {
 
         //
         // SUBWORKFLOW: Count reads from BAM alignments using Salmon
@@ -296,41 +319,6 @@ workflow RNASEQ {
             ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_STAR_SALMON.out.pca_multiqc.collect())
             ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_STAR_SALMON.out.dists_multiqc.collect())
             ch_versions = ch_versions.mix(DESEQ2_QC_STAR_SALMON.out.versions)
-        }
-    }
-
-    //
-    // SUBWORKFLOW: Alignment with STAR and gene/transcript quantification with RSEM
-    //
-    if (!params.skip_alignment && params.aligner == 'star_rsem') {
-        QUANTIFY_RSEM (
-            ch_strand_inferred_filtered_fastq,
-            ch_rsem_index,
-            ch_fasta.map { [ [:], it ] },
-            params.use_sentieon_star
-        )
-        ch_genome_bam        = ch_genome_bam.mix(QUANTIFY_RSEM.out.bam)
-        ch_transcriptome_bam = ch_transcriptome_bam.mix(QUANTIFY_RSEM.out.bam_transcript)
-        ch_unprocessed_bams  = ch_genome_bam.join(ch_transcriptome_bam)
-        ch_genome_bam_index  = ch_genome_bam_index.mix(params.bam_csi_index ? QUANTIFY_RSEM.out.csi : QUANTIFY_RSEM.out.bai)
-        ch_star_log          = QUANTIFY_RSEM.out.logs
-        ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_RSEM.out.stats.collect{it[1]})
-        ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_RSEM.out.flagstat.collect{it[1]})
-        ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_RSEM.out.idxstats.collect{it[1]})
-        ch_multiqc_files = ch_multiqc_files.mix(ch_star_log.collect{it[1]})
-        ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_RSEM.out.stat.collect{it[1]})
-
-        ch_versions = ch_versions.mix(QUANTIFY_RSEM.out.versions)
-
-        if (!params.skip_qc & !params.skip_deseq2_qc) {
-            DESEQ2_QC_RSEM (
-                QUANTIFY_RSEM.out.merged_counts_gene,
-                ch_pca_header_multiqc,
-                ch_clustering_header_multiqc
-            )
-            ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_RSEM.out.pca_multiqc.collect())
-            ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_RSEM.out.dists_multiqc.collect())
-            ch_versions = ch_versions.mix(DESEQ2_QC_RSEM.out.versions)
         }
     }
 

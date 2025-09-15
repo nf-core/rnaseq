@@ -280,8 +280,8 @@ The STAR section of the MultiQC report shows a bar plot with alignment rates: go
   - `rsem.merged.transcript_tpm.tsv`: Matrix of isoform-level TPM values across all samples.
   - `*.genes.results`: RSEM gene-level quantification results for each sample.
   - `*.isoforms.results`: RSEM isoform-level quantification results for each sample.
-  - `*.STAR.genome.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the reference genome will be placed in this directory. These files can be reused as `genome_bam` input in future pipeline runs.
-  - `*.transcript.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the transcriptome will be placed in this directory. These files can be reused as `transcriptome_bam` input in future pipeline runs.
+  - `*.STAR.genome.bam`: If `--save_align_intermeds` is specified the BAM file from STAR alignment containing read alignments to the reference genome will be placed in this directory. These files can be reused as `genome_bam` input in future pipeline runs.
+  - `*.transcript.bam`: If `--save_align_intermeds` is specified the BAM file from STAR alignment containing read alignments to the transcriptome will be placed in this directory. These files can be reused as `transcriptome_bam` input in future pipeline runs.
 - `star_rsem/<SAMPLE>.stat/`
   - `*.cnt`, `*.model`, `*.theta`: RSEM counts and statistics for each sample.
   - `star_rsem/log/`
@@ -289,7 +289,7 @@ The STAR section of the MultiQC report shows a bar plot with alignment rates: go
 
 </details>
 
-[RSEM](https://github.com/deweylab/RSEM) is a software package for estimating gene and isoform expression levels from RNA-seq data. It has been widely touted as one of the most accurate quantification tools for RNA-seq analysis. RSEM wraps other popular tools to map the reads to the genome (i.e. STAR, Bowtie2, HISAT2; STAR is used in this pipeline) which are then subsequently filtered relative to a transcriptome before quantifying at the gene- and isoform-level. Other advantages of using RSEM are that it performs both the alignment and quantification in a single package and its ability to effectively use ambiguously-mapping reads.
+[RSEM](https://github.com/deweylab/RSEM) is a software package for estimating gene and isoform expression levels from RNA-seq data. It has been widely touted as one of the most accurate quantification tools for RNA-seq analysis. When using `--aligner star_rsem`, the pipeline first runs STAR alignment with RSEM-compatible parameters to generate genome and transcriptome BAM files, then RSEM quantifies expression using these pre-aligned BAMs via the `--alignments` mode. This approach ensures optimal compatibility while maintaining RSEM's ability to effectively use ambiguously-mapping reads.
 
 You can choose to align and quantify your data with RSEM by providing the `--aligner star_rsem` parameter.
 

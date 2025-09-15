@@ -17,7 +17,6 @@ Special thanks to the following for their contributions to the release:
 - [PR #1603](https://github.com/nf-core/rnaseq/pull/1603) - Add bam input pathway
 - [PR #1604](https://github.com/nf-core/rnaseq/pull/1604) - Enable BAM input for RSEM
 
-
 ## [[3.20.0](https://github.com/nf-core/rnaseq/releases/tag/3.20.0)] - 2025-08-18
 
 ### Credits

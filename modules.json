@@ -129,7 +129,7 @@
                     },
                     "rsem/calculateexpression": {
                         "branch": "master",
-                        "git_sha": "20b042e352fc47ab6dab717a622253e96429e887",
+                        "git_sha": "82cd92d50025a01e1370758ae18fcfe708b6d28c",
                         "installed_by": ["modules"]
                     },
                     "rsem/preparereference": {

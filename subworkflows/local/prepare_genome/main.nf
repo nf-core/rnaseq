@@ -214,7 +214,7 @@ workflow PREPARE_GENOME {
     def prepare_tool_indices = []
     if (!skip_bbsplit)                                           { prepare_tool_indices << 'bbsplit' }
     if (!skip_sortmerna)                                         { prepare_tool_indices << 'sortmerna' }
-    if (!skip_alignment && aligner)                              { prepare_tool_indices << aligner }
+    if ((!skip_alignment && aligner) || aligner == 'star_rsem')  { prepare_tool_indices << aligner }
     if (!skip_pseudo_alignment && pseudo_aligner)                { prepare_tool_indices << pseudo_aligner }
 
     //---------------------------------------------------------

@@ -219,7 +219,7 @@
                     },
                     "sentieon/rsemcalculateexpression": {
                         "branch": "master",
-                        "git_sha": "2779d18605e9923332155d671f45ed37fa185ff4",
+                        "git_sha": "d9cd3c825e2d05f9c851130100018ae02a766510",
                         "installed_by": ["modules"]
                     },
                     "sentieon/rsempreparereference": {

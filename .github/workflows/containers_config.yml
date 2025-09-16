@@ -1,11 +1,12 @@
 name: Container Configs
 
 on:
-  # FIXME Remove these and only run on release or PRs to main or TEMPLATE updates
   push:
-    branches: [main,dev]
+    branches: [main, dev]
+    paths: ['modules.json']
   pull_request:
-    branches: [main,dev]
+    branches: [main, dev]
+    paths: ['modules.json']
   release:
     types: [published]
   # TODO workflow_dispatch:
@@ -22,14 +23,16 @@ jobs:
           ref: ${{ github.head_ref }}
       - uses: nf-core/setup-nextflow@v2
         with:
-          version: "25.01.0-edge"
+          version: "25.04.7"
       - name: Snapshot containers
         run: |
           mkdir -p conf/containers
-          for container in docker singularity; do
+          # TODO: Re-enable singularity builds once singularity image issues are resolved
+          # https://github.com/nf-core/rnaseq/pull/1515#pullrequestreview-3201429623
+          for container in docker; do # singularity
             for arch in amd64 arm64; do
               if [ "$arch" = "arm64" ]; then
-                profile="wave,$container,arm"
+                profile="wave,$container,arm64"
               else
                 profile="wave,$container"
               fi
@@ -48,4 +51,3 @@ jobs:
           git status
           git commit -m "[automated] Update container configs"
           git push
-

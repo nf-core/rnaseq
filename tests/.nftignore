@@ -13,7 +13,7 @@ sortmerna/*.sortmerna.log
 star_rsem/*.stat/*.{cnt,model,theta}
 star_rsem/*.{genes,isoforms}.results
 star_rsem/log/*.log
-star_salmon/log/*.Log.{final.out,out,progress.out}
+star_{salmon,rsem}/log/*.Log.{final.out,out,progress.out}
 trimgalore/*fastq.gz_trimming_report.txt
 umitools/*.umi_extract.log
 {hisat2,star_rsem,star_salmon}/*.{bam,bam.bai}

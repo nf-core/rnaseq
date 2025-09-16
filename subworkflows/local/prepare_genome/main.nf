@@ -214,7 +214,7 @@ workflow PREPARE_GENOME {
     def prepare_tool_indices = []
     if (!skip_bbsplit)                                           { prepare_tool_indices << 'bbsplit' }
     if (!skip_sortmerna)                                         { prepare_tool_indices << 'sortmerna' }
-    if (!skip_alignment && aligner)                              { prepare_tool_indices << aligner }
+    if ((!skip_alignment && aligner) || aligner == 'star_rsem')  { prepare_tool_indices << aligner }
     if (!skip_pseudo_alignment && pseudo_aligner)                { prepare_tool_indices << pseudo_aligner }
 
     //---------------------------------------------------------
@@ -288,7 +288,7 @@ workflow PREPARE_GENOME {
     // 11) STAR index (e.g. for 'star_salmon') -> needs FASTA if built
     //----------------------------------------------------
     ch_star_index = Channel.empty()
-    if ('star_salmon' in prepare_tool_indices) {
+    if (prepare_tool_indices.intersect(['star_salmon', 'star_rsem'])) {
         if (star_index) {
             if (star_index.endsWith('.tar.gz')) {
                 ch_star_index = UNTAR_STAR_INDEX ([ [:], file(star_index, checkIfExists: true) ]).untar.map { it[1] }

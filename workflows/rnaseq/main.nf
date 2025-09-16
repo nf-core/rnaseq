@@ -125,7 +125,7 @@ workflow RNASEQ {
         }
         .branch {
             meta, reads, genome_bam, transcriptome_bam ->
-                bam: genome_bam || transcriptome_bam
+                bam: params.skip_alignment && (genome_bam || transcriptome_bam)
                     return [ meta, genome_bam, transcriptome_bam ]
                 fastq: reads.size() > 0 && reads[0]
                     return [ meta.findAll {it.key != 'percent_mapped'}, reads ]

@@ -136,7 +136,7 @@ nextflow run nf-core/rnaseq \
   -profile docker
 ```
 
-The pipeline will skip alignment and indexing steps, putting the BAM files through post-processing and quantification only.
+The `--skip_alignment` flag tells the pipeline to skip alignment, and in this situation it will use any provided BAM files instead of performing alignment, putting them through post-processing and quantification only.
 
 #### Example of generated samplesheet
 
@@ -156,9 +156,11 @@ SAMPLE2,/path/sample2_R1.fastq.gz,,reverse,results/star_salmon/SAMPLE2.sorted.ba
 
 **Key technical details:**
 
+- BAM files are only used when `--skip_alignment` is specified
 - The pipeline automatically indexes provided BAM files
 - You can provide just `genome_bam`, just `transcriptome_bam`, or both
-- Mixed samplesheets (some samples with FASTQ, others with BAM) are supported
+- Mixed samplesheets are supported, but samples with BAM files require `--skip_alignment`
+- Without `--skip_alignment`, the pipeline will perform alignment even if BAM files are provided
 - For BAM file locations from pipeline outputs, see the [output documentation](https://nf-co.re/rnaseq/output)
 
 This workflow is ideal for tweaking downstream processing steps (quantification methods, QC parameters, differential expression analysis) without repeating time-consuming alignment.

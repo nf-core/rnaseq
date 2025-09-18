@@ -20,6 +20,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1603](https://github.com/nf-core/rnaseq/pull/1603) - Add bam input pathway
 - [PR #1604](https://github.com/nf-core/rnaseq/pull/1604) - Enable BAM input for RSEM
 - [PR #1605](https://github.com/nf-core/rnaseq/pull/1605) - Fix default for umi_discard_read to prevent validation errors in Platform
+- [PR #1606](https://github.com/nf-core/rnaseq/pull/1606) - Bump version to 3.21.0 ahead of release
 
 ### Software dependencies
 

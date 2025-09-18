@@ -108,7 +108,7 @@
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "c9a31c472ef2d86802eb44f27322955849859361",
+                        "git_sha": "e10b76ca0c66213581bec2833e30d31f239dec0b",
                         "installed_by": ["modules"]
                     },
                     "picard/markduplicates": {
@@ -129,7 +129,7 @@
                     },
                     "rsem/calculateexpression": {
                         "branch": "master",
-                        "git_sha": "20b042e352fc47ab6dab717a622253e96429e887",
+                        "git_sha": "82cd92d50025a01e1370758ae18fcfe708b6d28c",
                         "installed_by": ["modules"]
                     },
                     "rsem/preparereference": {
@@ -219,7 +219,7 @@
                     },
                     "sentieon/rsemcalculateexpression": {
                         "branch": "master",
-                        "git_sha": "2779d18605e9923332155d671f45ed37fa185ff4",
+                        "git_sha": "d9cd3c825e2d05f9c851130100018ae02a766510",
                         "installed_by": ["modules"]
                     },
                     "sentieon/rsempreparereference": {

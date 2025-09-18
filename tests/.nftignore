@@ -13,7 +13,7 @@ sortmerna/*.sortmerna.log
 star_rsem/*.stat/*.{cnt,model,theta}
 star_rsem/*.{genes,isoforms}.results
 star_rsem/log/*.log
-star_salmon/log/*.Log.{final.out,out,progress.out}
+star_{salmon,rsem}/log/*.Log.{final.out,out,progress.out}
 trimgalore/*fastq.gz_trimming_report.txt
 umitools/*.umi_extract.log
 {hisat2,star_rsem,star_salmon}/*.{bam,bam.bai}
@@ -37,7 +37,7 @@ umitools/*.umi_extract.log
 {hisat2,star_rsem,star_salmon}/stringtie/*.{coverage,transcripts}.gtf
 {hisat2,star_rsem,star_salmon}/{umitools,umicollapse}/{genomic,transcriptomic}_dedup_log/*.log
 {multiqc,multiqc/**}/multiqc_report.html
-{multiqc,multiqc/**}/multiqc_report_data/BETA-multiqc.parquet
+{multiqc,multiqc/**}/multiqc_report_data/multiqc.parquet
 {multiqc,multiqc/**}/multiqc_report_data/fastqc_{raw,trimmed}_top_overrepresented_sequences_table.txt
 {multiqc,multiqc/**}/multiqc_report_data/hisat2_pe_plot.txt
 {multiqc,multiqc/**}/multiqc_report_data/hisat2_se_plot.txt
@@ -92,6 +92,7 @@ umitools/*.umi_extract.log
 {multiqc,multiqc/**}/multiqc_report_data/star_summary_table.txt
 {multiqc,multiqc/**}/multiqc_report_data/umitools_deduplication_barplot.txt
 {multiqc,multiqc/**}/multiqc_report_data/umitools_stats_violin.txt
+{multiqc,multiqc/**}/multiqc_report_data/picard_MeanQualityByCycle_histogram_1.txt
 {multiqc,multiqc/**}/multiqc_report_plots/{pdf,png,svg}/*.{pdf,png,svg}
 {salmon,kallisto}/all_samples_{gene,transcript}.SummarizedExperiment.rds
 {salmon,star_rsem,star_salmon}/deseq2_qc/R_sessionInfo.log

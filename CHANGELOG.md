@@ -3,7 +3,32 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 3.20.0
+## [[3.21.0](https://github.com/nf-core/rnaseq/releases/tag/3.21.0)] - 2025-09-18
+
+### Credits
+
+Special thanks to the following for their contributions to the release:
+
+- [Edmund Miller](https://github.com/edmundmiller)
+- [Friederike Hanssen](https://github.com/friederikehanssen)
+- [Maxime Garcia](https://github.com/maxulysse)
+- [Jonathan Manning](https://github.com/pinin4fjords)
+
+### Enhancements & fixes
+
+- [PR #1597](https://github.com/nf-core/rnaseq/pull/1597) - Bump version after release 3.20.0
+- [PR #1603](https://github.com/nf-core/rnaseq/pull/1603) - Add bam input pathway
+- [PR #1604](https://github.com/nf-core/rnaseq/pull/1604) - Enable BAM input for RSEM
+- [PR #1605](https://github.com/nf-core/rnaseq/pull/1605) - Fix default for umi_discard_read to prevent validation errors in Platform
+- [PR #1606](https://github.com/nf-core/rnaseq/pull/1606) - Bump version to 3.21.0 ahead of release
+
+### Software dependencies
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| `MultiQC`  | 1.30        | 1.31        |
+
+## [[3.20.0](https://github.com/nf-core/rnaseq/releases/tag/3.20.0)] - 2025-08-18
 
 ### Credits
 

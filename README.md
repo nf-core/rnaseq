@@ -20,7 +20,7 @@
 
 ## Introduction
 
-**nf-core/rnaseq** is a bioinformatics pipeline that can be used to analyse RNA sequencing data obtained from organisms with a reference genome and annotation. It takes a samplesheet and FASTQ files as input, performs quality control (QC), trimming and (pseudo-)alignment, and produces a gene expression matrix and extensive QC report.
+**nf-core/rnaseq** is a bioinformatics pipeline that can be used to analyse RNA sequencing data obtained from organisms with a reference genome and annotation. It takes a samplesheet with FASTQ files or pre-aligned BAM files as input, performs quality control (QC), trimming and (pseudo-)alignment, and produces a gene expression matrix and extensive QC report.
 
 ![nf-core/rnaseq metro map](docs/images/nf-core-rnaseq_metro_map_grey_animated.svg)
 
@@ -75,6 +75,8 @@ CONTROL_REP1,AEG588A1_S1_L004_R1_001.fastq.gz,AEG588A1_S1_L004_R2_001.fastq.gz,a
 ```
 
 Each row represents a fastq file (single-end) or a pair of fastq files (paired end). Rows with the same sample identifier are considered technical replicates and merged automatically. The strandedness refers to the library preparation and will be automatically inferred if set to `auto`.
+
+The pipeline supports a two-step reprocessing workflow using BAM files from previous runs. Run initially with `--save_align_intermeds` to generate a samplesheet with BAM paths, then reprocess using `--skip_alignment` for efficient downstream analysis without repeating expensive alignment steps. This feature is designed specifically for pipeline-generated BAMs.
 
 > [!WARNING]
 > Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/usage/getting_started/configuration#custom-configuration-files).

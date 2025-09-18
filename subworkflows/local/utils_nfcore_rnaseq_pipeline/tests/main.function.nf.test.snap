@@ -101,7 +101,11 @@
                 {
                     "id": "test",
                     "strandedness": "unstranded",
-                    "single_end": true
+                    "single_end": true,
+                    "has_genome_bam": false,
+                    "has_transcriptome_bam": false,
+                    "original_genome_bam": null,
+                    "original_transcriptome_bam": null
                 },
                 [
                     [

@@ -1,16 +1,16 @@
 nextflow_pipeline {
 
-    name "Test pipeline with STAR aligner and RSEM for quantification"
+    name "Test pipeline with BAM files as input"
     script "../main.nf"
     tag "pipeline"
 
-    test("Params: --aligner star_rsem --use_sentieon_star") {
+    test("BAM input for Salmon") {
 
         when {
             params {
+                input = "https://raw.githubusercontent.com/nf-core/test-datasets/d17cecd75000d427a5cdefe794c79fc61dae3c1a/samplesheet/v3.10/samplesheet_test_with_bams.csv"
                 outdir = "$outputDir"
-                aligner = 'star_rsem'
-                use_sentieon_star = true
+                skip_alignment = true
             }
         }
 
@@ -35,15 +35,14 @@ nextflow_pipeline {
         }
     }
 
-    test("Params: --aligner star_rsem --use_sentieon_star - stub") {
-
-        options "-stub"
+    test("BAM input for RSEM") {
 
         when {
             params {
+                input = "https://raw.githubusercontent.com/nf-core/test-datasets/470a36d464328a152153da94971dd1a73dfe2d05/samplesheet/v3.10/samplesheet_test_with_rsem_bams.csv"
                 outdir = "$outputDir"
+                skip_alignment = true
                 aligner = 'star_rsem'
-                use_sentieon_star = true
             }
         }
 

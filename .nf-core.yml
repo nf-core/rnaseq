@@ -21,4 +21,4 @@ template:
   name: rnaseq
   org: nf-core
   outdir: .
-  version: 3.21.0dev
+  version: 3.21.0

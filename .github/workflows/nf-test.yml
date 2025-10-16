@@ -18,7 +18,7 @@ concurrency:
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  NFT_VER: "0.9.2"
+  NFT_VER: "0.9.3"
   NFT_WORKDIR: "~"
   NXF_ANSI_LOG: false
   NXF_SINGULARITY_CACHEDIR: ${{ github.workspace }}/.singularity
@@ -40,7 +40,7 @@ jobs:
           rm -rf ./* || true
           rm -rf ./.??* || true
           ls -la ./
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
         with:
           fetch-depth: 0
 
@@ -78,14 +78,14 @@ jobs:
           - isMain: false
             profile: "singularity"
         NXF_VER:
-          - "24.10.5"
+          - "25.04.0"
           - "latest-everything"
     env:
       NXF_ANSI_LOG: false
       TOTAL_SHARDS: ${{ needs.nf-test-changes.outputs.total_shards }}
 
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
         with:
           fetch-depth: 0
 
@@ -95,6 +95,7 @@ jobs:
         continue-on-error: ${{ matrix.NXF_VER == 'latest-everything' }}
         env:
           NFT_WORKDIR: ${{ env.NFT_WORKDIR }}
+          NXF_VERSION: ${{ matrix.NXF_VER }}
         with:
           profile: ${{ matrix.profile }}
           shard: ${{ matrix.shard }}

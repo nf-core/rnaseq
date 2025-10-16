@@ -1,20 +1,20 @@
 {
     "name": "nfcore",
-    "image": "nfcore/gitpod:latest",
-    "remoteUser": "gitpod",
-    "runArgs": ["--privileged"],
+    "image": "nfcore/devcontainer:latest",
 
-    // Configure tool-specific properties.
-    "customizations": {
-        // Configure properties specific to VS Code.
-        "vscode": {
-            // Set *default* container specific settings.json values on container create.
-            "settings": {
-                "python.defaultInterpreterPath": "/opt/conda/bin/python"
-            },
+    "remoteUser": "root",
+    "privileged": true,
 
-            // Add the IDs of extensions you want installed when the container is created.
-            "extensions": ["ms-python.python", "ms-python.vscode-pylance", "nf-core.nf-core-extensionpack"]
-        }
+    "remoteEnv": {
+        // Workspace path on the host for mounting with docker-outside-of-docker
+        "LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}"
+    },
+
+    "onCreateCommand": "./.devcontainer/setup.sh",
+
+    "hostRequirements": {
+        "cpus": 4,
+        "memory": "16gb",
+        "storage": "32gb"
     }
 }

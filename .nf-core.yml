@@ -10,7 +10,7 @@ lint:
   nextflow_config:
     - config_defaults:
         - params.ribo_database_manifest
-nf_core_version: 3.3.2
+nf_core_version: 3.4.1
 repository_type: pipeline
 template:
   author: "Harshil Patel, Phil Ewels, Rickard Hammar\xE9n"
@@ -21,4 +21,4 @@ template:
   name: rnaseq
   org: nf-core
   outdir: .
-  version: 3.20.0dev
+  version: 3.22.0dev

@@ -1,0 +1,57 @@
+name: sylphtax_taxprof
+description: Incorporates taxonomy into sylph metagenomic classifier
+keywords:
+  - taxonomy
+  - sylph
+  - metagenomics
+tools:
+  - sylphtax:
+      description: Integrating taxonomic information into the sylph metagenome profiler.
+      homepage: https://github.com/bluenote-1577/sylph-tax?tab=readme-ov-file
+      documentation: https://sylph-docs.github.io/sylph-tax/
+      licence: ["MIT"]
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'sample1', single_end:false ]`
+    - sylph_results:
+        type: file
+        description: Output results from sylph classifier. The database file(s) used
+          to create this file with sylph must be the same as those of the taxonomy input
+          channel of this module.
+        pattern: "*.{tsv}"
+        ontologies:
+          - edam: http://edamontology.org/format_3475 # TSV
+  - taxonomy:
+      type: file
+      description: A list of sylph-tax identifiers (e.g. GTDB_r220 or IMGVR_4.1). Multiple
+        taxonomy metadata files can be input. Custom taxonomy files are also possible.
+      ontologies: []
+output:
+  taxprof_output:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*{.sylphmpa}"
+      - "*.sylphmpa":
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*{.sylphmpa}"
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+authors:
+  - "@sofstam"
+maintainers:
+  - "@sofstam"

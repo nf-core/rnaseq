@@ -43,6 +43,8 @@ include { STRINGTIE_STRINGTIE        } from '../../modules/nf-core/stringtie/str
 include { SUBREAD_FEATURECOUNTS      } from '../../modules/nf-core/subread/featurecounts'
 include { KRAKEN2_KRAKEN2 as KRAKEN2 } from '../../modules/nf-core/kraken2/kraken2/main'
 include { BRACKEN_BRACKEN as BRACKEN } from '../../modules/nf-core/bracken/bracken/main'
+include { SYLPH_PROFILE              } from '../../modules/nf-core/sylph/profile/main'
+include { SYLPHTAX_TAXPROF           } from '../../modules/nf-core/sylphtax/taxprof/main'                                          
 include { MULTIQC                    } from '../../modules/nf-core/multiqc'
 include { BEDTOOLS_GENOMECOV as BEDTOOLS_GENOMECOV_FW          } from '../../modules/nf-core/bedtools/genomecov'
 include { BEDTOOLS_GENOMECOV as BEDTOOLS_GENOMECOV_REV         } from '../../modules/nf-core/bedtools/genomecov'

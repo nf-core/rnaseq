@@ -262,6 +262,16 @@
                         "git_sha": "1f008221e451e7a4738226c49e69aaa2eb731369",
                         "installed_by": ["modules", "quantify_pseudo_alignment"]
                     },
+                    "sylph/profile": {
+                        "branch": "master",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "installed_by": ["modules"]
+                    },
+                    "sylphtax/taxprof": {
+                        "branch": "master",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "installed_by": ["modules"]
+                    },
                     "trimgalore": {
                         "branch": "master",
                         "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",

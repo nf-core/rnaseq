@@ -601,7 +601,7 @@
                     "type": "string",
                     "description": "Tool to use for detecting contaminants in unaligned reads - available options are 'kraken2' and 'kraken2_bracken'",
                     "fa_icon": "fas fa-virus-slash",
-                    "enum": ["kraken2", "kraken2_bracken"]
+                    "enum": ["kraken2", "kraken2_bracken", "sylph"]
                 },
                 "kraken_db": {
                     "type": "string",
@@ -617,6 +617,18 @@
                     "description": "Taxonomic level for Bracken abundance estimations.",
                     "help_text": "Use the first letter of taxonomic levels: Domain, Phylum, Class, Order, Family, Genus, or Species.",
                     "enum": ["D", "P", "C", "O", "F", "G", "S"]
+                },
+                "sylph_db": {
+                    "type": "string",
+                    "description": "Database when using Sylph for contamination detection",
+                    "help_text": "See the usage documentation for more information on setting up and using Sylph databases.",
+                    "fa_icon": "fas fa-database"
+                },
+                "sylph_taxonomy": {
+                    "type": "string",
+                    "description": "Taxonomy when using Sylph for contamination detection/",
+                    "help_text": "See the usage documentation for more information on Sylph taxonomies.",
+                    "fa_icon": "fas fa-tree"
                 }
             }
         },

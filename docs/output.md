@@ -57,6 +57,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [featureCounts](#featurecounts)
     - [DESeq2](#deseq2)
     - [Kraken2/Bracken](#kraken2bracken)
+    - [Sylph](#Sylph)
     - [MultiQC](#multiqc)
   - [Pseudoalignment and quantification](#pseudoalignment-and-quantification)
     - [Pseudoalignment](#pseudoalignment)
@@ -736,6 +737,21 @@ The plot on the left hand side shows the standard PC plot - notice the variable 
 [Kraken2](https://ccb.jhu.edu/software/kraken2/) is a taxonomic classification tool that uses k-mer matches paired with a lowest common ancestory (LCA) algorithm to classify species reads. [Bracken](https://ccb.jhu.edu/software/bracken/) is a statistical method to generate abundance estimates based off of the Kraken2 output. These algorithms are run on unaligned sequences to detect potential contamination of samples. MultiQC reports the top 5 taxon members detected at the level of classification used for Bracken, with toggles available for higher taxonomic levels. Because MultiQC no longer has a separate Bracken module, results for Bracken will appear under the Kraken heading in the MultiQC report. If Bracken is skipped, MultiQC will report the top 5 species detected by Kraken2.
 
 ![MultiQC - Bracken top species plot](images/bracken-top-n-plot.png)
+
+### Sylph
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `<ALIGNER>/contaminants/sylph`
+  - `*.tsv` Summary of containment ANI and abundances of detected species in the sample. See the [Sylph documentation](https://sylph-docs.github.io/Output-format/) for full details on the output format. 
+  - `*.sylphmpa` Taxonomic report of unaligned reads from `sylph-tax`. See the [Sylph documentation](https://sylph-docs.github.io/sylph-tax-output-format/) for full details on the output format.
+
+</details>
+
+[Sylph](https://sylph-docs.github.io/) is a metagenomic profiler that determines the species present in reads by statistically estimating containment ANI. These algorithms are run on unaligned sequences to detect potential contamination of samples. MultiQC TBD. 
+
+#TODO add MultiQC info
 
 ### MultiQC
 

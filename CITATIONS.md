@@ -88,6 +88,10 @@
 
   > Kovaka S, Zimin AV, Pertea GM, Razaghi R, Salzberg SL, Pertea M. Transcriptome assembly from long-read RNA-seq alignments with StringTie2 Genome Biol. 2019 Dec 16;20(1):278. doi: 10.1186/s13059-019-1910-1. PubMed PMID: 31842956; PubMed Central PMCID: PMC6912988.
 
+- [Sylph](https://pubmed.ncbi.nlm.nih.gov/39379646/)
+
+  > Shaw J, Yu YW. Rapid species-level metagenome profiling and containment estimation with sylph. Nat Biotechnol. 2025 Aug;43(8):1348-1359. doi: 10.1038/s41587-024-02412-y. Epub 2024 Oct 8. PMID: 39379646; PMCID: PMC12339375.
+
 - [Trim Galore!](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/)
 
 - [UMI-tools](https://pubmed.ncbi.nlm.nih.gov/28100584/)

@@ -663,7 +663,21 @@ workflow RNASEQ {
                 ch_versions = ch_versions.mix(BRACKEN.out.versions)
                 ch_multiqc_files = ch_multiqc_files.mix(BRACKEN.out.txt.collect{it[1]})
             }
-        }
+        } else if (params.contaminant_screening == 'sylph') {
+            SYLPH_PROFILE (
+                ch_unaligned_sequences,
+                params.sylph_db
+            )
+            ch_sylph_profile = SYLPH_PROFILE.out.profile_out
+            ch_versions = ch_versions.mix(SYLPH_PROFILE.out.versions)
+
+            SYLPHTAX_TAXPROF (
+                ch_sylph_profile,
+                params.sylph_taxonomy
+            )
+            ch_versions = ch_versions.mix(SYLPHTAX_TAXPROF.out.versions)
+            ch_multiqc_files = ch_multiqc_files.mix(SYLPHTAX_TAXPROF.out.taxprof_output.collect{it[1]})
+        } 
     }
 
     //

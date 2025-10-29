@@ -620,12 +620,14 @@
                 },
                 "sylph_db": {
                     "type": "string",
+                    "format": "file-path",
                     "description": "Database when using Sylph for contamination detection",
                     "help_text": "See the usage documentation for more information on setting up and using Sylph databases.",
                     "fa_icon": "fas fa-database"
                 },
                 "sylph_taxonomy": {
                     "type": "string",
+                    "format": "file-path",
                     "description": "Taxonomy when using Sylph for contamination detection/",
                     "help_text": "See the usage documentation for more information on Sylph taxonomies.",
                     "fa_icon": "fas fa-tree"

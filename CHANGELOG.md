@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Enhancements and fixes
 
 - [PR #1608](https://github.com/nf-core/rnaseq/pull/1608) - Bump version after release 3.21.0
+- [PR #1616](https://github.com/nf-core/rnaseq/pull/1616) - Add Sylph for contamination detection.
 
 | Old parameter | New parameter      |
 | ------------- | -------------------|

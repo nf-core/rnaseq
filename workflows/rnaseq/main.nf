@@ -668,7 +668,7 @@ workflow RNASEQ {
                 ch_unaligned_sequences,
                 params.sylph_db
             )
-            ch_sylph_profile = SYLPH_PROFILE.out.profile_out
+            ch_sylph_profile = SYLPH_PROFILE.out.profile_out.filter{!it[1].isEmpty()}
             ch_versions = ch_versions.mix(SYLPH_PROFILE.out.versions)
 
             SYLPHTAX_TAXPROF (

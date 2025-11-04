@@ -3,6 +3,14 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## dev - xxxx-xx-xx
+
+### Credits
+
+### Enhancements and fixes
+
+- [PR #1608](https://github.com/nf-core/rnaseq/pull/1608) - Bump version after release 3.21.0
+
 ## [[3.21.0](https://github.com/nf-core/rnaseq/releases/tag/3.21.0)] - 2025-09-18
 
 ### Credits

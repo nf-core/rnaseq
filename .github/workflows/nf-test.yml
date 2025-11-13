@@ -1,12 +1,6 @@
 name: Run nf-test
 on:
   pull_request:
-    paths-ignore:
-      - "docs/**"
-      - "**/meta.yml"
-      - "**/*.md"
-      - "**/*.png"
-      - "**/*.svg"
   release:
     types: [published]
   workflow_dispatch:
@@ -33,6 +27,7 @@ jobs:
     outputs:
       shard: ${{ steps.set-shards.outputs.shard }}
       total_shards: ${{ steps.set-shards.outputs.total_shards }}
+      skip_tests: ${{ steps.filter.outputs.skip_tests }}
     steps:
       - name: Clean Workspace # Purge the workspace in case it's running on a self-hosted runner
         run: |
@@ -44,7 +39,19 @@ jobs:
         with:
           fetch-depth: 0
 
+      - uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 # v3
+        id: filter
+        with:
+          filters: |
+            skip_tests:
+              - 'docs/**'
+              - '**/meta.yml'
+              - '**/*.md'
+              - '**/*.png'
+              - '**/*.svg'
+
       - name: get number of shards
+        if: steps.filter.outputs.skip_tests != 'true'
         id: set-shards
         uses: ./.github/actions/get-shards
         env:
@@ -53,6 +60,7 @@ jobs:
           max_shards: 14
 
       - name: debug
+        if: steps.filter.outputs.skip_tests != 'true'
         run: |
           echo ${{ steps.set-shards.outputs.shard }}
           echo ${{ steps.set-shards.outputs.total_shards }}
@@ -60,7 +68,7 @@ jobs:
   nf-test:
     name: "${{ matrix.profile }} | ${{ matrix.NXF_VER }} | ${{ matrix.shard }}/${{ needs.nf-test-changes.outputs.total_shards }}"
     needs: [nf-test-changes]
-    if: ${{ needs.nf-test-changes.outputs.total_shards != '0' }}
+    if: ${{ needs.nf-test-changes.outputs.skip_tests != 'true' && needs.nf-test-changes.outputs.total_shards != '0' }}
     runs-on: # use self-hosted runners
       - runs-on=${{ github.run_id }}-nf-test
       - runner=4cpu-linux-x64
@@ -121,22 +129,28 @@ jobs:
           fi
 
   confirm-pass:
-    needs: [nf-test]
+    needs: [nf-test-changes, nf-test]
     if: always()
     runs-on: # use self-hosted runners
       - runs-on=${{ github.run_id }}-confirm-pass
       - runner=2cpu-linux-x64
     steps:
+      - name: Tests were skipped (docs/markdown only changes)
+        if: ${{ needs.nf-test-changes.outputs.skip_tests == 'true' }}
+        run: |
+          echo "Tests were skipped - only docs/markdown files changed"
+          exit 0
+
       - name: One or more tests failed (excluding latest-everything)
-        if: ${{ contains(needs.*.result, 'failure') }}
+        if: ${{ needs.nf-test-changes.outputs.skip_tests != 'true' && contains(needs.*.result, 'failure') }}
         run: exit 1
 
       - name: One or more tests cancelled
-        if: ${{ contains(needs.*.result, 'cancelled') }}
+        if: ${{ needs.nf-test-changes.outputs.skip_tests != 'true' && contains(needs.*.result, 'cancelled') }}
         run: exit 1
 
       - name: All tests ok
-        if: ${{ contains(needs.*.result, 'success') }}
+        if: ${{ needs.nf-test-changes.outputs.skip_tests != 'true' && contains(needs.*.result, 'success') }}
         run: exit 0
 
       - name: debug-print
@@ -145,4 +159,5 @@ jobs:
           echo "::group::DEBUG: `needs` Contents"
           echo "DEBUG: toJSON(needs) = ${{ toJSON(needs) }}"
           echo "DEBUG: toJSON(needs.*.result) = ${{ toJSON(needs.*.result) }}"
+          echo "DEBUG: skip_tests = ${{ needs.nf-test-changes.outputs.skip_tests }}"
           echo "::endgroup::"

@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Enhancements and fixes
 
 - [PR #1608](https://github.com/nf-core/rnaseq/pull/1608) - Bump version after release 3.21.0
+- [PR #1613](https://github.com/nf-core/rnaseq/pull/1613) - Fix broken link and add latest kit version for Takara UMI prep in usage documentation
+- [PR #1614](https://github.com/nf-core/rnaseq/pull/1614) - Template update for nf-core/tools v3.4.1
 
 ## [[3.21.0](https://github.com/nf-core/rnaseq/releases/tag/3.21.0)] - 2025-09-18
 

@@ -31,16 +31,16 @@ jobs:
         # Add full size test data (but still relatively small datasets for few samples)
         # on the `test_full.config` test runs with only one set of parameters
         with:
-          workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
+          workspace_id: ${{ vars.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
-          compute_env: ${{ secrets.TOWER_COMPUTE_ENV }}
+          compute_env: ${{ vars.TOWER_COMPUTE_ENV }}
           revision: ${{ steps.revision.outputs.revision }}
-          workdir: s3://${{ secrets.AWS_S3_BUCKET }}/work/rnaseq/work-${{ steps.revision.outputs.revision }}
+          workdir: s3://${{ vars.AWS_S3_BUCKET }}/work/rnaseq/work-${{ steps.revision.outputs.revision }}
           parameters: |
             {
               "hook_url": "${{ secrets.MEGATESTS_ALERTS_SLACK_HOOK_URL }}",
               "aligner": "${{ matrix.aligner }}",
-              "outdir": "s3://${{ secrets.AWS_S3_BUCKET }}/rnaseq/results-${{ steps.revision.outputs.revision }}/aligner_${{ matrix.aligner }}/"
+              "outdir": "s3://${{ vars.AWS_S3_BUCKET }}/rnaseq/results-${{ steps.revision.outputs.revision }}/aligner_${{ matrix.aligner }}/"
             }
           profiles: test_full
 
@@ -48,5 +48,5 @@ jobs:
         with:
           name: Seqera Platform debug log file
           path: |
-            seqera_platform_action_*.log
-            seqera_platform_action_*.json
+            tower_action_*.log
+            tower_action_*.json

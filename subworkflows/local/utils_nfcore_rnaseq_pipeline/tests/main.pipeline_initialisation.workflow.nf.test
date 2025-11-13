@@ -33,6 +33,10 @@ nextflow_workflow {
                 input[2] = true                 // monochrome_logs (boolean)
                 input[3] = args                 // args (array)
                 input[4] = file("$outputDir")   // outdir (string)
+                input[5] = null                 // input (string)
+                input[6] = false                // help (boolean)
+                input[7] = false                // help_full (boolean)
+                input[8] = false                // show_hidden (boolean)
                 """
             }
         }

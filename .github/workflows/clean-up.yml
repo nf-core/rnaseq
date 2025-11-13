@@ -10,7 +10,7 @@ jobs:
       issues: write
       pull-requests: write
     steps:
-      - uses: actions/stale@5bef64f19d7facfb25b37b414482c7164d639639 # v9
+      - uses: actions/stale@5f858e3efba33a5ca4407a664cc011ad407f2008 # v10
         with:
           stale-issue-message: "This issue has been tagged as awaiting-changes or awaiting-feedback by an nf-core contributor. Remove stale label or add a comment otherwise this issue will be closed in 20 days."
           stale-pr-message: "This PR has been tagged as awaiting-changes or awaiting-feedback by an nf-core contributor. Remove stale label or add a comment if it is still useful."

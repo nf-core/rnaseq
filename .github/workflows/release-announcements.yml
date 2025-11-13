@@ -15,9 +15,9 @@ jobs:
           echo "topics=$(curl -s https://nf-co.re/pipelines.json | jq -r '.remote_workflows[] | select(.full_name == "${{ github.repository }}") | .topics[]' | awk '{print "#"$0}' | tr '\n' ' ')" | sed 's/-//g' >> $GITHUB_OUTPUT
 
       - name: get description
-        id: get_topics
+        id: get_description
         run: |
-          echo "description=$(curl -s https://nf-co.re/pipelines.json | jq -r '.remote_workflows[] | select(.full_name == "${{ github.repository }}") | .description' >> $GITHUB_OUTPUT
+          echo "description=$(curl -s https://nf-co.re/pipelines.json | jq -r '.remote_workflows[] | select(.full_name == "${{ github.repository }}") | .description')" >> $GITHUB_OUTPUT
 
       - uses: rzr/fediverse-action@master
         with:

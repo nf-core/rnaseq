@@ -14,14 +14,14 @@ jobs:
       - name: Launch workflow via Seqera Platform
         uses: seqeralabs/action-tower-launch@v2
         with:
-          workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
+          workspace_id: ${{ vars.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
-          compute_env: ${{ secrets.TOWER_COMPUTE_ENV }}
+          compute_env: ${{ vars.TOWER_COMPUTE_ENV }}
           revision: ${{ github.sha }}
-          workdir: s3://${{ secrets.AWS_S3_BUCKET }}/work/rnaseq/work-${{ github.sha }}
+          workdir: s3://${{ vars.AWS_S3_BUCKET }}/work/rnaseq/work-${{ github.sha }}
           parameters: |
             {
-              "outdir": "s3://${{ secrets.AWS_S3_BUCKET }}/rnaseq/results-test-${{ github.sha }}"
+              "outdir": "s3://${{ vars.AWS_S3_BUCKET }}/rnaseq/results-test-${{ github.sha }}"
             }
           profiles: test
 
@@ -29,5 +29,5 @@ jobs:
         with:
           name: Seqera Platform debug log file
           path: |
-            seqera_platform_action_*.log
-            seqera_platform_action_*.json
+            tower_action_*.log
+            tower_action_*.json

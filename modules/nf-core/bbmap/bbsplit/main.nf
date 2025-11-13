@@ -2,9 +2,6 @@ process BBMAP_BBSPLIT {
     tag "$meta.id"
     label 'process_high'
     label 'error_retry'
-    
-    // Force copy mode to prevent index modifications
-    stageInMode 'copy'
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -41,8 +38,8 @@ process BBMAP_BBSPLIT {
     }
 
     def other_refs = []
-    other_ref_names.eachWithIndex { name, idx ->
-        other_refs << "ref_${name}=${other_ref_paths[idx]}"
+    other_ref_names.eachWithIndex { name, index ->
+        other_refs << "ref_${name}=${other_ref_paths[index]}"
     }
 
     def fastq_in=''
@@ -69,7 +66,21 @@ process BBMAP_BBSPLIT {
         refstats_cmd = 'refstats=' + prefix + '.stats.txt'
     }
     """
+
+    # When we stage in the index files the time stamps get disturbed, which
+    # bbsplit doesn't like. Fix the time stamps in its summaries. This needs to
+    # be done via Java to match what bbmap does
+
+    if [ $index ]; then
+        for summary_file in \$(find $index/ref/genome -name summary.txt); do
+            src=\$(grep '^source' "\$summary_file" | cut -f2- -d\$'\\t' | sed 's|.*/bbsplit|bbsplit|')
+            mod=\$(echo "System.out.println(java.nio.file.Files.getLastModifiedTime(java.nio.file.Paths.get(\\"\$src\\")).toMillis());" | jshell -J-Djdk.lang.Process.launchMechanism=vfork -)
+            sed "s|^last modified.*|last modified\\t\$mod|" "\$summary_file" > \${summary_file}.tmp && mv \${summary_file}.tmp \${summary_file}
+        done
+    fi
+
     # Run BBSplit
+
     bbsplit.sh \\
         -Xmx${avail_mem}M \\
         $index_files \\
@@ -78,6 +89,14 @@ process BBMAP_BBSPLIT {
         $fastq_out \\
         $refstats_cmd \\
         $args 2>| >(tee ${prefix}.log >&2)
+
+    # Summary files will have an absolute path that will make the index
+    # impossible to use in other processes- we can fix that
+
+    for summary_file in \$(find bbsplit/ref/genome -name summary.txt); do
+        src=\$(grep '^source' "\$summary_file" | cut -f2- -d\$'\\t' | sed 's|.*/bbsplit|bbsplit|')
+        sed "s|^source.*|source\\t\$src|" "\$summary_file" > \${summary_file}.tmp && mv \${summary_file}.tmp \${summary_file}
+    done
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -88,7 +107,7 @@ process BBMAP_BBSPLIT {
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     def other_refs = ''
-    other_ref_names.eachWithIndex { name, _idx ->
+    other_ref_names.eachWithIndex { name, index ->
         other_refs += "echo '' | gzip > ${prefix}_${name}.fastq.gz"
     }
     """

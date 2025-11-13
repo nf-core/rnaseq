@@ -1,0 +1,55 @@
+{
+    "homo_sapiens [bam] - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            
+                        ]
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,a6868ab89f7d31361a7791db2dea98e7"
+                ],
+                "results": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,a6868ab89f7d31361a7791db2dea98e7"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-22T11:27:41.158111"
+    },
+    "homo_sapiens [bam]": {
+        "content": [
+            "qualimapReport.html",
+            "rnaseq_qc_results.txt:md5,b77878cac45beaa79a892af54aad2da3",
+            [
+                "versions.yml:md5,a6868ab89f7d31361a7791db2dea98e7"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-22T11:27:30.782304"
+    }
+}

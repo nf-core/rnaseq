@@ -1,0 +1,205 @@
+{
+    "Test Function gtfGffWarn": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-06T14:33:11.163299"
+    },
+    "Test Function biotypeInGtf success": {
+        "content": [
+            true
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-06T14:34:03.414382"
+    },
+    "Test Function toolBibliographyText": {
+        "content": [
+            "<li>Andrews S, (2010) FastQC, URL: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/).</li> <li>Ewels, P., Magnusson, M., Lundin, S., & K\u00e4ller, M. (2016). MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics , 32(19), 3047\u20133048. doi: /10.1093/bioinformatics/btw354</li>"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-06T14:33:07.698845"
+    },
+    "Test Function toolCitationText": {
+        "content": [
+            "Tools used in the workflow included: FastQC (Andrews 2010), MultiQC (Ewels et al. 2016) ."
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-06T14:33:04.677913"
+    },
+    "Test Function rsemUmiError": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-06T14:33:26.903306"
+    },
+    "Test Function checkSamplesAfterGrouping invalid strandedness": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-06T14:32:41.841561"
+    },
+    "Test Function biotypeInGtf failed": {
+        "content": [
+            false
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-06T14:34:07.750259"
+    },
+    "Test Function transcriptsFastaWarn": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-06T14:33:20.618971"
+    },
+    "Test Function ucscGenomeWarn": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-06T14:33:17.405648"
+    },
+    "Test Function skipAlignmentWarn": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-06T14:33:23.76368"
+    },
+    "Test Function checkMaxContigSize": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-06T14:33:40.548126"
+    },
+    "Test Function checkSamplesAfterGrouping success": {
+        "content": [
+            [
+                {
+                    "id": "test",
+                    "strandedness": "unstranded",
+                    "single_end": true,
+                    "has_genome_bam": false,
+                    "has_transcriptome_bam": false,
+                    "original_genome_bam": null,
+                    "original_transcriptome_bam": null
+                },
+                [
+                    [
+                        "/ngi-igenomes/testdata/nf-core/modules/genomics/sarscov2/illumina/fastq/test_1.fastq.gz"
+                    ],
+                    [
+                        "/ngi-igenomes/testdata/nf-core/modules/genomics/sarscov2/illumina/fastq/test_1.fastq.gz"
+                    ]
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-06T14:32:37.450298"
+    },
+    "Test Function checkSamplesAfterGrouping invalid endedness": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-06T14:32:46.420194"
+    },
+    "Test Function genomeExistsError finds genome": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-06T14:32:58.626473"
+    },
+    "Test Function additionaFastaIndexWarn": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-06T14:33:36.224496"
+    },
+    "Test Function genomeExistsError missing genome": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-06T14:33:01.625542"
+    },
+    "Test Function ncbiGenomeWarn": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-06T14:33:14.286665"
+    },
+    "Test Function rsemStarExtraArgumentsWarn": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-06T14:33:33.141215"
+    },
+    "Test Function validateInputParameters success": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-06T14:32:49.565504"
+    },
+    "Test Function rsemStarIndexWarn": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-06T14:33:30.02058"
+    },
+    "Test Function getInferexperimentStrandedness reverse": {
+        "content": [
+            {
+                "inferred_strandedness": "reverse",
+                "forwardFragments": 0.749925006577425,
+                "reverseFragments": 83.60163982823676,
+                "unstrandedFragments": 15.64843516518582 
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-06-18T14:30:53.743529"
+    }
+}

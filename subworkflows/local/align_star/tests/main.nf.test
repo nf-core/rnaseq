@@ -1,0 +1,454 @@
+nextflow_workflow {
+
+    name "Test Subworkflow ALIGN_STAR"
+    script "../main.nf"
+    workflow "ALIGN_STAR"
+    config "./nextflow.config"
+
+    test("star - no igenomes") {
+
+        setup {
+            run("STAR_GENOMEGENERATE") {
+                script "../../../../modules/nf-core/star/genomegenerate/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id:'test_fasta' ],
+                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                    ])
+                    input[1] = Channel.of([
+                        [ id:'test_gtf' ],
+                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                    ])
+                    """
+                }
+            }
+        }
+
+        when {
+            workflow {
+                """
+                star_ignore_sjdbgtf = false
+                seq_platform        = 'illumina'
+                seq_center          = false
+                is_aws_igenome      = false
+                use_sentieon_star   = false
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = STAR_GENOMEGENERATE.out.index
+                input[2] = Channel.of([
+                    [ id:'test_gtf' ],
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                ])
+                input[3] = star_ignore_sjdbgtf
+                input[4] = seq_platform
+                input[5] = seq_center
+                input[6] = is_aws_igenome
+                input[7] = Channel.of([
+                    [ id:'test_fasta' ],
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                ])
+                input[8] = use_sentieon_star
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    file(workflow.out.log_final[0][1]).name,
+                    file(workflow.out.log_out[0][1]).name,
+                    file(workflow.out.bai[0][1]).name,
+                    bam(workflow.out.bam[0][1]).getReadsMD5(),
+                    workflow.out.csi,
+                    workflow.out.log_progress,
+                    workflow.out.fastq,
+                    workflow.out.flagstat,
+                    workflow.out.idxstats,
+                    bam(workflow.out.orig_bam[0][1]).getReadsMD5(),
+                    workflow.out.stats,
+                    workflow.out.tab,
+                    workflow.out.versions).match()}
+            )
+        }
+    }
+
+    test("sentieon star - no igenomes") {
+        tag "sentieon"
+        setup {
+            run("STAR_GENOMEGENERATE") {
+                script "../../../../modules/nf-core/star/genomegenerate/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id:'test_fasta' ],
+                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                    ])
+                    input[1] = Channel.of([
+                        [ id:'test_gtf' ],
+                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                    ])
+                    """
+                }
+            }
+        }
+
+        when {
+            workflow {
+                """
+                star_ignore_sjdbgtf = false
+                seq_platform        = 'illumina'
+                seq_center          = false
+                is_aws_igenome      = false
+                use_sentieon_star   = true
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = STAR_GENOMEGENERATE.out.index
+                input[2] = Channel.of([
+                    [ id:'test_gtf' ],
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                ])
+                input[3] = star_ignore_sjdbgtf
+                input[4] = seq_platform
+                input[5] = seq_center
+                input[6] = is_aws_igenome
+                input[7] = Channel.of([
+                    [ id:'test_fasta' ],
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                ])
+                input[8] = use_sentieon_star
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    file(workflow.out.log_final[0][1]).name,
+                    file(workflow.out.log_out[0][1]).name,
+                    file(workflow.out.bai[0][1]).name,
+                    bam(workflow.out.bam[0][1]).getReadsMD5(),
+                    workflow.out.csi,
+                    workflow.out.log_progress,
+                    workflow.out.fastq,
+                    workflow.out.flagstat,
+                    workflow.out.idxstats,
+                    bam(workflow.out.orig_bam[0][1]).getReadsMD5(),
+                    workflow.out.stats,
+                    workflow.out.tab,
+                    workflow.out.versions).match()}
+            )
+        }
+    }
+
+    test("star - with igenomes") {
+
+        setup {
+            run("STAR_GENOMEGENERATE_IGENOMES") {
+                script "../../../../modules/local/star_genomegenerate_igenomes/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)])
+                    input[1] = Channel.of([file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)])
+                    """
+                }
+            }
+        }
+
+        when {
+            workflow {
+                """
+                star_ignore_sjdbgtf = false
+                seq_platform        = 'illumina'
+                seq_center          = false
+                is_aws_igenome      = true
+                use_sentieon_star   = false
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = STAR_GENOMEGENERATE_IGENOMES.out.index.map{ [ [id:'star'], it ] }
+                input[2] = Channel.of([
+                    [ id:'test_gtf' ],
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                ])
+                input[3] = star_ignore_sjdbgtf
+                input[4] = seq_platform
+                input[5] = seq_center
+                input[6] = is_aws_igenome
+                input[7] = Channel.of([
+                    [ id:'test_fasta' ],
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                ])
+                input[8] = use_sentieon_star
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    file(workflow.out.log_final[0][1]).name,
+                    file(workflow.out.log_out[0][1]).name,
+                    file(workflow.out.bai[0][1]).name,
+                    bam(workflow.out.bam[0][1]).getReadsMD5(),
+                    workflow.out.csi,
+                    workflow.out.log_progress,
+                    workflow.out.fastq,
+                    workflow.out.flagstat,
+                    workflow.out.idxstats,
+                    bam(workflow.out.orig_bam[0][1]).getReadsMD5(),
+                    workflow.out.stats,
+                    workflow.out.tab,
+                    workflow.out.versions).match()}
+            )
+        }
+    }
+
+    test("star - no igenomes - stub") {
+
+        options "-stub"
+
+        setup {
+            run("STAR_GENOMEGENERATE") {
+                script "../../../../modules/nf-core/star/genomegenerate/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id:'test_fasta' ],
+                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                    ])
+                    input[1] = Channel.of([
+                        [ id:'test_gtf' ],
+                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                    ])
+                    """
+                }
+            }
+        }
+
+        when {
+            workflow {
+                """
+                star_ignore_sjdbgtf = false
+                seq_platform        = 'illumina'
+                seq_center          = false
+                is_aws_igenome      = false
+                use_sentieon_star   = false
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = STAR_GENOMEGENERATE.out.index
+                input[2] = Channel.of([
+                    [ id:'test_gtf' ],
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                ])
+                input[3] = star_ignore_sjdbgtf
+                input[4] = seq_platform
+                input[5] = seq_center
+                input[6] = is_aws_igenome
+                input[7] = Channel.of([
+                    [ id:'test_fasta' ],
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                ])
+                input[8] = use_sentieon_star
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out.bai,
+                    workflow.out.bam,
+                    workflow.out.bam_sorted,
+                    workflow.out.bam_transcript,
+                    workflow.out.csi,
+                    workflow.out.flagstat,
+                    workflow.out.idxstats,
+                    workflow.out.log_final,
+                    workflow.out.log_out,
+                    workflow.out.log_progress,
+                    workflow.out.orig_bam,
+                    workflow.out.stats,
+                    workflow.out.tab,
+                    workflow.out.versions).match()}
+            )
+        }
+    }
+
+    test("sentieon star - no igenomes - stub") {
+        tag "sentieon"
+        options "-stub"
+
+        setup {
+            run("STAR_GENOMEGENERATE") {
+                script "../../../../modules/nf-core/star/genomegenerate/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id:'test_fasta' ],
+                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                    ])
+                    input[1] = Channel.of([
+                        [ id:'test_gtf' ],
+                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                    ])
+                    """
+                }
+            }
+        }
+
+        when {
+            workflow {
+                """
+                star_ignore_sjdbgtf = false
+                seq_platform        = 'illumina'
+                seq_center          = false
+                is_aws_igenome      = false
+                use_sentieon_star   = true
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = STAR_GENOMEGENERATE.out.index
+                input[2] = Channel.of([
+                    [ id:'test_gtf' ],
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                ])
+                input[3] = star_ignore_sjdbgtf
+                input[4] = seq_platform
+                input[5] = seq_center
+                input[6] = is_aws_igenome
+                input[7] = Channel.of([
+                    [ id:'test_fasta' ],
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                ])
+                input[8] = use_sentieon_star
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out.bai,
+                    workflow.out.bam,
+                    workflow.out.bam_sorted,
+                    workflow.out.bam_transcript,
+                    workflow.out.csi,
+                    workflow.out.flagstat,
+                    workflow.out.idxstats,
+                    workflow.out.log_final,
+                    workflow.out.log_out,
+                    workflow.out.log_progress,
+                    workflow.out.orig_bam,
+                    workflow.out.stats,
+                    workflow.out.tab,
+                    workflow.out.versions).match()}
+            )
+        }
+    }
+
+    test("star - with igenomes - stub") {
+
+        options "-stub"
+
+        setup {
+            run("STAR_GENOMEGENERATE_IGENOMES") {
+                script "../../../../modules/local/star_genomegenerate_igenomes/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)])
+                    input[1] = Channel.of([file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)])
+                    """
+                }
+            }
+        }
+
+        when {
+            workflow {
+                """
+                star_ignore_sjdbgtf = false
+                seq_platform        = 'illumina'
+                seq_center          = false
+                is_aws_igenome      = true
+                use_sentieon_star   = false
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = STAR_GENOMEGENERATE_IGENOMES.out.index.map{ [ [id:'star'], it ] }
+                input[2] = Channel.of([
+                    [ id:'test_gtf' ],
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                ])
+                input[3] = star_ignore_sjdbgtf
+                input[4] = seq_platform
+                input[5] = seq_center
+                input[6] = is_aws_igenome
+                input[7] = Channel.of([
+                    [ id:'test_fasta' ],
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                ])
+                input[8] = use_sentieon_star
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out.bai,
+                    workflow.out.bam,
+                    workflow.out.bam_sorted,
+                    workflow.out.bam_transcript,
+                    workflow.out.csi,
+                    workflow.out.flagstat,
+                    workflow.out.idxstats,
+                    workflow.out.log_final,
+                    workflow.out.log_out,
+                    workflow.out.log_progress,
+                    workflow.out.orig_bam,
+                    workflow.out.stats,
+                    workflow.out.tab,
+                    workflow.out.versions).match()}
+            )
+        }
+    }
+}

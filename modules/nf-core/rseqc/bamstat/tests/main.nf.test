@@ -1,0 +1,49 @@
+nextflow_process {
+
+    name "Test Process RSEQC_BAMSTAT"
+    script "../main.nf"
+    process "RSEQC_BAMSTAT"
+
+
+    config "./nextflow.config"
+
+    test("sarscov2 - [meta] - bam") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam')
+                ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+    }
+
+    test("sarscov2 - [meta] - bam - stub") {
+
+    options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam')
+                ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+    }
+}

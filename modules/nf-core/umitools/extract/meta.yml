@@ -1,0 +1,60 @@
+name: umitools_extract
+description: Extracts UMI barcode from a read and add it to the read name, leaving
+  any sample barcode in place
+keywords:
+  - UMI
+  - barcode
+  - extract
+  - umitools
+tools:
+  - umi_tools:
+      description: >
+        UMI-tools contains tools for dealing with Unique Molecular Identifiers (UMIs)/Random
+        Molecular Tags (RMTs) and single cell RNA-Seq cell barcodes
+      documentation: https://umi-tools.readthedocs.io/en/latest/
+      license: "MIT"
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - reads:
+        type: list
+        description: |
+          List of input FASTQ files whose UMIs will be extracted.
+output:
+  - reads:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.fastq.gz":
+          type: file
+          description: >
+            Extracted FASTQ files. | For single-end reads, pattern is \${prefix}.umi_extract.fastq.gz.
+            | For paired-end reads, pattern is \${prefix}.umi_extract_{1,2}.fastq.gz.
+          pattern: "*.{fastq.gz}"
+  - log:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.log":
+          type: file
+          description: Logfile for umi_tools
+          pattern: "*.{log}"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+authors:
+  - "@drpatelh"
+  - "@grst"
+maintainers:
+  - "@drpatelh"
+  - "@grst"

@@ -1,0 +1,148 @@
+nextflow_process {
+
+    name "Test Process SENTIEON_RSEMCALCULATEEXPRESSION"
+    script "../main.nf"
+    process "SENTIEON_RSEMCALCULATEEXPRESSION"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "sentieon"
+    tag "sentieon/rsemcalculateexpression"
+    tag "sentieon/rsempreparereference"
+
+
+    test("homo_sapiens - bam") {
+
+        config "./alignment.config"
+
+        setup {
+            run("SENTIEON_RSEMPREPAREREFERENCE") {
+                script "../../../sentieon/rsempreparereference/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
+                    input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
+                    """
+                }
+            }
+        }
+
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', strandedness: 'forward' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/rsem.transcript.bam', checkIfExists: true)
+                ])
+                input[1] = SENTIEON_RSEMPREPAREREFERENCE.out.index
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.counts_gene,
+                    process.out.counts_transcript,
+                    process.out.stat,
+                    process.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("homo_sapiens - fastq") {
+
+        config "./nextflow.config"
+
+        setup {
+            run("SENTIEON_RSEMPREPAREREFERENCE") {
+                script "../../../sentieon/rsempreparereference/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
+                    input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
+                    """
+                }
+            }
+        }
+
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', strandedness: 'forward' ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = SENTIEON_RSEMPREPAREREFERENCE.out.index
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.counts_gene,
+                    process.out.counts_transcript,
+                    process.out.stat,
+                    process.out.versions
+                ).match() },
+                { assert path(process.out.logs.get(0).get(1)).exists() }
+            )
+        }
+    }
+
+    test("homo_sapiens - stub") {
+
+        config "./nextflow.config"
+
+        options "-stub"
+
+        setup {
+            run("SENTIEON_RSEMPREPAREREFERENCE") {
+                script "../../../sentieon/rsempreparereference/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
+                    input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
+                    """
+                }
+            }
+        }
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', strandedness: 'forward' ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = SENTIEON_RSEMPREPAREREFERENCE.out.index
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert process.success },
+                { assert path(process.out.counts_gene.get(0).get(1)).exists() },
+                { assert path(process.out.counts_transcript.get(0).get(1)).exists() },
+                { assert path(process.out.stat.get(0).get(1)).exists() },
+                { assert path(process.out.logs.get(0).get(1)).exists() },
+                { assert snapshot(
+                    process.out.versions
+                ).match() }
+            )
+        }
+    }
+}

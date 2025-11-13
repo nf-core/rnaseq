@@ -1,0 +1,53 @@
+Changes in component 'nf-core/hisat2/align'
+'modules/nf-core/hisat2/align/environment.yml' is unchanged
+'modules/nf-core/hisat2/align/meta.yml' is unchanged
+Changes in 'hisat2/align/main.nf':
+--- modules/nf-core/hisat2/align/main.nf
++++ modules/nf-core/hisat2/align/main.nf
+@@ -34,7 +34,7 @@
+     ss = "$splicesites" ? "--known-splicesite-infile $splicesites" : ''
+     def seq_center = params.seq_center ? "--rg-id ${prefix} --rg SM:$prefix --rg CN:${params.seq_center.replaceAll('\\s','_')}" : "--rg-id ${prefix} --rg SM:$prefix"
+     if (meta.single_end) {
+-        def unaligned = params.save_unaligned ? "--un-gz ${prefix}.unmapped.fastq.gz" : ''
++        def unaligned = params.save_unaligned || params.contaminant_screening ? "--un-gz ${prefix}.unmapped.fastq.gz" : ''
+         """
+         INDEX=`find -L ./ -name "*.1.ht2" | sed 's/\\.1.ht2\$//'`
+         hisat2 \\
+@@ -56,7 +56,7 @@
+         END_VERSIONS
+         """
+     } else {
+-        def unaligned = params.save_unaligned ? "--un-conc-gz ${prefix}.unmapped.fastq.gz" : ''
++        def unaligned = params.save_unaligned || params.contaminant_screening ? "--un-conc-gz ${prefix}.unmapped.fastq.gz" : ''
+         """
+         INDEX=`find -L ./ -name "*.1.ht2" | sed 's/\\.1.ht2\$//'`
+         hisat2 \\
+@@ -91,7 +91,7 @@
+ 
+     stub:
+     def prefix = task.ext.prefix ?: "${meta.id}"
+-    def unaligned = params.save_unaligned ? "echo '' | gzip >  ${prefix}.unmapped_1.fastq.gz \n echo '' | gzip >  ${prefix}.unmapped_2.fastq.gz" : ''
++    def unaligned = params.save_unaligned || params.contaminant_screening ? "echo '' | gzip >  ${prefix}.unmapped_1.fastq.gz \n echo '' | gzip >  ${prefix}.unmapped_2.fastq.gz" : ''
+     """
+     ${unaligned}
+ 
+
+'modules/nf-core/hisat2/align/tests/main.nf.test.snap' is unchanged
+Changes in 'hisat2/align/tests/main.nf.test':
+--- modules/nf-core/hisat2/align/tests/main.nf.test
++++ modules/nf-core/hisat2/align/tests/main.nf.test
+@@ -3,12 +3,6 @@
+     name "Test Process HISAT2_ALIGN"
+     script "../main.nf"
+     process "HISAT2_ALIGN"
+-    tag "modules"
+-    tag "modules_nfcore"
+-    tag "hisat2"
+-    tag "hisat2/align"
+-    tag "hisat2/build"
+-    tag "hisat2/extractsplicesites"
+ 
+     test("Single-End") {
+ 
+
+************************************************************

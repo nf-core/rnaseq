@@ -1,0 +1,48 @@
+nextflow_workflow {
+
+    name "Test Workflow PIPELINE_INITIALISATION"
+    script "../main.nf"
+    workflow "PIPELINE_INITIALISATION"
+
+    test("test PIPELINE_INITIALISATION successfully completes with valid parameters") {
+
+        when {
+            params {
+                // Genome references
+                fasta              = "https://raw.githubusercontent.com/nf-core/test-datasets/7f1614baeb0ddf66e60be78c3d9fa55440465ac8/reference/genome.fasta"
+                gtf                = "https://raw.githubusercontent.com/nf-core/test-datasets/7f1614baeb0ddf66e60be78c3d9fa55440465ac8/reference/genes_with_empty_tid.gtf.gz"
+                gff                = "https://raw.githubusercontent.com/nf-core/test-datasets/7f1614baeb0ddf66e60be78c3d9fa55440465ac8/reference/genes.gff.gz"
+                transcript_fasta   = "https://raw.githubusercontent.com/nf-core/test-datasets/7f1614baeb0ddf66e60be78c3d9fa55440465ac8/reference/transcriptome.fasta"
+                additional_fasta   = "https://raw.githubusercontent.com/nf-core/test-datasets/7f1614baeb0ddf66e60be78c3d9fa55440465ac8/reference/gfp.fa.gz"
+
+                bbsplit_fasta_list = "https://raw.githubusercontent.com/nf-core/test-datasets/7f1614baeb0ddf66e60be78c3d9fa55440465ac8/reference/bbsplit_fasta_list.txt"
+                hisat2_index       = "https://raw.githubusercontent.com/nf-core/test-datasets/7f1614baeb0ddf66e60be78c3d9fa55440465ac8/reference/hisat2.tar.gz"
+                salmon_index       = "https://raw.githubusercontent.com/nf-core/test-datasets/7f1614baeb0ddf66e60be78c3d9fa55440465ac8/reference/salmon.tar.gz"
+                rsem_index         = "https://raw.githubusercontent.com/nf-core/test-datasets/7f1614baeb0ddf66e60be78c3d9fa55440465ac8/reference/rsem.tar.gz"
+
+                // Other parameters
+                skip_bbsplit        = false
+                pseudo_aligner      = 'salmon'
+                umitools_bc_pattern = 'NNNN'
+                ribo_database_manifest = "${projectDir}/workflows/rnaseq/assets/rrna-db-defaults.txt"
+            }
+            workflow {
+                """
+                input[0] = false                // version (boolean)
+                input[1] = true                 // validate_parameters (boolean)
+                input[2] = true                 // monochrome_logs (boolean)
+                input[3] = args                 // args (array)
+                input[4] = file("$outputDir")   // outdir (string)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success}
+            )
+        }
+
+    }
+
+}

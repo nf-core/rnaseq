@@ -1,0 +1,61 @@
+nextflow_process {
+
+    name "Test Process QUALIMAP_RNASEQ"
+    script "../main.nf"
+    process "QUALIMAP_RNASEQ"
+
+    test("homo_sapiens [bam]") {
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true)
+                ])
+                input[1] = Channel.of([
+                    [ id:'test_fasta_gtf' ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(
+                    file("${process.out.results[0][1]}/qualimapReport.html").name,
+                    path("${process.out.results[0][1]}/rnaseq_qc_results.txt"),
+                    process.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("homo_sapiens [bam] - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true)
+                ])
+                input[1] = Channel.of([
+                    [ id:'test_fasta_gtf' ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+}

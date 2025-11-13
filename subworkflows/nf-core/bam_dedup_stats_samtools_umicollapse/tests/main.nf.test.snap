@@ -1,0 +1,79 @@
+{
+    "test_bam_dedup_stats_samtools_umicollapse_stats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.stats:md5,498621f92e86d55e4f7ae93170e6e733"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.10.1"
+        },
+        "timestamp": "2024-11-24T13:57:02.323104"
+    },
+    "test_bam_dedup_stats_samtools_umicollapse_versions": {
+        "content": [
+            [
+                "versions.yml:md5,20605eb79c410c0ed179ba660d82f75b",
+                "versions.yml:md5,23617661d2c899996bee2b05db027e25",
+                "versions.yml:md5,657bce03545b4c57f9c5fc4314bf85f7",
+                "versions.yml:md5,e02a62a393a833778e16542eeed0d148",
+                "versions.yml:md5,ef00762e264b99ac45713dc0dedf4060"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.10.1"
+        },
+        "timestamp": "2024-11-25T18:39:15.637444"
+    },
+    "test_bam_dedup_stats_samtools_umicollapse_flagstats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.flagstat:md5,18d602435a02a4d721b78d1812622159"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.10.1"
+        },
+        "timestamp": "2024-11-24T13:57:02.366866"
+    },
+    "test_bam_dedup_stats_samtools_umicollapse_idxstats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.idxstats:md5,85d20a901eef23ca50c323638a2eb602"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.10.1"
+        },
+        "timestamp": "2024-11-24T13:57:02.410712"
+    },
+    "test_bam_dedup_stats_samtools_umicollapse_bam": {
+        "content": [
+            "b7be15ac7aae194b04bdbb56f3534495"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.10.1"
+        },
+        "timestamp": "2024-11-25T18:39:15.613319"
+    }
+}

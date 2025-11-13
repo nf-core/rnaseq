@@ -16,6 +16,9 @@ jobs:
     # run only if the PR is approved by at least 2 reviewers and against the master/main branch or manually triggered
     if: github.repository == 'nf-core/rnaseq' && github.event.review.state == 'approved' && (github.event.pull_request.base.ref == 'master' || github.event.pull_request.base.ref == 'main') || github.event_name == 'workflow_dispatch' || github.event_name == 'release'
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        aligner: ["star_salmon", "star_rsem"]
     steps:
       - name: Set revision variable
         id: revision
@@ -36,7 +39,8 @@ jobs:
           parameters: |
             {
               "hook_url": "${{ secrets.MEGATESTS_ALERTS_SLACK_HOOK_URL }}",
-              "outdir": "s3://${{ vars.AWS_S3_BUCKET }}/rnaseq/results-${{ steps.revision.outputs.revision }}"
+              "aligner": "${{ matrix.aligner }}",
+              "outdir": "s3://${{ vars.AWS_S3_BUCKET }}/rnaseq/results-${{ steps.revision.outputs.revision }}/aligner_${{ matrix.aligner }}/"
             }
           profiles: test_full
 

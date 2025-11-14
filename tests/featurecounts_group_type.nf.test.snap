@@ -196,6 +196,9 @@
                 "SAMTOOLS_SORT": {
                     "samtools": 1.21
                 },
+                "SAMTOOLS_SORT_QUALIMAP": {
+                    "samtools": 1.21
+                },
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
                 },

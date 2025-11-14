@@ -79,6 +79,9 @@
                 "SAMTOOLS_INDEX": {
                     "samtools": 1.21
                 },
+                "SAMTOOLS_SORT_QUALIMAP": {
+                    "samtools": 1.21
+                },
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
                 },
@@ -1039,6 +1042,9 @@
                     "samtools": 1.21
                 },
                 "SAMTOOLS_INDEX": {
+                    "samtools": 1.21
+                },
+                "SAMTOOLS_SORT_QUALIMAP": {
                     "samtools": 1.21
                 },
                 "SAMTOOLS_STATS": {

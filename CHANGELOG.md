@@ -15,6 +15,7 @@ Special thanks to the following for their contributions to the release:
 
 - [PR #1608](https://github.com/nf-core/rnaseq/pull/1608) - Bump version after release 3.21.0
 - [PR #1617](https://github.com/nf-core/rnaseq/pull/1617) - Update bbmap/bbsplit module
+- [PR #1619](https://github.com/nf-core/rnaseq/pull/1619) - Update Credits to reflect current maintainership
 
 ## [[3.21.0](https://github.com/nf-core/rnaseq/releases/tag/3.21.0)] - 2025-09-18
 

@@ -103,7 +103,7 @@
     },
     "Params: --aligner hisat2": {
         "content": [
-            200,
+            205,
             {
                 "BBMAP_BBSPLIT": {
                     "bbmap": 39.18

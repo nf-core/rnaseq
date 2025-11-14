@@ -102,7 +102,7 @@
     },
     "Params: --featurecounts_group_type false": {
         "content": [
-            199,
+            204,
             {
                 "BBMAP_BBSPLIT": {
                     "bbmap": 39.18

@@ -1,7 +1,7 @@
 {
     "Params: --aligner star_rsem": {
         "content": [
-            207,
+            212,
             {
                 "BBMAP_BBSPLIT": {
                     "bbmap": 39.18

@@ -1,7 +1,7 @@
 {
     "Params: --remove_ribo_rna": {
         "content": [
-            220,
+            225,
             {
                 "BBMAP_BBSPLIT": {
                     "bbmap": 39.18

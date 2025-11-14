@@ -1,7 +1,7 @@
 {
     "--umi_dedup_tool 'umitools'": {
         "content": [
-            261,
+            266,
             {
                 "BEDTOOLS_GENOMECOV_FW": {
                     "bedtools": "2.31.1"
@@ -1510,7 +1510,7 @@
     },
     "Params: --aligner hisat2 --umi_dedup_tool 'umicollapse'": {
         "content": [
-            194,
+            199,
             {
                 "BEDTOOLS_GENOMECOV_FW": {
                     "bedtools": "2.31.1"

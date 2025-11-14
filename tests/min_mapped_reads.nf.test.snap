@@ -1,7 +1,7 @@
 {
     "Params: --min_mapped_reads 90": {
         "content": [
-            168,
+            166,
             {
                 "BBMAP_BBSPLIT": {
                     "bbmap": 39.18

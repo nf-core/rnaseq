@@ -378,6 +378,23 @@ This pipeline uses featureCounts to generate QC metrics based on [biotype](http:
 
 Please get in touch with us on the #rnaseq channel in the [nf-core Slack workspace](https://nf-co.re/join) if you are having problems or need any advice.
 
+#### Large chromosomes (plant genomes)
+
+Genomes with very large chromosomes (>500 Mb), such as plant genomes, may encounter failures in the RSeQC `inner_distance` module due to a known limitation in the underlying bx-python library. The bx-python BitSet implementation has a maximum capacity of approximately 537 million bases, which can be exceeded by chromosomes in organisms like wheat, barley, and other plants.
+
+If you encounter an error message similar to `IndexError: [coordinate] is larger than the size of this BitSet (536870912)`, you can work around this by excluding the `inner_distance` module from RSeQC analysis:
+
+```bash
+--rseqc_modules 'bam_stat,infer_experiment,junction_annotation,junction_saturation,read_distribution,read_duplication'
+```
+
+This removes `inner_distance` from the default list of RSeQC modules while retaining all other quality control metrics. Note that the inner_distance metric is only relevant for paired-end data and provides information about fragment size distribution.
+
+For more information, see the upstream issues:
+
+- [nf-core/rnaseq#608](https://github.com/nf-core/rnaseq/issues/608)
+- [bxlab/bx-python#67](https://github.com/bxlab/bx-python/issues/67)
+
 ### iGenomes (not recommended)
 
 If the `--genome` parameter is provided (e.g. `--genome GRCh37`) then the FASTA and GTF files (and existing indices) will be automatically obtained from AWS-iGenomes unless these have already been downloaded locally in the path specified by `--igenomes_base`.

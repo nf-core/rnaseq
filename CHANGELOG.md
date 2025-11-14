@@ -15,6 +15,7 @@ Special thanks to the following for their contributions to the release:
 
 - [PR #1608](https://github.com/nf-core/rnaseq/pull/1608) - Bump version after release 3.21.0
 - [PR #1617](https://github.com/nf-core/rnaseq/pull/1617) - Update bbmap/bbsplit module
+- [PR #1624](https://github.com/nf-core/rnaseq/pull/1624) - Document RSeQC inner_distance limitation for genomes with large chromosomes (>500 Mb), such as plant genomes
 
 ## [[3.21.0](https://github.com/nf-core/rnaseq/releases/tag/3.21.0)] - 2025-09-18
 

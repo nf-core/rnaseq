@@ -7,10 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Credits
 
+Special thanks to the following for their contributions to the release:
+
+- [Elad Herzog](https://github.com/EladH1)
+
 ### Enhancements and fixes
 
 - [PR #1608](https://github.com/nf-core/rnaseq/pull/1608) - Bump version after release 3.21.0
 - [PR #1618](https://github.com/nf-core/rnaseq/pull/1618) - Fix CI: Ensure confirm-pass job runs for markdown-only PRs
+- [PR #1617](https://github.com/nf-core/rnaseq/pull/1617) - Update bbmap/bbsplit module
 
 ## [[3.21.0](https://github.com/nf-core/rnaseq/releases/tag/3.21.0)] - 2025-09-18
 

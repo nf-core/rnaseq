@@ -614,6 +614,18 @@ RSeQC documentation: [tin.py](http://rseqc.sourceforge.net/#tin-py)
 
 The [Qualimap RNA-seq QC module](http://qualimap.bioinfo.cipf.es/doc_html/analysis.html#rna-seq-qc) is used within this pipeline to assess the overall mapping and coverage relative to gene features.
 
+:::warning
+**Known limitation**: Qualimap has a known bug ([#1273](https://github.com/nf-core/rnaseq/issues/1273), [Qualimap issue #81](https://bitbucket.org/kokonech/qualimap/issues/81)) where it may report more reads assigned to genomic features (exons, introns, intergenic regions) than the total number of reads in the BAM file. This can lead to inflated read counts and incorrect genomic origin statistics.
+
+If accurate read distribution metrics are critical for your analysis, we recommend:
+
+- Cross-referencing Qualimap results with RSeQC output (particularly `read_distribution.txt`)
+- Using `--skip_qualimap` to disable Qualimap and rely on RSeQC for genomic feature distribution
+- Validating suspicious results with alternative tools or custom scripts
+
+This is an upstream tool issue that cannot be fixed at the pipeline level.
+:::
+
 ![MultiQC - Qualimap gene coverage plot](images/mqc_qualimap_coverage.png)
 
 ![MultiQC - Qualimap genomic origin plot](images/mqc_qualimap_features.png)

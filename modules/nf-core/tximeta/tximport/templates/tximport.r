@@ -73,10 +73,10 @@ read_transcript_info <- function(tinfo_path){
     }
 
     transcript_info <- read.csv(tinfo_path, sep="\t", header = TRUE,
-                                col.names = c("tx", "gene_id", "gene_name"))
+                                col.names = c("tx", "gene_id", "gene_name"), check.names = FALSE)
 
     extra <- setdiff(rownames(txi[[1]]), as.character(transcript_info[["tx"]]))
-    transcript_info <- rbind(transcript_info, data.frame(tx=extra, gene_id=extra, gene_name=extra))
+    transcript_info <- rbind(transcript_info, data.frame(tx=extra, gene_id=extra, gene_name=extra, check.names = FALSE))
     transcript_info <- transcript_info[match(rownames(txi[[1]]), transcript_info[["tx"]]), ]
     rownames(transcript_info) <- transcript_info[["tx"]]
 
@@ -131,7 +131,7 @@ txi <- tximport(fns, type = '$quant_type', txOut = TRUE, dropInfReps = dropInfRe
 transcript_info <- read_transcript_info('$tx2gene')
 
 # Make coldata just to appease the summarizedexperiment
-coldata <- data.frame(files = fns, names = names)
+coldata <- data.frame(files = fns, names = names, check.names = FALSE)
 rownames(coldata) <- coldata[["names"]]
 
 # Create initial SummarizedExperiment object

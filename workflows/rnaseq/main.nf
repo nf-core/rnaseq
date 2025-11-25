@@ -500,6 +500,7 @@ workflow RNASEQ {
 
     //
     // MODULE: Genome-wide coverage with BEDTools
+    // Note: Strand parameters are conditional on library strandedness (see nextflow.config)
     //
     if (!params.skip_bigwig) {
 

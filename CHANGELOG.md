@@ -20,6 +20,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1614](https://github.com/nf-core/rnaseq/pull/1614) - Template update for nf-core/tools v3.4.1
 - [PR #1618](https://github.com/nf-core/rnaseq/pull/1618) - Fix CI: Ensure confirm-pass job runs for markdown-only PRs
 - [PR #1617](https://github.com/nf-core/rnaseq/pull/1617) - Update bbmap/bbsplit module
+- [PR #1625](https://github.com/nf-core/rnaseq/pull/1625) - Add documentation warning about Qualimap read counting bug ([#1273](https://github.com/nf-core/rnaseq/issues/1273))
 - [PR #1622](https://github.com/nf-core/rnaseq/pull/1622) - Update tximeta/tximport module to fix sample name mangling
 - [PR #1620](https://github.com/nf-core/rnaseq/pull/1620) - Fix bigwig strand labeling for reverse-stranded libraries ([#1591](https://github.com/nf-core/rnaseq/issues/1591))
 - [PR #1621](https://github.com/nf-core/rnaseq/pull/1621) - Optimize qualimap performance with multi-threaded name sorting

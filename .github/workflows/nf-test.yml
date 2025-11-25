@@ -1,12 +1,6 @@
 name: Run nf-test
 on:
   pull_request:
-    paths-ignore:
-      - "docs/**"
-      - "**/meta.yml"
-      - "**/*.md"
-      - "**/*.png"
-      - "**/*.svg"
   release:
     types: [published]
   workflow_dispatch:
@@ -121,7 +115,7 @@ jobs:
           fi
 
   confirm-pass:
-    needs: [nf-test]
+    needs: [nf-test-changes, nf-test]
     if: always()
     runs-on: # use self-hosted runners
       - runs-on=${{ github.run_id }}-confirm-pass
@@ -142,7 +136,7 @@ jobs:
       - name: debug-print
         if: always()
         run: |
-          echo "::group::DEBUG: `needs` Contents"
+          echo "::group::DEBUG: needs Contents"
           echo "DEBUG: toJSON(needs) = ${{ toJSON(needs) }}"
           echo "DEBUG: toJSON(needs.*.result) = ${{ toJSON(needs.*.result) }}"
           echo "::endgroup::"

@@ -1,4 +1,5 @@
 lint:
+  actions_nf_test: false
   files_exist:
     - conf/modules.config
   files_unchanged:

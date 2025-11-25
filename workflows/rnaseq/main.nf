@@ -47,6 +47,7 @@ include { MULTIQC                    } from '../../modules/nf-core/multiqc'
 include { BEDTOOLS_GENOMECOV as BEDTOOLS_GENOMECOV_FW          } from '../../modules/nf-core/bedtools/genomecov'
 include { BEDTOOLS_GENOMECOV as BEDTOOLS_GENOMECOV_REV         } from '../../modules/nf-core/bedtools/genomecov'
 include { SAMTOOLS_INDEX                                       } from '../../modules/nf-core/samtools/index'
+include { SAMTOOLS_SORT as SAMTOOLS_SORT_QUALIMAP              } from '../../modules/nf-core/samtools/sort'
 
 //
 // SUBWORKFLOW: Consisting entirely of nf-core/modules
@@ -540,8 +541,15 @@ workflow RNASEQ {
     //
     if (!params.skip_qc) {
         if (!params.skip_qualimap) {
-            QUALIMAP_RNASEQ (
+            // Sort BAM by name for qualimap (performance optimization)
+            SAMTOOLS_SORT_QUALIMAP (
                 ch_genome_bam,
+                ch_fasta.map { [ [:], it ] }
+            )
+            ch_versions = ch_versions.mix(SAMTOOLS_SORT_QUALIMAP.out.versions.first())
+
+            QUALIMAP_RNASEQ (
+                SAMTOOLS_SORT_QUALIMAP.out.bam,
                 ch_gtf.map { [ [:], it ] }
             )
             ch_multiqc_files = ch_multiqc_files.mix(QUALIMAP_RNASEQ.out.results.collect{it[1]})

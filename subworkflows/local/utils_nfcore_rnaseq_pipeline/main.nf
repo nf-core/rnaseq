@@ -272,8 +272,7 @@ def validateInputParameters() {
                 // Check if the relevant index for the selected pseudo-aligner is missing
                 if (params.pseudo_aligner == 'salmon' && !params.salmon_index) {
                     needs_to_build_index = true
-                }
-                if (params.pseudo_aligner == 'kallisto' && !params.kallisto_index) {
+                } else if (params.pseudo_aligner == 'kallisto' && !params.kallisto_index) {
                     needs_to_build_index = true
                 }
             }

@@ -267,13 +267,16 @@ def validateInputParameters() {
         // (i.e., no pre-built salmon/kallisto index provided). If the user provides a pre-built
         // index that already contains the spike-ins, the combination is valid.
         if (params.additional_fasta) {
-            def building_pseudo_index = (
-                !params.skip_pseudo_alignment &&
-                params.pseudo_aligner &&
-                !params.salmon_index &&
-                !params.kallisto_index
-            )
-            if (building_pseudo_index) {
+            def needs_to_build_index = false
+            if (!params.skip_pseudo_alignment && params.pseudo_aligner) {
+                // Check if the relevant index for the selected pseudo-aligner is missing
+                if (params.pseudo_aligner == 'salmon' && !params.salmon_index) {
+                    needs_to_build_index = true
+                } else if (params.pseudo_aligner == 'kallisto' && !params.kallisto_index) {
+                    needs_to_build_index = true
+                }
+            }
+            if (needs_to_build_index) {
                 transcriptFastaAdditionalFastaError()
             }
         }

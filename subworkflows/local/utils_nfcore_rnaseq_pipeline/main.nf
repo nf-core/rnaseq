@@ -263,6 +263,9 @@ def validateInputParameters() {
     }
 
     if (params.transcript_fasta) {
+        if (params.additional_fasta) {
+            transcriptFastaAdditionalFastaError()
+        }
         transcriptsFastaWarn()
     }
 
@@ -494,6 +497,26 @@ def transcriptsFastaWarn() {
         "  Please see:\n" +
         "  https://github.com/nf-core/rnaseq/issues/753\n" +
         "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+}
+
+//
+// Print an error if using both '--transcript_fasta' and '--additional_fasta'
+//
+def transcriptFastaAdditionalFastaError() {
+    def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
+        "  Both '--transcript_fasta' and '--additional_fasta' have been provided.\n\n" +
+        "  The pipeline cannot append additional sequences (e.g. ERCC spike-ins) to a\n" +
+        "  user-provided transcriptome FASTA file. This would cause quantification to\n" +
+        "  fail because alignments to additional sequences would not be found in the\n" +
+        "  transcript FASTA.\n\n" +
+        "  Please either:\n" +
+        "    - Remove '--transcript_fasta' and let the pipeline generate the\n" +
+        "      transcriptome from the genome FASTA and GTF (recommended), or\n" +
+        "    - Remove '--additional_fasta' if you do not need spike-in sequences.\n\n" +
+        "  Please see:\n" +
+        "  https://github.com/nf-core/rnaseq/issues/1450\n" +
+        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    error(error_string)
 }
 
 //

@@ -316,7 +316,7 @@ Notes:
 
 - If `--gff` is provided as input then this will be converted to a GTF file, or the latter will be used if both are provided.
 - If `--gene_bed` is not provided then it will be generated from the GTF file.
-- If `--additional_fasta` is provided then the features in this file (e.g. ERCC spike-ins) will be automatically concatenated onto both the reference FASTA file as well as the GTF annotation before building the appropriate indices.
+- If `--additional_fasta` is provided then the features in this file (e.g. ERCC spike-ins) will be automatically concatenated onto both the reference FASTA file as well as the GTF annotation before building the appropriate indices. Note: `--additional_fasta` cannot be used together with `--transcript_fasta` because the pipeline cannot append additional sequences to a user-provided transcriptome. If you need spike-ins, omit `--transcript_fasta` and let the pipeline generate the transcriptome automatically.
 - When using `--aligner star_rsem`, the pipeline will build separate STAR and RSEM indices. STAR performs alignment with RSEM-compatible parameters, then RSEM quantifies from the resulting BAM files using `--alignments` mode.
 - If the `--skip_alignment` option is used along with `--transcript_fasta`, the pipeline can technically run without providing the genomic FASTA (`--fasta`). However, this approach is **not recommended** with `--pseudo_aligner salmon`, as any dynamically generated Salmon index will lack decoys. To ensure optimal indexing with decoys, it is **highly recommended** to include the genomic FASTA (`--fasta`) with Salmon, unless a pre-existing decoy-aware Salmon index is supplied. For more details on the benefits of decoy-aware indexing, refer to the [Salmon documentation](https://salmon.readthedocs.io/en/latest/salmon.html#preparing-transcriptome-indices-mapping-based-mode).
 
@@ -349,6 +349,10 @@ More information and links to further resources are [available from Ensembl](htt
 In addition to the reference genome sequence and annotation, you can provide a reference transcriptome FASTA file. These files can be obtained from GENCODE or Ensembl. However, these sequences only cover the reference chromosomes and can cause inconsistencies if you are using a primary or toplevel genome assembly and annotation.
 
 We recommend not providing a transcriptome FASTA file and instead allowing the pipeline to create it from the provided genome and annotation. Similar to aligner indexes, you can save the created transcriptome FASTA and BED files to a central location for future pipeline runs. This helps avoid redundant computation and having multiple copies on your system. Ensure that all genome, annotation, transcriptome, and index versions match to maintain consistency.
+
+:::warning
+If you are using `--additional_fasta` to add spike-in sequences (e.g. ERCC), you **must not** provide `--transcript_fasta`. The pipeline needs to generate the transcriptome itself so that it includes the spike-in sequences. Providing both parameters will cause the pipeline to exit with an error.
+:::
 
 #### Indices
 

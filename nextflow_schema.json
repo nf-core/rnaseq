@@ -111,7 +111,8 @@
                     "mimetype": "text/plain",
                     "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
                     "fa_icon": "far fa-file-code",
-                    "description": "Path to FASTA transcriptome file."
+                    "description": "Path to FASTA transcriptome file.",
+                    "help_text": "If not provided, the transcriptome will be generated from the genome FASTA and GTF files. Cannot be used together with `--additional_fasta` because the pipeline cannot append spike-in sequences to a user-provided transcriptome."
                 },
                 "additional_fasta": {
                     "type": "string",
@@ -121,7 +122,7 @@
                     "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
                     "fa_icon": "far fa-file-code",
                     "description": "FASTA file to concatenate to genome FASTA file e.g. containing spike-in sequences.",
-                    "help_text": "If provided, sequences in this file will be concatenated to the genome FASTA file. A GTF file will be automatically created using these sequences, and alignment indices will be created from the combined files. Use `--save_reference` to reuse these indices in future runs."
+                    "help_text": "If provided, sequences in this file will be concatenated to the genome FASTA file. A GTF file will be automatically created using these sequences, and alignment indices will be created from the combined files. Use `--save_reference` to reuse these indices in future runs. Cannot be used together with `--transcript_fasta` - the pipeline must generate the transcriptome itself to include the additional sequences."
                 },
                 "splicesites": {
                     "type": "string",

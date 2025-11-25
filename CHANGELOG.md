@@ -29,6 +29,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1625](https://github.com/nf-core/rnaseq/pull/1625) - Add documentation warning about Qualimap read counting bug ([#1273](https://github.com/nf-core/rnaseq/issues/1273))
 - [PR #1628](https://github.com/nf-core/rnaseq/pull/1628) - Template update for nf-core/tools v3.5.1
 - [PR #1632](https://github.com/nf-core/rnaseq/pull/1632) - Add validation error for incompatible `--transcript_fasta` and `--additional_fasta` params ([#1450](https://github.com/nf-core/rnaseq/issues/1450))
+- [PR #1631](https://github.com/nf-core/rnaseq/pull/1631) - Fix bbsplit index staging by using symlinks instead of full copy
 
 ## [[3.21.0](https://github.com/nf-core/rnaseq/releases/tag/3.21.0)] - 2025-09-18
 

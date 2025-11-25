@@ -7,7 +7,7 @@
                 "nf-core": {
                     "bbmap/bbsplit": {
                         "branch": "master",
-                        "git_sha": "fa1477128e0ff24675c8f56d6c334fcc323025c4",
+                        "git_sha": "6da7216c83d9d885bdeb7aef1bcb9b51a90f370b",
                         "installed_by": ["fastq_qc_trim_filter_setstrandedness", "modules"]
                     },
                     "bedtools/genomecov": {

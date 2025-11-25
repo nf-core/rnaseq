@@ -26,6 +26,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1620](https://github.com/nf-core/rnaseq/pull/1620) - Fix bigwig strand labeling for reverse-stranded libraries ([#1591](https://github.com/nf-core/rnaseq/issues/1591))
 - [PR #1621](https://github.com/nf-core/rnaseq/pull/1621) - Optimize qualimap performance with multi-threaded name sorting
 - [PR #1628](https://github.com/nf-core/rnaseq/pull/1628) - Template update for nf-core/tools v3.5.1
+- [PR #1630](https://github.com/nf-core/rnaseq/pull/1630) - Fix arm64 profile to use pre-built ARM containers and update documentation
 
 ## [[3.21.0](https://github.com/nf-core/rnaseq/releases/tag/3.21.0)] - 2025-09-18
 

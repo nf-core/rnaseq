@@ -1,0 +1,131 @@
+nextflow_workflow {
+
+    name "Test Workflow QUANTIFY_RSEM"
+    script "../main.nf"
+    workflow "QUANTIFY_RSEM"
+    config "./nextflow.config"
+
+    test("homo_sapiens") {
+        tag "test"
+        setup {
+            run("RSEM_PREPAREREFERENCE") {
+                script "../../../../modules/nf-core/rsem/preparereference/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
+                    input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
+                    """
+                }
+            }
+        }
+
+        when {
+            workflow {
+                """
+                use_sentieon_star        = false
+
+                input[0] = Channel.of([
+                    [ id:'test', strandedness: 'forward' ], // meta map
+                    file('https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/' + 'genomics/homo_sapiens/illumina/bam/rsem.transcript.bam', checkIfExists: true)
+                ])
+                input[1] = RSEM_PREPAREREFERENCE.out.index
+                input[2] = use_sentieon_star
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.counts_gene,
+                    workflow.out.counts_transcript,
+                    workflow.out.stat,
+                    workflow.out.merged_counts_gene,
+                    workflow.out.merged_tpm_gene,
+                    workflow.out.merged_counts_transcript,
+                    workflow.out.merged_tpm_transcript,
+                    workflow.out.versions
+                ).match()}
+            )
+        }
+    }
+
+    test("homo_sapiens - stub") {
+
+        options "-stub"
+
+        setup {
+            run("RSEM_PREPAREREFERENCE") {
+                script "../../../../modules/nf-core/rsem/preparereference/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
+                    input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
+                    """
+                }
+            }
+        }
+
+        when {
+            workflow {
+                """
+                use_sentieon_star        = false
+
+                input[0] = Channel.of([
+                    [ id:'test', strandedness: 'forward' ], // meta map
+                    file('https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/' + 'genomics/homo_sapiens/illumina/bam/rsem.transcript.bam', checkIfExists: true)
+                ])
+                input[1] = RSEM_PREPAREREFERENCE.out.index
+                input[2] = use_sentieon_star
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(workflow.out).match()}
+            )
+        }
+    }
+
+    test("homo_sapiens - sentieon - stub") {
+
+        options "-stub"
+
+        setup {
+            run("SENTIEON_RSEMPREPAREREFERENCE") {
+                script "../../../../modules/nf-core/sentieon/rsempreparereference/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
+                    input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
+                    """
+                }
+            }
+        }
+
+        when {
+            workflow {
+                """
+                use_sentieon_star        = true
+
+                input[0] = Channel.of([
+                    [ id:'test', strandedness: 'forward' ], // meta map
+                    file('https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/' + 'genomics/homo_sapiens/illumina/bam/rsem.transcript.bam', checkIfExists: true)
+                ])
+                input[1] = SENTIEON_RSEMPREPAREREFERENCE.out.index
+                input[2] = use_sentieon_star
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(workflow.out).match()}
+            )
+        }
+    }
+}

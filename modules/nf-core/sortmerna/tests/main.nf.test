@@ -1,0 +1,333 @@
+nextflow_process {
+
+    name "Test Process SORTMERNA"
+    script "../main.nf"
+    process "SORTMERNA"
+
+    test("sarscov2 indexing only") {
+
+        config './indexing_only.config'
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([[],[]])
+                input[1] = [ [id:'test2'], // meta map
+                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true) ]
+                ]
+                input[2] = Channel.of([[],[]])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert ! process.out.reads },
+                { assert snapshot(
+                    file(process.out.index[0][1]).listFiles().findAll { !it.name.endsWith(".stats") }.sort { it.name },
+                    process.out.versions
+                ).match() }
+            )
+        }
+
+    }
+
+    test("sarscov2 indexing only stub") {
+
+        options '-stub'
+        config './indexing_only.config'
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([[],[]])
+                input[1] = [ [id:'test2'], // meta map
+                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true) ]
+                ]
+                input[2] = Channel.of([[],[]])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert ! process.out.reads },
+                { assert snapshot(process.out.index).match("index_only_stub") },
+                { assert snapshot(process.out.versions).match("versions_index_only_stub") }
+            )
+        }
+
+    }
+
+    test("sarscov2 single_end") {
+
+        when {
+            process {
+                """
+                input[0] = [ [ id:'test' ], // meta map
+                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true) ]
+                ]
+                input[1] = [ [id:'test2'], // meta map
+                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true) ]
+                ]
+                input[2] = Channel.of([[],[]])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert process.out.reads },
+                { assert file(process.out.log[0][1]).text.contains("Total reads passing E-value threshold = 100 (100.00)") },
+                {
+                    assert snapshot(
+                        (
+                            [process.out.reads[0][0].toString()] + // meta
+                            process.out.reads.collect { file(it[1]).getName() } +
+                            process.out.log.collect { file(it[1]).getName() }
+                        ).sort()
+                    ).match("sarscov2 single_end_match")
+                },
+                { assert snapshot(
+                    file(process.out.index[0][1]).listFiles().findAll { !it.name.endsWith(".stats") }.sort { it.name }
+                ).match("index_single_end")},
+                { assert snapshot(process.out.versions).match("versions_single_end") }
+            )
+        }
+
+    }
+
+    test("sarscov2 single_end stub") {
+
+        options '-stub'
+
+        when {
+            process {
+                """
+                input[0] = [ [ id:'test' ], // meta map
+                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true) ]
+                ]
+                input[1] = [ [id:'test2'], // meta map
+                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true) ]
+                ]
+                input[2] = Channel.of([[],[]])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                {
+                    assert snapshot(
+                        (
+                            [process.out.reads[0][0].toString()] + // meta
+                            process.out.reads.collect { file(it[1]).getName() } +
+                            process.out.log.collect { file(it[1]).getName() }
+                        ).sort()
+                    ).match("sarscov2 single_end-for_stub_match")
+                },
+                { assert snapshot(process.out.index).match("index_single_end_stub") },
+                { assert snapshot(process.out.versions).match("versions_single_end_stub") }
+            )
+        }
+
+    }
+
+    test("sarscov2 paired_end") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true),
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_2.fastq.gz", checkIfExists: true)
+                    ]
+                ]
+                input[1] = [ [id:'test2'], // meta map
+                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true) ]
+                ]
+                input[2] = Channel.of([[],[]])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert process.out.reads },
+                { assert file(process.out.log[0][1]).text.contains("Total reads passing E-value threshold = 200 (100.00)") },
+                {
+                    assert snapshot(
+                        (
+                            [process.out.reads[0][0].toString()] + // meta
+                            process.out.reads.collect { it[1].collect { item -> file(item).getName() } } +
+                            process.out.log.collect { file(it[1]).getName() }
+                        ).sort()
+                    ).match("sarscov2 paired_end_match")
+                },
+                { assert snapshot(
+                    file(process.out.index[0][1]).listFiles().findAll { !it.name.endsWith(".stats") }.sort { it.name }
+                ).match("index_paired_end") },
+                { assert snapshot(process.out.versions).match("versions_paired_end") }
+
+            )
+        }
+
+    }
+
+    test("sarscov2 paired_end stub") {
+
+        options '-stub'
+
+        when {
+            process {
+                """
+                input[0] = [ [ id:'test' ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true),
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_2.fastq.gz", checkIfExists: true)
+                    ]
+                ]
+                input[1] = [ [id:'test2'], // meta map
+                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true) ]
+                ]
+                input[2] = Channel.of([[],[]])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                {
+                    assert snapshot(
+                        (
+                            [process.out.reads[0][0].toString()] + // meta
+                            process.out.reads.collect { it[1].collect { item -> file(item).getName() } } +
+                            process.out.log.collect { file(it[1]).getName() }
+                        ).sort()
+                    ).match("sarscov2 paired_end-for_stub_match")
+                },
+                { assert snapshot(process.out.index).match("index_paired_end_stub") },
+                { assert snapshot(process.out.versions).match("versions_paired_end_stub") }
+            )
+        }
+
+    }
+
+    test("sarscov2 single_end premade_index") {
+
+        config './premade_index.config'
+
+        setup {
+
+            run("SORTMERNA", alias: "SORTMERNA_INDEX") {
+                script "../main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([[],[]])
+                    input[1] = [ [id:'test2'], // meta map
+                        [ file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true) ]
+                    ]
+                    input[2] = Channel.of([[],[]])
+                    """
+                }
+            }
+        }
+
+        when {
+            process {
+                """
+                input[0] = [ [ id:'test' ], // meta map
+                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true) ]
+                ]
+                input[1] = [ [id:'test2'], // meta map
+                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true) ]
+                ]
+                input[2] = SORTMERNA_INDEX.out.index
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert process.out.reads },
+                { assert file(process.out.log[0][1]).text.contains("Total reads passing E-value threshold = 100 (100.00)") },
+                {
+                    assert snapshot(
+                        (
+                            [process.out.reads[0][0].toString()] + // meta
+                            process.out.reads.collect { file(it[1]).getName() } +
+                            process.out.log.collect { file(it[1]).getName() }
+                        ).sort()
+                    ).match("sarscov2 single_end_premade_index_match")
+                },
+                { assert snapshot(
+                    file(process.out.index[0][1]).listFiles().findAll { !it.name.endsWith(".stats") }.sort{ it.name }
+                ).match("index_single_end_premade_index") },
+                { assert snapshot(process.out.versions).match("versions_single_end_premade_index") }
+            )
+        }
+    }
+
+    test("sarscov2 single_end premade_index stub") {
+
+        config './premade_index.config'
+        options '-stub'
+
+        setup {
+
+            run("SORTMERNA", alias: "SORTMERNA_INDEX") {
+                script "../main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([[],[]])
+                    input[1] = [ [id:'test2'], // meta map
+                        [ file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true) ]
+                    ]
+                    input[2] = Channel.of([[],[]])
+                    """
+                }
+            }
+        }
+
+        when {
+            process {
+                """
+                input[0] = [ [ id:'test' ], // meta map
+                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true) ]
+                ]
+                input[1] = [ [id:'test2'], // meta map
+                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true) ]
+                ]
+                input[2] = SORTMERNA_INDEX.out.index
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert process.out.reads },
+                {
+                    assert snapshot(
+                        (
+                            [process.out.reads[0][0].toString()] + // meta
+                            process.out.reads.collect { file(it[1]).getName() } +
+                            process.out.log.collect { file(it[1]).getName() }
+                        ).sort()
+                    ).match("sarscov2 single_end_premade_index_match_stub")
+                },
+                { assert snapshot(process.out.index).match("index_single_end_premade_index_stub") },
+                { assert snapshot(process.out.versions).match("versions_single_end_premade_index_stub") }
+            )
+        }
+    }
+}

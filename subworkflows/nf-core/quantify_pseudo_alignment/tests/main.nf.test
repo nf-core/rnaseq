@@ -1,0 +1,241 @@
+nextflow_workflow {
+
+    name "Test Workflow QUANTIFY_PSEUDO_ALIGNMENT"
+    script "../main.nf"
+    config "./nextflow.config"
+    workflow "QUANTIFY_PSEUDO_ALIGNMENT"
+
+
+
+    test("salmon") {
+
+        setup {
+            run("SALMON_INDEX") {
+                script "../../../../modules/nf-core/salmon/index/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.fasta", checkIfExists: true)])
+                    input[1] = Channel.of([file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)])
+                    """
+                }
+            }
+        }
+
+        when {
+            workflow {
+                """
+                input[0]  = [
+                    [ id: 'samplesheet' ],
+                    file(params.modules_testdata_base_path + '/genomics/sarscov2/illumina/csv/samplesheet_micro.csv', checkIfExists: true)
+                ]
+                input[1]  = [
+                    [ id: 'test' ],
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                    ]
+                ]
+                input[2]  = SALMON_INDEX.out.index
+                input[3]  = Channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))
+                input[4]  = Channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true))
+                input[5]  = 'gene_id'
+                input[6]  = 'gene_name'
+                input[7]  = 'salmon'
+                input[8]  = false
+                input[9]  = 'A'
+                input[10] = null
+                input[11] = null
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                        file(workflow.out.merged_gene_rds_unified[0][1]).name,
+                        file(workflow.out.merged_transcript_rds_unified[0][1]).name,
+                        workflow.out.counts_gene,
+                        workflow.out.counts_gene_length_scaled,
+                        workflow.out.lengths_gene,
+                        workflow.out.lengths_transcript,
+                        workflow.out.merged_counts_transcript,
+                        workflow.out.merged_tpm_transcript,
+                        workflow.out.tpm_gene,
+                        workflow.out.tpm_transcript,
+                        workflow.out.versions
+                    ).match()
+                }
+            )
+        }
+    }
+
+    test("kallisto") {
+
+        setup {
+            run("KALLISTO_INDEX") {
+                script "../../../../modules/nf-core/kallisto/index/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id:'transcriptome' ], // meta map
+                        file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)
+                    ])
+                    """
+                }
+            }
+        }
+
+        when {
+            workflow {
+                """
+                input[0]  = [
+                    [ id: 'samplesheet' ],
+                    file(params.modules_testdata_base_path + '/genomics/sarscov2/illumina/csv/samplesheet_micro.csv', checkIfExists: true)
+                ]
+                input[1]  = [
+                    [ id: 'test' ],
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                    ]
+                ]
+                input[2]  = KALLISTO_INDEX.out.index
+                input[3]  = Channel.of(file(params.modules_testdata_base_path +  "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))
+                input[4]  = Channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true))
+                input[5]  = 'gene_id'
+                input[6]  = 'gene_name'
+                input[7]  = 'kallisto'
+                input[8]  = null
+                input[9]  = null
+                input[10] = []
+                input[11] = []
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                        file(workflow.out.merged_gene_rds_unified[0][1]).name,
+                        file(workflow.out.merged_transcript_rds_unified[0][1]).name,
+                        workflow.out.counts_gene,
+                        workflow.out.counts_gene_length_scaled,
+                        workflow.out.lengths_gene,
+                        workflow.out.lengths_transcript,
+                        workflow.out.tpm_gene,
+                        workflow.out.tpm_transcript,
+                        workflow.out.versions
+                    ).match()
+                }
+            )
+        }
+    }
+
+    test("salmon - stub") {
+
+        options "-stub"
+
+        setup {
+            run("SALMON_INDEX") {
+                script "../../../../modules/nf-core/salmon/index/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.fasta", checkIfExists: true)])
+                    input[1] = Channel.of([file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)])
+                    """
+                }
+            }
+        }
+
+        when {
+            workflow {
+                """
+                input[0]  = [
+                    [ id: 'samplesheet' ],
+                    file(params.modules_testdata_base_path + '/genomics/sarscov2/illumina/csv/samplesheet_micro.csv', checkIfExists: true)
+                ]
+                input[1]  = [
+                    [ id: 'test' ],
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                    ]
+                ]
+                input[2]  = SALMON_INDEX.out.index
+                input[3]  = Channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))
+                input[4]  = Channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true))
+                input[5]  = 'gene_id'
+                input[6]  = 'gene_name'
+                input[7]  = 'salmon'
+                input[8]  = false
+                input[9]  = 'A'
+                input[10] = null
+                input[11] = null
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(workflow.out).match()}
+            )
+        }
+    }
+
+    test("kallisto - stub") {
+
+        options "-stub"
+
+        setup {
+            run("KALLISTO_INDEX") {
+                script "../../../../modules/nf-core/kallisto/index/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id:'transcriptome' ], // meta map
+                        file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)
+                    ])
+                    """
+                }
+            }
+        }
+
+        when {
+            workflow {
+                """
+                input[0]  = [
+                    [ id: 'samplesheet' ],
+                    file(params.modules_testdata_base_path + '/genomics/sarscov2/illumina/csv/samplesheet_micro.csv', checkIfExists: true)
+                ]
+                input[1]  = [
+                    [ id: 'test' ],
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                    ]
+                ]
+                input[2]  = KALLISTO_INDEX.out.index
+                input[3]  = Channel.of(file(params.modules_testdata_base_path +  "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))
+                input[4]  = Channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true))
+                input[5]  = 'gene_id'
+                input[6]  = 'gene_name'
+                input[7]  = 'kallisto'
+                input[8]  = null
+                input[9]  = null
+                input[10] = []
+                input[11] = []
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(workflow.out).match()}
+            )
+        }
+    }
+}

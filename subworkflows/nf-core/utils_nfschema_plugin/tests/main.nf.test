@@ -4,10 +4,6 @@ nextflow_workflow {
     script "../main.nf"
     workflow "UTILS_NFSCHEMA_PLUGIN"
 
-    tag "subworkflows"
-    tag "subworkflows_nfcore"
-    tag "subworkflows/utils_nfschema_plugin"
-    tag "plugin/nf-schema"
 
     config "./nextflow.config"
 

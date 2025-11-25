@@ -1,0 +1,134 @@
+nextflow_workflow {
+
+    name "Test Workflow BAM_RSEQC"
+    script "../main.nf"
+    workflow "BAM_RSEQC"
+
+    test("sarscov2 paired-end [bam]") {
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true)
+                ])
+                input[1] = Channel.of([
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/bed/test.bed12', checkIfExists: true)
+                ])
+                input[2] = ['bam_stat', 'inner_distance', 'infer_experiment', 'junction_annotation', 'junction_saturation', 'read_distribution', 'read_duplication', 'tin']
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert workflow.out.innerdistance_all.any { it[1].endsWith('.pdf') && file(it[1]).exists() } },
+                { assert workflow.out.readduplication_all.any { it[1].endsWith('.pdf') && file(it[1]).exists() } },
+                { assert workflow.out.junctionsaturation_all.any { it[1].endsWith('.pdf') && file(it[1]).exists() } },
+                { assert snapshot(
+                    workflow.out.bamstat_txt,
+                    workflow.out.innerdistance_all.findAll { it[1].endsWith('.pdf') == false },
+                    workflow.out.inferexperiment_txt,
+                    workflow.out.junctionannotation_all.findAll { it[1].endsWith('.xls') == false && it[1].endsWith('.r') == false },
+                    workflow.out.junctionsaturation_all.findAll { it[1].endsWith('.pdf') == false },
+                    workflow.out.readdistribution_txt,
+                    workflow.out.readduplication_all.findAll { it[1].endsWith('.pdf') == false },
+                    workflow.out.tin_txt,
+                    workflow.out.versions).match()}
+            )
+        }
+    }
+
+    test("sarscov2 paired-end [bam] no modules") {
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true)
+                ])
+                input[1] = Channel.of([
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/bed/test.bed12', checkIfExists: true)
+                ])
+                input[2] = []
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.out.bamstat_txt.size() == 0 },
+                { assert workflow.out.innerdistance_all.size() == 0 },
+                { assert workflow.out.inferexperiment_txt.size() == 0 },
+                { assert workflow.out.junctionannotation_all.size() == 0 },
+                { assert workflow.out.junctionsaturation_all.size() == 0 },
+                { assert workflow.out.readdistribution_txt.size() == 0 },
+                { assert workflow.out.readduplication_all.size() == 0 },
+                { assert workflow.out.tin_txt.size() == 0 },
+                { assert workflow.out.versions.size() == 0 }
+            )
+        }
+    }
+
+    test("sarscov2 paired-end [bam] - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true)
+                ])
+                input[1] = Channel.of([
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/bed/test.bed12', checkIfExists: true)
+                ])
+                input[2] = ['bam_stat', 'inner_distance', 'infer_experiment', 'junction_annotation', 'junction_saturation', 'read_distribution', 'read_duplication', 'tin']
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(workflow.out).match()}
+            )
+        }
+    }
+
+    test("sarscov2 paired-end [bam] no modules - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true)
+                ])
+                input[1] = Channel.of([
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/bed/test.bed12', checkIfExists: true)
+                ])
+                input[2] = []
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(workflow.out).match()}
+            )
+        }
+    }
+}

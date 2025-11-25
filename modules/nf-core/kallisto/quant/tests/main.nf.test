@@ -1,0 +1,164 @@
+nextflow_process {
+
+    name "Test Process KALLISTO_QUANT"
+    script "../main.nf"
+    process "KALLISTO_QUANT"
+
+    setup {
+            run("KALLISTO_INDEX") {
+                script "../../index/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id:'transcriptome' ], // meta map
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true)
+                    ])
+                    """
+                }
+            }
+
+            run("KALLISTO_INDEX", alias: "KALLISTO_INDEX_STUB") {
+                script "../../index/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id:'transcriptome' ], // meta map
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true)
+                    ])
+                    """
+                }
+            }
+        }
+
+    test("sarscov2 single-end") {
+        when {
+            process {
+                """
+                gtf                = []
+                chromosomes        = []
+                fragment_length    = 150
+                fragment_length_sd = 75
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:true ],
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                ])
+                input[1] = KALLISTO_INDEX.out.index
+                input[2] = gtf
+                input[3] = chromosomes
+                input[4] = fragment_length
+                input[5] = fragment_length_sd
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    path("${process.out.results[0][1]}/abundance.tsv"),
+                    process.out.log,
+                    process.out.versions).match() }
+            )
+        }
+    }
+
+    test("sarscov2 paired-end") {
+        when {
+            process {
+                """
+                gtf                = []
+                chromosomes        = []
+                fragment_length    = []
+                fragment_length_sd = []
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
+                ])
+                input[1] = KALLISTO_INDEX.out.index
+                input[2] = gtf
+                input[3] = chromosomes
+                input[4] = fragment_length
+                input[5] = fragment_length_sd
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    path("${process.out.results[0][1]}/abundance.tsv"),
+                    process.out.log,
+                    process.out.versions).match() }
+            )
+        }
+    }
+
+    test("sarscov2 single-end - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                gtf                = []
+                chromosomes        = []
+                fragment_length    = 150
+                fragment_length_sd = 75
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:true ],
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                ])
+                input[1] = KALLISTO_INDEX_STUB.out.index
+                input[2] = gtf
+                input[3] = chromosomes
+                input[4] = fragment_length
+                input[5] = fragment_length_sd
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("sarscov2 paired-end - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                gtf                = []
+                chromosomes        = []
+                fragment_length    = []
+                fragment_length_sd = []
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
+                ])
+                input[1] = KALLISTO_INDEX_STUB.out.index
+                input[2] = gtf
+                input[3] = chromosomes
+                input[4] = fragment_length
+                input[5] = fragment_length_sd
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+}

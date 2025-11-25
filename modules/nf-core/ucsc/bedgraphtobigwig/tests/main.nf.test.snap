@@ -1,0 +1,68 @@
+{
+    "stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bigWig:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,db26514184acfdf220bb2f061382cf8c"
+                ],
+                "bigwig": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bigWig:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,db26514184acfdf220bb2f061382cf8c"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-18T10:47:58.558813949"
+    },
+    "Should run without failures": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bigWig:md5,910ecc7f57e3bbd5fac5a8edba4f615d"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,db26514184acfdf220bb2f061382cf8c"
+                ],
+                "bigwig": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bigWig:md5,910ecc7f57e3bbd5fac5a8edba4f615d"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,db26514184acfdf220bb2f061382cf8c"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-18T10:47:36.476844229"
+    }
+}

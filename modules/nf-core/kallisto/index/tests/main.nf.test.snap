@@ -1,0 +1,51 @@
+{
+    "sarscov2 transcriptome.fasta - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "transcriptome"
+                        },
+                        [
+                            
+                        ]
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,e23afe0f9a5d0dc20b05c27fe59ad041"
+                ],
+                "index": [
+                    [
+                        {
+                            "id": "transcriptome"
+                        },
+                        [
+                            
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,e23afe0f9a5d0dc20b05c27fe59ad041"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-19T18:51:55.402665844"
+    },
+    "sarscov2 transcriptome.fasta": {
+        "content": [
+            [
+                "versions.yml:md5,e23afe0f9a5d0dc20b05c27fe59ad041"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-19T18:51:42.328144373"
+    }
+}

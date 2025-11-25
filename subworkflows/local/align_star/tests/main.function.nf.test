@@ -1,0 +1,61 @@
+nextflow_function {
+
+    name "Test Functions"
+    script "../main.nf"
+
+    test("Test Function getStarPercentMapped pass") {
+
+        function "getStarPercentMapped"
+
+        when {
+            function {
+                """
+                def alignLog = file("${workDir}/alignLog.txt")
+                alignLog.write("Uniquely mapped reads % | 95.6%")
+
+                input[0] = [
+                    min_mapped_reads: 1.0
+                ]
+                input[1] = alignLog
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert function.result == 95.6 }
+            )
+        }
+
+    }
+
+    test("Test Function getStarPercentMapped fail") {
+
+        function "getStarPercentMapped"
+
+        when {
+            function {
+                """
+                def alignLog = file("${workDir}/alignLog.txt")
+                alignLog.write("Uniquely mapped reads % | 10.2%")
+
+                input[0] = [
+                    min_mapped_reads: 50.0
+                ]
+                input[1] = alignLog
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert function.result == 10.2 }
+            )
+        }
+
+    }
+
+
+}

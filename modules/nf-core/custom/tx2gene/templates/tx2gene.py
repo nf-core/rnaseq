@@ -128,7 +128,7 @@ def map_transcripts_to_gene(
     gtf_file: str,
     quant_dir: str,
     gene_id: str,
-    extra_id_field: str,
+    extra_id_fields: str,
     output_file: str,
 ) -> bool:
     """
@@ -139,7 +139,7 @@ def map_transcripts_to_gene(
     gtf_file (str): Path to the GTF file.
     quant_dir (str): Directory where quantification files are located.
     gene_id (str): The gene ID attribute in the GTF file.
-    extra_id_field (str): Additional ID field in the GTF file.
+    extra_id_fields (str): Additional ID field(s) in the GTF file, comma-separated for multiple.
     output_file (str): The output file path.
 
     Returns:
@@ -150,12 +150,17 @@ def map_transcripts_to_gene(
     # Discover the attribute that corresponds to transcripts in the GTF
     transcript_attribute = discover_transcript_attribute(gtf_file, transcripts)
 
+    # Parse comma-separated extra ID fields
+    extra_fields = [field.strip() for field in extra_id_fields.split(",")]
+
     # Open GTF and output file to write the mappings
     # Initialize the set to track seen combinations
     seen = set()
 
     with open(gtf_file) as inh, open(output_file, "w") as output_handle:
-        output_handle.write(f"{transcript_attribute}\\t{gene_id}\\t{extra_id_field}\\n")
+        # Write header with all extra fields as separate columns
+        header_fields = [transcript_attribute, gene_id] + extra_fields
+        output_handle.write("\\t".join(header_fields) + "\\n")
         # Parse each line of the GTF, mapping transcripts to genes
         for line in filter(lambda x: not x.startswith("#"), inh):
             cols = line.split("\\t")
@@ -170,8 +175,10 @@ def map_transcripts_to_gene(
                 # Check if the combination has already been seen
                 if transcript_gene_pair not in seen:
                     # If it's a new combination, write it to the output and add to the seen set
-                    extra_id = attr_dict.get(extra_id_field, attr_dict[gene_id])
-                    output_handle.write(f"{attr_dict[transcript_attribute]}\\t{attr_dict[gene_id]}\\t{extra_id}\\n")
+                    # Extract values for all extra fields, falling back to gene_id if not present
+                    extra_values = [attr_dict.get(field, attr_dict[gene_id]) for field in extra_fields]
+                    output_fields = [attr_dict[transcript_attribute], attr_dict[gene_id]] + extra_values
+                    output_handle.write("\\t".join(output_fields) + "\\n")
                     seen.add(transcript_gene_pair)
 
     return True

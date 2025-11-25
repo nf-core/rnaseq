@@ -12,6 +12,8 @@ nextflow_pipeline {
                 pseudo_aligner = 'kallisto'
                 skip_qc = true
                 skip_alignment = true
+                // Disable additional_fasta since we don't have a kallisto_index with spike-ins
+                additional_fasta = null
             }
         }
 
@@ -46,6 +48,8 @@ nextflow_pipeline {
                 pseudo_aligner = 'kallisto'
                 skip_qc = true
                 skip_alignment = true
+                // Disable additional_fasta since we don't have a kallisto_index with spike-ins
+                additional_fasta = null
             }
         }
 

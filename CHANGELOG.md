@@ -31,6 +31,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1630](https://github.com/nf-core/rnaseq/pull/1630) - Fix arm64 profile to use pre-built ARM containers and update documentation
 - [PR #1631](https://github.com/nf-core/rnaseq/pull/1631) - Fix bbsplit index staging by using symlinks instead of full copy
 - [PR #1635](https://github.com/nf-core/rnaseq/pull/1635) - Fix `--gtf_extra_attributes` to support multiple comma-separated values and correct deprecated parameter name in docs ([#1626](https://github.com/nf-core/rnaseq/issues/1626))
+- [PR #1636](https://github.com/nf-core/rnaseq/pull/1636) - Simplify workflow nextflow.config by consolidating redundant patterns
 
 ## [[3.21.0](https://github.com/nf-core/rnaseq/releases/tag/3.21.0)] - 2025-09-18
 

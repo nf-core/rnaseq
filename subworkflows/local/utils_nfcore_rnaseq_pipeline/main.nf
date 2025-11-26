@@ -263,6 +263,23 @@ def validateInputParameters() {
     }
 
     if (params.transcript_fasta) {
+        // Only error if additional_fasta is provided AND we need to build a pseudo-aligner index
+        // (i.e., no pre-built salmon/kallisto index provided). If the user provides a pre-built
+        // index that already contains the spike-ins, the combination is valid.
+        if (params.additional_fasta) {
+            def needs_to_build_index = false
+            if (!params.skip_pseudo_alignment && params.pseudo_aligner) {
+                // Check if the relevant index for the selected pseudo-aligner is missing
+                if (params.pseudo_aligner == 'salmon' && !params.salmon_index) {
+                    needs_to_build_index = true
+                } else if (params.pseudo_aligner == 'kallisto' && !params.kallisto_index) {
+                    needs_to_build_index = true
+                }
+            }
+            if (needs_to_build_index) {
+                transcriptFastaAdditionalFastaError()
+            }
+        }
         transcriptsFastaWarn()
     }
 
@@ -494,6 +511,28 @@ def transcriptsFastaWarn() {
         "  Please see:\n" +
         "  https://github.com/nf-core/rnaseq/issues/753\n" +
         "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+}
+
+//
+// Print an error if using both '--transcript_fasta' and '--additional_fasta' without a pre-built index
+//
+def transcriptFastaAdditionalFastaError() {
+    def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
+        "  Both '--transcript_fasta' and '--additional_fasta' have been provided,\n" +
+        "  but no pre-built pseudo-aligner index (--salmon_index/--kallisto_index).\n\n" +
+        "  The pipeline cannot append additional sequences (e.g. ERCC spike-ins) to a\n" +
+        "  user-provided transcriptome FASTA file. This would cause quantification to\n" +
+        "  fail because the built index would not contain the additional sequences.\n\n" +
+        "  Please either:\n" +
+        "    - Remove '--transcript_fasta' and let the pipeline generate the\n" +
+        "      transcriptome from the genome FASTA and GTF (recommended), or\n" +
+        "    - Provide a pre-built index (--salmon_index/--kallisto_index) that\n" +
+        "      already contains the additional sequences, or\n" +
+        "    - Remove '--additional_fasta' if you do not need spike-in sequences.\n\n" +
+        "  Please see:\n" +
+        "  https://github.com/nf-core/rnaseq/issues/1450\n" +
+        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    error(error_string)
 }
 
 //

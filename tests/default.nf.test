@@ -1,5 +1,7 @@
 nextflow_pipeline {
 
+// FIXME: triggering a default test
+
     name "Test pipeline with default settings"
     script "../main.nf"
     tag "pipeline"

@@ -181,10 +181,6 @@ If you would like to reduce the number of reads used in the analysis, for exampl
 
 ## Alignment options
 
-:::note
-The `--aligner hisat2` option is not currently supported using ARM architecture ('-profile arm')
-:::
-
 By default, the pipeline uses [STAR](https://github.com/alexdobin/STAR) (i.e. `--aligner star_salmon`) to map the raw FastQ reads to the reference genome, project the alignments onto the transcriptome and to perform the downstream BAM-level quantification with [Salmon](https://salmon.readthedocs.io/en/latest/salmon.html). STAR is fast but requires a lot of memory to run, typically around 38GB for the Human GRCh37 reference genome. Both `--aligner star_salmon` and `--aligner star_rsem` use STAR for alignment, so you should use the [HISAT2](https://ccb.jhu.edu/software/hisat2/index.shtml) aligner (i.e. `--aligner hisat2`) if you have memory limitations.
 
 You also have the option to pseudoalign and quantify your data directly with [Salmon](https://salmon.readthedocs.io/en/latest/salmon.html) or [Kallisto](https://pachterlab.github.io/kallisto/) by specifying `salmon` or `kallisto` to the `--pseudo_aligner` parameter. The selected pseudoaligner will then be run in addition to the standard alignment workflow defined by `--aligner`, mainly because it allows you to obtain QC metrics with respect to the genomic alignments. However, you can provide the `--skip_alignment` parameter if you would like to run Salmon or Kallisto in isolation. By default, the pipeline will use the genome fasta and gtf file to generate the transcripts fasta file, and then to build the Salmon index. You can override these parameters using the `--transcript_fasta` and `--salmon_index` parameters, respectively.
@@ -247,13 +243,13 @@ The `--umitools_grouping_method` parameter affects [how similar, but non-identic
 
 #### Examples:
 
-| UMI type     | Source                                                                                                                                                                                                                                                                                                                              | Pipeline parameters                                                                                                                                                         |
-| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| In read name | [Illumina BCL convert >3.7.5](https://emea.support.illumina.com/content/dam/illumina-support/documents/documentation/software_documentation/bcl_convert/bcl-convert-v3-7-5-software-guide-1000000163594-00.pdf)                                                                                                                     | `--with_umi --skip_umi_extract --umitools_umi_separator ":"`                                                                                                                |
-| In sequence  | [Lexogen QuantSeq® 3’ mRNA-Seq V2 FWD](https://www.lexogen.com/quantseq-3mrna-sequencing) + [UMI Second Strand Synthesis Module](https://faqs.lexogen.com/faq/how-can-i-add-umis-to-my-quantseq-libraries)                                                                                                                         | `--with_umi --umitools_extract_method "regex" --umitools_bc_pattern "^(?P<umi_1>.{6})(?P<discard_1>.{4}).*"`                                                                |
-| In sequence  | [Lexogen CORALL® Total RNA-Seq V1](https://www.lexogen.com/corall-total-rna-seq/)<br> > _mind [Appendix H](https://www.lexogen.com/wp-content/uploads/2020/04/095UG190V0130_CORALL-Total-RNA-Seq_2020-03-31.pdf) regarding optional trimming_                                                                                      | `--with_umi --umitools_extract_method "regex" --umitools_bc_pattern "^(?P<umi_1>.{12}).*"`<br>Optional: `--clip_r2 9 --three_prime_clip_r2 12`                              |
-| In sequence  | [Takara Bio SMARTer® Stranded Total RNA-Seq Kit v3](https://www.takarabio.com/documents/User%20Manual/SMARTer%20Stranded%20Total%20RNA/SMARTer%20Stranded%20Total%20RNA-Seq%20Kit%20v3%20-%20Pico%20Input%20Mammalian%20User%20Manual-a_114949.pdf)                                                                                | `--with_umi --umitools_extract_method "regex" --umitools_bc_pattern2 "^(?P<umi_1>.{8})(?P<discard_1>.{6}).*"`                                                               |
-| In sequence  | [Watchmaker mRNA Library Prep Kit](https://watchmakergenomics.com/wp-content/uploads/2023/11/M223_mRNA-Library-Prep-Kit-_UG_WMUG214_v1-1-0823.pdf) with [Twist UMI Adapter System](https://www.twistbioscience.com/sites/default/files/resources/2023-03/DOC-001337_TechNote-ProcessingSequencingDataUtilizingUMI-REV1-singles.pdf) | `--with_umi --umitools_extract_method "regex" --umitools_bc_pattern "^(?P<umi_1>.{5})(?P<discard_1>.{2}).*" --umitools_bc_pattern2 "^(?P<umi_2>.{5})(?P<discard_2>.{2}).*"` |
+| UMI type     | Source                                                                                                                                                                                                                                                                                                                                                                                                                                                         | Pipeline parameters                                                                                                                                                         |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| In read name | [Illumina BCL convert >3.7.5](https://emea.support.illumina.com/content/dam/illumina-support/documents/documentation/software_documentation/bcl_convert/bcl-convert-v3-7-5-software-guide-1000000163594-00.pdf)                                                                                                                                                                                                                                                | `--with_umi --skip_umi_extract --umitools_umi_separator ":"`                                                                                                                |
+| In sequence  | [Lexogen QuantSeq® 3’ mRNA-Seq V2 FWD](https://www.lexogen.com/quantseq-3mrna-sequencing) + [UMI Second Strand Synthesis Module](https://faqs.lexogen.com/faq/how-can-i-add-umis-to-my-quantseq-libraries)                                                                                                                                                                                                                                                    | `--with_umi --umitools_extract_method "regex" --umitools_bc_pattern "^(?P<umi_1>.{6})(?P<discard_1>.{4}).*"`                                                                |
+| In sequence  | [Lexogen CORALL® Total RNA-Seq V1](https://www.lexogen.com/corall-total-rna-seq/)<br> > _mind [Appendix H](https://www.lexogen.com/wp-content/uploads/2020/04/095UG190V0130_CORALL-Total-RNA-Seq_2020-03-31.pdf) regarding optional trimming_                                                                                                                                                                                                                 | `--with_umi --umitools_extract_method "regex" --umitools_bc_pattern "^(?P<umi_1>.{12}).*"`<br>Optional: `--clip_r2 9 --three_prime_clip_r2 12`                              |
+| In sequence  | Takara Bio [SMART-Seq Total RNA Pico Input with UMIs](https://www.takarabio.com/documents/User%20Manual/SMART/SMART-Seq%20Total%20RNA%20Pico%20Input%20with%20UMIs%20%28ZapR%20Mammalian%29%20User%20Manual.pdf) and [SMARTer® Stranded Total RNA-Seq Kit v3](https://www.takarabio.com/documents/User%20Manual/SMARTer%20Stranded%20Total%20RNA/SMARTer%20Stranded%20Total%20RNA-Seq%20Kit%20v3%20-%20Pico%20Input%20Mammalian%20User%20Manual-a_114950.pdf) | `--with_umi --umitools_extract_method "regex" --umitools_bc_pattern2 "^(?P<umi_1>.{8})(?P<discard_1>.{6}).*"`                                                               |
+| In sequence  | [Watchmaker mRNA Library Prep Kit](https://watchmakergenomics.com/wp-content/uploads/2023/11/M223_mRNA-Library-Prep-Kit-_UG_WMUG214_v1-1-0823.pdf) with [Twist UMI Adapter System](https://www.twistbioscience.com/sites/default/files/resources/2023-03/DOC-001337_TechNote-ProcessingSequencingDataUtilizingUMI-REV1-singles.pdf)                                                                                                                            | `--with_umi --umitools_extract_method "regex" --umitools_bc_pattern "^(?P<umi_1>.{5})(?P<discard_1>.{2}).*" --umitools_bc_pattern2 "^(?P<umi_2>.{5})(?P<discard_2>.{2}).*"` |
 
 > _No warranty for the accuracy or completeness of the parameters is implied_
 
@@ -316,7 +312,7 @@ Notes:
 
 - If `--gff` is provided as input then this will be converted to a GTF file, or the latter will be used if both are provided.
 - If `--gene_bed` is not provided then it will be generated from the GTF file.
-- If `--additional_fasta` is provided then the features in this file (e.g. ERCC spike-ins) will be automatically concatenated onto both the reference FASTA file as well as the GTF annotation before building the appropriate indices.
+- If `--additional_fasta` is provided then the features in this file (e.g. ERCC spike-ins) will be automatically concatenated onto both the reference FASTA file as well as the GTF annotation before building the appropriate indices. Note: if you need the pipeline to build a pseudo-aligner index (Salmon/Kallisto), `--additional_fasta` cannot be used together with `--transcript_fasta` because the pipeline cannot append additional sequences to a user-provided transcriptome. Either omit `--transcript_fasta` and let the pipeline generate it, or provide a pre-built index that already contains the spike-ins.
 - When using `--aligner star_rsem`, the pipeline will build separate STAR and RSEM indices. STAR performs alignment with RSEM-compatible parameters, then RSEM quantifies from the resulting BAM files using `--alignments` mode.
 - If the `--skip_alignment` option is used along with `--transcript_fasta`, the pipeline can technically run without providing the genomic FASTA (`--fasta`). However, this approach is **not recommended** with `--pseudo_aligner salmon`, as any dynamically generated Salmon index will lack decoys. To ensure optimal indexing with decoys, it is **highly recommended** to include the genomic FASTA (`--fasta`) with Salmon, unless a pre-existing decoy-aware Salmon index is supplied. For more details on the benefits of decoy-aware indexing, refer to the [Salmon documentation](https://salmon.readthedocs.io/en/latest/salmon.html#preparing-transcriptome-indices-mapping-based-mode).
 
@@ -350,6 +346,10 @@ In addition to the reference genome sequence and annotation, you can provide a r
 
 We recommend not providing a transcriptome FASTA file and instead allowing the pipeline to create it from the provided genome and annotation. Similar to aligner indexes, you can save the created transcriptome FASTA and BED files to a central location for future pipeline runs. This helps avoid redundant computation and having multiple copies on your system. Ensure that all genome, annotation, transcriptome, and index versions match to maintain consistency.
 
+:::warning
+If you are using `--additional_fasta` to add spike-in sequences (e.g. ERCC) and need the pipeline to build a pseudo-aligner index (Salmon/Kallisto), you **must not** provide `--transcript_fasta`. The pipeline needs to generate the transcriptome itself so that it includes the spike-in sequences. This combination will cause the pipeline to exit with an error unless you also provide a pre-built index (`--salmon_index` or `--kallisto_index`) that already contains the spike-in sequences.
+:::
+
 #### Indices
 
 By default, indices are generated dynamically by the workflow for tools such as STAR and Salmon. Since indexing is an expensive process in time and resources you should ensure that it is only done once, by retaining the indices generated from each batch of reference files by specifying `--save_reference`.
@@ -362,7 +362,7 @@ Remember to note the genome and annotation versions as well as the versions of t
 
 If you are using [GENCODE](https://www.gencodegenes.org/) reference genome files please specify the `--gencode` parameter because the format of these files is slightly different to ENSEMBL genome files:
 
-- The `--gtf_group_features_type` parameter will automatically be set to `gene_type` as opposed to `gene_biotype`, respectively.
+- The `--featurecounts_group_type` parameter will automatically be set to `gene_type` as opposed to `gene_biotype`, respectively.
 - If you are running Salmon, the `--gencode` flag will also be passed to the index building step to overcome parsing issues resulting from the transcript IDs in GENCODE fasta files being separated by vertical pipes (`|`) instead of spaces (see [this issue](https://github.com/COMBINE-lab/salmon/issues/15)).
 
 As well as the standard annotations, GENCODE also provides "basic" annotations, which include only representative transcripts, but we do not recommend using these.
@@ -377,6 +377,23 @@ This pipeline uses featureCounts to generate QC metrics based on [biotype](http:
 - Use `--featurecounts_feature_type 'CDS' --featurecounts_group_type 'product'` to identify the number of hypothetical proteins. However, the featureCounts QC will no longer reflect the biotype information from your RNA.
 
 Please get in touch with us on the #rnaseq channel in the [nf-core Slack workspace](https://nf-co.re/join) if you are having problems or need any advice.
+
+#### Large chromosomes (plant genomes)
+
+Genomes with very large chromosomes (>500 Mb), such as plant genomes, may encounter failures in the RSeQC `inner_distance` module due to a known limitation in the underlying bx-python library. The bx-python BitSet implementation has a maximum capacity of approximately 537 million bases, which can be exceeded by chromosomes in organisms like wheat, barley, and other plants.
+
+If you encounter an error message similar to `IndexError: [coordinate] is larger than the size of this BitSet (536870912)`, you can work around this by excluding the `inner_distance` module from RSeQC analysis:
+
+```bash
+--rseqc_modules 'bam_stat,infer_experiment,junction_annotation,junction_saturation,read_distribution,read_duplication'
+```
+
+This removes `inner_distance` from the default list of RSeQC modules while retaining all other quality control metrics. Note that the inner_distance metric is only relevant for paired-end data and provides information about fragment size distribution.
+
+For more information, see the upstream issues:
+
+- [nf-core/rnaseq#608](https://github.com/nf-core/rnaseq/issues/608)
+- [bxlab/bx-python#67](https://github.com/bxlab/bx-python/issues/67)
 
 ### iGenomes (not recommended)
 
@@ -396,10 +413,6 @@ Notes:
 By default, the input GTF file will be filtered to ensure that sequence names correspond to those in the genome fasta file (where supplied), and to remove rows with empty transcript identifiers. Filtering can be bypassed completely where you are confident it is not necessary, using the `--skip_gtf_filter` parameter. If you just want to skip the 'transcript_id' checking component of the GTF filtering script used in the pipeline this can be disabled specifically using the `--skip_gtf_transcript_filter` parameter.
 
 ## Contamination screening options
-
-:::note
-The `--contaminant_screening` option is not currently available using ARM architecture ('-profile arm')
-:::
 
 The pipeline provides the option to scan unaligned reads for contamination from other species using [Kraken2](https://ccb.jhu.edu/software/kraken2/), with the possibility of applying corrections from [Bracken](https://ccb.jhu.edu/software/bracken/). Since running Bracken is not computationally expensive, we recommend always using it to refine the abundance estimates generated by Kraken2.
 
@@ -479,7 +492,7 @@ You can also generate such `YAML`/`JSON` files via [nf-core/launch](https://nf-c
 ### Running on Linux ARM architectures
 
 :::warning
-Please note that the ARM profile is experimental. It is expected to function correctly in all cases unless explicitly indicated otherwise—currently, exceptions include the use of the hisat2 aligner and contaminant screening via kraken2. However, because testing is presently conducted manually, we cannot guarantee its reliability.
+Please note that the ARM profile is experimental. However, because testing is presently conducted manually, we cannot guarantee its reliability.
 :::
 
 The pipeline can be executed in an ARM compatible mode by specifying the ARM profile, for example:
@@ -491,7 +504,7 @@ nextflow run \
     --outdir <OUTDIR> \
     --gtf <GTF> \
     --fasta <GENOME FASTA> \
-    -profile docker,arm
+    -profile docker,arm64
 ```
 
 This will use ARM-compatible containers, and apply a small number of overrides to Conda definitions to support ARM operations.
@@ -550,15 +563,15 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
 - `shifter`
   - A generic configuration profile to be used with [Shifter](https://nersc.gitlab.io/development/shifter/how-to-use/)
 - `charliecloud`
-  - A generic configuration profile to be used with [Charliecloud](https://hpc.github.io/charliecloud/)
+  - A generic configuration profile to be used with [Charliecloud](https://charliecloud.io/)
 - `apptainer`
   - A generic configuration profile to be used with [Apptainer](https://apptainer.org/)
 - `wave`
   - A generic configuration profile to enable [Wave](https://seqera.io/wave/) containers. Use together with one of the above (requires Nextflow ` 24.03.0-edge` or later).
 - `conda`
   - A generic configuration profile to be used with [Conda](https://conda.io/docs/). Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity, Podman, Shifter, Charliecloud, or Apptainer.
-- `arm`
-  - A configuration profile that will set `docker.runOptions` appropriately for ARM architectures, and apply overrides supplying ARM-compatible containers and Conda environments. See [Running on Linux ARM architectures](#running-on-linux-arm-architectures).
+- `arm64`
+  - A configuration profile that applies overrides supplying ARM-compatible containers and Conda environments. See [Running on Linux ARM architectures](#running-on-linux-arm-architectures).
 
 ### `-resume`
 

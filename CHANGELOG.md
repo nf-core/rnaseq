@@ -3,6 +3,41 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [[3.22.0](https://github.com/nf-core/rnaseq/releases/tag/3.22.0)] - 2025-11-26
+
+### Credits
+
+Special thanks to the following for their contributions to the release:
+
+- [Ahwan Pandey](https://github.com/ahwanpandey)
+- [Cristina Tuñí i Domínguez](https://github.com/ctuni)
+- [Elad Herzog](https://github.com/EladH1)
+- [Emily Miyoshi](https://github.com/emilymiyoshi)
+- [Jonathan Manning](https://github.com/pinin4fjords)
+- [Pontus Höjer](https://github.com/pontushojer)
+- [Siddhartha Bagaria](https://github.com/siddharthab)
+
+### Enhancements and fixes
+
+- [PR #1608](https://github.com/nf-core/rnaseq/pull/1608) - Bump version after release 3.21.0
+- [PR #1613](https://github.com/nf-core/rnaseq/pull/1613) - Fix broken link and add latest kit version for Takara UMI prep in usage documentation
+- [PR #1614](https://github.com/nf-core/rnaseq/pull/1614) - Template update for nf-core/tools v3.4.1
+- [PR #1617](https://github.com/nf-core/rnaseq/pull/1617) - Update bbmap/bbsplit module
+- [PR #1618](https://github.com/nf-core/rnaseq/pull/1618) - Fix CI: Ensure confirm-pass job runs for markdown-only PRs
+- [PR #1619](https://github.com/nf-core/rnaseq/pull/1619) - Update Credits to reflect current maintainership
+- [PR #1620](https://github.com/nf-core/rnaseq/pull/1620) - Fix bigwig strand labeling for reverse-stranded libraries ([#1591](https://github.com/nf-core/rnaseq/issues/1591))
+- [PR #1621](https://github.com/nf-core/rnaseq/pull/1621) - Optimize qualimap performance with multi-threaded name sorting
+- [PR #1622](https://github.com/nf-core/rnaseq/pull/1622) - Update tximeta/tximport module to fix sample name mangling
+- [PR #1624](https://github.com/nf-core/rnaseq/pull/1624) - Document RSeQC inner_distance limitation for genomes with large chromosomes (>500 Mb), such as plant genomes
+- [PR #1625](https://github.com/nf-core/rnaseq/pull/1625) - Add documentation warning about Qualimap read counting bug ([#1273](https://github.com/nf-core/rnaseq/issues/1273))
+- [PR #1628](https://github.com/nf-core/rnaseq/pull/1628) - Template update for nf-core/tools v3.5.1
+- [PR #1630](https://github.com/nf-core/rnaseq/pull/1630) - Fix arm64 profile to use pre-built ARM containers and update documentation
+- [PR #1631](https://github.com/nf-core/rnaseq/pull/1631) - Fix bbsplit index staging by using symlinks instead of full copy
+- [PR #1632](https://github.com/nf-core/rnaseq/pull/1632) - Add validation error for incompatible `--transcript_fasta` and `--additional_fasta` params ([#1450](https://github.com/nf-core/rnaseq/issues/1450))
+- [PR #1635](https://github.com/nf-core/rnaseq/pull/1635) - Fix `--gtf_extra_attributes` to support multiple comma-separated values and correct deprecated parameter name in docs ([#1626](https://github.com/nf-core/rnaseq/issues/1626))
+- [PR #1636](https://github.com/nf-core/rnaseq/pull/1636) - Simplify workflow nextflow.config by consolidating redundant patterns
+- [PR #1638](https://github.com/nf-core/rnaseq/pull/1638) - Bump version to 3.22.0 ahead of release
+
 ## [[3.21.0](https://github.com/nf-core/rnaseq/releases/tag/3.21.0)] - 2025-09-18
 
 ### Credits

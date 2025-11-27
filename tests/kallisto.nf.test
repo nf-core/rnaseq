@@ -12,6 +12,11 @@ nextflow_pipeline {
                 pseudo_aligner = 'kallisto'
                 skip_qc = true
                 skip_alignment = true
+                // Disable spike-ins since we don't have a kallisto_index with spike-ins.
+                // Must also disable transcript_fasta because the test profile's transcriptome
+                // was generated with spike-ins - we need the pipeline to regenerate it.
+                additional_fasta = null
+                transcript_fasta = null
             }
         }
 
@@ -46,6 +51,11 @@ nextflow_pipeline {
                 pseudo_aligner = 'kallisto'
                 skip_qc = true
                 skip_alignment = true
+                // Disable spike-ins since we don't have a kallisto_index with spike-ins.
+                // Must also disable transcript_fasta because the test profile's transcriptome
+                // was generated with spike-ins - we need the pipeline to regenerate it.
+                additional_fasta = null
+                transcript_fasta = null
             }
         }
 

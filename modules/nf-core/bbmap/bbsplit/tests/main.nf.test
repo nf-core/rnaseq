@@ -3,8 +3,12 @@ nextflow_process {
     name "Test Process BBMAP_BBSPLIT"
     script "../main.nf"
     process "BBMAP_BBSPLIT"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "bbmap"
+    tag "bbmap/bbsplit"
 
-    test("sarscov2_se_fastq_fasta_chr22_fasta - index") {
+    test("sarscov2_se_fastq_fasta_chr22_fasta - build index") {
 
         when {
             process {
@@ -31,7 +35,7 @@ nextflow_process {
         }
     }
 
-    test("sarscov2_se_fastq_fasta_chr22_fasta - index - stub") {
+    test("sarscov2_se_fastq_fasta_chr22_fasta - build index - stub") {
 
         options "-stub"
 
@@ -52,13 +56,12 @@ nextflow_process {
 
         then {
             assertAll(
-                { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert process.success }
             )
         }
     }
 
-    test("sarscov2_se_fastq_fasta_chr22_fasta") {
+    test("sarscov2_se_fastq_fasta_chr22_fasta - split with prebuilt index") {
 
         setup {
 
@@ -87,58 +90,27 @@ nextflow_process {
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
                     ])
                     input[1] = BBMAP_BBSPLIT_INDEX.out.index
-                    input[2] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true))
-                    input[3] = Channel.of([
-                        [ 'human' ], // meta map
-                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr22/sequence/chr22_23800000-23980000.fa', checkIfExists: true)
-                    ])
+                    input[2] = []
+                    input[3] = [[], []]
                     input[4] = false
                     """
                 }
         }
 
         then {
-            def filesToExclude = [
-                "info.txt",
-                "reflist.txt",
-                "scaffolds.txt.gz",
-                "summary.txt"
-            ]
-
-            def outputFiles = []
-            def outputDirectory = new File(process.out.index[0])
-            outputDirectory.eachFileRecurse { file ->
-                if (file.isFile()){
-                    outputFiles << file
-                    }
-            }
-
-            def filesExist = filesToExclude.every { excludeName ->
-                outputFiles.any { file ->
-                    file.getName().endsWith(excludeName) && file.exists()
-                }
-            }
-
-            def filteredFiles = outputFiles
-                .findAll { file ->
-                    !filesToExclude.any { excludeName ->
-                        file.getName().endsWith(excludeName)
-                    }
-                }.sort{ it.getName()}
-
             assertAll(
                 { assert process.success },
                 { assert path(process.out.log[0][1]).text.contains("If you wish to regenerate the index") },
-                { assert filesExist : "One or more files to exclude do not exist" },
                 { assert snapshot(
-                    filteredFiles,
+                    process.out.primary_fastq,
+                    process.out.stats,
                     process.out.versions
                 ).match()}
             )
         }
     }
 
-    test("sarscov2_se_fastq_fasta_chr22_fasta - stub") {
+    test("sarscov2_se_fastq_fasta_chr22_fasta - split with prebuilt index - stub") {
 
         options "-stub"
 
@@ -169,11 +141,8 @@ nextflow_process {
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
                     ])
                     input[1] = BBMAP_BBSPLIT_INDEX.out.index
-                    input[2] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true))
-                    input[3] = Channel.of([
-                        [ 'human' ], // meta map
-                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr22/sequence/chr22_23800000-23980000.fa', checkIfExists: true)
-                    ])
+                    input[2] = []
+                    input[3] = [[], []]
                     input[4] = false
                 """
             }
@@ -181,8 +150,7 @@ nextflow_process {
 
         then {
             assertAll(
-                { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert process.success }
             )
         }
     }

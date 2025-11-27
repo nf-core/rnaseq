@@ -50,17 +50,17 @@ process RSEM_MERGE_COUNTS {
     paste transcript_ids.txt tmp/isoforms/*.tpm.txt > rsem.merged.transcript_tpm.tsv
 
     # Create long format for genes (idx=1-4, concat columns 5-7)
-    echo -e "gene_id\ttranscript_id(s)\tlength\teffective_length\tsample_name\texpected_count\tTPM\tFPKM" > rsem.merged.genes_long.tsv
+    echo -e "sample_name\tgene_id\ttranscript_id(s)\tlength\teffective_length\texpected_count\tTPM\tFPKM" > rsem.merged.genes_long.tsv
     for fileid in `ls ./genes/*`; do
         samplename=`basename \$fileid | sed s/\\.genes.results\$//g`
-        tail -n+2 \${fileid} | awk -v sample="\$samplename" 'BEGIN{OFS="\t"}{print \$1,\$2,\$3,\$4,sample,\$5,\$6,\$7}' >> rsem.merged.genes_long.tsv
+        tail -n+2 \$fileid | awk -v sample=\$samplename 'BEGIN{OFS="\t"}{print sample,\$1,\$2,\$3,\$4,\$5,\$6,\$7}' >> rsem.merged.genes_long.tsv
     done
 
     # Create long format for isoforms (idx=1-4, concat columns 5-8)
-    echo -e "transcript_id\tgene_id\tlength\teffective_length\tsample_name\texpected_count\tTPM\tFPKM\tIsoPct" > rsem.merged.isoforms_long.tsv
+    echo -e "sample_name\ttranscript_id\tgene_id\tlength\teffective_length\texpected_count\tTPM\tFPKM\tIsoPct" > rsem.merged.isoforms_long.tsv 
     for fileid in `ls ./isoforms/*`; do
         samplename=`basename \$fileid | sed s/\\.isoforms.results\$//g`
-        tail -n+2 \${fileid} | awk -v sample="\$samplename" 'BEGIN{OFS="\t"}{print \$1,\$2,\$3,\$4,sample,\$5,\$6,\$7,\$8}' >> rsem.merged.isoforms_long.tsv
+        tail -n+2 \$fileid | awk -v sample=\$samplename 'BEGIN{OFS="\t"}{print sample,\$1,\$2,\$3,\$4,\$5,\$6,\$7,\$8}' >> rsem.merged.isoforms_long.tsv
     done
 
     cat <<-END_VERSIONS > versions.yml

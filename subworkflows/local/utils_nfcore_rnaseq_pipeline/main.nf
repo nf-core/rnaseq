@@ -10,6 +10,8 @@
 
 include { UTILS_NFSCHEMA_PLUGIN     } from '../../nf-core/utils_nfschema_plugin'
 include { paramsSummaryMap          } from 'plugin/nf-schema'
+include { samplesheetToList         } from 'plugin/nf-schema'
+include { paramsHelp                } from 'plugin/nf-schema'
 include { completionEmail           } from '../../nf-core/utils_nfcore_pipeline'
 include { completionSummary         } from '../../nf-core/utils_nfcore_pipeline'
 include { imNotification            } from '../../nf-core/utils_nfcore_pipeline'
@@ -32,10 +34,14 @@ workflow PIPELINE_INITIALISATION {
     monochrome_logs   // boolean: Do not use coloured log outputs
     nextflow_cli_args //   array: List of positional nextflow CLI args
     outdir            //  string: The output directory where the results will be saved
+    input             //  string: Path to input samplesheet
+    help              // boolean: Display help message and exit
+    help_full         // boolean: Show the full help message
+    show_hidden       // boolean: Show hidden parameters in the help message
 
     main:
 
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     //
     // Print version and exit if required and dump pipeline parameters to JSON file
@@ -50,10 +56,35 @@ workflow PIPELINE_INITIALISATION {
     //
     // Validate parameters and generate parameter summary to stdout
     //
+    before_text = """
+-\033[2m----------------------------------------------------\033[0m-
+                                        \033[0;32m,--.\033[0;30m/\033[0;32m,-.\033[0m
+\033[0;34m        ___     __   __   __   ___     \033[0;32m/,-._.--~\'\033[0m
+\033[0;34m  |\\ | |__  __ /  ` /  \\ |__) |__         \033[0;33m}  {\033[0m
+\033[0;34m  | \\| |       \\__, \\__/ |  \\ |___     \033[0;32m\\`-._,-`-,\033[0m
+                                        \033[0;32m`._,._,\'\033[0m
+\033[0;35m  nf-core/rnaseq ${workflow.manifest.version}\033[0m
+-\033[2m----------------------------------------------------\033[0m-
+"""
+    after_text = """${workflow.manifest.doi ? "\n* The pipeline\n" : ""}${workflow.manifest.doi.tokenize(",").collect { doi -> "    https://doi.org/${doi.trim().replace('https://doi.org/','')}"}.join("\n")}${workflow.manifest.doi ? "\n" : ""}
+* The nf-core framework
+    https://doi.org/10.1038/s41587-020-0439-x
+
+* Software dependencies
+    https://github.com/nf-core/rnaseq/blob/master/CITATIONS.md
+"""
+    command = "nextflow run ${workflow.manifest.name} -profile <docker/singularity/.../institute> --input samplesheet.csv --outdir <OUTDIR>"
+
     UTILS_NFSCHEMA_PLUGIN (
         workflow,
         validate_params,
-        null
+        null,
+        help,
+        help_full,
+        show_hidden,
+        before_text,
+        after_text,
+        command
     )
 
     //
@@ -232,6 +263,23 @@ def validateInputParameters() {
     }
 
     if (params.transcript_fasta) {
+        // Only error if additional_fasta is provided AND we need to build a pseudo-aligner index
+        // (i.e., no pre-built salmon/kallisto index provided). If the user provides a pre-built
+        // index that already contains the spike-ins, the combination is valid.
+        if (params.additional_fasta) {
+            def needs_to_build_index = false
+            if (!params.skip_pseudo_alignment && params.pseudo_aligner) {
+                // Check if the relevant index for the selected pseudo-aligner is missing
+                if (params.pseudo_aligner == 'salmon' && !params.salmon_index) {
+                    needs_to_build_index = true
+                } else if (params.pseudo_aligner == 'kallisto' && !params.kallisto_index) {
+                    needs_to_build_index = true
+                }
+            }
+            if (needs_to_build_index) {
+                transcriptFastaAdditionalFastaError()
+            }
+        }
         transcriptsFastaWarn()
     }
 
@@ -463,6 +511,28 @@ def transcriptsFastaWarn() {
         "  Please see:\n" +
         "  https://github.com/nf-core/rnaseq/issues/753\n" +
         "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+}
+
+//
+// Print an error if using both '--transcript_fasta' and '--additional_fasta' without a pre-built index
+//
+def transcriptFastaAdditionalFastaError() {
+    def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
+        "  Both '--transcript_fasta' and '--additional_fasta' have been provided,\n" +
+        "  but no pre-built pseudo-aligner index (--salmon_index/--kallisto_index).\n\n" +
+        "  The pipeline cannot append additional sequences (e.g. ERCC spike-ins) to a\n" +
+        "  user-provided transcriptome FASTA file. This would cause quantification to\n" +
+        "  fail because the built index would not contain the additional sequences.\n\n" +
+        "  Please either:\n" +
+        "    - Remove '--transcript_fasta' and let the pipeline generate the\n" +
+        "      transcriptome from the genome FASTA and GTF (recommended), or\n" +
+        "    - Provide a pre-built index (--salmon_index/--kallisto_index) that\n" +
+        "      already contains the additional sequences, or\n" +
+        "    - Remove '--additional_fasta' if you do not need spike-in sequences.\n\n" +
+        "  Please see:\n" +
+        "  https://github.com/nf-core/rnaseq/issues/1450\n" +
+        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    error(error_string)
 }
 
 //

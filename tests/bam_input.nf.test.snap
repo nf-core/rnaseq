@@ -1,7 +1,7 @@
 {
     "BAM input for Salmon": {
         "content": [
-            139,
+            144,
             {
                 "BBMAP_BBSPLIT": {
                     "bbmap": 39.18
@@ -77,6 +77,9 @@
                     "samtools": 1.21
                 },
                 "SAMTOOLS_INDEX": {
+                    "samtools": 1.21
+                },
+                "SAMTOOLS_SORT_QUALIMAP": {
                     "samtools": 1.21
                 },
                 "SAMTOOLS_STATS": {
@@ -958,7 +961,7 @@
     },
     "BAM input for RSEM": {
         "content": [
-            138,
+            143,
             {
                 "BBMAP_BBSPLIT": {
                     "bbmap": 39.18
@@ -1039,6 +1042,9 @@
                     "samtools": 1.21
                 },
                 "SAMTOOLS_INDEX": {
+                    "samtools": 1.21
+                },
+                "SAMTOOLS_SORT_QUALIMAP": {
                     "samtools": 1.21
                 },
                 "SAMTOOLS_STATS": {

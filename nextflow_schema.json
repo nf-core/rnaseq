@@ -111,7 +111,8 @@
                     "mimetype": "text/plain",
                     "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
                     "fa_icon": "far fa-file-code",
-                    "description": "Path to FASTA transcriptome file."
+                    "description": "Path to FASTA transcriptome file.",
+                    "help_text": "If not provided, the transcriptome will be generated from the genome FASTA and GTF files. Cannot be used together with `--additional_fasta` when building a pseudo-aligner index, because the pipeline cannot append spike-in sequences to a user-provided transcriptome. Either omit this parameter or provide a pre-built index."
                 },
                 "additional_fasta": {
                     "type": "string",
@@ -121,7 +122,7 @@
                     "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
                     "fa_icon": "far fa-file-code",
                     "description": "FASTA file to concatenate to genome FASTA file e.g. containing spike-in sequences.",
-                    "help_text": "If provided, sequences in this file will be concatenated to the genome FASTA file. A GTF file will be automatically created using these sequences, and alignment indices will be created from the combined files. Use `--save_reference` to reuse these indices in future runs."
+                    "help_text": "If provided, sequences in this file will be concatenated to the genome FASTA file. A GTF file will be automatically created using these sequences, and alignment indices will be created from the combined files. Use `--save_reference` to reuse these indices in future runs. Cannot be used together with `--transcript_fasta` when building a pseudo-aligner index - either omit `--transcript_fasta` or provide a pre-built index that already contains the spike-ins."
                 },
                 "splicesites": {
                     "type": "string",
@@ -888,6 +889,18 @@
                     "help_text": "You can use '{date}' as a placeholder which will be replaced with the current date and time in the format 'yyyy-MM-dd_HH-mm-ss'. For example, 'run_{date}' will become 'run_2023-05-15_14-30-45'.",
                     "errorMessage": "The trace report suffix must only contain alphanumeric characters, underscores, hyphens, dots, and curly braces for date placeholders.",
                     "hidden": true
+                },
+                "help": {
+                    "type": ["boolean", "string"],
+                    "description": "Display the help message."
+                },
+                "help_full": {
+                    "type": "boolean",
+                    "description": "Display the full detailed help message."
+                },
+                "show_hidden": {
+                    "type": "boolean",
+                    "description": "Display hidden parameters in the help message (only works when --help or --help_full are provided)."
                 }
             }
         }

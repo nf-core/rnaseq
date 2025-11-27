@@ -103,7 +103,7 @@
     },
     "Params: --aligner hisat2": {
         "content": [
-            200,
+            205,
             {
                 "BBMAP_BBSPLIT": {
                     "bbmap": 39.18
@@ -201,6 +201,9 @@
                     "samtools": 1.21
                 },
                 "SAMTOOLS_SORT": {
+                    "samtools": 1.21
+                },
+                "SAMTOOLS_SORT_QUALIMAP": {
                     "samtools": 1.21
                 },
                 "SAMTOOLS_STATS": {

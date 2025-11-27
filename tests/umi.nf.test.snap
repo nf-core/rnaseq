@@ -1,7 +1,7 @@
 {
     "--umi_dedup_tool 'umitools'": {
         "content": [
-            261,
+            266,
             {
                 "BEDTOOLS_GENOMECOV_FW": {
                     "bedtools": "2.31.1"
@@ -90,6 +90,9 @@
                     "samtools": 1.21
                 },
                 "SAMTOOLS_SORT": {
+                    "samtools": 1.21
+                },
+                "SAMTOOLS_SORT_QUALIMAP": {
                     "samtools": 1.21
                 },
                 "SAMTOOLS_STATS": {
@@ -1507,7 +1510,7 @@
     },
     "Params: --aligner hisat2 --umi_dedup_tool 'umicollapse'": {
         "content": [
-            194,
+            199,
             {
                 "BEDTOOLS_GENOMECOV_FW": {
                     "bedtools": "2.31.1"
@@ -1599,6 +1602,9 @@
                     "samtools": 1.21
                 },
                 "SAMTOOLS_SORT": {
+                    "samtools": 1.21
+                },
+                "SAMTOOLS_SORT_QUALIMAP": {
                     "samtools": 1.21
                 },
                 "SAMTOOLS_STATS": {

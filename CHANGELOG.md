@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Enhancements and fixes
 
-- [PR #xxxx](https://github.com/nf-core/rnaseq/pull/xxxx) - Bump version after release 3.22.0
+- [PR #1640](https://github.com/nf-core/rnaseq/pull/1640) - Bump version after release 3.22.0
 
 ## [[3.22.0](https://github.com/nf-core/rnaseq/releases/tag/3.22.0)] - 2025-11-26
 

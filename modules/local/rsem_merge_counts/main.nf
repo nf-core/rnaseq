@@ -15,6 +15,8 @@ process RSEM_MERGE_COUNTS {
     path "rsem.merged.gene_tpm.tsv"         , emit: tpm_gene
     path "rsem.merged.transcript_counts.tsv", emit: counts_transcript
     path "rsem.merged.transcript_tpm.tsv"   , emit: tpm_transcript
+    path "rsem.merged.genes_long.tsv"       , emit: genes_long
+    path "rsem.merged.isoforms_long.tsv"    , emit: isoforms_long
     path "versions.yml"                     , emit: versions
 
     when:
@@ -47,6 +49,20 @@ process RSEM_MERGE_COUNTS {
     paste transcript_ids.txt tmp/isoforms/*.counts.txt > rsem.merged.transcript_counts.tsv
     paste transcript_ids.txt tmp/isoforms/*.tpm.txt > rsem.merged.transcript_tpm.tsv
 
+    # Create long format for genes (idx=1-4, concat columns 5-7)
+    echo -e "gene_id\ttranscript_id(s)\tlength\teffective_length\tsample_name\texpected_count\tTPM\tFPKM" > rsem.merged.genes_long.tsv
+    for fileid in `ls ./genes/*`; do
+        samplename=`basename \$fileid | sed s/\\.genes.results\$//g`
+        tail -n+2 \${fileid} | awk -v sample="\$samplename" 'BEGIN{OFS="\t"}{print \$1,\$2,\$3,\$4,sample,\$5,\$6,\$7}' >> rsem.merged.genes_long.tsv
+    done
+
+    # Create long format for isoforms (idx=1-4, concat columns 5-8)
+    echo -e "transcript_id\tgene_id\tlength\teffective_length\tsample_name\texpected_count\tTPM\tFPKM\tIsoPct" > rsem.merged.isoforms_long.tsv
+    for fileid in `ls ./isoforms/*`; do
+        samplename=`basename \$fileid | sed s/\\.isoforms.results\$//g`
+        tail -n+2 \${fileid} | awk -v sample="\$samplename" 'BEGIN{OFS="\t"}{print \$1,\$2,\$3,\$4,sample,\$5,\$6,\$7,\$8}' >> rsem.merged.isoforms_long.tsv
+    done
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         sed: \$(echo \$(sed --version 2>&1) | sed 's/^.*GNU sed) //; s/ .*\$//')
@@ -59,6 +75,8 @@ process RSEM_MERGE_COUNTS {
     touch rsem.merged.gene_tpm.tsv
     touch rsem.merged.transcript_counts.tsv
     touch rsem.merged.transcript_tpm.tsv
+    touch rsem.merged.genes_long.tsv
+    touch rsem.merged.isoforms_long.tsv
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

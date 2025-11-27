@@ -26,9 +26,9 @@ env:
 
 jobs:
   nf-test-changes-arm:
-    name: nf-test-changes
+    name: nf-test-changes-arm
     runs-on: # use self-hosted runners
-      - runs-on=${{ github.run_id }}-nf-test-changes
+      - runs-on=${{ github.run_id }}-nf-test-changes-arm
       - runner=4cpu-linux-arm64
     outputs:
       shard: ${{ steps.set-shards.outputs.shard }}
@@ -58,16 +58,16 @@ jobs:
           echo ${{ steps.set-shards.outputs.total_shards }}
 
   nf-test-arm:
-    name: "${{ matrix.profile }}-${{ matrix.archProfile }} | ${{ matrix.NXF_VER }} | ${{ matrix.shard }}/${{ needs.nf-test-changes.outputs.total_shards }}"
-    needs: [nf-test-changes]
-    if: ${{ needs.nf-test-changes.outputs.total_shards != '0' }}
+    name: "${{ matrix.profile }}-${{ matrix.archProfile }} | ${{ matrix.NXF_VER }} | ${{ matrix.shard }}/${{ needs.nf-test-changes-arm.outputs.total_shards }}"
+    needs: [nf-test-changes-arm]
+    if: ${{ needs.nf-test-changes-arm.outputs.total_shards != '0' }}
     runs-on: # use self-hosted runners
       - runs-on=${{ github.run_id }}-nf-test
       - runner=4cpu-linux-arm64
     strategy:
       fail-fast: false
       matrix:
-        shard: ${{ fromJson(needs.nf-test-changes.outputs.shard) }}
+        shard: ${{ fromJson(needs.nf-test-changes-arm.outputs.shard) }}
         archProfile: [arm64]
         profile: [conda, docker, singularity]
         isMain:
@@ -83,7 +83,7 @@ jobs:
           - "latest-everything"
     env:
       NXF_ANSI_LOG: false
-      TOTAL_SHARDS: ${{ needs.nf-test-changes.outputs.total_shards }}
+      TOTAL_SHARDS: ${{ needs.nf-test-changes-arm.outputs.total_shards }}
 
     steps:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
@@ -122,7 +122,7 @@ jobs:
           fi
 
   confirm-pass-arm:
-    needs: [nf-test-changes, nf-test-arm]
+    needs: [nf-test-changes-arm, nf-test-arm]
     if: always()
     runs-on: # use self-hosted runners
       - runs-on=${{ github.run_id }}-confirm-pass

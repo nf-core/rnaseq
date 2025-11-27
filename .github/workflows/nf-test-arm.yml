@@ -49,6 +49,8 @@ jobs:
         uses: ./.github/actions/get-shards
         env:
           NFT_VER: ${{ env.NFT_VER }}
+          # Skip sentieon tests - no ARM containers available
+          SKIP_SENTIEON: true
         with:
           max_shards: 14
 
@@ -96,11 +98,9 @@ jobs:
         continue-on-error: ${{ matrix.NXF_VER == 'latest-everything' }}
         env:
           NFT_WORKDIR: ${{ env.NFT_WORKDIR }}
-          SENTIEON_AUTH_MECH: "GitHub Actions - token"
-          SENTIEON_ENCRYPTION_KEY: ${{ secrets.SENTIEON_ENCRYPTION_KEY }}
-          SENTIEON_LICENSE_MESSAGE: ${{ secrets.SENTIEON_LICENSE_MESSAGE }}
-          SENTIEON_LICSRVR_IP: ${{ secrets.SENTIEON_LICSRVR_IP }}
           NXF_VERSION: ${{ matrix.NXF_VER }}
+          # Skip sentieon tests - no ARM containers available
+          SKIP_SENTIEON: true
         with:
           profile: ${{ matrix.profile }},${{ matrix.archProfile }}
           shard: ${{ matrix.shard }}

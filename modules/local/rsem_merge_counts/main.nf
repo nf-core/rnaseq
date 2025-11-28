@@ -57,7 +57,7 @@ process RSEM_MERGE_COUNTS {
     done
 
     # Create long format for isoforms (idx=1-4, concat columns 5-8)
-    echo -e "sample_name\ttranscript_id\tgene_id\tlength\teffective_length\texpected_count\tTPM\tFPKM\tIsoPct" > rsem.merged.isoforms_long.tsv 
+    echo -e "sample_name\ttranscript_id\tgene_id\tlength\teffective_length\texpected_count\tTPM\tFPKM\tIsoPct" > rsem.merged.isoforms_long.tsv
     for fileid in `ls ./isoforms/*`; do
         samplename=`basename \$fileid | sed s/\\.isoforms.results\$//g`
         tail -n+2 \$fileid | awk -v sample=\$samplename 'BEGIN{OFS="\t"}{print sample,\$1,\$2,\$3,\$4,\$5,\$6,\$7,\$8}' >> rsem.merged.isoforms_long.tsv

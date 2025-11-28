@@ -75,11 +75,11 @@ jobs:
         isMain:
           - ${{ github.base_ref == 'master' || github.base_ref == 'main' }}
         # Exclude conda and singularity on dev
-        exclude:
-          - isMain: false
-            profile: "conda"
-          - isMain: false
-            profile: "singularity"
+        # exclude:
+        #   - isMain: false
+        #     profile: "conda"
+        #   - isMain: false
+        #     profile: "singularity"
         NXF_VER:
           - "25.04.0"
           - "latest-everything"

@@ -4,8 +4,8 @@ process STAR_GENOMEGENERATE_IGENOMES {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/mulled-v2-1fa26d1ce03c295fe2fdcf85831a92fbcbd7e8c2:59cdd445419f14abac76b31dd0d71217994cbcc9-0' :
-        'biocontainers/mulled-v2-1fa26d1ce03c295fe2fdcf85831a92fbcbd7e8c2:59cdd445419f14abac76b31dd0d71217994cbcc9-0' }"
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/50/50bb64440689d5d7af4bf8ad1032f01aa4e1597e0bb1c82ee91e8cb43943283c/data' :
+        'community.wave.seqera.io/library/star_samtools_gawk:79ca42311e583cdc' }"
 
     input:
     path fasta

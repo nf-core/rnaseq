@@ -48,7 +48,7 @@
                     ]
                 ],
                 "3": [
-                    "versions.yml:md5,957a57604ceb366b7af0123738e13559"
+                    "versions.yml:md5,1d87ea190fd5f463b8ae318cf966c675"
                 ],
                 "4": [
                     [
@@ -232,7 +232,7 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,957a57604ceb366b7af0123738e13559"
+                    "versions.yml:md5,1d87ea190fd5f463b8ae318cf966c675"
                 ]
             }
         ],
@@ -291,7 +291,7 @@
                     ]
                 ],
                 "3": [
-                    "versions.yml:md5,957a57604ceb366b7af0123738e13559"
+                    "versions.yml:md5,1d87ea190fd5f463b8ae318cf966c675"
                 ],
                 "4": [
                     [
@@ -475,7 +475,7 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,957a57604ceb366b7af0123738e13559"
+                    "versions.yml:md5,1d87ea190fd5f463b8ae318cf966c675"
                 ]
             }
         ],
@@ -537,7 +537,7 @@
             ],
             null,
             [
-                "versions.yml:md5,957a57604ceb366b7af0123738e13559"
+                "versions.yml:md5,1d87ea190fd5f463b8ae318cf966c675"
             ]
         ],
         "meta": {
@@ -598,7 +598,7 @@
             ],
             null,
             [
-                "versions.yml:md5,957a57604ceb366b7af0123738e13559"
+                "versions.yml:md5,1d87ea190fd5f463b8ae318cf966c675"
             ]
         ],
         "meta": {
@@ -656,7 +656,7 @@
                     ]
                 ],
                 "3": [
-                    "versions.yml:md5,957a57604ceb366b7af0123738e13559"
+                    "versions.yml:md5,1d87ea190fd5f463b8ae318cf966c675"
                 ],
                 "4": [
                     [
@@ -840,7 +840,7 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,957a57604ceb366b7af0123738e13559"
+                    "versions.yml:md5,1d87ea190fd5f463b8ae318cf966c675"
                 ]
             }
         ],
@@ -902,7 +902,7 @@
             ],
             null,
             [
-                "versions.yml:md5,957a57604ceb366b7af0123738e13559"
+                "versions.yml:md5,1d87ea190fd5f463b8ae318cf966c675"
             ]
         ],
         "meta": {
@@ -960,7 +960,7 @@
                     ]
                 ],
                 "3": [
-                    "versions.yml:md5,957a57604ceb366b7af0123738e13559"
+                    "versions.yml:md5,1d87ea190fd5f463b8ae318cf966c675"
                 ],
                 "4": [
                     [
@@ -1144,7 +1144,7 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,957a57604ceb366b7af0123738e13559"
+                    "versions.yml:md5,1d87ea190fd5f463b8ae318cf966c675"
                 ]
             }
         ],
@@ -1206,7 +1206,7 @@
             ],
             null,
             [
-                "versions.yml:md5,957a57604ceb366b7af0123738e13559"
+                "versions.yml:md5,1d87ea190fd5f463b8ae318cf966c675"
             ]
         ],
         "meta": {
@@ -1220,15 +1220,7 @@
             "test.Log.final.out",
             "test.Log.out",
             "test.Log.progress.out",
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.Aligned.out.bam:md5,28ecaa85a5dec1a18c877c85d874adf2"
-                ]
-            ],
+            "test.Aligned.out.bam",
             [
                 
             ],
@@ -1267,7 +1259,7 @@
             ],
             null,
             [
-                "versions.yml:md5,957a57604ceb366b7af0123738e13559"
+                "versions.yml:md5,1d87ea190fd5f463b8ae318cf966c675"
             ]
         ],
         "meta": {
@@ -1325,7 +1317,7 @@
                     ]
                 ],
                 "3": [
-                    "versions.yml:md5,957a57604ceb366b7af0123738e13559"
+                    "versions.yml:md5,1d87ea190fd5f463b8ae318cf966c675"
                 ],
                 "4": [
                     [
@@ -1509,7 +1501,7 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,957a57604ceb366b7af0123738e13559"
+                    "versions.yml:md5,1d87ea190fd5f463b8ae318cf966c675"
                 ]
             }
         ],

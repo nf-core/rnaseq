@@ -3,10 +3,13 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 3.22.1dev
+## dev - xxxx-xx-xx
+
+### Credits
 
 ### Enhancements and fixes
 
+- [PR #1640](https://github.com/nf-core/rnaseq/pull/1640) - Bump version after release 3.22.0
 - [PR #1641](https://github.com/nf-core/rnaseq/pull/1641) - Add arm-based CI tests and fix arm-related issues
 
 ## [[3.22.0](https://github.com/nf-core/rnaseq/releases/tag/3.22.0)] - 2025-11-26

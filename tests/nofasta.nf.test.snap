@@ -10,8 +10,8 @@
                     "python": "3.10.4"
                 },
                 "DESEQ2_QC_PSEUDO": {
-                    "bioconductor-deseq2": "1.28.0",
-                    "r-base": "4.0.3"
+                    "bioconductor-deseq2": "1.46.0",
+                    "r-base": "4.4.2"
                 },
                 "FASTQC": {
                     "fastqc": "0.12.1"

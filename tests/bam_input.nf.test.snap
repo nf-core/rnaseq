@@ -19,8 +19,8 @@
                     "python": "3.10.4"
                 },
                 "DESEQ2_QC_STAR_SALMON": {
-                    "bioconductor-deseq2": "1.28.0",
-                    "r-base": "4.0.3"
+                    "bioconductor-deseq2": "1.46.0",
+                    "r-base": "4.4.2"
                 },
                 "DUPRADAR": {
                     "bioconductor-dupradar": "1.32.0"
@@ -976,8 +976,8 @@
                     "getchromsizes": 1.21
                 },
                 "DESEQ2_QC_RSEM": {
-                    "bioconductor-deseq2": "1.28.0",
-                    "r-base": "4.0.3"
+                    "bioconductor-deseq2": "1.46.0",
+                    "r-base": "4.4.2"
                 },
                 "DUPRADAR": {
                     "bioconductor-dupradar": "1.32.0"

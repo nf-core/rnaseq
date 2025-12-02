@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [PR #1640](https://github.com/nf-core/rnaseq/pull/1640) - Bump version after release 3.22.0
 - [PR #1641](https://github.com/nf-core/rnaseq/pull/1641) - Add arm-based CI tests and fix arm-related issues
+- [PR #1642](https://github.com/nf-core/rnaseq/pull/1642) - Add long format to rsem merge
 
 ## [[3.22.0](https://github.com/nf-core/rnaseq/releases/tag/3.22.0)] - 2025-11-26
 
@@ -20,7 +21,7 @@ Special thanks to the following for their contributions to the release:
 
 - [Ahwan Pandey](https://github.com/ahwanpandey)
 - [Cristina Tuñí i Domínguez](https://github.com/ctuni)
-- [Elad Herzog](https://github.com/EladH1)
+- [Elad Herz](https://github.com/EladH1)
 - [Emily Miyoshi](https://github.com/emilymiyoshi)
 - [Jonathan Manning](https://github.com/pinin4fjords)
 - [Pontus Höjer](https://github.com/pontushojer)

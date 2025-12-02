@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [PR #1640](https://github.com/nf-core/rnaseq/pull/1640) - Bump version after release 3.22.0
 - [PR #1641](https://github.com/nf-core/rnaseq/pull/1641) - Add arm-based CI tests and fix arm-related issues
+- [PR #1645](https://github.com/nf-core/rnaseq/pull/1645) - Fix BAM CSI index access error with UMI deduplication ([#1643](https://github.com/nf-core/rnaseq/issues/1643))
 
 ## [[3.22.0](https://github.com/nf-core/rnaseq/releases/tag/3.22.0)] - 2025-11-26
 

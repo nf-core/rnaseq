@@ -253,7 +253,7 @@ workflow RNASEQ {
 
             ch_genome_bam        = BAM_DEDUP_UMI_STAR.out.bam
             ch_transcriptome_bam = BAM_DEDUP_UMI_STAR.out.transcriptome_bam
-            ch_genome_bam_index  = params.bam_csi_index ? BAM_DEDUP_UMI_STAR.out.csi : BAM_DEDUP_UMI_STAR.out.bai
+            ch_genome_bam_index  = BAM_DEDUP_UMI_STAR.out.bai
             ch_versions          = ch_versions.mix(BAM_DEDUP_UMI_STAR.out.versions)
 
             ch_multiqc_files = ch_multiqc_files
@@ -359,7 +359,7 @@ workflow RNASEQ {
             )
 
             ch_genome_bam        = BAM_DEDUP_UMI_HISAT2.out.bam
-            ch_genome_bam_index  = params.bam_csi_index ? BAM_DEDUP_UMI_HISAT2.out.csi : BAM_DEDUP_UMI_HISAT2.out.bai
+            ch_genome_bam_index  = BAM_DEDUP_UMI_HISAT2.out.bai
             ch_versions          = ch_versions.mix(BAM_DEDUP_UMI_HISAT2.out.versions)
 
             ch_multiqc_files = ch_multiqc_files

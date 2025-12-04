@@ -10,6 +10,10 @@ nextflow_pipeline {
             params {
                 outdir = "$outputDir"
                 min_mapped_reads = 90
+                // Skip processes already covered by default.nf.test (sample filtering doesn't change BAM structure)
+                skip_qc = true
+                skip_stringtie = true
+                skip_bigwig = true
             }
         }
 
@@ -42,6 +46,10 @@ nextflow_pipeline {
             params {
                 outdir = "$outputDir"
                 min_mapped_reads = 90
+                // Skip processes already covered by default.nf.test (sample filtering doesn't change BAM structure)
+                skip_qc = true
+                skip_stringtie = true
+                skip_bigwig = true
             }
         }
 

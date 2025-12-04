@@ -10,6 +10,9 @@ nextflow_pipeline {
             params {
                 outdir = "$outputDir"
                 aligner = 'hisat2'
+                // Skip bigwig (coverage tracks don't vary meaningfully by aligner)
+                // Keep QC and StringTie as HISAT2 BAMs have different characteristics worth integration testing
+                skip_bigwig = true
             }
         }
 
@@ -42,6 +45,9 @@ nextflow_pipeline {
             params {
                 outdir = "$outputDir"
                 aligner = 'hisat2'
+                // Skip bigwig (coverage tracks don't vary meaningfully by aligner)
+                // Keep QC and StringTie as HISAT2 BAMs have different characteristics worth integration testing
+                skip_bigwig = true
             }
         }
 

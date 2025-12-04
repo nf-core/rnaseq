@@ -10,6 +10,10 @@ nextflow_pipeline {
             params {
                 outdir = "$outputDir"
                 featurecounts_group_type = false
+                // Skip processes already covered by default.nf.test (featureCounts grouping doesn't affect BAMs)
+                skip_qc = true
+                skip_stringtie = true
+                skip_bigwig = true
             }
         }
 
@@ -42,6 +46,10 @@ nextflow_pipeline {
             params {
                 outdir = "$outputDir"
                 featurecounts_group_type = false
+                // Skip processes already covered by default.nf.test (featureCounts grouping doesn't affect BAMs)
+                skip_qc = true
+                skip_stringtie = true
+                skip_bigwig = true
             }
         }
 

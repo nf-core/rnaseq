@@ -10,6 +10,10 @@ nextflow_pipeline {
             params {
                 outdir = "$outputDir"
                 remove_ribo_rna = true
+                // Skip processes already covered by default.nf.test (rRNA removal only affects read count, not BAM structure)
+                skip_qc = true
+                skip_stringtie = true
+                skip_bigwig = true
             }
         }
 
@@ -42,6 +46,10 @@ nextflow_pipeline {
             params {
                 outdir = "$outputDir"
                 remove_ribo_rna = true
+                // Skip processes already covered by default.nf.test (rRNA removal only affects read count, not BAM structure)
+                skip_qc = true
+                skip_stringtie = true
+                skip_bigwig = true
             }
         }
 

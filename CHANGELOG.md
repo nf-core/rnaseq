@@ -19,6 +19,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1641](https://github.com/nf-core/rnaseq/pull/1641) - Add arm-based CI tests and fix arm-related issues
 - [PR #1645](https://github.com/nf-core/rnaseq/pull/1645) - Fix BAM CSI index access error with UMI deduplication ([#1643](https://github.com/nf-core/rnaseq/issues/1643))
 - [PR #1642](https://github.com/nf-core/rnaseq/pull/1642) - Add long format to rsem merge
+- [PR #1650](https://github.com/nf-core/rnaseq/pull/1650) - Restrict ARM CI tests to Docker profile only
 
 ## [[3.22.0](https://github.com/nf-core/rnaseq/releases/tag/3.22.0)] - 2025-11-26
 

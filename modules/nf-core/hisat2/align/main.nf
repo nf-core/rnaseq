@@ -36,7 +36,7 @@ process HISAT2_ALIGN {
     if (meta.single_end) {
         def unaligned = params.save_unaligned || params.contaminant_screening ? "--un-gz ${prefix}.unmapped.fastq.gz" : ''
         """
-        INDEX=`find -L ./ -name "*.1.ht2" | sed 's/\\.1.ht2\$//'`
+        INDEX=`find -L ./ -name "*.1.ht2*" | sed 's/\\.1.ht2.*\$//'`
         hisat2 \\
             -x \$INDEX \\
             -U $reads \\
@@ -58,7 +58,7 @@ process HISAT2_ALIGN {
     } else {
         def unaligned = params.save_unaligned || params.contaminant_screening ? "--un-conc-gz ${prefix}.unmapped.fastq.gz" : ''
         """
-        INDEX=`find -L ./ -name "*.1.ht2" | sed 's/\\.1.ht2\$//'`
+        INDEX=`find -L ./ -name "*.1.ht2*" | sed 's/\\.1.ht2.*\$//'`
         hisat2 \\
             -x \$INDEX \\
             -1 ${reads[0]} \\

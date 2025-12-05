@@ -22,12 +22,12 @@
                     "python": "3.10.4"
                 },
                 "DESEQ2_QC_PSEUDO": {
-                    "bioconductor-deseq2": "1.28.0",
-                    "r-base": "4.0.3"
+                    "bioconductor-deseq2": "1.46.0",
+                    "r-base": "4.4.2"
                 },
                 "DESEQ2_QC_STAR_SALMON": {
-                    "bioconductor-deseq2": "1.28.0",
-                    "r-base": "4.0.3"
+                    "bioconductor-deseq2": "1.46.0",
+                    "r-base": "4.4.2"
                 },
                 "DUPRADAR": {
                     "bioconductor-dupradar": "1.32.0"
@@ -1338,11 +1338,6 @@
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "cmd_info.json:md5,3a51e7db950cee84bed0b13e329f1934",
-                "RAP1_IAA_30M_REP1_dupMatrix.txt:md5,ddadea4a08511aae6faeb632eb6aafea",
-                "RAP1_UNINDUCED_REP1_dupMatrix.txt:md5,1db4c86723cf69052c4386760a9750bb",
-                "RAP1_UNINDUCED_REP2_dupMatrix.txt:md5,c0bf1135d2d70c5918d87f706c0c54bc",
-                "WT_REP1_dupMatrix.txt:md5,b82c4fed335d03e85c414c91c2efd461",
-                "WT_REP2_dupMatrix.txt:md5,bab18079153627205e5d907d8dfba677",
                 "RAP1_IAA_30M_REP1.biotype_counts_mqc.tsv:md5,accedae963f399d3b47effd8eda41edb",
                 "RAP1_IAA_30M_REP1.biotype_counts_rrna_mqc.tsv:md5,dde2de0cb90e10d0195c726f768e9941",
                 "RAP1_IAA_30M_REP1.featureCounts.tsv:md5,1769902d5214f137e12f89156c5334c9",

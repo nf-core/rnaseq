@@ -124,8 +124,8 @@
                     "python": "3.10.4"
                 },
                 "DESEQ2_QC_PSEUDO": {
-                    "bioconductor-deseq2": "1.28.0",
-                    "r-base": "4.0.3"
+                    "bioconductor-deseq2": "1.46.0",
+                    "r-base": "4.4.2"
                 },
                 "DUPRADAR": {
                     "bioconductor-dupradar": "1.32.0"
@@ -1202,11 +1202,6 @@
             [
                 "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055",
                 "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28",
-                "RAP1_IAA_30M_REP1_dupMatrix.txt:md5,8a6bf324a928534cb7ed7a5522aff7d0",
-                "RAP1_UNINDUCED_REP1_dupMatrix.txt:md5,ae3e70edc98ec8117608f8f608effab9",
-                "RAP1_UNINDUCED_REP2_dupMatrix.txt:md5,9a5c2672c5817e930c7b884ada8fd92c",
-                "WT_REP1_dupMatrix.txt:md5,11371da7a087879340c2e7e6842a5d89",
-                "WT_REP2_dupMatrix.txt:md5,5176c7447c4295f94e2683dd9995cea0",
                 "RAP1_IAA_30M_REP1.biotype_counts_mqc.tsv:md5,cd7494b3bb12295a287f36506638f3c6",
                 "RAP1_IAA_30M_REP1.biotype_counts_rrna_mqc.tsv:md5,dde2de0cb90e10d0195c726f768e9941",
                 "RAP1_IAA_30M_REP1.featureCounts.tsv:md5,289e47b060051eb33c17e52aa0ce52cc",

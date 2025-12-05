@@ -1,6 +1,12 @@
-name: Run nf-test
+name: Run nf-test on ARM
 on:
   pull_request:
+    paths-ignore:
+      - "docs/**"
+      - "**/meta.yml"
+      - "**/*.md"
+      - "**/*.png"
+      - "**/*.svg"
   release:
     types: [published]
   workflow_dispatch:
@@ -19,11 +25,11 @@ env:
   NXF_SINGULARITY_LIBRARYDIR: ${{ github.workspace }}/.singularity
 
 jobs:
-  nf-test-changes:
-    name: nf-test-changes
+  nf-test-changes-arm:
+    name: nf-test-changes-arm
     runs-on: # use self-hosted runners
-      - runs-on=${{ github.run_id }}-nf-test-changes
-      - runner=4cpu-linux-x64
+      - runs-on=${{ github.run_id }}-nf-test-changes-arm
+      - runner=4cpu-linux-arm64
     outputs:
       shard: ${{ steps.set-shards.outputs.shard }}
       total_shards: ${{ steps.set-shards.outputs.total_shards }}
@@ -43,8 +49,8 @@ jobs:
         uses: ./.github/actions/get-shards
         env:
           NFT_VER: ${{ env.NFT_VER }}
-          # Skip sentieon tests on fork PRs where secrets are not available
-          SKIP_SENTIEON: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != 'nf-core/rnaseq' }}
+          # Skip sentieon tests - no ARM containers available
+          SKIP_SENTIEON: true
         with:
           max_shards: 14
 
@@ -53,18 +59,19 @@ jobs:
           echo ${{ steps.set-shards.outputs.shard }}
           echo ${{ steps.set-shards.outputs.total_shards }}
 
-  nf-test:
-    name: "${{ matrix.profile }} | ${{ matrix.NXF_VER }} | ${{ matrix.shard }}/${{ needs.nf-test-changes.outputs.total_shards }}"
-    needs: [nf-test-changes]
-    if: ${{ needs.nf-test-changes.outputs.total_shards != '0' }}
+  nf-test-arm:
+    name: "${{ matrix.profile }}-${{ matrix.archProfile }} | ${{ matrix.NXF_VER }} | ${{ matrix.shard }}/${{ needs.nf-test-changes-arm.outputs.total_shards }}"
+    needs: [nf-test-changes-arm]
+    if: ${{ needs.nf-test-changes-arm.outputs.total_shards != '0' }}
     runs-on: # use self-hosted runners
       - runs-on=${{ github.run_id }}-nf-test
-      - runner=4cpu-linux-x64
+      - runner=4cpu-linux-arm64
     strategy:
       fail-fast: false
       matrix:
-        shard: ${{ fromJson(needs.nf-test-changes.outputs.shard) }}
-        profile: [conda, docker, singularity]
+        shard: ${{ fromJson(needs.nf-test-changes-arm.outputs.shard) }}
+        archProfile: [arm64]
+        profile: [docker]
         isMain:
           - ${{ github.base_ref == 'master' || github.base_ref == 'main' }}
         # Exclude conda and singularity on dev
@@ -78,7 +85,7 @@ jobs:
           - "latest-everything"
     env:
       NXF_ANSI_LOG: false
-      TOTAL_SHARDS: ${{ needs.nf-test-changes.outputs.total_shards }}
+      TOTAL_SHARDS: ${{ needs.nf-test-changes-arm.outputs.total_shards }}
 
     steps:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
@@ -91,15 +98,11 @@ jobs:
         continue-on-error: ${{ matrix.NXF_VER == 'latest-everything' }}
         env:
           NFT_WORKDIR: ${{ env.NFT_WORKDIR }}
-          SENTIEON_AUTH_MECH: "GitHub Actions - token"
-          SENTIEON_ENCRYPTION_KEY: ${{ secrets.SENTIEON_ENCRYPTION_KEY }}
-          SENTIEON_LICENSE_MESSAGE: ${{ secrets.SENTIEON_LICENSE_MESSAGE }}
-          SENTIEON_LICSRVR_IP: ${{ secrets.SENTIEON_LICSRVR_IP }}
           NXF_VERSION: ${{ matrix.NXF_VER }}
-          # Skip sentieon tests on fork PRs where secrets are not available
-          SKIP_SENTIEON: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != 'nf-core/rnaseq' }}
+          # Skip sentieon tests - no ARM containers available
+          SKIP_SENTIEON: true
         with:
-          profile: ${{ matrix.profile }}
+          profile: ${{ matrix.profile }},${{ matrix.archProfile }}
           shard: ${{ matrix.shard }}
           total_shards: ${{ env.TOTAL_SHARDS }}
 
@@ -109,7 +112,7 @@ jobs:
           if [[ "${{ steps.run_nf_test.outcome }}" == "failure" ]]; then
             echo "::error::Test with ${{ matrix.NXF_VER }} failed"
             # Add to workflow summary
-            echo "## ❌ Test failed: ${{ matrix.profile }} | ${{ matrix.NXF_VER }} | Shard ${{ matrix.shard }}/${{ env.TOTAL_SHARDS }}" >> $GITHUB_STEP_SUMMARY
+            echo "## ❌ Test failed: ${{ matrix.profile }},${{ matrix.archProfile }} | ${{ matrix.NXF_VER }} | Shard ${{ matrix.shard }}/${{ env.TOTAL_SHARDS }}" >> $GITHUB_STEP_SUMMARY
             if [[ "${{ matrix.NXF_VER }}" == "latest-everything" ]]; then
               echo "::warning::Test with latest-everything failed but will not cause workflow failure. Please check if the error is expected or if it needs fixing."
             fi
@@ -118,8 +121,8 @@ jobs:
             fi
           fi
 
-  confirm-pass:
-    needs: [nf-test-changes, nf-test]
+  confirm-pass-arm:
+    needs: [nf-test-changes-arm, nf-test-arm]
     if: always()
     runs-on: # use self-hosted runners
       - runs-on=${{ github.run_id }}-confirm-pass

@@ -77,7 +77,7 @@
                     },
                     "hisat2/align": {
                         "branch": "master",
-                        "git_sha": "20b042e352fc47ab6dab717a622253e96429e887",
+                        "git_sha": "5ec0e05ebe154cf1325de4c8ae07cdff1a197b06",
                         "installed_by": ["fastq_align_hisat2"],
                         "patch": "modules/nf-core/hisat2/align/hisat2-align.diff"
                     },

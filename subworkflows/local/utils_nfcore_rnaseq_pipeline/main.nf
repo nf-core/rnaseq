@@ -301,19 +301,8 @@ def validateInputParameters() {
     }
 
     // Check that Kraken/Bracken database provided if using kraken2/bracken
-    if (params.contaminant_screening in ['kraken2', 'kraken2_bracken']) {
-        if (!params.kraken_db) {
-            error("Contaminant screening set to kraken2 but no database was provided. Please provide a database with the --kraken_db option.")
-        }
-    // Check that Kraken/Bracken parameters are not provided when Kraken2 is not being used
-    } else {
-        if (!params.bracken_precision.equals('S')) {
-            brackenPrecisionWithoutKrakenDBWarn()
-        }
-
-        if (params.save_kraken_assignments || params.save_kraken_unassigned || params.kraken_db) {
-            krakenArgumentsWithoutKrakenDBWarn()
-        }
+    if (params.contaminant_screening in ['kraken2', 'kraken2_bracken'] && !params.kraken_db) {
+        error("Contaminant screening set to kraken2 but no database was provided. Please provide a database with the --kraken_db option.")
     }
 
     // Check that Sylph database and taxonomy is provided if using Sylph
@@ -324,11 +313,7 @@ def validateInputParameters() {
         if (!params.sylph_taxonomy) {
             error("Contaminant screening is set to Sylph but no taxonomy was provided. Please provide a taxonomy with the --sylph_taxonomy option.")
         }
-    } else {
-        if (params.sylph_db || params.sylph_taxonomy) {
-            sylphArgumentsWithoutSylphUsageWarn()
-        }
-    }
+    } 
 
     // Check which RSeQC modules we are running
     def valid_rseqc_modules = ['bam_stat', 'inner_distance', 'infer_experiment', 'junction_annotation', 'junction_saturation', 'read_distribution', 'read_duplication', 'tin']
@@ -543,37 +528,6 @@ def additionaFastaIndexWarn(index) {
         "  Ignore this warning if you know that the index already contains transgenes.\n\n" +
         "  Please see:\n" +
         "  https://github.com/nf-core/rnaseq/issues/556\n" +
-        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-}
-
-//
-// Print a warning if --save_kraken_assignments, --save_kraken_unassigned, or --kraken-db, 
-// is provided without setting --contaminant-screening to 'kraken2' or 'kraken2_bracken'
-//
-def krakenArgumentsWithoutKrakenDBWarn() {
-    log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
-        "  Kraken2 related arguments have been provided without setting contaminant\n" +
-        "  screening to Kraken2. Kraken2 is not being run so these will not be used.\n" +
-        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-}
-
-///
-/// Print a warning if --bracken-precision is provided without contaminant screening using kraken2
-///
-def brackenPrecisionWithoutKrakenDBWarn() {
-    log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
-        "  '--bracken-precision' parameter has been provided without Kraken2 contaminant screening.\n" +
-        "  Bracken will not run so precision will not be set.\n" +
-        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-}
-
-//
-// Print a warning if --sylph_db or --sylph_taxonomy is provided without contaminant screening set to 'sylph'
-//
-def sylphArgumentsWithoutSylphUsageWarn() {
-    log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
-        "  Sylph related arguments have been provided without setting contaminant\n" +
-        "  screening to Sylph. Sylph is not being run so these will not be used.\n" +
         "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 }
 

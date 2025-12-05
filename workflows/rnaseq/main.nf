@@ -664,16 +664,20 @@ workflow RNASEQ {
                 ch_multiqc_files = ch_multiqc_files.mix(BRACKEN.out.txt.collect{it[1]})
             }
         } else if (params.contaminant_screening == 'sylph') {
+            def sylph_databases = params.sylph_db ? params.sylph_db.split(',').collect{ file(it.trim()) } : []
+            ch_sylph_databases = channel.value(sylph_databases)
             SYLPH_PROFILE (
                 ch_unaligned_sequences,
-                params.sylph_db
+                ch_sylph_databases
             )
             ch_sylph_profile = SYLPH_PROFILE.out.profile_out.filter{!it[1].isEmpty()}
             ch_versions = ch_versions.mix(SYLPH_PROFILE.out.versions)
 
+            def sylph_taxonomies = params.sylph_taxonomy ? params.sylph_taxonomy.split(',').collect{ file(it.trim()) } : []
+            ch_sylph_taxonomies = channel.value(sylph_taxonomies)
             SYLPHTAX_TAXPROF (
                 ch_sylph_profile,
-                params.sylph_taxonomy
+                ch_sylph_taxonomies
             )
             ch_versions = ch_versions.mix(SYLPHTAX_TAXPROF.out.versions)
             ch_multiqc_files = ch_multiqc_files.mix(SYLPHTAX_TAXPROF.out.taxprof_output.collect{it[1]})

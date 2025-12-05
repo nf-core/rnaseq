@@ -621,16 +621,16 @@
                 "sylph_db": {
                     "type": "string",
                     "format": "file-path",
-                    "description": "Database when using Sylph for contamination detection",
+                    "description": "Comma separated list of databases to profile against when using Sylph for contamination detection",
                     "help_text": "See the usage documentation for more information on setting up and using Sylph databases. Requires --contaminant-screening option to be set to 'sylph' to have an effect.",
                     "fa_icon": "fas fa-database"
                 },
                 "sylph_taxonomy": {
                     "type": "string",
-                    "format": "file-path",
-                    "description": "Taxonomy when using Sylph for contamination detection/",
+                    "description": "Comma separated list of taxonomies when using Sylph for contamination detection",
                     "help_text": "See the usage documentation for more information on Sylph taxonomies. Requires --contaminant-screening option to be set to 'sylph' to have an effect.",
-                    "fa_icon": "fas fa-tree"
+                    "fa_icon": "fas fa-tree",
+                    "format": "file-path"
                 }
             }
         },

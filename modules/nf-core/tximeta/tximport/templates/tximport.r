@@ -14,6 +14,23 @@ library(tximport)
 ################################################
 ################################################
 
+#' Parse out options from a string without recourse to optparse
+#'
+#' @param x Long-form argument list like --opt1 val1 --opt2 val2
+#'
+#' @return named list of options and values similar to optparse
+
+parse_args <- function(x){
+    args_list <- unlist(strsplit(x, ' ?--')[[1]])[-1]
+    args_vals <- lapply(args_list, function(y) scan(text=y, what='character', quiet = TRUE))
+
+    # Ensure the option vectors are length 2 (key/value) to catch empty ones
+    args_vals <- lapply(args_vals, function(z){ length(z) <- 2; z})
+
+    parsed_args <- structure(lapply(args_vals, function(y) y[2]), names = lapply(args_vals, function(y) y[1]))
+    parsed_args[! is.na(parsed_args)]
+}
+
 #' Build a table from a SummarizedExperiment object
 #'
 #' This function takes a SummarizedExperiment object and a specific slot name to extract
@@ -53,27 +70,38 @@ write_se_table <- function(params, prefix) {
 #' Read Transcript Metadata from a Given Path
 #'
 #' This function reads transcript metadata from a specified file path. The file is expected to
-#' be a tab-separated values file without headers, containing transcript information. The function
-#' checks if the file is empty and stops execution with an error message if so. It reads the file
-#' into a data frame, expecting columns for transcript IDs, gene IDs, and gene names. Additional
+#' be a tab-separated values file with a header, containing transcript information. Columns are
+#' selected by name using the tx_col, gene_id_col, and gene_name_col parameters. The function
+#' checks if the file is empty and stops execution with an error message if so. Additional
 #' processing is done to ensure compatibility with a predefined data structure (e.g., `txi[[1]]`),
 #' including adding missing entries and reordering based on the transcript IDs found in `txi[[1]]`.
 #'
 #' @param tinfo_path The file path to the transcript information file.
+#' @param tx_col Column name for transcript IDs.
+#' @param gene_id_col Column name for gene IDs.
+#' @param gene_name_col Column name for gene names.
 #'
 #' @return A list containing three elements:
 #' - `transcript`: A data frame with transcript IDs, gene IDs, and gene names, indexed by transcript IDs.
 #' - `gene`: A data frame with unique gene IDs and gene names.
 #' - `tx2gene`: A data frame mapping transcript IDs to gene IDs.
 
-read_transcript_info <- function(tinfo_path){
+read_transcript_info <- function(tinfo_path, tx_col, gene_id_col, gene_name_col){
     info <- file.info(tinfo_path)
     if (info\$size == 0) {
         stop("tx2gene file is empty")
     }
 
-    transcript_info <- read.csv(tinfo_path, sep="\t", header = TRUE,
-                                col.names = c("tx", "gene_id", "gene_name"), check.names = FALSE)
+    # Read file with actual header to handle variable column counts correctly
+    raw_info <- read.csv(tinfo_path, sep="\t", header = TRUE, check.names = FALSE)
+
+    # Select columns by name, falling back to position if name not found
+    transcript_info <- data.frame(
+        tx = raw_info[[if (tx_col %in% colnames(raw_info)) tx_col else 1]],
+        gene_id = raw_info[[if (gene_id_col %in% colnames(raw_info)) gene_id_col else 2]],
+        gene_name = raw_info[[if (gene_name_col %in% colnames(raw_info)) gene_name_col else 3]],
+        check.names = FALSE
+    )
 
     extra <- setdiff(rownames(txi[[1]]), as.character(transcript_info[["tx"]]))
     transcript_info <- rbind(transcript_info, data.frame(tx=extra, gene_id=extra, gene_name=extra, check.names = FALSE))
@@ -117,6 +145,21 @@ create_summarized_experiment <- function(counts, abundance, length, col_data, ro
 ################################################
 ################################################
 
+# Set defaults and classes
+opt <- list(
+    tx_col = "transcript_id",
+    gene_id_col = "gene_id",
+    gene_name_col = "gene_name"
+)
+
+# Apply parameter overrides from ext.args
+args_opt <- parse_args('$task.ext.args')
+for (ao in names(args_opt)) {
+    if (ao %in% names(opt)) {
+        opt[[ao]] <- args_opt[[ao]]
+    }
+}
+
 # Define pattern for file names based on quantification type
 pattern <- ifelse('$quant_type' == "kallisto", "abundance.tsv", "quant.sf")
 fns <- list.files('quants', pattern = pattern, recursive = T, full.names = T)
@@ -128,7 +171,7 @@ dropInfReps <- '$quant_type' == "kallisto"
 txi <- tximport(fns, type = '$quant_type', txOut = TRUE, dropInfReps = dropInfReps)
 
 # Read transcript and sample data
-transcript_info <- read_transcript_info('$tx2gene')
+transcript_info <- read_transcript_info('$tx2gene', opt\$tx_col, opt\$gene_id_col, opt\$gene_name_col)
 
 # Make coldata just to appease the summarizedexperiment
 coldata <- data.frame(files = fns, names = names, check.names = FALSE)

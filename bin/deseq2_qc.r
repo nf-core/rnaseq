@@ -55,7 +55,7 @@ if (is.null(opt$count_file)){
 ################################################
 ################################################
 
-count.table           <- read.delim(file=opt$count_file,header=TRUE, row.names=NULL)
+count.table           <- read.delim(file=opt$count_file,header=TRUE, row.names=NULL, check.names=FALSE)
 rownames(count.table) <- count.table[,opt$id_col]
 count.table           <- count.table[,opt$count_col:ncol(count.table),drop=FALSE]
 colnames(count.table) <- gsub(opt$sample_suffix,"",colnames(count.table))

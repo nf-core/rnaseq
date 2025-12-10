@@ -758,19 +758,38 @@ workflow RNASEQ {
         // Provide MultiQC with rename patterns to ensure it uses sample names
         // for single-techrep samples not processed by CAT_FASTQ, and trims out
         // _raw or _trimmed
+        //
+        // Note: We only add FASTQ filename-based mappings when the FASTQ simpleName
+        // differs from the sample ID. This prevents duplicate/conflicting mappings
+        // when multiple samples share the same FASTQ filename in different directories
+        // (see: https://github.com/nf-core/rnaseq/issues/1657)
 
         ch_name_replacements = ch_fastq
             .map{ meta, reads ->
-                def name1 = file(reads[0][0]).simpleName + "\t" + meta.id + '_1'
-                def fastqcnames = meta.id + "_raw\t" + meta.id + "\n" + meta.id + "_trimmed\t" + meta.id
-                if (reads[0][1] ){
-                    def name2 = file(reads[0][1]).simpleName + "\t" + meta.id + '_2'
-                    def fastqcnames1 = meta.id + "_raw_1\t" + meta.id + "_1\n" + meta.id + "_trimmed_1\t" + meta.id + "_1"
-                    def fastqcnames2 = meta.id + "_raw_2\t" + meta.id + "_2\n" + meta.id + "_trimmed_2\t" + meta.id + "_2"
-                    return [ name1, name2, fastqcnames1, fastqcnames2 ]
-                } else{
-                    return [ name1, fastqcnames ]
+                def fastq1_simplename = file(reads[0][0]).simpleName
+                def replacements = []
+
+                // Only add FASTQ-to-sample mapping if the FASTQ filename differs from sample ID
+                if (fastq1_simplename != meta.id) {
+                    replacements << fastq1_simplename + "\t" + meta.id + '_1'
+                    if (reads[0][1]) {
+                        def fastq2_simplename = file(reads[0][1]).simpleName
+                        replacements << fastq2_simplename + "\t" + meta.id + '_2'
+                    }
                 }
+
+                // Always add the _raw/_trimmed suffix mappings for FastQC
+                if (reads[0][1]) {
+                    replacements << meta.id + "_raw_1\t" + meta.id + "_1"
+                    replacements << meta.id + "_trimmed_1\t" + meta.id + "_1"
+                    replacements << meta.id + "_raw_2\t" + meta.id + "_2"
+                    replacements << meta.id + "_trimmed_2\t" + meta.id + "_2"
+                } else {
+                    replacements << meta.id + "_raw\t" + meta.id
+                    replacements << meta.id + "_trimmed\t" + meta.id
+                }
+
+                return replacements
             }
             .flatten()
             .collectFile(name: 'name_replacement.txt', newLine: true)

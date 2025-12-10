@@ -1420,6 +1420,7 @@
                 "multiqc",
                 "multiqc/star_rsem",
                 "multiqc/star_rsem/multiqc_data",
+                "multiqc/star_rsem/multiqc_data/.stub",
                 "multiqc/star_rsem/multiqc_plots",
                 "multiqc/star_rsem/multiqc_report.html",
                 "pipeline_info",

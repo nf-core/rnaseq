@@ -10,7 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Enhancements and fixes
 
 - [PR #1656](https://github.com/nf-core/rnaseq/pull/1656) - Bump version after release 3.22.1
-- [PR #xxxx](https://github.com/nf-core/rnaseq/pull/xxxx) - Fix MultiQC sample name collisions when multiple samples share the same FASTQ filename ([#1657](https://github.com/nf-core/rnaseq/issues/1657))
+- [PR #1658](https://github.com/nf-core/rnaseq/pull/1658) - Bump nf-core/multiqc module
+- [PR #1659](https://github.com/nf-core/rnaseq/pull/1659) - Fix MultiQC sample name collisions when multiple samples share the same FASTQ filename ([#1657](https://github.com/nf-core/rnaseq/issues/1657))
+
 
 ## [[3.22.1](https://github.com/nf-core/rnaseq/releases/tag/3.22.1)] - 2025-12-04
 

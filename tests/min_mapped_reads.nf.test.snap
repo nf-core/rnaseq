@@ -556,22 +556,10 @@
                 "multiqc_cutadapt.txt:md5,583b7b9ba76b26162bb9610ed746454b",
                 "multiqc_fail_mapped_samples_table.txt:md5,5dd9b06f326b1a55d78878343af89927",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,54743154d0e8858980acffeb5b6f6a97",
-                "multiqc_samtools_idxstats.txt:md5,8b8f6cb092004918c18319a8cd64eb4c",
-                "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-idxstats-mapped-reads-plot_Normalised_Counts.txt:md5,75acd04232d1804b5f960ee4c5db4722",
-                "samtools-idxstats-mapped-reads-plot_Observed_over_Expected_Counts.txt:md5,ae45731d8d4595f77e6b271004f3a070",
-                "samtools-idxstats-mapped-reads-plot_Raw_Counts.txt:md5,3e57c1686c863035b6e6569210dfd4a8",
-                "multiqc_featurecounts_biotype_plot.txt:md5,7023aeba8868687d17107a265791f096",
                 "multiqc_samtools_idxstats.txt:md5,e172fffa5d56d0436a34523746e79a70",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "qualimap_gene_coverage_profile_Counts.txt:md5,6d377444d29c3d4135980982ab1df2fb",
-                "qualimap_gene_coverage_profile_Normalised.txt:md5,dc8b4f9fddc08e06668f9ee87faac008",
-                "qualimap_rnaseq_cov_hist.txt:md5,a409821701f60811027daef4e7f3ebee",
-                "rseqc_infer_experiment_plot.txt:md5,749a802379ada3ec9d2083ecbe6aef7e",
                 "samtools-idxstats-mapped-reads-plot_Normalised_Counts.txt:md5,cae99971c3b35606a630eb15f80bf482",
                 "samtools-idxstats-mapped-reads-plot_Observed_over_Expected_Counts.txt:md5,ea868b260a012178506a02b151a6c406",
                 "samtools-idxstats-mapped-reads-plot_Raw_Counts.txt:md5,b7fe1870ecda40c3893b7a30c0adf2c0",
@@ -631,15 +619,6 @@
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "cmd_info.json:md5,3a51e7db950cee84bed0b13e329f1934",
-                "RAP1_IAA_30M_REP1.biotype_counts_mqc.tsv:md5,6940e190bb388be56f282aa01e916466",
-                "RAP1_IAA_30M_REP1.biotype_counts_rrna_mqc.tsv:md5,dde2de0cb90e10d0195c726f768e9941",
-                "RAP1_IAA_30M_REP1.featureCounts.tsv:md5,07bd87d86ba5c6c3ceff36518183417d",
-                "RAP1_UNINDUCED_REP1.biotype_counts_mqc.tsv:md5,d241d50e582ceb97e6f16b3556f5f5a9",
-                "RAP1_UNINDUCED_REP1.biotype_counts_rrna_mqc.tsv:md5,845ff9059c72bc6722a8de69776e22bb",
-                "RAP1_UNINDUCED_REP1.featureCounts.tsv:md5,cb48d282dde8d10d5e4b1680e1a79ef4",
-                "RAP1_UNINDUCED_REP2.biotype_counts_mqc.tsv:md5,b621ce1e803d8670ece6c66391c33ba4",
-                "RAP1_UNINDUCED_REP2.biotype_counts_rrna_mqc.tsv:md5,6d3fa4c88c7fe61f638e4624ad5e22f0",
-                "RAP1_UNINDUCED_REP2.featureCounts.tsv:md5,5c96326d9edb98d18322d506394dda1a",
                 "RAP1_IAA_30M_REP1.SJ.out.tab:md5,ea95e243278af55534f2c52eb5fff7ee",
                 "RAP1_UNINDUCED_REP1.SJ.out.tab:md5,e548d13942535dc0821f3ec6d9743ec8",
                 "RAP1_UNINDUCED_REP2.SJ.out.tab:md5,1f294365343a1a5e95682792fdb77033",
@@ -652,7 +631,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-04T15:34:06.296046947"
+        "timestamp": "2025-12-11T14:08:44.90177233"
     },
     "Params: --min_mapped_reads 90 - stub": {
         "content": [
@@ -740,6 +719,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-04T15:34:36.392993014"
+        "timestamp": "2025-12-11T14:09:16.36913923"
     }
 }

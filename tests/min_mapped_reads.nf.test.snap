@@ -653,7 +653,6 @@
             "nextflow": "25.10.2"
         },
         "timestamp": "2025-12-04T15:34:06.296046947"
-        "timestamp": "2025-12-09T13:41:44.233163663"
     },
     "Params: --min_mapped_reads 90 - stub": {
         "content": [

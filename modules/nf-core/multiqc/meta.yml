@@ -57,10 +57,10 @@ input:
         - edam: http://edamontology.org/format_3475 # TSV
 output:
   report:
-    - "*multiqc_report.html":
+    - "*.html":
         type: file
         description: MultiQC report file
-        pattern: "multiqc_report.html"
+        pattern: ".html"
         ontologies: []
   data:
     - "*_data":
@@ -74,12 +74,16 @@ output:
         pattern: "*_data"
         ontologies: []
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - multiqc:
+          type: string
+          description: The tool name
+      - multiqc --version | sed "s/.* //g":
+          type: eval
+          description: The expression to obtain the version of the tool
+
 authors:
   - "@abhi18av"
   - "@bunop"

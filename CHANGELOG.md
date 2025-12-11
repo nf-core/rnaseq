@@ -7,8 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Credits
 
+### Enhancements and fixes
+
+- [PR #1655](https://github.com/nf-core/rnaseq/pull/1655) - Fix duplicate flagstat files in MultiQC report when mark duplicates is enabled ([#1653](https://github.com/nf-core/rnaseq/issues/1653))
+- [PR #1656](https://github.com/nf-core/rnaseq/pull/1656) - Bump version after release 3.22.1
+- [PR #1658](https://github.com/nf-core/rnaseq/pull/1658) - Bump nf-core/multiqc module to 1.33
+- [PR #1660](https://github.com/nf-core/rnaseq/pull/1660) - Update MultiQC ARM container to 1.33
+
+## [[3.22.1](https://github.com/nf-core/rnaseq/releases/tag/3.22.1)] - 2025-12-04
+
+### Credits
+
 Special thanks to the following for their contributions to the release:
 
+- [Elad Herz](https://github.com/EladH1)
+- [Matthias Hörtenhuber](https://github.com/mashehu)
 - [sisterdot](https://github.com/sisterdot)
 
 ### Enhancements and fixes
@@ -17,6 +30,8 @@ Special thanks to the following for their contributions to the release:
 - [PR #1641](https://github.com/nf-core/rnaseq/pull/1641) - Add arm-based CI tests and fix arm-related issues
 - [PR #1645](https://github.com/nf-core/rnaseq/pull/1645) - Fix BAM CSI index access error with UMI deduplication ([#1643](https://github.com/nf-core/rnaseq/issues/1643))
 - [PR #1642](https://github.com/nf-core/rnaseq/pull/1642) - Add long format to rsem merge
+- [PR #1650](https://github.com/nf-core/rnaseq/pull/1650) - Restrict ARM CI tests to Docker profile only
+- [PR #1651](https://github.com/nf-core/rnaseq/pull/1651) - Add dupMatrix files to nftignore to fix conda reproducibility issues
 
 ## [[3.22.0](https://github.com/nf-core/rnaseq/releases/tag/3.22.0)] - 2025-11-26
 

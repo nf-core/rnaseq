@@ -1086,7 +1086,7 @@
                 "multiqc_fastqc_fastqc_raw.txt:md5,81c3c1a2575a1891a7f2a9637a0f2cc0",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,54743154d0e8858980acffeb5b6f6a97",
                 "multiqc_featurecounts_biotype_plot.txt:md5,7023aeba8868687d17107a265791f096",
-                "multiqc_samtools_idxstats.txt:md5,8b8f6cb092004918c18319a8cd64eb4c",
+                "multiqc_samtools_idxstats.txt:md5,e172fffa5d56d0436a34523746e79a70",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -1094,9 +1094,9 @@
                 "qualimap_gene_coverage_profile_Normalised.txt:md5,dc8b4f9fddc08e06668f9ee87faac008",
                 "qualimap_rnaseq_cov_hist.txt:md5,a409821701f60811027daef4e7f3ebee",
                 "rseqc_infer_experiment_plot.txt:md5,749a802379ada3ec9d2083ecbe6aef7e",
-                "samtools-idxstats-mapped-reads-plot_Normalised_Counts.txt:md5,75acd04232d1804b5f960ee4c5db4722",
-                "samtools-idxstats-mapped-reads-plot_Observed_over_Expected_Counts.txt:md5,ae45731d8d4595f77e6b271004f3a070",
-                "samtools-idxstats-mapped-reads-plot_Raw_Counts.txt:md5,3e57c1686c863035b6e6569210dfd4a8",
+                "samtools-idxstats-mapped-reads-plot_Normalised_Counts.txt:md5,cae99971c3b35606a630eb15f80bf482",
+                "samtools-idxstats-mapped-reads-plot_Observed_over_Expected_Counts.txt:md5,ea868b260a012178506a02b151a6c406",
+                "samtools-idxstats-mapped-reads-plot_Raw_Counts.txt:md5,b7fe1870ecda40c3893b7a30c0adf2c0",
                 "ambig_info.tsv:md5,de973a4b22a4457217ae3dc04caf9401",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
@@ -1195,10 +1195,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-08-12T12:00:47.968279209"
+        "timestamp": "2025-12-09T13:41:44.233163663"
     },
     "Params: --min_mapped_reads 90 - stub": {
         "content": [

@@ -17,6 +17,10 @@ nextflow_pipeline {
                 aligner = 'hisat2'
                 outdir = "$outputDir"
                 save_umi_intermeds = true
+                // Skip processes not affected by UMI deduplication
+                // Keep QC as deduplicated BAMs have different characteristics worth integration testing
+                skip_stringtie = true
+                skip_bigwig = true
             }
         }
 
@@ -52,6 +56,10 @@ nextflow_pipeline {
                 skip_bbsplit = true
                 outdir = "$outputDir"
                 save_umi_intermeds = true
+                // Skip processes not affected by UMI deduplication
+                // Keep QC as deduplicated BAMs have different characteristics worth integration testing
+                skip_stringtie = true
+                skip_bigwig = true
             }
         }
 
@@ -87,6 +95,10 @@ nextflow_pipeline {
                 umitools_bc_pattern = "^(?P<umi_1>CGA.{8}){s<=2}.*"
                 umitools_dedup_stats = true
                 outdir = "$outputDir"
+                // Skip processes not affected by UMI deduplication
+                // Keep QC as deduplicated BAMs have different characteristics worth integration testing
+                skip_stringtie = true
+                skip_bigwig = true
             }
         }
 

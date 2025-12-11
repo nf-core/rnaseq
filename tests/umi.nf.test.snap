@@ -1,11 +1,8 @@
 {
     "--umi_dedup_tool 'umitools'": {
         "content": [
-            266,
+            231,
             {
-                "BEDTOOLS_GENOMECOV_FW": {
-                    "bedtools": "2.31.1"
-                },
                 "CAT_FASTQ": {
                     "cat": 9.5
                 },
@@ -114,9 +111,6 @@
                     "samtools": 1.21,
                     "star": "2.7.11b"
                 },
-                "STRINGTIE_STRINGTIE": {
-                    "stringtie": "2.2.3"
-                },
                 "SUBREAD_FEATURECOUNTS": {
                     "subread": "2.0.6"
                 },
@@ -127,12 +121,6 @@
                 },
                 "TXIMETA_TXIMPORT": {
                     "bioconductor-tximeta": "1.20.1"
-                },
-                "UCSC_BEDCLIP": {
-                    "ucsc": 377
-                },
-                "UCSC_BEDGRAPHTOBIGWIG": {
-                    "ucsc": 469
                 },
                 "UMITOOLS_DEDUP": {
                     "umitools": "1.1.5"
@@ -722,17 +710,6 @@
                 "star_salmon/WT_REP2/logs/salmon_quant.log",
                 "star_salmon/WT_REP2/quant.genes.sf",
                 "star_salmon/WT_REP2/quant.sf",
-                "star_salmon/bigwig",
-                "star_salmon/bigwig/RAP1_IAA_30M_REP1.forward.bigWig",
-                "star_salmon/bigwig/RAP1_IAA_30M_REP1.reverse.bigWig",
-                "star_salmon/bigwig/RAP1_UNINDUCED_REP1.forward.bigWig",
-                "star_salmon/bigwig/RAP1_UNINDUCED_REP1.reverse.bigWig",
-                "star_salmon/bigwig/RAP1_UNINDUCED_REP2.forward.bigWig",
-                "star_salmon/bigwig/RAP1_UNINDUCED_REP2.reverse.bigWig",
-                "star_salmon/bigwig/WT_REP1.forward.bigWig",
-                "star_salmon/bigwig/WT_REP1.reverse.bigWig",
-                "star_salmon/bigwig/WT_REP2.forward.bigWig",
-                "star_salmon/bigwig/WT_REP2.reverse.bigWig",
                 "star_salmon/deseq2_qc",
                 "star_salmon/deseq2_qc/R_sessionInfo.log",
                 "star_salmon/deseq2_qc/deseq2.dds.RData",
@@ -1182,52 +1159,6 @@
                 "star_salmon/samtools_stats/WT_REP2.umi_dedup.transcriptome.sorted.bam.flagstat",
                 "star_salmon/samtools_stats/WT_REP2.umi_dedup.transcriptome.sorted.bam.idxstats",
                 "star_salmon/samtools_stats/WT_REP2.umi_dedup.transcriptome.sorted.bam.stats",
-                "star_salmon/stringtie",
-                "star_salmon/stringtie/RAP1_IAA_30M_REP1.ballgown",
-                "star_salmon/stringtie/RAP1_IAA_30M_REP1.ballgown/e2t.ctab",
-                "star_salmon/stringtie/RAP1_IAA_30M_REP1.ballgown/e_data.ctab",
-                "star_salmon/stringtie/RAP1_IAA_30M_REP1.ballgown/i2t.ctab",
-                "star_salmon/stringtie/RAP1_IAA_30M_REP1.ballgown/i_data.ctab",
-                "star_salmon/stringtie/RAP1_IAA_30M_REP1.ballgown/t_data.ctab",
-                "star_salmon/stringtie/RAP1_IAA_30M_REP1.coverage.gtf",
-                "star_salmon/stringtie/RAP1_IAA_30M_REP1.gene.abundance.txt",
-                "star_salmon/stringtie/RAP1_IAA_30M_REP1.transcripts.gtf",
-                "star_salmon/stringtie/RAP1_UNINDUCED_REP1.ballgown",
-                "star_salmon/stringtie/RAP1_UNINDUCED_REP1.ballgown/e2t.ctab",
-                "star_salmon/stringtie/RAP1_UNINDUCED_REP1.ballgown/e_data.ctab",
-                "star_salmon/stringtie/RAP1_UNINDUCED_REP1.ballgown/i2t.ctab",
-                "star_salmon/stringtie/RAP1_UNINDUCED_REP1.ballgown/i_data.ctab",
-                "star_salmon/stringtie/RAP1_UNINDUCED_REP1.ballgown/t_data.ctab",
-                "star_salmon/stringtie/RAP1_UNINDUCED_REP1.coverage.gtf",
-                "star_salmon/stringtie/RAP1_UNINDUCED_REP1.gene.abundance.txt",
-                "star_salmon/stringtie/RAP1_UNINDUCED_REP1.transcripts.gtf",
-                "star_salmon/stringtie/RAP1_UNINDUCED_REP2.ballgown",
-                "star_salmon/stringtie/RAP1_UNINDUCED_REP2.ballgown/e2t.ctab",
-                "star_salmon/stringtie/RAP1_UNINDUCED_REP2.ballgown/e_data.ctab",
-                "star_salmon/stringtie/RAP1_UNINDUCED_REP2.ballgown/i2t.ctab",
-                "star_salmon/stringtie/RAP1_UNINDUCED_REP2.ballgown/i_data.ctab",
-                "star_salmon/stringtie/RAP1_UNINDUCED_REP2.ballgown/t_data.ctab",
-                "star_salmon/stringtie/RAP1_UNINDUCED_REP2.coverage.gtf",
-                "star_salmon/stringtie/RAP1_UNINDUCED_REP2.gene.abundance.txt",
-                "star_salmon/stringtie/RAP1_UNINDUCED_REP2.transcripts.gtf",
-                "star_salmon/stringtie/WT_REP1.ballgown",
-                "star_salmon/stringtie/WT_REP1.ballgown/e2t.ctab",
-                "star_salmon/stringtie/WT_REP1.ballgown/e_data.ctab",
-                "star_salmon/stringtie/WT_REP1.ballgown/i2t.ctab",
-                "star_salmon/stringtie/WT_REP1.ballgown/i_data.ctab",
-                "star_salmon/stringtie/WT_REP1.ballgown/t_data.ctab",
-                "star_salmon/stringtie/WT_REP1.coverage.gtf",
-                "star_salmon/stringtie/WT_REP1.gene.abundance.txt",
-                "star_salmon/stringtie/WT_REP1.transcripts.gtf",
-                "star_salmon/stringtie/WT_REP2.ballgown",
-                "star_salmon/stringtie/WT_REP2.ballgown/e2t.ctab",
-                "star_salmon/stringtie/WT_REP2.ballgown/e_data.ctab",
-                "star_salmon/stringtie/WT_REP2.ballgown/i2t.ctab",
-                "star_salmon/stringtie/WT_REP2.ballgown/i_data.ctab",
-                "star_salmon/stringtie/WT_REP2.ballgown/t_data.ctab",
-                "star_salmon/stringtie/WT_REP2.coverage.gtf",
-                "star_salmon/stringtie/WT_REP2.gene.abundance.txt",
-                "star_salmon/stringtie/WT_REP2.transcripts.gtf",
                 "star_salmon/tx2gene.tsv",
                 "star_salmon/umitools",
                 "star_salmon/umitools/RAP1_IAA_30M_REP1.umi_dedup.sorted_edit_distance.tsv",
@@ -1436,26 +1367,6 @@
                 "RAP1_UNINDUCED_REP2.infer_experiment.txt:md5,5b7bc57d1349566303263ca3a518e6fd",
                 "WT_REP1.infer_experiment.txt:md5,63c888e13ef0fa915abd6e7c26ffde48",
                 "WT_REP2.infer_experiment.txt:md5,3e6940ec81e6a809f929362ba4ba4a56",
-                "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,25598a444e1e9f1f15b4906b03a5874c",
-                "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
-                "i_data.ctab:md5,70fc90fa0a39d071c0e7edb1a705b6bc",
-                "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,3c9b439b5a37a3cfdf4382d1bf6f7487",
-                "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
-                "i_data.ctab:md5,a4235dcab3d0b32432a3b26272b3e16d",
-                "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,6356faf089792dfb24bda62bd0502d8e",
-                "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
-                "i_data.ctab:md5,1f7a09a1e1f86158196c4c4c805086c1",
-                "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,8576a03875dc511f3e2374d9d0232ac9",
-                "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
-                "i_data.ctab:md5,3395edddbf247fa5229e0bae721d6c99",
-                "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,01bfb332685d888c002fbda59ce28516",
-                "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
-                "i_data.ctab:md5,3d489da8244fc4d1fba0d0442220bf2d",
                 "tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "RAP1_IAA_30M_REP1.umi_dedup.sorted_edit_distance.tsv:md5,620d5a5928e7739492de3bf66d149db2",
                 "RAP1_IAA_30M_REP1.umi_dedup.sorted_per_umi.tsv:md5,9c68e481bc942cfbf5cf51039238c269",
@@ -1498,18 +1409,15 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-08-12T12:58:21.550591817"
+        "timestamp": "2025-12-04T15:50:11.813452994"
     },
     "Params: --aligner hisat2 --umi_dedup_tool 'umicollapse'": {
         "content": [
-            199,
+            164,
             {
-                "BEDTOOLS_GENOMECOV_FW": {
-                    "bedtools": "2.31.1"
-                },
                 "CAT_FASTQ": {
                     "cat": 9.5
                 },
@@ -1611,9 +1519,6 @@
                 "SE_TRANSCRIPT_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
                 },
-                "STRINGTIE_STRINGTIE": {
-                    "stringtie": "2.2.3"
-                },
                 "SUBREAD_FEATURECOUNTS": {
                     "subread": "2.0.6"
                 },
@@ -1624,12 +1529,6 @@
                 },
                 "TXIMETA_TXIMPORT": {
                     "bioconductor-tximeta": "1.20.1"
-                },
-                "UCSC_BEDCLIP": {
-                    "ucsc": 377
-                },
-                "UCSC_BEDGRAPHTOBIGWIG": {
-                    "ucsc": 469
                 },
                 "UMICOLLAPSE": {
                     "umicollapse": "1.1.0-0"
@@ -1708,17 +1607,6 @@
                 "hisat2/WT_REP1.umi_dedup.sorted.bam.bai",
                 "hisat2/WT_REP2.umi_dedup.sorted.bam",
                 "hisat2/WT_REP2.umi_dedup.sorted.bam.bai",
-                "hisat2/bigwig",
-                "hisat2/bigwig/RAP1_IAA_30M_REP1.forward.bigWig",
-                "hisat2/bigwig/RAP1_IAA_30M_REP1.reverse.bigWig",
-                "hisat2/bigwig/RAP1_UNINDUCED_REP1.forward.bigWig",
-                "hisat2/bigwig/RAP1_UNINDUCED_REP1.reverse.bigWig",
-                "hisat2/bigwig/RAP1_UNINDUCED_REP2.forward.bigWig",
-                "hisat2/bigwig/RAP1_UNINDUCED_REP2.reverse.bigWig",
-                "hisat2/bigwig/WT_REP1.forward.bigWig",
-                "hisat2/bigwig/WT_REP1.reverse.bigWig",
-                "hisat2/bigwig/WT_REP2.forward.bigWig",
-                "hisat2/bigwig/WT_REP2.reverse.bigWig",
                 "hisat2/dupradar",
                 "hisat2/dupradar/box_plot",
                 "hisat2/dupradar/box_plot/RAP1_IAA_30M_REP1_duprateExpBoxplot.pdf",
@@ -2115,52 +2003,6 @@
                 "hisat2/samtools_stats/WT_REP2.umi_dedup.sorted.bam.flagstat",
                 "hisat2/samtools_stats/WT_REP2.umi_dedup.sorted.bam.idxstats",
                 "hisat2/samtools_stats/WT_REP2.umi_dedup.sorted.bam.stats",
-                "hisat2/stringtie",
-                "hisat2/stringtie/RAP1_IAA_30M_REP1.ballgown",
-                "hisat2/stringtie/RAP1_IAA_30M_REP1.ballgown/e2t.ctab",
-                "hisat2/stringtie/RAP1_IAA_30M_REP1.ballgown/e_data.ctab",
-                "hisat2/stringtie/RAP1_IAA_30M_REP1.ballgown/i2t.ctab",
-                "hisat2/stringtie/RAP1_IAA_30M_REP1.ballgown/i_data.ctab",
-                "hisat2/stringtie/RAP1_IAA_30M_REP1.ballgown/t_data.ctab",
-                "hisat2/stringtie/RAP1_IAA_30M_REP1.coverage.gtf",
-                "hisat2/stringtie/RAP1_IAA_30M_REP1.gene.abundance.txt",
-                "hisat2/stringtie/RAP1_IAA_30M_REP1.transcripts.gtf",
-                "hisat2/stringtie/RAP1_UNINDUCED_REP1.ballgown",
-                "hisat2/stringtie/RAP1_UNINDUCED_REP1.ballgown/e2t.ctab",
-                "hisat2/stringtie/RAP1_UNINDUCED_REP1.ballgown/e_data.ctab",
-                "hisat2/stringtie/RAP1_UNINDUCED_REP1.ballgown/i2t.ctab",
-                "hisat2/stringtie/RAP1_UNINDUCED_REP1.ballgown/i_data.ctab",
-                "hisat2/stringtie/RAP1_UNINDUCED_REP1.ballgown/t_data.ctab",
-                "hisat2/stringtie/RAP1_UNINDUCED_REP1.coverage.gtf",
-                "hisat2/stringtie/RAP1_UNINDUCED_REP1.gene.abundance.txt",
-                "hisat2/stringtie/RAP1_UNINDUCED_REP1.transcripts.gtf",
-                "hisat2/stringtie/RAP1_UNINDUCED_REP2.ballgown",
-                "hisat2/stringtie/RAP1_UNINDUCED_REP2.ballgown/e2t.ctab",
-                "hisat2/stringtie/RAP1_UNINDUCED_REP2.ballgown/e_data.ctab",
-                "hisat2/stringtie/RAP1_UNINDUCED_REP2.ballgown/i2t.ctab",
-                "hisat2/stringtie/RAP1_UNINDUCED_REP2.ballgown/i_data.ctab",
-                "hisat2/stringtie/RAP1_UNINDUCED_REP2.ballgown/t_data.ctab",
-                "hisat2/stringtie/RAP1_UNINDUCED_REP2.coverage.gtf",
-                "hisat2/stringtie/RAP1_UNINDUCED_REP2.gene.abundance.txt",
-                "hisat2/stringtie/RAP1_UNINDUCED_REP2.transcripts.gtf",
-                "hisat2/stringtie/WT_REP1.ballgown",
-                "hisat2/stringtie/WT_REP1.ballgown/e2t.ctab",
-                "hisat2/stringtie/WT_REP1.ballgown/e_data.ctab",
-                "hisat2/stringtie/WT_REP1.ballgown/i2t.ctab",
-                "hisat2/stringtie/WT_REP1.ballgown/i_data.ctab",
-                "hisat2/stringtie/WT_REP1.ballgown/t_data.ctab",
-                "hisat2/stringtie/WT_REP1.coverage.gtf",
-                "hisat2/stringtie/WT_REP1.gene.abundance.txt",
-                "hisat2/stringtie/WT_REP1.transcripts.gtf",
-                "hisat2/stringtie/WT_REP2.ballgown",
-                "hisat2/stringtie/WT_REP2.ballgown/e2t.ctab",
-                "hisat2/stringtie/WT_REP2.ballgown/e_data.ctab",
-                "hisat2/stringtie/WT_REP2.ballgown/i2t.ctab",
-                "hisat2/stringtie/WT_REP2.ballgown/i_data.ctab",
-                "hisat2/stringtie/WT_REP2.ballgown/t_data.ctab",
-                "hisat2/stringtie/WT_REP2.coverage.gtf",
-                "hisat2/stringtie/WT_REP2.gene.abundance.txt",
-                "hisat2/stringtie/WT_REP2.transcripts.gtf",
                 "hisat2/umicollapse",
                 "hisat2/umicollapse/genomic_dedup_log",
                 "hisat2/umicollapse/genomic_dedup_log/RAP1_IAA_30M_REP1.umi_dedup.sorted_UMICollapse.log",
@@ -2630,26 +2472,6 @@
                 "RAP1_UNINDUCED_REP2.infer_experiment.txt:md5,d48a674bd9e64adadd66b89b5c096056",
                 "WT_REP1.infer_experiment.txt:md5,8559d69b9f350897869ca61097643449",
                 "WT_REP2.infer_experiment.txt:md5,2ac93ef54e0aaa62482ceb45c91c64bb",
-                "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,b3f8769326278237c14c0820a3c627c3",
-                "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
-                "i_data.ctab:md5,a8047633f3ba499a0c68af993429b1af",
-                "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,dd7844bd42536ccba73b5b41b11a4c89",
-                "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
-                "i_data.ctab:md5,a715eca5dcbed38cbb21e6aeae27d4c6",
-                "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,97d59d95d8298cde4082ff4bfcf06fd6",
-                "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
-                "i_data.ctab:md5,349abadc17965a12f1fd2a24b111203e",
-                "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,cd81e0cbece094019ca814d34f4f3033",
-                "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
-                "i_data.ctab:md5,7f21bf2c570993f5a444c2e67c7d2983",
-                "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,593daf0b84f008c0c64319990ef2fd42",
-                "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
-                "i_data.ctab:md5,01c675638f918a70ea689f618a2610bc",
                 "cutadapt_filtered_reads_plot.txt:md5,3f122969fa288888e5abef061b7963f2",
                 "cutadapt_trimmed_sequences_plot_3_Counts.txt:md5,5e8a821c9a4deb46c11bc65969b8864f",
                 "cutadapt_trimmed_sequences_plot_3_Obs_Exp.txt:md5,bf8abefa7c5f2f1e1140749983279d9d",
@@ -2728,10 +2550,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-08-12T12:52:07.98248406"
+        "timestamp": "2025-12-04T15:46:37.452288674"
     },
     "--umi_dedup_tool 'umitools - stub": {
         "content": [

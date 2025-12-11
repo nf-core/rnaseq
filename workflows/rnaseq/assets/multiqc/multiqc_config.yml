@@ -75,6 +75,7 @@ report_section_order:
     order: -1002
 
 export_plots: true
+export_plots_timeout: 60
 disable_version_detection: true
 sample_names_replace_exact: true
 

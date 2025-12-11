@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Enhancements and fixes
 
+- [PR #1655](https://github.com/nf-core/rnaseq/pull/1655) - Fix duplicate flagstat files in MultiQC report when mark duplicates is enabled ([#1653](https://github.com/nf-core/rnaseq/issues/1653))
 - [PR #1656](https://github.com/nf-core/rnaseq/pull/1656) - Bump version after release 3.22.1
 - [PR #1658](https://github.com/nf-core/rnaseq/pull/1658) - Bump nf-core/multiqc module to 1.33
 - [PR #1660](https://github.com/nf-core/rnaseq/pull/1660) - Update MultiQC ARM container to 1.33

@@ -259,9 +259,11 @@ workflow RNASEQ {
             ch_multiqc_files = ch_multiqc_files
                 .mix(BAM_DEDUP_UMI_STAR.out.multiqc_files)
 
-        } else {
+        } else if (params.skip_markduplicates) {
             // The deduplicated stats should take priority for MultiQC, but use
-            // them straight out of the aligner otherwise
+            // them straight out of the aligner otherwise. If mark duplicates
+            // will run, those stats will be added later instead to avoid
+            // duplicate flagstat files in MultiQC.
 
             ch_multiqc_files = ch_multiqc_files
                 .mix(ALIGN_STAR.out.stats.collect{it[1]})
@@ -364,10 +366,12 @@ workflow RNASEQ {
 
             ch_multiqc_files = ch_multiqc_files
                 .mix(BAM_DEDUP_UMI_HISAT2.out.multiqc_files)
-        } else {
+        } else if (params.skip_markduplicates) {
 
             // The deduplicated stats should take priority for MultiQC, but use
-            // them straight out of the aligner otherwise
+            // them straight out of the aligner otherwise. If mark duplicates
+            // will run, those stats will be added later instead to avoid
+            // duplicate flagstat files in MultiQC.
             ch_multiqc_files = ch_multiqc_files
                 .mix(FASTQ_ALIGN_HISAT2.out.stats.collect{it[1]})
                 .mix(FASTQ_ALIGN_HISAT2.out.flagstat.collect{it[1]})

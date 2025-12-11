@@ -104,13 +104,10 @@
     },
     "Params: --aligner hisat2": {
         "content": [
-            205,
+            175,
             {
                 "BBMAP_BBSPLIT": {
                     "bbmap": 39.18
-                },
-                "BEDTOOLS_GENOMECOV_FW": {
-                    "bedtools": "2.31.1"
                 },
                 "CAT_FASTQ": {
                     "cat": 9.5
@@ -230,12 +227,6 @@
                 "TXIMETA_TXIMPORT": {
                     "bioconductor-tximeta": "1.20.1"
                 },
-                "UCSC_BEDCLIP": {
-                    "ucsc": 377
-                },
-                "UCSC_BEDGRAPHTOBIGWIG": {
-                    "ucsc": 469
-                },
                 "UNTAR_HISAT2_INDEX": {
                     "untar": 1.34
                 },
@@ -319,17 +310,6 @@
                 "hisat2/WT_REP1.markdup.sorted.bam.bai",
                 "hisat2/WT_REP2.markdup.sorted.bam",
                 "hisat2/WT_REP2.markdup.sorted.bam.bai",
-                "hisat2/bigwig",
-                "hisat2/bigwig/RAP1_IAA_30M_REP1.forward.bigWig",
-                "hisat2/bigwig/RAP1_IAA_30M_REP1.reverse.bigWig",
-                "hisat2/bigwig/RAP1_UNINDUCED_REP1.forward.bigWig",
-                "hisat2/bigwig/RAP1_UNINDUCED_REP1.reverse.bigWig",
-                "hisat2/bigwig/RAP1_UNINDUCED_REP2.forward.bigWig",
-                "hisat2/bigwig/RAP1_UNINDUCED_REP2.reverse.bigWig",
-                "hisat2/bigwig/WT_REP1.forward.bigWig",
-                "hisat2/bigwig/WT_REP1.reverse.bigWig",
-                "hisat2/bigwig/WT_REP2.forward.bigWig",
-                "hisat2/bigwig/WT_REP2.reverse.bigWig",
                 "hisat2/dupradar",
                 "hisat2/dupradar/box_plot",
                 "hisat2/dupradar/box_plot/RAP1_IAA_30M_REP1_duprateExpBoxplot.pdf",
@@ -1331,9 +1311,9 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-08-12T11:48:58.018707447"
+        "timestamp": "2025-12-04T15:43:24.360940596"
     }
 }

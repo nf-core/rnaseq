@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## dev - xxxx-xx-xx
+## [[3.22.2](https://github.com/nf-core/rnaseq/releases/tag/3.22.2)] - 2025-12-11
 
 ### Credits
 
@@ -22,6 +22,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1658](https://github.com/nf-core/rnaseq/pull/1658) - Bump nf-core/multiqc module to 1.33
 - [PR #1660](https://github.com/nf-core/rnaseq/pull/1660) - Update MultiQC ARM container to 1.33
 - [PR #1648](https://github.com/nf-core/rnaseq/pull/1648) - Reduce duplicate coverage in pipeline tests by adding skip options
+- [PR #1661](https://github.com/nf-core/rnaseq/pull/1661) - Bump version to 3.22.2 ahead of release
 
 ## [[3.22.1](https://github.com/nf-core/rnaseq/releases/tag/3.22.1)] - 2025-12-04
 

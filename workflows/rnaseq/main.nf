@@ -766,30 +766,26 @@ workflow RNASEQ {
 
         ch_name_replacements = ch_fastq
             .map{ meta, reads ->
-                def fastq1_simplename = file(reads[0][0]).simpleName
-                def replacements = []
+                def paired = reads[0][1] as boolean
+                def suffixes = paired ? ['_1', '_2'] : ['']
+                def mappings = []
 
-                // Only add FASTQ-to-sample mapping if the FASTQ filename differs from sample ID
+                // FASTQ-to-sample mappings (only if filename differs from sample ID)
+                def fastq1_simplename = file(reads[0][0]).simpleName
                 if (fastq1_simplename != meta.id) {
-                    replacements << fastq1_simplename + "\t" + meta.id + '_1'
-                    if (reads[0][1]) {
-                        def fastq2_simplename = file(reads[0][1]).simpleName
-                        replacements << fastq2_simplename + "\t" + meta.id + '_2'
+                    mappings << [fastq1_simplename, "${meta.id}${suffixes[0]}"]
+                    if (paired) {
+                        mappings << [file(reads[0][1]).simpleName, "${meta.id}${suffixes[1]}"]
                     }
                 }
 
-                // Always add the _raw/_trimmed suffix mappings for FastQC
-                if (reads[0][1]) {
-                    replacements << meta.id + "_raw_1\t" + meta.id + "_1"
-                    replacements << meta.id + "_trimmed_1\t" + meta.id + "_1"
-                    replacements << meta.id + "_raw_2\t" + meta.id + "_2"
-                    replacements << meta.id + "_trimmed_2\t" + meta.id + "_2"
-                } else {
-                    replacements << meta.id + "_raw\t" + meta.id
-                    replacements << meta.id + "_trimmed\t" + meta.id
+                // _raw/_trimmed suffix mappings for FastQC
+                suffixes.each { s ->
+                    mappings << ["${meta.id}_raw${s}", "${meta.id}${s}"]
+                    mappings << ["${meta.id}_trimmed${s}", "${meta.id}${s}"]
                 }
 
-                return replacements
+                return mappings.collect { it.join('\t') }
             }
             .flatten()
             .collectFile(name: 'name_replacement.txt', newLine: true)

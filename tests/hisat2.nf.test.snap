@@ -76,6 +76,7 @@
                 "multiqc",
                 "multiqc/hisat2",
                 "multiqc/hisat2/multiqc_data",
+                "multiqc/hisat2/multiqc_data/.stub",
                 "multiqc/hisat2/multiqc_plots",
                 "multiqc/hisat2/multiqc_report.html",
                 "pipeline_info",

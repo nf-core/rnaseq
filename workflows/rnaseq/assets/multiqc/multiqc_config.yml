@@ -129,6 +129,7 @@ extra_fn_clean_exts:
   - "_val"
   - ".markdup"
   - "_primary"
+  - ".namesorted"
 
 # Customise the module search patterns to speed up execution time
 #  - Skip module sub-tools that we are not interested in

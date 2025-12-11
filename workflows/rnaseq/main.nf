@@ -756,33 +756,25 @@ workflow RNASEQ {
             .mix(ch_methods_description)
 
         // Provide MultiQC with rename patterns to ensure it uses sample names
-        // for single-techrep samples not processed by CAT_FASTQ, and trims out
-        // _raw or _trimmed
+        // for single-techrep samples not processed by CAT_FASTQ.
         //
-        // Note: We only add FASTQ filename-based mappings when the FASTQ simpleName
-        // differs from the sample ID. This prevents duplicate/conflicting mappings
-        // when multiple samples share the same FASTQ filename in different directories
-        // (see: https://github.com/nf-core/rnaseq/issues/1657)
-
+        // We only add mappings when the FASTQ simpleName differs from the sample ID.
+        // This prevents duplicate/conflicting mappings when multiple samples share
+        // the same FASTQ filename in different directories (see #1657).
+        //
+        // Note: _raw/_trimmed suffixes are handled via extra_fn_clean_exts in multiqc_config.yml
         ch_name_replacements = ch_fastq
             .map{ meta, reads ->
                 def paired = reads[0][1] as boolean
                 def suffixes = paired ? ['_1', '_2'] : ['']
                 def mappings = []
 
-                // FASTQ-to-sample mappings (only if filename differs from sample ID)
                 def fastq1_simplename = file(reads[0][0]).simpleName
                 if (fastq1_simplename != meta.id) {
                     mappings << [fastq1_simplename, "${meta.id}${suffixes[0]}"]
                     if (paired) {
                         mappings << [file(reads[0][1]).simpleName, "${meta.id}${suffixes[1]}"]
                     }
-                }
-
-                // _raw/_trimmed suffix mappings for FastQC
-                suffixes.each { s ->
-                    mappings << ["${meta.id}_raw${s}", "${meta.id}${s}"]
-                    mappings << ["${meta.id}_trimmed${s}", "${meta.id}${s}"]
                 }
 
                 return mappings.collect { it.join('\t') }

@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Special thanks to the following for their contributions to the release:
 
+- [ahwanpandey](https://github.com/ahwanpandey)
+- [Graeme Grimes](https://github.com/ggrimes)
 - [Pontus Höjer](https://github.com/pontushojer)
 
 ### Enhancements and fixes

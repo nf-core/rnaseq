@@ -749,9 +749,9 @@ The plot on the left hand side shows the standard PC plot - notice the variable 
 
 </details>
 
-[Sylph](https://sylph-docs.github.io/) is a metagenomic profiler that determines the species present in reads by statistically estimating containment ANI. These algorithms are run on unaligned sequences to detect potential contamination of samples. MultiQC TBD. 
+[Sylph](https://sylph-docs.github.io/) is a metagenomic profiler that determines the species present in reads by statistically estimating containment ANI. Its companion script, [sylph-tax](https://sylph-docs.github.io/sylph-tax/), converts these ANI estimates into estimated taxonomic abundances in the sample. These algorithms are run on unaligned sequences to detect potential contamination of samples. MultiQC shows the Top 10 strains in the Sylph-tax abundance estimates, with toggles available for higher taxonomic levels.
 
-#TODO add MultiQC info
+![MultiQC - Sylphtax top species plot](images/sylphtax-top-n-plot.png)
 
 ### MultiQC
 

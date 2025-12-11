@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Dependency | Old version | New version |
 | -----------| ----------- | ----------- |
+| `MultiQC`  | 1.31        | 1.33        |
 | `sylph`    |             | 0.7.0       |
 | `sylph-tax`|             | 1.2.0       |
 

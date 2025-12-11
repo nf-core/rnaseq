@@ -97,6 +97,7 @@ run_modules:
   - rseqc
   - qualimap
   - kraken
+  - sylphtax
 
 # Order of modules
 
@@ -162,6 +163,8 @@ sp:
   kraken:
     - fn: "*.kraken2.report.txt"
     - fn: "*.kraken2.report_bracken.txt"
+  sylphtax:
+    - fn: "*.sylphmpa"
   rseqc/bam_stat:
     fn: "*.bam_stat.txt"
   rseqc/gene_body_coverage:

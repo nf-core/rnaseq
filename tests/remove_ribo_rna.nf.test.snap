@@ -646,21 +646,6 @@
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "cmd_info.json:md5,3a51e7db950cee84bed0b13e329f1934",
-                "RAP1_IAA_30M_REP1.biotype_counts_mqc.tsv:md5,accedae963f399d3b47effd8eda41edb",
-                "RAP1_IAA_30M_REP1.biotype_counts_rrna_mqc.tsv:md5,dde2de0cb90e10d0195c726f768e9941",
-                "RAP1_IAA_30M_REP1.featureCounts.tsv:md5,1769902d5214f137e12f89156c5334c9",
-                "RAP1_UNINDUCED_REP1.biotype_counts_mqc.tsv:md5,782f5001d411ba79314ba77f7d36b157",
-                "RAP1_UNINDUCED_REP1.biotype_counts_rrna_mqc.tsv:md5,845ff9059c72bc6722a8de69776e22bb",
-                "RAP1_UNINDUCED_REP1.featureCounts.tsv:md5,5b9b5bbbb20c0cab3df44c0e26cc9e65",
-                "RAP1_UNINDUCED_REP2.biotype_counts_mqc.tsv:md5,1c9d07d9f9d12219d2b9f761f854eced",
-                "RAP1_UNINDUCED_REP2.biotype_counts_rrna_mqc.tsv:md5,6d3fa4c88c7fe61f638e4624ad5e22f0",
-                "RAP1_UNINDUCED_REP2.featureCounts.tsv:md5,83037849e03ca42702e2a7df0e01b7c4",
-                "WT_REP1.biotype_counts_mqc.tsv:md5,97caee79e83b5fce6e5504c0daefe474",
-                "WT_REP1.biotype_counts_rrna_mqc.tsv:md5,8ef76d717492ca23764938aee8ea33a9",
-                "WT_REP1.featureCounts.tsv:md5,2aa40a90f397b5efd8409b8df8f3d520",
-                "WT_REP2.biotype_counts_mqc.tsv:md5,e6bec82076f4cb2eff39f0d1bae70dc9",
-                "WT_REP2.biotype_counts_rrna_mqc.tsv:md5,12294618fe44df1e7f39348372dcb481",
-                "WT_REP2.featureCounts.tsv:md5,120171de51a8697aee507a6acb424191",
                 "RAP1_IAA_30M_REP1.SJ.out.tab:md5,ea95e243278af55534f2c52eb5fff7ee",
                 "RAP1_UNINDUCED_REP1.SJ.out.tab:md5,e548d13942535dc0821f3ec6d9743ec8",
                 "RAP1_UNINDUCED_REP2.SJ.out.tab:md5,1f294365343a1a5e95682792fdb77033",
@@ -673,7 +658,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-04T15:29:46.077937344"
+        "timestamp": "2025-12-11T12:44:56.941652484"
     },
     "Params: --remove_ribo_rna - stub": {
         "content": [

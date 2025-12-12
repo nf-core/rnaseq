@@ -61,6 +61,7 @@
                 "multiqc",
                 "multiqc/star_salmon",
                 "multiqc/star_salmon/multiqc_data",
+                "multiqc/star_salmon/multiqc_data/.stub",
                 "multiqc/star_salmon/multiqc_plots",
                 "multiqc/star_salmon/multiqc_report.html",
                 "pipeline_info",

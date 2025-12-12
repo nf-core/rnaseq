@@ -10,7 +10,11 @@ nextflow_pipeline {
         when {
             params {
                 outdir = "$outputDir"
-                use_sentieon_star= true
+                use_sentieon_star = true
+                // Skip processes already covered by default.nf.test (Sentieon STAR produces near-identical BAMs to STAR)
+                skip_qc = true
+                skip_stringtie = true
+                skip_bigwig = true
             }
         }
 
@@ -43,6 +47,10 @@ nextflow_pipeline {
             params {
                 outdir = "$outputDir"
                 use_sentieon_star = true
+                // Skip processes already covered by default.nf.test (Sentieon STAR produces near-identical BAMs to STAR)
+                skip_qc = true
+                skip_stringtie = true
+                skip_bigwig = true
             }
         }
 

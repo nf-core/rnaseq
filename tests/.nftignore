@@ -47,6 +47,7 @@ umitools/*.umi_extract.log
 {hisat2,star_rsem,star_salmon}/stringtie/*.gene.abundance.txt
 {hisat2,star_rsem,star_salmon}/stringtie/*.{coverage,transcripts}.gtf
 {hisat2,star_rsem,star_salmon}/{umitools,umicollapse}/{genomic,transcriptomic}_dedup_log/*.log
+{multiqc,multiqc/**}/.stub
 {multiqc,multiqc/**}/multiqc_report.html
 {multiqc,multiqc/**}/multiqc_report_data/multiqc.parquet
 {multiqc,multiqc/**}/multiqc_report_data/fastqc_{raw,trimmed}_top_overrepresented_sequences_table.txt

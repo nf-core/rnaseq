@@ -320,6 +320,7 @@
                 "fq_lint/raw/WT_REP2.fq_lint.txt",
                 "multiqc",
                 "multiqc/multiqc_data",
+                "multiqc/multiqc_data/.stub",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
@@ -335,6 +336,7 @@
                 "trimgalore/WT_REP2_trimmed_2.fastq.gz_trimming_report.txt"
             ],
             [
+                
             ]
         ],
         "meta": {

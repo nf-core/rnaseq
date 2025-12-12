@@ -259,9 +259,11 @@ workflow RNASEQ {
             ch_multiqc_files = ch_multiqc_files
                 .mix(BAM_DEDUP_UMI_STAR.out.multiqc_files)
 
-        } else {
+        } else if (params.skip_markduplicates) {
             // The deduplicated stats should take priority for MultiQC, but use
-            // them straight out of the aligner otherwise
+            // them straight out of the aligner otherwise. If mark duplicates
+            // will run, those stats will be added later instead to avoid
+            // duplicate flagstat files in MultiQC.
 
             ch_multiqc_files = ch_multiqc_files
                 .mix(ALIGN_STAR.out.stats.collect{it[1]})
@@ -364,10 +366,12 @@ workflow RNASEQ {
 
             ch_multiqc_files = ch_multiqc_files
                 .mix(BAM_DEDUP_UMI_HISAT2.out.multiqc_files)
-        } else {
+        } else if (params.skip_markduplicates) {
 
             // The deduplicated stats should take priority for MultiQC, but use
-            // them straight out of the aligner otherwise
+            // them straight out of the aligner otherwise. If mark duplicates
+            // will run, those stats will be added later instead to avoid
+            // duplicate flagstat files in MultiQC.
             ch_multiqc_files = ch_multiqc_files
                 .mix(FASTQ_ALIGN_HISAT2.out.stats.collect{it[1]})
                 .mix(FASTQ_ALIGN_HISAT2.out.flagstat.collect{it[1]})
@@ -756,21 +760,28 @@ workflow RNASEQ {
             .mix(ch_methods_description)
 
         // Provide MultiQC with rename patterns to ensure it uses sample names
-        // for single-techrep samples not processed by CAT_FASTQ, and trims out
-        // _raw or _trimmed
-
+        // for single-techrep samples not processed by CAT_FASTQ.
+        //
+        // We only add mappings when the FASTQ simpleName differs from the sample ID.
+        // This prevents duplicate/conflicting mappings when multiple samples share
+        // the same FASTQ filename in different directories (see #1657).
+        //
+        // Note: _raw/_trimmed suffixes are handled via extra_fn_clean_exts in multiqc_config.yml
         ch_name_replacements = ch_fastq
             .map{ meta, reads ->
-                def name1 = file(reads[0][0]).simpleName + "\t" + meta.id + '_1'
-                def fastqcnames = meta.id + "_raw\t" + meta.id + "\n" + meta.id + "_trimmed\t" + meta.id
-                if (reads[0][1] ){
-                    def name2 = file(reads[0][1]).simpleName + "\t" + meta.id + '_2'
-                    def fastqcnames1 = meta.id + "_raw_1\t" + meta.id + "_1\n" + meta.id + "_trimmed_1\t" + meta.id + "_1"
-                    def fastqcnames2 = meta.id + "_raw_2\t" + meta.id + "_2\n" + meta.id + "_trimmed_2\t" + meta.id + "_2"
-                    return [ name1, name2, fastqcnames1, fastqcnames2 ]
-                } else{
-                    return [ name1, fastqcnames ]
+                def paired = reads[0][1] as boolean
+                def suffixes = paired ? ['_1', '_2'] : ['']
+                def mappings = []
+
+                def fastq1_simplename = file(reads[0][0]).simpleName
+                if (fastq1_simplename != meta.id) {
+                    mappings << [fastq1_simplename, "${meta.id}${suffixes[0]}"]
+                    if (paired) {
+                        mappings << [file(reads[0][1]).simpleName, "${meta.id}${suffixes[1]}"]
+                    }
                 }
+
+                return mappings.collect { it.join('\t') }
             }
             .flatten()
             .collectFile(name: 'name_replacement.txt', newLine: true)

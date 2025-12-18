@@ -1,0 +1,174 @@
+nextflow_process {
+
+    name "Test Process UMICOLLAPSE"
+    script "../main.nf"
+    process "UMICOLLAPSE"
+
+
+    test("umicollapse single end test") {
+
+        when {
+            config "./nextflow.config"
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test',  single_end:true ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.single_end.umi.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.single_end.umi.sorted.bam.bai', checkIfExists: true)
+                ])
+                input[1] = 'bam'
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    bam(process.out.bam[0][1]).getSamLinesMD5(),
+                    process.out.versions).match() }
+            )
+        }
+
+    }
+
+    test("umicollapse paired tests") {
+
+        when {
+            config "./nextflow.config"
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test'], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam.bai', checkIfExists: true)
+                ])
+                input[1] = 'bam'
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    bam(process.out.bam[0][1]).getSamLinesMD5(),
+                    process.out.versions).match() }
+            )
+        }
+
+    }
+
+    test("umicollapse fastq test (single-end)") {
+
+            when {
+                config "./nextflow.config"
+                process {
+                    """
+                    input[0] = [
+                    [ id:'test', single_end:true ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test.umi_extract_single.fastq.gz', checkIfExists: true),
+                    []
+                    ]
+                    input[1] = 'fastq'
+                    """
+                }
+            }
+
+            then {
+                assertAll(
+                    { assert process.success },
+                    { assert snapshot(
+                        process.out.fastq,
+                        process.out.versions).match() }
+                )
+            }
+    }
+
+    test("umicollapse fastq test (paired-end)") {
+
+            when {
+                config "./nextflow.config"
+                process {
+                    """
+                    input[0] = [
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test.umi_extract_1.fastq.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test.umi_extract_2.fastq.gz', checkIfExists: true)
+                    ]
+                    input[1] = 'fastq'
+                    """
+                }
+            }
+
+            then {
+                assertAll(
+                    { assert process.success },
+                    { assert snapshot(
+                        process.out.fastq,
+                        process.out.versions).match() }
+                )
+            }
+    }
+
+    // Stub tests
+
+        test("umicollapse single end test - stub") {
+
+        options "-stub"
+
+        when {
+            config "./nextflow.config"
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test',  single_end:true ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.single_end.umi.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.single_end.umi.sorted.bam.bai', checkIfExists: true)
+                ])
+                input[1] = 'bam'
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.bam,
+                    process.out.versions).match() }
+            )
+        }
+
+    }
+
+    test("umicollapse paired tests - stub") {
+
+        options "-stub"
+
+        when {
+            config "./nextflow.config"
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test'], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam.bai', checkIfExists: true)
+                ])
+                input[1] = 'bam'
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.bam,
+                    process.out.versions).match() }
+            )
+        }
+
+    }
+
+}

@@ -1,0 +1,143 @@
+nextflow_workflow {
+
+    name "Test Workflow BAM_MARKDUPLICATES_PICARD"
+    script "../main.nf"
+    workflow "BAM_MARKDUPLICATES_PICARD"
+
+
+    test("sarscov2 - bam") {
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end: false ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true)
+                ])
+                input[1] = Channel.of([
+                    [ id:'genome' ],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                ])
+                input[2] = Channel.of([
+                    [ id:'genome' ],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert path(workflow.out.metrics.get(0).get(1)).getText().contains("97") },
+                { assert snapshot(
+                    path(workflow.out.bam[0][1]),
+                    path(workflow.out.bai[0][1]),
+                    path(workflow.out.flagstat[0][1]),
+                    path(workflow.out.idxstats[0][1]),
+                    path(workflow.out.stats[0][1]),
+                    workflow.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("homo_sapiens - cram") {
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true)
+                ])
+                input[1] = Channel.of([
+                    [ id:'genome' ],
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                ])
+                input[2] = Channel.of([
+                    [ id:'genome' ],
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert path(workflow.out.metrics.get(0).get(1)).getText().contains("0.999986") },
+                { assert snapshot(
+                    file(workflow.out.cram[0][1]).name,
+                    path(workflow.out.crai[0][1]),
+                    path(workflow.out.flagstat[0][1]),
+                    path(workflow.out.idxstats[0][1]),
+                    path(workflow.out.stats[0][1]),
+                    workflow.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("sarscov2 - bam - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end: false ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true)
+                ])
+                input[1] = Channel.of([
+                    [ id:'genome' ],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                ])
+                input[2] = Channel.of([
+                    [ id:'genome' ],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(workflow.out).match() }
+            )
+        }
+    }
+
+    test("homo_sapiens - cram - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true)
+                ])
+                input[1] = Channel.of([
+                    [ id:'genome' ],
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                ])
+                input[2] = Channel.of([
+                    [ id:'genome' ],
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(workflow.out).match() }
+            )
+        }
+    }
+}

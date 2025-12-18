@@ -1,0 +1,51 @@
+nextflow_process {
+
+    name "Test Process KALLISTO_INDEX"
+    script "../main.nf"
+    process "KALLISTO_INDEX"
+
+    test("sarscov2 transcriptome.fasta") {
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'transcriptome' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert path(process.out.index.get(0).get(1)).exists() },
+                { assert snapshot(process.out.versions).match() }
+            )
+        }
+    }
+
+    test("sarscov2 transcriptome.fasta - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'transcriptome' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+}

@@ -1,0 +1,72 @@
+{
+    "BAM - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.flagstat:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,108a155f2d4a99f50bf3176904208d27"
+                ],
+                "flagstat": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.flagstat:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,108a155f2d4a99f50bf3176904208d27"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-16T08:02:58.866491759"
+    },
+    "BAM": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.flagstat:md5,4f7ffd1e6a5e85524d443209ac97d783"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,108a155f2d4a99f50bf3176904208d27"
+                ],
+                "flagstat": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.flagstat:md5,4f7ffd1e6a5e85524d443209ac97d783"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,108a155f2d4a99f50bf3176904208d27"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-16T08:02:47.383332837"
+    }
+}

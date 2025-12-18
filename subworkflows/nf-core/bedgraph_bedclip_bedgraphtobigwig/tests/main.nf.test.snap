@@ -1,0 +1,112 @@
+{
+    "sarscov2 [bedgraph] [genome_sizes]": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bigWig:md5,910ecc7f57e3bbd5fac5a8edba4f615d"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.clip.bedGraph:md5,e02395e1f7c593b3f79563067159ebc2"
+                    ]
+                ],
+                "2": [
+                    "versions.yml:md5,1202cdc73b5829361d5b150dcf7fe865",
+                    "versions.yml:md5,72a7b07bc0e796ff6805c57f7340337f"
+                ],
+                "bedgraph": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.clip.bedGraph:md5,e02395e1f7c593b3f79563067159ebc2"
+                    ]
+                ],
+                "bigwig": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bigWig:md5,910ecc7f57e3bbd5fac5a8edba4f615d"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,1202cdc73b5829361d5b150dcf7fe865",
+                    "versions.yml:md5,72a7b07bc0e796ff6805c57f7340337f"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-18T10:48:23.095911334"
+    },
+    "sarscov2 [bedgraph] [genome_sizes] - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bigWig:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.clip.bedGraph:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    "versions.yml:md5,1202cdc73b5829361d5b150dcf7fe865",
+                    "versions.yml:md5,72a7b07bc0e796ff6805c57f7340337f"
+                ],
+                "bedgraph": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.clip.bedGraph:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "bigwig": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bigWig:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,1202cdc73b5829361d5b150dcf7fe865",
+                    "versions.yml:md5,72a7b07bc0e796ff6805c57f7340337f"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-18T10:48:45.587883209"
+    }
+}

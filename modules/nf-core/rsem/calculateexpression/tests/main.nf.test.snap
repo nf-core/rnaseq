@@ -1,0 +1,100 @@
+{
+    "homo_sapiens - stub": {
+        "content": [
+            [
+                "versions.yml:md5,823e53afe1ff4f3930ae8392f9f8dd5c"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-09-15T09:32:28.388711"
+    },
+    "homo_sapiens - fastq": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "strandedness": "forward"
+                    },
+                    "test.genes.results:md5,c7ec226f76736ea805771e73553ae359"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "strandedness": "forward"
+                    },
+                    "test.isoforms.results:md5,99f7f80aa505b44ca429fdebbd7dd5d8"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "strandedness": "forward"
+                    },
+                    [
+                        "test.cnt:md5,76249e6b2f3c104f414aae596ba2c2f4",
+                        "test.model:md5,a7a4bc1734918ef5848604e3362b83e2",
+                        "test.theta:md5,de2e4490c98cc5383a86ae8225fd0a28"
+                    ]
+                ]
+            ],
+            [
+                "versions.yml:md5,823e53afe1ff4f3930ae8392f9f8dd5c"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-09-12T14:47:20.34162"
+    },
+    "homo_sapiens - bam": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "strandedness": "forward"
+                    },
+                    "test.genes.results:md5,c7ec226f76736ea805771e73553ae359"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "strandedness": "forward"
+                    },
+                    "test.isoforms.results:md5,99f7f80aa505b44ca429fdebbd7dd5d8"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "strandedness": "forward"
+                    },
+                    [
+                        "test.cnt:md5,76249e6b2f3c104f414aae596ba2c2f4",
+                        "test.model:md5,a7a4bc1734918ef5848604e3362b83e2",
+                        "test.theta:md5,de2e4490c98cc5383a86ae8225fd0a28"
+                    ]
+                ]
+            ],
+            [
+                "versions.yml:md5,823e53afe1ff4f3930ae8392f9f8dd5c"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-09-15T10:38:32.603705"
+    }
+}

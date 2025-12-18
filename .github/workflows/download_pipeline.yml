@@ -1,0 +1,134 @@
+name: Test successful pipeline download with 'nf-core pipelines download'
+
+# Run the workflow when:
+#  - dispatched manually
+#  - when a PR is opened or reopened to main/master branch
+#  - the head branch of the pull request is updated, i.e. if fixes for a release are pushed last minute to dev.
+on:
+  workflow_dispatch:
+    inputs:
+      testbranch:
+        description: "The specific branch you wish to utilize for the test execution of nf-core pipelines download."
+        required: true
+        default: "dev"
+  pull_request:
+    branches:
+      - main
+      - master
+
+env:
+  NXF_ANSI_LOG: false
+
+jobs:
+  configure:
+    runs-on: ubuntu-latest
+    outputs:
+      REPO_LOWERCASE: ${{ steps.get_repo_properties.outputs.REPO_LOWERCASE }}
+      REPOTITLE_LOWERCASE: ${{ steps.get_repo_properties.outputs.REPOTITLE_LOWERCASE }}
+      REPO_BRANCH: ${{ steps.get_repo_properties.outputs.REPO_BRANCH }}
+    steps:
+      - name: Get the repository name and current branch
+        id: get_repo_properties
+        run: |
+          echo "REPO_LOWERCASE=${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
+          echo "REPOTITLE_LOWERCASE=$(basename ${GITHUB_REPOSITORY,,})" >> "$GITHUB_OUTPUT"
+          echo "REPO_BRANCH=${{ github.event.inputs.testbranch || 'dev' }}" >> "$GITHUB_OUTPUT"
+
+  download:
+    runs-on: ubuntu-latest
+    needs: configure
+    steps:
+      - name: Install Nextflow
+        uses: nf-core/setup-nextflow@v2
+
+      - name: Disk space cleanup
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
+
+      - uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v6
+        with:
+          python-version: "3.14"
+          architecture: "x64"
+
+      - name: Setup Apptainer
+        uses: eWaterCycle/setup-apptainer@4bb22c52d4f63406c49e94c804632975787312b3 # v2.0.0
+        with:
+          apptainer-version: 1.3.4
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install git+https://github.com/nf-core/tools.git
+
+      - name: Make a cache directory for the container images
+        run: |
+          mkdir -p ./singularity_container_images
+
+      - name: Download the pipeline
+        env:
+          NXF_SINGULARITY_CACHEDIR: ./singularity_container_images
+        run: |
+          nf-core pipelines download ${{ needs.configure.outputs.REPO_LOWERCASE }} \
+          --revision ${{ needs.configure.outputs.REPO_BRANCH }} \
+          --outdir ./${{ needs.configure.outputs.REPOTITLE_LOWERCASE }} \
+          --compress "none" \
+          --container-system 'singularity' \
+          --container-library "quay.io" -l "docker.io" -l "community.wave.seqera.io/library/" \
+          --container-cache-utilisation 'amend' \
+          --download-configuration 'yes'
+
+      - name: Inspect download
+        run: tree ./${{ needs.configure.outputs.REPOTITLE_LOWERCASE }}
+
+      - name: Inspect container images
+        run: tree ./singularity_container_images | tee ./container_initial
+
+      - name: Count the downloaded number of container images
+        id: count_initial
+        run: |
+          image_count=$(ls -1 ./singularity_container_images | wc -l | xargs)
+          echo "Initial container image count: $image_count"
+          echo "IMAGE_COUNT_INITIAL=$image_count" >> "$GITHUB_OUTPUT"
+
+      - name: Run the downloaded pipeline (stub)
+        id: stub_run_pipeline
+        continue-on-error: true
+        env:
+          NXF_SINGULARITY_CACHEDIR: ./singularity_container_images
+          NXF_SINGULARITY_HOME_MOUNT: true
+        run: nextflow run ./${{needs.configure.outputs.REPOTITLE_LOWERCASE }}/$( sed 's/\W/_/g' <<< ${{ needs.configure.outputs.REPO_BRANCH }}) -stub -profile test,singularity --outdir ./results
+      - name: Run the downloaded pipeline (stub run not supported)
+        id: run_pipeline
+        if: ${{ steps.stub_run_pipeline.outcome == 'failure' }}
+        env:
+          NXF_SINGULARITY_CACHEDIR: ./singularity_container_images
+          NXF_SINGULARITY_HOME_MOUNT: true
+        run: nextflow run ./${{ needs.configure.outputs.REPOTITLE_LOWERCASE }}/$( sed 's/\W/_/g' <<< ${{ needs.configure.outputs.REPO_BRANCH }}) -profile test,singularity --outdir ./results
+
+      - name: Count the downloaded number of container images
+        id: count_afterwards
+        run: |
+          image_count=$(ls -1 ./singularity_container_images | wc -l | xargs)
+          echo "Post-pipeline run container image count: $image_count"
+          echo "IMAGE_COUNT_AFTER=$image_count" >> "$GITHUB_OUTPUT"
+
+      - name: Compare container image counts
+        id: count_comparison
+        run: |
+          if [ "${{ steps.count_initial.outputs.IMAGE_COUNT_INITIAL }}" -ne "${{ steps.count_afterwards.outputs.IMAGE_COUNT_AFTER }}" ]; then
+            initial_count=${{ steps.count_initial.outputs.IMAGE_COUNT_INITIAL }}
+            final_count=${{ steps.count_afterwards.outputs.IMAGE_COUNT_AFTER }}
+            difference=$((final_count - initial_count))
+            echo "$difference additional container images were \n downloaded at runtime . The pipeline has no support for offline runs!"
+            tree ./singularity_container_images > ./container_afterwards
+            diff ./container_initial ./container_afterwards
+            exit 1
+          else
+            echo "The pipeline can be downloaded successfully!"
+          fi
+
+      - name: Upload Nextflow logfile for debugging purposes
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        with:
+          name: nextflow_logfile.txt
+          path: .nextflow.log*
+          include-hidden-files: true

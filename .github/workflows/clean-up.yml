@@ -1,0 +1,24 @@
+name: "Close user-tagged issues and PRs"
+on:
+  schedule:
+    - cron: "0 0 * * 0" # Once a week
+
+jobs:
+  clean-up:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/stale@5f858e3efba33a5ca4407a664cc011ad407f2008 # v10
+        with:
+          stale-issue-message: "This issue has been tagged as awaiting-changes or awaiting-feedback by an nf-core contributor. Remove stale label or add a comment otherwise this issue will be closed in 20 days."
+          stale-pr-message: "This PR has been tagged as awaiting-changes or awaiting-feedback by an nf-core contributor. Remove stale label or add a comment if it is still useful."
+          close-issue-message: "This issue was closed because it has been tagged as awaiting-changes or awaiting-feedback by an nf-core contributor and then staled for 20 days with no activity."
+          days-before-stale: 30
+          days-before-close: 20
+          days-before-pr-close: -1
+          any-of-labels: "awaiting-changes,awaiting-feedback"
+          exempt-issue-labels: "WIP"
+          exempt-pr-labels: "WIP"
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"

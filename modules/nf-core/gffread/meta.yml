@@ -1,0 +1,75 @@
+name: gffread
+description: Validate, filter, convert and perform various other operations on GFF
+  files
+keywords:
+  - gff
+  - conversion
+  - validation
+tools:
+  - gffread:
+      description: GFF/GTF utility providing format conversions, region filtering, FASTA
+        sequence extraction and more.
+      homepage: http://ccb.jhu.edu/software/stringtie/gff.shtml#gffread
+      documentation: http://ccb.jhu.edu/software/stringtie/gff.shtml#gffread
+      tool_dev_url: https://github.com/gpertea/gffread
+      doi: 10.12688/f1000research.23297.1
+      licence: ["MIT"]
+      identifier: biotools:gffread
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing meta data
+          e.g. [ id:'test' ]
+    - gff:
+        type: file
+        description: A reference file in either the GFF3, GFF2 or GTF format.
+        pattern: "*.{gff, gtf}"
+  - - fasta:
+        type: file
+        description: A multi-fasta file with the genomic sequences
+        pattern: "*.{fasta,fa,faa,fas,fsa}"
+output:
+  - gtf:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing meta data
+            e.g. [ id:'test' ]
+      - "*.gtf":
+          type: file
+          description: GTF file resulting from the conversion of the GFF input file if
+            '-T' argument is present
+          pattern: "*.{gtf}"
+  - gffread_gff:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing meta data
+            e.g. [ id:'test' ]
+      - "*.gff3":
+          type: file
+          description: GFF3 file resulting from the conversion of the GFF input file if
+            '-T' argument is absent
+          pattern: "*.gff3"
+  - gffread_fasta:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing meta data
+            e.g. [ id:'test' ]
+      - "*.fasta":
+          type: file
+          description: Fasta file produced when either of '-w', '-x', '-y' parameters
+            is present
+          pattern: "*.fasta"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+authors:
+  - "@edmundmiller"
+maintainers:
+  - "@edmundmiller"
+  - "@gallvp"

@@ -1,0 +1,93 @@
+nextflow_process {
+
+    name "Test Process STAR_GENOMEGENERATE_IGENOMES"
+    script "../main.nf"
+    process "STAR_GENOMEGENERATE_IGENOMES"
+
+    test("fasta with gtf") {
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)])
+                input[1] = Channel.of([file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    file(process.out.index[0][1]).listFiles().collect { it.getName() }.sort().toString(),
+                    process.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("fasta no gtf") {
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)])
+                input[1] = Channel.of([ ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    file(process.out.index[0][1]).listFiles().collect { it.getName() }.sort().toString(),
+                    process.out.versions
+                ).match() }
+            )
+        }
+
+    }
+
+    test("fasta with gtf - stub") {
+
+        options '-stub'
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)])
+                input[1] = Channel.of([file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("fasta no gtf - stub") {
+
+        options '-stub'
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)])
+                input[1] = Channel.of([ ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+}

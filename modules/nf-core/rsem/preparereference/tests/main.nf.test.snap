@@ -1,0 +1,80 @@
+{
+    "homo_sapiens - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        "genome.fasta:md5,f315020d899597c1b57e5fe9f60f4c3e"
+                    ]
+                ],
+                "1": [
+                    "genome.transcripts.fa:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "2": [
+                    "versions.yml:md5,517611c42f6354d3609db1b35fffa397"
+                ],
+                "index": [
+                    [
+                        "genome.fasta:md5,f315020d899597c1b57e5fe9f60f4c3e"
+                    ]
+                ],
+                "transcript_fasta": [
+                    "genome.transcripts.fa:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "versions": [
+                    "versions.yml:md5,517611c42f6354d3609db1b35fffa397"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2025-06-02T14:24:38.229417"
+    },
+    "versions": {
+        "content": [
+            [
+                "versions.yml:md5,517611c42f6354d3609db1b35fffa397"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2025-06-02T14:24:27.489566"
+    },
+    "index": {
+        "content": [
+            [
+                [
+                    "genome.chrlist:md5,b190587cae0531f3cf25552d8aa674db",
+                    "genome.fasta:md5,f315020d899597c1b57e5fe9f60f4c3e",
+                    "genome.grp:md5,c2848a8b6d495956c11ec53efc1de67e",
+                    "genome.idx.fa:md5,050c521a2719c2ae48267c1e65218f29",
+                    "genome.n2g.idx.fa:md5,050c521a2719c2ae48267c1e65218f29",
+                    "genome.seq:md5,94da0c6b88c33e63c9a052a11f4f57c1",
+                    "genome.ti:md5,c9e4ae8d4d13a504eec2acf1b8589a66",
+                    "genome.transcripts.fa:md5,050c521a2719c2ae48267c1e65218f29"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2025-06-02T14:24:27.451885"
+    },
+    "transcript_fasta": {
+        "content": [
+            [
+                "genome.transcripts.fa:md5,050c521a2719c2ae48267c1e65218f29"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2025-06-02T14:24:27.472246"
+    }
+}

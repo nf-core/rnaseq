@@ -1,0 +1,87 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: "summarizedexperiment_summarizedexperiment"
+description: |
+  SummarizedExperiment container
+keywords:
+  - gene
+  - transcript
+  - sample
+  - matrix
+  - assay
+tools:
+  - "summarizedexperiment":
+      description: "The SummarizedExperiment container contains one or more assays,
+        each represented by a matrix-like object of numeric or other mode. The rows
+        typically represent genomic ranges of interest and the columns represent samples."
+      homepage: "https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html"
+      documentation: "https://bioconductor.org/packages/release/bioc/vignettes/SummarizedExperiment/inst/doc/SummarizedExperiment.html"
+      tool_dev_url: "https://github.com/Bioconductor/SummarizedExperiment"
+      doi: "10.18129/B9.bioc.SummarizedExperiment"
+      licence: ["Artistic-2.0"]
+      identifier: biotools:summarizedexperiment
+
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing information related to the experiment as a whole
+          e.g. `[ id:'SRP123456' ]`
+    - matrix_files:
+        type: directory
+        description: |
+          One or more paths to CSV or TSV matrix files. All files must have the
+          same rows and columns.
+        pattern: "*.{csv,tsv}"
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing reference information related to the species
+          reference from which matrix rows are derived e.g. `[ id:'yeast' ]`
+    - rowdata:
+        type: file
+        description: |
+          Metadata on matrix features. One column must contain all matrix row
+          IDs.
+        pattern: "*.{csv,tsv}"
+  - - meta3:
+        type: map
+        description: |
+          Groovy Map containing information related to the experiment as a whole,
+          as represented by the matrix columns and the sample sheet e.g.
+          `[id:'SRP123456' ]`
+    - coldata:
+        type: file
+        description: |
+          Metadata on matrix columns. One column must contain all matrix column
+          IDs.
+        pattern: "*.{csv,tsv}"
+output:
+  - rds:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing information related to the experiment as a whole
+            e.g. `[ id:'SRP123456' ]`
+      - "*.rds":
+          type: file
+          description: Serialised SummarizedExperiment object
+          pattern: "*.SummarizedExperiment.rds"
+  - log:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing information related to the experiment as a whole
+            e.g. `[ id:'SRP123456' ]`
+      - "*.R_sessionInfo.log":
+          type: file
+          description: dump of R SessionInfo
+          pattern: "*.log"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+authors:
+  - "@pinin4fjords"
+maintainers:
+  - "@pinin4fjords"

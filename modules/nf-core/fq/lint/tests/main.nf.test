@@ -1,0 +1,59 @@
+nextflow_process {
+
+    name "Test Process FQ_LINT"
+    script "../main.nf"
+    process "FQ_LINT"
+
+
+    test("test_fq_lint_success") {
+        when {
+            params {
+                outdir   = "$outputDir"
+            }
+            process {
+                """
+                input[0] = [ [ id:'test', single_end:false ], // meta map
+                             [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                               file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
+                           ]
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert process.out.lint.get(0).get(1) ==~ ".*/test.fq_lint.txt" },
+                { assert path(process.out.lint.get(0).get(1)).getText().contains("fq-lint start") },
+                { assert path(process.out.lint.get(0).get(1)).getText().contains("read 100 records") },
+                { assert path(process.out.lint.get(0).get(1)).getText().contains("fq-lint end") },
+            )
+        }
+
+    }
+
+    test("test_fq_lint_fail") {
+        when {
+            params {
+                outdir   = "$outputDir"
+            }
+            process {
+                """
+                input[0] = [ [ id:'test', single_end:false ], // meta map
+                             [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                               file(params.modules_testdata_base_path + 'genomics/prokaryotes/candidatus_portiera_aleyrodidarum/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
+                           ]
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert !process.success },
+                { assert snapshot(process.out).match() },
+            )
+        }
+
+    }
+
+}

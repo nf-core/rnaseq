@@ -1,0 +1,175 @@
+{
+    "log": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.junction_annotation.log:md5,ef37d06d169a1adbeec23fddf82aee2b"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-26T14:32:52.732937"
+    },
+    "versions": {
+        "content": [
+            [
+                "versions.yml:md5,091865c0ebd6de262c9b0968b5771091"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-26T14:32:52.734515"
+    },
+    "sarscov2 - paired end [bam] - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.junction.xls:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.junction_plot.r:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.junction_annotation.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.junction.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "4": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Interact.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "5": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.junction.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "6": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.events.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "7": [
+                    "versions.yml:md5,091865c0ebd6de262c9b0968b5771091"
+                ],
+                "bed": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.junction.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "events_pdf": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.events.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "interact_bed": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Interact.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "log": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.junction_annotation.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "pdf": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.junction.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "rscript": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.junction_plot.r:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,091865c0ebd6de262c9b0968b5771091"
+                ],
+                "xls": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.junction.xls:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-21T09:39:10.213511"
+    }
+}

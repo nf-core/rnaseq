@@ -1,0 +1,8 @@
+channels:
+  - conda-forge
+  - bioconda
+  - seqera
+dependencies:
+  - star=2.6.1d
+  - bioconda::samtools=1.21
+  - conda-forge::gawk=5.1.0

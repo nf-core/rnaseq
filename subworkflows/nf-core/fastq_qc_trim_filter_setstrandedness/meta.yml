@@ -1,0 +1,202 @@
+name: "fastq_qc_trim_filter_setstrandedness"
+description: Performs linting, quality control, trimming, filtering, and strandedness determination on RNA-seq FASTQ files, preparing them for downstream analysis.
+keywords:
+  - fastq
+  - rnaseq
+  - rrna
+  - trimming
+  - subsample
+  - strandedness
+components:
+  - bbmap/bbsplit
+  - samtools/sort
+  - samtools/index
+  - cat
+  - cat/fastq
+  - fq/lint
+  - sortmerna
+  - fastq_subsample_fq_salmon
+  - fastq_fastqc_umitools_trimgalore
+  - fastq_fastqc_umitools_fastp
+input:
+  - ch_reads:
+      description: Channel with input FastQ files
+      structure:
+        - meta:
+            type: map
+            description: Groovy Map containing sample information e.g. [ id:'test' ]
+        - reads:
+            type: file
+            description: FastQ files
+            pattern: "*.{fq,fastq},{,.gz}"
+  - ch_fasta:
+      description: Channel with genome sequence in fasta format
+      structure:
+        - meta:
+            type: map
+            description: Metadata for the fasta file
+        - fasta:
+            type: file
+            description: Genome fasta file
+            pattern: "*.{fa,fasta}"
+  - ch_transcript_fasta:
+      description: Channel with transcriptome sequence in fasta format
+      structure:
+        - meta:
+            type: map
+            description: Metadata for the transcript fasta file
+        - fasta:
+            type: file
+            description: Transcript fasta file
+            pattern: "*.{fa,fasta}"
+  - ch_gtf:
+      description: Channel with features in GTF format
+      structure:
+        - meta:
+            type: map
+            description: Metadata for the GTF file
+        - gtf:
+            type: file
+            description: GTF file
+            pattern: "*.gtf"
+  - ch_salmon_index:
+      description: Directory containing Salmon index
+      structure:
+        - meta:
+            type: map
+            description: Metadata for the Salmon index
+        - index:
+            type: directory
+            description: Salmon index directory
+  - ch_sortmerna_index:
+      description: Directory containing sortmerna index
+      structure:
+        - meta:
+            type: map
+            description: Metadata for the SortMeRNA index
+        - index:
+            type: directory
+            description: SortMeRNA index directory
+  - ch_bbsplit_index:
+      description: Path to directory or tar.gz archive for pre-built BBSplit index
+      structure:
+        - meta:
+            type: map
+            description: Metadata for the BBSplit index
+        - index:
+            type: file
+            description: BBSplit index directory or tar.gz archive
+            pattern: "{*,*.tar.gz}"
+  - ch_rrna_fastas:
+      description: Channel containing one or more FASTA files containing rRNA sequences for use with SortMeRNA
+      structure:
+        - meta:
+            type: map
+            description: Metadata for the rRNA fasta files
+        - fasta:
+            type: file
+            description: rRNA fasta files
+            pattern: "*.{fa,fasta}"
+  - skip_bbsplit:
+      type: boolean
+      description: Whether to skip BBSplit for removal of non-reference genome reads
+  - skip_fastqc:
+      type: boolean
+      description: Whether to skip FastQC
+  - skip_trimming:
+      type: boolean
+      description: Whether to skip trimming
+  - skip_umi_extract:
+      type: boolean
+      description: Skip the UMI extraction from the read in case the UMIs have been moved to the headers in advance of the pipeline run
+  - make_salmon_index:
+      type: boolean
+      description: Whether to create salmon index before running salmon quant
+  - make_sortmerna_index:
+      type: boolean
+      description: Whether to create sortmerna index before running sortmerna
+  - trimmer:
+      type: string
+      description: Specifies the trimming tool to use - available options are 'trimgalore' and 'fastp'
+  - min_trimmed_reads:
+      type: integer
+      description: Minimum number of trimmed reads below which samples are removed from further processing
+  - save_trimmed:
+      type: boolean
+      description: Save the trimmed FastQ files in the results directory?
+  - remove_ribo_rna:
+      type: boolean
+      description: Enable the removal of reads derived from ribosomal RNA using SortMeRNA?
+  - with_umi:
+      type: boolean
+      description: Enable UMI-based read deduplication
+  - umi_discard_read:
+      type: integer
+      description: After UMI barcode extraction discard either R1 or R2 by setting this parameter to 1 or 2, respectively
+  - stranded_threshold:
+      type: float
+      min: 0.5
+      description: The fraction of stranded reads that must be assigned to a strandedness for confident assignment. Must be at least 0.5.
+  - unstranded_threshold:
+      type: float
+      description: The difference in fraction of stranded reads assigned to 'forward' and 'reverse' below which a sample is classified as 'unstranded'.
+  - skip_linting:
+      type: boolean
+      description: Whether to skip linting of FastQ files
+  - fastp_merge:
+      type: boolean
+      description: |
+        For FASTP, save merged fastqs stitching together read1 and read2 for paired end reads
+
+output:
+  - reads:
+      description: Preprocessed fastq reads
+      structure:
+        - meta:
+            type: map
+            description: Metadata for the preprocessed reads
+        - reads:
+            type: file
+            description: Preprocessed FastQ files
+            pattern: "*.{fq,fastq},{,.gz}"
+  - multiqc_files:
+      description: MultiQC-compatible output files from tools used in preprocessing
+      structure:
+        - meta:
+            type: map
+            description: Metadata for the MultiQC files
+        - mqc:
+            type: file
+            description: MultiQC-compatible files
+            pattern: "*"
+  - trim_read_count:
+      description: Number of reads remaining after trimming for all input samples
+      structure:
+        - meta:
+            type: map
+            description: Metadata for the trim read count
+        - count:
+            type: integer
+            description: Number of reads after trimming
+  - versions:
+      description: File containing software versions
+      structure:
+        - versions:
+            type: file
+            description: File containing software versions
+            pattern: "versions.yml"
+  - lint_log:
+      description: Log files from FastQ linting
+      structure:
+        - meta:
+            type: map
+            description: Metadata for the lint log
+        - log:
+            type: file
+            description: FastQ lint log file
+            pattern: "*.log"
+
+authors:
+  - "@pinin4fjords"
+maintainers:
+  - "@pinin4fjords"

@@ -1,0 +1,135 @@
+nextflow_process {
+
+    name "Test Process DUPRADAR"
+    script "../main.nf"
+    process "DUPRADAR"
+
+
+    test("sarscov2 - bam - single_end") {
+
+        config './nextflow.config'
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:true, strandedness:'forward' ], // meta map
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.single_end.bam", checkIfExists: true)
+                ]
+                input[1] = [
+                    [ id:'sarscov2' ], // meta map
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    file(process.out.boxplot[0][1]).name,
+                    file(process.out.hist[0][1]).name,
+                    file(process.out.scatter2d[0][1]).name,
+                    process.out.dupmatrix,
+                    process.out.intercept_slopt,
+                    process.out.multiqc,
+                    process.out.versions
+                    ).match() }
+            )
+        }
+    }
+
+    test("sarscov2 - bam - single_end - stub") {
+
+        config './nextflow.config'
+
+        options '-stub'
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:true, strandedness:'forward' ], // meta map
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.single_end.bam", checkIfExists: true)
+                ]
+                input[1] = [
+                    [ id:'sarscov2' ], // meta map
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("sarscov2 - bam - paired_end") {
+
+        config './nextflow.config'
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false, strandedness:'forward' ], // meta map
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.bam", checkIfExists: true)
+                ]
+                input[1] = [
+                    [ id:'sarscov2' ], // meta map
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    file(process.out.boxplot[0][1]).name,
+                    file(process.out.hist[0][1]).name,
+                    file(process.out.scatter2d[0][1]).name,
+                    process.out.dupmatrix,
+                    process.out.intercept_slopt,
+                    process.out.multiqc,
+                    process.out.versions
+                    ).match() }
+            )
+        }
+    }
+
+    test("sarscov2 - bam - paired_end - stub") {
+
+        config './nextflow.config'
+
+        options '-stub'
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false, strandedness:'forward' ], // meta map
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.bam", checkIfExists: true)
+                ]
+                input[1] = [
+                    [ id:'sarscov2' ], // meta map
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+}

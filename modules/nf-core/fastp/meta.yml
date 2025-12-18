@@ -1,0 +1,114 @@
+name: fastp
+description: Perform adapter/quality trimming on sequencing reads
+keywords:
+  - trimming
+  - quality control
+  - fastq
+tools:
+  - fastp:
+      description: |
+        A tool designed to provide fast all-in-one preprocessing for FastQ files. This tool is developed in C++ with multithreading supported to afford high performance.
+      documentation: https://github.com/OpenGene/fastp
+      doi: 10.1093/bioinformatics/bty560
+      licence: ["MIT"]
+      identifier: biotools:fastp
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information. Use 'single_end: true' to specify single ended or interleaved FASTQs. Use 'single_end: false' for paired-end reads.
+          e.g. [ id:'test', single_end:false ]
+    - reads:
+        type: file
+        description: |
+          List of input FastQ files of size 1 and 2 for single-end and paired-end data,
+          respectively. If you wish to run interleaved paired-end data,  supply as single-end data
+          but with `--interleaved_in` in your `modules.conf`'s `ext.args` for the module.
+  - - adapter_fasta:
+        type: file
+        description: File in FASTA format containing possible adapters to remove.
+        pattern: "*.{fasta,fna,fas,fa}"
+  - - discard_trimmed_pass:
+        type: boolean
+        description: |
+          Specify true to not write any reads that pass trimming thresholds.
+          This can be used to use fastp for the output report only.
+  - - save_trimmed_fail:
+        type: boolean
+        description: Specify true to save files that failed to pass trimming thresholds
+          ending in `*.fail.fastq.gz`
+  - - save_merged:
+        type: boolean
+        description: Specify true to save all merged reads to a file ending in `*.merged.fastq.gz`
+output:
+  - reads:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.fastp.fastq.gz":
+          type: file
+          description: The trimmed/modified/unmerged fastq reads
+          pattern: "*fastp.fastq.gz"
+  - json:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.json":
+          type: file
+          description: Results in JSON format
+          pattern: "*.json"
+  - html:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.html":
+          type: file
+          description: Results in HTML format
+          pattern: "*.html"
+  - log:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.log":
+          type: file
+          description: fastq log file
+          pattern: "*.log"
+  - reads_fail:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.fail.fastq.gz":
+          type: file
+          description: Reads the failed the preprocessing
+          pattern: "*fail.fastq.gz"
+  - reads_merged:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.merged.fastq.gz":
+          type: file
+          description: Reads that were successfully merged
+          pattern: "*.{merged.fastq.gz}"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+authors:
+  - "@drpatelh"
+  - "@kevinmenden"
+maintainers:
+  - "@drpatelh"
+  - "@kevinmenden"

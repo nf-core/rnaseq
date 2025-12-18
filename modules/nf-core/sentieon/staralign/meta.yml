@@ -1,0 +1,248 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: "sentieon_staralign"
+description: Align reads to a reference genome using Sentieon STAR
+keywords:
+  - align
+  - fasta
+  - genome
+  - reference
+tools:
+  - sentieon:
+      description: |
+        Sentieon® provides complete solutions for secondary DNA/RNA analysis for a variety of sequencing platforms, including short and long reads.
+        Our software improves upon BWA, STAR, Minimap2, GATK, HaplotypeCaller, Mutect, and Mutect2 based pipelines and is deployable on any generic-CPU-based computing system.
+      homepage: https://www.sentieon.com/
+      documentation: https://www.sentieon.com/
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - reads:
+        type: file
+        description: |
+          List of input FastQ files of size 1 and 2 for single-end and paired-end data,
+          respectively.
+        ontologies: []
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'test' ]
+    - index:
+        type: directory
+        description: STAR genome index
+        pattern: "star"
+  - - meta3:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'test' ]
+    - gtf:
+        type: file
+        description: Annotation GTF file
+        pattern: "*.{gtf}"
+        ontologies: []
+  - star_ignore_sjdbgtf:
+      type: boolean
+      description: Ignore annotation GTF file
+  - seq_platform:
+      type: string
+      description: Sequencing platform
+  - seq_center:
+      type: string
+      description: Sequencing center
+output:
+  log_final:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*Log.final.out":
+          type: file
+          description: STAR final log file
+          pattern: "*Log.final.out"
+          ontologies: []
+  log_out:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*Log.out":
+          type: file
+          description: STAR lot out file
+          pattern: "*Log.out"
+          ontologies: []
+  log_progress:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*Log.progress.out":
+          type: file
+          description: STAR log progress file
+          pattern: "*Log.progress.out"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+  bam:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*d.out.bam":
+          type: file
+          description: Output BAM file containing read alignments
+          pattern: "*.{bam}"
+          ontologies: []
+  bam_sorted:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - ${prefix}.sortedByCoord.out.bam:
+          type: file
+          description: Sorted BAM file of read alignments (optional)
+          pattern: "*sortedByCoord.out.bam"
+          ontologies: []
+  bam_sorted_aligned:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - ${prefix}.Aligned.sortedByCoord.out.bam:
+          type: file
+          description: Sorted BAM file of read alignments (optional)
+          pattern: "*.Aligned.sortedByCoord.out.bam"
+          ontologies: []
+  bam_transcript:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*toTranscriptome.out.bam":
+          type: file
+          description: Output BAM file of transcriptome alignment (optional)
+          pattern: "*toTranscriptome.out.bam"
+          ontologies: []
+  bam_unsorted:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*Aligned.unsort.out.bam":
+          type: file
+          description: Unsorted BAM file of read alignments (optional)
+          pattern: "*Aligned.unsort.out.bam"
+          ontologies: []
+  fastq:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*fastq.gz":
+          type: file
+          description: Unmapped FastQ files (optional)
+          pattern: "*fastq.gz"
+          ontologies:
+            - edam: http://edamontology.org/format_3989 # GZIP format
+  tab:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.tab":
+          type: file
+          description: STAR output tab file(s) (optional)
+          pattern: "*.tab"
+          ontologies:
+            - edam: http://edamontology.org/format_3475 # TSV
+  spl_junc_tab:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.SJ.out.tab":
+          type: file
+          description: STAR output splice junction tab file
+          pattern: "*.SJ.out.tab"
+          ontologies:
+            - edam: http://edamontology.org/format_3475 # TSV
+  read_per_gene_tab:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.ReadsPerGene.out.tab":
+          type: file
+          description: STAR output read per gene tab file
+          pattern: "*.ReadsPerGene.out.tab"
+          ontologies:
+            - edam: http://edamontology.org/format_3475 # TSV
+  junction:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.out.junction":
+          type: file
+          description: STAR chimeric junction output file (optional)
+          pattern: "*.out.junction"
+          ontologies: []
+  sam:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.out.sam":
+          type: file
+          description: STAR output SAM file(s) (optional)
+          pattern: "*.out.sam"
+          ontologies: []
+  wig:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.wig":
+          type: file
+          description: STAR output wiggle format file(s) (optional)
+          pattern: "*.wig"
+          ontologies: []
+  bedgraph:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.bg":
+          type: file
+          description: STAR output bedGraph format file(s) (optional)
+          pattern: "*.bg"
+          ontologies: []
+authors:
+  - "@FriederikeHanssen"
+maintainers:
+  - "@FriederikeHanssen"

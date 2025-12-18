@@ -1,0 +1,68 @@
+{
+    "sarscov2 - [[meta] - bam] - bed - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.infer_experiment.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,f56ba5c6208ae720dd730f3a432e3ba7"
+                ],
+                "txt": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.infer_experiment.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,f56ba5c6208ae720dd730f3a432e3ba7"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-21T09:34:31.050305"
+    },
+    "sarscov2 - [[meta] - bam] - bed": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.infer_experiment.txt:md5,f9d0bfc239df637cd8aeda40ade3c59a"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,f56ba5c6208ae720dd730f3a432e3ba7"
+                ],
+                "txt": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.infer_experiment.txt:md5,f9d0bfc239df637cd8aeda40ade3c59a"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,f56ba5c6208ae720dd730f3a432e3ba7"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-26T14:33:19.853327"
+    }
+}

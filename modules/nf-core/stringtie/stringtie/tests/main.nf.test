@@ -1,0 +1,209 @@
+nextflow_process {
+
+    name "Test Process STRINGTIE_STRINGTIE"
+    script "../main.nf"
+    process "STRINGTIE_STRINGTIE"
+    config "./nextflow.config"
+
+    test("sarscov2 [bam] - forward strandedness") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                            [ id:'test', strandedness:'forward' ], // meta map
+                            [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true) ]
+                        ]
+                input[1] = []
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.abundance,
+                    process.out.transcript_gtf,
+                    process.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("sarscov2 [bam] - forward strandedness + reference annotation") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', strandedness:'forward' ], // meta map
+                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true) ]
+                ]
+                input[1] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+            { assert process.success },
+                { assert snapshot(
+                    process.out.abundance,
+                    process.out.ballgown,
+                    process.out.transcript_gtf,
+                    process.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("sarscov2 [bam] - reverse strandedness") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                            [ id:'test', strandedness:'reverse' ], // meta map
+                            [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true) ]
+                        ]
+                input[1] = []
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.abundance,
+                    process.out.transcript_gtf,
+                    process.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("sarscov2 [bam] - reverse strandedness + reference annotation") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                            [ id:'test', strandedness:'reverse' ], // meta map
+                            [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true) ]
+                        ]
+                input[1] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.abundance,
+                    process.out.ballgown,
+                    process.out.transcript_gtf,
+                    process.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("sarscov2 [bam] - forward strandedness - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                            [ id:'test', strandedness:'forward' ], // meta map
+                            [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true) ]
+                        ]
+                input[1] = []
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("sarscov2 [bam] - forward strandedness + reference annotation - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', strandedness:'forward' ], // meta map
+                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true) ]
+                ]
+                input[1] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("sarscov2 [bam] - reverse strandedness - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                            [ id:'test', strandedness:'reverse' ], // meta map
+                            [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true) ]
+                        ]
+                input[1] = []
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("sarscov2 [bam] - reverse strandedness + reference annotation - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                            [ id:'test', strandedness:'reverse' ], // meta map
+                            [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true) ]
+                        ]
+                input[1] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+}

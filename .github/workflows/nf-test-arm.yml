@@ -1,0 +1,149 @@
+name: Run nf-test on ARM
+on:
+  pull_request:
+    paths-ignore:
+      - "docs/**"
+      - "**/meta.yml"
+      - "**/*.md"
+      - "**/*.png"
+      - "**/*.svg"
+  release:
+    types: [published]
+  workflow_dispatch:
+
+# Cancel if a newer run is started
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  NFT_VER: "0.9.3"
+  NFT_WORKDIR: "~"
+  NXF_ANSI_LOG: false
+  NXF_SINGULARITY_CACHEDIR: ${{ github.workspace }}/.singularity
+  NXF_SINGULARITY_LIBRARYDIR: ${{ github.workspace }}/.singularity
+
+jobs:
+  nf-test-changes-arm:
+    name: nf-test-changes-arm
+    runs-on: # use self-hosted runners
+      - runs-on=${{ github.run_id }}-nf-test-changes-arm
+      - runner=4cpu-linux-arm64
+    outputs:
+      shard: ${{ steps.set-shards.outputs.shard }}
+      total_shards: ${{ steps.set-shards.outputs.total_shards }}
+    steps:
+      - name: Clean Workspace # Purge the workspace in case it's running on a self-hosted runner
+        run: |
+          ls -la ./
+          rm -rf ./* || true
+          rm -rf ./.??* || true
+          ls -la ./
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          fetch-depth: 0
+
+      - name: get number of shards
+        id: set-shards
+        uses: ./.github/actions/get-shards
+        env:
+          NFT_VER: ${{ env.NFT_VER }}
+          # Skip sentieon tests - no ARM containers available
+          SKIP_SENTIEON: true
+        with:
+          max_shards: 14
+
+      - name: debug
+        run: |
+          echo ${{ steps.set-shards.outputs.shard }}
+          echo ${{ steps.set-shards.outputs.total_shards }}
+
+  nf-test-arm:
+    name: "${{ matrix.profile }}-${{ matrix.archProfile }} | ${{ matrix.NXF_VER }} | ${{ matrix.shard }}/${{ needs.nf-test-changes-arm.outputs.total_shards }}"
+    needs: [nf-test-changes-arm]
+    if: ${{ needs.nf-test-changes-arm.outputs.total_shards != '0' }}
+    runs-on: # use self-hosted runners
+      - runs-on=${{ github.run_id }}-nf-test
+      - runner=4cpu-linux-arm64
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: ${{ fromJson(needs.nf-test-changes-arm.outputs.shard) }}
+        archProfile: [arm64]
+        profile: [docker]
+        isMain:
+          - ${{ github.base_ref == 'master' || github.base_ref == 'main' }}
+        # Exclude conda and singularity on dev
+        exclude:
+          - isMain: false
+            profile: "conda"
+          - isMain: false
+            profile: "singularity"
+        NXF_VER:
+          - "25.04.0"
+          - "latest-everything"
+    env:
+      NXF_ANSI_LOG: false
+      TOTAL_SHARDS: ${{ needs.nf-test-changes-arm.outputs.total_shards }}
+
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          fetch-depth: 0
+
+      - name: Run nf-test
+        id: run_nf_test
+        uses: ./.github/actions/nf-test
+        continue-on-error: ${{ matrix.NXF_VER == 'latest-everything' }}
+        env:
+          NFT_WORKDIR: ${{ env.NFT_WORKDIR }}
+          NXF_VERSION: ${{ matrix.NXF_VER }}
+          # Skip sentieon tests - no ARM containers available
+          SKIP_SENTIEON: true
+        with:
+          profile: ${{ matrix.profile }},${{ matrix.archProfile }}
+          shard: ${{ matrix.shard }}
+          total_shards: ${{ env.TOTAL_SHARDS }}
+
+      - name: Report test status
+        if: ${{ always() }}
+        run: |
+          if [[ "${{ steps.run_nf_test.outcome }}" == "failure" ]]; then
+            echo "::error::Test with ${{ matrix.NXF_VER }} failed"
+            # Add to workflow summary
+            echo "## ❌ Test failed: ${{ matrix.profile }},${{ matrix.archProfile }} | ${{ matrix.NXF_VER }} | Shard ${{ matrix.shard }}/${{ env.TOTAL_SHARDS }}" >> $GITHUB_STEP_SUMMARY
+            if [[ "${{ matrix.NXF_VER }}" == "latest-everything" ]]; then
+              echo "::warning::Test with latest-everything failed but will not cause workflow failure. Please check if the error is expected or if it needs fixing."
+            fi
+            if [[ "${{ matrix.NXF_VER }}" != "latest-everything" ]]; then
+              exit 1
+            fi
+          fi
+
+  confirm-pass-arm:
+    needs: [nf-test-changes-arm, nf-test-arm]
+    if: always()
+    runs-on: # use self-hosted runners
+      - runs-on=${{ github.run_id }}-confirm-pass
+      - runner=2cpu-linux-x64
+    steps:
+      - name: One or more tests failed (excluding latest-everything)
+        if: ${{ contains(needs.*.result, 'failure') }}
+        run: exit 1
+
+      - name: One or more tests cancelled
+        if: ${{ contains(needs.*.result, 'cancelled') }}
+        run: exit 1
+
+      - name: All tests ok
+        if: ${{ contains(needs.*.result, 'success') }}
+        run: exit 0
+
+      - name: debug-print
+        if: always()
+        run: |
+          echo "::group::DEBUG: needs Contents"
+          echo "DEBUG: toJSON(needs) = ${{ toJSON(needs) }}"
+          echo "DEBUG: toJSON(needs.*.result) = ${{ toJSON(needs.*.result) }}"
+          echo "::endgroup::"

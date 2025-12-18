@@ -1,0 +1,15 @@
+#id: 'deseq2_clustering'
+#section_name: 'DESeq2 sample similarity'
+#description: "is generated from clustering by Euclidean distances between
+#	       <a href='https://bioconductor.org/packages/release/bioc/html/DESeq2.html' target='_blank'>DESeq2</a>
+#              rlog values for each sample
+#              in the <a href='https://github.com/nf-core/rnaseq/blob/master/bin/deseq2_qc.r'><code>deseq2_qc.r</code></a> script."
+#parent_id: 'sample-relationships'
+#parent_name: 'Sample relationships'
+#parent_description: 'Plots interrogating sample relationships, based on final count matrices'
+#plot_type: 'heatmap'
+#anchor: 'deseq2_clustering'
+#pconfig:
+#    title: 'DESeq2: Heatmap of the sample-to-sample distances'
+#    xlog: True
+#    reverse_colors: True

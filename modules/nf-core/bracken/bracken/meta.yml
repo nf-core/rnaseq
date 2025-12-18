@@ -1,0 +1,68 @@
+name: bracken_bracken
+description: Re-estimate taxonomic abundance of metagenomic samples analyzed by kraken.
+keywords:
+  - bracken
+  - metagenomics
+  - abundance
+  - kraken2
+tools:
+  - bracken:
+      description: Bracken (Bayesian Reestimation of Abundance with KrakEN) is a highly
+        accurate statistical method that computes the abundance of species in DNA sequences
+        from a metagenomics sample.
+      homepage: https://ccb.jhu.edu/software/bracken/
+      documentation: https://ccb.jhu.edu/software/bracken/index.shtml?t=manual
+      tool_dev_url: https://github.com/jenniferlu717/Bracken
+      doi: "10.7717/peerj-cs.104"
+      licence: ["GPL v3"]
+      identifier: biotools:bracken
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - kraken_report:
+        type: file
+        description: TSV file with six columns coming from kraken2 output
+        pattern: "*.{tsv}"
+  - - database:
+        type: file
+        description: Directory containing the kraken2/Bracken files for analysis
+        pattern: "*"
+output:
+  - reports:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*.{tsv}"
+      - bracken_report:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*.{tsv}"
+  - txt:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*.txt"
+      - bracken_kraken_style_report:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*.txt"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+authors:
+  - "@Midnighter"
+maintainers:
+  - "@Midnighter"

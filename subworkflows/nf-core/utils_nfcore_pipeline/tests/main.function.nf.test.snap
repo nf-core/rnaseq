@@ -1,0 +1,136 @@
+{
+    "Test Function checkProfileProvided": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-28T12:03:03.360873"
+    },
+    "Test Function checkConfigProvided": {
+        "content": [
+            true
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-28T12:02:59.729647"
+    },
+    "Test Function without logColours": {
+        "content": [
+            {
+                "reset": "",
+                "bold": "",
+                "dim": "",
+                "underlined": "",
+                "blink": "",
+                "reverse": "",
+                "hidden": "",
+                "black": "",
+                "red": "",
+                "green": "",
+                "yellow": "",
+                "blue": "",
+                "purple": "",
+                "cyan": "",
+                "white": "",
+                "bblack": "",
+                "bred": "",
+                "bgreen": "",
+                "byellow": "",
+                "bblue": "",
+                "bpurple": "",
+                "bcyan": "",
+                "bwhite": "",
+                "ublack": "",
+                "ured": "",
+                "ugreen": "",
+                "uyellow": "",
+                "ublue": "",
+                "upurple": "",
+                "ucyan": "",
+                "uwhite": "",
+                "iblack": "",
+                "ired": "",
+                "igreen": "",
+                "iyellow": "",
+                "iblue": "",
+                "ipurple": "",
+                "icyan": "",
+                "iwhite": "",
+                "biblack": "",
+                "bired": "",
+                "bigreen": "",
+                "biyellow": "",
+                "biblue": "",
+                "bipurple": "",
+                "bicyan": "",
+                "biwhite": ""
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-28T12:03:17.969323"
+    },
+    "Test Function with logColours": {
+        "content": [
+            {
+                "reset": "\u001b[0m",
+                "bold": "\u001b[1m",
+                "dim": "\u001b[2m",
+                "underlined": "\u001b[4m",
+                "blink": "\u001b[5m",
+                "reverse": "\u001b[7m",
+                "hidden": "\u001b[8m",
+                "black": "\u001b[0;30m",
+                "red": "\u001b[0;31m",
+                "green": "\u001b[0;32m",
+                "yellow": "\u001b[0;33m",
+                "blue": "\u001b[0;34m",
+                "purple": "\u001b[0;35m",
+                "cyan": "\u001b[0;36m",
+                "white": "\u001b[0;37m",
+                "bblack": "\u001b[1;30m",
+                "bred": "\u001b[1;31m",
+                "bgreen": "\u001b[1;32m",
+                "byellow": "\u001b[1;33m",
+                "bblue": "\u001b[1;34m",
+                "bpurple": "\u001b[1;35m",
+                "bcyan": "\u001b[1;36m",
+                "bwhite": "\u001b[1;37m",
+                "ublack": "\u001b[4;30m",
+                "ured": "\u001b[4;31m",
+                "ugreen": "\u001b[4;32m",
+                "uyellow": "\u001b[4;33m",
+                "ublue": "\u001b[4;34m",
+                "upurple": "\u001b[4;35m",
+                "ucyan": "\u001b[4;36m",
+                "uwhite": "\u001b[4;37m",
+                "iblack": "\u001b[0;90m",
+                "ired": "\u001b[0;91m",
+                "igreen": "\u001b[0;92m",
+                "iyellow": "\u001b[0;93m",
+                "iblue": "\u001b[0;94m",
+                "ipurple": "\u001b[0;95m",
+                "icyan": "\u001b[0;96m",
+                "iwhite": "\u001b[0;97m",
+                "biblack": "\u001b[1;90m",
+                "bired": "\u001b[1;91m",
+                "bigreen": "\u001b[1;92m",
+                "biyellow": "\u001b[1;93m",
+                "biblue": "\u001b[1;94m",
+                "bipurple": "\u001b[1;95m",
+                "bicyan": "\u001b[1;96m",
+                "biwhite": "\u001b[1;97m"
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-28T12:03:21.714424"
+    }
+}

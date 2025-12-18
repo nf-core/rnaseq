@@ -1,0 +1,27 @@
+repos:
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: "v3.1.0"
+    hooks:
+      - id: prettier
+        additional_dependencies:
+          - prettier@3.6.2
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+        exclude: |
+          (?x)^(
+              .*ro-crate-metadata.json$|
+              modules/nf-core/.*|
+              subworkflows/nf-core/.*|
+              .*\.snap$
+          )$
+      - id: end-of-file-fixer
+        exclude: |
+          (?x)^(
+              .*ro-crate-metadata.json$|
+              modules/nf-core/.*|
+              subworkflows/nf-core/.*|
+              .*\.snap$
+          )$

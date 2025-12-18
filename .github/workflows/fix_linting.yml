@@ -1,0 +1,89 @@
+name: Fix linting from a comment
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  fix-linting:
+    # Only run if comment is on a PR with the main repo, and if it contains the magic keywords
+    if: >
+      contains(github.event.comment.html_url, '/pull/') &&
+      contains(github.event.comment.body, '@nf-core-bot fix linting') &&
+      github.repository == 'nf-core/rnaseq'
+    runs-on: ubuntu-latest
+    steps:
+      # Use the @nf-core-bot token to check out so we can push later
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          token: ${{ secrets.nf_core_bot_auth_token }}
+
+      # indication that the linting is being fixed
+      - name: React on comment
+        uses: peter-evans/create-or-update-comment@e8674b075228eee787fea43ef493e45ece1004c9 # v5
+        with:
+          comment-id: ${{ github.event.comment.id }}
+          reactions: eyes
+
+      # Action runs on the issue comment, so we don't get the PR by default
+      # Use the gh cli to check out the PR
+      - name: Checkout Pull Request
+        run: gh pr checkout ${{ github.event.issue.number }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.nf_core_bot_auth_token }}
+
+      # Install and run pre-commit
+      - uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v6
+        with:
+          python-version: "3.14"
+
+      - name: Install pre-commit
+        run: pip install pre-commit
+
+      - name: Run pre-commit
+        id: pre-commit
+        run: pre-commit run --all-files
+        continue-on-error: true
+
+      # indication that the linting has finished
+      - name: react if linting finished succesfully
+        if: steps.pre-commit.outcome == 'success'
+        uses: peter-evans/create-or-update-comment@e8674b075228eee787fea43ef493e45ece1004c9 # v5
+        with:
+          comment-id: ${{ github.event.comment.id }}
+          reactions: "+1"
+
+      - name: Commit & push changes
+        id: commit-and-push
+        if: steps.pre-commit.outcome == 'failure'
+        run: |
+          git config user.email "core@nf-co.re"
+          git config user.name "nf-core-bot"
+          git config push.default upstream
+          git add .
+          git status
+          git commit -m "[automated] Fix code linting"
+          git push
+
+      - name: react if linting errors were fixed
+        id: react-if-fixed
+        if: steps.commit-and-push.outcome == 'success'
+        uses: peter-evans/create-or-update-comment@e8674b075228eee787fea43ef493e45ece1004c9 # v5
+        with:
+          comment-id: ${{ github.event.comment.id }}
+          reactions: hooray
+
+      - name: react if linting errors were not fixed
+        if: steps.commit-and-push.outcome == 'failure'
+        uses: peter-evans/create-or-update-comment@e8674b075228eee787fea43ef493e45ece1004c9 # v5
+        with:
+          comment-id: ${{ github.event.comment.id }}
+          reactions: confused
+
+      - name: react if linting errors were not fixed
+        if: steps.commit-and-push.outcome  == 'failure'
+        uses: peter-evans/create-or-update-comment@e8674b075228eee787fea43ef493e45ece1004c9 # v5
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            @${{ github.actor }} I tried to fix the linting errors, but it didn't work. Please fix them manually.
+            See [CI log](https://github.com/nf-core/rnaseq/actions/runs/${{ github.run_id }}) for more details.

@@ -1,0 +1,105 @@
+name: trimgalore
+description: Trim FastQ files using Trim Galore!
+keywords:
+  - trimming
+  - adapters
+  - sequencing adapters
+  - fastq
+tools:
+  - trimgalore:
+      description: |
+        A wrapper tool around Cutadapt and FastQC to consistently apply quality
+        and adapter trimming to FastQ files, with some extra functionality for
+        MspI-digested RRBS-type (Reduced Representation Bisufite-Seq) libraries.
+      homepage: https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/
+      documentation: https://github.com/FelixKrueger/TrimGalore/blob/master/Docs/Trim_Galore_User_Guide.md
+      licence: ["GPL-3.0-or-later"]
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - reads:
+        type: file
+        description: |
+          List of input FastQ files of size 1 and 2 for single-end and paired-end data,
+          respectively.
+output:
+  - reads:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*{3prime,5prime,trimmed,val}{,_1,_2}.fq.gz":
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*{3prime,5prime,trimmed,val}{,_1,_2}.fq.gz"
+  - log:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*_{report.txt}"
+      - "*report.txt":
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*_{report.txt}"
+  - unpaired:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*unpaired{,_1,_2}.fq.gz":
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*unpaired*.fq.gz"
+  - html:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*_{fastqc.html}"
+      - "*.html":
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*_{fastqc.html}"
+  - zip:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*_{fastqc.zip}"
+      - "*.zip":
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*_{fastqc.zip}"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+authors:
+  - "@drpatelh"
+  - "@ewels"
+  - "@FelixKrueger"
+maintainers:
+  - "@drpatelh"
+  - "@ewels"
+  - "@FelixKrueger"

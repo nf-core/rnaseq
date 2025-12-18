@@ -1,0 +1,188 @@
+nextflow_process {
+
+    name "Test Process SAMTOOLS_SORT"
+    script "../main.nf"
+    process "SAMTOOLS_SORT"
+
+    test("bam") {
+
+        config "./nextflow.config"
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true)
+                ])
+                input[1] = Channel.of([
+                    [ id:'fasta' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(
+                        process.out.bam,
+                        process.out.csi.collect { it.collect { it instanceof Map ? it : file(it).name } },
+                        process.out.versions
+                ).match()}
+            )
+        }
+    }
+
+    test("multiple bam") {
+
+        config "./nextflow.config"
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.sorted.bam', checkIfExists: true)
+                    ]
+                ])
+                input[1] = Channel.of([
+                    [ id:'fasta' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(
+                        process.out.bam,
+                        process.out.csi.collect { it.collect { it instanceof Map ? it : file(it).name } },
+                        process.out.versions
+                ).match()}
+            )
+        }
+    }
+
+    test("cram") {
+
+        config "./nextflow_cram.config"
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true)
+                ])
+                input[1] = Channel.of([
+                    [ id:'fasta' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(
+                    process.out.cram.collect { it.collect { it instanceof Map ? it : file(it).name } },
+                    process.out.crai.collect { it.collect { it instanceof Map ? it : file(it).name } },
+                    process.out.versions
+                ).match()}
+            )
+        }
+    }
+
+    test("bam - stub") {
+
+        options "-stub"
+        config "./nextflow.config"
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true)
+                ])
+                input[1] = Channel.of([
+                    [ id:'fasta' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("multiple bam - stub") {
+
+        config "./nextflow.config"
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.sorted.bam', checkIfExists: true)
+                    ]
+                ])
+                input[1] = Channel.of([
+                    [ id:'fasta' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("cram - stub") {
+
+        options "-stub"
+        config "./nextflow_cram.config"
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true)
+                ])
+                input[1] = Channel.of([
+                    [ id:'fasta' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+}

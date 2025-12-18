@@ -1,0 +1,315 @@
+nextflow_process {
+
+    name "Test Process SALMON_QUANT"
+    script "../main.nf"
+    process "SALMON_QUANT"
+    config "./nextflow.config"
+
+    setup {
+        run("SALMON_INDEX") {
+            script "../../../salmon/index/main.nf"
+            process {
+                """
+                input[0] = Channel.of([file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.fasta", checkIfExists: true)])
+                input[1] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)])
+                """
+            }
+        }
+    }
+
+    test("sarscov2 - single_end") {
+
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end: true ], // meta map
+                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true) ]
+                ])
+                input[1] = SALMON_INDEX.out.index
+                input[2] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)])
+                input[3] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)])
+                input[4] = false
+                input[5] = ''
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert path(process.out.json_info.get(0).get(1)).exists() },
+                { assert path(process.out.results.get(0).get(1)).exists() },
+                { assert snapshot(
+                    process.out.versions,
+                    process.out.lib_format_counts
+                ).match() }
+            )
+        }
+
+    }
+
+    test("sarscov2 - single_end stub") {
+        options "-stub"
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end: true ], // meta map
+                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true) ]
+                ])
+                input[1] = SALMON_INDEX.out.index
+                input[2] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)])
+                input[3] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)])
+                input[4] = false
+                input[5] = ''
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert path(process.out.json_info.get(0).get(1)).exists() },
+                { assert path(process.out.results.get(0).get(1)).exists() },
+                { assert snapshot(
+                    process.out.versions,
+                    process.out.lib_format_counts
+                ).match() }
+            )
+        }
+
+    }
+
+    test("sarscov2 - single_end lib type A") {
+
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end: true ], // meta map
+                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true) ]
+                ])
+                input[1] = SALMON_INDEX.out.index
+                input[2] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)])
+                input[3] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)])
+                input[4] = false
+                input[5] = 'A'
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert path(process.out.json_info.get(0).get(1)).exists() },
+                { assert path(process.out.results.get(0).get(1)).exists() },
+                { assert snapshot(
+                    process.out.versions,
+                    process.out.lib_format_counts
+                ).match() }
+            )
+        }
+
+    }
+
+    test("sarscov2 - single_end lib type A stub") {
+        options "-stub"
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end: true ], // meta map
+                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true) ]
+                ])
+                input[1] = SALMON_INDEX.out.index
+                input[2] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)])
+                input[3] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)])
+                input[4] = false
+                input[5] = 'A'
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert path(process.out.json_info.get(0).get(1)).exists() },
+                { assert path(process.out.results.get(0).get(1)).exists() },
+                { assert snapshot(
+                    process.out.versions,
+                    process.out.lib_format_counts
+                ).match() }
+            )
+        }
+
+    }
+
+    test("sarscov2 - pair_end") {
+
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end: true ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true),
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_2.fastq.gz", checkIfExists: true)
+                    ]
+                ])
+                input[1] = SALMON_INDEX.out.index
+                input[2] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)])
+                input[3] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)])
+                input[4] = false
+                input[5] = ''
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert path(process.out.json_info.get(0).get(1)).exists() },
+                { assert path(process.out.results.get(0).get(1)).exists() },
+                { assert snapshot(
+                    process.out.versions,
+                    process.out.lib_format_counts
+                ).match() }
+            )
+        }
+
+    }
+
+    test("sarscov2 - pair_end stub") {
+        options "-stub"
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end: true ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true),
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_2.fastq.gz", checkIfExists: true)
+                    ]
+                ])
+                input[1] = SALMON_INDEX.out.index
+                input[2] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)])
+                input[3] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)])
+                input[4] = false
+                input[5] = ''
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert path(process.out.json_info.get(0).get(1)).exists() },
+                { assert path(process.out.results.get(0).get(1)).exists() },
+                { assert snapshot(
+                    process.out.versions,
+                    process.out.lib_format_counts
+                ).match() }
+            )
+        }
+
+    }
+
+    test("sarscov2 - pair_end multiple") {
+
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true),
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_2.fastq.gz", checkIfExists: true),
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test2_1.fastq.gz", checkIfExists: true),
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test2_2.fastq.gz", checkIfExists: true)
+                    ]
+                ])
+                input[1] = SALMON_INDEX.out.index
+                input[2] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)])
+                input[3] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)])
+                input[4] = false
+                input[5] = ''
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert path(process.out.json_info.get(0).get(1)).exists() },
+                { assert path(process.out.results.get(0).get(1)).exists() },
+                { assert snapshot(
+                    process.out.versions,
+                    process.out.lib_format_counts
+                ).match() }
+            )
+        }
+
+    }
+
+    test("sarscov2 - pair_end multiple stub") {
+        options "-stub"
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true),
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_2.fastq.gz", checkIfExists: true),
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test2_1.fastq.gz", checkIfExists: true),
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test2_2.fastq.gz", checkIfExists: true)
+                    ]
+                ])
+                input[1] = SALMON_INDEX.out.index
+                input[2] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)])
+                input[3] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)])
+                input[4] = false
+                input[5] = ''
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert path(process.out.json_info.get(0).get(1)).exists() },
+                { assert path(process.out.results.get(0).get(1)).exists() },
+                { assert snapshot(
+                    process.out.versions,
+                    process.out.lib_format_counts
+                ).match() }
+            )
+        }
+
+    }
+}

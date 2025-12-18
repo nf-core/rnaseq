@@ -1,0 +1,99 @@
+{
+    "parse count data correctly - stub": {
+        "content": [
+            {
+                "0": [
+                    "deseq2.plots.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "1": [
+                    "deseq2.dds.RData:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "2": [
+                    "deseq2.pca.vals.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "3": [
+                    
+                ],
+                "4": [
+                    "deseq2.sample.dists.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "5": [
+                    
+                ],
+                "6": [
+                    "R_sessionInfo.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "7": [
+                    [
+                        "RAP1_IAA_30M_REP1.size_factors.RData:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "RAP1_UNINDUCED_REP1.size_factors.RData:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "RAP1_UNINDUCED_REP2.size_factors.RData:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "WT_REP1.size_factors.RData:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "WT_REP2.size_factors.RData:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "deseq2.size_factors.RData:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "8": [
+                    "versions.yml:md5,334928b64c46461488576cd735ec439c"
+                ],
+                "dists_multiqc": [
+                    
+                ],
+                "dists_txt": [
+                    "deseq2.sample.dists.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "log": [
+                    "R_sessionInfo.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "pca_multiqc": [
+                    
+                ],
+                "pca_txt": [
+                    "deseq2.pca.vals.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "pdf": [
+                    "deseq2.plots.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "rdata": [
+                    "deseq2.dds.RData:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "size_factors": [
+                    [
+                        "RAP1_IAA_30M_REP1.size_factors.RData:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "RAP1_UNINDUCED_REP1.size_factors.RData:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "RAP1_UNINDUCED_REP2.size_factors.RData:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "WT_REP1.size_factors.RData:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "WT_REP2.size_factors.RData:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "deseq2.size_factors.RData:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,334928b64c46461488576cd735ec439c"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-11-27T13:29:23.049264"
+    },
+    "parse count data correctly": {
+        "content": [
+            [
+
+            ],
+            [
+
+            ],
+            [
+                "versions.yml:md5,334928b64c46461488576cd735ec439c"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-11-27T13:28:49.884314"
+    }
+}

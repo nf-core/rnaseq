@@ -1,0 +1,96 @@
+nextflow_process {
+
+    name "Test Process PRESEQ_LCEXTRAP"
+    script "../main.nf"
+    process "PRESEQ_LCEXTRAP"
+
+    test("sarscov2 - single_end") {
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:true ], // meta map
+                    [ file(params.modules_testdata_base_path + 'delete_me/preseq/SRR1003759_5M_subset.mr', checkIfExists: true) ]
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(file(process.out.log[0][1]).name).match("single_end - log") },
+                { assert snapshot(process.out.lc_extrap).match("single_end - lc_extrap") },
+                { assert snapshot(process.out.versions).match("single_end - versions") }
+            )
+        }
+    }
+
+    test("sarscov2 - single_end - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:true ], // meta map
+                    [ file(params.modules_testdata_base_path + 'delete_me/preseq/SRR1003759_5M_subset.mr', checkIfExists: true) ]
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("sarscov2 - paired_end") {
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [ file(params.modules_testdata_base_path + 'delete_me/preseq/SRR1003759_5M_subset.mr', checkIfExists: true) ]
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(file(process.out.log[0][1]).name).match("paired_end - log") },
+                { assert snapshot(process.out.lc_extrap).match("paired_end - lc_extrap") },
+                { assert snapshot(process.out.versions).match("paired_end - versions") }
+            )
+        }
+    }
+
+    test("sarscov2 - paired_end - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [ file(params.modules_testdata_base_path + 'delete_me/preseq/SRR1003759_5M_subset.mr', checkIfExists: true) ]
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+}

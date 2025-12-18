@@ -1,0 +1,50 @@
+name: sentieon_rsempreparereference
+description: Prepare a reference genome for RSEM
+keywords:
+  - rsem
+  - genome
+  - index
+  - sentieon
+tools:
+  - rseqc:
+      description: |
+        RSEM: accurate transcript quantification from RNA-Seq data with or without a reference genome
+      homepage: https://github.com/deweylab/RSEM
+      documentation: https://github.com/deweylab/RSEM
+      doi: 10.1186/1471-2105-12-323
+      licence: ["GPL-3.0-or-later"]
+      identifier: biotools:rsem
+input:
+  - fasta:
+      type: file
+      description: The Fasta file of the reference genome
+      pattern: "*.{fasta,fa}"
+      ontologies: []
+  - gtf:
+      type: file
+      description: The GTF file of the reference genome
+      pattern: "*.gtf"
+      ontologies: []
+output:
+  index:
+    - rsem:
+        type: directory
+        description: RSEM index directory
+        pattern: "rsem"
+  transcript_fasta:
+    - "*transcripts.fa":
+        type: file
+        description: Fasta file of transcripts
+        pattern: "rsem/*transcripts.fa"
+        ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+authors:
+  - "@FriederikeHanssen"
+maintainers:
+  - "@FriederikeHanssen"

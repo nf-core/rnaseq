@@ -1,0 +1,45 @@
+name: cat_fastq
+description: Concatenates fastq files
+keywords:
+  - cat
+  - fastq
+  - concatenate
+tools:
+  - cat:
+      description: |
+        The cat utility reads files sequentially, writing them to the standard output.
+      documentation: https://www.gnu.org/software/coreutils/manual/html_node/cat-invocation.html
+      licence: ["GPL-3.0-or-later"]
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - reads:
+        type: file
+        description: |
+          List of input FastQ files to be concatenated.
+output:
+  - reads:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.merged.fastq.gz":
+          type: file
+          description: Merged fastq file
+          pattern: "*.{merged.fastq.gz}"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+authors:
+  - "@joseespinosa"
+  - "@drpatelh"
+maintainers:
+  - "@joseespinosa"
+  - "@drpatelh"

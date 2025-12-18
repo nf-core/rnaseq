@@ -1,0 +1,44 @@
+nextflow_process {
+
+    name "Test Process GTF2BED"
+    script "../main.nf"
+    process "GTF2BED"
+
+    test("sarscov2 - bam") {
+
+        when {
+            process {
+                """
+                input[0] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("sarscov2 - bam - stub") {
+
+    options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+}

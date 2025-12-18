@@ -1,0 +1,406 @@
+{
+    "se_versions": {
+        "content": [
+            [
+                "versions.yml:md5,1a38a5d8b9ea523ccfa7c9f9802fa7ec"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2025-06-02T13:34:25.408496"
+    },
+    "Paired-End - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.hisat2.summary.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    "versions.yml:md5,1a38a5d8b9ea523ccfa7c9f9802fa7ec"
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "fastq": [
+                    
+                ],
+                "summary": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.hisat2.summary.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,1a38a5d8b9ea523ccfa7c9f9802fa7ec"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2025-06-02T13:35:07.399682"
+    },
+    "Single-End - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.hisat2.summary.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    "versions.yml:md5,1a38a5d8b9ea523ccfa7c9f9802fa7ec"
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "fastq": [
+                    
+                ],
+                "summary": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.hisat2.summary.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,1a38a5d8b9ea523ccfa7c9f9802fa7ec"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2025-06-02T13:34:39.530376"
+    },
+    "pe_no_ss_versions": {
+        "content": [
+            [
+                "versions.yml:md5,1a38a5d8b9ea523ccfa7c9f9802fa7ec"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2025-06-02T13:35:42.179425"
+    },
+    "Paired-End No Splice Sites - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.hisat2.summary.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    "versions.yml:md5,1a38a5d8b9ea523ccfa7c9f9802fa7ec"
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "fastq": [
+                    
+                ],
+                "summary": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.hisat2.summary.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,1a38a5d8b9ea523ccfa7c9f9802fa7ec"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2025-06-02T13:35:54.361279"
+    },
+    "pe_no_ss_summary": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.hisat2.summary.log:md5,9839b31db795958cc4b70711a3414e9c"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-21T09:09:52.068244"
+    },
+    "pe_no_ss_fastq": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-21T09:09:52.072985"
+    },
+    "se_summary": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.hisat2.summary.log:md5,7b8a9e61b7646da1089b041333c41a87"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-21T09:08:33.727355"
+    },
+    "pe_summary": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.hisat2.summary.log:md5,9839b31db795958cc4b70711a3414e9c"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-21T09:09:01.495439"
+    },
+    "pe_fastq": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-21T09:09:01.500755"
+    },
+    "se_fastq": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-21T09:08:33.732523"
+    },
+    "se_no_ss_summary": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.hisat2.summary.log:md5,7b8a9e61b7646da1089b041333c41a87"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-21T09:09:26.851884"
+    },
+    "se_no_ss_versions": {
+        "content": [
+            [
+                "versions.yml:md5,1a38a5d8b9ea523ccfa7c9f9802fa7ec"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2025-06-02T13:35:18.850585"
+    },
+    "se_no_ss_fastq": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-21T09:09:26.871369"
+    },
+    "Single-End No Splice Sites - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.hisat2.summary.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    "versions.yml:md5,1a38a5d8b9ea523ccfa7c9f9802fa7ec"
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "fastq": [
+                    
+                ],
+                "summary": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.hisat2.summary.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,1a38a5d8b9ea523ccfa7c9f9802fa7ec"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2025-06-02T13:35:30.451275"
+    },
+    "pe_versions": {
+        "content": [
+            [
+                "versions.yml:md5,1a38a5d8b9ea523ccfa7c9f9802fa7ec"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2025-06-02T13:34:53.518239"
+    }
+}

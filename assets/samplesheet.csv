@@ -1,0 +1,8 @@
+sample,fastq_1,fastq_2,strandedness
+control_REP1,/path/to/fastq/files/AEG588A1_S1_L002_R1_001.fastq.gz,/path/to/fastq/files/AEG588A1_S1_L002_R2_001.fastq.gz,forward
+control_REP2,/path/to/fastq/files/AEG588A2_S2_L002_R1_001.fastq.gz,/path/to/fastq/files/AEG588A2_S2_L002_R2_001.fastq.gz,forward
+control_REP3,/path/to/fastq/files/AEG588A3_S3_L002_R1_001.fastq.gz,/path/to/fastq/files/AEG588A3_S3_L002_R2_001.fastq.gz,forward
+treatment_REP1,/path/to/fastq/files/AEG588A4_S4_L003_R1_001.fastq.gz,,forward
+treatment_REP2,/path/to/fastq/files/AEG588A5_S5_L003_R1_001.fastq.gz,,forward
+treatment_REP3,/path/to/fastq/files/AEG588A6_S6_L003_R1_001.fastq.gz,,forward
+treatment_REP3,/path/to/fastq/files/AEG588A6_S6_L004_R1_001.fastq.gz,,forward

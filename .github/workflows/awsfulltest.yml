@@ -1,0 +1,52 @@
+name: nf-core AWS full size tests
+# This workflow is triggered on PRs opened against the main/master branch.
+# It can be additionally triggered manually with GitHub actions workflow dispatch button.
+# It runs the -profile 'test_full' on AWS batch
+
+on:
+  workflow_dispatch:
+  pull_request_review:
+    types: [submitted]
+  release:
+    types: [published]
+
+jobs:
+  run-platform:
+    name: Run AWS full tests
+    # run only if the PR is approved by at least 2 reviewers and against the master/main branch or manually triggered
+    if: github.repository == 'nf-core/rnaseq' && github.event.review.state == 'approved' && (github.event.pull_request.base.ref == 'master' || github.event.pull_request.base.ref == 'main') || github.event_name == 'workflow_dispatch' || github.event_name == 'release'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        aligner: ["star_salmon", "star_rsem"]
+    steps:
+      - name: Set revision variable
+        id: revision
+        run: |
+          echo "revision=${{ (github.event_name == 'workflow_dispatch' || github.event_name == 'release') && github.sha || 'dev' }}" >> "$GITHUB_OUTPUT"
+
+      - name: Launch workflow via Seqera Platform
+        uses: seqeralabs/action-tower-launch@v2
+        # TODO nf-core: You can customise AWS full pipeline tests as required
+        # Add full size test data (but still relatively small datasets for few samples)
+        # on the `test_full.config` test runs with only one set of parameters
+        with:
+          workspace_id: ${{ vars.TOWER_WORKSPACE_ID }}
+          access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
+          compute_env: ${{ vars.TOWER_COMPUTE_ENV }}
+          revision: ${{ steps.revision.outputs.revision }}
+          workdir: s3://${{ vars.AWS_S3_BUCKET }}/work/rnaseq/work-${{ steps.revision.outputs.revision }}
+          parameters: |
+            {
+              "hook_url": "${{ secrets.MEGATESTS_ALERTS_SLACK_HOOK_URL }}",
+              "aligner": "${{ matrix.aligner }}",
+              "outdir": "s3://${{ vars.AWS_S3_BUCKET }}/rnaseq/results-${{ steps.revision.outputs.revision }}/aligner_${{ matrix.aligner }}/"
+            }
+          profiles: test_full
+
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        with:
+          name: Seqera Platform debug log file
+          path: |
+            tower_action_*.log
+            tower_action_*.json

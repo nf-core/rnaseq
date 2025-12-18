@@ -1,0 +1,56 @@
+name: star_genomegenerate
+description: Create index for STAR
+keywords:
+  - index
+  - fasta
+  - genome
+  - reference
+tools:
+  - star:
+      description: |
+        STAR is a software package for mapping DNA sequences against
+        a large reference genome, such as the human genome.
+      homepage: https://github.com/alexdobin/STAR
+      manual: https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf
+      doi: 10.1093/bioinformatics/bts635
+      licence: ["MIT"]
+      identifier: biotools:star
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - fasta:
+        type: file
+        description: Fasta file of the reference genome
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'test' ]
+    - gtf:
+        type: file
+        description: GTF file of the reference genome
+output:
+  - index:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - star:
+          type: directory
+          description: Folder containing the star index files
+          pattern: "star"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+authors:
+  - "@kevinmenden"
+  - "@drpatelh"
+maintainers:
+  - "@kevinmenden"
+  - "@drpatelh"

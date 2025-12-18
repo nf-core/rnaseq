@@ -1,0 +1,167 @@
+{
+    "pair end - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.umi_extract_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test.umi_extract_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                        ]
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.umi_extract.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    "versions.yml:md5,568d243174c081a0301e74ed42e59b48"
+                ],
+                "log": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.umi_extract.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "reads": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.umi_extract_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test.umi_extract_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,568d243174c081a0301e74ed42e59b48"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-02T15:05:20.008312"
+    },
+    "single end - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.umi_extract.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.umi_extract.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    "versions.yml:md5,568d243174c081a0301e74ed42e59b48"
+                ],
+                "log": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.umi_extract.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "reads": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.umi_extract.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,568d243174c081a0301e74ed42e59b48"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-02T15:04:12.145999"
+    },
+    "pair end": {
+        "content": [
+            "test.umi_extract_1.fastq.gz",
+            "test.umi_extract_2.fastq.gz",
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.umi_extract.log"
+                ]
+            ],
+            [
+                "versions.yml:md5,568d243174c081a0301e74ed42e59b48"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-02T15:21:09.578031"
+    },
+    "single end": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.umi_extract.fastq.gz"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.umi_extract.log"
+                ]
+            ],
+            [
+                "versions.yml:md5,568d243174c081a0301e74ed42e59b48"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-02T15:03:52.464606"
+    }
+}

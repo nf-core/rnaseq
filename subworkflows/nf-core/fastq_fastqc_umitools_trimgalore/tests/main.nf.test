@@ -1,0 +1,263 @@
+nextflow_workflow {
+
+    name "Test Subworkflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE"
+    script "../main.nf"
+    workflow "FASTQ_FASTQC_UMITOOLS_TRIMGALORE"
+    config './nextflow.config'
+
+    test("test single end read with UMI") {
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:true ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                ])
+                input[1] = false // skip_fastqc
+                input[2] = true  // with_umi
+                input[3] = false // skip_umi_extract
+                input[4] = false // skip_trimming
+                input[5] = 1     // umi_discard_read
+                input[6] = 1     // min_trimmed_reads
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert path(workflow.out.fastqc_html[0][1]).text.contains("<tr><td>File type</td><td>Conventional base calls</td></tr>") },
+                { assert snapshot(
+                    workflow.out.reads,
+                    workflow.out.trim_read_count,
+                    workflow.out.trim_unpaired,
+                    workflow.out.versions).match() }
+            )
+        }
+    }
+
+    test("test paired end read with UMI") {
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = false // skip_fastqc
+                input[2] = true  // with_umi
+                input[3] = false // skip_umi_extract
+                input[4] = false // skip_trimming
+                input[5] = 1     // umi_discard_read
+                input[6] = 1     // min_trimmed_reads
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out.reads,
+                    workflow.out.trim_read_count,
+                    workflow.out.trim_unpaired,
+                    workflow.out.versions).match() }
+            )
+        }
+    }
+    test("test paired end read without UMI") {
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = false // skip_fastqc
+                input[2] = false // with_umi
+                input[3] = false // skip_umi_extract
+                input[4] = false // skip_trimming
+                input[5] = 1     // umi_discard_read
+                input[6] = 1     // min_trimmed_reads
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out.reads,
+                    workflow.out.trim_read_count,
+                    workflow.out.trim_unpaired,
+                    workflow.out.versions).match() }
+            )
+        }
+    }
+
+    test("test skip all steps") {
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = true // skip_fastqc
+                input[2] = true // with_umi
+                input[3] = true // skip_umi_extract
+                input[4] = true // skip_trimming
+                input[5] = 0    // umi_discard_read
+                input[6] = 1    // min_trimmed_reads
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out.trim_read_count,
+                    workflow.out.trim_unpaired,
+                    workflow.out.versions).match() }
+            )
+        }
+    }
+
+    test("test single end read with UMI - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:true ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                ])
+                input[1] = false // skip_fastqc
+                input[2] = true  // with_umi
+                input[3] = false // skip_umi_extract
+                input[4] = false // skip_trimming
+                input[5] = 1     // umi_discard_read
+                input[6] = 1     // min_trimmed_reads
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(workflow.out).match() }
+            )
+        }
+    }
+
+    test("test paired end read with UMI - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = false // skip_fastqc
+                input[2] = true  // with_umi
+                input[3] = false // skip_umi_extract
+                input[4] = false // skip_trimming
+                input[5] = 1     // umi_discard_read
+                input[6] = 1     // min_trimmed_reads
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(workflow.out).match() }
+            )
+        }
+    }
+    test("test paired end read without UMI - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = false // skip_fastqc
+                input[2] = false // with_umi
+                input[3] = false // skip_umi_extract
+                input[4] = false // skip_trimming
+                input[5] = 1     // umi_discard_read
+                input[6] = 1     // min_trimmed_reads
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(workflow.out).match() }
+            )
+        }
+    }
+
+    test("test skip all steps - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = true // skip_fastqc
+                input[2] = true // with_umi
+                input[3] = true // skip_umi_extract
+                input[4] = true // skip_trimming
+                input[5] = 0    // umi_discard_read
+                input[6] = 1    // min_trimmed_reads
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success}
+                // No snapshot when skipping all as output is input
+            )
+        }
+    }
+}

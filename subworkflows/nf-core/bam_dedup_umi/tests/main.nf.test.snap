@@ -1,0 +1,109 @@
+{
+    "sarscov2_bam_bai - umicollapse - no transcriptome bams": {
+        "content": [
+            "c1917631c47d16320d002b867e226a2e",
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.umi_dedup.genome.sorted.bam.stats:md5,a03e635b85a846a2650c7b747926c7ed"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.umi_dedup.genome.sorted.bam.flagstat:md5,18d602435a02a4d721b78d1812622159"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.umi_dedup.genome.sorted.bam.idxstats:md5,85d20a901eef23ca50c323638a2eb602"
+                ]
+            ],
+            [
+                "versions.yml:md5,3fe6727d1a90130a932400464233ab5d",
+                "versions.yml:md5,5d91176bd409dc54816e7e3a7773b5ef",
+                "versions.yml:md5,7eaf0c81f627dde8e2710a57e19b4d87",
+                "versions.yml:md5,d6bba04463b79564f053e7e5033025dd",
+                "versions.yml:md5,f90574f645fd8876ba52b89b2272afc1"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2024-12-12T13:04:25.48875"
+    },
+    "sarscov2_bam_bai - umitools - with transcriptome bams": {
+        "content": [
+            "c1917631c47d16320d002b867e226a2e",
+            "fe38ce657d4208a850702bdbfaa062ca",
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.umi_dedup.genome.sorted.bam.stats:md5,a03e635b85a846a2650c7b747926c7ed"
+                ],
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.umi_dedup.transcriptome.sorted.bam.stats:md5,720f03daf649606a50c2cccbf135edc5"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.umi_dedup.genome.sorted.bam.flagstat:md5,18d602435a02a4d721b78d1812622159"
+                ],
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.umi_dedup.transcriptome.sorted.bam.flagstat:md5,18d602435a02a4d721b78d1812622159"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.umi_dedup.genome.sorted.bam.idxstats:md5,85d20a901eef23ca50c323638a2eb602"
+                ],
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.umi_dedup.transcriptome.sorted.bam.idxstats:md5,85d20a901eef23ca50c323638a2eb602"
+                ]
+            ],
+            [
+                "versions.yml:md5,017dce06e6fadba312ce46808e2b19ff",
+                "versions.yml:md5,0ca2bd583dd1951c792b526f768db343",
+                "versions.yml:md5,1e761d924c3e0f35284799aa566e7c1a",
+                "versions.yml:md5,43e34c4518b8d546b632b372bc282ac4",
+                "versions.yml:md5,9d7724974d6dc288b485b5509c89297b",
+                "versions.yml:md5,a4562f4cc5d04041a79ba57761e231d9",
+                "versions.yml:md5,acfef82b716e50563fb22f47f33de00a",
+                "versions.yml:md5,afd68b9511aecba9cc5d6f7dd4c34bbd",
+                "versions.yml:md5,c2fda58ea2b120a510502b9db24d8a16",
+                "versions.yml:md5,d531cd7e744b2f95659bdb544f2cd8a5",
+                "versions.yml:md5,e22174a7d3003395e8e8c34ebfba1719"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2024-12-12T13:04:12.182087"
+    }
+}

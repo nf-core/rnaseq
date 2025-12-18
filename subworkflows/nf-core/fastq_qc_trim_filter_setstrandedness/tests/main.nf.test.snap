@@ -1,0 +1,128 @@
+{
+    "fastp_read_count": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false,
+                        "strandedness": "auto"
+                    },
+                    3022
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2024-12-02T12:56:09.941793"
+    },
+    "trimgalore_test_pe_reads_2_lines": {
+        "content": "eccf3e9e74589ff01c77fce7f4548e41",
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2024-12-02T12:56:34.948679"
+    },
+    "fastp_test_pe_reads_1_size": {
+        "content": [
+            4508
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2024-12-02T12:56:09.889501"
+    },
+    "trimgalore_test_pe_reads_1_size": {
+        "content": [
+            4508
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2024-12-02T12:56:34.91497"
+    },
+    "trimgalore_lint": {
+        "content": "daec499818124330ef90e5af47383f00",
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2024-12-02T12:56:34.952929"
+    },
+    "trimgalore_test_pe_reads_1_lines": {
+        "content": "3868fc1caf09367141d2bbf47e158823",
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2024-12-02T12:56:34.913312"
+    },
+    "fastp_lint": {
+        "content": "daec499818124330ef90e5af47383f00",
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2024-12-02T12:56:09.943788"
+    },
+    "fastp_test_pe_reads_2_lines": {
+        "content": "eccf3e9e74589ff01c77fce7f4548e41",
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2024-12-02T12:56:09.93962"
+    },
+    "fastp_test_pe_reads_2_size": {
+        "content": [
+            4508
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2024-12-02T12:56:09.940673"
+    },
+    "trimgalore_test_pe_reads_2_size": {
+        "content": [
+            4508
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2024-12-02T12:56:34.949981"
+    },
+    "fastp_test_pe_reads_1_lines": {
+        "content": "3868fc1caf09367141d2bbf47e158823",
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2024-12-02T12:56:09.887546"
+    },
+    "trimgalore_read_count": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false,
+                        "strandedness": "auto"
+                    },
+                    3022
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2024-12-02T12:56:34.951137"
+    }
+}

@@ -1,0 +1,90 @@
+{
+    "Should run without failures - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "genome"
+                        },
+                        [
+                            
+                        ]
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,e36ef3cd73d19ccf2378c9358fe942c0"
+                ],
+                "index": [
+                    [
+                        {
+                            "id": "genome"
+                        },
+                        [
+                            
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,e36ef3cd73d19ccf2378c9358fe942c0"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-20T18:18:08.896422"
+    },
+    "Should run without failures": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "genome"
+                        },
+                        [
+                            "genome.1.ht2:md5,057cfa8a22b97ee9cff4c8d342498803",
+                            "genome.2.ht2:md5,47b153cd1319abc88dda532462651fcf",
+                            "genome.3.ht2:md5,4ed93abba181d8dfab2e303e33114777",
+                            "genome.4.ht2:md5,c25be5f8b0378abf7a58c8a880b87626",
+                            "genome.5.ht2:md5,91198831aaba993acac1734138c5f173",
+                            "genome.6.ht2:md5,265e1284ce85686516fae5d35540994a",
+                            "genome.7.ht2:md5,9013eccd91ad614d7893c739275a394f",
+                            "genome.8.ht2:md5,33cdeccccebe80329f1fdbee7f5874cb"
+                        ]
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,e36ef3cd73d19ccf2378c9358fe942c0"
+                ],
+                "index": [
+                    [
+                        {
+                            "id": "genome"
+                        },
+                        [
+                            "genome.1.ht2:md5,057cfa8a22b97ee9cff4c8d342498803",
+                            "genome.2.ht2:md5,47b153cd1319abc88dda532462651fcf",
+                            "genome.3.ht2:md5,4ed93abba181d8dfab2e303e33114777",
+                            "genome.4.ht2:md5,c25be5f8b0378abf7a58c8a880b87626",
+                            "genome.5.ht2:md5,91198831aaba993acac1734138c5f173",
+                            "genome.6.ht2:md5,265e1284ce85686516fae5d35540994a",
+                            "genome.7.ht2:md5,9013eccd91ad614d7893c739275a394f",
+                            "genome.8.ht2:md5,33cdeccccebe80329f1fdbee7f5874cb"
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,e36ef3cd73d19ccf2378c9358fe942c0"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2023-10-16T14:42:22.381609786"
+    }
+}

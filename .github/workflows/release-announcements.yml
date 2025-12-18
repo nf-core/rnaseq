@@ -1,0 +1,47 @@
+name: release-announcements
+# Automatic release toot and tweet anouncements
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  toot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: get topics and convert to hashtags
+        id: get_topics
+        run: |
+          echo "topics=$(curl -s https://nf-co.re/pipelines.json | jq -r '.remote_workflows[] | select(.full_name == "${{ github.repository }}") | .topics[]' | awk '{print "#"$0}' | tr '\n' ' ')" | sed 's/-//g' >> $GITHUB_OUTPUT
+
+      - name: get description
+        id: get_description
+        run: |
+          echo "description=$(curl -s https://nf-co.re/pipelines.json | jq -r '.remote_workflows[] | select(.full_name == "${{ github.repository }}") | .description')" >> $GITHUB_OUTPUT
+
+      - uses: rzr/fediverse-action@master
+        with:
+          access-token: ${{ secrets.MASTODON_ACCESS_TOKEN }}
+          host: "mstdn.science" # custom host if not "mastodon.social" (default)
+          # GitHub event payload
+          # https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#release
+          message: |
+            Pipeline release! ${{ github.repository }} v${{ github.event.release.tag_name }} - ${{ github.event.release.name }}!
+            ${{ steps.get_description.outputs.description }}
+            Please see the changelog: ${{ github.event.release.html_url }}
+
+            ${{ steps.get_topics.outputs.topics }} #nfcore #openscience #nextflow #bioinformatics
+
+  bsky-post:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: zentered/bluesky-post-action@6461056ea355ea43b977e149f7bf76aaa572e5e8 # v0.3.0
+        with:
+          post: |
+            Pipeline release! ${{ github.repository }} v${{ github.event.release.tag_name }} - ${{ github.event.release.name }}!
+
+            Please see the changelog: ${{ github.event.release.html_url }}
+        env:
+          BSKY_IDENTIFIER: ${{ secrets.BSKY_IDENTIFIER }}
+          BSKY_PASSWORD: ${{ secrets.BSKY_PASSWORD }}
+          #

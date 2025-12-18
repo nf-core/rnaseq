@@ -1,0 +1,46 @@
+name: kallisto_index
+description: Create kallisto index
+keywords:
+  - kallisto
+  - kallisto/index
+  - index
+tools:
+  - kallisto:
+      description: Quantifying abundances of transcripts from bulk and single-cell RNA-Seq
+        data, or more generally of target sequences using high-throughput sequencing
+        reads.
+      homepage: https://pachterlab.github.io/kallisto/
+      documentation: https://pachterlab.github.io/kallisto/manual
+      tool_dev_url: https://github.com/pachterlab/kallisto
+      licence: ["BSD-2-Clause"]
+      identifier: biotools:kallisto
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'test' ]
+    - fasta:
+        type: file
+        description: genome fasta file
+        pattern: "*.{fasta}"
+output:
+  - index:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing reference information
+            e.g. [ id:'test' ]
+      - kallisto:
+          type: directory
+          description: Kallisto genome index
+          pattern: "*.idx"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+authors:
+  - "@ggabernet"
+maintainers:
+  - "@ggabernet"

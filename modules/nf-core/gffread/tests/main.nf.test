@@ -1,0 +1,221 @@
+nextflow_process {
+
+    name "Test Process GFFREAD"
+    script "../main.nf"
+    process "GFFREAD"
+
+
+    test("sarscov2-gff3-gtf") {
+
+        config "./nextflow.config"
+
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+            process {
+                """
+                input[0] = [
+                    [id: 'test'],
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gff3", checkIfExists: true)
+                ]
+                input[1] = []
+
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(process.out).match() },
+                { assert process.out.gffread_gff == [] },
+                { assert process.out.gffread_fasta == [] }
+            )
+        }
+
+    }
+
+    test("sarscov2-gff3-gtf-stub") {
+
+        options '-stub'
+        config "./nextflow.config"
+
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+            process {
+                """
+                input[0] = [
+                    [id: 'test'],
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gff3", checkIfExists: true)
+                ]
+                input[1] = []
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(process.out).match() },
+                { assert process.out.gffread_gff == [] },
+                { assert process.out.gffread_fasta == [] }
+            )
+        }
+
+    }
+
+    test("sarscov2-gff3-gff3") {
+
+        config "./nextflow-gff3.config"
+
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+            process {
+                """
+                input[0] = [
+                    [id: 'test'],
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gff3", checkIfExists: true)
+                ]
+                input[1] = []
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(process.out).match() },
+                { assert process.out.gtf == [] },
+                { assert process.out.gffread_fasta == [] }
+            )
+        }
+
+    }
+
+    test("sarscov2-gff3-gff3-stub") {
+
+        options '-stub'
+        config "./nextflow-gff3.config"
+
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+            process {
+                """
+                input[0] = [
+                    [id: 'test'],
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gff3", checkIfExists: true)
+                ]
+                input[1] = []
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(process.out).match() },
+                { assert process.out.gtf == [] },
+                { assert process.out.gffread_fasta == [] }
+            )
+        }
+
+    }
+
+    test("sarscov2-gff3-fasta") {
+
+        config "./nextflow-fasta.config"
+
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+            process {
+                """
+                input[0] = [
+                    [id: 'test'],
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gff3", checkIfExists: true)
+                ]
+                input[1] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(process.out).match() },
+                { assert process.out.gtf == [] },
+                { assert process.out.gffread_gff == [] }
+            )
+        }
+
+    }
+
+    test("sarscov2-gff3-fasta-stub") {
+
+        options '-stub'
+        config "./nextflow-fasta.config"
+
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+            process {
+                """
+                input[0] = [
+                    [id: 'test'],
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gff3", checkIfExists: true)
+                ]
+                input[1] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(process.out).match() },
+                { assert process.out.gtf == [] },
+                { assert process.out.gffread_gff == [] }
+            )
+        }
+
+    }
+
+    test("sarscov2-gff3-fasta-fail-catch") {
+
+        options '-stub'
+        config "./nextflow-fasta.config"
+
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+            process {
+                """
+                input[0] = [
+                    [id: 'genome'],
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gff3", checkIfExists: true)
+                ]
+                input[1] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert ! process.success },
+                { assert process.stdout.toString().contains("Input and output names are the same") }
+            )
+        }
+
+    }
+
+}

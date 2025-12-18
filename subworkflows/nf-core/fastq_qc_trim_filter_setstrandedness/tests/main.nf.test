@@ -1,0 +1,146 @@
+nextflow_workflow {
+
+    name "Test Subworkflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS"
+    script "../main.nf"
+    workflow "FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS"
+    config "./nextflow.config"
+
+
+
+
+
+    test("homo_sapiens paired-end [fastq] fastp") {
+
+        when {
+            workflow {
+                """
+                ch_reads = Channel.of([
+                    [ id:'test', single_end:false, strandedness:'auto' ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+
+                input[0] = ch_reads
+                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)) // ch_fasta
+                input[2] = Channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)) // ch_transcript_fasta
+                input[3] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)) // ch_gtf
+                input[4] = []              // ch_salmon_index
+                input[5] = []              // ch_sortmerna_index
+                input[6] = []              // ch_bbsplit_index
+                input[7] = Channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas
+                input[8] = true            // skip_bbsplit
+                input[9] = false           // skip_fastqc
+                input[10] = false           // skip_trimming
+                input[11] = true           // skip_umi_extract
+                input[12] = true           // make_salmon_index
+                input[13] = true           // make_sortmerna_index
+                input[14] = 'fastp'        // trimmer
+                input[15] = 10             // min_trimmed_reads
+                input[16] = true           // save_trimmed
+                input[17] = true           // remove_ribo_rna
+                input[18] = false          // with_umi
+                input[19] = 0              // umi_discard_read
+                input[20] = 0.8            // stranded_threshold
+                input[21] = 0.1            // unstranded_threshold
+                input[22] = false          // skip_linting
+                input[23] = true           // fastp_merge
+                """
+            }
+        }
+
+        then {
+            def pelines1 = path(workflow.out.reads[0][1][0]).linesGzip
+            def pelines2 = path(workflow.out.reads[0][1][1]).linesGzip
+
+            // First part of each fq lint report line is a timestamp, remove it before snapshotting
+            def processed_sortmerna_lint_report = path(workflow.out.lint_log.find { entry -> entry[1].contains('sortmerna')}?.getAt(1))
+                .getText()
+                .readLines()
+                .collect { line -> line.split(' ', 2)[1] } // Split by the first space and take everything after it
+                .join('\n') // Join the processed lines back into a single text block
+
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(pelines1).md5().match("fastp_test_pe_reads_1_lines") },
+                { assert snapshot(pelines1.size()).match("fastp_test_pe_reads_1_size") },
+                { assert snapshot(pelines2).md5().match("fastp_test_pe_reads_2_lines") },
+                { assert snapshot(pelines2.size()).match("fastp_test_pe_reads_2_size") },
+                { assert snapshot(workflow.out.trim_read_count).match("fastp_read_count") },
+                { assert snapshot(processed_sortmerna_lint_report).md5().match("fastp_lint") }
+                // This doesn't work- 'cat' changes between Conda and Docker -
+                // leaving it here until we find a way to address that
+                // { assert snapshot(workflow.out.versions).match("fastp_versions") }
+            )
+        }
+    }
+    test("homo_sapiens paired-end [fastq] trimgalore") {
+
+        when {
+            workflow {
+                """
+                ch_reads = Channel.of([
+                    [ id:'test', single_end:false, strandedness:'auto' ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+
+                input[0] = ch_reads
+                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)) // ch_fasta
+                input[2] = Channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)) // ch_transcript_fasta
+                input[3] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)) // ch_gtf
+                input[4] = []              // ch_salmon_index
+                input[5] = []              // ch_sortmerna_index
+                input[6] = []              // ch_bbsplit_index
+                input[7] = Channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas
+                input[8] = true            // skip_bbsplit
+                input[9] = false           // skip_fastqc
+                input[10] = false           // skip_trimming
+                input[11] = true           // skip_umi_extract
+                input[12] = true           // make_salmon_index
+                input[13] = true           // make_sortmerna_index
+                input[14] = 'fastp'        // trimmer
+                input[15] = 10             // min_trimmed_reads
+                input[16] = true           // save_trimmed
+                input[17] = true           // remove_ribo_rna
+                input[18] = false          // with_umi
+                input[19] = 0              // umi_discard_read
+                input[20] = 0.8            // stranded_threshold
+                input[21] = 0.1            // unstranded_threshold
+                input[22] = false          // skip_linting
+                input[23] = true           // fastp_merge
+                """
+            }
+        }
+
+        then {
+            def pelines1 = path(workflow.out.reads[0][1][0]).linesGzip
+            def pelines2 = path(workflow.out.reads[0][1][1]).linesGzip
+
+            // First part of each fq lint report line is a timestamp, remove it before snapshotting
+            def processed_sortmerna_lint_report = path(workflow.out.lint_log.find { entry -> entry[1].contains('sortmerna')}?.getAt(1))
+                .getText()
+                .readLines()
+                .collect { line -> line.split(' ', 2)[1] } // Split by the first space and take everything after it
+                .join('\n') // Join the processed lines back into a single text block
+
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(pelines1).md5().match("trimgalore_test_pe_reads_1_lines") },
+                { assert snapshot(pelines1.size()).match("trimgalore_test_pe_reads_1_size") },
+                { assert snapshot(pelines2).md5().match("trimgalore_test_pe_reads_2_lines") },
+                { assert snapshot(pelines2.size()).match("trimgalore_test_pe_reads_2_size") },
+                { assert snapshot(workflow.out.trim_read_count).match("trimgalore_read_count") },
+                { assert snapshot(processed_sortmerna_lint_report).md5().match("trimgalore_lint") }
+                // This doesn't work- 'cat' changes between Conda and Docker -
+                // leaving it here until we find a way to address that
+                //{ assert snapshot(workflow.out.versions).match("trimgalore_versions") }
+            )
+        }
+    }
+
+
+}

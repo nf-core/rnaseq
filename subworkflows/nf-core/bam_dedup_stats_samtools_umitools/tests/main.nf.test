@@ -1,0 +1,67 @@
+nextflow_workflow {
+
+    name "Test Workflow BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS"
+    script "../main.nf"
+    workflow "BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS"
+
+    test("sarscov2_bam_bai") {
+
+        when {
+            workflow {
+                """
+                val_get_dedup_stats = false
+
+                input[0] = Channel.of([
+                    [ id:'test'], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam.bai', checkIfExists: true)
+                ])
+                input[1] = val_get_dedup_stats
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert workflow.out.deduplog.get(0).get(1) ==~ ".*.log"},
+                { assert workflow.out.bam.get(0).get(1) ==~ ".*.bam"},
+                { assert workflow.out.bai.get(0).get(1) ==~ ".*.bai"},
+                { assert snapshot(
+                    bam(workflow.out.bam[0][1]).getSamLinesMD5(),
+                    workflow.out.stats,
+                    workflow.out.flagstat,
+                    workflow.out.idxstats,
+                    workflow.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("sarscov2_bam_bai - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                val_get_dedup_stats = false
+
+                input[0] = Channel.of([
+                    [ id:'test'], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam.bai', checkIfExists: true)
+                ])
+                input[1] = val_get_dedup_stats
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(workflow.out).match() }
+            )
+        }
+    }
+}

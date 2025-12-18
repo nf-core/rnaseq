@@ -1,0 +1,200 @@
+{
+    "sarscov2 - dummy sizes": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.coverage.txt:md5,01291b6e1beab72e046653e709eb0e10"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,5fd44452613992a6f71f2c73d2e117f2"
+                ],
+                "genomecov": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.coverage.txt:md5,01291b6e1beab72e046653e709eb0e10"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,5fd44452613992a6f71f2c73d2e117f2"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-05T11:59:33.898146"
+    },
+    "sarscov2 - no scale - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.coverage.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,5fd44452613992a6f71f2c73d2e117f2"
+                ],
+                "genomecov": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.coverage.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,5fd44452613992a6f71f2c73d2e117f2"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-05T11:59:52.483371"
+    },
+    "sarscov2 - scale": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.coverage.txt:md5,de3c59c0ea123bcdbbad27bc0a0a601e"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,5fd44452613992a6f71f2c73d2e117f2"
+                ],
+                "genomecov": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.coverage.txt:md5,de3c59c0ea123bcdbbad27bc0a0a601e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,5fd44452613992a6f71f2c73d2e117f2"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-05T11:59:43.69501"
+    },
+    "sarscov2 - scale - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.coverage.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,5fd44452613992a6f71f2c73d2e117f2"
+                ],
+                "genomecov": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.coverage.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,5fd44452613992a6f71f2c73d2e117f2"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-05T12:00:09.930036"
+    },
+    "sarscov2 - no scale": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.coverage.txt:md5,66083198daca6c001d328ba9616e9b53"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,5fd44452613992a6f71f2c73d2e117f2"
+                ],
+                "genomecov": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.coverage.txt:md5,66083198daca6c001d328ba9616e9b53"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,5fd44452613992a6f71f2c73d2e117f2"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-05T11:59:25.448817"
+    },
+    "sarscov2 - dummy sizes - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.coverage.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,5fd44452613992a6f71f2c73d2e117f2"
+                ],
+                "genomecov": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.coverage.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,5fd44452613992a6f71f2c73d2e117f2"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-05T12:00:01.086433"
+    }
+}

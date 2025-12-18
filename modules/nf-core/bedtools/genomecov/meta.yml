@@ -1,0 +1,71 @@
+name: bedtools_genomecov
+description: Computes histograms (default), per-base reports (-d) and BEDGRAPH (-bg)
+  summaries of feature coverage (e.g., aligned sequences) for a given genome.
+keywords:
+  - bed
+  - bam
+  - genomecov
+  - bedtools
+  - histogram
+tools:
+  - bedtools:
+      description: |
+        A set of tools for genomic analysis tasks, specifically enabling genome arithmetic (merge, count, complement) on various file types.
+      documentation: https://bedtools.readthedocs.io/en/latest/content/tools/genomecov.html
+      licence: ["MIT"]
+      identifier: biotools:bedtools
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - intervals:
+        type: file
+        description: BAM/BED/GFF/VCF
+        pattern: "*.{bam|bed|gff|vcf}"
+    - scale:
+        type: integer
+        description: Number containing the scale factor for the output. Set to 1 to
+          disable. Setting to a value other than 1 will also get the -bg bedgraph output
+          format as this is required for this command switch
+  - - sizes:
+        type: file
+        description: Tab-delimited table of chromosome names in the first column and
+          chromosome sizes in the second column
+  - - extension:
+        type: string
+        description: Extension of the output file (e. g., ".bg", ".bedgraph", ".txt",
+          ".tab", etc.) It is set arbitrarily by the user and corresponds to the file
+          format which depends on arguments.
+  - - sort:
+        type: boolean
+        description: Sort the output
+output:
+  - genomecov:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.${extension}":
+          type: file
+          description: Computed genome coverage file
+          pattern: "*.${extension}"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+authors:
+  - "@edmundmiller"
+  - "@sruthipsuresh"
+  - "@drpatelh"
+  - "@sidorov-si"
+  - "@chris-cheshire"
+maintainers:
+  - "@edmundmiller"
+  - "@sruthipsuresh"
+  - "@drpatelh"
+  - "@sidorov-si"
+  - "@chris-cheshire"

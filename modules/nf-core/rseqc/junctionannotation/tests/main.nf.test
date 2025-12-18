@@ -1,0 +1,56 @@
+nextflow_process {
+
+    name "Test Process RSEQC_JUNCTIONANNOTATION"
+    script "../main.nf"
+    process "RSEQC_JUNCTIONANNOTATION"
+
+
+    test("sarscov2 - paired end [bam]") {
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end: false ], // meta map
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true)
+                ])
+                input[1] = Channel.of(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/bed/test.bed", checkIfExists: true))
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert process.out.rscript.get(0).get(1) ==~ ".*/test.junction_plot.r" },
+                { assert process.out.xls.get(0).get(1) ==~ ".*/test.junction.xls" },
+                { assert snapshot(process.out.log).match("log") },
+                { assert snapshot(process.out.versions).match("versions") }
+            )
+        }
+    }
+
+    test("sarscov2 - paired end [bam] - stub") {
+
+    options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end: false ], // meta map
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true)
+                ])
+                input[1] = Channel.of(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/bed/test.bed", checkIfExists: true))
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+}

@@ -1,0 +1,53 @@
+nextflow_process {
+
+    name "Test Process UCSC_BEDCLIP"
+    script "../main.nf"
+    process "UCSC_BEDCLIP"
+
+    test("sarscov2") {
+        config "./nextflow.config"
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bedgraph/test.bedgraph", checkIfExists: true)
+                ])
+                input[1] = Channel.of(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.sizes", checkIfExists: true))
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("sarscov2 - stub") {
+        config "./nextflow.config"
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bedgraph/test.bedgraph", checkIfExists: true)
+                ])
+                input[1] = Channel.of(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.sizes", checkIfExists: true))
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+}

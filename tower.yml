@@ -1,0 +1,57 @@
+reports:
+  multiqc_report.html:
+    display: "MultiQC HTML report"
+  "**/star_salmon/**/deseq2.plots.pdf":
+    display: "All samples STAR Salmon DESeq2 QC PDF plots"
+  "**/star_salmon/salmon.merged.gene_counts.tsv":
+    display: "All samples STAR Salmon merged gene raw counts"
+  "**/star_salmon/salmon.merged.gene_lengths.tsv":
+    display: "All samples STAR Salmon mean transcript length per gene"
+  "**/star_salmon/salmon.merged.transcript_lengths.tsv":
+    display: "All samples STAR Salmon transcript lengths"
+  "**/star_salmon/salmon.merged.gene_tpm.tsv":
+    display: "All samples STAR Salmon merged gene TPM counts"
+  "**/star_salmon/salmon.merged.transcript_counts.tsv":
+    display: "All samples STAR Salmon merged transcript raw counts"
+  "**/star_salmon/salmon.merged.transcript_tpm.tsv":
+    display: "All samples STAR Salmon merged transcript TPM counts"
+  "**/salmon/**/deseq2.plots.pdf":
+    display: "All samples Salmon DESeq2 QC PDF plots"
+  "**/salmon/salmon.merged.gene_counts.tsv":
+    display: "All samples Salmon merged gene raw counts"
+  "**/salmon/salmon.merged.gene_lengths.tsv":
+    display: "All samples Salmon mean transcript length per gene"
+  "**/salmon/salmon.merged.transcript_lengths.tsv":
+    display: "All samples Salmon transcript lengths"
+  "**/salmon/salmon.merged.gene_tpm.tsv":
+    display: "All samples Salmon merged gene TPM counts"
+  "**/salmon/salmon.merged.transcript_counts.tsv":
+    display: "All samples Salmon merged transcript raw counts"
+  "**/salmon/salmon.merged.transcript_tpm.tsv":
+    display: "All samples Salmon merged transcript TPM counts"
+  "**/kallisto/**/deseq2.plots.pdf":
+    display: "All samples Kallisto DESeq2 QC PDF plots"
+  "**/kallisto/kallisto.merged.gene_counts.tsv":
+    display: "All samples Kallisto merged gene raw counts"
+  "**/kallisto/kallisto.merged.gene_lengths.tsv":
+    display: "All samples Kallisto mean transcript length per gene"
+  "**/kallisto/kallisto.merged.transcript_lengths.tsv":
+    display: "All samples Kallisto transcript lengths"
+  "**/kallisto/kallisto.merged.gene_tpm.tsv":
+    display: "All samples Kallisto merged gene TPM counts"
+  "**/kallisto/kallisto.merged.transcript_counts.tsv":
+    display: "All samples Kallisto merged transcript raw counts"
+  "**/kallisto/kallisto.merged.transcript_tpm.tsv":
+    display: "All samples Kallisto merged transcript TPM counts"
+  "**/star_rsem/**/deseq2.plots.pdf":
+    display: "All samples STAR RSEM DESeq2 QC PDF plots"
+  "**/star_rsem/rsem.merged.gene_counts.tsv":
+    display: "All samples STAR RSEM merged gene raw counts"
+  "**/star_rsem/rsem.merged.gene_tpm.tsv":
+    display: "All samples STAR RSEM merged gene TPM counts"
+  "**/star_rsem/rsem.merged.transcript_counts.tsv":
+    display: "All samples STAR RSEM merged transcript raw counts"
+  "**/star_rsem/rsem.merged.transcript_tpm.tsv":
+    display: "All samples STAR RSEM merged transcript TPM counts"
+  "**/samplesheets/samplesheet_with_bams.csv":
+    display: "Samplesheet with BAM paths for reanalysis"

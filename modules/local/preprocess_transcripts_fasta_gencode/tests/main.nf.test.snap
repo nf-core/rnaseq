@@ -1,0 +1,48 @@
+{
+    "gencode fasta": {
+        "content": [
+            {
+                "0": [
+                    "gencodeFasta.fixed.fa:md5,e9267fa40efc784cc92575b5ba8a441b"
+                ],
+                "1": [
+                    "versions.yml:md5,e2c7f636c472887a914b128d1444737e"
+                ],
+                "fasta": [
+                    "gencodeFasta.fixed.fa:md5,e9267fa40efc784cc92575b5ba8a441b"
+                ],
+                "versions": [
+                    "versions.yml:md5,e2c7f636c472887a914b128d1444737e"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-06T16:16:36.494744"
+    },
+    "gencode fasta - stub": {
+        "content": [
+            {
+                "0": [
+                    "gencodeFasta.fixed.fa:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "1": [
+                    "versions.yml:md5,e2c7f636c472887a914b128d1444737e"
+                ],
+                "fasta": [
+                    "gencodeFasta.fixed.fa:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "versions": [
+                    "versions.yml:md5,e2c7f636c472887a914b128d1444737e"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-21T11:54:20.291494"
+    }
+}

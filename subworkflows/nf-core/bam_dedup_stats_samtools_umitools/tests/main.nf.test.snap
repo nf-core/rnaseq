@@ -1,0 +1,170 @@
+{
+    "sarscov2_bam_bai": {
+        "content": [
+            "b7be15ac7aae194b04bdbb56f3534495",
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.stats:md5,41ba57a9b90b54587e7d154e5405ea5e"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.flagstat:md5,18d602435a02a4d721b78d1812622159"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.idxstats:md5,85d20a901eef23ca50c323638a2eb602"
+                ]
+            ],
+            [
+                "versions.yml:md5,2bf4310f1d49429016f5633f965e9ed0",
+                "versions.yml:md5,306b85f2109aeac87f1bf0eed94e6940",
+                "versions.yml:md5,db76f947845712952426efae5356018f",
+                "versions.yml:md5,eb35d8fd0745ef0ebacb9e26d4124e1d",
+                "versions.yml:md5,f4935d4e563646266cc6bb4d75d0fb7d"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.10.1"
+        },
+        "timestamp": "2024-11-25T17:23:13.841219"
+    },
+    "sarscov2_bam_bai - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    
+                ],
+                "4": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.stats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "5": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.flagstat:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "6": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "7": [
+                    "versions.yml:md5,2bf4310f1d49429016f5633f965e9ed0",
+                    "versions.yml:md5,306b85f2109aeac87f1bf0eed94e6940",
+                    "versions.yml:md5,db76f947845712952426efae5356018f",
+                    "versions.yml:md5,eb35d8fd0745ef0ebacb9e26d4124e1d",
+                    "versions.yml:md5,f4935d4e563646266cc6bb4d75d0fb7d"
+                ],
+                "bai": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "csi": [
+                    
+                ],
+                "deduplog": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "flagstat": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.flagstat:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "idxstats": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "stats": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.stats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,2bf4310f1d49429016f5633f965e9ed0",
+                    "versions.yml:md5,306b85f2109aeac87f1bf0eed94e6940",
+                    "versions.yml:md5,db76f947845712952426efae5356018f",
+                    "versions.yml:md5,eb35d8fd0745ef0ebacb9e26d4124e1d",
+                    "versions.yml:md5,f4935d4e563646266cc6bb4d75d0fb7d"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-16T08:04:43.790052381"
+    }
+}

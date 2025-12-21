@@ -19,6 +19,8 @@ multiqc/multiqc_data/llms-full.txt
 multiqc/multiqc_plots/{svg,pdf,png}/*.{svg,pdf,png}
 multiqc/multiqc_report.html
 pipeline_info/*.{html,json,txt,yml}
+bowtie2_rrna/*.bowtie2.log
+ribodetector/*.ribodetector.log
 sortmerna/*.sortmerna.log
 star_rsem/*.stat/*.{cnt,model,theta}
 star_rsem/*.{genes,isoforms}.results
@@ -76,9 +78,16 @@ umitools/*.umi_extract.log
 {multiqc,multiqc/**}/multiqc_report_data/multiqc_sample-relationships*.txt
 {multiqc,multiqc/**}/multiqc_report_data/multiqc_samtools_{flagstat,stats}.txt
 {multiqc,multiqc/**}/multiqc_report_data/multiqc_software_versions.txt
+{multiqc,multiqc/**}/multiqc_report_data/multiqc_bowtie2_rrna.txt
+{multiqc,multiqc/**}/multiqc_report_data/multiqc_bowtie2_bowtie2_rrna.txt
+{multiqc,multiqc/**}/multiqc_report_data/multiqc_cutadapt.txt
+{multiqc,multiqc/**}/multiqc_report_data/multiqc_ribodetector.txt
 {multiqc,multiqc/**}/multiqc_report_data/multiqc_sortmerna.txt
 {multiqc,multiqc/**}/multiqc_report_data/multiqc_sources.txt
 {multiqc,multiqc/**}/multiqc_report_data/multiqc_star.txt
+{multiqc,multiqc/**}/multiqc_report_data/bbmap-bbsplit_plot.txt
+{multiqc,multiqc/**}/multiqc_report_data/bbmap.txt
+{multiqc,multiqc/**}/multiqc_report_data/bbsplit_stats_table.txt
 {multiqc,multiqc/**}/multiqc_report_data/multiqc_star_rsem_deseq2_clustering.txt
 {multiqc,multiqc/**}/multiqc_report_data/multiqc_star_rsem_deseq2_pca.txt
 {multiqc,multiqc/**}/multiqc_report_data/multiqc_star_salmon_deseq2_clustering.txt
@@ -99,6 +108,10 @@ umitools/*.umi_extract.log
 {multiqc,multiqc/**}/multiqc_report_data/samtools-flagstat-table.txt
 {multiqc,multiqc/**}/multiqc_report_data/samtools-stats-dp.txt
 {multiqc,multiqc/**}/multiqc_report_data/samtools_alignment_plot.txt
+{multiqc,multiqc/**}/multiqc_report_data/bowtie2_pe_plot.txt
+{multiqc,multiqc/**}/multiqc_report_data/bowtie2_se_plot.txt
+{multiqc,multiqc/**}/multiqc_report_data/bowtie2_rrna-*.txt
+{multiqc,multiqc/**}/multiqc_report_data/ribodetector-*.txt
 {multiqc,multiqc/**}/multiqc_report_data/sortmerna-detailed-plot.txt
 {multiqc,multiqc/**}/multiqc_report_data/star_alignment_plot.txt
 {multiqc,multiqc/**}/multiqc_report_data/star_summary_table.txt

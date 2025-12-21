@@ -1,0 +1,105 @@
+nextflow_process {
+
+    name "Test Process SEQKIT_REPLACE"
+    script "../main.nf"
+    process "SEQKIT_REPLACE"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "seqkit"
+    tag "seqkit/replace"
+
+    test("sarscov2 - fasta - replace") {
+
+        config "./replace.config"
+
+        when {
+            process {
+                """
+                    input[0] = [ [ id:'test' ],   // meta map
+                                 [ file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/proteome.fasta.gz', checkIfExists: true) ]
+                    ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
+
+    test("sarscov2 - fasta - replace - uncompressed") {
+
+        config "./replace.config"
+
+        when {
+            process {
+                """
+                    input[0] = [ [ id:'test' ],   // meta map
+                                 [ file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true) ]
+                    ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
+    test("sarscov2 - fasta - uncomp - custom") {
+
+        config "./uncomp.config"
+
+        when {
+            process {
+                """
+                    input[0] = [ [ id:'test' ],   // meta map
+                                 [ file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true) ]
+                    ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
+    test("sarscov2 - fasta - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                    input[0] = [ [ id:'test' ],   // meta map
+                                 [ file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true) ]
+                    ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
+}

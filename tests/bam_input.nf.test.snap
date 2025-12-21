@@ -12,9 +12,6 @@
                 "CUSTOM_CATADDITIONALFASTA": {
                     "python": "3.12.2"
                 },
-                "CUSTOM_GETCHROMSIZES": {
-                    "getchromsizes": 1.21
-                },
                 "CUSTOM_TX2GENE": {
                     "python": "3.10.4"
                 },
@@ -23,7 +20,7 @@
                     "r-base": "4.4.2"
                 },
                 "DUPRADAR": {
-                    "bioconductor-dupradar": "1.32.0"
+                    "bioconductor-dupradar": "1.38.0"
                 },
                 "GTF2BED": {
                     "perl": "5.26.2"
@@ -47,43 +44,46 @@
                     "qualimap": 2.3
                 },
                 "RSEQC_BAMSTAT": {
-                    "rseqc": "5.0.2"
+                    "rseqc": "5.0.4"
                 },
                 "RSEQC_INFEREXPERIMENT": {
-                    "rseqc": "5.0.2"
+                    "rseqc": "5.0.4"
                 },
                 "RSEQC_INNERDISTANCE": {
-                    "rseqc": "5.0.2"
+                    "rseqc": "5.0.4"
                 },
                 "RSEQC_JUNCTIONANNOTATION": {
-                    "rseqc": "5.0.2"
+                    "rseqc": "5.0.4"
                 },
                 "RSEQC_JUNCTIONSATURATION": {
-                    "rseqc": "5.0.2"
+                    "rseqc": "5.0.4"
                 },
                 "RSEQC_READDISTRIBUTION": {
-                    "rseqc": "5.0.2"
+                    "rseqc": "5.0.4"
                 },
                 "RSEQC_READDUPLICATION": {
-                    "rseqc": "5.0.2"
+                    "rseqc": "5.0.4"
                 },
                 "SALMON_QUANT": {
                     "salmon": "1.10.3"
                 },
+                "SAMTOOLS_FAIDX": {
+                    "samtools": "1.22.1"
+                },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": 1.21
+                    "samtools": "1.22.1"
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": 1.21
+                    "samtools": "1.22.1"
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": 1.21
+                    "samtools": "1.22.1"
                 },
                 "SAMTOOLS_SORT_QUALIMAP": {
-                    "samtools": 1.21
+                    "samtools": "1.22.1"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.22.1"
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -680,6 +680,8 @@
                 "star_salmon/rseqc/inner_distance/txt/RAP1_IAA_30M_REP1.inner_distance.txt",
                 "star_salmon/rseqc/inner_distance/txt/RAP1_IAA_30M_REP1.inner_distance_freq.txt",
                 "star_salmon/rseqc/inner_distance/txt/RAP1_IAA_30M_REP1.inner_distance_mean.txt",
+                "star_salmon/rseqc/inner_distance/txt/RAP1_UNINDUCED_REP1.inner_distance.txt",
+                "star_salmon/rseqc/inner_distance/txt/RAP1_UNINDUCED_REP2.inner_distance.txt",
                 "star_salmon/rseqc/inner_distance/txt/WT_REP1.inner_distance.txt",
                 "star_salmon/rseqc/inner_distance/txt/WT_REP1.inner_distance_freq.txt",
                 "star_salmon/rseqc/inner_distance/txt/WT_REP1.inner_distance_mean.txt",
@@ -949,10 +951,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.3"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-15T20:12:59.270445702"
+        "timestamp": "2025-12-18T13:31:41.891475537"
     },
     "BAM input for RSEM": {
         "content": [
@@ -967,15 +969,12 @@
                 "CUSTOM_CATADDITIONALFASTA": {
                     "python": "3.12.2"
                 },
-                "CUSTOM_GETCHROMSIZES": {
-                    "getchromsizes": 1.21
-                },
                 "DESEQ2_QC_RSEM": {
                     "bioconductor-deseq2": "1.46.0",
                     "r-base": "4.4.2"
                 },
                 "DUPRADAR": {
-                    "bioconductor-dupradar": "1.32.0"
+                    "bioconductor-dupradar": "1.38.0"
                 },
                 "GTF2BED": {
                     "perl": "5.26.2"
@@ -1010,40 +1009,43 @@
                     "star": "2.7.10a"
                 },
                 "RSEQC_BAMSTAT": {
-                    "rseqc": "5.0.2"
+                    "rseqc": "5.0.4"
                 },
                 "RSEQC_INFEREXPERIMENT": {
-                    "rseqc": "5.0.2"
+                    "rseqc": "5.0.4"
                 },
                 "RSEQC_INNERDISTANCE": {
-                    "rseqc": "5.0.2"
+                    "rseqc": "5.0.4"
                 },
                 "RSEQC_JUNCTIONANNOTATION": {
-                    "rseqc": "5.0.2"
+                    "rseqc": "5.0.4"
                 },
                 "RSEQC_JUNCTIONSATURATION": {
-                    "rseqc": "5.0.2"
+                    "rseqc": "5.0.4"
                 },
                 "RSEQC_READDISTRIBUTION": {
-                    "rseqc": "5.0.2"
+                    "rseqc": "5.0.4"
                 },
                 "RSEQC_READDUPLICATION": {
-                    "rseqc": "5.0.2"
+                    "rseqc": "5.0.4"
+                },
+                "SAMTOOLS_FAIDX": {
+                    "samtools": "1.22.1"
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": 1.21
+                    "samtools": "1.22.1"
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": 1.21
+                    "samtools": "1.22.1"
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": 1.21
+                    "samtools": "1.22.1"
                 },
                 "SAMTOOLS_SORT_QUALIMAP": {
-                    "samtools": 1.21
+                    "samtools": "1.22.1"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.22.1"
                 },
                 "STAR_GENOMEGENERATE": {
                     "gawk": "5.1.0",
@@ -1615,6 +1617,8 @@
                 "star_rsem/rseqc/inner_distance/txt/RAP1_IAA_30M_REP1.inner_distance.txt",
                 "star_rsem/rseqc/inner_distance/txt/RAP1_IAA_30M_REP1.inner_distance_freq.txt",
                 "star_rsem/rseqc/inner_distance/txt/RAP1_IAA_30M_REP1.inner_distance_mean.txt",
+                "star_rsem/rseqc/inner_distance/txt/RAP1_UNINDUCED_REP1.inner_distance.txt",
+                "star_rsem/rseqc/inner_distance/txt/RAP1_UNINDUCED_REP2.inner_distance.txt",
                 "star_rsem/rseqc/inner_distance/txt/WT_REP1.inner_distance.txt",
                 "star_rsem/rseqc/inner_distance/txt/WT_REP1.inner_distance_freq.txt",
                 "star_rsem/rseqc/inner_distance/txt/WT_REP1.inner_distance_mean.txt",
@@ -1883,9 +1887,9 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.3"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-15T20:20:27.355744216"
+        "timestamp": "2025-12-18T13:33:03.920315678"
     }
 }

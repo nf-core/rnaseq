@@ -1,5 +1,5 @@
 name: untar
-description: Extract files.
+description: Extract files from tar, tar.gz, tar.bz2, tar.xz archives
 keywords:
   - untar
   - uncompress
@@ -7,7 +7,7 @@ keywords:
 tools:
   - untar:
       description: |
-        Extract tar.gz files.
+        Extract tar, tar.gz, tar.bz2, tar.xz files.
       documentation: https://www.gnu.org/software/tar/manual/
       licence: ["GPL-3.0-or-later"]
       identifier: ""
@@ -19,11 +19,14 @@ input:
           e.g. [ id:'test', single_end:false ]
     - archive:
         type: file
-        description: File to be untar
-        pattern: "*.{tar}.{gz}"
+        description: File to be untarred
+        pattern: "*.{tar,tar.gz,tar.bz2,tar.xz}"
+        ontologies:
+          - edam: http://edamontology.org/format_3981 # TAR format
+          - edam: http://edamontology.org/format_3989 # GZIP format
 output:
-  - untar:
-      - meta:
+  untar:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -35,11 +38,13 @@ output:
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
           pattern: "*/"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@joseespinosa"
   - "@drpatelh"

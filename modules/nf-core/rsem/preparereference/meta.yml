@@ -14,30 +14,35 @@ tools:
       licence: ["GPL-3.0-or-later"]
       identifier: biotools:rsem
 input:
-  - - fasta:
-        type: file
-        description: The Fasta file of the reference genome
-        pattern: "*.{fasta,fa}"
-  - - gtf:
-        type: file
-        description: The GTF file of the reference genome
-        pattern: "*.gtf"
+  - fasta:
+      type: file
+      description: The Fasta file of the reference genome
+      pattern: "*.{fasta,fa}"
+      ontologies: []
+  - gtf:
+      type: file
+      description: The GTF file of the reference genome
+      pattern: "*.gtf"
+      ontologies: []
 output:
-  - index:
-      - rsem:
-          type: directory
-          description: RSEM index directory
-          pattern: "rsem"
-  - transcript_fasta:
-      - "*transcripts.fa":
-          type: file
-          description: Fasta file of transcripts
-          pattern: "rsem/*transcripts.fa"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+  index:
+    - rsem:
+        type: directory
+        description: RSEM index directory
+        pattern: "rsem"
+  transcript_fasta:
+    - "*transcripts.fa":
+        type: file
+        description: Fasta file of transcripts
+        pattern: "rsem/*transcripts.fa"
+        ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@drpatelh"
   - "@kevinmenden"

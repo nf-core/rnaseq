@@ -292,8 +292,16 @@
                 "remove_ribo_rna": {
                     "type": "boolean",
                     "fa_icon": "fas fa-trash-alt",
-                    "description": "Enable the removal of reads derived from ribosomal RNA using SortMeRNA.",
-                    "help_text": "Any patterns found in sequences defined by the `--ribo_database_manifest` parameter will be used for filtering."
+                    "description": "Enable the removal of reads derived from ribosomal RNA.",
+                    "help_text": "Any patterns found in sequences defined by the `--ribo_database_manifest` parameter will be used for filtering (when using SortMeRNA or Bowtie2)."
+                },
+                "ribo_removal_tool": {
+                    "type": "string",
+                    "default": "sortmerna",
+                    "fa_icon": "fas fa-tools",
+                    "description": "Tool to use for rRNA removal.",
+                    "help_text": "Choose between 'sortmerna' (default), 'bowtie2', or 'ribodetector' for rRNA removal.\n\n- **sortmerna**: Reference-based filtering (default). Requires `--ribo_database_manifest`. Note: Default databases include SILVA sequences requiring licensing for commercial use.\n- **bowtie2**: Alignment-based filtering. Requires `--ribo_database_manifest`. Recommended for users with SILVA licensing concerns as it supports custom databases.\n- **ribodetector**: ⚠️ EXPERIMENTAL - ML-based detection without reference requirement. Known ONNX multiprocessing issues can cause hangs in containerized environments. See https://github.com/hzi-bifo/RiboDetector/pull/61",
+                    "enum": ["sortmerna", "ribodetector", "bowtie2"]
                 },
                 "ribo_database_manifest": {
                     "type": "string",
@@ -600,15 +608,15 @@
                 },
                 "contaminant_screening": {
                     "type": "string",
-                    "description": "Tool to use for detecting contaminants in unaligned reads - available options are 'kraken2' and 'kraken2_bracken'",
+                    "description": "Tool to use for detecting contaminants in unaligned reads - available options are 'sylph', 'kraken2', or 'kraken2_bracken'",
                     "fa_icon": "fas fa-virus-slash",
-                    "enum": ["kraken2", "kraken2_bracken"]
+                    "enum": ["kraken2", "kraken2_bracken", "sylph"]
                 },
                 "kraken_db": {
                     "type": "string",
                     "format": "directory-path",
                     "description": "Database when using Kraken2/Bracken for contaminant screening.",
-                    "help_text": "See the usage documentation for more information on setting up and using Kraken2 databases.",
+                    "help_text": "See the usage documentation for more information on setting up and using Kraken2 databases. Requires the --contaminant_screening option to be set to 'kraken2' or 'kraken2_bracken' to have an effect",
                     "fa_icon": "fas fa-fish"
                 },
                 "bracken_precision": {
@@ -616,8 +624,22 @@
                     "default": "S",
                     "fa_icon": "fas fa-tree",
                     "description": "Taxonomic level for Bracken abundance estimations.",
-                    "help_text": "Use the first letter of taxonomic levels: Domain, Phylum, Class, Order, Family, Genus, or Species.",
+                    "help_text": "Use the first letter of taxonomic levels: Domain, Phylum, Class, Order, Family, Genus, or Species. Requires --contaminant_screening option to be set to 'kraken2_bracken' to have an effect.",
                     "enum": ["D", "P", "C", "O", "F", "G", "S"]
+                },
+                "sylph_db": {
+                    "type": "string",
+                    "format": "file-path",
+                    "description": "Comma separated list of databases to profile against when using Sylph for contamination detection",
+                    "help_text": "See the usage documentation for more information on setting up and using Sylph databases. Requires --contaminant_screening option to be set to 'sylph' to have an effect.",
+                    "fa_icon": "fas fa-database"
+                },
+                "sylph_taxonomy": {
+                    "type": "string",
+                    "description": "Comma separated list of taxonomies when using Sylph for contamination detection",
+                    "help_text": "See the usage documentation for more information on Sylph taxonomies. Requires --contaminant_screening option to be set to 'sylph' to have an effect.",
+                    "fa_icon": "fas fa-tree",
+                    "format": "file-path"
                 }
             }
         },

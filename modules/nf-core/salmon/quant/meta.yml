@@ -26,25 +26,28 @@ input:
           List of input FastQ files for single-end or paired-end data.
           Multiple single-end fastqs or pairs of paired-end fastqs are
           handled.
-  - - index:
-        type: directory
-        description: Folder containing the star index files
-  - - gtf:
-        type: file
-        description: GTF of the reference transcriptome
-  - - transcript_fasta:
-        type: file
-        description: Fasta file of the reference transcriptome
-  - - alignment_mode:
-        type: boolean
-        description: whether to run salmon in alignment mode
-  - - lib_type:
-        type: string
-        description: |
-          Override library type inferred based on strandedness defined in meta object
+        ontologies: []
+  - index:
+      type: directory
+      description: Folder containing the star index files
+  - gtf:
+      type: file
+      description: GTF of the reference transcriptome
+      ontologies: []
+  - transcript_fasta:
+      type: file
+      description: Fasta file of the reference transcriptome
+      ontologies: []
+  - alignment_mode:
+      type: boolean
+      description: whether to run salmon in alignment mode
+  - lib_type:
+      type: string
+      description: |
+        Override library type inferred based on strandedness defined in meta object
 output:
-  - results:
-      - meta:
+  results:
+    - - meta:
           type: directory
           description: Folder containing the quantification results for a specific sample
           pattern: "${prefix}"
@@ -52,30 +55,35 @@ output:
           type: directory
           description: Folder containing the quantification results for a specific sample
           pattern: "${prefix}"
-  - json_info:
-      - meta:
-          type: file
-          description: File containing meta information from Salmon quant
-          pattern: "*info.json"
+  json_info:
+    - - meta:
+          type: directory
+          description: Folder containing the quantification results for a specific sample
+          pattern: "${prefix}"
       - "*info.json":
           type: file
           description: File containing meta information from Salmon quant
           pattern: "*info.json"
-  - lib_format_counts:
-      - meta:
-          type: map
-          description: |
-            Groovy Map containing sample information
-            e.g. [ id:'test', single_end:false ]
+          ontologies:
+            - edam: http://edamontology.org/format_3464 # JSON
+  lib_format_counts:
+    - - meta:
+          type: directory
+          description: Folder containing the quantification results for a specific sample
+          pattern: "${prefix}"
       - "*lib_format_counts.json":
           type: file
           description: File containing the library format counts
           pattern: "*lib_format_counts.json"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies:
+            - edam: http://edamontology.org/format_3464 # JSON
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@kevinmenden"
   - "@drpatelh"

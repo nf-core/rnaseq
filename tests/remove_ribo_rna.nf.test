@@ -3,6 +3,7 @@ nextflow_pipeline {
     name "Test pipeline with ribosomal RNA removal"
     script "../main.nf"
     tag "pipeline"
+    tag "remove_ribo_rna"
 
     test("Params: --remove_ribo_rna") {
 
@@ -46,6 +47,78 @@ nextflow_pipeline {
             params {
                 outdir = "$outputDir"
                 remove_ribo_rna = true
+                // Skip processes already covered by default.nf.test (rRNA removal only affects read count, not BAM structure)
+                skip_qc = true
+                skip_stringtie = true
+                skip_bigwig = true
+            }
+        }
+
+        then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow and pipeline versions are removed (all from the workflow key)
+                    removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow"),
+                    // All stable path name, with a relative path
+                    stable_name,
+                    // All files with stable contents
+                    stable_path
+                ).match() }
+            )
+        }
+    }
+
+    test("Params: --remove_ribo_rna --ribo_removal_tool bowtie2") {
+
+        when {
+            params {
+                outdir = "$outputDir"
+                remove_ribo_rna = true
+                ribo_removal_tool = 'bowtie2'
+                // Skip processes already covered by default.nf.test (rRNA removal only affects read count, not BAM structure)
+                skip_qc = true
+                skip_stringtie = true
+                skip_bigwig = true
+            }
+        }
+
+        then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow and pipeline versions are removed (all from the workflow key)
+                    removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow"),
+                    // All stable path name, with a relative path
+                    stable_name,
+                    // All files with stable contents
+                    stable_path
+                ).match() }
+            )
+        }
+    }
+
+    test("Params: --remove_ribo_rna --ribo_removal_tool bowtie2 - stub") {
+
+        options "-stub"
+
+        when {
+            params {
+                outdir = "$outputDir"
+                remove_ribo_rna = true
+                ribo_removal_tool = 'bowtie2'
                 // Skip processes already covered by default.nf.test (rRNA removal only affects read count, not BAM structure)
                 skip_qc = true
                 skip_stringtie = true

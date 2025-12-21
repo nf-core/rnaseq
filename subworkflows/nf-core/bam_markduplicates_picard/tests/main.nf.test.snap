@@ -2,23 +2,22 @@
     "homo_sapiens - cram": {
         "content": [
             "test.cram",
-            "test.cram.crai:md5,9a74bf028b7146d8ef285442a14bbc8f",
+            "test.cram.crai:md5,77e0b15d73ba9d9cc3bec25356f4b5ff",
             "test.flagstat:md5,93b0ef463df947ede1f42ff60396c34d",
             "test.idxstats:md5,e179601fa7b8ebce81ac3765206f6c15",
-            "test.stats:md5,1a4569080c6f73546a863b0c3bc72c49",
+            "test.stats:md5,a61e467c4ecbc0baebb2ce29abb6fb9d",
             [
-                "versions.yml:md5,39f93ad916207c307cdb142959a19e95",
-                "versions.yml:md5,5a97b3ae2f98b3fd84c475f26a7e01b7",
-                "versions.yml:md5,6f95a91fadb30bd32b77143d18f2e1f9",
-                "versions.yml:md5,a54e44823e415885a18a6b62e3087fca",
-                "versions.yml:md5,b867241d6184a7ff9312f6f493f1b49c"
+                "versions.yml:md5,492bf2c795ed7c31947f0390a5b6cbe1",
+                "versions.yml:md5,53f9c88ce12ea1192cf2fb12cb3f980f",
+                "versions.yml:md5,d298dab7f84d3fa45618d3be5c054a92",
+                "versions.yml:md5,fb2919b16758582cf470a86acd1f1886"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
         },
-        "timestamp": "2024-10-18T10:59:53.440891602"
+        "timestamp": "2025-11-01T02:37:26.3247"
     },
     "sarscov2 - bam - stub": {
         "content": [
@@ -74,7 +73,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.flagstat:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.flagstat:md5,67394650dbae96d1a4fcc70484822159"
                     ]
                 ],
                 "8": [
@@ -87,11 +86,10 @@
                     ]
                 ],
                 "9": [
-                    "versions.yml:md5,39f93ad916207c307cdb142959a19e95",
-                    "versions.yml:md5,5a97b3ae2f98b3fd84c475f26a7e01b7",
-                    "versions.yml:md5,6f95a91fadb30bd32b77143d18f2e1f9",
-                    "versions.yml:md5,a54e44823e415885a18a6b62e3087fca",
-                    "versions.yml:md5,b867241d6184a7ff9312f6f493f1b49c"
+                    "versions.yml:md5,492bf2c795ed7c31947f0390a5b6cbe1",
+                    "versions.yml:md5,53f9c88ce12ea1192cf2fb12cb3f980f",
+                    "versions.yml:md5,d298dab7f84d3fa45618d3be5c054a92",
+                    "versions.yml:md5,fb2919b16758582cf470a86acd1f1886"
                 ],
                 "bai": [
                     [
@@ -126,7 +124,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.flagstat:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.flagstat:md5,67394650dbae96d1a4fcc70484822159"
                     ]
                 ],
                 "idxstats": [
@@ -157,19 +155,18 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,39f93ad916207c307cdb142959a19e95",
-                    "versions.yml:md5,5a97b3ae2f98b3fd84c475f26a7e01b7",
-                    "versions.yml:md5,6f95a91fadb30bd32b77143d18f2e1f9",
-                    "versions.yml:md5,a54e44823e415885a18a6b62e3087fca",
-                    "versions.yml:md5,b867241d6184a7ff9312f6f493f1b49c"
+                    "versions.yml:md5,492bf2c795ed7c31947f0390a5b6cbe1",
+                    "versions.yml:md5,53f9c88ce12ea1192cf2fb12cb3f980f",
+                    "versions.yml:md5,d298dab7f84d3fa45618d3be5c054a92",
+                    "versions.yml:md5,fb2919b16758582cf470a86acd1f1886"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
         },
-        "timestamp": "2024-10-18T11:00:20.860494683"
+        "timestamp": "2025-11-01T02:37:50.805524"
     },
     "homo_sapiens - cram - stub": {
         "content": [
@@ -220,7 +217,7 @@
                         {
                             "id": "test"
                         },
-                        "test.flagstat:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.flagstat:md5,67394650dbae96d1a4fcc70484822159"
                     ]
                 ],
                 "8": [
@@ -232,11 +229,10 @@
                     ]
                 ],
                 "9": [
-                    "versions.yml:md5,39f93ad916207c307cdb142959a19e95",
-                    "versions.yml:md5,5a97b3ae2f98b3fd84c475f26a7e01b7",
-                    "versions.yml:md5,6f95a91fadb30bd32b77143d18f2e1f9",
-                    "versions.yml:md5,a54e44823e415885a18a6b62e3087fca",
-                    "versions.yml:md5,b867241d6184a7ff9312f6f493f1b49c"
+                    "versions.yml:md5,492bf2c795ed7c31947f0390a5b6cbe1",
+                    "versions.yml:md5,53f9c88ce12ea1192cf2fb12cb3f980f",
+                    "versions.yml:md5,d298dab7f84d3fa45618d3be5c054a92",
+                    "versions.yml:md5,fb2919b16758582cf470a86acd1f1886"
                 ],
                 "bai": [
                     
@@ -268,7 +264,7 @@
                         {
                             "id": "test"
                         },
-                        "test.flagstat:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.flagstat:md5,67394650dbae96d1a4fcc70484822159"
                     ]
                 ],
                 "idxstats": [
@@ -296,39 +292,37 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,39f93ad916207c307cdb142959a19e95",
-                    "versions.yml:md5,5a97b3ae2f98b3fd84c475f26a7e01b7",
-                    "versions.yml:md5,6f95a91fadb30bd32b77143d18f2e1f9",
-                    "versions.yml:md5,a54e44823e415885a18a6b62e3087fca",
-                    "versions.yml:md5,b867241d6184a7ff9312f6f493f1b49c"
+                    "versions.yml:md5,492bf2c795ed7c31947f0390a5b6cbe1",
+                    "versions.yml:md5,53f9c88ce12ea1192cf2fb12cb3f980f",
+                    "versions.yml:md5,d298dab7f84d3fa45618d3be5c054a92",
+                    "versions.yml:md5,fb2919b16758582cf470a86acd1f1886"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
         },
-        "timestamp": "2024-10-18T11:00:42.042387118"
+        "timestamp": "2025-11-01T02:38:18.069303"
     },
     "sarscov2 - bam": {
         "content": [
-            "test.bam:md5,c8a3a56d56bf2c87f09e143ed2f78a7d",
+            "test.bam:md5,71b5b5ab3e970477179b934c564b3184",
             "test.bam.bai:md5,7d205e4e0b3d98887b1eafb5c50a3363",
             "test.flagstat:md5,4f7ffd1e6a5e85524d443209ac97d783",
             "test.idxstats:md5,df60a8c8d6621100d05178c93fb053a2",
-            "test.stats:md5,ba007b13981dad548358c7c957d41e12",
+            "test.stats:md5,f26c554c244ee86c89d62ebed509fd95",
             [
-                "versions.yml:md5,39f93ad916207c307cdb142959a19e95",
-                "versions.yml:md5,5a97b3ae2f98b3fd84c475f26a7e01b7",
-                "versions.yml:md5,6f95a91fadb30bd32b77143d18f2e1f9",
-                "versions.yml:md5,a54e44823e415885a18a6b62e3087fca",
-                "versions.yml:md5,b867241d6184a7ff9312f6f493f1b49c"
+                "versions.yml:md5,492bf2c795ed7c31947f0390a5b6cbe1",
+                "versions.yml:md5,53f9c88ce12ea1192cf2fb12cb3f980f",
+                "versions.yml:md5,d298dab7f84d3fa45618d3be5c054a92",
+                "versions.yml:md5,fb2919b16758582cf470a86acd1f1886"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
         },
-        "timestamp": "2024-10-18T10:59:22.840531827"
+        "timestamp": "2025-11-01T02:36:56.78063"
     }
 }

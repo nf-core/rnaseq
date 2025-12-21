@@ -1,0 +1,59 @@
+name: "sylph_profile"
+description: Sylph profile command for taxonoming profiling
+keywords:
+  - profile
+  - metagenomics
+  - sylph
+  - classification
+tools:
+  - sylph:
+      description: Sylph quickly enables querying of genomes against even low-coverage
+        shotgun metagenomes to find nearest neighbour ANI.
+      homepage: https://github.com/bluenote-1577/sylph
+      documentation: https://github.com/bluenote-1577/sylph
+      tool_dev_url: https://github.com/bluenote-1577/sylph
+      doi: 10.1038/s41587-024-02412-y
+      licence: ["MIT"]
+      identifier: biotools:sylph
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'test', single_end:false ]`
+    - reads:
+        type: file
+        description: |
+          List of input FastQ/FASTA files of size 1 and 2 for single-end and paired-end data,
+          respectively. They are automatically sketched to .sylsp/.syldb
+        ontologies: []
+  - database:
+      type: file
+      description: Pre-sketched *.syldb/*.sylsp files. Raw single-end fastq/fasta are
+        allowed and will be automatically sketched to .sylsp/.syldb.
+      pattern: "*.{syldb,sylsp,fasta,fastq}"
+      ontologies:
+        - edam: http://edamontology.org/format_1930 # FASTQ
+output:
+  profile_out:
+    - - meta:
+          type: map
+          description: Groovy Map containing sample information
+      - "*.tsv":
+          type: file
+          description: Output file of species-level taxonomic profiling with abundances
+            and ANIs.
+          pattern: "*tsv"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+authors:
+  - "@jiahang1234"
+  - "@sofstam"
+maintainers:
+  - "@sofstam"

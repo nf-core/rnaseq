@@ -18,7 +18,7 @@ include { UNTAR as UNTAR_SALMON_INDEX       } from '../../../modules/nf-core/unt
 include { UNTAR as UNTAR_KALLISTO_INDEX     } from '../../../modules/nf-core/untar'
 
 include { CUSTOM_CATADDITIONALFASTA         } from '../../../modules/nf-core/custom/catadditionalfasta'
-include { CUSTOM_GETCHROMSIZES              } from '../../../modules/nf-core/custom/getchromsizes'
+include { SAMTOOLS_FAIDX                    } from '../../../modules/nf-core/samtools/faidx'
 include { GFFREAD                           } from '../../../modules/nf-core/gffread'
 include { BBMAP_BBSPLIT                     } from '../../../modules/nf-core/bbmap/bbsplit'
 include { SORTMERNA as SORTMERNA_INDEX      } from '../../../modules/nf-core/sortmerna'
@@ -62,7 +62,7 @@ workflow PREPARE_GENOME {
     pseudo_aligner           // string: Specifies the pseudo aligner to use - available options are 'salmon'. Runs in addition to '--aligner'
     skip_gtf_filter          // boolean: Skip filtering of GTF for valid scaffolds and/ or transcript IDs
     skip_bbsplit             // boolean: Skip BBSplit for removal of non-reference genome reads
-    skip_sortmerna           // boolean: Skip sortmerna for removal of reads mapping to sequences in sortmerna_fasta_list
+    ribo_removal_tool        // string: Tool for rRNA removal - 'sortmerna', 'ribodetector', or 'bowtie2' (null if skip)
     skip_alignment           // boolean: Skip all of the alignment-based processes within the pipeline
     skip_pseudo_alignment    // boolean: Skip all of the pseudoalignment-based processes within the pipeline
     use_sentieon_star             // boolean: whether to use sentieon STAR version
@@ -202,10 +202,10 @@ workflow PREPARE_GENOME {
     ch_fai         = Channel.empty()
     ch_chrom_sizes = Channel.empty()
     if (fasta_provided) {
-        CUSTOM_GETCHROMSIZES(ch_fasta.map { [ [:], it ] })
-        ch_fai         = CUSTOM_GETCHROMSIZES.out.fai.map { it[1] }
-        ch_chrom_sizes = CUSTOM_GETCHROMSIZES.out.sizes.map { it[1] }
-        ch_versions    = ch_versions.mix(CUSTOM_GETCHROMSIZES.out.versions)
+        SAMTOOLS_FAIDX(ch_fasta.map { [ [:], it ] }, [ [:], [] ], true)
+        ch_fai         = SAMTOOLS_FAIDX.out.fai.map { it[1] }
+        ch_chrom_sizes = SAMTOOLS_FAIDX.out.sizes.map { it[1] }
+        ch_versions    = ch_versions.mix(SAMTOOLS_FAIDX.out.versions)
     }
 
     //------------------------------------------------
@@ -213,7 +213,7 @@ workflow PREPARE_GENOME {
     //------------------------------------------------
     def prepare_tool_indices = []
     if (!skip_bbsplit)                                           { prepare_tool_indices << 'bbsplit' }
-    if (!skip_sortmerna)                                         { prepare_tool_indices << 'sortmerna' }
+    if (ribo_removal_tool == 'sortmerna')                        { prepare_tool_indices << 'sortmerna' }
     if ((!skip_alignment && aligner) || aligner == 'star_rsem')  { prepare_tool_indices << aligner }
     if (!skip_pseudo_alignment && pseudo_aligner)                { prepare_tool_indices << pseudo_aligner }
 
@@ -255,16 +255,20 @@ workflow PREPARE_GENOME {
     }
 
     //-------------------------------------------------------------
-    // 10) SortMeRNA index does not require the genome FASTA at all
+    // 10) rRNA fastas and SortMeRNA index
     //-------------------------------------------------------------
     ch_sortmerna_index = Channel.empty()
     ch_rrna_fastas     = Channel.empty()
-    if ('sortmerna' in prepare_tool_indices) {
-        // We always need the rRNA FASTAs
+
+    // Load rRNA FASTAs when using sortmerna or bowtie2 for rRNA removal
+    if (ribo_removal_tool in ['sortmerna', 'bowtie2']) {
         def ribo_db = file(sortmerna_fasta_list)
         ch_rrna_fastas = Channel.from(ribo_db.readLines())
             .map { row -> file(row) }
+    }
 
+    // Build SortMeRNA index only when using sortmerna
+    if ('sortmerna' in prepare_tool_indices) {
         if (sortmerna_index) {
             if (sortmerna_index.endsWith('.tar.gz')) {
                 ch_sortmerna_index = UNTAR_SORTMERNA_INDEX ([ [:], file(sortmerna_index, checkIfExists: true) ]).untar.map { it[1] }

@@ -1,0 +1,61 @@
+{
+    "sarscov2 illumina paired-end [fastq_gz]": {
+        "content": [
+            [
+                "versions.yml:md5,7b5a545483277cc0ff9189f8891e737f"
+            ],
+            "Sample_file\tGenome_file\tTaxonomic_abundance\tSequence_abundance\tAdjusted_ANI\tEff_cov\tANI_5-95_percentile\tEff_lambda\tLambda_5-95_percentile\tMedian_cov\tMean_cov_geq1\tContainment_ind\tNaive_ANI\tkmers_reassigned\tContig_name"
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
+        },
+        "timestamp": "2025-03-05T11:07:00.061876287"
+    },
+    "sarscov2 illumina single-end [fastq_gz]": {
+        "content": [
+            [
+                "versions.yml:md5,7b5a545483277cc0ff9189f8891e737f"
+            ],
+            "Sample_file\tGenome_file\tTaxonomic_abundance\tSequence_abundance\tAdjusted_ANI\tEff_cov\tANI_5-95_percentile\tEff_lambda\tLambda_5-95_percentile\tMedian_cov\tMean_cov_geq1\tContainment_ind\tNaive_ANI\tkmers_reassigned\tContig_name"
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
+        },
+        "timestamp": "2025-03-05T11:05:21.230604092"
+    },
+    "sarscov2 illumina paired-end [fastq_gz]-stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,7b5a545483277cc0ff9189f8891e737f"
+                ],
+                "profile_out": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,7b5a545483277cc0ff9189f8891e737f"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
+        },
+        "timestamp": "2025-03-05T11:08:35.882851964"
+    }
+}

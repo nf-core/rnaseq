@@ -21,21 +21,26 @@ input:
         type: file
         description: File to be compressed/uncompressed
         pattern: "*.*"
+        ontologies: []
 output:
-  - gunzip:
-      - meta:
+  gunzip:
+    - - meta:
           type: file
           description: Compressed/uncompressed file
           pattern: "*.*"
+          ontologies: []
       - ${gunzip}:
           type: file
           description: Compressed/uncompressed file
           pattern: "*.*"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@joseespinosa"
   - "@drpatelh"

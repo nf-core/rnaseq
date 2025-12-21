@@ -25,35 +25,39 @@ input:
         type: file
         description: A reference file in either the GFF3, GFF2 or GTF format.
         pattern: "*.{gff, gtf}"
-  - - fasta:
-        type: file
-        description: A multi-fasta file with the genomic sequences
-        pattern: "*.{fasta,fa,faa,fas,fsa}"
+        ontologies: []
+  - fasta:
+      type: file
+      description: A multi-fasta file with the genomic sequences
+      pattern: "*.{fasta,fa,faa,fas,fsa}"
+      ontologies: []
 output:
-  - gtf:
-      - meta:
+  gtf:
+    - - meta:
           type: map
           description: |
             Groovy Map containing meta data
             e.g. [ id:'test' ]
       - "*.gtf":
           type: file
-          description: GTF file resulting from the conversion of the GFF input file if
-            '-T' argument is present
+          description: GTF file resulting from the conversion of the GFF input file
+            if '-T' argument is present
           pattern: "*.{gtf}"
-  - gffread_gff:
-      - meta:
+          ontologies: []
+  gffread_gff:
+    - - meta:
           type: map
           description: |
             Groovy Map containing meta data
             e.g. [ id:'test' ]
       - "*.gff3":
           type: file
-          description: GFF3 file resulting from the conversion of the GFF input file if
-            '-T' argument is absent
+          description: GFF3 file resulting from the conversion of the GFF input file
+            if '-T' argument is absent
           pattern: "*.gff3"
-  - gffread_fasta:
-      - meta:
+          ontologies: []
+  gffread_fasta:
+    - - meta:
           type: map
           description: |
             Groovy Map containing meta data
@@ -63,11 +67,14 @@ output:
           description: Fasta file produced when either of '-w', '-x', '-y' parameters
             is present
           pattern: "*.fasta"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@edmundmiller"
 maintainers:

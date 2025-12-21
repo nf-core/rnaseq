@@ -24,6 +24,7 @@ input:
     - fasta:
         type: file
         description: Fasta file of the reference genome
+        ontologies: []
   - - meta2:
         type: map
         description: |
@@ -32,9 +33,10 @@ input:
     - gtf:
         type: file
         description: GTF file of the reference genome
+        ontologies: []
 output:
-  - index:
-      - meta:
+  index:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -43,11 +45,13 @@ output:
           type: directory
           description: Folder containing the star index files
           pattern: "star"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@kevinmenden"
   - "@drpatelh"

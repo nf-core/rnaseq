@@ -43,6 +43,8 @@ include { STRINGTIE_STRINGTIE        } from '../../modules/nf-core/stringtie/str
 include { SUBREAD_FEATURECOUNTS      } from '../../modules/nf-core/subread/featurecounts'
 include { KRAKEN2_KRAKEN2 as KRAKEN2 } from '../../modules/nf-core/kraken2/kraken2/main'
 include { BRACKEN_BRACKEN as BRACKEN } from '../../modules/nf-core/bracken/bracken/main'
+include { SYLPH_PROFILE              } from '../../modules/nf-core/sylph/profile/main'
+include { SYLPHTAX_TAXPROF           } from '../../modules/nf-core/sylphtax/taxprof/main'
 include { MULTIQC                    } from '../../modules/nf-core/multiqc'
 include { BEDTOOLS_GENOMECOV as BEDTOOLS_GENOMECOV_FW          } from '../../modules/nf-core/bedtools/genomecov'
 include { BEDTOOLS_GENOMECOV as BEDTOOLS_GENOMECOV_REV         } from '../../modules/nf-core/bedtools/genomecov'
@@ -97,6 +99,7 @@ workflow RNASEQ {
     ch_bbsplit_index     // channel: path(bbsplit/index/)
     ch_ribo_db           // channel: path(sortmerna_fasta_list)
     ch_sortmerna_index   // channel: path(sortmerna/index/)
+    ch_bowtie2_index     // channel: path(bowtie2/index/) for rRNA removal
     ch_splicesites       // channel: path(genome.splicesites.txt)
 
     main:
@@ -106,6 +109,26 @@ workflow RNASEQ {
     ch_map_status = Channel.empty()
     ch_strand_status = Channel.empty()
     ch_percent_mapped = Channel.empty()
+
+    //
+    // Collect versions from topic channel (for modules that emit versions via topics)
+    //
+    def topic_versions = Channel.topic('versions')
+        .distinct()
+        .branch { entry ->
+            versions_file: entry instanceof Path
+            versions_tuple: true
+        }
+
+    def topic_versions_string = topic_versions.versions_tuple
+        .map { process, tool, version ->
+            [ process[process.lastIndexOf(':')+1..-1], "  ${tool}: ${version}" ]
+        }
+        .groupTuple(by: 0)
+        .map { process, tool_versions ->
+            tool_versions.unique().sort()
+            "${process}:\n${tool_versions.join('\n')}"
+        }
 
     //
     // Create channel from input file provided through params.input
@@ -160,31 +183,38 @@ workflow RNASEQ {
     // samples, and if we haven't already made one elsewhere
     salmon_index_available = params.salmon_index || (!params.skip_pseudo_alignment && params.pseudo_aligner == 'salmon')
 
+    // Determine if we need to build rRNA removal indexes
+    def make_sortmerna_index = !params.sortmerna_index && params.remove_ribo_rna && params.ribo_removal_tool == 'sortmerna'
+    def make_bowtie2_index   = params.remove_ribo_rna && params.ribo_removal_tool == 'bowtie2'
+
     FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS (
-        ch_fastq,
-        ch_fasta,
-        ch_transcript_fasta,
-        ch_gtf,
-        ch_salmon_index,
-        ch_sortmerna_index,
-        ch_bbsplit_index,
-        ch_ribo_db,
-        params.skip_bbsplit || ! params.fasta,
-        params.skip_fastqc || params.skip_qc,
-        params.skip_trimming,
-        params.skip_umi_extract,
-        !salmon_index_available,
-        false,
-        params.trimmer,
-        params.min_trimmed_reads,
-        params.save_trimmed,
-        params.remove_ribo_rna,
-        params.with_umi,
-        params.umi_discard_read,
-        params.stranded_threshold,
-        params.unstranded_threshold,
-        params.skip_linting,
-        false
+        ch_fastq,                                   // ch_reads
+        ch_fasta,                                   // ch_fasta
+        ch_transcript_fasta,                        // ch_transcript_fasta
+        ch_gtf,                                     // ch_gtf
+        ch_salmon_index,                            // ch_salmon_index
+        ch_sortmerna_index,                         // ch_sortmerna_index
+        ch_bowtie2_index,                           // ch_bowtie2_index
+        ch_bbsplit_index,                           // ch_bbsplit_index
+        ch_ribo_db,                                 // ch_rrna_fastas
+        params.skip_bbsplit || !params.fasta,       // skip_bbsplit
+        params.skip_fastqc || params.skip_qc,       // skip_fastqc
+        params.skip_trimming,                       // skip_trimming
+        params.skip_umi_extract,                    // skip_umi_extract
+        params.skip_linting,                        // skip_linting
+        !salmon_index_available,                    // make_salmon_index
+        make_sortmerna_index,                       // make_sortmerna_index
+        make_bowtie2_index,                         // make_bowtie2_index
+        params.trimmer,                             // trimmer
+        params.min_trimmed_reads,                   // min_trimmed_reads
+        params.save_trimmed,                        // save_trimmed
+        false,                                      // fastp_merge
+        params.remove_ribo_rna,                     // remove_ribo_rna
+        params.ribo_removal_tool,                   // ribo_removal_tool
+        params.with_umi,                            // with_umi
+        params.umi_discard_read,                    // umi_discard_read
+        params.stranded_threshold,                  // stranded_threshold
+        params.unstranded_threshold                 // unstranded_threshold
     )
 
     ch_multiqc_files                  = ch_multiqc_files.mix(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.multiqc_files)
@@ -548,9 +578,9 @@ workflow RNASEQ {
             // Sort BAM by name for qualimap (performance optimization)
             SAMTOOLS_SORT_QUALIMAP (
                 ch_genome_bam,
-                ch_fasta.map { [ [:], it ] }
+                ch_fasta.map { [ [:], it ] },
+                ''
             )
-            ch_versions = ch_versions.mix(SAMTOOLS_SORT_QUALIMAP.out.versions.first())
 
             QUALIMAP_RNASEQ (
                 SAMTOOLS_SORT_QUALIMAP.out.bam,
@@ -580,7 +610,7 @@ workflow RNASEQ {
         }
         if (!params.skip_rseqc && rseqc_modules.size() > 0) {
             BAM_RSEQC (
-                ch_genome_bam.join(ch_genome_bam_index, by: [0]),
+                ch_genome_bam.join(ch_genome_bam_index, by: [0]).map { meta, bam, bai -> [ meta, [ bam, bai ] ] },
                 ch_gene_bed,
                 rseqc_modules
             )
@@ -592,7 +622,6 @@ workflow RNASEQ {
             ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.readdistribution_txt.collect{it[1]})
             ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.readduplication_pos_xls.collect{it[1]})
             ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.tin_txt.collect{it[1]})
-            ch_versions = ch_versions.mix(BAM_RSEQC.out.versions)
 
             // Compare predicted supplied or Salmon-predicted strand with what we get from RSeQC
             ch_strand_comparison = BAM_RSEQC.out.inferexperiment_txt
@@ -674,6 +703,24 @@ workflow RNASEQ {
                 ch_versions = ch_versions.mix(BRACKEN.out.versions)
                 ch_multiqc_files = ch_multiqc_files.mix(BRACKEN.out.txt.collect{it[1]})
             }
+        } else if (params.contaminant_screening == 'sylph') {
+            def sylph_databases = params.sylph_db ? params.sylph_db.split(',').collect{ file(it.trim()) } : []
+            ch_sylph_databases = channel.value(sylph_databases)
+            SYLPH_PROFILE (
+                ch_unaligned_sequences,
+                ch_sylph_databases
+            )
+            ch_sylph_profile = SYLPH_PROFILE.out.profile_out.filter{!it[1].isEmpty()}
+            ch_versions = ch_versions.mix(SYLPH_PROFILE.out.versions)
+
+            def sylph_taxonomies = params.sylph_taxonomy ? params.sylph_taxonomy.split(',').collect{ file(it.trim()) } : []
+            ch_sylph_taxonomies = channel.value(sylph_taxonomies)
+            SYLPHTAX_TAXPROF (
+                ch_sylph_profile,
+                ch_sylph_taxonomies
+            )
+            ch_versions = ch_versions.mix(SYLPHTAX_TAXPROF.out.versions)
+            ch_multiqc_files = ch_multiqc_files.mix(SYLPHTAX_TAXPROF.out.taxprof_output.collect{it[1]})
         }
     }
 
@@ -720,10 +767,11 @@ workflow RNASEQ {
 
     //
     // Collate and save software versions
+    // Combines traditional versions.yml files with versions emitted via topic channels
     //
-    softwareVersionsToYAML(ch_versions)
+    ch_collated_versions = softwareVersionsToYAML(ch_versions.mix(topic_versions.versions_file))
+        .mix(topic_versions_string)
         .collectFile(storeDir: "${params.outdir}/pipeline_info", name: 'nf_core_rnaseq_software_mqc_versions.yml', sort: true, newLine: true)
-        .set { ch_collated_versions }
 
     //
     // MODULE: MultiQC

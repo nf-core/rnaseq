@@ -22,15 +22,15 @@ process SALMON_INDEX {
     def args = task.ext.args ?: ''
     def decoys = ''
     def fasta = transcript_fasta
-    if (genome_fasta){
-        if (genome_fasta.endsWith('.gz')) {
-            genome_fasta = "<(gunzip -c $genome_fasta)"
+    if (genome_fasta) {
+        if ("${genome_fasta}".endsWith('.gz')) {
+            genome_fasta = "<(gunzip -c ${genome_fasta})"
         }
         decoys='-d decoys.txt'
         fasta='gentrome.fa'
     }
-    if (transcript_fasta.endsWith('.gz')) {
-        transcript_fasta = "<(gunzip -c $transcript_fasta)"
+    if ("${transcript_fasta}".endsWith('.gz')) {
+        transcript_fasta = "<(gunzip -c ${transcript_fasta})"
     }
     """
     if [ -n '$genome_fasta' ]; then

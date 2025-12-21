@@ -25,51 +25,84 @@ input:
         type: file
         description: the alignment in bam format
         pattern: "*.{bam}"
+        ontologies: []
+    - bai:
+        type: file
+        description: BAM index file
+        pattern: "*.{bai}"
+        ontologies: []
 output:
-  - seq_xls:
-      - meta:
+  seq_xls:
+    - - meta:
           type: file
           description: Read duplication rate determined from mapping position of read
           pattern: "*seq.DupRate.xls"
+          ontologies: []
       - "*seq.DupRate.xls":
           type: file
           description: Read duplication rate determined from mapping position of read
           pattern: "*seq.DupRate.xls"
-  - pos_xls:
-      - meta:
+          ontologies: []
+  pos_xls:
+    - - meta:
           type: file
-          description: Read duplication rate determined from sequence of read
-          pattern: "*pos.DupRate.xls"
+          description: Read duplication rate determined from mapping position of read
+          pattern: "*seq.DupRate.xls"
+          ontologies: []
       - "*pos.DupRate.xls":
           type: file
           description: Read duplication rate determined from sequence of read
           pattern: "*pos.DupRate.xls"
-  - pdf:
-      - meta:
+          ontologies: []
+  pdf:
+    - - meta:
           type: file
-          description: plot of duplication rate
-          pattern: "*.pdf"
+          description: Read duplication rate determined from mapping position of read
+          pattern: "*seq.DupRate.xls"
+          ontologies: []
       - "*.pdf":
           type: file
           description: plot of duplication rate
           pattern: "*.pdf"
-  - rscript:
-      - meta:
+          ontologies: []
+  rscript:
+    - - meta:
           type: file
-          description: script to reproduce the plot
-          pattern: "*.R"
+          description: Read duplication rate determined from mapping position of read
+          pattern: "*seq.DupRate.xls"
+          ontologies: []
       - "*.r":
           type: file
           description: script to reproduce the plot
           pattern: "*.R"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies:
+            - edam: http://edamontology.org/format_3999 # R script
+  versions_rseqc:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - rseqc:
+          type: string
+          description: The tool name
+      - read_duplication.py --version | sed "s/read_duplication.py //":
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - rseqc:
+          type: string
+          description: The tool name
+      - read_duplication.py --version | sed "s/read_duplication.py //":
+          type: eval
+          description: The expression to obtain the version of the tool
 authors:
   - "@drpatelh"
   - "@kevinmenden"
+  - "@rhassaine"
 maintainers:
   - "@drpatelh"
   - "@kevinmenden"
+  - "@rhassaine"

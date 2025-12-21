@@ -4,12 +4,11 @@ process FASTP {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/88/889a182b8066804f4799f3808a5813ad601381a8a0e3baa4ab8d73e739b97001/data' :
-        'community.wave.seqera.io/library/fastp:0.24.0--62c97b06e8447690' }"
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/52/527b18847a97451091dba07a886b24f17f742a861f9f6c9a6bfb79d4f1f3bf9d/data' :
+        'community.wave.seqera.io/library/fastp:1.0.1--c8b87fe62dcc103c' }"
 
     input:
-    tuple val(meta), path(reads)
-    path  adapter_fasta
+    tuple val(meta), path(reads), path(adapter_fasta)
     val   discard_trimmed_pass
     val   save_trimmed_fail
     val   save_merged

@@ -1,0 +1,102 @@
+name: samtools_faidx
+description: Index FASTA file, and optionally generate a file of chromosome sizes
+keywords:
+  - index
+  - fasta
+  - faidx
+  - chromosome
+tools:
+  - samtools:
+      description: |
+        SAMtools is a set of utilities for interacting with and post-processing
+        short DNA sequence read alignments in the SAM, BAM and CRAM formats, written by Heng Li.
+        These files are generated as output by short read aligners like BWA.
+      homepage: http://www.htslib.org/
+      documentation: http://www.htslib.org/doc/samtools.html
+      doi: 10.1093/bioinformatics/btp352
+      licence: ["MIT"]
+      identifier: biotools:samtools
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'test' ]
+    - fasta:
+        type: file
+        description: FASTA file
+        pattern: "*.{fa,fasta}"
+        ontologies: []
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'test' ]
+    - fai:
+        type: file
+        description: FASTA index file
+        pattern: "*.{fai}"
+        ontologies: []
+  - get_sizes:
+      type: boolean
+      description: use cut to get the sizes of the index (true) or not (false)
+
+output:
+  fa:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.{fa,fasta}":
+          type: file
+          description: FASTA file
+          pattern: "*.{fa}"
+          ontologies: []
+  sizes:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.sizes":
+          type: file
+          description: File containing chromosome lengths
+          pattern: "*.{sizes}"
+          ontologies: []
+  fai:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.fai":
+          type: file
+          description: FASTA index file
+          pattern: "*.{fai}"
+          ontologies: []
+  gzi:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.gzi":
+          type: file
+          description: Optional gzip index file for compressed inputs
+          pattern: "*.gzi"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+authors:
+  - "@drpatelh"
+  - "@ewels"
+  - "@phue"
+maintainers:
+  - "@maxulysse"
+  - "@phue"

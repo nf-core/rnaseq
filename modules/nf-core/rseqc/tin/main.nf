@@ -4,8 +4,8 @@ process RSEQC_TIN {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/rseqc:5.0.3--py39hf95cd2a_0' :
-        'biocontainers/rseqc:5.0.3--py39hf95cd2a_0' }"
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/6f/6f44b7933e2c2b1a340dc9485869974eb032d34e81af83716eb381964ee3e5e7/data' :
+        'community.wave.seqera.io/library/rseqc_r-base:2e29d2dfda9cef15' }"
 
     input:
     tuple val(meta), path(bam), path(bai)
@@ -14,7 +14,7 @@ process RSEQC_TIN {
     output:
     tuple val(meta), path("*.txt"), emit: txt
     tuple val(meta), path("*.xls"), emit: xls
-    path "versions.yml"           , emit: versions
+    tuple val("${task.process}"), val('rseqc'), eval('tin.py --version | sed "s/tin.py //"'), emit: versions_rseqc, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -27,11 +27,6 @@ process RSEQC_TIN {
         -i $bam \\
         -r $bed \\
         $args
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        rseqc: \$(tin.py --version | sed -e "s/tin.py //g")
-    END_VERSIONS
     """
 
     stub:
@@ -39,10 +34,5 @@ process RSEQC_TIN {
     """
     touch ${bam.fileName}.summary.txt
     touch ${bam.fileName}.tin.xls
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        rseqc: \$(tin.py --version | sed -e "s/tin.py //g")
-    END_VERSIONS
     """
 }

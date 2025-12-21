@@ -16,7 +16,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = false
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = false
@@ -43,7 +43,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -85,7 +85,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = false
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = false
@@ -112,7 +112,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -154,7 +154,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter          = true
                 skip_bbsplit             = false
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = false
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = false
@@ -181,7 +181,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -223,7 +223,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter           = false
                 skip_bbsplit             = true
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = false
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = false
@@ -250,7 +250,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -292,7 +292,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = true
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = false
@@ -319,7 +319,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -361,7 +361,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = false
                 skip_pseudo_alignment    = true
                 use_sentieon_star        = false
@@ -388,7 +388,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -430,7 +430,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = false
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = false
@@ -457,7 +457,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -499,7 +499,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = false
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = false
@@ -526,7 +526,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -568,7 +568,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = false
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = false
@@ -595,7 +595,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -637,7 +637,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = false
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = false
@@ -664,7 +664,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -706,7 +706,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = false
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = false
@@ -733,7 +733,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -775,7 +775,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = false
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = false
@@ -802,7 +802,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -844,7 +844,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = false
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = false
@@ -871,7 +871,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -913,7 +913,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = false
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = false
@@ -940,7 +940,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -982,7 +982,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = false
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = false
@@ -1009,7 +1009,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -1051,7 +1051,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = false
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = false
@@ -1078,7 +1078,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -1120,7 +1120,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter          = true
                 skip_bbsplit             = false
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = false
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = false
@@ -1147,7 +1147,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -1189,7 +1189,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter          = false
                 skip_bbsplit             = true
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = false
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = false
@@ -1216,7 +1216,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -1258,7 +1258,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = true
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = false
@@ -1285,7 +1285,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -1327,7 +1327,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = false
                 skip_pseudo_alignment    = true
                 use_sentieon_star        = false
@@ -1354,7 +1354,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -1396,7 +1396,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = false
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = true
@@ -1423,7 +1423,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -1467,7 +1467,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = false
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = false
@@ -1494,7 +1494,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -1538,7 +1538,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = false
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = false
@@ -1565,7 +1565,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -1609,7 +1609,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter          = true
                 skip_bbsplit             = false
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = false
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = false
@@ -1636,7 +1636,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -1680,7 +1680,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter          = false
                 skip_bbsplit             = true
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = false
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = false
@@ -1707,7 +1707,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -1736,7 +1736,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = true
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = false
@@ -1763,7 +1763,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -1807,7 +1807,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = false
                 skip_pseudo_alignment    = true
                 use_sentieon_star        = false
@@ -1834,7 +1834,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -1878,7 +1878,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = false
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = false
@@ -1905,7 +1905,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -1949,7 +1949,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = false
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = false
@@ -1976,7 +1976,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -2020,7 +2020,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = false
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = false
@@ -2047,7 +2047,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -2091,7 +2091,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = false
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = false
@@ -2118,7 +2118,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -2162,7 +2162,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter           = false
                 skip_bbsplit             = false
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = false
                 skip_pseudo_alignment    = false
                 use_sentieon_star         = false
@@ -2189,7 +2189,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -2233,7 +2233,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter           = false
                 skip_bbsplit             = false
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = false
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = false
@@ -2260,7 +2260,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -2304,7 +2304,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = false
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = false
@@ -2331,7 +2331,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -2375,7 +2375,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = false
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = false
@@ -2402,7 +2402,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -2446,7 +2446,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = false
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = false
@@ -2473,7 +2473,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -2517,7 +2517,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = false
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = false
@@ -2544,7 +2544,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -2588,7 +2588,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter          = true
                 skip_bbsplit             = false
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = false
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = false
@@ -2615,7 +2615,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -2659,7 +2659,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter          = false
                 skip_bbsplit             = true
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = false
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = false
@@ -2686,7 +2686,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -2715,7 +2715,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = true
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = false
@@ -2742,7 +2742,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -2786,7 +2786,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = false
                 skip_pseudo_alignment    = true
                 use_sentieon_star        = false
@@ -2813,7 +2813,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
@@ -2857,7 +2857,7 @@ nextflow_workflow {
                 pseudo_aligner           = 'salmon,kallisto'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
-                skip_sortmerna           = true
+                ribo_removal_tool        = null
                 skip_alignment           = false
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = true
@@ -2884,7 +2884,7 @@ nextflow_workflow {
                 input[19] = pseudo_aligner
                 input[20] = skip_gtf_filter
                 input[21] = skip_bbsplit
-                input[22] = skip_sortmerna
+                input[22] = ribo_removal_tool
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star

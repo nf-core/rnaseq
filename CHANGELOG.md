@@ -3,6 +3,50 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## dev - xxxx-xx-xx
+
+### Credits
+
+Special thanks to the following for their contributions to the release:
+
+- [Ezra Greenberg](https://github.com/egreenberg7)
+
+### Enhancements and fixes
+
+- [PR #1616](https://github.com/nf-core/rnaseq/pull/1616) - Add Sylph for contamination detection.
+- [PR #1663](https://github.com/nf-core/rnaseq/pull/1663) - Bump version after release 3.22.2
+- [PR #1664](https://github.com/nf-core/rnaseq/pull/1664) - Add support for multiple rRNA removal tools (`--ribo_removal_tool`): SortMeRNA (default), Bowtie2, and RiboDetector; enable BBSplit MultiQC reporting; add paired-end read grouping in MultiQC
+- [PR #1665](https://github.com/nf-core/rnaseq/pull/1665) - Bulk update modules/subworkflows; replace CUSTOM_GETCHROMSIZES with SAMTOOLS_FAIDX; update RSEQC modules with Wave containers for ARM compatibility; update ARM containers for RSEQC and UMITOOLS
+- [PR #1669](https://github.com/nf-core/rnaseq/pull/1669) - Enable SeqKit stats MultiQC module for RiboDetector rRNA removal
+
+### Parameters
+
+| Old parameter | New parameter         |
+| ------------- | --------------------- |
+|               | `--ribo_removal_tool` |
+
+> **NB:** Parameter has been **added** if just the new parameter information is present.
+
+### Parameters
+
+| Old parameter | New parameter      |
+| ------------- | ------------------ |
+|               | `--sylph_db`       |
+|               | `--sylph_taxonomy` |
+
+### Software dependencies
+
+| Dependency  | Old version | New version |
+| ----------- | ----------- | ----------- |
+| `sylph`     |             | 0.7.0       |
+| `sylph-tax` |             | 1.2.0       |
+
+> **NB:** Dependency has been **updated** if both old and new version information is present.
+>
+> **NB:** Dependency has been **added** if just the new version information is present.
+>
+> **NB:** Dependency has been **removed** if new version information isn't present.
+
 ## [[3.22.2](https://github.com/nf-core/rnaseq/releases/tag/3.22.2)] - 2025-12-11
 
 ### Credits

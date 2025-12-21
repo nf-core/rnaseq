@@ -79,7 +79,8 @@ workflow BAM_DEDUP_UMI {
     // 3. Restore name sorting
     SAMTOOLS_SORT (
         UMI_DEDUP_TRANSCRIPTOME.out.bam,
-        ch_fasta
+        ch_fasta,
+        ''
     )
 
     // 4. Run prepare_for_rsem.py on paired-end BAM files

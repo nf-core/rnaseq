@@ -25,9 +25,10 @@ input:
     - input:
         type: file
         description: input file
+        ontologies: []
 output:
-  - bai:
-      - meta:
+  bai:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -36,8 +37,9 @@ output:
           type: file
           description: BAM/CRAM/SAM index file
           pattern: "*.{bai,crai,sai}"
-  - csi:
-      - meta:
+          ontologies: []
+  csi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -46,8 +48,9 @@ output:
           type: file
           description: CSI index file
           pattern: "*.{csi}"
-  - crai:
-      - meta:
+          ontologies: []
+  crai:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -56,11 +59,14 @@ output:
           type: file
           description: BAM/CRAM/SAM index file
           pattern: "*.{bai,crai,sai}"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@drpatelh"
   - "@ewels"

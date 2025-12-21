@@ -83,7 +83,6 @@ output:
       - multiqc --version | sed "s/.* //g":
           type: eval
           description: The expression to obtain the version of the tool
-
 authors:
   - "@abhi18av"
   - "@bunop"
@@ -94,3 +93,27 @@ maintainers:
   - "@bunop"
   - "@drpatelh"
   - "@jfy133"
+containers:
+  conda:
+    linux_amd64:
+      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-d58f60e4deb769bf_1/condalock
+    linux_arm64:
+      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-193776baee4194db_1/condalock
+  docker:
+    linux_amd64:
+      build_id: bd-d58f60e4deb769bf_1
+      name: community.wave.seqera.io/library/multiqc:1.32--d58f60e4deb769bf
+      scanId: sc-d76ac07493e940b4_6
+    linux_arm64:
+      build_id: bd-193776baee4194db_1
+      name: community.wave.seqera.io/library/multiqc:1.32--193776baee4194db
+      scanId: sc-86caded0bff8246e_3
+  singularity:
+    linux_amd64:
+      build_id: bd-e649ffa094d1ef4a_1
+      name: oras://community.wave.seqera.io/library/multiqc:1.32--e649ffa094d1ef4a
+      https: https://community.wave.seqera.io/v2/library/multiqc/blobs/sha256:8c6c120d559d7ee04c7442b61ad7cf5a9e8970be5feefb37d68eeaa60c1034eb
+    linux_arm64:
+      build_id: bd-aee0064f5570ef22_1
+      name: oras://community.wave.seqera.io/library/multiqc:1.32--aee0064f5570ef22
+      https: https://community.wave.seqera.io/v2/library/multiqc/blobs/sha256:f02c59ebf6e9a00aa954ee8188a4ecc5c743e18f40b9215a242f67606a00f9cf

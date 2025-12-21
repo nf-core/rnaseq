@@ -1,0 +1,175 @@
+name: samtools_view
+description: filter/convert SAM/BAM/CRAM file
+keywords:
+  - view
+  - bam
+  - sam
+  - cram
+tools:
+  - samtools:
+      description: |
+        SAMtools is a set of utilities for interacting with and post-processing
+        short DNA sequence read alignments in the SAM, BAM and CRAM formats, written by Heng Li.
+        These files are generated as output by short read aligners like BWA.
+      homepage: http://www.htslib.org/
+      documentation: http://www.htslib.org/doc/samtools.html
+      doi: 10.1093/bioinformatics/btp352
+      licence: ["MIT"]
+      identifier: biotools:samtools
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - input:
+        type: file
+        description: BAM/CRAM/SAM file
+        pattern: "*.{bam,cram,sam}"
+        ontologies: []
+    - index:
+        type: file
+        description: BAM.BAI/BAM.CSI/CRAM.CRAI file (optional)
+        pattern: "*.{.bai,.csi,.crai}"
+        ontologies: []
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'test' ]
+    - fasta:
+        type: file
+        description: Reference file the CRAM was created with (optional)
+        pattern: "*.{fasta,fa}"
+        ontologies: []
+  - qname:
+      type: file
+      description: Optional file with read names to output only select alignments
+      pattern: "*.{txt,list}"
+      ontologies: []
+  - index_format:
+      type: string
+      description: Index format, used together with ext.args = '--write-index'
+      pattern: "bai|csi|crai"
+output:
+  bam:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - ${prefix}.bam:
+          type: file
+          description: optional filtered/converted BAM file
+          pattern: "*.{bam}"
+          ontologies: []
+  cram:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - ${prefix}.cram:
+          type: file
+          description: optional filtered/converted CRAM file
+          pattern: "*.{cram}"
+          ontologies: []
+  sam:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - ${prefix}.sam:
+          type: file
+          description: optional filtered/converted SAM file
+          pattern: "*.{sam}"
+          ontologies: []
+  bai:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - ${prefix}.${file_type}.bai:
+          type: file
+          description: optional BAM file index
+          pattern: "*.{bai}"
+          ontologies: []
+  csi:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - ${prefix}.${file_type}.csi:
+          type: file
+          description: optional tabix BAM file index
+          pattern: "*.{csi}"
+          ontologies: []
+  crai:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - ${prefix}.${file_type}.crai:
+          type: file
+          description: optional CRAM file index
+          pattern: "*.{crai}"
+          ontologies: []
+  unselected:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - ${prefix}.unselected.${file_type}:
+          type: file
+          description: optional file with unselected alignments
+          pattern: "*.unselected.{bam,cram,sam}"
+          ontologies: []
+  unselected_index:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - ${prefix}.unselected.${file_type}.{csi,crai}:
+          type: file
+          description: index for the "unselected" file
+          pattern: "*.unselected.{csi,crai}"
+          ontologies: []
+  versions_samtools:
+    - - ${task.process}:
+          type: string
+          description: Name of the process
+      - samtools:
+          type: string
+          description: Name of the tool
+      - samtools --version | head -1 | sed -e "s/samtools //":
+          type: eval
+          description: The expression to obtain the version of the tool
+
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: Name of the process
+      - samtools:
+          type: string
+          description: Name of the tool
+      - samtools --version | head -1 | sed -e "s/samtools //":
+          type: eval
+          description: The expression to obtain the version of the tool
+
+authors:
+  - "@drpatelh"
+  - "@joseespinosa"
+  - "@FriederikeHanssen"
+  - "@priyanka-surana"
+maintainers:
+  - "@drpatelh"
+  - "@joseespinosa"
+  - "@FriederikeHanssen"
+  - "@priyanka-surana"

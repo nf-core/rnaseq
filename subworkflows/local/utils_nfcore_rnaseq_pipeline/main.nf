@@ -287,8 +287,8 @@ def validateInputParameters() {
         error("Please provide either --bbsplit_fasta_list / --bbsplit_index to run BBSplit.")
     }
 
-    if (params.remove_ribo_rna && !params.ribo_database_manifest) {
-        error("Please provide --ribo_database_manifest to remove ribosomal RNA with SortMeRNA.")
+    if (params.remove_ribo_rna && params.ribo_removal_tool in ['sortmerna', 'bowtie2'] && !params.ribo_database_manifest) {
+        error("Please provide --ribo_database_manifest to remove ribosomal RNA with SortMeRNA or Bowtie2.")
     }
 
     if (params.with_umi && !params.skip_umi_extract) {
@@ -349,18 +349,17 @@ def validateInputParameters() {
     }
 
     // Check that Kraken/Bracken database provided if using kraken2/bracken
-    if (params.contaminant_screening in ['kraken2', 'kraken2_bracken']) {
-        if (!params.kraken_db) {
-            error("Contaminant screening set to kraken2 but not database is provided. Please provide a database with the --kraken_db option.")
-        }
-    // Check that Kraken/Bracken parameters are not provided when Kraken2 is not being used
-    } else {
-        if (!params.bracken_precision.equals('S')) {
-            brackenPrecisionWithoutKrakenDBWarn()
-        }
+    if (params.contaminant_screening in ['kraken2', 'kraken2_bracken'] && !params.kraken_db) {
+        error("Contaminant screening set to kraken2 but no database was provided. Please provide a database with the --kraken_db option.")
+    }
 
-        if (params.save_kraken_assignments || params.save_kraken_unassigned || params.kraken_db) {
-            krakenArgumentsWithoutKrakenDBWarn()
+    // Check that Sylph database and taxonomy is provided if using Sylph
+    if (params.contaminant_screening == 'sylph') {
+        if (!params.sylph_db) {
+            error("Contaminant screening is set to Sylph but no database was provided. Please provide a database with the --sylph_db option.")
+        }
+        if (!params.sylph_taxonomy) {
+            error("Contaminant screening is set to Sylph but no taxonomy was provided. Please provide a taxonomy with the --sylph_taxonomy option.")
         }
     }
 
@@ -599,26 +598,6 @@ def additionaFastaIndexWarn(index) {
         "  Ignore this warning if you know that the index already contains transgenes.\n\n" +
         "  Please see:\n" +
         "  https://github.com/nf-core/rnaseq/issues/556\n" +
-        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-}
-
-//
-// Print a warning if --save_kraken_assignments or --save_kraken_unassigned is provided without --kraken_db
-//
-def krakenArgumentsWithoutKrakenDBWarn() {
-    log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
-        "  'Kraken2 related arguments have been provided without setting contaminant\n" +
-        "  screening to Kraken2. Kraken2 is not being run so these will not be used.\n" +
-        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-}
-
-///
-/// Print a warning if --bracken-precision is provided without --kraken_db
-///
-def brackenPrecisionWithoutKrakenDBWarn() {
-    log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
-        "  '--bracken-precision' parameter has been provided without Kraken2 contaminant screening.\n" +
-        "  Bracken will not run so precision will not be set.\n" +
         "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 }
 

@@ -24,82 +24,121 @@ input:
         type: file
         description: the alignment in bam format
         pattern: "*.{bam}"
-  - - bed:
+        ontologies: []
+    - bai:
         type: file
-        description: a bed file for the reference gene model
-        pattern: "*.{bed}"
+        description: BAM index file
+        pattern: "*.{bai}"
+        ontologies: []
+  - bed:
+      type: file
+      description: a bed file for the reference gene model
+      pattern: "*.{bed}"
+      ontologies: []
 output:
-  - xls:
-      - meta:
+  xls:
+    - - meta:
           type: file
           description: xls file with junction information
           pattern: "*.xls"
+          ontologies: []
       - "*.xls":
           type: file
           description: xls file with junction information
           pattern: "*.xls"
-  - rscript:
-      - meta:
+          ontologies: []
+  rscript:
+    - - meta:
           type: file
-          description: Rscript to reproduce the plots
-          pattern: "*.r"
+          description: xls file with junction information
+          pattern: "*.xls"
+          ontologies: []
       - "*.r":
           type: file
           description: Rscript to reproduce the plots
           pattern: "*.r"
-  - log:
-      - meta:
+          ontologies: []
+  log:
+    - - meta:
           type: file
-          description: Log file of execution
-          pattern: "*.junction_annotation.log"
+          description: xls file with junction information
+          pattern: "*.xls"
+          ontologies: []
       - "*.log":
           type: file
           description: Log file of execution
           pattern: "*.junction_annotation.log"
-  - bed:
-      - meta:
+          ontologies: []
+  bed:
+    - - meta:
           type: file
-          description: bed file of annotated junctions
-          pattern: "*.junction.bed"
+          description: xls file with junction information
+          pattern: "*.xls"
+          ontologies: []
       - "*.junction.bed":
           type: file
           description: bed file of annotated junctions
           pattern: "*.junction.bed"
-  - interact_bed:
-      - meta:
+          ontologies: []
+  interact_bed:
+    - - meta:
           type: file
-          description: Interact bed file
-          pattern: "*.Interact.bed"
+          description: xls file with junction information
+          pattern: "*.xls"
+          ontologies: []
       - "*.Interact.bed":
           type: file
           description: Interact bed file
           pattern: "*.Interact.bed"
-  - pdf:
-      - meta:
+          ontologies: []
+  pdf:
+    - - meta:
           type: file
-          description: junction plot
-          pattern: "*.junction.pdf"
+          description: xls file with junction information
+          pattern: "*.xls"
+          ontologies: []
       - "*junction.pdf":
           type: file
           description: junction plot
           pattern: "*.junction.pdf"
-  - events_pdf:
-      - meta:
+          ontologies: []
+  events_pdf:
+    - - meta:
           type: file
-          description: events plot
-          pattern: "*.events.pdf"
+          description: xls file with junction information
+          pattern: "*.xls"
+          ontologies: []
       - "*events.pdf":
           type: file
           description: events plot
           pattern: "*.events.pdf"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions_rseqc:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - rseqc:
+          type: string
+          description: The tool name
+      - junction_annotation.py --version | sed "s/junction_annotation.py //":
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - rseqc:
+          type: string
+          description: The tool name
+      - junction_annotation.py --version | sed "s/junction_annotation.py //":
+          type: eval
+          description: The expression to obtain the version of the tool of the tool
 authors:
   - "@drpatelh"
   - "@kevinmenden"
+  - "@rhassaine"
 maintainers:
   - "@drpatelh"
   - "@kevinmenden"
+  - "@rhassaine"

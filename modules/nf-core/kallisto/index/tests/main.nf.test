@@ -3,6 +3,10 @@ nextflow_process {
     name "Test Process KALLISTO_INDEX"
     script "../main.nf"
     process "KALLISTO_INDEX"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "kallisto"
+    tag "kallisto/index"
 
     test("sarscov2 transcriptome.fasta") {
 

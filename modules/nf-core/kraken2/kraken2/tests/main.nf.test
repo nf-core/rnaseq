@@ -2,6 +2,11 @@ nextflow_process {
     name "Test Process KRAKEN2_KRAKEN2"
     script "../main.nf"
     process "KRAKEN2_KRAKEN2"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "untar"
+    tag "kraken2"
+    tag "kraken2/kraken2"
 
     setup {
         run("UNTAR") {
@@ -128,10 +133,80 @@ nextflow_process {
             { assert process.success },
             { assert snapshot(
                     process.out.report,
+                    process.out.versions,
                     process.out.classified_reads_assignment,
+                ).match()
+            },
+            )
+        }
+    }
+
+    test("single_end - stub") {
+
+    tag "stub"
+    options "-stub"
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:true ], // meta map
+                    [ file("dummy1", checkIfExists: false)]
+                ]
+                input[1] = file("dummy2", checkIfExists: false)
+                input[2] = true
+                input[3] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+            { assert process.success },
+            { assert snapshot(
+                    process.out.report,
                     process.out.versions,
                 ).match()
             },
+            { assert process.out.classified_reads_fastq.get(0).get(1) ==~ ".*/test.classified.fastq.gz" },
+            { assert process.out.unclassified_reads_fastq.get(0).get(1) ==~ ".*/test.unclassified.fastq.gz" },
+            )
+        }
+    }
+
+    test("paired_end - stub") {
+
+    tag "stub"
+    options "-stub"
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                    [ file("dummy1", checkIfExists: false)]
+                ]
+                input[1] = file("dummy2", checkIfExists: false)
+                input[2] = true
+                input[3] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+            { assert process.success },
+            { assert snapshot(
+                    process.out.report,
+                    process.out.versions,
+                ).match()
+            },
+            { assert process.out.classified_reads_fastq.get(0).get(1).get(0)
+                ==~ ".*/test.classified_1.fastq.gz" },
+            { assert process.out.classified_reads_fastq.get(0).get(1).get(1)
+                ==~ ".*/test.classified_2.fastq.gz" },
+            { assert process.out.unclassified_reads_fastq.get(0).get(1).get(0)
+                ==~ ".*/test.unclassified_1.fastq.gz" },
+            { assert process.out.unclassified_reads_fastq.get(0).get(1).get(1)
+                ==~ ".*/test.unclassified_2.fastq.gz" },
             )
         }
     }

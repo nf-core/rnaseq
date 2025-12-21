@@ -20,12 +20,14 @@ input:
         type: file
         description: bedGraph file
         pattern: "*.{bedgraph}"
-  - - sizes:
-        type: file
-        description: Chromosome sizes file
+        ontologies: []
+  - sizes:
+      type: file
+      description: Chromosome sizes file
+      ontologies: []
 output:
-  - bedgraph:
-      - meta:
+  bedgraph:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -34,11 +36,14 @@ output:
           type: file
           description: bedGraph file
           pattern: "*.{bedgraph}"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@drpatelh"
 maintainers:

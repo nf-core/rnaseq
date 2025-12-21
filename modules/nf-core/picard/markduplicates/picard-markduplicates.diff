@@ -1,4 +1,15 @@
-Changes in module 'nf-core/picard/markduplicates'
+Changes in component 'nf-core/picard/markduplicates'
+Changes in 'picard/markduplicates/environment.yml':
+--- modules/nf-core/picard/markduplicates/environment.yml
++++ modules/nf-core/picard/markduplicates/environment.yml
+@@ -5,4 +5,4 @@
+   - bioconda
+ dependencies:
+   # renovate: datasource=conda depName=bioconda/picard
+-  - bioconda::picard=3.4.0
++  - bioconda::picard=3.1.1
+
+'modules/nf-core/picard/markduplicates/meta.yml' is unchanged
 Changes in 'picard/markduplicates/main.nf':
 --- modules/nf-core/picard/markduplicates/main.nf
 +++ modules/nf-core/picard/markduplicates/main.nf
@@ -6,24 +17,13 @@ Changes in 'picard/markduplicates/main.nf':
  
      conda "${moduleDir}/environment.yml"
      container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
--        'https://depot.galaxyproject.org/singularity/picard:3.2.0--hdfd78af_0' :
--        'biocontainers/picard:3.2.0--hdfd78af_0' }"
+-        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/08/0861295baa7c01fc593a9da94e82b44a729dcaf8da92be8e565da109aa549b25/data' :
+-        'community.wave.seqera.io/library/picard:3.4.0--e9963040df0a9bf6' }"
 +        'https://depot.galaxyproject.org/singularity/picard:3.1.1--hdfd78af_0' :
 +        'biocontainers/picard:3.1.1--hdfd78af_0' }"
  
      input:
      tuple val(meta), path(reads)
-
-'modules/nf-core/picard/markduplicates/meta.yml' is unchanged
-Changes in 'picard/markduplicates/environment.yml':
---- modules/nf-core/picard/markduplicates/environment.yml
-+++ modules/nf-core/picard/markduplicates/environment.yml
-@@ -2,4 +2,4 @@
-   - conda-forge
-   - bioconda
- dependencies:
--  - bioconda::picard=3.2.0
-+  - bioconda::picard=3.1.1
 
 Changes in 'picard/markduplicates/tests/main.nf.test.snap':
 --- modules/nf-core/picard/markduplicates/tests/main.nf.test.snap
@@ -32,25 +32,28 @@ Changes in 'picard/markduplicates/tests/main.nf.test.snap':
                      ]
                  ],
                  "4": [
--                    "versions.yml:md5,33dd4b32140e801e0d2e50aeefd0788d"
+-                    "versions.yml:md5,8c1f1d135a968adbfd14679b93b50bd0"
 +                    "versions.yml:md5,b699af51b1956f3810f8a7c066e0ab17"
                  ],
                  "bai": [
                      
-@@ -54,7 +54,7 @@
+@@ -54,15 +54,15 @@
                      ]
                  ],
                  "versions": [
--                    "versions.yml:md5,33dd4b32140e801e0d2e50aeefd0788d"
+-                    "versions.yml:md5,8c1f1d135a968adbfd14679b93b50bd0"
 +                    "versions.yml:md5,b699af51b1956f3810f8a7c066e0ab17"
                  ]
              }
          ],
-@@ -62,7 +62,7 @@
-             "nf-test": "0.9.0",
-             "nextflow": "24.04.3"
-         },
--        "timestamp": "2024-07-22T11:56:32.025869"
+         "meta": {
+-            "nf-test": "0.9.2",
+-            "nextflow": "25.04.7"
+-        },
+-        "timestamp": "2025-09-15T10:55:23.719403975"
++            "nf-test": "0.9.0",
++            "nextflow": "24.04.3"
++        },
 +        "timestamp": "2024-07-22T19:34:20.663558"
      },
      "sarscov2 [unsorted bam] - stub": {
@@ -59,25 +62,28 @@ Changes in 'picard/markduplicates/tests/main.nf.test.snap':
                      ]
                  ],
                  "4": [
--                    "versions.yml:md5,33dd4b32140e801e0d2e50aeefd0788d"
+-                    "versions.yml:md5,8c1f1d135a968adbfd14679b93b50bd0"
 +                    "versions.yml:md5,b699af51b1956f3810f8a7c066e0ab17"
                  ],
                  "bai": [
                      
-@@ -119,7 +119,7 @@
+@@ -119,69 +119,69 @@
                      ]
                  ],
                  "versions": [
--                    "versions.yml:md5,33dd4b32140e801e0d2e50aeefd0788d"
+-                    "versions.yml:md5,8c1f1d135a968adbfd14679b93b50bd0"
 +                    "versions.yml:md5,b699af51b1956f3810f8a7c066e0ab17"
                  ]
              }
          ],
-@@ -127,61 +127,61 @@
-             "nf-test": "0.9.0",
-             "nextflow": "24.04.3"
-         },
--        "timestamp": "2024-07-22T11:56:20.497105"
+         "meta": {
+-            "nf-test": "0.9.2",
+-            "nextflow": "25.04.7"
+-        },
+-        "timestamp": "2025-09-15T10:55:15.021745504"
++            "nf-test": "0.9.0",
++            "nextflow": "24.04.3"
++        },
 +        "timestamp": "2024-07-22T19:34:01.021052"
      },
      "sarscov2 [unsorted bam]": {
@@ -85,20 +91,23 @@ Changes in 'picard/markduplicates/tests/main.nf.test.snap':
              "test.marked.bam",
              [
                  "## htsjdk.samtools.metrics.StringHeader",
--                "# MarkDuplicates --INPUT test.paired_end.bam --OUTPUT test.marked.bam --METRICS_FILE test.marked.MarkDuplicates.metrics.txt --ASSUME_SORT_ORDER queryname --MAX_SEQUENCES_FOR_DISK_READ_ENDS_MAP 50000 --MAX_FILE_HANDLES_FOR_READ_ENDS_MAP 8000 --SORTING_COLLECTION_SIZE_RATIO 0.25 --TAG_DUPLICATE_SET_MEMBERS false --REMOVE_SEQUENCING_DUPLICATES false --TAGGING_POLICY DontTag --CLEAR_DT true --DUPLEX_UMI false --FLOW_MODE false --FLOW_DUP_STRATEGY FLOW_QUALITY_SUM_STRATEGY --USE_END_IN_UNPAIRED_READS false --USE_UNPAIRED_CLIPPED_END false --UNPAIRED_END_UNCERTAINTY 0 --UNPAIRED_START_UNCERTAINTY 0 --FLOW_SKIP_FIRST_N_FLOWS 0 --FLOW_Q_IS_KNOWN_END false --FLOW_EFFECTIVE_QUALITY_THRESHOLD 15 --ADD_PG_TAG_TO_READS true --REMOVE_DUPLICATES false --ASSUME_SORTED false --DUPLICATE_SCORING_STRATEGY SUM_OF_BASE_QUALITIES --PROGRAM_RECORD_ID MarkDuplicates --PROGRAM_GROUP_NAME MarkDuplicates --READ_NAME_REGEX <optimized capture of last three ':' separated fields as numeric values> --OPTICAL_DUPLICATE_PIXEL_DISTANCE 100 --MAX_OPTICAL_DUPLICATE_SET_SIZE 300000 --VERBOSITY INFO --QUIET false --VALIDATION_STRINGENCY STRICT --COMPRESSION_LEVEL 5 --MAX_RECORDS_IN_RAM 500000 --CREATE_INDEX false --CREATE_MD5_FILE false --help false --version false --showHidden false --USE_JDK_DEFLATER false --USE_JDK_INFLATER false",
+-                "# MarkDuplicates --INPUT test.paired_end.bam --OUTPUT test.marked.bam --METRICS_FILE test.marked.MarkDuplicates.metrics.txt --ASSUME_SORT_ORDER queryname --MAX_SEQUENCES_FOR_DISK_READ_ENDS_MAP 50000 --MAX_FILE_HANDLES_FOR_READ_ENDS_MAP 8000 --SORTING_COLLECTION_SIZE_RATIO 0.25 --TAG_DUPLICATE_SET_MEMBERS false --REMOVE_SEQUENCING_DUPLICATES false --TAGGING_POLICY DontTag --CLEAR_DT true --DUPLEX_UMI false --FLOW_MODE false --FLOW_DUP_STRATEGY FLOW_QUALITY_SUM_STRATEGY --FLOW_USE_END_IN_UNPAIRED_READS false --FLOW_USE_UNPAIRED_CLIPPED_END false --FLOW_UNPAIRED_END_UNCERTAINTY 0 --FLOW_UNPAIRED_START_UNCERTAINTY 0 --FLOW_SKIP_FIRST_N_FLOWS 0 --FLOW_Q_IS_KNOWN_END false --FLOW_EFFECTIVE_QUALITY_THRESHOLD 15 --ADD_PG_TAG_TO_READS true --REMOVE_DUPLICATES false --ASSUME_SORTED false --DUPLICATE_SCORING_STRATEGY SUM_OF_BASE_QUALITIES --PROGRAM_RECORD_ID MarkDuplicates --PROGRAM_GROUP_NAME MarkDuplicates --READ_NAME_REGEX <optimized capture of last three ':' separated fields as numeric values> --OPTICAL_DUPLICATE_PIXEL_DISTANCE 100 --MAX_OPTICAL_DUPLICATE_SET_SIZE 300000 --VERBOSITY INFO --QUIET false --VALIDATION_STRINGENCY STRICT --COMPRESSION_LEVEL 5 --MAX_RECORDS_IN_RAM 500000 --CREATE_INDEX false --CREATE_MD5_FILE false --help false --version false --showHidden false --USE_JDK_DEFLATER false --USE_JDK_INFLATER false",
 +                "# MarkDuplicates --INPUT test.paired_end.bam --OUTPUT test.marked.bam --METRICS_FILE test.marked.MarkDuplicates.metrics.txt --ASSUME_SORT_ORDER queryname --MAX_SEQUENCES_FOR_DISK_READ_ENDS_MAP 50000 --MAX_FILE_HANDLES_FOR_READ_ENDS_MAP 8000 --SORTING_COLLECTION_SIZE_RATIO 0.25 --TAG_DUPLICATE_SET_MEMBERS false --REMOVE_SEQUENCING_DUPLICATES false --TAGGING_POLICY DontTag --CLEAR_DT true --DUPLEX_UMI false --FLOW_MODE false --FLOW_QUALITY_SUM_STRATEGY false --USE_END_IN_UNPAIRED_READS false --USE_UNPAIRED_CLIPPED_END false --UNPAIRED_END_UNCERTAINTY 0 --FLOW_SKIP_FIRST_N_FLOWS 0 --FLOW_Q_IS_KNOWN_END false --FLOW_EFFECTIVE_QUALITY_THRESHOLD 15 --ADD_PG_TAG_TO_READS true --REMOVE_DUPLICATES false --ASSUME_SORTED false --DUPLICATE_SCORING_STRATEGY SUM_OF_BASE_QUALITIES --PROGRAM_RECORD_ID MarkDuplicates --PROGRAM_GROUP_NAME MarkDuplicates --READ_NAME_REGEX <optimized capture of last three ':' separated fields as numeric values> --OPTICAL_DUPLICATE_PIXEL_DISTANCE 100 --MAX_OPTICAL_DUPLICATE_SET_SIZE 300000 --VERBOSITY INFO --QUIET false --VALIDATION_STRINGENCY STRICT --COMPRESSION_LEVEL 5 --MAX_RECORDS_IN_RAM 500000 --CREATE_INDEX false --CREATE_MD5_FILE false --help false --version false --showHidden false --USE_JDK_DEFLATER false --USE_JDK_INFLATER false",
                  "## htsjdk.samtools.metrics.StringHeader"
              ],
              [
--                "versions.yml:md5,33dd4b32140e801e0d2e50aeefd0788d"
+-                "versions.yml:md5,8c1f1d135a968adbfd14679b93b50bd0"
 +                "versions.yml:md5,b699af51b1956f3810f8a7c066e0ab17"
              ]
          ],
          "meta": {
-             "nf-test": "0.9.0",
-             "nextflow": "24.04.3"
-         },
--        "timestamp": "2024-07-22T11:50:14.881666"
+-            "nf-test": "0.9.2",
+-            "nextflow": "25.04.7"
+-        },
+-        "timestamp": "2025-09-15T10:54:42.391563873"
++            "nf-test": "0.9.0",
++            "nextflow": "24.04.3"
++        },
 +        "timestamp": "2024-07-22T19:32:49.777427"
      },
      "sarscov2 [sorted bam]": {
@@ -106,20 +115,23 @@ Changes in 'picard/markduplicates/tests/main.nf.test.snap':
              "test.marked.bam",
              [
                  "## htsjdk.samtools.metrics.StringHeader",
--                "# MarkDuplicates --INPUT test.paired_end.sorted.bam --OUTPUT test.marked.bam --METRICS_FILE test.marked.MarkDuplicates.metrics.txt --ASSUME_SORT_ORDER queryname --MAX_SEQUENCES_FOR_DISK_READ_ENDS_MAP 50000 --MAX_FILE_HANDLES_FOR_READ_ENDS_MAP 8000 --SORTING_COLLECTION_SIZE_RATIO 0.25 --TAG_DUPLICATE_SET_MEMBERS false --REMOVE_SEQUENCING_DUPLICATES false --TAGGING_POLICY DontTag --CLEAR_DT true --DUPLEX_UMI false --FLOW_MODE false --FLOW_DUP_STRATEGY FLOW_QUALITY_SUM_STRATEGY --USE_END_IN_UNPAIRED_READS false --USE_UNPAIRED_CLIPPED_END false --UNPAIRED_END_UNCERTAINTY 0 --UNPAIRED_START_UNCERTAINTY 0 --FLOW_SKIP_FIRST_N_FLOWS 0 --FLOW_Q_IS_KNOWN_END false --FLOW_EFFECTIVE_QUALITY_THRESHOLD 15 --ADD_PG_TAG_TO_READS true --REMOVE_DUPLICATES false --ASSUME_SORTED false --DUPLICATE_SCORING_STRATEGY SUM_OF_BASE_QUALITIES --PROGRAM_RECORD_ID MarkDuplicates --PROGRAM_GROUP_NAME MarkDuplicates --READ_NAME_REGEX <optimized capture of last three ':' separated fields as numeric values> --OPTICAL_DUPLICATE_PIXEL_DISTANCE 100 --MAX_OPTICAL_DUPLICATE_SET_SIZE 300000 --VERBOSITY INFO --QUIET false --VALIDATION_STRINGENCY STRICT --COMPRESSION_LEVEL 5 --MAX_RECORDS_IN_RAM 500000 --CREATE_INDEX false --CREATE_MD5_FILE false --help false --version false --showHidden false --USE_JDK_DEFLATER false --USE_JDK_INFLATER false",
+-                "# MarkDuplicates --INPUT test.paired_end.sorted.bam --OUTPUT test.marked.bam --METRICS_FILE test.marked.MarkDuplicates.metrics.txt --ASSUME_SORT_ORDER queryname --MAX_SEQUENCES_FOR_DISK_READ_ENDS_MAP 50000 --MAX_FILE_HANDLES_FOR_READ_ENDS_MAP 8000 --SORTING_COLLECTION_SIZE_RATIO 0.25 --TAG_DUPLICATE_SET_MEMBERS false --REMOVE_SEQUENCING_DUPLICATES false --TAGGING_POLICY DontTag --CLEAR_DT true --DUPLEX_UMI false --FLOW_MODE false --FLOW_DUP_STRATEGY FLOW_QUALITY_SUM_STRATEGY --FLOW_USE_END_IN_UNPAIRED_READS false --FLOW_USE_UNPAIRED_CLIPPED_END false --FLOW_UNPAIRED_END_UNCERTAINTY 0 --FLOW_UNPAIRED_START_UNCERTAINTY 0 --FLOW_SKIP_FIRST_N_FLOWS 0 --FLOW_Q_IS_KNOWN_END false --FLOW_EFFECTIVE_QUALITY_THRESHOLD 15 --ADD_PG_TAG_TO_READS true --REMOVE_DUPLICATES false --ASSUME_SORTED false --DUPLICATE_SCORING_STRATEGY SUM_OF_BASE_QUALITIES --PROGRAM_RECORD_ID MarkDuplicates --PROGRAM_GROUP_NAME MarkDuplicates --READ_NAME_REGEX <optimized capture of last three ':' separated fields as numeric values> --OPTICAL_DUPLICATE_PIXEL_DISTANCE 100 --MAX_OPTICAL_DUPLICATE_SET_SIZE 300000 --VERBOSITY INFO --QUIET false --VALIDATION_STRINGENCY STRICT --COMPRESSION_LEVEL 5 --MAX_RECORDS_IN_RAM 500000 --CREATE_INDEX false --CREATE_MD5_FILE false --help false --version false --showHidden false --USE_JDK_DEFLATER false --USE_JDK_INFLATER false",
 +                "# MarkDuplicates --INPUT test.paired_end.sorted.bam --OUTPUT test.marked.bam --METRICS_FILE test.marked.MarkDuplicates.metrics.txt --ASSUME_SORT_ORDER queryname --MAX_SEQUENCES_FOR_DISK_READ_ENDS_MAP 50000 --MAX_FILE_HANDLES_FOR_READ_ENDS_MAP 8000 --SORTING_COLLECTION_SIZE_RATIO 0.25 --TAG_DUPLICATE_SET_MEMBERS false --REMOVE_SEQUENCING_DUPLICATES false --TAGGING_POLICY DontTag --CLEAR_DT true --DUPLEX_UMI false --FLOW_MODE false --FLOW_QUALITY_SUM_STRATEGY false --USE_END_IN_UNPAIRED_READS false --USE_UNPAIRED_CLIPPED_END false --UNPAIRED_END_UNCERTAINTY 0 --FLOW_SKIP_FIRST_N_FLOWS 0 --FLOW_Q_IS_KNOWN_END false --FLOW_EFFECTIVE_QUALITY_THRESHOLD 15 --ADD_PG_TAG_TO_READS true --REMOVE_DUPLICATES false --ASSUME_SORTED false --DUPLICATE_SCORING_STRATEGY SUM_OF_BASE_QUALITIES --PROGRAM_RECORD_ID MarkDuplicates --PROGRAM_GROUP_NAME MarkDuplicates --READ_NAME_REGEX <optimized capture of last three ':' separated fields as numeric values> --OPTICAL_DUPLICATE_PIXEL_DISTANCE 100 --MAX_OPTICAL_DUPLICATE_SET_SIZE 300000 --VERBOSITY INFO --QUIET false --VALIDATION_STRINGENCY STRICT --COMPRESSION_LEVEL 5 --MAX_RECORDS_IN_RAM 500000 --CREATE_INDEX false --CREATE_MD5_FILE false --help false --version false --showHidden false --USE_JDK_DEFLATER false --USE_JDK_INFLATER false",
                  "## htsjdk.samtools.metrics.StringHeader"
              ],
              [
--                "versions.yml:md5,33dd4b32140e801e0d2e50aeefd0788d"
+-                "versions.yml:md5,8c1f1d135a968adbfd14679b93b50bd0"
 +                "versions.yml:md5,b699af51b1956f3810f8a7c066e0ab17"
              ]
          ],
          "meta": {
-             "nf-test": "0.9.0",
-             "nextflow": "24.04.3"
-         },
--        "timestamp": "2024-07-22T11:52:03.11428"
+-            "nf-test": "0.9.2",
+-            "nextflow": "25.04.7"
+-        },
+-        "timestamp": "2025-09-15T10:54:53.513175854"
++            "nf-test": "0.9.0",
++            "nextflow": "24.04.3"
++        },
 +        "timestamp": "2024-07-22T19:33:14.462596"
      },
      "homo_sapiens [cram]": {
@@ -127,20 +139,23 @@ Changes in 'picard/markduplicates/tests/main.nf.test.snap':
              "test.marked.cram",
              [
                  "## htsjdk.samtools.metrics.StringHeader",
--                "# MarkDuplicates --INPUT test.paired_end.sorted.cram --OUTPUT test.marked.cram --METRICS_FILE test.marked.MarkDuplicates.metrics.txt --ASSUME_SORT_ORDER queryname --REFERENCE_SEQUENCE genome.fasta --MAX_SEQUENCES_FOR_DISK_READ_ENDS_MAP 50000 --MAX_FILE_HANDLES_FOR_READ_ENDS_MAP 8000 --SORTING_COLLECTION_SIZE_RATIO 0.25 --TAG_DUPLICATE_SET_MEMBERS false --REMOVE_SEQUENCING_DUPLICATES false --TAGGING_POLICY DontTag --CLEAR_DT true --DUPLEX_UMI false --FLOW_MODE false --FLOW_DUP_STRATEGY FLOW_QUALITY_SUM_STRATEGY --USE_END_IN_UNPAIRED_READS false --USE_UNPAIRED_CLIPPED_END false --UNPAIRED_END_UNCERTAINTY 0 --UNPAIRED_START_UNCERTAINTY 0 --FLOW_SKIP_FIRST_N_FLOWS 0 --FLOW_Q_IS_KNOWN_END false --FLOW_EFFECTIVE_QUALITY_THRESHOLD 15 --ADD_PG_TAG_TO_READS true --REMOVE_DUPLICATES false --ASSUME_SORTED false --DUPLICATE_SCORING_STRATEGY SUM_OF_BASE_QUALITIES --PROGRAM_RECORD_ID MarkDuplicates --PROGRAM_GROUP_NAME MarkDuplicates --READ_NAME_REGEX <optimized capture of last three ':' separated fields as numeric values> --OPTICAL_DUPLICATE_PIXEL_DISTANCE 100 --MAX_OPTICAL_DUPLICATE_SET_SIZE 300000 --VERBOSITY INFO --QUIET false --VALIDATION_STRINGENCY STRICT --COMPRESSION_LEVEL 5 --MAX_RECORDS_IN_RAM 500000 --CREATE_INDEX false --CREATE_MD5_FILE false --help false --version false --showHidden false --USE_JDK_DEFLATER false --USE_JDK_INFLATER false",
+-                "# MarkDuplicates --INPUT test.paired_end.sorted.cram --OUTPUT test.marked.cram --METRICS_FILE test.marked.MarkDuplicates.metrics.txt --ASSUME_SORT_ORDER queryname --REFERENCE_SEQUENCE genome.fasta --MAX_SEQUENCES_FOR_DISK_READ_ENDS_MAP 50000 --MAX_FILE_HANDLES_FOR_READ_ENDS_MAP 8000 --SORTING_COLLECTION_SIZE_RATIO 0.25 --TAG_DUPLICATE_SET_MEMBERS false --REMOVE_SEQUENCING_DUPLICATES false --TAGGING_POLICY DontTag --CLEAR_DT true --DUPLEX_UMI false --FLOW_MODE false --FLOW_DUP_STRATEGY FLOW_QUALITY_SUM_STRATEGY --FLOW_USE_END_IN_UNPAIRED_READS false --FLOW_USE_UNPAIRED_CLIPPED_END false --FLOW_UNPAIRED_END_UNCERTAINTY 0 --FLOW_UNPAIRED_START_UNCERTAINTY 0 --FLOW_SKIP_FIRST_N_FLOWS 0 --FLOW_Q_IS_KNOWN_END false --FLOW_EFFECTIVE_QUALITY_THRESHOLD 15 --ADD_PG_TAG_TO_READS true --REMOVE_DUPLICATES false --ASSUME_SORTED false --DUPLICATE_SCORING_STRATEGY SUM_OF_BASE_QUALITIES --PROGRAM_RECORD_ID MarkDuplicates --PROGRAM_GROUP_NAME MarkDuplicates --READ_NAME_REGEX <optimized capture of last three ':' separated fields as numeric values> --OPTICAL_DUPLICATE_PIXEL_DISTANCE 100 --MAX_OPTICAL_DUPLICATE_SET_SIZE 300000 --VERBOSITY INFO --QUIET false --VALIDATION_STRINGENCY STRICT --COMPRESSION_LEVEL 5 --MAX_RECORDS_IN_RAM 500000 --CREATE_INDEX false --CREATE_MD5_FILE false --help false --version false --showHidden false --USE_JDK_DEFLATER false --USE_JDK_INFLATER false",
 +                "# MarkDuplicates --INPUT test.paired_end.sorted.cram --OUTPUT test.marked.cram --METRICS_FILE test.marked.MarkDuplicates.metrics.txt --ASSUME_SORT_ORDER queryname --REFERENCE_SEQUENCE genome.fasta --MAX_SEQUENCES_FOR_DISK_READ_ENDS_MAP 50000 --MAX_FILE_HANDLES_FOR_READ_ENDS_MAP 8000 --SORTING_COLLECTION_SIZE_RATIO 0.25 --TAG_DUPLICATE_SET_MEMBERS false --REMOVE_SEQUENCING_DUPLICATES false --TAGGING_POLICY DontTag --CLEAR_DT true --DUPLEX_UMI false --FLOW_MODE false --FLOW_QUALITY_SUM_STRATEGY false --USE_END_IN_UNPAIRED_READS false --USE_UNPAIRED_CLIPPED_END false --UNPAIRED_END_UNCERTAINTY 0 --FLOW_SKIP_FIRST_N_FLOWS 0 --FLOW_Q_IS_KNOWN_END false --FLOW_EFFECTIVE_QUALITY_THRESHOLD 15 --ADD_PG_TAG_TO_READS true --REMOVE_DUPLICATES false --ASSUME_SORTED false --DUPLICATE_SCORING_STRATEGY SUM_OF_BASE_QUALITIES --PROGRAM_RECORD_ID MarkDuplicates --PROGRAM_GROUP_NAME MarkDuplicates --READ_NAME_REGEX <optimized capture of last three ':' separated fields as numeric values> --OPTICAL_DUPLICATE_PIXEL_DISTANCE 100 --MAX_OPTICAL_DUPLICATE_SET_SIZE 300000 --VERBOSITY INFO --QUIET false --VALIDATION_STRINGENCY STRICT --COMPRESSION_LEVEL 5 --MAX_RECORDS_IN_RAM 500000 --CREATE_INDEX false --CREATE_MD5_FILE false --help false --version false --showHidden false --USE_JDK_DEFLATER false --USE_JDK_INFLATER false",
                  "## htsjdk.samtools.metrics.StringHeader"
              ],
              [
--                "versions.yml:md5,33dd4b32140e801e0d2e50aeefd0788d"
+-                "versions.yml:md5,8c1f1d135a968adbfd14679b93b50bd0"
 +                "versions.yml:md5,b699af51b1956f3810f8a7c066e0ab17"
              ]
          ],
          "meta": {
-             "nf-test": "0.9.0",
-             "nextflow": "24.04.3"
-         },
--        "timestamp": "2024-07-22T11:53:05.403139"
+-            "nf-test": "0.9.2",
+-            "nextflow": "25.04.7"
+-        },
+-        "timestamp": "2025-09-15T10:55:05.845819685"
++            "nf-test": "0.9.0",
++            "nextflow": "24.04.3"
++        },
 +        "timestamp": "2024-07-22T19:33:40.215159"
      },
      "homo_sapiens [cram] - stub": {
@@ -149,25 +164,28 @@ Changes in 'picard/markduplicates/tests/main.nf.test.snap':
                      ]
                  ],
                  "4": [
--                    "versions.yml:md5,33dd4b32140e801e0d2e50aeefd0788d"
+-                    "versions.yml:md5,8c1f1d135a968adbfd14679b93b50bd0"
 +                    "versions.yml:md5,b699af51b1956f3810f8a7c066e0ab17"
                  ],
                  "bai": [
                      
-@@ -238,7 +238,7 @@
+@@ -238,14 +238,14 @@
                      ]
                  ],
                  "versions": [
--                    "versions.yml:md5,33dd4b32140e801e0d2e50aeefd0788d"
+-                    "versions.yml:md5,8c1f1d135a968adbfd14679b93b50bd0"
 +                    "versions.yml:md5,b699af51b1956f3810f8a7c066e0ab17"
                  ]
              }
          ],
-@@ -246,6 +246,6 @@
-             "nf-test": "0.9.0",
-             "nextflow": "24.04.3"
-         },
--        "timestamp": "2024-07-22T11:56:43.438188"
+         "meta": {
+-            "nf-test": "0.9.2",
+-            "nextflow": "25.04.7"
+-        },
+-        "timestamp": "2025-09-15T10:55:33.129976674"
++            "nf-test": "0.9.0",
++            "nextflow": "24.04.3"
++        },
 +        "timestamp": "2024-07-22T19:34:51.753515"
      }
  }
@@ -187,5 +205,4 @@ Changes in 'picard/markduplicates/tests/main.nf.test':
      test("sarscov2 [unsorted bam]") {
  
 
-'modules/nf-core/picard/markduplicates/tests/tags.yml' was removed
 ************************************************************

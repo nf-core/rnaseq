@@ -1,0 +1,119 @@
+nextflow_process {
+
+    name "Test Process SAMTOOLS_FASTQ"
+    script "../main.nf"
+    process "SAMTOOLS_FASTQ"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "samtools"
+    tag "samtools/fastq"
+
+    test("bam") {
+
+        when {
+            process {
+                """
+                interleave = false
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true)
+                ])
+                input[1] = interleave
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.fastq[0][1].collect { path(it).linesGzip[0..6] }).match("bam_fastq") },
+                { assert snapshot(process.out.interleaved).match("bam_interleaved") },
+                { assert snapshot(file(process.out.singleton[0][1]).name).match("bam_singleton") },
+                { assert snapshot(file(process.out.other[0][1]).name).match("bam_other") },
+                { assert snapshot(process.out.versions).match("bam_versions") }
+            )
+        }
+    }
+
+    test("bam_interleave") {
+
+        when {
+            process {
+                """
+                interleave = true
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true)
+                ])
+                input[1] = interleave
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.fastq).match("bam_interleave_fastq") },
+                { assert snapshot(path(process.out.interleaved[0][1]).readLines()[0..6]).match("bam_interlinterleave_eaved") },
+                { assert snapshot(process.out.singleton).match("bam_singinterleave_leton") },
+                { assert snapshot(file(process.out.other[0][1]).name).match("bam_interleave_other") },
+                { assert snapshot(process.out.versions).match("bam_verinterleave_sions") }
+            )
+        }
+    }
+
+    test("bam - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                interleave = false
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true)
+                ])
+                input[1] = interleave
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("bam_interleave - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                interleave = true
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true)
+                ])
+                input[1] = interleave
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+}

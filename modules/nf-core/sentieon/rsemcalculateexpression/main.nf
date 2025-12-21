@@ -65,7 +65,7 @@ process SENTIEON_RSEMCALCULATEEXPRESSION {
             [ ${reads.size()} -gt 1 ] && PAIRED_END_FLAG="--paired-end"
         fi
     fi
-    
+
     rsem-calculate-expression \\
         --num-threads $task.cpus \\
         --temporary-folder ./tmp/ \\
@@ -93,12 +93,12 @@ process SENTIEON_RSEMCALCULATEEXPRESSION {
     touch ${prefix}.isoforms.results
     touch ${prefix}.stat
     touch ${prefix}.log
-    
+
     # Only create STAR BAM output when not in alignment mode
     if [ "${is_bam}" == "false" ]; then
         touch ${prefix}.STAR.genome.bam
     fi
-    
+
     touch ${prefix}.genome.bam
     touch ${prefix}.transcript.bam
 

@@ -23,13 +23,15 @@ input:
         type: file
         description: |
           Stringtie transcript gtf output(s).
-  - - annotation_gtf:
-        type: file
-        description: |
-          Annotation gtf file (optional).
+        ontologies: []
+  - annotation_gtf:
+      type: file
+      description: |
+        Annotation gtf file (optional).
+      ontologies: []
 output:
-  - transcript_gtf:
-      - meta:
+  transcript_gtf:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -38,8 +40,9 @@ output:
           type: file
           description: transcript gtf
           pattern: "*.{transcripts.gtf}"
-  - abundance:
-      - meta:
+          ontologies: []
+  abundance:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -48,8 +51,9 @@ output:
           type: file
           description: abundance
           pattern: "*.{abundance.txt}"
-  - coverage_gtf:
-      - meta:
+          ontologies: []
+  coverage_gtf:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -58,8 +62,9 @@ output:
           type: file
           description: coverage gtf
           pattern: "*.{coverage.gtf}"
-  - ballgown:
-      - meta:
+          ontologies: []
+  ballgown:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -68,11 +73,14 @@ output:
           type: file
           description: for running ballgown
           pattern: "*.{ballgown}"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@drpatelh"
 maintainers:

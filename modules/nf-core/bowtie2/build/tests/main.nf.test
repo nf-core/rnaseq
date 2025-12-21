@@ -1,0 +1,31 @@
+nextflow_process {
+
+    name "Test Process BOWTIE2_BUILD"
+    script "../main.nf"
+    process "BOWTIE2_BUILD"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "bowtie2"
+    tag "bowtie2/build"
+
+    test("Should run without failures") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+
+    }
+
+}

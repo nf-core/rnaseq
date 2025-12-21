@@ -1,0 +1,56 @@
+name: "seqkit_stats"
+description: simple statistics of FASTA/Q files
+keywords:
+  - seqkit
+  - fasta
+  - stats
+tools:
+  - "seqkit":
+      description: Cross-platform and ultrafast toolkit for FASTA/Q file manipulation,
+        written by Wei Shen.
+      homepage: https://bioinf.shenwei.me/seqkit/usage/
+      documentation: https://bioinf.shenwei.me/seqkit/usage/
+      tool_dev_url: https://github.com/shenwei356/seqkit/
+      doi: "10.1371/journal.pone.0163962"
+      licence: ["MIT"]
+      identifier: biotools:seqkit
+input:
+  - - meta:
+        type: map
+        description: >
+          Groovy Map containing sample information e.g. [ id:'test', single_end:false
+          ]
+    - reads:
+        type: file
+        description: >
+          Either FASTA or FASTQ files.
+        pattern: "*.{fa,fna,faa,fasta,fq,fastq}[.gz]"
+        ontologies:
+          - edam: http://edamontology.org/format_1930 # FASTQ
+output:
+  stats:
+    - - meta:
+          type: map
+          description: >
+            Groovy Map containing sample information e.g. [ id:'test', single_end:false
+            ]
+      - "*.tsv":
+          type: file
+          description: >
+            Tab-separated output file with basic sequence statistics.
+          pattern: "*.tsv"
+          ontologies:
+            - edam: http://edamontology.org/format_3475 # TSV
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+authors:
+  - "@Midnighter"
+  - "@heuermh"
+maintainers:
+  - "@Midnighter"
+  - "@heuermh"

@@ -25,8 +25,8 @@ input:
         description: |
           List of input FASTQ files whose UMIs will be extracted.
 output:
-  - reads:
-      - meta:
+  reads:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -37,8 +37,9 @@ output:
             Extracted FASTQ files. | For single-end reads, pattern is \${prefix}.umi_extract.fastq.gz.
             | For paired-end reads, pattern is \${prefix}.umi_extract_{1,2}.fastq.gz.
           pattern: "*.{fastq.gz}"
-  - log:
-      - meta:
+          ontologies: []
+  log:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -47,11 +48,14 @@ output:
           type: file
           description: Logfile for umi_tools
           pattern: "*.{log}"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@drpatelh"
   - "@grst"

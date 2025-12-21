@@ -1,0 +1,49 @@
+{
+    "Should run without failures": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "genome.1.bt2:md5,cbe3d0bbea55bc57c99b4bfa25b5fbdf",
+                            "genome.2.bt2:md5,47b153cd1319abc88dda532462651fcf",
+                            "genome.3.bt2:md5,4ed93abba181d8dfab2e303e33114777",
+                            "genome.4.bt2:md5,c25be5f8b0378abf7a58c8a880b87626",
+                            "genome.rev.1.bt2:md5,52be6950579598a990570fbcf5372184",
+                            "genome.rev.2.bt2:md5,e3b4ef343dea4dd571642010a7d09597"
+                        ]
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,d136fb9c16f0a9fb2ae804b2a5fbc09c"
+                ],
+                "index": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "genome.1.bt2:md5,cbe3d0bbea55bc57c99b4bfa25b5fbdf",
+                            "genome.2.bt2:md5,47b153cd1319abc88dda532462651fcf",
+                            "genome.3.bt2:md5,4ed93abba181d8dfab2e303e33114777",
+                            "genome.4.bt2:md5,c25be5f8b0378abf7a58c8a880b87626",
+                            "genome.rev.1.bt2:md5,52be6950579598a990570fbcf5372184",
+                            "genome.rev.2.bt2:md5,e3b4ef343dea4dd571642010a7d09597"
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,d136fb9c16f0a9fb2ae804b2a5fbc09c"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.02.1"
+        },
+        "timestamp": "2023-11-23T11:51:01.107681997"
+    }
+}

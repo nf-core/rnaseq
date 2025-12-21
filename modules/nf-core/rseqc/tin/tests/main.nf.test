@@ -3,18 +3,22 @@ nextflow_process {
     name "Test Process RSEQC_TIN"
     script "../main.nf"
     process "RSEQC_TIN"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "rseqc"
+    tag "rseqc/tin"
 
     test("sarscov2 paired-end [bam]") {
 
         when {
             process {
                 """
-                input[0] = Channel.of([
+                input[0] = channel.of([
                     [ id:'test', single_end:false ], // meta map
                     file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true),
                     file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam.bai", checkIfExists: true)
                 ])
-                input[1] = Channel.of(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/bed/test.bed12", checkIfExists: true))
+                input[1] = channel.of(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/bed/test.bed12", checkIfExists: true))
                 """
             }
         }
@@ -34,12 +38,12 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
+                input[0] = channel.of([
                     [ id:'test', single_end:false ], // meta map
                     file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true),
                     file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam.bai", checkIfExists: true)
                 ])
-                input[1] = Channel.of(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/bed/test.bed12", checkIfExists: true))
+                input[1] = channel.of(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/bed/test.bed12", checkIfExists: true))
                 """
             }
         }

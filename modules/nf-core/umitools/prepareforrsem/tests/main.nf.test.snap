@@ -2,14 +2,14 @@
     "versions_sarscov2_bam": {
         "content": [
             [
-                "versions.yml:md5,3403849e88fbd33fadd928f8b6ca60bb"
+                "versions.yml:md5,4f175c0153cb80ee2f66f724e8d77b26"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.6"
         },
-        "timestamp": "2024-02-16T09:46:33.206750132"
+        "timestamp": "2025-09-11T09:52:43.959969"
     },
     "bam_sarscov2_bam": {
         "content": [
@@ -50,13 +50,13 @@
     "versions_sarscov2_bam - stub": {
         "content": [
             [
-                "versions.yml:md5,3403849e88fbd33fadd928f8b6ca60bb"
+                "versions.yml:md5,4f175c0153cb80ee2f66f724e8d77b26"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.6"
         },
-        "timestamp": "2024-02-16T09:46:47.363697981"
+        "timestamp": "2025-09-11T09:52:50.388349"
     }
 }

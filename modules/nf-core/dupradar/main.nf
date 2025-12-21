@@ -4,8 +4,8 @@ process DUPRADAR {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/bioconductor-dupradar:1.32.0--r43hdfd78af_0' :
-        'biocontainers/bioconductor-dupradar:1.32.0--r43hdfd78af_0' }"
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/24/24bb76357588d05b5637e2954f2dfb3ba04e3eb1ff52c927ffe1906d7d69915a/data' :
+        'community.wave.seqera.io/library/bioconductor-dupradar:1.38.0--831da16eb40a64ab' }"
 
     input:
     tuple val(meta), path(bam)

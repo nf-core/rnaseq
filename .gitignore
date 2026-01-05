@@ -11,3 +11,4 @@ testing*
 testing/
 work/
 null/
+.workspaces/

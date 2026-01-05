@@ -1,14 +1,12 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
 name: "dupradar"
 description: |
-  Assessment of duplication rates in RNA-Seq datasets.
-  Supports both traditional R-based analysis (dupRadar) and fast shell-based mode for improved performance with high-latency storage systems like Fusion S3.
-  Use `ext.use_fast_dupradar = true` to enable fast mode.
+  Assessment of duplication rates in RNA-Seq datasets using optimized
+  featureCounts-based implementation for cloud storage compatibility.
 keywords:
   - rnaseq
   - duplication
   - genomics
-  - performance
 tools:
   - "dupradar":
       description: "Assessment of duplication rates in RNA-Seq datasets"

@@ -4,22 +4,17 @@ nextflow_process {
     script "../main.nf"
     process "RSEQC_JUNCTIONANNOTATION"
 
-    tag "modules"
-    tag "modules_nfcore"
-    tag "rseqc"
-    tag "rseqc/junctionannotation"
 
     test("sarscov2 - paired end [bam]") {
 
         when {
             process {
                 """
-                input[0] = channel.of([
+                input[0] = Channel.of([
                     [ id:'test', single_end: false ], // meta map
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true),
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam.bai", checkIfExists: true)
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true)
                 ])
-                input[1] = channel.of(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/bed/test.bed12", checkIfExists: true))
+                input[1] = Channel.of(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/bed/test.bed", checkIfExists: true))
                 """
             }
         }
@@ -27,14 +22,10 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert process.out.pdf.size() == 0 || file(process.out.pdf[0][1]).name.endsWith('.pdf') },
-                { assert process.out.events_pdf.size() == 0 || file(process.out.events_pdf[0][1]).name.endsWith('.pdf') },
-                { assert process.out.xls.size() == 0 || file(process.out.xls[0][1]).name.endsWith('.xls') },
-                { assert process.out.rscript.size() == 0 || file(process.out.rscript[0][1]).name.endsWith('.r') },
-                { assert snapshot(
-                    process.out.log,
-                    process.out.versions_rseqc
-                ).match() }
+                { assert process.out.rscript.get(0).get(1) ==~ ".*/test.junction_plot.r" },
+                { assert process.out.xls.get(0).get(1) ==~ ".*/test.junction.xls" },
+                { assert snapshot(process.out.log).match("log") },
+                { assert snapshot(process.out.versions).match("versions") }
             )
         }
     }
@@ -46,12 +37,11 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = channel.of([
+                input[0] = Channel.of([
                     [ id:'test', single_end: false ], // meta map
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true),
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam.bai", checkIfExists: true)
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true)
                 ])
-                input[1] = channel.of(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/bed/test.bed12", checkIfExists: true))
+                input[1] = Channel.of(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/bed/test.bed", checkIfExists: true))
                 """
             }
         }
@@ -59,8 +49,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out).match() },
-                { assert snapshot(process.out.versions_rseqc).match("versions") }
+                { assert snapshot(process.out).match() }
             )
         }
     }

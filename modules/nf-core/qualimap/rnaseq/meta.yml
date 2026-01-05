@@ -26,7 +26,6 @@ input:
         type: file
         description: BAM file
         pattern: "*.{bam}"
-        ontologies: []
   - - meta2:
         type: map
         description: |
@@ -36,10 +35,9 @@ input:
         type: file
         description: GTF file of the reference genome
         pattern: "*.{gtf}"
-        ontologies: []
 output:
-  results:
-    - - meta:
+  - results:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -48,13 +46,11 @@ output:
           type: directory
           description: Qualimap results dir
           pattern: "*/*"
-  versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@FriederikeHanssen"
 maintainers:

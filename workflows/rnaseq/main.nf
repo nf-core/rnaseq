@@ -1,6 +1,6 @@
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    IMPORT MODULES/SUBWORKFLOWS
+    IMPORT LOCAL MODULES/SUBWORKFLOWS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
@@ -22,10 +22,10 @@ include { BAM_DEDUP_UMI as BAM_DEDUP_UMI_HISAT2 } from '../../subworkflows/nf-co
 
 include { checkSamplesAfterGrouping      } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { multiqcTsvFromList             } from '../../subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness'
+include { getStarPercentMapped           } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { biotypeInGtf                   } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { getInferexperimentStrandedness } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { methodsDescriptionText         } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
-include { mapBamToPublishedPath          } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -43,13 +43,9 @@ include { STRINGTIE_STRINGTIE        } from '../../modules/nf-core/stringtie/str
 include { SUBREAD_FEATURECOUNTS      } from '../../modules/nf-core/subread/featurecounts'
 include { KRAKEN2_KRAKEN2 as KRAKEN2 } from '../../modules/nf-core/kraken2/kraken2/main'
 include { BRACKEN_BRACKEN as BRACKEN } from '../../modules/nf-core/bracken/bracken/main'
-include { SYLPH_PROFILE              } from '../../modules/nf-core/sylph/profile/main'
-include { SYLPHTAX_TAXPROF           } from '../../modules/nf-core/sylphtax/taxprof/main'
 include { MULTIQC                    } from '../../modules/nf-core/multiqc'
 include { BEDTOOLS_GENOMECOV as BEDTOOLS_GENOMECOV_FW          } from '../../modules/nf-core/bedtools/genomecov'
 include { BEDTOOLS_GENOMECOV as BEDTOOLS_GENOMECOV_REV         } from '../../modules/nf-core/bedtools/genomecov'
-include { SAMTOOLS_INDEX                                       } from '../../modules/nf-core/samtools/index'
-include { SAMTOOLS_SORT as SAMTOOLS_SORT_QUALIMAP              } from '../../modules/nf-core/samtools/sort'
 
 //
 // SUBWORKFLOW: Consisting entirely of nf-core/modules
@@ -99,7 +95,6 @@ workflow RNASEQ {
     ch_bbsplit_index     // channel: path(bbsplit/index/)
     ch_ribo_db           // channel: path(sortmerna_fasta_list)
     ch_sortmerna_index   // channel: path(sortmerna/index/)
-    ch_bowtie2_index     // channel: path(bowtie2/index/) for rRNA removal
     ch_splicesites       // channel: path(genome.splicesites.txt)
 
     main:
@@ -108,27 +103,6 @@ workflow RNASEQ {
     ch_trim_status = Channel.empty()
     ch_map_status = Channel.empty()
     ch_strand_status = Channel.empty()
-    ch_percent_mapped = Channel.empty()
-
-    //
-    // Collect versions from topic channel (for modules that emit versions via topics)
-    //
-    def topic_versions = Channel.topic('versions')
-        .distinct()
-        .branch { entry ->
-            versions_file: entry instanceof Path
-            versions_tuple: true
-        }
-
-    def topic_versions_string = topic_versions.versions_tuple
-        .map { process, tool, version ->
-            [ process[process.lastIndexOf(':')+1..-1], "  ${tool}: ${version}" ]
-        }
-        .groupTuple(by: 0)
-        .map { process, tool_versions ->
-            tool_versions.unique().sort()
-            "${process}:\n${tool_versions.join('\n')}"
-        }
 
     //
     // Create channel from input file provided through params.input
@@ -136,44 +110,18 @@ workflow RNASEQ {
     Channel
         .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
         .map {
-            meta, fastq_1, fastq_2, genome_bam, transcriptome_bam ->
+            meta, fastq_1, fastq_2 ->
                 if (!fastq_2) {
-                    return [ meta.id, meta + [ single_end:true ], [ fastq_1 ], genome_bam, transcriptome_bam ]
+                    return [ meta.id, meta + [ single_end:true ], [ fastq_1 ] ]
                 } else {
-                    return [ meta.id, meta + [ single_end:false ], [ fastq_1, fastq_2 ], genome_bam, transcriptome_bam ]
+                    return [ meta.id, meta + [ single_end:false ], [ fastq_1, fastq_2 ] ]
                 }
         }
         .groupTuple()
         .map { samplesheet ->
             checkSamplesAfterGrouping(samplesheet)
         }
-        .branch {
-            meta, reads, genome_bam, transcriptome_bam ->
-                bam: params.skip_alignment && (genome_bam || transcriptome_bam)
-                    return [ meta, genome_bam, transcriptome_bam ]
-                fastq: reads.size() > 0 && reads[0]
-                    return [ meta.findAll {it.key != 'percent_mapped'}, reads ]
-        }
-        .set { ch_input_branched }
-
-    // Get inputs for FASTQ and BAM processing paths
-
-    ch_fastq = ch_input_branched.fastq
-    ch_genome_bam = ch_input_branched.bam.map { meta, genome_bam, transcriptome_bam -> [ meta, genome_bam ] }.distinct()
-    ch_transcriptome_bam = ch_input_branched.bam.map { meta, genome_bam, transcriptome_bam -> [ meta, transcriptome_bam ] }.distinct()
-
-    // Derive mapping percentages if supplied with input
-
-    ch_percent_mapped = ch_input_branched.bam
-        .filter{ meta, genome_bam, transcriptome_bam -> meta.percent_mapped }
-        .map { meta, genome_bam, transcriptome_bam -> [ meta, meta.percent_mapped ] }
-
-    // Index pre-aligned input BAM files
-    SAMTOOLS_INDEX (
-        ch_genome_bam
-    )
-    ch_genome_bam_index = params.bam_csi_index ? SAMTOOLS_INDEX.out.csi : SAMTOOLS_INDEX.out.bai
-    ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
+        .set { ch_fastq }
 
     //
     // Run RNA-seq FASTQ preprocessing subworkflow
@@ -183,38 +131,31 @@ workflow RNASEQ {
     // samples, and if we haven't already made one elsewhere
     salmon_index_available = params.salmon_index || (!params.skip_pseudo_alignment && params.pseudo_aligner == 'salmon')
 
-    // Determine if we need to build rRNA removal indexes
-    def make_sortmerna_index = !params.sortmerna_index && params.remove_ribo_rna && params.ribo_removal_tool == 'sortmerna'
-    def make_bowtie2_index   = params.remove_ribo_rna && params.ribo_removal_tool == 'bowtie2'
-
     FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS (
-        ch_fastq,                                   // ch_reads
-        ch_fasta,                                   // ch_fasta
-        ch_transcript_fasta,                        // ch_transcript_fasta
-        ch_gtf,                                     // ch_gtf
-        ch_salmon_index,                            // ch_salmon_index
-        ch_sortmerna_index,                         // ch_sortmerna_index
-        ch_bowtie2_index,                           // ch_bowtie2_index
-        ch_bbsplit_index,                           // ch_bbsplit_index
-        ch_ribo_db,                                 // ch_rrna_fastas
-        params.skip_bbsplit || !params.fasta,       // skip_bbsplit
-        params.skip_fastqc || params.skip_qc,       // skip_fastqc
-        params.skip_trimming,                       // skip_trimming
-        params.skip_umi_extract,                    // skip_umi_extract
-        params.skip_linting,                        // skip_linting
-        !salmon_index_available,                    // make_salmon_index
-        make_sortmerna_index,                       // make_sortmerna_index
-        make_bowtie2_index,                         // make_bowtie2_index
-        params.trimmer,                             // trimmer
-        params.min_trimmed_reads,                   // min_trimmed_reads
-        params.save_trimmed,                        // save_trimmed
-        false,                                      // fastp_merge
-        params.remove_ribo_rna,                     // remove_ribo_rna
-        params.ribo_removal_tool,                   // ribo_removal_tool
-        params.with_umi,                            // with_umi
-        params.umi_discard_read,                    // umi_discard_read
-        params.stranded_threshold,                  // stranded_threshold
-        params.unstranded_threshold                 // unstranded_threshold
+        ch_fastq,
+        ch_fasta,
+        ch_transcript_fasta,
+        ch_gtf,
+        ch_salmon_index,
+        ch_sortmerna_index,
+        ch_bbsplit_index,
+        ch_ribo_db,
+        params.skip_bbsplit || ! params.fasta,
+        params.skip_fastqc || params.skip_qc,
+        params.skip_trimming,
+        params.skip_umi_extract,
+        !salmon_index_available,
+        false,
+        params.trimmer,
+        params.min_trimmed_reads,
+        params.save_trimmed,
+        params.remove_ribo_rna,
+        params.with_umi,
+        params.umi_discard_read,
+        params.stranded_threshold,
+        params.unstranded_threshold,
+        params.skip_linting,
+        false
     )
 
     ch_multiqc_files                  = ch_multiqc_files.mix(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.multiqc_files)
@@ -231,10 +172,13 @@ workflow RNASEQ {
     //
     // SUBWORKFLOW: Alignment with STAR and gene/transcript quantification with Salmon
     //
+    ch_genome_bam          = Channel.empty()
+    ch_genome_bam_index    = Channel.empty()
     ch_star_log            = Channel.empty()
     ch_unaligned_sequences = Channel.empty()
+    ch_transcriptome_bam   = Channel.empty()
 
-    if (!params.skip_alignment && (params.aligner == 'star_salmon' || params.aligner == 'star_rsem')) {
+    if (!params.skip_alignment && params.aligner == 'star_salmon') {
         // Check if an AWS iGenome has been provided to use the appropriate version of STAR
         def is_aws_igenome = false
         if (params.fasta && params.gtf) {
@@ -254,16 +198,16 @@ workflow RNASEQ {
             ch_fasta.map { [ [:], it ] },
             params.use_sentieon_star
         )
+        ch_genome_bam          = ALIGN_STAR.out.bam
+        ch_genome_bam_index    = ALIGN_STAR.out.bai
+        ch_transcriptome_bam   = ALIGN_STAR.out.bam_transcript
+        ch_star_log            = ALIGN_STAR.out.log_final
+        ch_unaligned_sequences = ALIGN_STAR.out.fastq
+        ch_multiqc_files = ch_multiqc_files.mix(ch_star_log.collect{it[1]})
 
-        ch_genome_bam                    = ch_genome_bam.mix(ALIGN_STAR.out.bam)
-        ch_genome_bam_index              = ch_genome_bam_index.mix(params.bam_csi_index ? ALIGN_STAR.out.csi : ALIGN_STAR.out.bai)
-        ch_transcriptome_bam             = ch_transcriptome_bam.mix(ALIGN_STAR.out.bam_transcript)
-        ch_percent_mapped                = ch_percent_mapped.mix(ALIGN_STAR.out.percent_mapped)
-        ch_unprocessed_bams              = ch_genome_bam.join(ch_transcriptome_bam)
-        ch_star_log                      = ALIGN_STAR.out.log_final
-        ch_unaligned_sequences           = ALIGN_STAR.out.fastq
-        ch_multiqc_files                 = ch_multiqc_files.mix(ch_star_log.collect{it[1]})
-
+        if (params.bam_csi_index) {
+            ch_genome_bam_index = ALIGN_STAR.out.csi
+        }
         ch_versions = ch_versions.mix(ALIGN_STAR.out.versions)
 
         //
@@ -289,41 +233,15 @@ workflow RNASEQ {
             ch_multiqc_files = ch_multiqc_files
                 .mix(BAM_DEDUP_UMI_STAR.out.multiqc_files)
 
-        } else if (params.skip_markduplicates) {
+        } else {
             // The deduplicated stats should take priority for MultiQC, but use
-            // them straight out of the aligner otherwise. If mark duplicates
-            // will run, those stats will be added later instead to avoid
-            // duplicate flagstat files in MultiQC.
+            // them straight out of the aligner otherwise
 
             ch_multiqc_files = ch_multiqc_files
                 .mix(ALIGN_STAR.out.stats.collect{it[1]})
                 .mix(ALIGN_STAR.out.flagstat.collect{it[1]})
                 .mix(ALIGN_STAR.out.idxstats.collect{it[1]})
         }
-    }
-
-    if (params.aligner == 'star_rsem') {
-
-        QUANTIFY_RSEM (
-            ch_transcriptome_bam,
-            ch_rsem_index,
-            params.use_sentieon_star
-        )
-        ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_RSEM.out.stat.collect{it[1]})
-        ch_versions = ch_versions.mix(QUANTIFY_RSEM.out.versions)
-
-        if (!params.skip_qc & !params.skip_deseq2_qc) {
-            DESEQ2_QC_RSEM (
-                QUANTIFY_RSEM.out.merged_counts_gene,
-                ch_pca_header_multiqc,
-                ch_clustering_header_multiqc
-            )
-            ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_RSEM.out.pca_multiqc.collect())
-            ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_RSEM.out.dists_multiqc.collect())
-            ch_versions = ch_versions.mix(DESEQ2_QC_RSEM.out.versions)
-        }
-
-    } else if (params.aligner == 'star_salmon') {
 
         //
         // SUBWORKFLOW: Count reads from BAM alignments using Salmon
@@ -357,6 +275,42 @@ workflow RNASEQ {
     }
 
     //
+    // SUBWORKFLOW: Alignment with STAR and gene/transcript quantification with RSEM
+    //
+    if (!params.skip_alignment && params.aligner == 'star_rsem') {
+        QUANTIFY_RSEM (
+            ch_strand_inferred_filtered_fastq,
+            ch_rsem_index,
+            ch_fasta.map { [ [:], it ] },
+            params.use_sentieon_star
+        )
+        ch_genome_bam       = QUANTIFY_RSEM.out.bam
+        ch_genome_bam_index = QUANTIFY_RSEM.out.bai
+        ch_star_log         = QUANTIFY_RSEM.out.logs
+        ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_RSEM.out.stats.collect{it[1]})
+        ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_RSEM.out.flagstat.collect{it[1]})
+        ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_RSEM.out.idxstats.collect{it[1]})
+        ch_multiqc_files = ch_multiqc_files.mix(ch_star_log.collect{it[1]})
+        ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_RSEM.out.stat.collect{it[1]})
+
+        if (params.bam_csi_index) {
+            ch_genome_bam_index = QUANTIFY_RSEM.out.csi
+        }
+        ch_versions = ch_versions.mix(QUANTIFY_RSEM.out.versions)
+
+        if (!params.skip_qc & !params.skip_deseq2_qc) {
+            DESEQ2_QC_RSEM (
+                QUANTIFY_RSEM.out.merged_counts_gene,
+                ch_pca_header_multiqc,
+                ch_clustering_header_multiqc
+            )
+            ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_RSEM.out.pca_multiqc.collect())
+            ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_RSEM.out.dists_multiqc.collect())
+            ch_versions = ch_versions.mix(DESEQ2_QC_RSEM.out.versions)
+        }
+    }
+
+    //
     // SUBWORKFLOW: Alignment with HISAT2
     //
     if (!params.skip_alignment && params.aligner == 'hisat2') {
@@ -366,12 +320,14 @@ workflow RNASEQ {
             ch_splicesites.map { [ [:], it ] },
             ch_fasta.map { [ [:], it ] }
         )
-        ch_genome_bam          = ch_genome_bam.mix(FASTQ_ALIGN_HISAT2.out.bam)
-        ch_genome_bam_index    = ch_genome_bam_index.mix(params.bam_csi_index ? FASTQ_ALIGN_HISAT2.out.csi : FASTQ_ALIGN_HISAT2.out.bai)
-        ch_unprocessed_bams    = ch_genome_bam.map { meta, bam -> [ meta, bam, '' ] }
+        ch_genome_bam          = FASTQ_ALIGN_HISAT2.out.bam
+        ch_genome_bam_index    = FASTQ_ALIGN_HISAT2.out.bai
         ch_unaligned_sequences = FASTQ_ALIGN_HISAT2.out.fastq
         ch_multiqc_files = ch_multiqc_files.mix(FASTQ_ALIGN_HISAT2.out.summary.collect{it[1]})
 
+        if (params.bam_csi_index) {
+            ch_genome_bam_index = FASTQ_ALIGN_HISAT2.out.csi
+        }
         ch_versions = ch_versions.mix(FASTQ_ALIGN_HISAT2.out.versions)
 
         //
@@ -396,12 +352,10 @@ workflow RNASEQ {
 
             ch_multiqc_files = ch_multiqc_files
                 .mix(BAM_DEDUP_UMI_HISAT2.out.multiqc_files)
-        } else if (params.skip_markduplicates) {
+        } else {
 
             // The deduplicated stats should take priority for MultiQC, but use
-            // them straight out of the aligner otherwise. If mark duplicates
-            // will run, those stats will be added later instead to avoid
-            // duplicate flagstat files in MultiQC.
+            // them straight out of the aligner otherwise
             ch_multiqc_files = ch_multiqc_files
                 .mix(FASTQ_ALIGN_HISAT2.out.stats.collect{it[1]})
                 .mix(FASTQ_ALIGN_HISAT2.out.flagstat.collect{it[1]})
@@ -409,61 +363,56 @@ workflow RNASEQ {
         }
     }
 
-    // Filter bam and index by percent mapped being present in the meta
+    //
+    // Filter channels to get samples that passed STAR minimum mapping percentage
+    //
+    if (!params.skip_alignment && params.aligner.contains('star')) {
+        ch_star_log
+            .map { meta, align_log -> [ meta ] + getStarPercentMapped(params, align_log) }
+            .set { ch_percent_mapped }
 
-    ch_genome_bam_bai_mapping = ch_genome_bam
-        .join(ch_genome_bam_index)
-        .join(ch_percent_mapped, remainder: true)
-        .map{ row ->
-            def (meta, bam, index) = row[0..2]
-            def percent_mapped = row.size() == 4 ? row[3] : null
-            def pass = percent_mapped != null ? percent_mapped >= params.min_mapped_reads.toFloat() : null
-            return [ meta, bam, index, percent_mapped, pass ]
-        }
-        .multiMap { meta, bam, index, percent_mapped, pass ->
-            bam: [ meta, bam, index, pass ]
-            percent_mapped: [ meta.id, percent_mapped ]
-            percent_mapped_pass: [ meta.id, percent_mapped, pass ]
-            status: [ meta.id, pass ]
-        }
+        // Save status for workflow summary
+        ch_map_status = ch_percent_mapped
+            .map {
+                meta, mapped, pass ->
+                    return [ meta.id, pass ]
+            }
 
-    ch_percent_mapped = ch_genome_bam_bai_mapping.percent_mapped
+        ch_genome_bam
+            .join(ch_percent_mapped, by: [0])
+            .map { meta, ofile, mapped, pass -> if (pass) [ meta, ofile ] }
+            .set { ch_genome_bam }
 
-    // Save mapping status for workflow summary where present
+        ch_genome_bam_index
+            .join(ch_percent_mapped, by: [0])
+            .map { meta, ofile, mapped, pass -> if (pass) [ meta, ofile ] }
+            .set { ch_genome_bam_index }
 
-    ch_map_status = ch_genome_bam_bai_mapping.status
-        .filter { id, pass -> pass != null }
+        ch_percent_mapped
+            .branch { meta, mapped, pass ->
+                pass: pass
+                    return [ "$meta.id\t$mapped" ]
+                fail: !pass
+                    return [ "$meta.id\t$mapped" ]
+            }
+            .set { ch_pass_fail_mapped }
 
-    // Save status for MultiQC report
-    ch_fail_mapping_multiqc = ch_genome_bam_bai_mapping.percent_mapped_pass
-        .filter { id, percent_mapped, pass -> pass != null && !pass }
-        .map { id, percent_mapped, pass -> [ "${id}\t${percent_mapped}" ] }
-        .collect()
-        .map {
-            tsv_data ->
-                def header = ["Sample", "STAR uniquely mapped reads (%)"]
-                sample_status_header_multiqc.text + multiqcTsvFromList(tsv_data, header)
-        }
-        .collectFile(name: 'fail_mapped_samples_mqc.tsv')
-
-    ch_multiqc_files = ch_multiqc_files.mix(ch_fail_mapping_multiqc)
-
-    // Where a percent mapping is present, use it to filter bam and index
-
-    map_filtered_genome_bam_bai = ch_genome_bam_bai_mapping.bam
-        .filter { meta, bam, index, pass -> pass || pass == null }
-        .multiMap { meta, bam, index, pass ->
-            bam: [ meta, bam ]
-            index: [ meta, index ]
-        }
-
-    ch_genome_bam = map_filtered_genome_bam_bai.bam
-    ch_genome_bam_index = map_filtered_genome_bam_bai.index
+        ch_pass_fail_mapped
+            .fail
+            .collect()
+            .map {
+                tsv_data ->
+                    def header = ["Sample", "STAR uniquely mapped reads (%)"]
+                    sample_status_header_multiqc.text + multiqcTsvFromList(tsv_data, header)
+            }
+            .set { ch_fail_mapping_multiqc }
+        ch_multiqc_files = ch_multiqc_files.mix(ch_fail_mapping_multiqc.collectFile(name: 'fail_mapped_samples_mqc.tsv'))
+    }
 
     //
     // MODULE: Run Preseq
     //
-    if (!params.skip_qc && !params.skip_preseq) {
+    if (!params.skip_alignment && !params.skip_qc && !params.skip_preseq) {
         PRESEQ_LCEXTRAP (
             ch_genome_bam
         )
@@ -474,26 +423,29 @@ workflow RNASEQ {
     //
     // SUBWORKFLOW: Mark duplicate reads
     //
-    if (!params.skip_markduplicates && !params.with_umi) {
+    if (!params.skip_alignment && !params.skip_markduplicates && !params.with_umi) {
         BAM_MARKDUPLICATES_PICARD (
             ch_genome_bam,
             ch_fasta.map { [ [:], it ] },
             ch_fai.map { [ [:], it ] }
         )
         ch_genome_bam       = BAM_MARKDUPLICATES_PICARD.out.bam
-        ch_genome_bam_index = params.bam_csi_index ? BAM_MARKDUPLICATES_PICARD.out.csi : BAM_MARKDUPLICATES_PICARD.out.bai
+        ch_genome_bam_index = BAM_MARKDUPLICATES_PICARD.out.bai
         ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.stats.collect{it[1]})
         ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.flagstat.collect{it[1]})
         ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.idxstats.collect{it[1]})
         ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.metrics.collect{it[1]})
 
+        if (params.bam_csi_index) {
+            ch_genome_bam_index = BAM_MARKDUPLICATES_PICARD.out.csi
+        }
         ch_versions = ch_versions.mix(BAM_MARKDUPLICATES_PICARD.out.versions)
     }
 
     //
     // MODULE: STRINGTIE
     //
-    if (!params.skip_stringtie) {
+    if (!params.skip_alignment && !params.skip_stringtie) {
         STRINGTIE_STRINGTIE (
             ch_genome_bam,
             ch_gtf
@@ -505,7 +457,7 @@ workflow RNASEQ {
     // MODULE: Feature biotype QC using featureCounts
     //
     def biotype = params.gencode ? "gene_type" : params.featurecounts_group_type
-    if (!params.skip_qc && !params.skip_biotype_qc && biotype) {
+    if (!params.skip_alignment && !params.skip_qc && !params.skip_biotype_qc && biotype) {
 
         ch_gtf
             .map { biotypeInGtf(it, biotype) }
@@ -534,9 +486,8 @@ workflow RNASEQ {
 
     //
     // MODULE: Genome-wide coverage with BEDTools
-    // Note: Strand parameters are conditional on library strandedness (see nextflow.config)
     //
-    if (!params.skip_bigwig) {
+    if (!params.skip_alignment && !params.skip_bigwig) {
 
         ch_genomecov_input = ch_genome_bam.map { meta, bam -> [ meta, bam, 1 ] }
 
@@ -573,17 +524,10 @@ workflow RNASEQ {
     //
     // MODULE: Downstream QC steps
     //
-    if (!params.skip_qc) {
+    if (!params.skip_alignment && !params.skip_qc) {
         if (!params.skip_qualimap) {
-            // Sort BAM by name for qualimap (performance optimization)
-            SAMTOOLS_SORT_QUALIMAP (
-                ch_genome_bam,
-                ch_fasta.map { [ [:], it ] },
-                ''
-            )
-
             QUALIMAP_RNASEQ (
-                SAMTOOLS_SORT_QUALIMAP.out.bam,
+                ch_genome_bam,
                 ch_gtf.map { [ [:], it ] }
             )
             ch_multiqc_files = ch_multiqc_files.mix(QUALIMAP_RNASEQ.out.results.collect{it[1]})
@@ -610,7 +554,7 @@ workflow RNASEQ {
         }
         if (!params.skip_rseqc && rseqc_modules.size() > 0) {
             BAM_RSEQC (
-                ch_genome_bam.join(ch_genome_bam_index, by: [0]).map { meta, bam, bai -> [ meta, [ bam, bai ] ] },
+                ch_genome_bam.join(ch_genome_bam_index, by: [0]),
                 ch_gene_bed,
                 rseqc_modules
             )
@@ -622,6 +566,7 @@ workflow RNASEQ {
             ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.readdistribution_txt.collect{it[1]})
             ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.readduplication_pos_xls.collect{it[1]})
             ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.tin_txt.collect{it[1]})
+            ch_versions = ch_versions.mix(BAM_RSEQC.out.versions)
 
             // Compare predicted supplied or Salmon-predicted strand with what we get from RSeQC
             ch_strand_comparison = BAM_RSEQC.out.inferexperiment_txt
@@ -703,24 +648,6 @@ workflow RNASEQ {
                 ch_versions = ch_versions.mix(BRACKEN.out.versions)
                 ch_multiqc_files = ch_multiqc_files.mix(BRACKEN.out.txt.collect{it[1]})
             }
-        } else if (params.contaminant_screening == 'sylph') {
-            def sylph_databases = params.sylph_db ? params.sylph_db.split(',').collect{ file(it.trim()) } : []
-            ch_sylph_databases = channel.value(sylph_databases)
-            SYLPH_PROFILE (
-                ch_unaligned_sequences,
-                ch_sylph_databases
-            )
-            ch_sylph_profile = SYLPH_PROFILE.out.profile_out.filter{!it[1].isEmpty()}
-            ch_versions = ch_versions.mix(SYLPH_PROFILE.out.versions)
-
-            def sylph_taxonomies = params.sylph_taxonomy ? params.sylph_taxonomy.split(',').collect{ file(it.trim()) } : []
-            ch_sylph_taxonomies = channel.value(sylph_taxonomies)
-            SYLPHTAX_TAXPROF (
-                ch_sylph_profile,
-                ch_sylph_taxonomies
-            )
-            ch_versions = ch_versions.mix(SYLPHTAX_TAXPROF.out.versions)
-            ch_multiqc_files = ch_multiqc_files.mix(SYLPHTAX_TAXPROF.out.taxprof_output.collect{it[1]})
         }
     }
 
@@ -767,11 +694,10 @@ workflow RNASEQ {
 
     //
     // Collate and save software versions
-    // Combines traditional versions.yml files with versions emitted via topic channels
     //
-    ch_collated_versions = softwareVersionsToYAML(ch_versions.mix(topic_versions.versions_file))
-        .mix(topic_versions_string)
+    softwareVersionsToYAML(ch_versions)
         .collectFile(storeDir: "${params.outdir}/pipeline_info", name: 'nf_core_rnaseq_software_mqc_versions.yml', sort: true, newLine: true)
+        .set { ch_collated_versions }
 
     //
     // MODULE: MultiQC
@@ -808,32 +734,24 @@ workflow RNASEQ {
             .mix(ch_methods_description)
 
         // Provide MultiQC with rename patterns to ensure it uses sample names
-        // for single-techrep samples not processed by CAT_FASTQ.
-        //
-        // We only add mappings when the FASTQ simpleName differs from the sample ID.
-        // This prevents duplicate/conflicting mappings when multiple samples share
-        // the same FASTQ filename in different directories (see #1657).
-        //
-        // Note: _raw/_trimmed suffixes are handled via extra_fn_clean_exts in multiqc_config.yml
+        // for single-techrep samples not processed by CAT_FASTQ, and trims out
+        // _raw or _trimmed
+
         ch_name_replacements = ch_fastq
             .map{ meta, reads ->
-                def paired = reads[0][1] as boolean
-                def suffixes = paired ? ['_1', '_2'] : ['']
-                def mappings = []
-
-                def fastq1_simplename = file(reads[0][0]).simpleName
-                if (fastq1_simplename != meta.id) {
-                    mappings << [fastq1_simplename, "${meta.id}${suffixes[0]}"]
-                    if (paired) {
-                        mappings << [file(reads[0][1]).simpleName, "${meta.id}${suffixes[1]}"]
-                    }
+                def name1 = file(reads[0][0]).simpleName + "\t" + meta.id + '_1'
+                def fastqcnames = meta.id + "_raw\t" + meta.id + "\n" + meta.id + "_trimmed\t" + meta.id
+                if (reads[0][1] ){
+                    def name2 = file(reads[0][1]).simpleName + "\t" + meta.id + '_2'
+                    def fastqcnames1 = meta.id + "_raw_1\t" + meta.id + "_1\n" + meta.id + "_trimmed_1\t" + meta.id + "_1"
+                    def fastqcnames2 = meta.id + "_raw_2\t" + meta.id + "_2\n" + meta.id + "_trimmed_2\t" + meta.id + "_2"
+                    return [ name1, name2, fastqcnames1, fastqcnames2 ]
+                } else{
+                    return [ name1, fastqcnames ]
                 }
-
-                return mappings.collect { it.join('\t') }
             }
             .flatten()
             .collectFile(name: 'name_replacement.txt', newLine: true)
-            .ifEmpty([])
 
         MULTIQC (
             ch_multiqc_files.collect(),
@@ -844,42 +762,6 @@ workflow RNASEQ {
             []
         )
         ch_multiqc_report = MULTIQC.out.report
-    }
-
-    //
-    // Generate samplesheet with BAM paths for future runs
-    //
-
-    ch_samplesheet_with_bams = Channel.empty()
-    if (!params.skip_alignment && params.save_align_intermeds) {
-        // Create channel with original input info and BAM paths
-        ch_fastq.map { meta, reads -> [ meta.id, meta, reads ] }
-            .join(ch_unprocessed_bams.map { meta, genome_bam, transcriptome_bam -> [ meta.id, meta, genome_bam, transcriptome_bam ] })
-            .join(ch_percent_mapped)
-            .transpose()
-            .map { id, fastq_meta, reads, meta, genome_bam, transcriptome_bam, percent_mapped ->
-
-                // Handle BAM paths (same for all runs of this sample)
-                def genome_bam_published = meta.has_genome_bam ?
-                    (meta.original_genome_bam ?: '') :
-                    mapBamToPublishedPath(genome_bam, meta.id, params.aligner, params.outdir)
-
-                def transcriptome_bam_published = meta.has_transcriptome_bam ?
-                    (meta.original_transcriptome_bam ?: '') :
-                    mapBamToPublishedPath(transcriptome_bam, meta.id, params.aligner, params.outdir)
-
-                def fastq_1 = reads[0].toUriString()
-                def fastq_2 = reads.size() > 1 ? reads[1].toUriString() : ''
-                def mapped = percent_mapped != null ? percent_mapped : ''
-
-                return "${meta.id},${fastq_1},${fastq_2},${meta.strandedness},${genome_bam_published},${mapped},${transcriptome_bam_published}"
-            }
-            .collectFile(
-                name: 'samplesheet_with_bams.csv',
-                storeDir: "${params.outdir}/samplesheets",
-                newLine: true,
-                seed: 'sample,fastq_1,fastq_2,strandedness,genome_bam,percent_mapped,transcriptome_bam'
-            )
     }
 
     emit:

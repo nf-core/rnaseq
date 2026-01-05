@@ -3,10 +3,6 @@ nextflow_process {
     name "Test Process HISAT2_EXTRACTSPLICESITES"
     script "../main.nf"
     process "HISAT2_EXTRACTSPLICESITES"
-    tag "modules"
-    tag "modules_nfcore"
-    tag "hisat2"
-    tag "hisat2/extractsplicesites"
 
     test("Should run without failures") {
 

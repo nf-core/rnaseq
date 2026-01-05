@@ -1,5 +1,4 @@
 lint:
-  actions_nf_test: false
   files_exist:
     - conf/modules.config
   files_unchanged:
@@ -11,7 +10,7 @@ lint:
   nextflow_config:
     - config_defaults:
         - params.ribo_database_manifest
-nf_core_version: 3.5.1
+nf_core_version: 3.3.2
 repository_type: pipeline
 template:
   author: "Harshil Patel, Phil Ewels, Rickard Hammarén"
@@ -22,4 +21,4 @@ template:
   name: rnaseq
   org: nf-core
   outdir: .
-  version: 3.23.0dev
+  version: 3.21.0dev

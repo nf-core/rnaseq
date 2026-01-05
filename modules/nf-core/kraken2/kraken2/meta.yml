@@ -25,23 +25,22 @@ input:
         description: |
           List of input FastQ files of size 1 and 2 for single-end and paired-end data,
           respectively.
-        ontologies: []
-  - db:
-      type: directory
-      description: Kraken2 database
-  - save_output_fastqs:
-      type: string
-      description: |
-        If true, optional commands are added to save classified and unclassified reads
-        as fastq files
-  - save_reads_assignment:
-      type: string
-      description: |
-        If true, an optional command is added to save a file reporting the taxonomic
-        classification of each input read
+  - - db:
+        type: directory
+        description: Kraken2 database
+  - - save_output_fastqs:
+        type: string
+        description: |
+          If true, optional commands are added to save classified and unclassified reads
+          as fastq files
+  - - save_reads_assignment:
+        type: string
+        description: |
+          If true, an optional command is added to save a file reporting the taxonomic
+          classification of each input read
 output:
-  classified_reads_fastq:
-    - - meta:
+  - classified_reads_fastq:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -52,9 +51,8 @@ output:
             Reads classified as belonging to any of the taxa
             on the Kraken2 database.
           pattern: "*{fastq.gz}"
-          ontologies: []
-  unclassified_reads_fastq:
-    - - meta:
+  - unclassified_reads_fastq:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -65,9 +63,8 @@ output:
             Reads not classified to any of the taxa
             on the Kraken2 database.
           pattern: "*{fastq.gz}"
-          ontologies: []
-  classified_reads_assignment:
-    - - meta:
+  - classified_reads_assignment:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -77,9 +74,8 @@ output:
           description: |
             Kraken2 output file indicating the taxonomic assignment of
             each input read
-          ontologies: []
-  report:
-    - - meta:
+  - report:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -90,14 +86,11 @@ output:
             Kraken2 report containing stats about classified
             and not classified reads.
           pattern: "*.{report.txt}"
-          ontologies: []
-  versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@joseespinosa"
   - "@drpatelh"

@@ -4,10 +4,6 @@ nextflow_process {
     script "../main.nf"
     process "FQ_LINT"
 
-    tag "modules"
-    tag "modules_nfcore"
-    tag "fq"
-    tag "fq/lint"
 
     test("test_fq_lint_success") {
         when {

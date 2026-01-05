@@ -3,149 +3,17 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## dev - xxxx-xx-xx
+## dev
 
 ### Credits
 
 Special thanks to the following for their contributions to the release:
 
-- [Ezra Greenberg](https://github.com/egreenberg7)
-
-### Enhancements and fixes
-
-- [PR #1616](https://github.com/nf-core/rnaseq/pull/1616) - Add Sylph for contamination detection.
-- [PR #1663](https://github.com/nf-core/rnaseq/pull/1663) - Bump version after release 3.22.2
-- [PR #1664](https://github.com/nf-core/rnaseq/pull/1664) - Add support for multiple rRNA removal tools (`--ribo_removal_tool`): SortMeRNA (default), Bowtie2, and RiboDetector; enable BBSplit MultiQC reporting; add paired-end read grouping in MultiQC
-- [PR #1665](https://github.com/nf-core/rnaseq/pull/1665) - Bulk update modules/subworkflows; replace CUSTOM_GETCHROMSIZES with SAMTOOLS_FAIDX; update RSEQC modules with Wave containers for ARM compatibility; update ARM containers for RSEQC and UMITOOLS
-- [PR #1669](https://github.com/nf-core/rnaseq/pull/1669) - Enable SeqKit stats MultiQC module for RiboDetector rRNA removal
-
-### Parameters
-
-| Old parameter | New parameter         |
-| ------------- | --------------------- |
-|               | `--ribo_removal_tool` |
-
-> **NB:** Parameter has been **added** if just the new parameter information is present.
-
-### Parameters
-
-| Old parameter | New parameter      |
-| ------------- | ------------------ |
-|               | `--sylph_db`       |
-|               | `--sylph_taxonomy` |
-
-### Software dependencies
-
-| Dependency  | Old version | New version |
-| ----------- | ----------- | ----------- |
-| `sylph`     |             | 0.7.0       |
-| `sylph-tax` |             | 1.2.0       |
-
-> **NB:** Dependency has been **updated** if both old and new version information is present.
->
-> **NB:** Dependency has been **added** if just the new version information is present.
->
-> **NB:** Dependency has been **removed** if new version information isn't present.
-
-## [[3.22.2](https://github.com/nf-core/rnaseq/releases/tag/3.22.2)] - 2025-12-11
-
-### Credits
-
-Special thanks to the following for their contributions to the release:
-
-- [ahwanpandey](https://github.com/ahwanpandey)
-- [Graeme Grimes](https://github.com/ggrimes)
-- [Pontus Höjer](https://github.com/pontushojer)
-
-### Enhancements and fixes
-
-- [PR #1654](https://github.com/nf-core/rnaseq/pull/1654) - Fix tximport to handle tx2gene files with extra columns from `--gtf_extra_attributes`, and fix sample name mangling in DESeq2 QC
-- [PR #1655](https://github.com/nf-core/rnaseq/pull/1655) - Fix duplicate flagstat files in MultiQC report when mark duplicates is enabled ([#1653](https://github.com/nf-core/rnaseq/issues/1653))
-- [PR #1656](https://github.com/nf-core/rnaseq/pull/1656) - Bump version after release 3.22.1
-- [PR #1659](https://github.com/nf-core/rnaseq/pull/1659) - Fix MultiQC sample name collisions when multiple samples share the same FASTQ filename ([#1657](https://github.com/nf-core/rnaseq/issues/1657))
-- [PR #1658](https://github.com/nf-core/rnaseq/pull/1658) - Bump nf-core/multiqc module to 1.33
-- [PR #1660](https://github.com/nf-core/rnaseq/pull/1660) - Update MultiQC ARM container to 1.33
-- [PR #1648](https://github.com/nf-core/rnaseq/pull/1648) - Reduce duplicate coverage in pipeline tests by adding skip options
-- [PR #1661](https://github.com/nf-core/rnaseq/pull/1661) - Bump version to 3.22.2 ahead of release
-
-## [[3.22.1](https://github.com/nf-core/rnaseq/releases/tag/3.22.1)] - 2025-12-04
-
-### Credits
-
-Special thanks to the following for their contributions to the release:
-
-- [Elad Herz](https://github.com/EladH1)
-- [Matthias Hörtenhuber](https://github.com/mashehu)
-- [sisterdot](https://github.com/sisterdot)
-
-### Enhancements and fixes
-
-- [PR #1640](https://github.com/nf-core/rnaseq/pull/1640) - Bump version after release 3.22.0
-- [PR #1641](https://github.com/nf-core/rnaseq/pull/1641) - Add arm-based CI tests and fix arm-related issues
-- [PR #1645](https://github.com/nf-core/rnaseq/pull/1645) - Fix BAM CSI index access error with UMI deduplication ([#1643](https://github.com/nf-core/rnaseq/issues/1643))
-- [PR #1642](https://github.com/nf-core/rnaseq/pull/1642) - Add long format to rsem merge
-- [PR #1650](https://github.com/nf-core/rnaseq/pull/1650) - Restrict ARM CI tests to Docker profile only
-- [PR #1651](https://github.com/nf-core/rnaseq/pull/1651) - Add dupMatrix files to nftignore to fix conda reproducibility issues
-
-## [[3.22.0](https://github.com/nf-core/rnaseq/releases/tag/3.22.0)] - 2025-11-26
-
-### Credits
-
-Special thanks to the following for their contributions to the release:
-
-- [Ahwan Pandey](https://github.com/ahwanpandey)
-- [Cristina Tuñí i Domínguez](https://github.com/ctuni)
-- [Elad Herz](https://github.com/EladH1)
-- [Emily Miyoshi](https://github.com/emilymiyoshi)
-- [Jonathan Manning](https://github.com/pinin4fjords)
-- [Pontus Höjer](https://github.com/pontushojer)
-- [Siddhartha Bagaria](https://github.com/siddharthab)
-
-### Enhancements and fixes
-
-- [PR #1608](https://github.com/nf-core/rnaseq/pull/1608) - Bump version after release 3.21.0
-- [PR #1613](https://github.com/nf-core/rnaseq/pull/1613) - Fix broken link and add latest kit version for Takara UMI prep in usage documentation
-- [PR #1614](https://github.com/nf-core/rnaseq/pull/1614) - Template update for nf-core/tools v3.4.1
-- [PR #1617](https://github.com/nf-core/rnaseq/pull/1617) - Update bbmap/bbsplit module
-- [PR #1618](https://github.com/nf-core/rnaseq/pull/1618) - Fix CI: Ensure confirm-pass job runs for markdown-only PRs
-- [PR #1619](https://github.com/nf-core/rnaseq/pull/1619) - Update Credits to reflect current maintainership
-- [PR #1620](https://github.com/nf-core/rnaseq/pull/1620) - Fix bigwig strand labeling for reverse-stranded libraries ([#1591](https://github.com/nf-core/rnaseq/issues/1591))
-- [PR #1621](https://github.com/nf-core/rnaseq/pull/1621) - Optimize qualimap performance with multi-threaded name sorting
-- [PR #1622](https://github.com/nf-core/rnaseq/pull/1622) - Update tximeta/tximport module to fix sample name mangling
-- [PR #1624](https://github.com/nf-core/rnaseq/pull/1624) - Document RSeQC inner_distance limitation for genomes with large chromosomes (>500 Mb), such as plant genomes
-- [PR #1625](https://github.com/nf-core/rnaseq/pull/1625) - Add documentation warning about Qualimap read counting bug ([#1273](https://github.com/nf-core/rnaseq/issues/1273))
-- [PR #1628](https://github.com/nf-core/rnaseq/pull/1628) - Template update for nf-core/tools v3.5.1
-- [PR #1630](https://github.com/nf-core/rnaseq/pull/1630) - Fix arm64 profile to use pre-built ARM containers and update documentation
-- [PR #1631](https://github.com/nf-core/rnaseq/pull/1631) - Fix bbsplit index staging by using symlinks instead of full copy
-- [PR #1632](https://github.com/nf-core/rnaseq/pull/1632) - Add validation error for incompatible `--transcript_fasta` and `--additional_fasta` params ([#1450](https://github.com/nf-core/rnaseq/issues/1450))
-- [PR #1635](https://github.com/nf-core/rnaseq/pull/1635) - Fix `--gtf_extra_attributes` to support multiple comma-separated values and correct deprecated parameter name in docs ([#1626](https://github.com/nf-core/rnaseq/issues/1626))
-- [PR #1636](https://github.com/nf-core/rnaseq/pull/1636) - Simplify workflow nextflow.config by consolidating redundant patterns
-- [PR #1638](https://github.com/nf-core/rnaseq/pull/1638) - Bump version to 3.22.0 ahead of release
-
-## [[3.21.0](https://github.com/nf-core/rnaseq/releases/tag/3.21.0)] - 2025-09-18
-
-### Credits
-
-Special thanks to the following for their contributions to the release:
-
-- [Edmund Miller](https://github.com/edmundmiller)
-- [Friederike Hanssen](https://github.com/friederikehanssen)
 - [Maxime Garcia](https://github.com/maxulysse)
-- [Jonathan Manning](https://github.com/pinin4fjords)
 
 ### Enhancements & fixes
 
 - [PR #1597](https://github.com/nf-core/rnaseq/pull/1597) - Bump version after release 3.20.0
-- [PR #1603](https://github.com/nf-core/rnaseq/pull/1603) - Add bam input pathway
-- [PR #1604](https://github.com/nf-core/rnaseq/pull/1604) - Enable BAM input for RSEM
-- [PR #1605](https://github.com/nf-core/rnaseq/pull/1605) - Fix default for umi_discard_read to prevent validation errors in Platform
-- [PR #1606](https://github.com/nf-core/rnaseq/pull/1606) - Bump version to 3.21.0 ahead of release
-
-### Software dependencies
-
-| Dependency | Old version | New version |
-| ---------- | ----------- | ----------- |
-| `MultiQC`  | 1.30        | 1.31        |
 
 ## [[3.20.0](https://github.com/nf-core/rnaseq/releases/tag/3.20.0)] - 2025-08-18
 

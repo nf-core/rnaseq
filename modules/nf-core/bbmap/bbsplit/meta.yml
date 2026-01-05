@@ -25,33 +25,31 @@ input:
         description: |
           List of input FastQ files of size 1 and 2 for single-end and paired-end data,
           respectively.
-        ontologies: []
-  - index:
-      type: directory
-      description: Directory to place generated index
-      pattern: "*"
-  - primary_ref:
-      type: file
-      description: Path to the primary reference
-      pattern: "*"
-      ontologies: []
+  - - index:
+        type: directory
+        description: Directory to place generated index
+        pattern: "*"
+  - - primary_ref:
+        type: file
+        description: Path to the primary reference
+        pattern: "*"
   - - other_ref_names:
         type: list
         description: List of other reference ids apart from the primary
     - other_ref_paths:
         type: list
         description: Path to other references paths corresponding to "other_ref_names"
-  - only_build_index:
-      type: string
-      description: true = only build index; false = mapping
+  - - only_build_index:
+        type: string
+        description: true = only build index; false = mapping
 output:
-  index:
-    - bbsplit_index:
-        type: directory
-        description: Directory with index files
-        pattern: "bbsplit_index"
-  primary_fastq:
-    - - meta:
+  - index:
+      - bbsplit:
+          type: directory
+          description: Directory with index files
+          pattern: "bbsplit"
+  - primary_fastq:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -60,10 +58,8 @@ output:
           type: file
           description: Output reads that map to the primary reference
           pattern: "*primary*fastq.gz"
-          ontologies:
-            - edam: http://edamontology.org/format_3989 # GZIP format
-  all_fastq:
-    - - meta:
+  - all_fastq:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -72,10 +68,8 @@ output:
           type: file
           description: All reads mapping to any of the references
           pattern: "*fastq.gz"
-          ontologies:
-            - edam: http://edamontology.org/format_3989 # GZIP format
-  stats:
-    - - meta:
+  - stats:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -84,9 +78,8 @@ output:
           type: file
           description: Tab-delimited text file containing mapping statistics
           pattern: "*.txt"
-          ontologies: []
-  log:
-    - - meta:
+  - log:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -95,19 +88,14 @@ output:
           type: file
           description: Log file
           pattern: "*.log"
-          ontologies: []
-  versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@joseespinosa"
   - "@drpatelh"
-  - "@pinin4fjords"
 maintainers:
   - "@joseespinosa"
   - "@drpatelh"
-  - "@pinin4fjords"

@@ -4,18 +4,18 @@ process RSEQC_READDUPLICATION {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/6f/6f44b7933e2c2b1a340dc9485869974eb032d34e81af83716eb381964ee3e5e7/data' :
-        'community.wave.seqera.io/library/rseqc_r-base:2e29d2dfda9cef15' }"
+        'https://depot.galaxyproject.org/singularity/rseqc:5.0.3--py39hf95cd2a_0' :
+        'biocontainers/rseqc:5.0.3--py39hf95cd2a_0' }"
 
     input:
-    tuple val(meta), path(bam), path(bai)
+    tuple val(meta), path(bam)
 
     output:
     tuple val(meta), path("*seq.DupRate.xls"), emit: seq_xls
     tuple val(meta), path("*pos.DupRate.xls"), emit: pos_xls
     tuple val(meta), path("*.pdf")           , emit: pdf
     tuple val(meta), path("*.r")             , emit: rscript
-    tuple val("${task.process}"), val('rseqc'), eval('read_duplication.py --version | sed "s/read_duplication.py //"'), emit: versions_rseqc, topic: versions
+    path  "versions.yml"                     , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -28,6 +28,11 @@ process RSEQC_READDUPLICATION {
         -i $bam \\
         -o $prefix \\
         $args
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        rseqc: \$(read_duplication.py --version | sed -e "s/read_duplication.py //g")
+    END_VERSIONS
     """
 
     stub:
@@ -37,5 +42,10 @@ process RSEQC_READDUPLICATION {
     touch ${prefix}.pos.DupRate.xls
     touch ${prefix}.DupRate_plot.pdf
     touch ${prefix}.DupRate_plot.r
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        rseqc: \$(read_duplication.py --version | sed -e "s/read_duplication.py //g")
+    END_VERSIONS
     """
 }

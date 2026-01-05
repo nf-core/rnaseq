@@ -24,121 +24,82 @@ input:
         type: file
         description: the alignment in bam format
         pattern: "*.{bam}"
-        ontologies: []
-    - bai:
+  - - bed:
         type: file
-        description: BAM index file
-        pattern: "*.{bai}"
-        ontologies: []
-  - bed:
-      type: file
-      description: a bed file for the reference gene model
-      pattern: "*.{bed}"
-      ontologies: []
+        description: a bed file for the reference gene model
+        pattern: "*.{bed}"
 output:
-  xls:
-    - - meta:
+  - xls:
+      - meta:
           type: file
           description: xls file with junction information
           pattern: "*.xls"
-          ontologies: []
       - "*.xls":
           type: file
           description: xls file with junction information
           pattern: "*.xls"
-          ontologies: []
-  rscript:
-    - - meta:
+  - rscript:
+      - meta:
           type: file
-          description: xls file with junction information
-          pattern: "*.xls"
-          ontologies: []
+          description: Rscript to reproduce the plots
+          pattern: "*.r"
       - "*.r":
           type: file
           description: Rscript to reproduce the plots
           pattern: "*.r"
-          ontologies: []
-  log:
-    - - meta:
+  - log:
+      - meta:
           type: file
-          description: xls file with junction information
-          pattern: "*.xls"
-          ontologies: []
+          description: Log file of execution
+          pattern: "*.junction_annotation.log"
       - "*.log":
           type: file
           description: Log file of execution
           pattern: "*.junction_annotation.log"
-          ontologies: []
-  bed:
-    - - meta:
+  - bed:
+      - meta:
           type: file
-          description: xls file with junction information
-          pattern: "*.xls"
-          ontologies: []
+          description: bed file of annotated junctions
+          pattern: "*.junction.bed"
       - "*.junction.bed":
           type: file
           description: bed file of annotated junctions
           pattern: "*.junction.bed"
-          ontologies: []
-  interact_bed:
-    - - meta:
+  - interact_bed:
+      - meta:
           type: file
-          description: xls file with junction information
-          pattern: "*.xls"
-          ontologies: []
+          description: Interact bed file
+          pattern: "*.Interact.bed"
       - "*.Interact.bed":
           type: file
           description: Interact bed file
           pattern: "*.Interact.bed"
-          ontologies: []
-  pdf:
-    - - meta:
+  - pdf:
+      - meta:
           type: file
-          description: xls file with junction information
-          pattern: "*.xls"
-          ontologies: []
+          description: junction plot
+          pattern: "*.junction.pdf"
       - "*junction.pdf":
           type: file
           description: junction plot
           pattern: "*.junction.pdf"
-          ontologies: []
-  events_pdf:
-    - - meta:
+  - events_pdf:
+      - meta:
           type: file
-          description: xls file with junction information
-          pattern: "*.xls"
-          ontologies: []
+          description: events plot
+          pattern: "*.events.pdf"
       - "*events.pdf":
           type: file
           description: events plot
           pattern: "*.events.pdf"
-          ontologies: []
-  versions_rseqc:
-    - - ${task.process}:
-          type: string
-          description: The process the versions were collected from
-      - rseqc:
-          type: string
-          description: The tool name
-      - junction_annotation.py --version | sed "s/junction_annotation.py //":
-          type: eval
-          description: The expression to obtain the version of the tool
-topics:
-  versions:
-    - - ${task.process}:
-          type: string
-          description: The process the versions were collected from
-      - rseqc:
-          type: string
-          description: The tool name
-      - junction_annotation.py --version | sed "s/junction_annotation.py //":
-          type: eval
-          description: The expression to obtain the version of the tool of the tool
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@drpatelh"
   - "@kevinmenden"
-  - "@rhassaine"
 maintainers:
   - "@drpatelh"
   - "@kevinmenden"
-  - "@rhassaine"

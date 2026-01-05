@@ -3,14 +3,6 @@ nextflow_workflow {
     name "Test Workflow BAM_STATS_SAMTOOLS"
     script "../main.nf"
     workflow "BAM_STATS_SAMTOOLS"
-    tag "subworkflows"
-    tag "subworkflows_nfcore"
-    tag "bam_stats_samtools"
-    tag "subworkflows/bam_stats_samtools"
-    tag "samtools"
-    tag "samtools/flagstat"
-    tag "samtools/idxstats"
-    tag "samtools/stats"
 
     test("test_bam_stats_samtools_single_end") {
 

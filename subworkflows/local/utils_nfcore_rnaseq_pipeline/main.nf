@@ -10,8 +10,6 @@
 
 include { UTILS_NFSCHEMA_PLUGIN     } from '../../nf-core/utils_nfschema_plugin'
 include { paramsSummaryMap          } from 'plugin/nf-schema'
-include { samplesheetToList         } from 'plugin/nf-schema'
-include { paramsHelp                } from 'plugin/nf-schema'
 include { completionEmail           } from '../../nf-core/utils_nfcore_pipeline'
 include { completionSummary         } from '../../nf-core/utils_nfcore_pipeline'
 include { imNotification            } from '../../nf-core/utils_nfcore_pipeline'
@@ -34,14 +32,10 @@ workflow PIPELINE_INITIALISATION {
     monochrome_logs   // boolean: Do not use coloured log outputs
     nextflow_cli_args //   array: List of positional nextflow CLI args
     outdir            //  string: The output directory where the results will be saved
-    input             //  string: Path to input samplesheet
-    help              // boolean: Display help message and exit
-    help_full         // boolean: Show the full help message
-    show_hidden       // boolean: Show hidden parameters in the help message
 
     main:
 
-    ch_versions = channel.empty()
+    ch_versions = Channel.empty()
 
     //
     // Print version and exit if required and dump pipeline parameters to JSON file
@@ -56,35 +50,10 @@ workflow PIPELINE_INITIALISATION {
     //
     // Validate parameters and generate parameter summary to stdout
     //
-    before_text = """
--\033[2m----------------------------------------------------\033[0m-
-                                        \033[0;32m,--.\033[0;30m/\033[0;32m,-.\033[0m
-\033[0;34m        ___     __   __   __   ___     \033[0;32m/,-._.--~\'\033[0m
-\033[0;34m  |\\ | |__  __ /  ` /  \\ |__) |__         \033[0;33m}  {\033[0m
-\033[0;34m  | \\| |       \\__, \\__/ |  \\ |___     \033[0;32m\\`-._,-`-,\033[0m
-                                        \033[0;32m`._,._,\'\033[0m
-\033[0;35m  nf-core/rnaseq ${workflow.manifest.version}\033[0m
--\033[2m----------------------------------------------------\033[0m-
-"""
-    after_text = """${workflow.manifest.doi ? "\n* The pipeline\n" : ""}${workflow.manifest.doi.tokenize(",").collect { doi -> "    https://doi.org/${doi.trim().replace('https://doi.org/','')}"}.join("\n")}${workflow.manifest.doi ? "\n" : ""}
-* The nf-core framework
-    https://doi.org/10.1038/s41587-020-0439-x
-
-* Software dependencies
-    https://github.com/nf-core/rnaseq/blob/master/CITATIONS.md
-"""
-    command = "nextflow run ${workflow.manifest.name} -profile <docker/singularity/.../institute> --input samplesheet.csv --outdir <OUTDIR>"
-
     UTILS_NFSCHEMA_PLUGIN (
         workflow,
         validate_params,
-        null,
-        help,
-        help_full,
-        show_hidden,
-        before_text,
-        after_text,
-        command
+        null
     )
 
     //
@@ -184,12 +153,7 @@ workflow PIPELINE_COMPLETION {
 // Function to check samples are internally consistent after being grouped
 //
 def checkSamplesAfterGrouping(input) {
-    // Handle both old format [id, metas, fastqs] and new format with BAMs [id, metas, fastqs, genome_bams, transcriptome_bams]
-    def id = input[0]
-    def metas = input[1]
-    def fastqs = input[2]
-    def genome_bams = input.size() > 3 ? input[3] : null
-    def transcriptome_bams = input.size() > 4 ? input[4] : null
+    def (metas, fastqs) = input[1..2]
 
     // Check that multiple runs of the same sample are of the same strandedness
     def strandedness_ok = metas.collect{ it.strandedness }.unique().size == 1
@@ -203,30 +167,7 @@ def checkSamplesAfterGrouping(input) {
         error("Please check input samplesheet -> Multiple runs of a sample must be of the same datatype i.e. single-end or paired-end: ${metas[0].id}")
     }
 
-    // Return format depends on whether BAM data was provided
-    if (genome_bams != null || transcriptome_bams != null) {
-        def genome_bam = genome_bams?.find { it != null }
-        def transcriptome_bam = transcriptome_bams?.find { it != null }
-
-        // Add BAM flags and original paths to meta
-        def meta_with_bams = metas[0] + [
-            has_genome_bam: genome_bam ? true : false,
-            has_transcriptome_bam: transcriptome_bam ? true : false,
-            original_genome_bam: genome_bam ?: null,
-            original_transcriptome_bam: transcriptome_bam ?: null
-        ]
-
-        return [ meta_with_bams, fastqs, genome_bam, transcriptome_bam ]
-    } else {
-        // Add null BAM fields to meta for consistency
-        def meta_no_bams = metas[0] + [
-            has_genome_bam: false,
-            has_transcriptome_bam: false,
-            original_genome_bam: null,
-            original_transcriptome_bam: null
-        ]
-        return [ meta_no_bams, fastqs ]
-    }
+    return [ metas[0], fastqs ]
 }
 
 //
@@ -263,23 +204,6 @@ def validateInputParameters() {
     }
 
     if (params.transcript_fasta) {
-        // Only error if additional_fasta is provided AND we need to build a pseudo-aligner index
-        // (i.e., no pre-built salmon/kallisto index provided). If the user provides a pre-built
-        // index that already contains the spike-ins, the combination is valid.
-        if (params.additional_fasta) {
-            def needs_to_build_index = false
-            if (!params.skip_pseudo_alignment && params.pseudo_aligner) {
-                // Check if the relevant index for the selected pseudo-aligner is missing
-                if (params.pseudo_aligner == 'salmon' && !params.salmon_index) {
-                    needs_to_build_index = true
-                } else if (params.pseudo_aligner == 'kallisto' && !params.kallisto_index) {
-                    needs_to_build_index = true
-                }
-            }
-            if (needs_to_build_index) {
-                transcriptFastaAdditionalFastaError()
-            }
-        }
         transcriptsFastaWarn()
     }
 
@@ -287,8 +211,8 @@ def validateInputParameters() {
         error("Please provide either --bbsplit_fasta_list / --bbsplit_index to run BBSplit.")
     }
 
-    if (params.remove_ribo_rna && params.ribo_removal_tool in ['sortmerna', 'bowtie2'] && !params.ribo_database_manifest) {
-        error("Please provide --ribo_database_manifest to remove ribosomal RNA with SortMeRNA or Bowtie2.")
+    if (params.remove_ribo_rna && !params.ribo_database_manifest) {
+        error("Please provide --ribo_database_manifest to remove ribosomal RNA with SortMeRNA.")
     }
 
     if (params.with_umi && !params.skip_umi_extract) {
@@ -349,17 +273,18 @@ def validateInputParameters() {
     }
 
     // Check that Kraken/Bracken database provided if using kraken2/bracken
-    if (params.contaminant_screening in ['kraken2', 'kraken2_bracken'] && !params.kraken_db) {
-        error("Contaminant screening set to kraken2 but no database was provided. Please provide a database with the --kraken_db option.")
-    }
-
-    // Check that Sylph database and taxonomy is provided if using Sylph
-    if (params.contaminant_screening == 'sylph') {
-        if (!params.sylph_db) {
-            error("Contaminant screening is set to Sylph but no database was provided. Please provide a database with the --sylph_db option.")
+    if (params.contaminant_screening in ['kraken2', 'kraken2_bracken']) {
+        if (!params.kraken_db) {
+            error("Contaminant screening set to kraken2 but not database is provided. Please provide a database with the --kraken_db option.")
         }
-        if (!params.sylph_taxonomy) {
-            error("Contaminant screening is set to Sylph but no taxonomy was provided. Please provide a taxonomy with the --sylph_taxonomy option.")
+    // Check that Kraken/Bracken parameters are not provided when Kraken2 is not being used
+    } else {
+        if (!params.bracken_precision.equals('S')) {
+            brackenPrecisionWithoutKrakenDBWarn()
+        }
+
+        if (params.save_kraken_assignments || params.save_kraken_unassigned || params.kraken_db) {
+            krakenArgumentsWithoutKrakenDBWarn()
         }
     }
 
@@ -513,28 +438,6 @@ def transcriptsFastaWarn() {
 }
 
 //
-// Print an error if using both '--transcript_fasta' and '--additional_fasta' without a pre-built index
-//
-def transcriptFastaAdditionalFastaError() {
-    def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
-        "  Both '--transcript_fasta' and '--additional_fasta' have been provided,\n" +
-        "  but no pre-built pseudo-aligner index (--salmon_index/--kallisto_index).\n\n" +
-        "  The pipeline cannot append additional sequences (e.g. ERCC spike-ins) to a\n" +
-        "  user-provided transcriptome FASTA file. This would cause quantification to\n" +
-        "  fail because the built index would not contain the additional sequences.\n\n" +
-        "  Please either:\n" +
-        "    - Remove '--transcript_fasta' and let the pipeline generate the\n" +
-        "      transcriptome from the genome FASTA and GTF (recommended), or\n" +
-        "    - Provide a pre-built index (--salmon_index/--kallisto_index) that\n" +
-        "      already contains the additional sequences, or\n" +
-        "    - Remove '--additional_fasta' if you do not need spike-in sequences.\n\n" +
-        "  Please see:\n" +
-        "  https://github.com/nf-core/rnaseq/issues/1450\n" +
-        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-    error(error_string)
-}
-
-//
 // Print a warning if --skip_alignment has been provided
 //
 def skipAlignmentWarn() {
@@ -602,6 +505,26 @@ def additionaFastaIndexWarn(index) {
 }
 
 //
+// Print a warning if --save_kraken_assignments or --save_kraken_unassigned is provided without --kraken_db
+//
+def krakenArgumentsWithoutKrakenDBWarn() {
+    log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
+        "  'Kraken2 related arguments have been provided without setting contaminant\n" +
+        "  screening to Kraken2. Kraken2 is not being run so these will not be used.\n" +
+        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+}
+
+///
+/// Print a warning if --bracken-precision is provided without --kraken_db
+///
+def brackenPrecisionWithoutKrakenDBWarn() {
+    log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
+        "  '--bracken-precision' parameter has been provided without Kraken2 contaminant screening.\n" +
+        "  Bracken will not run so precision will not be set.\n" +
+        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+}
+
+//
 // Function to generate an error if contigs in genome fasta file > 512 Mbp
 //
 def checkMaxContigSize(fai_file) {
@@ -621,6 +544,26 @@ def checkMaxContigSize(fai_file) {
             error(error_string)
         }
     }
+}
+
+//
+// Function that parses and returns the alignment rate from the STAR log output
+//
+def getStarPercentMapped(params, align_log) {
+    def percent_aligned = 0
+    def pattern = /Uniquely mapped reads %\s*\|\s*([\d\.]+)%/
+    align_log.eachLine { line ->
+        def matcher = line =~ pattern
+        if (matcher) {
+            percent_aligned = matcher[0][1].toFloat()
+        }
+    }
+
+    def pass = false
+    if (percent_aligned >= params.min_mapped_reads.toFloat()) {
+        pass = true
+    }
+    return [ percent_aligned, pass ]
 }
 
 //
@@ -671,36 +614,6 @@ def getInferexperimentStrandedness(inferexperiment_file, stranded_threshold = 0.
 
     // Use shared calculation function to determine strandedness
     return calculateStrandedness(forwardFragments, reverseFragments, unstrandedFragments, stranded_threshold, unstranded_threshold)
-}
-
-//
-// Function to map work directory BAM paths to published paths
-//
-def mapBamToPublishedPath(bam_path, sample_id, aligner, outdir) {
-    if (!bam_path) return ''
-
-    def filename = file(bam_path).getName()
-    def base_dir = "${outdir}/${aligner}"
-
-    // Map based on aligner type and filename patterns
-    if (aligner == 'star_salmon') {
-        if (filename.contains('Aligned.out.bam')) {
-            return "${base_dir}/${sample_id}.Aligned.out.bam"
-        } else if (filename.contains('toTranscriptome')) {
-            return "${base_dir}/${sample_id}.Aligned.toTranscriptome.out.bam"
-        }
-    } else if (aligner == 'star_rsem') {
-        if (filename.contains('genome.bam')) {
-            return "${base_dir}/${sample_id}.STAR.genome.bam"
-        } else if (filename.contains('transcript.bam')) {
-            return "${base_dir}/${sample_id}.transcript.bam"
-        }
-    } else if (aligner == 'hisat2') {
-        return "${base_dir}/${sample_id}.bam"
-    }
-
-    // Fallback to original filename
-    return "${base_dir}/${filename}"
 }
 
 //

@@ -1,19 +1,33 @@
 {
-    "versions": {
+    "log": {
         "content": [
             [
                 [
-                    "RSEQC_JUNCTIONANNOTATION",
-                    "rseqc",
-                    "5.0.4"
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.junction_annotation.log:md5,ef37d06d169a1adbeec23fddf82aee2b"
                 ]
             ]
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.10.2"
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
         },
-        "timestamp": "2025-12-16T11:12:52.934637398"
+        "timestamp": "2024-02-26T14:32:52.732937"
+    },
+    "versions": {
+        "content": [
+            [
+                "versions.yml:md5,091865c0ebd6de262c9b0968b5771091"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-26T14:32:52.734515"
     },
     "sarscov2 - paired end [bam] - stub": {
         "content": [
@@ -82,11 +96,7 @@
                     ]
                 ],
                 "7": [
-                    [
-                        "RSEQC_JUNCTIONANNOTATION",
-                        "rseqc",
-                        "5.0.4"
-                    ]
+                    "versions.yml:md5,091865c0ebd6de262c9b0968b5771091"
                 ],
                 "bed": [
                     [
@@ -142,12 +152,8 @@
                         "test.junction_plot.r:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "versions_rseqc": [
-                    [
-                        "RSEQC_JUNCTIONANNOTATION",
-                        "rseqc",
-                        "5.0.4"
-                    ]
+                "versions": [
+                    "versions.yml:md5,091865c0ebd6de262c9b0968b5771091"
                 ],
                 "xls": [
                     [
@@ -161,34 +167,9 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.10.2"
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2025-12-10T15:03:34.433311514"
-    },
-    "sarscov2 - paired end [bam]": {
-        "content": [
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.junction_annotation.log:md5,d75e0f5d62fada8aa9449991b209554c"
-                ]
-            ],
-            [
-                [
-                    "RSEQC_JUNCTIONANNOTATION",
-                    "rseqc",
-                    "5.0.4"
-                ]
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-16T11:12:46.525058132"
+        "timestamp": "2024-06-21T09:39:10.213511"
     }
 }

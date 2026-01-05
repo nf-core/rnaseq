@@ -25,10 +25,9 @@ input:
         type: file
         description: Reference gtf annotation file
         pattern: "*.{gtf}"
-        ontologies: []
 output:
-  txt:
-    - - meta:
+  - txt:
+      - meta:
           type: map
           description: |
             Groovy Map containing reference information
@@ -37,14 +36,11 @@ output:
           type: file
           description: Splice sites in txt file
           pattern: "*.txt"
-          ontologies: []
-  versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@ntoda03"
   - "@ramprasadn"

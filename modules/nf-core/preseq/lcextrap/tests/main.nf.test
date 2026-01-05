@@ -3,10 +3,6 @@ nextflow_process {
     name "Test Process PRESEQ_LCEXTRAP"
     script "../main.nf"
     process "PRESEQ_LCEXTRAP"
-    tag "modules"
-    tag "modules_nfcore"
-    tag "preseq"
-    tag "preseq/lcextrap"
 
     test("sarscov2 - single_end") {
         when {

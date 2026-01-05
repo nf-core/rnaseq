@@ -24,100 +24,64 @@ input:
         type: file
         description: the alignment in bam format
         pattern: "*.{bam}"
-        ontologies: []
-    - bai:
+  - - bed:
         type: file
-        description: BAM index file
-        pattern: "*.{bai}"
-        ontologies: []
-  - bed:
-      type: file
-      description: a bed file for the reference gene model
-      pattern: "*.{bed}"
-      ontologies: []
+        description: a bed file for the reference gene model
+        pattern: "*.{bed}"
 output:
-  distance:
-    - - meta:
+  - distance:
+      - meta:
           type: file
           description: the inner distances
           pattern: "*.inner_distance.txt"
-          ontologies: []
       - "*distance.txt":
           type: file
           description: the inner distances
           pattern: "*.inner_distance.txt"
-          ontologies: []
-  freq:
-    - - meta:
+  - freq:
+      - meta:
           type: file
-          description: the inner distances
-          pattern: "*.inner_distance.txt"
-          ontologies: []
+          description: frequencies of different insert sizes
+          pattern: "*.inner_distance_freq.txt"
       - "*freq.txt":
           type: file
           description: frequencies of different insert sizes
           pattern: "*.inner_distance_freq.txt"
-          ontologies: []
-  mean:
-    - - meta:
+  - mean:
+      - meta:
           type: file
-          description: the inner distances
-          pattern: "*.inner_distance.txt"
-          ontologies: []
+          description: mean/median values of inner distances
+          pattern: "*.inner_distance_mean.txt"
       - "*mean.txt":
           type: file
           description: mean/median values of inner distances
           pattern: "*.inner_distance_mean.txt"
-          ontologies: []
-  pdf:
-    - - meta:
+  - pdf:
+      - meta:
           type: file
-          description: the inner distances
-          pattern: "*.inner_distance.txt"
-          ontologies: []
+          description: distribution plot of inner distances
+          pattern: "*.inner_distance_plot.pdf"
       - "*.pdf":
           type: file
           description: distribution plot of inner distances
           pattern: "*.inner_distance_plot.pdf"
-          ontologies: []
-  rscript:
-    - - meta:
+  - rscript:
+      - meta:
           type: file
-          description: the inner distances
-          pattern: "*.inner_distance.txt"
-          ontologies: []
+          description: script to reproduce the plot
+          pattern: "*.inner_distance_plot.R"
       - "*.r":
           type: file
           description: script to reproduce the plot
           pattern: "*.inner_distance_plot.R"
-          ontologies:
-            - edam: http://edamontology.org/format_3999 # R script
-  versions_rseqc:
-    - - ${task.process}:
-          type: string
-          description: The process the versions were collected from
-      - rseqc:
-          type: string
-          description: The tool name
-      - inner_distance.py --version | sed "s/inner_distance.py //":
-          type: eval
-          description: The expression to obtain the version of the tool
-topics:
-  versions:
-    - - ${task.process}:
-          type: string
-          description: The process the versions were collected from
-      - rseqc:
-          type: string
-          description: The tool name
-      - inner_distance.py --version | sed "s/inner_distance.py //":
-          type: eval
-          description: The expression to obtain the version of the tool
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@drpatelh"
   - "@kevinmenden"
-  - "@rhassaine"
 maintainers:
   - "@drpatelh"
   - "@kevinmenden"
-  - "@rhassaine"

@@ -3,10 +3,6 @@ nextflow_process {
     name "Test Process RSEM_PREPAREREFERENCE"
     script "../main.nf"
     process "RSEM_PREPAREREFERENCE"
-    tag "modules"
-    tag "modules_nfcore"
-    tag "rsem"
-    tag "rsem/preparereference"
 
     test("homo_sapiens") {
 

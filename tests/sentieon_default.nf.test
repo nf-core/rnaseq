@@ -3,14 +3,13 @@ nextflow_pipeline {
     name "Test pipeline with sentieon"
     script "../main.nf"
     tag "pipeline"
-    tag "sentieon"
 
     test("Params: default --use_sentieon_star") {
 
         when {
             params {
                 outdir = "$outputDir"
-                use_sentieon_star = true
+                use_sentieon_star= true
             }
         }
 

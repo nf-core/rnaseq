@@ -4,9 +4,6 @@ nextflow_process {
     script "../main.nf"
     process "UMICOLLAPSE"
 
-    tag "modules"
-    tag "modules_nfcore"
-    tag "umicollapse"
 
     test("umicollapse single end test") {
 

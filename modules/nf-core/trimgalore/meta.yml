@@ -1,11 +1,9 @@
 name: trimgalore
-description: |
-  A wrapper around Cutadapt and FastQC to consistently apply adapter and quality trimming to FastQ files,
-  with extra functionality for RRBS data
+description: Trim FastQ files using Trim Galore!
 keywords:
   - trimming
   - adapters
-  - sequencing
+  - sequencing adapters
   - fastq
 tools:
   - trimgalore:
@@ -16,8 +14,7 @@ tools:
       homepage: https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/
       documentation: https://github.com/FelixKrueger/TrimGalore/blob/master/Docs/Trim_Galore_User_Guide.md
       licence: ["GPL-3.0-or-later"]
-      identifier: biotools:trim_galore
-
+      identifier: ""
 input:
   - - meta:
         type: map
@@ -29,95 +26,75 @@ input:
         description: |
           List of input FastQ files of size 1 and 2 for single-end and paired-end data,
           respectively.
-        ontologies:
-          - edam: "http://edamontology.org/format_1930" # FASTQ
 output:
-  reads:
-    - - meta:
+  - reads:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
       - "*{3prime,5prime,trimmed,val}{,_1,_2}.fq.gz":
-          type: file
-          description: The trimmed/modified fastq reads
-          pattern: "*{3prime,5prime,trimmed,val}{,_1,_2}.fq.gz"
-          ontologies:
-            - edam: "http://edamontology.org/format_1930" # FASTQ
-            - edam: http://edamontology.org/format_3989 # GZIP format
-  log:
-    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
+          pattern: "*{3prime,5prime,trimmed,val}{,_1,_2}.fq.gz"
+  - log:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*_{report.txt}"
       - "*report.txt":
-          type: file
-          description: trimgalore log file
-          pattern: "*report.txt"
-          ontologies:
-            - edam: "http://edamontology.org/format_2330" # Textual format
-  unpaired:
-    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*_{report.txt}"
+  - unpaired:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
       - "*unpaired{,_1,_2}.fq.gz":
-          type: file
-          description: unpaired reads when --retain_unpaired flag is used
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
           pattern: "*unpaired*.fq.gz"
-          ontologies:
-            - edam: "http://edamontology.org/format_1930" # FASTQ
-            - edam: http://edamontology.org/format_3989 # GZIP format
-  html:
-    - - meta:
+  - html:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
+          pattern: "*_{fastqc.html}"
       - "*.html":
-          type: file
-          description: FastQC HTML report after trimming when the --fastqc flag is used
-          pattern: "*_fastqc.html"
-          ontologies:
-            - edam: "http://edamontology.org/format_2331" # HTML
-  zip:
-    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
+          pattern: "*_{fastqc.html}"
+  - zip:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*_{fastqc.zip}"
       - "*.zip":
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*_{fastqc.zip}"
+  - versions:
+      - versions.yml:
           type: file
-          description: FastQC report output zip after trimming when the --fastqc flag
-            is used
-          pattern: "*_fastqc.zip"
-          ontologies:
-            - edam: http://edamontology.org/format_3987 # ZIP format
-  versions_trimgalore:
-    - - ${task.process}:
-          type: string
-          description: The name of the process
-      - trimgalore:
-          type: string
-          description: The name of the tool
-      - trim_galore --version | grep -Eo "[0-9]+(\.[0-9]+)+":
-          type: eval
-          description: The expression to obtain the version of the tool
-
-topics:
-  versions:
-    - - ${task.process}:
-          type: string
-          description: The name of the process
-      - trimgalore:
-          type: string
-          description: The name of the tool
-      - trim_galore --version | grep -Eo "[0-9]+(\.[0-9]+)+":
-          type: eval
-          description: The expression to obtain the version of the tool
-
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@drpatelh"
   - "@ewels"
@@ -126,4 +103,3 @@ maintainers:
   - "@drpatelh"
   - "@ewels"
   - "@FelixKrueger"
-  - "@vagkaratzas"

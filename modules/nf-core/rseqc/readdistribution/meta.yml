@@ -24,55 +24,28 @@ input:
         type: file
         description: the alignment in bam format
         pattern: "*.{bam}"
-        ontologies: []
-    - bai:
+  - - bed:
         type: file
-        description: BAM index file
-        pattern: "*.{bai}"
-        ontologies: []
-  - bed:
-      type: file
-      description: a bed file for the reference gene model
-      pattern: "*.{bed}"
-      ontologies: []
+        description: a bed file for the reference gene model
+        pattern: "*.{bed}"
 output:
-  txt:
-    - - meta:
+  - txt:
+      - meta:
           type: file
           description: the read distribution report
           pattern: "*.read_distribution.txt"
-          ontologies: []
       - "*.read_distribution.txt":
           type: file
           description: the read distribution report
           pattern: "*.read_distribution.txt"
-          ontologies: []
-  versions_rseqc:
-    - - ${task.process}:
-          type: string
-          description: The process the versions were collected from
-      - rseqc:
-          type: string
-          description: The tool name
-      - read_distribution.py --version | sed "s/read_distribution.py //":
-          type: eval
-          description: The expression to obtain the version of the tool
-topics:
-  versions:
-    - - ${task.process}:
-          type: string
-          description: The process the versions were collected from
-      - rseqc:
-          type: string
-          description: The tool name
-      - read_distribution.py --version | sed "s/read_distribution.py //":
-          type: eval
-          description: The expression to obtain the version of the tool
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@drpatelh"
   - "@kevinmenden"
-  - "@rhassaine"
 maintainers:
   - "@drpatelh"
   - "@kevinmenden"
-  - "@rhassaine"

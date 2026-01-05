@@ -26,7 +26,6 @@ input:
         type: file
         description: Reference fasta file
         pattern: "*.{fa,fasta,fna}"
-        ontologies: []
   - - meta2:
         type: map
         description: |
@@ -36,7 +35,6 @@ input:
         type: file
         description: Reference gtf annotation file
         pattern: "*.{gtf}"
-        ontologies: []
   - - meta3:
         type: map
         description: |
@@ -46,10 +44,9 @@ input:
         type: file
         description: Splices sites in gtf file
         pattern: "*.{txt}"
-        ontologies: []
 output:
-  index:
-    - - meta:
+  - index:
+      - meta:
           type: map
           description: |
             Groovy Map containing reference information
@@ -58,14 +55,11 @@ output:
           type: file
           description: HISAT2 genome index file
           pattern: "*.ht2"
-          ontologies: []
-  versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@ntoda03"
 maintainers:

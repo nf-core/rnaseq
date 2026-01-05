@@ -5,17 +5,6 @@ nextflow_workflow {
     workflow "FASTQ_FASTQC_UMITOOLS_TRIMGALORE"
     config './nextflow.config'
 
-    tag "subworkflows"
-    tag "subworkflows_nfcore"
-    tag "subworkflows/fastq_fastqc_umitools_trimgalore"
-    tag "fastqc"
-    tag "umitools/extract"
-    tag "trimgalore"
-
-    tag "FASTQC"
-    tag "UMITOOLS_EXTRACT"
-    tag "TRIMGALORE"
-
     test("test single end read with UMI") {
 
         when {

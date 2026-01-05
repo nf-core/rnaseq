@@ -21,11 +21,7 @@
                     ]
                 ],
                 "2": [
-                    [
-                        "RSEQC_TIN",
-                        "rseqc",
-                        "5.0.4"
-                    ]
+                    "versions.yml:md5,79670dedaa11a978951c16ead7f49c24"
                 ],
                 "txt": [
                     [
@@ -36,12 +32,8 @@
                         "test.paired_end.sorted.summary.txt:md5,9d98447e178b89a89f6f5aba7a772fe6"
                     ]
                 ],
-                "versions_rseqc": [
-                    [
-                        "RSEQC_TIN",
-                        "rseqc",
-                        "5.0.4"
-                    ]
+                "versions": [
+                    "versions.yml:md5,79670dedaa11a978951c16ead7f49c24"
                 ],
                 "xls": [
                     [
@@ -55,10 +47,10 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.10.2"
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
         },
-        "timestamp": "2025-12-10T14:24:58.103086041"
+        "timestamp": "2024-02-26T14:32:42.823857"
     },
     "sarscov2 paired-end [bam] - stub": {
         "content": [
@@ -82,11 +74,7 @@
                     ]
                 ],
                 "2": [
-                    [
-                        "RSEQC_TIN",
-                        "rseqc",
-                        "5.0.4"
-                    ]
+                    "versions.yml:md5,79670dedaa11a978951c16ead7f49c24"
                 ],
                 "txt": [
                     [
@@ -97,12 +85,8 @@
                         "test.paired_end.sorted.bam.summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "versions_rseqc": [
-                    [
-                        "RSEQC_TIN",
-                        "rseqc",
-                        "5.0.4"
-                    ]
+                "versions": [
+                    "versions.yml:md5,79670dedaa11a978951c16ead7f49c24"
                 ],
                 "xls": [
                     [
@@ -116,9 +100,9 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.10.2"
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2025-12-10T14:25:04.054587066"
+        "timestamp": "2024-06-21T09:55:57.905927"
     }
 }

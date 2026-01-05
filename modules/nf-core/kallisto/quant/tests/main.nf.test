@@ -3,11 +3,6 @@ nextflow_process {
     name "Test Process KALLISTO_QUANT"
     script "../main.nf"
     process "KALLISTO_QUANT"
-    tag "modules"
-    tag "modules_nfcore"
-    tag "kallisto"
-    tag "kallisto/quant"
-    tag "kallisto/index"
 
     setup {
             run("KALLISTO_INDEX") {

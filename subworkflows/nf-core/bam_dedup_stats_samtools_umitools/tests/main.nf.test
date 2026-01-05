@@ -3,19 +3,6 @@ nextflow_workflow {
     name "Test Workflow BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS"
     script "../main.nf"
     workflow "BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS"
-    tag "subworkflows"
-    tag "subworkflows_nfcore"
-    tag "subworkflows/bam_dedup_stats_samtools_umitools"
-    tag "subworkflows/bam_stats_samtools"
-    tag "bam_dedup_stats_samtools_umitools"
-    tag "bam_stats_samtools"
-    tag "samtools"
-    tag "samtools/index"
-    tag "samtools/stats"
-    tag "samtools/idxstats"
-    tag "samtools/flagstat"
-    tag "umitools"
-    tag "umitools/dedup"
 
     test("sarscov2_bam_bai") {
 

@@ -1,7 +1,6 @@
 {
-    "sarscov2 paired-end [bam]": {
+    "pos_xls": {
         "content": [
-            "test.DupRate_plot.pdf",
             [
                 [
                     {
@@ -10,7 +9,16 @@
                     },
                     "test.pos.DupRate.xls:md5,a859bc2031d46bf1cc4336205847caa3"
                 ]
-            ],
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-26T15:43:14.989834"
+    },
+    "rscript": {
+        "content": [
             [
                 [
                     {
@@ -19,7 +27,26 @@
                     },
                     "test.DupRate_plot.r:md5,3c0325095cee4835b921e57d61c23dca"
                 ]
-            ],
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-26T15:43:15.045525"
+    },
+    "pdf": {
+        "content": [
+            "test.DupRate_plot.pdf"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-26T14:33:06.857254"
+    },
+    "seq_xls": {
+        "content": [
             [
                 [
                     {
@@ -28,20 +55,25 @@
                     },
                     "test.seq.DupRate.xls:md5,ee8783399eec5a18522a6f08bece338b"
                 ]
-            ],
-            [
-                [
-                    "RSEQC_READDUPLICATION",
-                    "rseqc",
-                    "5.0.4"
-                ]
             ]
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.10.2"
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
         },
-        "timestamp": "2025-12-11T15:22:07.908044925"
+        "timestamp": "2024-02-26T15:43:15.101953"
+    },
+    "versions": {
+        "content": [
+            [
+                "versions.yml:md5,8a0721f3247f97135eadb8eecbe142a1"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-26T14:33:06.877127"
     },
     "sarscov2 paired-end [bam] - stub": {
         "content": [
@@ -83,11 +115,7 @@
                     ]
                 ],
                 "4": [
-                    [
-                        "RSEQC_READDUPLICATION",
-                        "rseqc",
-                        "5.0.4"
-                    ]
+                    "versions.yml:md5,8a0721f3247f97135eadb8eecbe142a1"
                 ],
                 "pdf": [
                     [
@@ -125,19 +153,15 @@
                         "test.seq.DupRate.xls:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "versions_rseqc": [
-                    [
-                        "RSEQC_READDUPLICATION",
-                        "rseqc",
-                        "5.0.4"
-                    ]
+                "versions": [
+                    "versions.yml:md5,8a0721f3247f97135eadb8eecbe142a1"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.10.2"
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2025-12-11T15:22:13.974266658"
+        "timestamp": "2024-06-21T09:53:03.817194"
     }
 }

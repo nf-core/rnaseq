@@ -24,27 +24,25 @@ input:
           List of input FastQ files of size 1 and 2 for single-end and paired-end data,
           respectively. If you wish to run interleaved paired-end data,  supply as single-end data
           but with `--interleaved_in` in your `modules.conf`'s `ext.args` for the module.
-        ontologies: []
-    - adapter_fasta:
+  - - adapter_fasta:
         type: file
         description: File in FASTA format containing possible adapters to remove.
         pattern: "*.{fasta,fna,fas,fa}"
-        ontologies: []
-  - discard_trimmed_pass:
-      type: boolean
-      description: |
-        Specify true to not write any reads that pass trimming thresholds.
-        This can be used to use fastp for the output report only.
-  - save_trimmed_fail:
-      type: boolean
-      description: Specify true to save files that failed to pass trimming thresholds
-        ending in `*.fail.fastq.gz`
-  - save_merged:
-      type: boolean
-      description: Specify true to save all merged reads to a file ending in `*.merged.fastq.gz`
+  - - discard_trimmed_pass:
+        type: boolean
+        description: |
+          Specify true to not write any reads that pass trimming thresholds.
+          This can be used to use fastp for the output report only.
+  - - save_trimmed_fail:
+        type: boolean
+        description: Specify true to save files that failed to pass trimming thresholds
+          ending in `*.fail.fastq.gz`
+  - - save_merged:
+        type: boolean
+        description: Specify true to save all merged reads to a file ending in `*.merged.fastq.gz`
 output:
-  reads:
-    - - meta:
+  - reads:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -53,10 +51,8 @@ output:
           type: file
           description: The trimmed/modified/unmerged fastq reads
           pattern: "*fastp.fastq.gz"
-          ontologies:
-            - edam: http://edamontology.org/format_3989 # GZIP format
-  json:
-    - - meta:
+  - json:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -65,10 +61,8 @@ output:
           type: file
           description: Results in JSON format
           pattern: "*.json"
-          ontologies:
-            - edam: http://edamontology.org/format_3464 # JSON
-  html:
-    - - meta:
+  - html:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -77,9 +71,8 @@ output:
           type: file
           description: Results in HTML format
           pattern: "*.html"
-          ontologies: []
-  log:
-    - - meta:
+  - log:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -88,9 +81,8 @@ output:
           type: file
           description: fastq log file
           pattern: "*.log"
-          ontologies: []
-  reads_fail:
-    - - meta:
+  - reads_fail:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -99,10 +91,8 @@ output:
           type: file
           description: Reads the failed the preprocessing
           pattern: "*fail.fastq.gz"
-          ontologies:
-            - edam: http://edamontology.org/format_3989 # GZIP format
-  reads_merged:
-    - - meta:
+  - reads_merged:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -111,14 +101,11 @@ output:
           type: file
           description: Reads that were successfully merged
           pattern: "*.{merged.fastq.gz}"
-          ontologies: []
-  versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@drpatelh"
   - "@kevinmenden"

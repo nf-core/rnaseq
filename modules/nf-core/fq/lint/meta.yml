@@ -22,26 +22,21 @@ input:
         type: file
         description: FASTQ file list
         pattern: "*.fastq{,.gz}"
-        ontologies: []
 output:
-  lint:
-    - - meta:
+  - lint:
+      - meta:
           type: file
           description: Lint output
           pattern: "*.fq_lint.txt"
-          ontologies: []
       - "*.fq_lint.txt":
           type: file
           description: Lint output
           pattern: "*.fq_lint.txt"
-          ontologies: []
-  versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@adamrtalbot"
 maintainers:

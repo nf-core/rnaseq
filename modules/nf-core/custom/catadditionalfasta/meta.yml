@@ -23,12 +23,10 @@ input:
         type: file
         description: FASTA-format sequence file
         pattern: "*.{fasta,fa}"
-        ontologies: []
     - gtf:
         type: file
         description: GTF-format annotation file for fasta
         pattern: "*.gtf"
-        ontologies: []
   - - meta2:
         type: map
         description: |
@@ -37,13 +35,12 @@ input:
         type: file
         description: FASTA-format file of additional sequences
         pattern: "*.fa"
-        ontologies: []
-  - biotype:
-      type: string
-      description: Biotype to apply to new GTF entries
+  - - biotype:
+        type: string
+        description: Biotype to apply to new GTF entries
 output:
-  fasta:
-    - - meta:
+  - fasta:
+      - meta:
           type: map
           description: |
             Groovy Map containing fasta information
@@ -51,9 +48,8 @@ output:
           type: file
           description: FASTA-format combined sequence file
           pattern: "*.{fasta,fa}"
-          ontologies: []
-  gtf:
-    - - meta:
+  - gtf:
+      - meta:
           type: map
           description: |
             Groovy Map containing fasta information
@@ -61,14 +57,11 @@ output:
           type: file
           description: GTF-format combined annotation file
           pattern: "*.gtf"
-          ontologies: []
-  versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@pinin4fjords"
 maintainers:

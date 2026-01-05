@@ -1,10 +1,14 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
 name: "dupradar"
-description: Assessment of duplication rates in RNA-Seq datasets
+description: |
+  Assessment of duplication rates in RNA-Seq datasets.
+  Supports both traditional R-based analysis (dupRadar) and fast shell-based mode for improved performance with high-latency storage systems like Fusion S3.
+  Use `ext.use_fast_dupradar = true` to enable fast mode.
 keywords:
   - rnaseq
   - duplication
   - genomics
+  - performance
 tools:
   - "dupradar":
       description: "Assessment of duplication rates in RNA-Seq datasets"
@@ -25,7 +29,6 @@ input:
         type: file
         description: BAM/SAM file containing read alignments
         pattern: "*.{bam}"
-        ontologies: []
   - - meta2:
         type: map
         description: |
@@ -35,10 +38,9 @@ input:
         type: file
         description: Genomic features annotation in GTF or SAF
         pattern: "*.{gtf}"
-        ontologies: []
 output:
-  scatter2d:
-    - - meta:
+  - scatter2d:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -47,9 +49,8 @@ output:
           type: file
           description: PDF duplication rate against total read count plot
           pattern: "*_duprateExpDens.pdf"
-          ontologies: []
-  boxplot:
-    - - meta:
+  - boxplot:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -59,9 +60,8 @@ output:
           description: |
             PDF duplication rate ~ total reads per kilobase (RPK) boxplot
           pattern: "*_duprateExpBoxplot.pdf"
-          ontologies: []
-  hist:
-    - - meta:
+  - hist:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -71,9 +71,8 @@ output:
           description: |
             PDF expression histogram
           pattern: "*.pdf"
-          ontologies: []
-  dupmatrix:
-    - - meta:
+  - dupmatrix:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -84,9 +83,8 @@ output:
             Text file containing tags falling on the features described in the GTF
             file
           pattern: "*_dupMatrix.txt"
-          ontologies: []
-  intercept_slope:
-    - - meta:
+  - intercept_slope:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -96,9 +94,8 @@ output:
           description: |
             Text file containing intercept and slope from dupRadar modelling
           pattern: "*_intercept_slope.txt"
-          ontologies: []
-  multiqc:
-    - - meta:
+  - multiqc:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -108,9 +105,8 @@ output:
           description: |
             dupRadar files for passing to MultiQC
           pattern: "*_multiqc.txt"
-          ontologies: []
-  session_info:
-    - - meta:
+  - session_info:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -119,14 +115,11 @@ output:
           type: file
           description: dump of R SessionInfo
           pattern: "*.log"
-          ontologies: []
-  versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@pinin4fjords"
 maintainers:

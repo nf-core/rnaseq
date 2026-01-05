@@ -26,8 +26,6 @@ input:
           List of input FastQ files of size 1 and 2 for single-end and paired-end data,
           respectively.
         pattern: "*.{fastq,fastq.gz}"
-        ontologies:
-          - edam: http://edamontology.org/format_1930 # FASTQ
   - - meta2:
         type: map
         description: |
@@ -37,28 +35,24 @@ input:
         type: file
         description: Kallisto genome index.
         pattern: "*.idx"
-        ontologies: []
-  - gtf:
-      type: file
-      description: Optional gtf file for translation of transcripts into genomic coordinates.
-      pattern: "*.gtf"
-      ontologies: []
-  - chromosomes:
-      type: file
-      description: Optional tab separated file with chromosome names and lengths.
-      pattern: "*.tsv"
-      ontologies:
-        - edam: http://edamontology.org/format_3475 # TSV
-  - fragment_length:
-      type: integer
-      description: For single-end mode only, the estimated average fragment length.
-  - fragment_length_sd:
-      type: integer
-      description: For single-end mode only, the estimated standard deviation of the
-        fragment length.
+  - - gtf:
+        type: file
+        description: Optional gtf file for translation of transcripts into genomic coordinates.
+        pattern: "*.gtf"
+  - - chromosomes:
+        type: file
+        description: Optional tab separated file with chromosome names and lengths.
+        pattern: "*.tsv"
+  - - fragment_length:
+        type: integer
+        description: For single-end mode only, the estimated average fragment length.
+  - - fragment_length_sd:
+        type: integer
+        description: For single-end mode only, the estimated standard deviation of the
+          fragment length.
 output:
-  results:
-    - - meta:
+  - results:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -66,9 +60,8 @@ output:
       - ${prefix}:
           type: file
           description: Kallisto output file
-          ontologies: []
-  json_info:
-    - - meta:
+  - json_info:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -77,10 +70,8 @@ output:
           type: file
           description: JSON file containing information about the run
           pattern: "*.run_info.json"
-          ontologies:
-            - edam: http://edamontology.org/format_3464 # JSON
-  log:
-    - - meta:
+  - log:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -89,14 +80,11 @@ output:
           type: file
           description: File containing log information from running kallisto quant
           pattern: "*.log.txt"
-          ontologies: []
-  versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@anoronh4"
 maintainers:

@@ -4,11 +4,6 @@ nextflow_process {
     script "../main.nf"
     process "SALMON_QUANT"
     config "./nextflow.config"
-    tag "modules"
-    tag "modules_nfcore"
-    tag "salmon"
-    tag "salmon/quant"
-    tag "salmon/index"
 
     setup {
         run("SALMON_INDEX") {

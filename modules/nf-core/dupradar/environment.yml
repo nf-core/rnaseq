@@ -4,4 +4,10 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::bioconductor-dupradar=1.38.0
+  # Original dupRadar dependencies
+  - bioconda::bioconductor-dupradar=1.32.0
+  # Fast mode dependencies
+  - bioconda::subread=2.0.1
+  - conda-forge::python=3.9
+  - conda-forge::matplotlib=3.5.2
+  - conda-forge::numpy=1.21.5

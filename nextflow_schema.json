@@ -111,8 +111,7 @@
                     "mimetype": "text/plain",
                     "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
                     "fa_icon": "far fa-file-code",
-                    "description": "Path to FASTA transcriptome file.",
-                    "help_text": "If not provided, the transcriptome will be generated from the genome FASTA and GTF files. Cannot be used together with `--additional_fasta` when building a pseudo-aligner index, because the pipeline cannot append spike-in sequences to a user-provided transcriptome. Either omit this parameter or provide a pre-built index."
+                    "description": "Path to FASTA transcriptome file."
                 },
                 "additional_fasta": {
                     "type": "string",
@@ -122,7 +121,7 @@
                     "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
                     "fa_icon": "far fa-file-code",
                     "description": "FASTA file to concatenate to genome FASTA file e.g. containing spike-in sequences.",
-                    "help_text": "If provided, sequences in this file will be concatenated to the genome FASTA file. A GTF file will be automatically created using these sequences, and alignment indices will be created from the combined files. Use `--save_reference` to reuse these indices in future runs. Cannot be used together with `--transcript_fasta` when building a pseudo-aligner index - either omit `--transcript_fasta` or provide a pre-built index that already contains the spike-ins."
+                    "help_text": "If provided, sequences in this file will be concatenated to the genome FASTA file. A GTF file will be automatically created using these sequences, and alignment indices will be created from the combined files. Use `--save_reference` to reuse these indices in future runs."
                 },
                 "splicesites": {
                     "type": "string",
@@ -292,16 +291,8 @@
                 "remove_ribo_rna": {
                     "type": "boolean",
                     "fa_icon": "fas fa-trash-alt",
-                    "description": "Enable the removal of reads derived from ribosomal RNA.",
-                    "help_text": "Any patterns found in sequences defined by the `--ribo_database_manifest` parameter will be used for filtering (when using SortMeRNA or Bowtie2)."
-                },
-                "ribo_removal_tool": {
-                    "type": "string",
-                    "default": "sortmerna",
-                    "fa_icon": "fas fa-tools",
-                    "description": "Tool to use for rRNA removal.",
-                    "help_text": "Choose between 'sortmerna' (default), 'bowtie2', or 'ribodetector' for rRNA removal.\n\n- **sortmerna**: Reference-based filtering (default). Requires `--ribo_database_manifest`. Note: Default databases include SILVA sequences requiring licensing for commercial use.\n- **bowtie2**: Alignment-based filtering. Requires `--ribo_database_manifest`. Recommended for users with SILVA licensing concerns as it supports custom databases.\n- **ribodetector**: ⚠️ EXPERIMENTAL - ML-based detection without reference requirement. Known ONNX multiprocessing issues can cause hangs in containerized environments. See https://github.com/hzi-bifo/RiboDetector/pull/61",
-                    "enum": ["sortmerna", "ribodetector", "bowtie2"]
+                    "description": "Enable the removal of reads derived from ribosomal RNA using SortMeRNA.",
+                    "help_text": "Any patterns found in sequences defined by the `--ribo_database_manifest` parameter will be used for filtering."
                 },
                 "ribo_database_manifest": {
                     "type": "string",
@@ -608,15 +599,15 @@
                 },
                 "contaminant_screening": {
                     "type": "string",
-                    "description": "Tool to use for detecting contaminants in unaligned reads - available options are 'sylph', 'kraken2', or 'kraken2_bracken'",
+                    "description": "Tool to use for detecting contaminants in unaligned reads - available options are 'kraken2' and 'kraken2_bracken'",
                     "fa_icon": "fas fa-virus-slash",
-                    "enum": ["kraken2", "kraken2_bracken", "sylph"]
+                    "enum": ["kraken2", "kraken2_bracken"]
                 },
                 "kraken_db": {
                     "type": "string",
                     "format": "directory-path",
                     "description": "Database when using Kraken2/Bracken for contaminant screening.",
-                    "help_text": "See the usage documentation for more information on setting up and using Kraken2 databases. Requires the --contaminant_screening option to be set to 'kraken2' or 'kraken2_bracken' to have an effect",
+                    "help_text": "See the usage documentation for more information on setting up and using Kraken2 databases.",
                     "fa_icon": "fas fa-fish"
                 },
                 "bracken_precision": {
@@ -624,22 +615,8 @@
                     "default": "S",
                     "fa_icon": "fas fa-tree",
                     "description": "Taxonomic level for Bracken abundance estimations.",
-                    "help_text": "Use the first letter of taxonomic levels: Domain, Phylum, Class, Order, Family, Genus, or Species. Requires --contaminant_screening option to be set to 'kraken2_bracken' to have an effect.",
+                    "help_text": "Use the first letter of taxonomic levels: Domain, Phylum, Class, Order, Family, Genus, or Species.",
                     "enum": ["D", "P", "C", "O", "F", "G", "S"]
-                },
-                "sylph_db": {
-                    "type": "string",
-                    "format": "file-path",
-                    "description": "Comma separated list of databases to profile against when using Sylph for contamination detection",
-                    "help_text": "See the usage documentation for more information on setting up and using Sylph databases. Requires --contaminant_screening option to be set to 'sylph' to have an effect.",
-                    "fa_icon": "fas fa-database"
-                },
-                "sylph_taxonomy": {
-                    "type": "string",
-                    "description": "Comma separated list of taxonomies when using Sylph for contamination detection",
-                    "help_text": "See the usage documentation for more information on Sylph taxonomies. Requires --contaminant_screening option to be set to 'sylph' to have an effect.",
-                    "fa_icon": "fas fa-tree",
-                    "format": "file-path"
                 }
             }
         },
@@ -911,18 +888,6 @@
                     "help_text": "You can use '{date}' as a placeholder which will be replaced with the current date and time in the format 'yyyy-MM-dd_HH-mm-ss'. For example, 'run_{date}' will become 'run_2023-05-15_14-30-45'.",
                     "errorMessage": "The trace report suffix must only contain alphanumeric characters, underscores, hyphens, dots, and curly braces for date placeholders.",
                     "hidden": true
-                },
-                "help": {
-                    "type": ["boolean", "string"],
-                    "description": "Display the help message."
-                },
-                "help_full": {
-                    "type": "boolean",
-                    "description": "Display the full detailed help message."
-                },
-                "show_hidden": {
-                    "type": "boolean",
-                    "description": "Display hidden parameters in the help message (only works when --help or --help_full are provided)."
                 }
             }
         }

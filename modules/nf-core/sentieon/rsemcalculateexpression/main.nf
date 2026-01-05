@@ -2,6 +2,7 @@ process SENTIEON_RSEMCALCULATEEXPRESSION {
     tag "$meta.id"
     label 'process_high'
     label 'sentieon'
+    scratch true
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -9,14 +10,14 @@ process SENTIEON_RSEMCALCULATEEXPRESSION {
         'community.wave.seqera.io/library/rsem_sentieon:1d3ad86b89bf5cc7' }"
 
     input:
-    tuple val(meta), path(reads)  // FASTQ files or BAM file for --alignments mode
+    tuple val(meta), path(reads)
     path  index
 
     output:
     tuple val(meta), path("*.genes.results")   , emit: counts_gene
     tuple val(meta), path("*.isoforms.results"), emit: counts_transcript
     tuple val(meta), path("*.stat")            , emit: stat
-    tuple val(meta), path("*.log")             , emit: logs, optional:true
+    tuple val(meta), path("*.log")             , emit: logs
     path  "versions.yml"                       , emit: versions
 
     tuple val(meta), path("*.STAR.genome.bam")       , optional:true, emit: bam_star
@@ -29,6 +30,7 @@ process SENTIEON_RSEMCALCULATEEXPRESSION {
     script:
     def args = task.ext.args   ?: ''
     prefix   = task.ext.prefix ?: "${meta.id}"
+    def temp_dir = task.ext.temp_dir ?: '/tmp'
 
     def strandedness = ''
     if (meta.strandedness == 'forward') {
@@ -36,18 +38,11 @@ process SENTIEON_RSEMCALCULATEEXPRESSION {
     } else if (meta.strandedness == 'reverse') {
         strandedness = '--strandedness reverse'
     }
-
-    // Detect if input is BAM file(s)
-    def is_bam = reads.toString().toLowerCase().endsWith('.bam')
-    def alignment_mode = is_bam ? '--alignments' : ''
-
-    // Use metadata for paired-end detection if available, otherwise empty (auto-detect)
-    def paired_end = meta.containsKey('single_end') ? (meta.single_end ? "" : "--paired-end") : "unknown"
+    def paired_end = meta.single_end ? "" : "--paired-end"
 
     def sentieonLicense = secrets.SENTIEON_LICENSE_BASE64
         ? "export SENTIEON_LICENSE=\$(mktemp);echo -e \"${secrets.SENTIEON_LICENSE_BASE64}\" | base64 -d > \$SENTIEON_LICENSE; "
         : ""
-
     """
     INDEX=`find -L ./ -name "*.grp" | sed 's/\\.grp\$//'`
 
@@ -55,23 +50,11 @@ process SENTIEON_RSEMCALCULATEEXPRESSION {
     ln -sf \$(which sentieon) ./STAR
     export PATH=".:\$PATH"
 
-    # Use metadata-based paired-end detection, or auto-detect if no metadata provided
-    PAIRED_END_FLAG="$paired_end"
-    if [ "${paired_end}" == "unknown" ]; then
-        # Auto-detect only if no metadata provided
-        if [ "${is_bam}" == "true" ]; then
-            samtools flagstat $reads | grep -q 'paired in sequencing' && PAIRED_END_FLAG="--paired-end"
-        else
-            [ ${reads.size()} -gt 1 ] && PAIRED_END_FLAG="--paired-end"
-        fi
-    fi
-
     rsem-calculate-expression \\
         --num-threads $task.cpus \\
-        --temporary-folder ./tmp/ \\
-        $alignment_mode \\
+        --temporary-folder ${temp_dir}/ \\
         $strandedness \\
-        \$PAIRED_END_FLAG \\
+        $paired_end \\
         $args \\
         $reads \\
         \$INDEX \\
@@ -87,18 +70,12 @@ process SENTIEON_RSEMCALCULATEEXPRESSION {
 
     stub:
     prefix = task.ext.prefix ?: "${meta.id}"
-    def is_bam = reads.toString().toLowerCase().endsWith('.bam')
     """
     touch ${prefix}.genes.results
     touch ${prefix}.isoforms.results
     touch ${prefix}.stat
     touch ${prefix}.log
-
-    # Only create STAR BAM output when not in alignment mode
-    if [ "${is_bam}" == "false" ]; then
-        touch ${prefix}.STAR.genome.bam
-    fi
-
+    touch ${prefix}.STAR.genome.bam
     touch ${prefix}.genome.bam
     touch ${prefix}.transcript.bam
 

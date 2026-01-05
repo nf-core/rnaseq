@@ -24,57 +24,28 @@ input:
         type: file
         description: the bam file to calculate statistics of
         pattern: "*.{bam}"
-        ontologies: []
-    - bai:
+  - - bed:
         type: file
-        description: BAM index file
-        pattern: "*.{bai}"
-        ontologies: []
-  - bed:
-      type: file
-      description: a bed file for the reference gene model
-      pattern: "*.{bed}"
-      ontologies: []
+        description: a bed file for the reference gene model
+        pattern: "*.{bed}"
 output:
-  txt:
-    - - meta:
+  - txt:
+      - meta:
           type: file
           description: infer_experiment results report
           pattern: "*.infer_experiment.txt"
-          ontologies: []
       - "*.infer_experiment.txt":
           type: file
           description: infer_experiment results report
           pattern: "*.infer_experiment.txt"
-          ontologies: []
-  versions_rseqc:
-    - - ${task.process}:
-          type: string
-          description: The name of the process
-      - rseqc:
-          type: string
-          description: The name of the tool
-      - infer_experiment.py --version | sed "s/infer_experiment.py //":
-          type: eval
-          description: The expression to obtain the version of the tool
-
-topics:
-  versions:
-    - - ${task.process}:
-          type: string
-          description: The name of the process
-      - rseqc:
-          type: string
-          description: The name of the tool
-      - infer_experiment.py --version | sed "s/infer_experiment.py //":
-          type: eval
-          description: The expression to obtain the version of the tool
-
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@drpatelh"
   - "@kevinmenden"
-  - "@rhassaine"
 maintainers:
   - "@drpatelh"
   - "@kevinmenden"
-  - "@rhassaine"

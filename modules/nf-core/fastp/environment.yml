@@ -4,5 +4,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  # renovate: datasource=conda depName=bioconda/fastp
-  - bioconda::fastp=1.0.1
+  - bioconda::fastp=0.24.0

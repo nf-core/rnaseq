@@ -24,66 +24,37 @@ input:
         type: file
         description: the alignment in bam format
         pattern: "*.{bam}"
-        ontologies: []
-    - bai:
+  - - bed:
         type: file
-        description: BAM index file
-        pattern: "*.{bai}"
-        ontologies: []
-  - bed:
-      type: file
-      description: a bed file for the reference gene model
-      pattern: "*.{bed}"
-      ontologies: []
+        description: a bed file for the reference gene model
+        pattern: "*.{bed}"
 output:
-  pdf:
-    - - meta:
+  - pdf:
+      - meta:
           type: file
           description: Junction saturation report
           pattern: "*.pdf"
-          ontologies: []
       - "*.pdf":
           type: file
           description: Junction saturation report
           pattern: "*.pdf"
-          ontologies: []
-  rscript:
-    - - meta:
+  - rscript:
+      - meta:
           type: file
-          description: Junction saturation report
-          pattern: "*.pdf"
-          ontologies: []
+          description: Junction saturation R-script
+          pattern: "*.r"
       - "*.r":
           type: file
           description: Junction saturation R-script
           pattern: "*.r"
-          ontologies: []
-  versions_rseqc:
-    - - ${task.process}:
-          type: string
-          description: The process the versions were collected from
-      - rseqc:
-          type: string
-          description: The tool name
-      - junction_saturation.py --version | sed "s/junction_saturation.py //":
-          type: eval
-          description: The expression to obtain the version of the tool
-topics:
-  versions:
-    - - ${task.process}:
-          type: string
-          description: The process the versions were collected from
-      - rseqc:
-          type: string
-          description: The tool name
-      - junction_saturation.py --version | sed "s/junction_saturation.py //":
-          type: eval
-          description: The expression to obtain the version of the tool
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@drpatelh"
   - "@kevinmenden"
-  - "@rhassaine"
 maintainers:
   - "@drpatelh"
   - "@kevinmenden"
-  - "@rhassaine"

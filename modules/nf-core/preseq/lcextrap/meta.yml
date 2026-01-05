@@ -24,10 +24,9 @@ input:
         type: file
         description: BAM/CRAM/SAM file
         pattern: "*.{bam,cram,sam}"
-        ontologies: []
 output:
-  lc_extrap:
-    - - meta:
+  - lc_extrap:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -36,9 +35,8 @@ output:
           type: file
           description: File containing output of Preseq lcextrap
           pattern: "*.{lc_extrap.txt}"
-          ontologies: []
-  log:
-    - - meta:
+  - log:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -47,14 +45,11 @@ output:
           type: file
           description: Log file containing stderr produced by Preseq
           pattern: "*.{log}"
-          ontologies: []
-  versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@drpatelh"
   - "@edmundmiller"

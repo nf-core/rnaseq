@@ -53,6 +53,8 @@ workflow QUANTIFY_RSEM {
     merged_tpm_gene          = RSEM_MERGE_COUNTS.out.tpm_gene                 //    path: *.gene_tpm.tsv
     merged_counts_transcript = RSEM_MERGE_COUNTS.out.counts_transcript        //    path: *.transcript_counts.tsv
     merged_tpm_transcript    = RSEM_MERGE_COUNTS.out.tpm_transcript           //    path: *.transcript_tpm.tsv
+    merged_genes_long        = RSEM_MERGE_COUNTS.out.genes_long               //    path: *.genes_long.tsv
+    merged_isoforms_long     = RSEM_MERGE_COUNTS.out.isoforms_long            //    path: *.isoforms_long.tsv
 
     versions                 = ch_versions                                    // channel: [ versions.yml ]
 }

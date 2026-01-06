@@ -135,6 +135,10 @@
                         "test.isoforms.results:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
+                "10": [
+                    "versions.yml:md5,2aa5252eb2ffb409cf556a165d40f8a9",
+                    "versions.yml:md5,ae1676b60b6335fff8f1188288103a1c"
+                ],
                 "2": [
                     [
                         {
@@ -166,8 +170,10 @@
                     "rsem.merged.transcript_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                 ],
                 "8": [
-                    "versions.yml:md5,2aa5252eb2ffb409cf556a165d40f8a9",
-                    "versions.yml:md5,ae1676b60b6335fff8f1188288103a1c"
+                    "rsem.merged.genes_long.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "9": [
+                    "rsem.merged.isoforms_long.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                 ],
                 "counts_gene": [
                     [
@@ -202,6 +208,12 @@
                 "merged_counts_transcript": [
                     "rsem.merged.transcript_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                 ],
+                "merged_genes_long": [
+                    "rsem.merged.genes_long.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "merged_isoforms_long": [
+                    "rsem.merged.isoforms_long.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
                 "merged_tpm_gene": [
                     "rsem.merged.gene_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                 ],
@@ -225,9 +237,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.6"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-11-27T16:26:03.792661891"
+        "timestamp": "2025-12-19T18:07:00.878904222"
     },
     "homo_sapiens": {
         "content": [

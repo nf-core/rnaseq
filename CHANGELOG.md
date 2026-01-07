@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Special thanks to the following for their contributions to the release:
 
+- [Chase Mateusiak](https://github.com/cmatKhan)
 - [Elad Herz](https://github.com/EladH1)
 - [Ezra Greenberg](https://github.com/egreenberg7)
 
@@ -20,6 +21,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1665](https://github.com/nf-core/rnaseq/pull/1665) - Bulk update modules/subworkflows; replace CUSTOM_GETCHROMSIZES with SAMTOOLS_FAIDX; update RSEQC modules with Wave containers for ARM compatibility; update ARM containers for RSEQC and UMITOOLS
 - [PR #1667](https://github.com/nf-core/rnaseq/pull/1667) - Enhance RSEM output exports and remove unnecessary star_rsem check
 - [PR #1669](https://github.com/nf-core/rnaseq/pull/1669) - Enable SeqKit stats MultiQC module for RiboDetector rRNA removal
+- [PR #1672](https://github.com/nf-core/rnaseq/pull/1672) - Document star_rsem STAR aligner settings and customization
 
 ### Parameters
 

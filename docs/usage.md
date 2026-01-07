@@ -224,6 +224,31 @@ RiboDetector automatically determines read length from your data and uses its pr
 
 By default, the pipeline uses [STAR](https://github.com/alexdobin/STAR) (i.e. `--aligner star_salmon`) to map the raw FastQ reads to the reference genome, project the alignments onto the transcriptome and to perform the downstream BAM-level quantification with [Salmon](https://salmon.readthedocs.io/en/latest/salmon.html). STAR is fast but requires a lot of memory to run, typically around 38GB for the Human GRCh37 reference genome. Both `--aligner star_salmon` and `--aligner star_rsem` use STAR for alignment, so you should use the [HISAT2](https://ccb.jhu.edu/software/hisat2/index.shtml) aligner (i.e. `--aligner hisat2`) if you have memory limitations.
 
+:::note
+Selecting `star_rsem` automatically applies the same STAR settings as [rsem-calculate-expression](https://deweylab.github.io/RSEM/rsem-calculate-expression.html) with the `--star` option. These are based on the ENCODE3 STAR settings, and are as follows:
+
+<details>
+<summary>View STAR parameters</summary>
+
+```raw
+--outSAMunmapped Within
+--outFilterType BySJout
+--outFilterMultimapNmax 20
+--outFilterMismatchNmax 999
+--outFilterMismatchNoverLmax 0.04
+--alignIntronMin 20
+--alignIntronMax 1000000
+--alignMatesGapMax 1000000
+--alignSJoverhangMin 8
+--alignSJDBoverhangMin 1
+--sjdbScore 1
+```
+
+</details>
+
+**NOTE**: The pipeline parameter [`--extra_star_align_args`](#custom-star-parameters) cannot be used with aligner option `star_rsem`. It is possible to set, via [custom tool arguments](#custom-tool-arguments), custom settings to the process `STAR_ALIGN` via `ext.args`. However, we discourage this and consider adjusting the STAR aligner while using RSEM to be an unsupported option in this pipeline. If you need to pass in custom star alignment options, we recommend using the aligner option `star_salmon`. After this warning, if you still wish to set custom STAR settings and use RSEM for quantification, then please reference [this configuration file](https://github.com/nf-core/rnaseq/blob/master/subworkflows/local/align_star/nextflow.config).
+:::
+
 You also have the option to pseudoalign and quantify your data directly with [Salmon](https://salmon.readthedocs.io/en/latest/salmon.html) or [Kallisto](https://pachterlab.github.io/kallisto/) by specifying `salmon` or `kallisto` to the `--pseudo_aligner` parameter. The selected pseudoaligner will then be run in addition to the standard alignment workflow defined by `--aligner`, mainly because it allows you to obtain QC metrics with respect to the genomic alignments. However, you can provide the `--skip_alignment` parameter if you would like to run Salmon or Kallisto in isolation. By default, the pipeline will use the genome fasta and gtf file to generate the transcripts fasta file, and then to build the Salmon index. You can override these parameters using the `--transcript_fasta` and `--salmon_index` parameters, respectively.
 
 The library preparation protocol (library type) used by Salmon quantification is inferred by the pipeline based on the information provided in the samplesheet, however, you can override it using the `--salmon_quant_libtype` parameter. You can find the available options in the [Salmon documentation](https://salmon.readthedocs.io/en/latest/library_type.html). Similarly, strandedness is taken from the sample sheet or calculated automatically, and passed to Kallisto on a per-library basis, but you can apply a global override by setting the Kallisto strandedness parameters in `--extra_kallisto_quant_args` like `--extra_kallisto_quant_args '--fr-stranded'` see the [Kallisto documentation](https://pachterlab.github.io/kallisto/manual).

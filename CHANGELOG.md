@@ -10,9 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Special thanks to the following for their contributions to the release:
 
 - [Ezra Greenberg](https://github.com/egreenberg7)
+- [Chase Mateusiak](https://github.com/cmatKhan)
 
 ### Enhancements and fixes
 
+- [PR #1671](https://github.com/nf-core/rnaseq/issues/1671) - Clarify documentation on STAR settings when using `--aligner star-rsem`
 - [PR #1616](https://github.com/nf-core/rnaseq/pull/1616) - Add Sylph for contamination detection.
 - [PR #1663](https://github.com/nf-core/rnaseq/pull/1663) - Bump version after release 3.22.2
 - [PR #1664](https://github.com/nf-core/rnaseq/pull/1664) - Add support for multiple rRNA removal tools (`--ribo_removal_tool`): SortMeRNA (default), Bowtie2, and RiboDetector; enable BBSplit MultiQC reporting; add paired-end read grouping in MultiQC

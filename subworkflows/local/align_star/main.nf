@@ -1,11 +1,11 @@
 //
 // Alignment with STAR
 //
-include { SENTIEON_STARALIGN as SENTIEON_STAR_ALIGN } from '../../../modules/nf-core/sentieon/staralign/main'
-include { STAR_ALIGN                                } from '../../../modules/nf-core/star/align'
-include { STAR_ALIGN_IGENOMES                       } from '../../../modules/local/star_align_igenomes'
-include { BAM_SORT_STATS_SAMTOOLS                   } from '../../nf-core/bam_sort_stats_samtools'
-
+include { SENTIEON_STARALIGN as SENTIEON_STAR_ALIGN         } from '../../../modules/nf-core/sentieon/staralign/main'
+include { PARABRICKS_RNAFQ2BAM as PARABRICKS_RNA_FQ2BAM     } from '../../../modules/nf-core/parabricks/rnafq2bam/main'
+include { STAR_ALIGN                                        } from '../../../modules/nf-core/star/align'
+include { STAR_ALIGN_IGENOMES                               } from '../../../modules/local/star_align_igenomes'
+include { BAM_SORT_STATS_SAMTOOLS                           } from '../../nf-core/bam_sort_stats_samtools'
 
 //
 // Function that parses and returns the alignment rate from the STAR log output
@@ -25,15 +25,17 @@ def getStarPercentMapped(params, align_log) {
 
 workflow ALIGN_STAR {
     take:
-    reads               // channel: [ val(meta), [ reads ] ]
-    index               // channel: [ val(meta), [ index ] ]
-    gtf                 // channel: [ val(meta), [ gtf ] ]
-    star_ignore_sjdbgtf // boolean: when using pre-built STAR indices do not re-extract and use splice junctions from the GTF file
-    seq_platform        // string : sequencing platform
-    seq_center          // string : sequencing center
-    is_aws_igenome      // boolean: whether the genome files are from AWS iGenomes
-    fasta               // channel: /path/to/fasta
-    use_sentieon_star   // boolean: whether star alignment is accelerated with Sentieon
+    reads                // channel: [ val(meta), [ reads ] ]
+    index                // channel: [ val(meta), [ index ] ]
+    gtf                  // channel: [ val(meta), [ gtf ] ]
+    star_ignore_sjdbgtf  // boolean: when using pre-built STAR indices do not re-extract and use splice junctions from the GTF file
+    seq_platform         // string : sequencing platform
+    seq_center           // string : sequencing center
+    is_aws_igenome       // boolean: whether the genome files are from AWS iGenomes
+    fasta                // channel: /path/to/fasta
+    use_sentieon_star    // boolean: whether star alignment is accelerated with Sentieon
+    use_parabricks_star  // boolean: whether star alignment (and mark duplicates) is accelerated with Parabricks
+    skip_markduplicates  // boolean: whether to skip marking duplicates
 
     main:
 
@@ -47,6 +49,11 @@ workflow ALIGN_STAR {
 
         SENTIEON_STAR_ALIGN(reads, index, gtf, star_ignore_sjdbgtf, seq_platform, seq_center)
         ch_star_out = SENTIEON_STAR_ALIGN
+
+    } else if (use_parabricks_star) {
+
+        PARABRICKS_RNA_FQ2BAM(reads, fasta, index, true, !skip_markduplicates)
+        ch_star_out = PARABRICKS_RNA_FQ2BAM
 
     } else if (is_aws_igenome) {
 

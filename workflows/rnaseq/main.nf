@@ -252,7 +252,9 @@ workflow RNASEQ {
             params.seq_center ?: '',
             is_aws_igenome,
             ch_fasta.map { [ [:], it ] },
-            params.use_sentieon_star
+            params.use_sentieon_star,
+            params.use_parabricks_star,
+            params.skip_markduplicates
         )
 
         ch_genome_bam                    = ch_genome_bam.mix(ALIGN_STAR.out.bam)
@@ -474,7 +476,10 @@ workflow RNASEQ {
     //
     // SUBWORKFLOW: Mark duplicate reads
     //
-    if (!params.skip_markduplicates && !params.with_umi) {
+
+    // Some tools (Ex. Parabricks) may have already run marked duplicates during alignment
+    def markdups_done = !params.skip_markduplicates && params.use_parabricks_star
+    if (!params.skip_markduplicates && !params.with_umi && !markdups_done) {
         BAM_MARKDUPLICATES_PICARD (
             ch_genome_bam,
             ch_fasta.map { [ [:], it ] },

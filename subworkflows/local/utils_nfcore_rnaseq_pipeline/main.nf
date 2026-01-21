@@ -34,7 +34,7 @@ workflow PIPELINE_INITIALISATION {
     monochrome_logs   // boolean: Do not use coloured log outputs
     nextflow_cli_args //   array: List of positional nextflow CLI args
     outdir            //  string: The output directory where the results will be saved
-    input             //  string: Path to input samplesheet
+    _input            //  string: Path to input samplesheet
     help              // boolean: Display help message and exit
     help_full         // boolean: Show the full help message
     show_hidden       // boolean: Show hidden parameters in the help message
@@ -56,15 +56,16 @@ workflow PIPELINE_INITIALISATION {
     //
     // Validate parameters and generate parameter summary to stdout
     //
+    def colors = logColours(monochrome_logs)
     before_text = """
--\033[2m----------------------------------------------------\033[0m-
-                                        \033[0;32m,--.\033[0;30m/\033[0;32m,-.\033[0m
-\033[0;34m        ___     __   __   __   ___     \033[0;32m/,-._.--~\'\033[0m
-\033[0;34m  |\\ | |__  __ /  ` /  \\ |__) |__         \033[0;33m}  {\033[0m
-\033[0;34m  | \\| |       \\__, \\__/ |  \\ |___     \033[0;32m\\`-._,-`-,\033[0m
-                                        \033[0;32m`._,._,\'\033[0m
-\033[0;35m  nf-core/rnaseq ${workflow.manifest.version}\033[0m
--\033[2m----------------------------------------------------\033[0m-
+-${colors.dim}----------------------------------------------------${colors.reset}-
+                                        ${colors.green},--.${colors.black}/${colors.green},-.${colors.reset}
+${colors.blue}        ___     __   __   __   ___     ${colors.green}/,-._.--~\'${colors.reset}
+${colors.blue}  |\\ | |__  __ /  ` /  \\ |__) |__         ${colors.yellow}}  {${colors.reset}
+${colors.blue}  | \\| |       \\__, \\__/ |  \\ |___     ${colors.green}\\`-._,-`-,${colors.reset}
+                                        ${colors.green}`._,._,\'${colors.reset}
+${colors.purple}  nf-core/rnaseq ${workflow.manifest.version}${colors.reset}
+-${colors.dim}----------------------------------------------------${colors.reset}-
 """
     after_text = """${workflow.manifest.doi ? "\n* The pipeline\n" : ""}${workflow.manifest.doi.tokenize(",").collect { doi -> "    https://doi.org/${doi.trim().replace('https://doi.org/','')}"}.join("\n")}${workflow.manifest.doi ? "\n" : ""}
 * The nf-core framework
@@ -185,14 +186,14 @@ workflow PIPELINE_COMPLETION {
 //
 def checkSamplesAfterGrouping(input) {
     // Handle both old format [id, metas, fastqs] and new format with BAMs [id, metas, fastqs, genome_bams, transcriptome_bams]
-    def id = input[0]
+    def _id = input[0]
     def metas = input[1]
     def fastqs = input[2]
     def genome_bams = input.size() > 3 ? input[3] : null
     def transcriptome_bams = input.size() > 4 ? input[4] : null
 
     // Check that multiple runs of the same sample are of the same strandedness
-    def strandedness_ok = metas.collect{ it.strandedness }.unique().size == 1
+    def strandedness_ok = metas.collect{ meta -> meta.strandedness }.unique().size == 1
     if (!strandedness_ok) {
         error("Please check input samplesheet -> Multiple runs of a sample must have the same strandedness!: ${metas[0].id}")
     }
@@ -205,8 +206,8 @@ def checkSamplesAfterGrouping(input) {
 
     // Return format depends on whether BAM data was provided
     if (genome_bams != null || transcriptome_bams != null) {
-        def genome_bam = genome_bams?.find { it != null }
-        def transcriptome_bam = transcriptome_bams?.find { it != null }
+        def genome_bam = genome_bams?.find { bam -> bam != null }
+        def transcriptome_bam = transcriptome_bams?.find { bam -> bam != null }
 
         // Add BAM flags and original paths to meta
         def meta_with_bams = metas[0] + [
@@ -358,7 +359,7 @@ def validateInputParameters() {
 
     // Check which RSeQC modules we are running
     def valid_rseqc_modules = ['bam_stat', 'inner_distance', 'infer_experiment', 'junction_annotation', 'junction_saturation', 'read_distribution', 'read_duplication', 'tin']
-    def rseqc_modules = params.rseqc_modules ? params.rseqc_modules.split(',').collect{ it.trim().toLowerCase() } : []
+    def rseqc_modules = params.rseqc_modules ? params.rseqc_modules.split(',').collect{ module -> module.trim().toLowerCase() } : []
     if ((valid_rseqc_modules + rseqc_modules).unique().size() != valid_rseqc_modules.size()) {
         error("Invalid option: ${params.rseqc_modules}. Valid options for '--rseqc_modules': ${valid_rseqc_modules.join(', ')}")
     }
@@ -702,9 +703,9 @@ def mapBamToPublishedPath(bam_path, sample_id, aligner, outdir) {
 def rnaseqSummary(monochrome_logs=true, pass_mapped_reads=[:], pass_trimmed_reads=[:], pass_strand_check=[:]) {
     def colors = logColours(monochrome_logs)
 
-    def fail_mapped_count  = pass_mapped_reads.count  { key, value -> value == false }
-    def fail_trimmed_count = pass_trimmed_reads.count { key, value -> value == false }
-    def fail_strand_count  = pass_strand_check.count  { key, value -> value == false }
+    def fail_mapped_count  = pass_mapped_reads.count  { _key, value -> value == false }
+    def fail_trimmed_count = pass_trimmed_reads.count { _key, value -> value == false }
+    def fail_strand_count  = pass_strand_check.count  { _key, value -> value == false }
     if (workflow.success) {
         def color = colors.green
         def status = []

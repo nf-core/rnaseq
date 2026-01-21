@@ -29,15 +29,14 @@
                 ]
             ],
             [
-                "versions.yml:md5,acbe540e7ede18f7999975729fde869c",
                 "versions.yml:md5,eb47b2c20a3565e58b613f66521da320"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-10-19T17:28:10.525956442"
+        "timestamp": "2026-01-19T15:48:44.886628"
     },
     "homo_sapiens paired-end [fastq] - stub": {
         "content": [
@@ -103,7 +102,6 @@
                     ]
                 ],
                 "5": [
-                    "versions.yml:md5,acbe540e7ede18f7999975729fde869c",
                     "versions.yml:md5,eb47b2c20a3565e58b613f66521da320"
                 ],
                 "index": [
@@ -167,15 +165,14 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,acbe540e7ede18f7999975729fde869c",
                     "versions.yml:md5,eb47b2c20a3565e58b613f66521da320"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-10-19T17:28:28.896824153"
+        "timestamp": "2026-01-19T15:48:54.66733"
     }
 }

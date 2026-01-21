@@ -28,7 +28,7 @@ nextflow_process {
                 { assert snapshot(
                     process.out.index,
                     process.out.transcript_fasta,
-                    path(process.out.versions[0]).yaml
+                    process.out.findAll { key, val -> key.startsWith("versions") }
                 ).match() }
             )
         }

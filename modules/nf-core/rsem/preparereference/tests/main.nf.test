@@ -27,7 +27,7 @@ nextflow_process {
                 { assert process.success },
                 { assert snapshot(process.out.index).match("index")},
                 { assert snapshot(process.out.transcript_fasta).match("transcript_fasta")},
-                { assert snapshot(process.out.versions).match("versions") }
+                { assert snapshot(process.out.findAll { key, val -> key.startsWith("versions") }).match("versions") }
             )
         }
     }

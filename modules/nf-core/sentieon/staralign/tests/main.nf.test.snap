@@ -75,7 +75,18 @@
                     ]
                 ],
                 "16": [
-                    "versions.yml:md5,59e385f30cd29a68b9ea0791b7343457"
+                    [
+                        "SENTIEON_STARALIGN",
+                        "star",
+                        "2.7.10b"
+                    ]
+                ],
+                "17": [
+                    [
+                        "SENTIEON_STARALIGN",
+                        "sentieon",
+                        "202503.01"
+                    ]
                 ],
                 "2": [
                     [
@@ -306,8 +317,19 @@
                         ]
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,59e385f30cd29a68b9ea0791b7343457"
+                "versions_sentieon": [
+                    [
+                        "SENTIEON_STARALIGN",
+                        "sentieon",
+                        "202503.01"
+                    ]
+                ],
+                "versions_star": [
+                    [
+                        "SENTIEON_STARALIGN",
+                        "star",
+                        "2.7.10b"
+                    ]
                 ],
                 "wig": [
                     [
@@ -402,7 +424,18 @@
                     ]
                 ],
                 "16": [
-                    "versions.yml:md5,59e385f30cd29a68b9ea0791b7343457"
+                    [
+                        "SENTIEON_STARALIGN",
+                        "star",
+                        "2.7.10b"
+                    ]
+                ],
+                "17": [
+                    [
+                        "SENTIEON_STARALIGN",
+                        "sentieon",
+                        "202503.01"
+                    ]
                 ],
                 "2": [
                     [
@@ -633,8 +666,19 @@
                         ]
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,59e385f30cd29a68b9ea0791b7343457"
+                "versions_sentieon": [
+                    [
+                        "SENTIEON_STARALIGN",
+                        "sentieon",
+                        "202503.01"
+                    ]
+                ],
+                "versions_star": [
+                    [
+                        "SENTIEON_STARALIGN",
+                        "star",
+                        "2.7.10b"
+                    ]
                 ],
                 "wig": [
                     [
@@ -703,10 +747,20 @@
                 
             ],
             {
-                "SENTIEON_STARALIGN": {
-                    "star": "2.7.10b",
-                    "sentieon": 202503.01
-                }
+                "versions_sentieon": [
+                    [
+                        "SENTIEON_STARALIGN",
+                        "sentieon",
+                        "202503.01"
+                    ]
+                ],
+                "versions_star": [
+                    [
+                        "SENTIEON_STARALIGN",
+                        "star",
+                        "2.7.10b"
+                    ]
+                ]
             }
         ],
         "meta": {
@@ -765,10 +819,20 @@
                 
             ],
             {
-                "SENTIEON_STARALIGN": {
-                    "star": "2.7.10b",
-                    "sentieon": 202503.01
-                }
+                "versions_sentieon": [
+                    [
+                        "SENTIEON_STARALIGN",
+                        "sentieon",
+                        "202503.01"
+                    ]
+                ],
+                "versions_star": [
+                    [
+                        "SENTIEON_STARALIGN",
+                        "star",
+                        "2.7.10b"
+                    ]
+                ]
             }
         ],
         "meta": {
@@ -853,7 +917,18 @@
                     ]
                 ],
                 "16": [
-                    "versions.yml:md5,59e385f30cd29a68b9ea0791b7343457"
+                    [
+                        "SENTIEON_STARALIGN",
+                        "star",
+                        "2.7.10b"
+                    ]
+                ],
+                "17": [
+                    [
+                        "SENTIEON_STARALIGN",
+                        "sentieon",
+                        "202503.01"
+                    ]
                 ],
                 "2": [
                     [
@@ -1084,8 +1159,19 @@
                         ]
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,59e385f30cd29a68b9ea0791b7343457"
+                "versions_sentieon": [
+                    [
+                        "SENTIEON_STARALIGN",
+                        "sentieon",
+                        "202503.01"
+                    ]
+                ],
+                "versions_star": [
+                    [
+                        "SENTIEON_STARALIGN",
+                        "star",
+                        "2.7.10b"
+                    ]
                 ],
                 "wig": [
                     [
@@ -1180,7 +1266,18 @@
                     ]
                 ],
                 "16": [
-                    "versions.yml:md5,59e385f30cd29a68b9ea0791b7343457"
+                    [
+                        "SENTIEON_STARALIGN",
+                        "star",
+                        "2.7.10b"
+                    ]
+                ],
+                "17": [
+                    [
+                        "SENTIEON_STARALIGN",
+                        "sentieon",
+                        "202503.01"
+                    ]
                 ],
                 "2": [
                     [
@@ -1411,8 +1508,19 @@
                         ]
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,59e385f30cd29a68b9ea0791b7343457"
+                "versions_sentieon": [
+                    [
+                        "SENTIEON_STARALIGN",
+                        "sentieon",
+                        "202503.01"
+                    ]
+                ],
+                "versions_star": [
+                    [
+                        "SENTIEON_STARALIGN",
+                        "star",
+                        "2.7.10b"
+                    ]
                 ],
                 "wig": [
                     [
@@ -1481,10 +1589,20 @@
                 
             ],
             {
-                "SENTIEON_STARALIGN": {
-                    "star": "2.7.10b",
-                    "sentieon": 202503.01
-                }
+                "versions_sentieon": [
+                    [
+                        "SENTIEON_STARALIGN",
+                        "sentieon",
+                        "202503.01"
+                    ]
+                ],
+                "versions_star": [
+                    [
+                        "SENTIEON_STARALIGN",
+                        "star",
+                        "2.7.10b"
+                    ]
+                ]
             }
         ],
         "meta": {
@@ -1534,10 +1652,20 @@
                 
             ],
             {
-                "SENTIEON_STARALIGN": {
-                    "star": "2.7.10b",
-                    "sentieon": 202503.01
-                }
+                "versions_sentieon": [
+                    [
+                        "SENTIEON_STARALIGN",
+                        "sentieon",
+                        "202503.01"
+                    ]
+                ],
+                "versions_star": [
+                    [
+                        "SENTIEON_STARALIGN",
+                        "star",
+                        "2.7.10b"
+                    ]
+                ]
             }
         ],
         "meta": {
@@ -1586,10 +1714,20 @@
                 
             ],
             {
-                "SENTIEON_STARALIGN": {
-                    "star": "2.7.10b",
-                    "sentieon": 202503.01
-                }
+                "versions_sentieon": [
+                    [
+                        "SENTIEON_STARALIGN",
+                        "sentieon",
+                        "202503.01"
+                    ]
+                ],
+                "versions_star": [
+                    [
+                        "SENTIEON_STARALIGN",
+                        "star",
+                        "2.7.10b"
+                    ]
+                ]
             }
         ],
         "meta": {
@@ -1674,7 +1812,18 @@
                     ]
                 ],
                 "16": [
-                    "versions.yml:md5,59e385f30cd29a68b9ea0791b7343457"
+                    [
+                        "SENTIEON_STARALIGN",
+                        "star",
+                        "2.7.10b"
+                    ]
+                ],
+                "17": [
+                    [
+                        "SENTIEON_STARALIGN",
+                        "sentieon",
+                        "202503.01"
+                    ]
                 ],
                 "2": [
                     [
@@ -1905,8 +2054,19 @@
                         ]
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,59e385f30cd29a68b9ea0791b7343457"
+                "versions_sentieon": [
+                    [
+                        "SENTIEON_STARALIGN",
+                        "sentieon",
+                        "202503.01"
+                    ]
+                ],
+                "versions_star": [
+                    [
+                        "SENTIEON_STARALIGN",
+                        "star",
+                        "2.7.10b"
+                    ]
                 ],
                 "wig": [
                     [

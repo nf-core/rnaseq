@@ -48,7 +48,7 @@ nextflow_process {
             { assert process.success },
             { assert snapshot(
                     process.out.report,
-                    process.out.versions,
+                    process.out.findAll { key, val -> key.startsWith("versions") },
                 ).match()
             },
             { assert process.out.classified_reads_fastq.get(0).get(1) ==~ ".*/test.classified.fastq.gz" },
@@ -91,7 +91,7 @@ nextflow_process {
             { assert process.success },
             { assert snapshot(
                     process.out.report,
-                    process.out.versions,
+                    process.out.findAll { key, val -> key.startsWith("versions") },
                 ).match()
             },
             { assert process.out.classified_reads_fastq.get(0).get(1).get(0)
@@ -133,7 +133,7 @@ nextflow_process {
             { assert process.success },
             { assert snapshot(
                     process.out.report,
-                    process.out.versions,
+                    process.out.findAll { key, val -> key.startsWith("versions") },
                     process.out.classified_reads_assignment,
                 ).match()
             },
@@ -164,7 +164,7 @@ nextflow_process {
             { assert process.success },
             { assert snapshot(
                     process.out.report,
-                    process.out.versions,
+                    process.out.findAll { key, val -> key.startsWith("versions") },
                 ).match()
             },
             { assert process.out.classified_reads_fastq.get(0).get(1) ==~ ".*/test.classified.fastq.gz" },
@@ -196,7 +196,7 @@ nextflow_process {
             { assert process.success },
             { assert snapshot(
                     process.out.report,
-                    process.out.versions,
+                    process.out.findAll { key, val -> key.startsWith("versions") },
                 ).match()
             },
             { assert process.out.classified_reads_fastq.get(0).get(1).get(0)

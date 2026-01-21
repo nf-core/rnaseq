@@ -65,7 +65,7 @@ nextflow_process {
                     process.out.spl_junc_tab,
                     process.out.tab,
                     process.out.wig,
-                    path(process.out.versions[0]).yaml
+                    process.out.findAll { key, val -> key.startsWith("versions") }
                 ).match() }
             )
         }
@@ -130,7 +130,7 @@ nextflow_process {
                     process.out.spl_junc_tab,
                     process.out.tab,
                     process.out.wig,
-                    path(process.out.versions[0]).yaml
+                    process.out.findAll { key, val -> key.startsWith("versions") }
                 ).match() }
             )
         }
@@ -194,7 +194,7 @@ nextflow_process {
                     process.out.spl_junc_tab,
                     process.out.tab,
                     process.out.wig,
-                    path(process.out.versions[0]).yaml
+                    process.out.findAll { key, val -> key.startsWith("versions") }
                 ).match() }
             )
         }
@@ -259,7 +259,7 @@ nextflow_process {
                     process.out.spl_junc_tab,
                     process.out.tab,
                     process.out.wig,
-                    path(process.out.versions[0]).yaml
+                    process.out.findAll { key, val -> key.startsWith("versions") }
                 ).match() }
             )
         }
@@ -326,7 +326,7 @@ nextflow_process {
                     process.out.spl_junc_tab,
                     process.out.tab,
                     process.out.wig,
-                    path(process.out.versions[0]).yaml
+                    process.out.findAll { key, val -> key.startsWith("versions") }
                 ).match() }
             )
         }

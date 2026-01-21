@@ -8,7 +8,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.paired_end.sorted.summary.txt:md5,9d98447e178b89a89f6f5aba7a772fe6"
+                        "test.summary.txt:md5,9d98447e178b89a89f6f5aba7a772fe6"
                     ]
                 ],
                 "1": [
@@ -17,7 +17,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.paired_end.sorted.tin.xls:md5,abdbb6d51a5cd7038cd862ce241ecef1"
+                        "test.tin.xls:md5,abdbb6d51a5cd7038cd862ce241ecef1"
                     ]
                 ],
                 "2": [
@@ -33,7 +33,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.paired_end.sorted.summary.txt:md5,9d98447e178b89a89f6f5aba7a772fe6"
+                        "test.summary.txt:md5,9d98447e178b89a89f6f5aba7a772fe6"
                     ]
                 ],
                 "versions_rseqc": [
@@ -49,7 +49,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.paired_end.sorted.tin.xls:md5,abdbb6d51a5cd7038cd862ce241ecef1"
+                        "test.tin.xls:md5,abdbb6d51a5cd7038cd862ce241ecef1"
                     ]
                 ]
             }
@@ -69,7 +69,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.paired_end.sorted.bam.summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "1": [
@@ -78,7 +78,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.paired_end.sorted.bam.tin.xls:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.tin.xls:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "2": [
@@ -94,7 +94,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.paired_end.sorted.bam.summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "versions_rseqc": [
@@ -110,7 +110,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.paired_end.sorted.bam.tin.xls:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.tin.xls:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ]
             }

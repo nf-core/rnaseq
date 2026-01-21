@@ -34,7 +34,8 @@ process SENTIEON_STARALIGN {
     tuple val(meta), path('*.out.sam'),                               emit: sam,                optional: true
     tuple val(meta), path('*.wig'),                                   emit: wig,                optional: true
     tuple val(meta), path('*.bg'),                                    emit: bedgraph,           optional: true
-    path "versions.yml",                                              emit: versions
+    tuple val("${task.process}"), val('star'), eval('sentieon STAR --version | sed -e "s/STAR_//g"'), topic: versions, emit: versions_star
+    tuple val("${task.process}"), val('sentieon'), eval('sentieon driver --version 2>&1 | sed -e "s/sentieon-genomics-//g"'), topic: versions, emit: versions_sentieon
 
     when:
     task.ext.when == null || task.ext.when
@@ -44,7 +45,7 @@ process SENTIEON_STARALIGN {
     prefix = task.ext.prefix ?: "${meta.id}"
     def reads1 = []
     def reads2 = []
-    meta.single_end ? [reads].flatten().each { reads1 << it } : reads.eachWithIndex { v, ix -> (ix & 1 ? reads2 : reads1) << v }
+    meta.single_end ? [reads].flatten().each { r -> reads1 << r } : reads.eachWithIndex { v, ix -> (ix & 1 ? reads2 : reads1) << v }
     def ignore_gtf = star_ignore_sjdbgtf ? '' : "--sjdbGTFfile ${gtf}"
     def seq_platform_arg = seq_platform ? "'PL:${seq_platform}'" : ""
     def seq_center_arg = seq_center ? "'CN:${seq_center}'" : ""
@@ -56,6 +57,8 @@ process SENTIEON_STARALIGN {
         ? "export SENTIEON_LICENSE=\$(mktemp);echo -e \"${secrets.SENTIEON_LICENSE_BASE64}\" | base64 -d > \$SENTIEON_LICENSE; "
         : ""
     """
+    $sentieonLicense
+
     sentieon STAR \\
         --genomeDir ${index} \\
         --readFilesIn ${reads1.join(",")} ${reads2.join(",")} \\
@@ -76,12 +79,6 @@ process SENTIEON_STARALIGN {
         mv ${prefix}.Unmapped.out.mate2 ${prefix}.unmapped_2.fastq
         gzip ${prefix}.unmapped_2.fastq
     fi
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        star: \$(sentieon STAR --version | sed -e "s/STAR_//g")
-        sentieon: \$(echo \$(sentieon driver --version 2>&1) | sed -e "s/sentieon-genomics-//g")
-    END_VERSIONS
     """
 
     stub:
@@ -104,11 +101,5 @@ process SENTIEON_STARALIGN {
     touch ${prefix}.out.sam
     touch ${prefix}.Signal.UniqueMultiple.str1.out.wig
     touch ${prefix}.Signal.UniqueMultiple.str1.out.bg
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        star: \$(sentieon STAR --version | sed -e "s/STAR_//g")
-        sentieon: \$(echo \$(sentieon driver --version 2>&1) | sed -e "s/sentieon-genomics-//g")
-    END_VERSIONS
     """
 }

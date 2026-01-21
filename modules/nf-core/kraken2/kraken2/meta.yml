@@ -91,13 +91,48 @@ output:
             and not classified reads.
           pattern: "*.{report.txt}"
           ontologies: []
+  versions_kraken2:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - kraken2:
+          type: string
+          description: The tool name
+      - kraken2 --version 2>&1 | head -1 | sed "s/^.*Kraken version //; s/ .*//":
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_pigz:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - pigz:
+          type: string
+          description: The tool name
+      - pigz --version 2>&1 | sed "s/pigz //g":
+          type: eval
+          description: The expression to obtain the version of the tool
+
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - kraken2:
+          type: string
+          description: The tool name
+      - kraken2 --version 2>&1 | head -1 | sed "s/^.*Kraken version //; s/ .*//":
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - pigz:
+          type: string
+          description: The tool name
+      - pigz --version 2>&1 | sed "s/pigz //g":
+          type: eval
+          description: The expression to obtain the version of the tool
+
 authors:
   - "@joseespinosa"
   - "@drpatelh"

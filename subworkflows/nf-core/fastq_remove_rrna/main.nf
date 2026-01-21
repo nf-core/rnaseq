@@ -21,13 +21,13 @@ def getReadLengthFromSeqkitStats(stats_file) {
     }
 
     def header = lines[0].split('\t')
-    def avgLenIdx = header.findIndexOf { it == 'avg_len' }
+    def avgLenIdx = header.findIndexOf { col -> col == 'avg_len' }
     if (avgLenIdx < 0) {
         return 100 // Default fallback if column not found
     }
 
     // Calculate mean avg_len across all files in the stats output
-    def avgLens = lines[1..-1].collect { it.split('\t')[avgLenIdx] as float }
+    def avgLens = lines[1..-1].collect { line -> line.split('\t')[avgLenIdx] as float }
     def meanAvgLen = avgLens.sum() / avgLens.size()
 
     return Math.round(meanAvgLen) as int
@@ -45,14 +45,14 @@ workflow FASTQ_REMOVE_RRNA {
 
     main:
 
-    ch_versions = Channel.empty()
-    ch_multiqc_files = Channel.empty()
+    ch_versions = channel.empty()
+    ch_multiqc_files = channel.empty()
     ch_filtered_reads = ch_reads
 
     if (ribo_removal_tool == 'sortmerna') {
         ch_sortmerna_fastas = ch_rrna_fastas
             .collect()
-            .map { [[id: 'rrna_refs'], it] }
+            .map { fastas -> [[id: 'rrna_refs'], fastas] }
 
         if (make_sortmerna_index) {
             SORTMERNA_INDEX(
@@ -71,7 +71,6 @@ workflow FASTQ_REMOVE_RRNA {
 
         ch_filtered_reads = SORTMERNA.out.reads
         ch_multiqc_files = ch_multiqc_files.mix(SORTMERNA.out.log)
-        ch_versions = ch_versions.mix(SORTMERNA.out.versions.first())
     }
     else if (ribo_removal_tool == 'ribodetector') {
         // Run seqkit stats to determine average read length
@@ -106,7 +105,7 @@ workflow FASTQ_REMOVE_RRNA {
             // Process each rRNA file to add unique prefixes and convert U to T
             // This prevents duplicate sequence IDs in SAM header when combining databases
             ch_rrna_fastas
-                .map { fasta -> [[id: fasta.baseName], fasta] }
+                .map { fasta_file -> [[id: fasta_file.baseName], fasta_file] }
                 .set { ch_rrna_with_meta }
 
             // Step 1: Add filename prefixes to sequence headers
@@ -117,7 +116,7 @@ workflow FASTQ_REMOVE_RRNA {
 
             // Step 2: Convert U to T in sequences (RNA to DNA)
             SEQKIT_REPLACE.out.fastx
-                .map { meta, fasta -> [[id: "${meta.id}_dna"], fasta] }
+                .map { meta, fasta_file -> [[id: "${meta.id}_dna"], fasta_file] }
                 .set { ch_prefixed_fastas }
 
             SEQKIT_REPLACE_U2T(
@@ -127,9 +126,9 @@ workflow FASTQ_REMOVE_RRNA {
 
             // Collect processed files (already prefixed and U->T converted)
             SEQKIT_REPLACE_U2T.out.fastx
-                .map { meta, fasta -> fasta }
+                .map { _meta, fasta_file -> fasta_file }
                 .collectFile(name: 'rrna_combined_dna.fasta', newLine: true)
-                .map { fasta -> [[id: 'rrna_refs'], fasta] }
+                .map { fasta_file -> [[id: 'rrna_refs'], fasta_file] }
                 .set { ch_combined_fasta }
 
             BOWTIE2_BUILD(
@@ -141,7 +140,7 @@ workflow FASTQ_REMOVE_RRNA {
 
         // Branch reads by single-end vs paired-end for different filtering strategies
         ch_filtered_reads
-            .branch { meta, reads ->
+            .branch { meta, _reads ->
                 single_end: meta.single_end
                 paired_end: !meta.single_end
             }
@@ -177,7 +176,7 @@ workflow FASTQ_REMOVE_RRNA {
         // Filter BAM for read pairs where BOTH mates are unmapped (flag 12 = 4 + 8)
         // This removes any pair where at least one mate aligned to rRNA
         SAMTOOLS_VIEW_BOWTIE2(
-            BOWTIE2_ALIGN_PE.out.bam.map { meta, bam -> [meta, bam, []] },
+            BOWTIE2_ALIGN_PE.out.bam.map { meta, bam_file -> [meta, bam_file, []] },
             [[], []],  // No reference fasta
             [],        // No qname file
             []         // No index format

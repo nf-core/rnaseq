@@ -11,7 +11,25 @@
                     "genome.transcripts.fa:md5,d41d8cd98f00b204e9800998ecf8427e"
                 ],
                 "2": [
-                    "versions.yml:md5,5701c66cf1e2c8475b2903d95df99db5"
+                    [
+                        "SENTIEON_RSEMPREPAREREFERENCE",
+                        "rsem",
+                        "1.3.1"
+                    ]
+                ],
+                "3": [
+                    [
+                        "SENTIEON_RSEMPREPAREREFERENCE",
+                        "star",
+                        "2.7.10b"
+                    ]
+                ],
+                "4": [
+                    [
+                        "SENTIEON_RSEMPREPAREREFERENCE",
+                        "sentieon",
+                        "202503.01"
+                    ]
                 ],
                 "index": [
                     [
@@ -21,8 +39,26 @@
                 "transcript_fasta": [
                     "genome.transcripts.fa:md5,d41d8cd98f00b204e9800998ecf8427e"
                 ],
-                "versions": [
-                    "versions.yml:md5,5701c66cf1e2c8475b2903d95df99db5"
+                "versions_rsem": [
+                    [
+                        "SENTIEON_RSEMPREPAREREFERENCE",
+                        "rsem",
+                        "1.3.1"
+                    ]
+                ],
+                "versions_sentieon": [
+                    [
+                        "SENTIEON_RSEMPREPAREREFERENCE",
+                        "sentieon",
+                        "202503.01"
+                    ]
+                ],
+                "versions_star": [
+                    [
+                        "SENTIEON_RSEMPREPAREREFERENCE",
+                        "star",
+                        "2.7.10b"
+                    ]
                 ]
             }
         ],
@@ -50,11 +86,27 @@
                 "genome.transcripts.fa:md5,050c521a2719c2ae48267c1e65218f29"
             ],
             {
-                "SENTIEON_RSEMPREPAREREFERENCE": {
-                    "rsem": "1.3.1",
-                    "star": null,
-                    "sentieon": 202503.01
-                }
+                "versions_rsem": [
+                    [
+                        "SENTIEON_RSEMPREPAREREFERENCE",
+                        "rsem",
+                        "1.3.1"
+                    ]
+                ],
+                "versions_sentieon": [
+                    [
+                        "SENTIEON_RSEMPREPAREREFERENCE",
+                        "sentieon",
+                        "202503.01"
+                    ]
+                ],
+                "versions_star": [
+                    [
+                        "SENTIEON_RSEMPREPAREREFERENCE",
+                        "star",
+                        "2.7.10b"
+                    ]
+                ]
             }
         ],
         "meta": {

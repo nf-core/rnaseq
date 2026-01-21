@@ -25,7 +25,7 @@ nextflow_process {
         then {
             assert process.success
             assert snapshot(
-                process.out.versions,
+                process.out.findAll { key, val -> key.startsWith("versions") },
                 file(process.out.profile_out[0][1]).readLines()[0]
             ).match()
         }
@@ -49,7 +49,7 @@ nextflow_process {
         then {
             assert process.success
             assert snapshot(
-                process.out.versions,
+                process.out.findAll { key, val -> key.startsWith("versions") },
                 file(process.out.profile_out[0][1]).readLines()[0]
             ).match()
         }

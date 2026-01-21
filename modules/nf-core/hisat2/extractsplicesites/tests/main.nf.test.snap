@@ -11,7 +11,11 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,eeea7231fe197810659b8bad4133aff2"
+                    [
+                        "HISAT2_EXTRACTSPLICESITES",
+                        "hisat2",
+                        "2.2.1"
+                    ]
                 ],
                 "txt": [
                     [
@@ -21,27 +25,37 @@
                         "genome.splice_sites.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,eeea7231fe197810659b8bad4133aff2"
+                "versions_hisat2": [
+                    [
+                        "HISAT2_EXTRACTSPLICESITES",
+                        "hisat2",
+                        "2.2.1"
+                    ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-06-20T17:34:13.229903"
+        "timestamp": "2026-01-19T13:53:18.228211649"
     },
     "Should run without failures": {
         "content": [
-            [
-                "versions.yml:md5,eeea7231fe197810659b8bad4133aff2"
-            ]
+            {
+                "versions_hisat2": [
+                    [
+                        "HISAT2_EXTRACTSPLICESITES",
+                        "hisat2",
+                        "2.2.1"
+                    ]
+                ]
+            }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-01-18T20:56:30.71763"
+        "timestamp": "2026-01-19T13:53:12.997365366"
     }
 }

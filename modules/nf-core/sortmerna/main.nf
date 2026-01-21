@@ -16,7 +16,7 @@ process SORTMERNA {
     tuple val(meta), path("*non_rRNA.fastq.gz"), emit: reads, optional: true
     tuple val(meta), path("*.log")             , emit: log, optional: true
     tuple val(meta2), path("idx")              , emit: index, optional: true
-    path  "versions.yml"                       , emit: versions
+    tuple val("${task.process}"), val('sortmerna'), eval('sortmerna --version 2>&1 | grep -oE "[0-9]+\\.[0-9]+\\.[0-9]+" | head -1'), topic: versions, emit: versions_sortmerna
 
     when:
     task.ext.when == null || task.ext.when
@@ -33,11 +33,11 @@ process SORTMERNA {
     def out2_cmd      = ''
     def mv_cmd        = ''
     def reads_input   = ''
-    def refs_input    = ''
+    def refs_input    = (skip_index && index) ? "--idx-dir ${index}" : ''
 
     if (! index_only){
         reads_args = '--aligned rRNA_reads --fastx --other non_rRNA_reads'
-        reads_input = paired_end ? reads.collect{"--reads $it"}.join(' ') : "--reads $reads"
+        reads_input = paired_end ? reads.collect{ r -> "--reads $r"}.join(' ') : "--reads $reads"
         def n_fastq = paired_end ? reads.size() : 1
         if ( n_fastq == 1 ) {
             mv_cmd = """
@@ -67,11 +67,6 @@ process SORTMERNA {
         $args
 
     $mv_cmd
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        sortmerna: \$(echo \$(sortmerna --version 2>&1) | sed 's/^.*SortMeRNA version //; s/ Build Date.*\$//')
-    END_VERSIONS
     """
 
     stub:
@@ -80,13 +75,9 @@ process SORTMERNA {
 
     def index_only    = args.contains('--index 1')? true : false
     def paired_end    = reads instanceof List
-    def paired_cmd    = ''
-    def out2_cmd      = ''
     def mv_cmd        = ''
-    def reads_input   = ''
 
     if (! index_only){
-        reads_input = paired_end ? reads.collect{"--reads $it"}.join(' ') : "--reads $reads"
         def n_fastq = paired_end ? reads.size() : 1
         if ( n_fastq == 1 ) {
             mv_cmd = "echo | gzip > ${prefix}.non_rRNA.fastq.gz"
@@ -101,10 +92,5 @@ process SORTMERNA {
     $mv_cmd
     mkdir -p idx
     touch ${prefix}.sortmerna.log
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        sortmerna: \$(echo \$(sortmerna --version 2>&1) | sed 's/^.*SortMeRNA version //; s/ Build Date.*\$//')
-    END_VERSIONS
     """
 }

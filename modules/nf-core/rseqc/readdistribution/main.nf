@@ -23,6 +23,7 @@ process RSEQC_READDISTRIBUTION {
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     read_distribution.py \\
+        $args \\
         -i $bam \\
         -r $bed \\
         > ${prefix}.read_distribution.txt

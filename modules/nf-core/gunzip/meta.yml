@@ -34,13 +34,29 @@ output:
           description: Compressed/uncompressed file
           pattern: "*.*"
           ontologies: []
+  versions_gunzip:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - gunzip:
+          type: string
+          description: The tool name
+      - gunzip --version 2>&1 | head -1 | sed "s/^.*(gzip) //; s/ Copyright.*//":
+          type: eval
+          description: The expression to obtain the version of the tool
+
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - gunzip:
+          type: string
+          description: The tool name
+      - gunzip --version 2>&1 | head -1 | sed "s/^.*(gzip) //; s/ Copyright.*//":
+          type: eval
+          description: The expression to obtain the version of the tool
+
 authors:
   - "@joseespinosa"
   - "@drpatelh"

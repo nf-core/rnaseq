@@ -12,7 +12,7 @@ process HISAT2_EXTRACTSPLICESITES {
 
     output:
     tuple val(meta), path("*.splice_sites.txt"), emit: txt
-    path "versions.yml"                        , emit: versions
+    tuple val("${task.process}"), val('hisat2'), eval('hisat2 --version | grep -o "version [^ ]*" | cut -d " " -f 2'), topic: versions, emit: versions_hisat2
 
     when:
     task.ext.when == null || task.ext.when
@@ -20,20 +20,14 @@ process HISAT2_EXTRACTSPLICESITES {
     script:
     def args = task.ext.args ?: ''
     """
-    hisat2_extract_splice_sites.py $gtf > ${gtf.baseName}.splice_sites.txt
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        hisat2: \$(hisat2 --version | grep -o 'version [^ ]*' | cut -d ' ' -f 2)
-    END_VERSIONS
+    hisat2_extract_splice_sites.py \\
+        $args \\
+        $gtf \\
+        > ${gtf.baseName}.splice_sites.txt
     """
 
     stub:
     """
     touch ${gtf.baseName}.splice_sites.txt
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        hisat2: \$(hisat2 --version | grep -o 'version [^ ]*' | cut -d ' ' -f 2)
-    END_VERSIONS
     """
 }

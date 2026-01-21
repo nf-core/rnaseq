@@ -4,4 +4,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::sylph=0.7.0
+  - bioconda::sylph=0.9.0

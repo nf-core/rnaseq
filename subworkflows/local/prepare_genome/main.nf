@@ -240,7 +240,6 @@ workflow PREPARE_GENOME {
                 ch_bbsplit_fasta_list,
                 true
             ).index
-            ch_versions = ch_versions.mix(BBMAP_BBSPLIT.out.versions)
         }
         // else: no FASTA and no user-provided index -> remains empty
     }

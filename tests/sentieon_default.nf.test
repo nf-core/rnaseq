@@ -2,6 +2,7 @@ nextflow_pipeline {
 
     name "Test pipeline with sentieon"
     script "../main.nf"
+    config "./sentieon.config"
     tag "pipeline"
     tag "sentieon"
 

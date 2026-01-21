@@ -3,7 +3,7 @@ nextflow_workflow {
     name "Test Subworkflow ALIGN_STAR - Sentieon"
     script "../main.nf"
     workflow "ALIGN_STAR"
-    config "./nextflow.config"
+    config "./sentieon.config"
 
     test("sentieon star - no igenomes") {
         tag "sentieon"

@@ -13,10 +13,10 @@ process HISAT2_ALIGN {
     tuple val(meta3), path(splicesites)
 
     output:
-    tuple val(meta), path("*.bam")                   , emit: bam
-    tuple val(meta), path("*.log")                   , emit: summary
-    tuple val(meta), path("*fastq.gz"), optional:true, emit: fastq
-    path  "versions.yml"                             , emit: versions
+    tuple val(meta), path("*.bam")                   , emit: bam      , topic: 'hisat2/bam/genome'
+    tuple val(meta), path("*.log")                   , emit: summary  , topic: 'hisat2/logs/summary'
+    tuple val(meta), path("*fastq.gz"), optional:true, emit: fastq    , topic: 'hisat2/fastq/unmapped'
+    path  "versions.yml"                             , emit: versions , topic: 'versions'
 
     when:
     task.ext.when == null || task.ext.when

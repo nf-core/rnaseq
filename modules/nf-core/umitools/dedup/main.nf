@@ -12,12 +12,12 @@ process UMITOOLS_DEDUP {
     val get_output_stats
 
     output:
-    tuple val(meta), path("${prefix}.bam")     , emit: bam
-    tuple val(meta), path("*.log")             , emit: log
-    tuple val(meta), path("*edit_distance.tsv"), optional:true, emit: tsv_edit_distance
-    tuple val(meta), path("*per_umi.tsv")      , optional:true, emit: tsv_per_umi
-    tuple val(meta), path("*per_position.tsv") , optional:true, emit: tsv_umi_per_position
-    path  "versions.yml"                       , emit: versions
+    tuple val(meta), path("${prefix}.bam")     , emit: bam                    , topic: 'umi/dedup/bam'
+    tuple val(meta), path("*.log")             , emit: log                    , topic: 'umi/dedup/logs'
+    tuple val(meta), path("*edit_distance.tsv"), optional:true, emit: tsv_edit_distance      , topic: 'umi/dedup/stats/edit_distance'
+    tuple val(meta), path("*per_umi.tsv")      , optional:true, emit: tsv_per_umi            , topic: 'umi/dedup/stats/per_umi'
+    tuple val(meta), path("*per_position.tsv") , optional:true, emit: tsv_umi_per_position   , topic: 'umi/dedup/stats/per_position'
+    path  "versions.yml"                       , emit: versions               , topic: 'versions'
 
     when:
     task.ext.when == null || task.ext.when

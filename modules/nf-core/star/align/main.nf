@@ -16,20 +16,20 @@ process STAR_ALIGN {
     val seq_center
 
     output:
-    tuple val(meta), path('*Log.final.out')   , emit: log_final
-    tuple val(meta), path('*Log.out')         , emit: log_out
-    tuple val(meta), path('*Log.progress.out'), emit: log_progress
-    path  "versions.yml"                      , emit: versions
+    tuple val(meta), path('*Log.final.out')   , emit: log_final  , topic: 'star/logs/final'
+    tuple val(meta), path('*Log.out')         , emit: log_out    , topic: 'star/logs/out'
+    tuple val(meta), path('*Log.progress.out'), emit: log_progress, topic: 'star/logs/progress'
+    path  "versions.yml"                      , emit: versions   , topic: 'versions'
 
-    tuple val(meta), path('*d.out.bam')                              , optional:true, emit: bam
-    tuple val(meta), path("${prefix}.sortedByCoord.out.bam")         , optional:true, emit: bam_sorted
+    tuple val(meta), path('*d.out.bam')                              , optional:true, emit: bam                , topic: 'star/bam/genome'
+    tuple val(meta), path("${prefix}.sortedByCoord.out.bam")         , optional:true, emit: bam_sorted         , topic: 'star/bam/sorted'
     tuple val(meta), path("${prefix}.Aligned.sortedByCoord.out.bam") , optional:true, emit: bam_sorted_aligned
-    tuple val(meta), path('*toTranscriptome.out.bam')                , optional:true, emit: bam_transcript
-    tuple val(meta), path('*Aligned.unsort.out.bam')                 , optional:true, emit: bam_unsorted
-    tuple val(meta), path('*fastq.gz')                               , optional:true, emit: fastq
+    tuple val(meta), path('*toTranscriptome.out.bam')                , optional:true, emit: bam_transcript     , topic: 'star/bam/transcriptome'
+    tuple val(meta), path('*Aligned.unsort.out.bam')                 , optional:true, emit: bam_unsorted       , topic: 'star/bam/unsorted'
+    tuple val(meta), path('*fastq.gz')                               , optional:true, emit: fastq              , topic: 'star/fastq/unmapped'
     tuple val(meta), path('*.tab')                                   , optional:true, emit: tab
-    tuple val(meta), path('*.SJ.out.tab')                            , optional:true, emit: spl_junc_tab
-    tuple val(meta), path('*.ReadsPerGene.out.tab')                  , optional:true, emit: read_per_gene_tab
+    tuple val(meta), path('*.SJ.out.tab')                            , optional:true, emit: spl_junc_tab       , topic: 'star/tab/splice_junctions'
+    tuple val(meta), path('*.ReadsPerGene.out.tab')                  , optional:true, emit: read_per_gene_tab  , topic: 'star/tab/read_per_gene'
     tuple val(meta), path('*.out.junction')                          , optional:true, emit: junction
     tuple val(meta), path('*.out.sam')                               , optional:true, emit: sam
     tuple val(meta), path('*.wig')                                   , optional:true, emit: wig

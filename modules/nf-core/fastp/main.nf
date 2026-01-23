@@ -21,7 +21,7 @@ process FASTP {
     tuple val(meta), path('*.log')            , emit: log
     tuple val(meta), path('*.fail.fastq.gz')  , optional:true, emit: reads_fail
     tuple val(meta), path('*.merged.fastq.gz'), optional:true, emit: reads_merged
-    path "versions.yml"                       , emit: versions
+    path "versions.yml"                       , emit: versions, topic: 'versions'
 
     when:
     task.ext.when == null || task.ext.when

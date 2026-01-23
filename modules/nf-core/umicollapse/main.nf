@@ -16,7 +16,7 @@ process UMICOLLAPSE {
     tuple val(meta), path("*.bam"),                   emit: bam,        optional: true
     tuple val(meta), path("*dedup*fastq.gz"),         emit: fastq,      optional: true
     tuple val(meta), path("*_UMICollapse.log"),       emit: log
-    path  "versions.yml" ,                            emit: versions
+    path  "versions.yml" ,                            emit: versions, topic: 'versions'
 
     when:
     task.ext.when == null || task.ext.when

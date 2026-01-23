@@ -19,7 +19,7 @@ process DUPRADAR {
     tuple val(meta), path("*_intercept_slope.txt")  , emit: intercept_slope
     tuple val(meta), path("*_mqc.txt")              , emit: multiqc
     tuple val(meta), path("*.R_sessionInfo.log")    , emit: session_info
-    path "versions.yml"                             , emit: versions
+    path "versions.yml"                             , emit: versions, topic: 'versions'
 
     when:
     task.ext.when == null || task.ext.when

@@ -17,7 +17,7 @@ process RSEM_MERGE_COUNTS {
     path "rsem.merged.transcript_tpm.tsv"   , emit: tpm_transcript
     path "rsem.merged.genes_long.tsv"       , emit: genes_long
     path "rsem.merged.isoforms_long.tsv"    , emit: isoforms_long
-    path "versions.yml"                     , emit: versions
+    path "versions.yml"                     , emit: versions, topic: 'versions'
 
     when:
     task.ext.when == null || task.ext.when

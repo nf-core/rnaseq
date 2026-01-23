@@ -17,7 +17,7 @@ process SENTIEON_RSEMCALCULATEEXPRESSION {
     tuple val(meta), path("*.isoforms.results"), emit: counts_transcript
     tuple val(meta), path("*.stat")            , emit: stat
     tuple val(meta), path("*.log")             , emit: logs, optional:true
-    path  "versions.yml"                       , emit: versions
+    path  "versions.yml"                       , emit: versions, topic: 'versions'
 
     tuple val(meta), path("*.STAR.genome.bam")       , optional:true, emit: bam_star
     tuple val(meta), path("${prefix}.genome.bam")    , optional:true, emit: bam_genome

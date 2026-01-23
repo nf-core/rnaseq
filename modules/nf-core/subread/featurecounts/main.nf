@@ -13,7 +13,7 @@ process SUBREAD_FEATURECOUNTS {
     output:
     tuple val(meta), path("*featureCounts.tsv"), emit: counts
     tuple val(meta), path("*featureCounts.tsv.summary"), emit: summary
-    path "versions.yml", emit: versions
+    path "versions.yml", emit: versions, topic: 'versions'
 
     when:
     task.ext.when == null || task.ext.when

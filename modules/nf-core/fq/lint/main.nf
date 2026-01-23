@@ -12,7 +12,7 @@ process FQ_LINT {
 
     output:
     tuple val(meta), path("*.fq_lint.txt"), emit: lint
-    path "versions.yml"                   , emit: versions
+    path "versions.yml"                   , emit: versions, topic: 'versions'
 
     when:
     task.ext.when == null || task.ext.when

@@ -21,7 +21,7 @@ process BBMAP_BBSPLIT {
     tuple val(meta), path('*fastq.gz')        , optional:true, emit: all_fastq
     tuple val(meta), path('*txt')             , optional:true, emit: stats
     tuple val(meta), path('*.log')            , optional:true, emit: log
-    path "versions.yml"                       , emit: versions
+    path "versions.yml"                       , emit: versions, topic: 'versions'
 
     when:
     task.ext.when == null || task.ext.when

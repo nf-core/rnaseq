@@ -14,7 +14,7 @@ process CUSTOM_CATADDITIONALFASTA {
     output:
     tuple val(meta), path("*/*.fasta") , emit: fasta
     tuple val(meta), path("*/*.gtf")   , emit: gtf
-    path "versions.yml"                , emit: versions
+    path "versions.yml"                , emit: versions, topic: 'versions'
 
     when:
     task.ext.when == null || task.ext.when

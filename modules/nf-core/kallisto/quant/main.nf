@@ -19,7 +19,7 @@ process KALLISTO_QUANT {
     tuple val(meta), path("${prefix}")        , emit: results
     tuple val(meta), path("*.run_info.json")  , emit: json_info
     tuple val(meta), path("*.log")            , emit: log
-    path "versions.yml"                       , emit: versions
+    path "versions.yml"                       , emit: versions, topic: 'versions'
 
     when:
     task.ext.when == null || task.ext.when

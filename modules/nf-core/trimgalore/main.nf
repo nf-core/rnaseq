@@ -16,7 +16,7 @@ process TRIMGALORE {
     tuple val(meta), path("*unpaired{,_1,_2}.fq.gz")                  , emit: unpaired, optional: true
     tuple val(meta), path("*.html")                                    , emit: html, optional: true
     tuple val(meta), path("*.zip")                                     , emit: zip, optional: true
-    path "versions.yml"					                               , emit: versions
+    path "versions.yml"					                               , emit: versions, topic: 'versions'
 
     when:
     task.ext.when == null || task.ext.when

@@ -15,7 +15,7 @@ process SENTIEON_RSEMPREPAREREFERENCE {
     output:
     path "rsem"           , emit: index
     path "*transcripts.fa", emit: transcript_fasta
-    path "versions.yml"   , emit: versions
+    path "versions.yml"   , emit: versions, topic: 'versions'
 
     when:
     task.ext.when == null || task.ext.when

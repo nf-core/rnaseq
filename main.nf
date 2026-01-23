@@ -174,6 +174,106 @@ workflow {
         NFCORE_RNASEQ.out.map_status,
         NFCORE_RNASEQ.out.strand_status
     )
+
+    output:
+    // STAR alignment outputs
+    'star' {
+        'bam' {
+            Channel.topic('star/bam/genome') >> { meta, bam -> 
+                "star/${meta.id}/${bam.name}" 
+            }
+        }
+        'sorted_bam' {
+            Channel.topic('star/bam/sorted') >> { meta, bam -> 
+                "star/${meta.id}/${bam.name}" 
+            }
+        }
+        'transcriptome_bam' {
+            Channel.topic('star/bam/transcriptome') >> { meta, bam -> 
+                "star/${meta.id}/${bam.name}" 
+            }
+        }
+        'log' {
+            Channel.topic('star/logs/final') >> { meta, log -> 
+                "star/${meta.id}/log/${log.name}" 
+            }
+        }
+        'unmapped' {
+            Channel.topic('star/fastq/unmapped') >> { meta, fastq -> 
+                "star/${meta.id}/unmapped/${fastq.name}" 
+            }
+        }
+        'splice_junctions' {
+            Channel.topic('star/tab/splice_junctions') >> { meta, tab -> 
+                "star/${meta.id}/${tab.name}" 
+            }
+        }
+        'read_per_gene' {
+            Channel.topic('star/tab/read_per_gene') >> { meta, tab -> 
+                "star/${meta.id}/${tab.name}" 
+            }
+        }
+    }
+
+    // HISAT2 alignment outputs
+    'hisat2' {
+        'bam' {
+            Channel.topic('hisat2/bam/genome') >> { meta, bam -> 
+                "hisat2/${meta.id}/${bam.name}" 
+            }
+        }
+        'log' {
+            Channel.topic('hisat2/logs/summary') >> { meta, log -> 
+                "hisat2/${meta.id}/log/${log.name}" 
+            }
+        }
+        'unmapped' {
+            Channel.topic('hisat2/fastq/unmapped') >> { meta, fastq -> 
+                "hisat2/${meta.id}/unmapped/${fastq.name}" 
+            }
+        }
+    }
+
+    // UMI deduplication outputs
+    'umitools' {
+        'dedup_bam' {
+            Channel.topic('umi/dedup/bam') >> { meta, bam -> 
+                "umitools/dedup/${meta.id}/${bam.name}" 
+            }
+        }
+        'dedup_log' {
+            Channel.topic('umi/dedup/logs') >> { meta, log -> 
+                "umitools/dedup/${meta.id}/${log.name}" 
+            }
+        }
+        'stats' {
+            Channel.topic('umi/dedup/stats/edit_distance') >> { meta, tsv -> 
+                "umitools/dedup/${meta.id}/stats/${tsv.name}" 
+            }
+            Channel.topic('umi/dedup/stats/per_umi') >> { meta, tsv -> 
+                "umitools/dedup/${meta.id}/stats/${tsv.name}" 
+            }
+            Channel.topic('umi/dedup/stats/per_position') >> { meta, tsv -> 
+                "umitools/dedup/${meta.id}/stats/${tsv.name}" 
+            }
+        }
+    }
+
+    // MultiQC report
+    'multiqc' {
+        Channel.topic('multiqc/report') >> { report -> 
+            "multiqc/${report.name}" 
+        }
+    }
+
+    // Software versions
+    'pipeline_info' {
+        Channel.topic('versions')
+            .unique()
+            .collectFile(name: 'collated_versions.yml') >> { versions -> 
+                "pipeline_info/${versions.name}" 
+            }
+    }
 }
 
 /*

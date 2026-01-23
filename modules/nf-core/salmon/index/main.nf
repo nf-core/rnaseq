@@ -13,7 +13,7 @@ process SALMON_INDEX {
 
     output:
     path "salmon"      , emit: index
-    path "versions.yml", emit: versions
+    path "versions.yml", emit: versions, topic: 'versions'
 
     when:
     task.ext.when == null || task.ext.when

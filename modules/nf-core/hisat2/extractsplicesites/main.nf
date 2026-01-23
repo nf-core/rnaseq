@@ -12,7 +12,7 @@ process HISAT2_EXTRACTSPLICESITES {
 
     output:
     tuple val(meta), path("*.splice_sites.txt"), emit: txt
-    path "versions.yml"                        , emit: versions
+    path "versions.yml"                        , emit: versions, topic: 'versions'
 
     when:
     task.ext.when == null || task.ext.when

@@ -21,7 +21,7 @@ process SENTIEON_STARALIGN {
     tuple val(meta), path('*Log.final.out'), emit: log_final
     tuple val(meta), path('*Log.out'), emit: log_out
     tuple val(meta), path('*Log.progress.out'), emit: log_progress
-    path "versions.yml", emit: versions
+    path "versions.yml", emit: versions, topic: 'versions'
 
     tuple val(meta), path('*d.out.bam'), optional: true, emit: bam
     tuple val(meta), path("${prefix}.sortedByCoord.out.bam"), optional: true, emit: bam_sorted

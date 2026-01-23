@@ -19,7 +19,7 @@ process SALMON_QUANT {
     tuple val(meta), path("${prefix}"), emit: results
     tuple val(meta), path("*info.json"), emit: json_info, optional: true
     tuple val(meta), path("*lib_format_counts.json"), emit: lib_format_counts, optional: true
-    path "versions.yml", emit: versions
+    path "versions.yml", emit: versions, topic: 'versions'
 
     when:
     task.ext.when == null || task.ext.when

@@ -121,6 +121,11 @@
                         "git_sha": "99856f9d99f7d418bebe4c4a558f4c3bb0df2193",
                         "installed_by": ["modules"]
                     },
+                    "parabricks/stargenomegenerate": {
+                        "branch": "master",
+                        "git_sha": "fe77c644515b46f9fdf01e1d11f22a56d17b036e",
+                        "installed_by": ["modules"]
+                    },
                     "picard/markduplicates": {
                         "branch": "master",
                         "git_sha": "df124e87c74d8b40285199f8cc20151f5aa57255",

@@ -10,7 +10,7 @@ nextflow_pipeline {
         when {
             params {
                 outdir = "$outputDir"
-                aligner = parabricks
+                use_parabricks_star = true
             }
         }
 
@@ -35,14 +35,14 @@ nextflow_pipeline {
         }
     }
 
-    test("Params: default --use_sentieon_star - stub") {
+    test("Params: default aligner parabricks - stub") {
 
         options "-stub"
 
         when {
             params {
                 outdir = "$outputDir"
-                aligner = parabricks
+                use_parabricks_star = true
             }
         }
 

@@ -1,0 +1,40 @@
+{
+    "Params: default aligner parabricks - stub": {
+        "content": [
+            0,
+            {
+                
+            },
+            [
+                "pipeline_info"
+            ],
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2026-01-26T07:20:34.311533195"
+    },
+    "Params: default aligner parabricks": {
+        "content": [
+            0,
+            {
+                
+            },
+            [
+                "pipeline_info"
+            ],
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2026-01-26T07:20:04.094842537"
+    }
+}

@@ -16,6 +16,8 @@ process PARABRICKS_RNAFQ2BAM {
 
     output:
     tuple val(meta), path("${prefix}.Log.final.out")                    , emit: log_final
+    tuple val(meta), path("${prefix}.Log.out")                          , emit: log_out
+    tuple val(meta), path("${prefix}.Log.progress.out")                 , emit: log_progress
     path  "versions.yml"                                                , emit: versions
 
     tuple val(meta), path("${prefix}.bam")                              , optional:true, emit: bam

@@ -403,8 +403,6 @@
                 "custom/out",
                 "custom/out/genome_transcriptome.fasta",
                 "custom/out/genome_transcriptome.gtf",
-                "fastqc",
-                "fastqc/trim",
                 "fq_lint",
                 "fq_lint/raw",
                 "fq_lint/raw/RAP1_IAA_30M_REP1.fq_lint.txt",

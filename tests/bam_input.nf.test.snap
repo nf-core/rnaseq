@@ -1382,7 +1382,6 @@
                 "star_rsem/featurecounts/WT_REP2.biotype_counts_rrna_mqc.tsv",
                 "star_rsem/featurecounts/WT_REP2.featureCounts.tsv",
                 "star_rsem/featurecounts/WT_REP2.featureCounts.tsv.summary",
-                "star_rsem/log",
                 "star_rsem/picard_metrics",
                 "star_rsem/picard_metrics/RAP1_IAA_30M_REP1.markdup.sorted.MarkDuplicates.metrics.txt",
                 "star_rsem/picard_metrics/RAP1_UNINDUCED_REP1.markdup.sorted.MarkDuplicates.metrics.txt",

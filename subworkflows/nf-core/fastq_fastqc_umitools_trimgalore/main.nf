@@ -47,9 +47,11 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
 
     umi_reads = reads
     umi_log = channel.empty()
+    ch_umi_reads_out = channel.empty()
     if (with_umi && !skip_umi_extract) {
         UMITOOLS_EXTRACT(reads)
         umi_reads = UMITOOLS_EXTRACT.out.reads
+        ch_umi_reads_out = UMITOOLS_EXTRACT.out.reads
         umi_log = UMITOOLS_EXTRACT.out.log
         ch_versions = ch_versions.mix(UMITOOLS_EXTRACT.out.versions.first())
 
@@ -107,6 +109,7 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
     fastqc_html     // channel: [ val(meta), [ html ] ]
     fastqc_zip      // channel: [ val(meta), [ zip ] ]
     umi_log         // channel: [ val(meta), [ log ] ]
+    umi_reads       = ch_umi_reads_out // channel: [ val(meta), [ reads ] ]
     trim_unpaired   // channel: [ val(meta), [ reads ] ]
     trim_html       // channel: [ val(meta), [ html ] ]
     trim_zip        // channel: [ val(meta), [ zip ] ]

@@ -74,11 +74,13 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
     }
 
     umi_reads = reads_only
+    ch_umi_reads_out = channel.empty()
     if (with_umi && !skip_umi_extract) {
         UMITOOLS_EXTRACT(
             reads_only
         )
         umi_reads = UMITOOLS_EXTRACT.out.reads
+        ch_umi_reads_out = UMITOOLS_EXTRACT.out.reads
         umi_log = UMITOOLS_EXTRACT.out.log
         ch_versions = ch_versions.mix(UMITOOLS_EXTRACT.out.versions.first())
 
@@ -148,6 +150,7 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
     fastqc_raw_html   // channel: [ val(meta), [ html ] ]
     fastqc_raw_zip    // channel: [ val(meta), [ zip ] ]
     umi_log           // channel: [ val(meta), [ log ] ]
+    umi_reads         = ch_umi_reads_out // channel: [ val(meta), [ reads ] ]
     adapter_seq       // channel: [ val(meta), [ adapter_seq] ]
     trim_json         // channel: [ val(meta), [ json ] ]
     trim_html         // channel: [ val(meta), [ html ] ]

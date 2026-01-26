@@ -71,6 +71,10 @@ workflow PREPARE_GENOME {
     // Versions collector
     ch_versions = channel.empty()
 
+    // Custom fasta/gtf from CUSTOM_CATADDITIONALFASTA (for publishing)
+    ch_custom_fasta = channel.empty()
+    ch_custom_gtf   = channel.empty()
+
     //---------------------------
     // 1) Uncompress GTF or GFF -> GTF
     //---------------------------
@@ -137,9 +141,11 @@ workflow PREPARE_GENOME {
             ch_add_fasta.map { item -> [ [id: 'genome_transcriptome'], item ] },
             gencode ? "gene_type" : featurecounts_group_type
         )
-        ch_fasta    = CUSTOM_CATADDITIONALFASTA.out.fasta.map { tuple -> tuple[1] }.first()
-        ch_gtf      = CUSTOM_CATADDITIONALFASTA.out.gtf.map { tuple -> tuple[1] }.first()
-        ch_versions = ch_versions.mix(CUSTOM_CATADDITIONALFASTA.out.versions)
+        ch_custom_fasta = CUSTOM_CATADDITIONALFASTA.out.fasta
+        ch_custom_gtf   = CUSTOM_CATADDITIONALFASTA.out.gtf
+        ch_fasta        = ch_custom_fasta.map { tuple -> tuple[1] }.first()
+        ch_gtf          = ch_custom_gtf.map { tuple -> tuple[1] }.first()
+        ch_versions     = ch_versions.mix(CUSTOM_CATADDITIONALFASTA.out.versions)
     }
 
     //------------------------------------------------------
@@ -415,6 +421,8 @@ workflow PREPARE_GENOME {
     emit:
     fasta            = ch_fasta                  // channel: path(genome.fasta)
     gtf              = ch_gtf                    // channel: path(genome.gtf)
+    custom_fasta     = ch_custom_fasta           // channel: [ meta, path(custom/out/*.fasta) ]
+    custom_gtf       = ch_custom_gtf             // channel: [ meta, path(custom/out/*.gtf) ]
     fai              = ch_fai                    // channel: path(genome.fai)
     gene_bed         = ch_gene_bed               // channel: path(gene.bed)
     transcript_fasta = ch_transcript_fasta       // channel: path(transcript.fasta)

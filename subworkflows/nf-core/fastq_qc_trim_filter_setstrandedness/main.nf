@@ -130,7 +130,31 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     ch_filtered_reads = channel.empty()
     ch_trim_read_count = channel.empty()
     ch_multiqc_files = channel.empty()
-    ch_lint_log = channel.empty()
+    ch_lint_log_raw = channel.empty()
+    ch_lint_log_trimmed = channel.empty()
+    ch_lint_log_bbsplit = channel.empty()
+    ch_lint_log_ribo = channel.empty()
+
+    // Individual output channels for workflow outputs
+    ch_fastqc_raw_html    = channel.empty()
+    ch_fastqc_raw_zip     = channel.empty()
+    ch_fastqc_trim_html   = channel.empty()
+    ch_fastqc_trim_zip    = channel.empty()
+    ch_trim_html          = channel.empty()
+    ch_trim_zip           = channel.empty()
+    ch_trim_log           = channel.empty()
+    ch_trim_json          = channel.empty()
+    ch_trim_unpaired      = channel.empty()
+    ch_umi_log            = channel.empty()
+    ch_umi_reads          = channel.empty()
+    ch_bbsplit_stats      = channel.empty()
+    ch_sortmerna_log      = channel.empty()
+    ch_ribodetector_log   = channel.empty()
+    ch_seqkit_stats       = channel.empty()
+    ch_bowtie2_log        = channel.empty()
+    ch_bowtie2_index      = channel.empty()
+    ch_seqkit_prefixed    = channel.empty()
+    ch_seqkit_converted   = channel.empty()
 
     ch_reads
         .branch { meta, fastqs ->
@@ -157,7 +181,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
             ch_filtered_reads
         )
         ch_versions = ch_versions.mix(FQ_LINT.out.versions.first())
-        ch_lint_log = ch_lint_log.mix(FQ_LINT.out.lint)
+        ch_lint_log_raw = FQ_LINT.out.lint
         ch_filtered_reads = ch_filtered_reads.join(FQ_LINT.out.lint.map { meta, _lint -> meta })
     }
 
@@ -176,6 +200,16 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         )
         ch_filtered_reads = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.reads
         ch_trim_read_count = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_read_count
+
+        // Capture individual outputs for workflow outputs
+        ch_fastqc_raw_html = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_html
+        ch_fastqc_raw_zip  = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_zip
+        ch_fastqc_trim_html = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_html
+        ch_fastqc_trim_zip  = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_zip
+        ch_trim_log        = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_log
+        ch_trim_unpaired   = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_unpaired
+        ch_umi_log         = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.umi_log
+        ch_umi_reads       = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.umi_reads
 
         ch_versions = ch_versions.mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.versions)
         ch_multiqc_files = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_zip
@@ -202,6 +236,17 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         )
         ch_filtered_reads = FASTQ_FASTQC_UMITOOLS_FASTP.out.reads
         ch_trim_read_count = FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_read_count
+
+        // Capture individual outputs for workflow outputs
+        ch_fastqc_raw_html  = FASTQ_FASTQC_UMITOOLS_FASTP.out.fastqc_raw_html
+        ch_fastqc_raw_zip   = FASTQ_FASTQC_UMITOOLS_FASTP.out.fastqc_raw_zip
+        ch_fastqc_trim_html = FASTQ_FASTQC_UMITOOLS_FASTP.out.fastqc_trim_html
+        ch_fastqc_trim_zip  = FASTQ_FASTQC_UMITOOLS_FASTP.out.fastqc_trim_zip
+        ch_trim_json        = FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_json
+        ch_trim_html        = FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_html
+        ch_trim_log         = FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_log
+        ch_umi_log          = FASTQ_FASTQC_UMITOOLS_FASTP.out.umi_log
+        ch_umi_reads        = FASTQ_FASTQC_UMITOOLS_FASTP.out.umi_reads
 
         ch_versions = ch_versions.mix(FASTQ_FASTQC_UMITOOLS_FASTP.out.versions)
         ch_multiqc_files = FASTQ_FASTQC_UMITOOLS_FASTP.out.fastqc_raw_zip
@@ -240,7 +285,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         FQ_LINT_AFTER_TRIMMING(
             ch_filtered_reads
         )
-        ch_lint_log = ch_lint_log.mix(FQ_LINT_AFTER_TRIMMING.out.lint)
+        ch_lint_log_trimmed = FQ_LINT_AFTER_TRIMMING.out.lint
         ch_filtered_reads = ch_filtered_reads.join(FQ_LINT_AFTER_TRIMMING.out.lint.map { meta, _lint -> meta })
     }
 
@@ -258,13 +303,14 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
 
         BBMAP_BBSPLIT.out.primary_fastq.set { ch_filtered_reads }
 
+        ch_bbsplit_stats = BBMAP_BBSPLIT.out.stats
         ch_multiqc_files = ch_multiqc_files.mix(BBMAP_BBSPLIT.out.stats)
 
         if (!skip_linting) {
             FQ_LINT_AFTER_BBSPLIT(
                 ch_filtered_reads
             )
-            ch_lint_log = ch_lint_log.mix(FQ_LINT_AFTER_BBSPLIT.out.lint)
+            ch_lint_log_bbsplit = FQ_LINT_AFTER_BBSPLIT.out.lint
             ch_filtered_reads = ch_filtered_reads.join(FQ_LINT_AFTER_BBSPLIT.out.lint.map { meta, _lint -> meta })
         }
     }
@@ -284,6 +330,13 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         )
 
         ch_filtered_reads = FASTQ_REMOVE_RRNA.out.reads
+        ch_sortmerna_log    = FASTQ_REMOVE_RRNA.out.sortmerna_log
+        ch_ribodetector_log = FASTQ_REMOVE_RRNA.out.ribodetector_log
+        ch_seqkit_stats     = FASTQ_REMOVE_RRNA.out.seqkit_stats
+        ch_bowtie2_log      = FASTQ_REMOVE_RRNA.out.bowtie2_log
+        ch_bowtie2_index    = FASTQ_REMOVE_RRNA.out.bowtie2_index
+        ch_seqkit_prefixed  = FASTQ_REMOVE_RRNA.out.seqkit_prefixed
+        ch_seqkit_converted = FASTQ_REMOVE_RRNA.out.seqkit_converted
         ch_multiqc_files = ch_multiqc_files.mix(FASTQ_REMOVE_RRNA.out.multiqc_files)
         ch_versions = ch_versions.mix(FASTQ_REMOVE_RRNA.out.versions)
 
@@ -291,7 +344,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
             FQ_LINT_AFTER_RIBO_REMOVAL(
                 ch_filtered_reads
             )
-            ch_lint_log = ch_lint_log.mix(FQ_LINT_AFTER_RIBO_REMOVAL.out.lint)
+            ch_lint_log_ribo = FQ_LINT_AFTER_RIBO_REMOVAL.out.lint
             ch_filtered_reads = ch_filtered_reads.join(FQ_LINT_AFTER_RIBO_REMOVAL.out.lint.map { meta, _lint -> meta })
         }
     }
@@ -341,9 +394,34 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         .set { ch_strand_inferred_fastq }
 
     emit:
-    lint_log        = ch_lint_log
-    reads           = ch_strand_inferred_fastq
-    trim_read_count = ch_trim_read_count
-    multiqc_files   = ch_multiqc_files.transpose().map { _meta, file -> file }
-    versions        = ch_versions // channel: [ versions.yml ]
+    reads              = ch_strand_inferred_fastq
+    trim_read_count    = ch_trim_read_count
+    multiqc_files      = ch_multiqc_files.transpose().map { _meta, file -> file }
+
+    // Individual outputs for workflow outputs
+    lint_log_raw       = ch_lint_log_raw
+    lint_log_trimmed   = ch_lint_log_trimmed
+    lint_log_bbsplit   = ch_lint_log_bbsplit
+    lint_log_ribo      = ch_lint_log_ribo
+    fastqc_raw_html    = ch_fastqc_raw_html
+    fastqc_raw_zip     = ch_fastqc_raw_zip
+    fastqc_trim_html   = ch_fastqc_trim_html
+    fastqc_trim_zip    = ch_fastqc_trim_zip
+    trim_html          = ch_trim_html
+    trim_zip           = ch_trim_zip
+    trim_log           = ch_trim_log
+    trim_json          = ch_trim_json
+    trim_unpaired      = ch_trim_unpaired
+    umi_log            = ch_umi_log
+    umi_reads          = ch_umi_reads
+    bbsplit_stats      = ch_bbsplit_stats
+    sortmerna_log      = ch_sortmerna_log
+    ribodetector_log   = ch_ribodetector_log
+    seqkit_stats       = ch_seqkit_stats
+    bowtie2_log        = ch_bowtie2_log
+    bowtie2_index      = ch_bowtie2_index
+    seqkit_prefixed    = ch_seqkit_prefixed
+    seqkit_converted   = ch_seqkit_converted
+
+    versions           = ch_versions // channel: [ versions.yml ]
 }

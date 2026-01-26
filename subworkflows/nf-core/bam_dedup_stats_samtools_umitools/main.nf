@@ -45,6 +45,9 @@ workflow BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS {
     emit:
     bam      = UMITOOLS_DEDUP.out.bam          // channel: [ val(meta), path(bam) ]
     deduplog = UMITOOLS_DEDUP.out.log          // channel: [ val(meta), path(log) ]
+    tsv_edit_distance   = UMITOOLS_DEDUP.out.tsv_edit_distance   // channel: [ val(meta), path(tsv) ]
+    tsv_per_umi         = UMITOOLS_DEDUP.out.tsv_per_umi         // channel: [ val(meta), path(tsv) ]
+    tsv_umi_per_position = UMITOOLS_DEDUP.out.tsv_umi_per_position // channel: [ val(meta), path(tsv) ]
 
     bai      = SAMTOOLS_INDEX.out.bai          // channel: [ val(meta), path(bai) ]
     csi      = SAMTOOLS_INDEX.out.csi          // channel: [ val(meta), path(csi) ]

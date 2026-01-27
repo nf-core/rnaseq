@@ -426,7 +426,7 @@
                     },
                     "fastq_remove_rrna": {
                         "branch": "master",
-                        "git_sha": "6d1d4b987af3ee5852d852abf99f8883028cea9c",
+                        "git_sha": "6a0bfd9dba05ecc4bec6dd0260e85b9cf03b8c7f",
                         "installed_by": ["fastq_qc_trim_filter_setstrandedness"]
                     },
                     "fastq_subsample_fq_salmon": {
@@ -436,7 +436,7 @@
                     },
                     "quantify_pseudo_alignment": {
                         "branch": "master",
-                        "git_sha": "9ebc300e05af07c770b86ff089581a2d41346c8b",
+                        "git_sha": "6a0bfd9dba05ecc4bec6dd0260e85b9cf03b8c7f",
                         "installed_by": ["subworkflows"]
                     },
                     "utils_nextflow_pipeline": {

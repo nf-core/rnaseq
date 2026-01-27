@@ -366,12 +366,12 @@
                     },
                     "bam_dedup_stats_samtools_umitools": {
                         "branch": "master",
-                        "git_sha": "eed5d14302a6c9070dcc25feeab707a27a4b3254",
+                        "git_sha": "6a0bfd9dba05ecc4bec6dd0260e85b9cf03b8c7f",
                         "installed_by": ["bam_dedup_umi", "subworkflows"]
                     },
                     "bam_dedup_umi": {
                         "branch": "master",
-                        "git_sha": "eed5d14302a6c9070dcc25feeab707a27a4b3254",
+                        "git_sha": "6a0bfd9dba05ecc4bec6dd0260e85b9cf03b8c7f",
                         "installed_by": ["subworkflows"]
                     },
                     "bam_markduplicates_picard": {
@@ -411,17 +411,17 @@
                     },
                     "fastq_fastqc_umitools_fastp": {
                         "branch": "master",
-                        "git_sha": "eed5d14302a6c9070dcc25feeab707a27a4b3254",
+                        "git_sha": "6a0bfd9dba05ecc4bec6dd0260e85b9cf03b8c7f",
                         "installed_by": ["fastq_qc_trim_filter_setstrandedness", "subworkflows"]
                     },
                     "fastq_fastqc_umitools_trimgalore": {
                         "branch": "master",
-                        "git_sha": "eed5d14302a6c9070dcc25feeab707a27a4b3254",
+                        "git_sha": "6a0bfd9dba05ecc4bec6dd0260e85b9cf03b8c7f",
                         "installed_by": ["fastq_qc_trim_filter_setstrandedness", "subworkflows"]
                     },
                     "fastq_qc_trim_filter_setstrandedness": {
                         "branch": "master",
-                        "git_sha": "6d1d4b987af3ee5852d852abf99f8883028cea9c",
+                        "git_sha": "6a0bfd9dba05ecc4bec6dd0260e85b9cf03b8c7f",
                         "installed_by": ["subworkflows"]
                     },
                     "fastq_remove_rrna": {

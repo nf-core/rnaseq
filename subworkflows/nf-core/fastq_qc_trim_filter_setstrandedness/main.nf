@@ -394,34 +394,34 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         .set { ch_strand_inferred_fastq }
 
     emit:
-    reads              = ch_strand_inferred_fastq
-    trim_read_count    = ch_trim_read_count
-    multiqc_files      = ch_multiqc_files.transpose().map { _meta, file -> file }
+    reads            = ch_strand_inferred_fastq
+    trim_read_count  = ch_trim_read_count
+    multiqc_files    = ch_multiqc_files.transpose().map { _meta, file -> file }
 
     // Individual outputs for workflow outputs
-    lint_log_raw       = ch_lint_log_raw
-    lint_log_trimmed   = ch_lint_log_trimmed
-    lint_log_bbsplit   = ch_lint_log_bbsplit
-    lint_log_ribo      = ch_lint_log_ribo
-    fastqc_raw_html    = ch_fastqc_raw_html
-    fastqc_raw_zip     = ch_fastqc_raw_zip
-    fastqc_trim_html   = ch_fastqc_trim_html
-    fastqc_trim_zip    = ch_fastqc_trim_zip
-    trim_html          = ch_trim_html
-    trim_zip           = ch_trim_zip
-    trim_log           = ch_trim_log
-    trim_json          = ch_trim_json
-    trim_unpaired      = ch_trim_unpaired
-    umi_log            = ch_umi_log
-    umi_reads          = ch_umi_reads
-    bbsplit_stats      = ch_bbsplit_stats
-    sortmerna_log      = ch_sortmerna_log
-    ribodetector_log   = ch_ribodetector_log
-    seqkit_stats       = ch_seqkit_stats
-    bowtie2_log        = ch_bowtie2_log
-    bowtie2_index      = ch_bowtie2_index
-    seqkit_prefixed    = ch_seqkit_prefixed
-    seqkit_converted   = ch_seqkit_converted
+    lint_log_raw     = ch_lint_log_raw
+    lint_log_trimmed = ch_lint_log_trimmed
+    lint_log_bbsplit = ch_lint_log_bbsplit
+    lint_log_ribo    = ch_lint_log_ribo
+    fastqc_raw_html  = ch_fastqc_raw_html
+    fastqc_raw_zip   = ch_fastqc_raw_zip
+    fastqc_trim_html = ch_fastqc_trim_html
+    fastqc_trim_zip  = ch_fastqc_trim_zip
+    trim_html        = ch_trim_html
+    trim_zip         = ch_trim_zip
+    trim_log         = ch_trim_log
+    trim_json        = ch_trim_json
+    trim_unpaired    = ch_trim_unpaired
+    umi_log          = ch_umi_log
+    umi_reads        = ch_umi_reads
+    bbsplit_stats    = ch_bbsplit_stats
+    sortmerna_log    = ch_sortmerna_log
+    ribodetector_log = ch_ribodetector_log
+    seqkit_stats     = ch_seqkit_stats
+    bowtie2_log      = ch_bowtie2_log
+    bowtie2_index    = ch_bowtie2_index
+    seqkit_prefixed  = ch_seqkit_prefixed
+    seqkit_converted = ch_seqkit_converted
 
-    versions           = ch_versions // channel: [ versions.yml ]
+    versions         = ch_versions // channel: [ versions.yml ]
 }

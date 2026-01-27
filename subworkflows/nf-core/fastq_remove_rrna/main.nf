@@ -49,6 +49,15 @@ workflow FASTQ_REMOVE_RRNA {
     ch_multiqc_files = channel.empty()
     ch_filtered_reads = ch_reads
 
+    // Individual output channels for workflow outputs
+    ch_sortmerna_log     = channel.empty()
+    ch_ribodetector_log  = channel.empty()
+    ch_seqkit_stats      = channel.empty()
+    ch_bowtie2_log       = channel.empty()
+    ch_bowtie2_index_out = channel.empty()
+    ch_seqkit_prefixed   = channel.empty()
+    ch_seqkit_converted  = channel.empty()
+
     if (ribo_removal_tool == 'sortmerna') {
         ch_sortmerna_fastas = ch_rrna_fastas
             .collect()
@@ -70,6 +79,7 @@ workflow FASTQ_REMOVE_RRNA {
         )
 
         ch_filtered_reads = SORTMERNA.out.reads
+        ch_sortmerna_log = SORTMERNA.out.log
         ch_multiqc_files = ch_multiqc_files.mix(SORTMERNA.out.log)
     }
     else if (ribo_removal_tool == 'ribodetector') {
@@ -79,6 +89,7 @@ workflow FASTQ_REMOVE_RRNA {
         )
 
         ch_versions = ch_versions.mix(SEQKIT_STATS.out.versions.first())
+        ch_seqkit_stats = SEQKIT_STATS.out.stats
         ch_multiqc_files = ch_multiqc_files.mix(SEQKIT_STATS.out.stats)
 
         // Join stats with reads and calculate read length for RiboDetector
@@ -97,6 +108,7 @@ workflow FASTQ_REMOVE_RRNA {
         )
 
         ch_filtered_reads = RIBODETECTOR.out.fastq
+        ch_ribodetector_log = RIBODETECTOR.out.log
         ch_multiqc_files = ch_multiqc_files.mix(RIBODETECTOR.out.log)
         // Note: ribodetector versions collected via topic
     }
@@ -113,6 +125,7 @@ workflow FASTQ_REMOVE_RRNA {
                 ch_rrna_with_meta
             )
             ch_versions = ch_versions.mix(SEQKIT_REPLACE.out.versions)
+            ch_seqkit_prefixed = SEQKIT_REPLACE.out.fastx
 
             // Step 2: Convert U to T in sequences (RNA to DNA)
             SEQKIT_REPLACE.out.fastx
@@ -123,6 +136,7 @@ workflow FASTQ_REMOVE_RRNA {
                 ch_prefixed_fastas
             )
             ch_versions = ch_versions.mix(SEQKIT_REPLACE_U2T.out.versions)
+            ch_seqkit_converted = SEQKIT_REPLACE_U2T.out.fastx
 
             // Collect processed files (already prefixed and U->T converted)
             SEQKIT_REPLACE_U2T.out.fastx
@@ -135,6 +149,7 @@ workflow FASTQ_REMOVE_RRNA {
                 ch_combined_fasta
             )
             ch_bowtie2_index = BOWTIE2_BUILD.out.index.first()
+            ch_bowtie2_index_out = BOWTIE2_BUILD.out.index
             ch_versions = ch_versions.mix(BOWTIE2_BUILD.out.versions.first())
         }
 
@@ -156,6 +171,7 @@ workflow FASTQ_REMOVE_RRNA {
             false,     // sort_bam - not needed
         )
 
+        ch_bowtie2_log = BOWTIE2_ALIGN.out.log
         ch_multiqc_files = ch_multiqc_files.mix(BOWTIE2_ALIGN.out.log)
         ch_versions = ch_versions.mix(BOWTIE2_ALIGN.out.versions)
 
@@ -170,6 +186,7 @@ workflow FASTQ_REMOVE_RRNA {
             false,     // sort_bam - not needed
         )
 
+        ch_bowtie2_log = ch_bowtie2_log.mix(BOWTIE2_ALIGN_PE.out.log)
         ch_multiqc_files = ch_multiqc_files.mix(BOWTIE2_ALIGN_PE.out.log)
         ch_versions = ch_versions.mix(BOWTIE2_ALIGN_PE.out.versions)
 
@@ -198,7 +215,14 @@ workflow FASTQ_REMOVE_RRNA {
     }
 
     emit:
-    reads         = ch_filtered_reads  // channel: [ val(meta), [ reads ] ]
-    multiqc_files = ch_multiqc_files   // channel: [ val(meta), [ log files ] ]
-    versions      = ch_versions        // channel: [ versions.yml ]
+    reads            = ch_filtered_reads   // channel: [ val(meta), [ reads ] ]
+    multiqc_files    = ch_multiqc_files    // channel: [ val(meta), [ log files ] ]
+    sortmerna_log    = ch_sortmerna_log    // channel: [ val(meta), [ log ] ]
+    ribodetector_log = ch_ribodetector_log // channel: [ val(meta), [ log ] ]
+    seqkit_stats     = ch_seqkit_stats     // channel: [ val(meta), [ stats ] ]
+    bowtie2_log      = ch_bowtie2_log      // channel: [ val(meta), [ log ] ]
+    bowtie2_index    = ch_bowtie2_index_out // channel: [ val(meta), [ index ] ]
+    seqkit_prefixed  = ch_seqkit_prefixed  // channel: [ val(meta), [ fasta ] ]
+    seqkit_converted = ch_seqkit_converted // channel: [ val(meta), [ fasta ] ]
+    versions         = ch_versions         // channel: [ versions.yml ]
 }

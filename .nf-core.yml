@@ -12,6 +12,8 @@ lint:
   nextflow_config:
     - config_defaults:
         - params.ribo_database_manifest
+    # params.outdir replaced by Nextflow's native workflow.outputDir in 25.10+
+    - params.outdir
 nf_core_version: 3.5.1
 repository_type: pipeline
 template:

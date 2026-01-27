@@ -74,7 +74,7 @@ ${colors.purple}  nf-core/rnaseq ${workflow.manifest.version}${colors.reset}
 * Software dependencies
     https://github.com/nf-core/rnaseq/blob/master/CITATIONS.md
 """
-    command = "nextflow run ${workflow.manifest.name} -profile <docker/singularity/.../institute> --input samplesheet.csv --outdir <OUTDIR>"
+    command = "nextflow run ${workflow.manifest.name} -profile <docker/singularity/.../institute> --input samplesheet.csv -output-dir <OUTDIR>"
 
     UTILS_NFSCHEMA_PLUGIN (
         workflow,
@@ -670,10 +670,11 @@ def getInferexperimentStrandedness(inferexperiment_file, stranded_threshold = 0.
 //
 // Function to map work directory BAM paths to published paths
 //
-def mapBamToPublishedPath(bam_path, sample_id, aligner, outdir) {
+def mapBamToPublishedPath(bam_path, sample_id, aligner) {
     if (!bam_path) return ''
 
     def filename = file(bam_path).getName()
+    def outdir = workflow.outputDir ?: '.'
     def base_dir = "${outdir}/${aligner}"
 
     // Map based on aligner type and filename patterns

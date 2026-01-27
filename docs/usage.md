@@ -8,6 +8,22 @@
 
 Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration except for parameters; see [docs](https://nf-co.re/usage/configuration#custom-configuration-files).
 
+:::warning
+**Output directory change in v4.0.0+**
+
+Starting from version 4.0.0, the pipeline uses Nextflow's native [workflow outputs](https://nextflow.io/docs/latest/tutorials/workflow-outputs.html) feature instead of the `--outdir` parameter. You must now use the `-output-dir` CLI option (note: single hyphen, not double):
+
+```bash
+# Old (no longer supported):
+nextflow run nf-core/rnaseq --input samplesheet.csv --outdir ./results
+
+# New (required):
+nextflow run nf-core/rnaseq --input samplesheet.csv -output-dir ./results
+```
+
+If using a params file, remove `outdir` from it and specify `-output-dir` on the command line instead.
+:::
+
 ## Samplesheet input
 
 You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 4 columns, and a header row as shown in the examples below.
@@ -118,7 +134,7 @@ Run the pipeline normally, adding `--save_align_intermeds` to publish BAM files 
 nextflow run nf-core/rnaseq \
   --input samplesheet.csv \
   --save_align_intermeds \
-  --outdir results_initial \
+  -output-dir results_initial \
   -profile docker
 ```
 
@@ -132,7 +148,7 @@ Use the auto-generated samplesheet to reprocess data, skipping alignment:
 nextflow run nf-core/rnaseq \
   --input samplesheets/samplesheet_with_bams.csv \
   --skip_alignment \
-  --outdir results_reprocessed \
+  -output-dir results_reprocessed \
   -profile docker
 ```
 
@@ -498,7 +514,7 @@ The typical command for running the pipeline is as follows:
 nextflow run \
     nf-core/rnaseq \
     --input <SAMPLESHEET> \
-    --outdir <OUTDIR> \
+    -output-dir <OUTDIR> \
     --gtf <GTF> \
     --fasta <GENOME FASTA> \
     -profile docker
@@ -510,7 +526,7 @@ You can also run without a genomic FASTA file, provided you skip the alignment s
 nextflow run \
     nf-core/rnaseq \
     --input <SAMPLESHEET> \
-    --outdir <OUTDIR> \
+    -output-dir <OUTDIR> \
     --gtf <GTF> \
     --transcript_fasta <TRANSCRIPTOME FASTA> \
     --skip_alignment \
@@ -529,7 +545,7 @@ Note that the pipeline will create the following files in your working directory
 
 ```bash
 work                # Directory containing the nextflow working files
-<OUTDIR>            # Finished results in specified location (defined with --outdir)
+<OUTDIR>            # Finished results in specified location (defined with -output-dir)
 .nextflow_log       # Log file from Nextflow
 # Other nextflow hidden files, eg. history of pipeline runs and old logs.
 ```
@@ -545,17 +561,18 @@ Do not use `-c <file>` to specify parameters as this will result in errors. Cust
 The above pipeline run specified with a params file in yaml format:
 
 ```bash
-nextflow run nf-core/rnaseq -profile docker -params-file params.yaml
+nextflow run nf-core/rnaseq -profile docker -params-file params.yaml -output-dir <OUTDIR>
 ```
 
 with:
 
 ```yaml
 input: <SAMPLESHEET>
-outdir: <OUTDIR>
 genome: 'GRCh37'
 <...>
 ```
+
+Note that the output directory must be specified via `-output-dir` on the command line, not in the params file.
 
 You can also generate such `YAML`/`JSON` files via [nf-core/launch](https://nf-co.re/launch).
 
@@ -571,7 +588,7 @@ The pipeline can be executed in an ARM compatible mode by specifying the ARM pro
 nextflow run \
     nf-core/rnaseq \
     --input <SAMPLESHEET> \
-    --outdir <OUTDIR> \
+    -output-dir <OUTDIR> \
     --gtf <GTF> \
     --fasta <GENOME FASTA> \
     -profile docker,arm64

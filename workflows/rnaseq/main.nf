@@ -16,9 +16,8 @@ include { MULTIQC_CUSTOM_BIOTYPE             } from '../../modules/local/multiqc
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 include { ALIGN_STAR                            } from '../../subworkflows/local/align_star'
+include { ALIGN_HISAT2                          } from '../../subworkflows/local/align_hisat2'
 include { QUANTIFY_RSEM                         } from '../../subworkflows/local/quantify_rsem'
-include { BAM_DEDUP_UMI as BAM_DEDUP_UMI_STAR   } from '../../subworkflows/nf-core/bam_dedup_umi'
-include { BAM_DEDUP_UMI as BAM_DEDUP_UMI_HISAT2 } from '../../subworkflows/nf-core/bam_dedup_umi'
 
 include { checkSamplesAfterGrouping      } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { multiqcTsvFromList             } from '../../subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness'
@@ -58,7 +57,6 @@ include { paramsSummaryMap                 } from 'plugin/nf-schema'
 include { samplesheetToList                } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc             } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML           } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
-include { FASTQ_ALIGN_HISAT2               } from '../../subworkflows/nf-core/fastq_align_hisat2'
 include { BAM_MARKDUPLICATES_PICARD        } from '../../subworkflows/nf-core/bam_markduplicates_picard'
 include { BAM_RSEQC                        } from '../../subworkflows/nf-core/bam_rseqc'
 include { BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG as BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD } from '../../subworkflows/nf-core/bedgraph_bedclip_bedgraphtobigwig'
@@ -109,6 +107,131 @@ workflow RNASEQ {
     ch_map_status = channel.empty()
     ch_strand_status = channel.empty()
     ch_percent_mapped = channel.empty()
+
+    // Channel initializations for workflow outputs
+    ch_stringtie_gtf          = channel.empty()
+    ch_stringtie_coverage     = channel.empty()
+    ch_stringtie_abundance    = channel.empty()
+    ch_stringtie_ballgown     = channel.empty()
+    ch_featurecounts_counts   = channel.empty()
+    ch_featurecounts_summary  = channel.empty()
+    ch_biotype_counts         = channel.empty()
+    ch_bigwig_forward         = channel.empty()
+    ch_bigwig_reverse         = channel.empty()
+    ch_preseq_txt             = channel.empty()
+    ch_preseq_log             = channel.empty()
+    ch_markdup_bam            = channel.empty()
+    ch_markdup_bai            = channel.empty()
+    ch_markdup_metrics        = channel.empty()
+    ch_markdup_stats          = channel.empty()
+    ch_markdup_flagstat       = channel.empty()
+    ch_markdup_idxstats       = channel.empty()
+    ch_qualimap_results       = channel.empty()
+    ch_dupradar_scatter       = channel.empty()
+    ch_dupradar_boxplot       = channel.empty()
+    ch_dupradar_histogram     = channel.empty()
+    ch_dupradar_gene_data     = channel.empty()
+    ch_dupradar_intercept     = channel.empty()
+    ch_rseqc_bamstat          = channel.empty()
+    ch_rseqc_inferexperiment  = channel.empty()
+    ch_rseqc_junctionannotation_bed   = channel.empty()
+    ch_rseqc_junctionannotation_xls        = channel.empty()
+    ch_rseqc_junctionannotation_log        = channel.empty()
+    ch_rseqc_junctionannotation_pdf        = channel.empty()
+    ch_rseqc_junctionannotation_events_pdf = channel.empty()
+    ch_rseqc_junctionannotation_r          = channel.empty()
+    ch_rseqc_junctionsaturation_pdf   = channel.empty()
+    ch_rseqc_junctionsaturation_r     = channel.empty()
+    ch_rseqc_readduplication_pos_xls  = channel.empty()
+    ch_rseqc_readduplication_seq_xls  = channel.empty()
+    ch_rseqc_readduplication_pdf      = channel.empty()
+    ch_rseqc_readduplication_r        = channel.empty()
+    ch_rseqc_readdistribution                = channel.empty()
+    ch_rseqc_innerdistance_txt               = channel.empty()
+    ch_rseqc_innerdistance_distance          = channel.empty()
+    ch_rseqc_innerdistance_mean              = channel.empty()
+    ch_rseqc_innerdistance_pdf               = channel.empty()
+    ch_rseqc_innerdistance_r                 = channel.empty()
+    ch_rseqc_tin                             = channel.empty()
+    ch_rseqc_junctionannotation_interact_bed = channel.empty()
+    ch_kraken_report          = channel.empty()
+    ch_bracken_txt            = channel.empty()
+    ch_sylph_profile          = channel.empty()
+    ch_sylphtax_output        = channel.empty()
+    ch_pseudo_quant           = channel.empty()
+    ch_pseudo_tx2gene         = channel.empty()
+    ch_pseudo_counts_gene     = channel.empty()
+    ch_pseudo_counts_gene_length_scaled = channel.empty()
+    ch_pseudo_counts_gene_scaled = channel.empty()
+    ch_pseudo_counts_transcript = channel.empty()
+    ch_pseudo_lengths_gene    = channel.empty()
+    ch_pseudo_lengths_transcript = channel.empty()
+    ch_pseudo_tpm_gene        = channel.empty()
+    ch_pseudo_tpm_transcript  = channel.empty()
+    ch_pseudo_merged_gene_rds = channel.empty()
+    ch_pseudo_merged_transcript_rds = channel.empty()
+    ch_rsem_stat              = channel.empty()
+    ch_rsem_logs              = channel.empty()
+    ch_rsem_counts_gene       = channel.empty()
+    ch_rsem_counts_transcript = channel.empty()
+    ch_rsem_tpm_gene          = channel.empty()
+    ch_rsem_tpm_transcript    = channel.empty()
+    ch_rsem_merged_counts_gene       = channel.empty()
+    ch_rsem_merged_counts_transcript = channel.empty()
+    ch_rsem_merged_genes_long        = channel.empty()
+    ch_rsem_merged_isoforms_long     = channel.empty()
+    ch_star_salmon_quant      = channel.empty()
+    ch_star_salmon_tx2gene    = channel.empty()
+    ch_star_salmon_counts_gene = channel.empty()
+    ch_star_salmon_counts_gene_length_scaled = channel.empty()
+    ch_star_salmon_counts_gene_scaled = channel.empty()
+    ch_star_salmon_counts_transcript = channel.empty()
+    ch_star_salmon_lengths_gene = channel.empty()
+    ch_star_salmon_lengths_transcript = channel.empty()
+    ch_star_salmon_tpm_gene   = channel.empty()
+    ch_star_salmon_tpm_transcript = channel.empty()
+    ch_star_salmon_merged_gene_rds       = channel.empty()
+    ch_star_salmon_merged_transcript_rds = channel.empty()
+    ch_deseq2_pca             = channel.empty()
+    ch_deseq2_dists           = channel.empty()
+    ch_deseq2_pdf             = channel.empty()
+    ch_deseq2_rdata           = channel.empty()
+    ch_deseq2_pca_txt         = channel.empty()
+    ch_deseq2_dists_txt       = channel.empty()
+    ch_deseq2_log             = channel.empty()
+    ch_deseq2_size_factors    = channel.empty()
+    // Separate channels for pseudo-aligner DESeq2 QC (goes to different output path)
+    ch_pseudo_deseq2_pca             = channel.empty()
+    ch_pseudo_deseq2_dists           = channel.empty()
+    ch_pseudo_deseq2_pdf             = channel.empty()
+    ch_pseudo_deseq2_rdata           = channel.empty()
+    ch_pseudo_deseq2_pca_txt         = channel.empty()
+    ch_pseudo_deseq2_dists_txt       = channel.empty()
+    ch_pseudo_deseq2_log             = channel.empty()
+    ch_pseudo_deseq2_size_factors    = channel.empty()
+    ch_hisat2_summary         = channel.empty()
+    ch_star_bam               = channel.empty()
+    ch_star_bai               = channel.empty()
+    ch_sorted_bam_stats       = channel.empty()
+    ch_sorted_bam_flagstat    = channel.empty()
+    ch_sorted_bam_idxstats    = channel.empty()
+    ch_transcriptome_bam_out  = channel.empty()
+    ch_umi_genomic_dedup_log        = channel.empty()
+    ch_umi_transcriptomic_dedup_log = channel.empty()
+    ch_umi_prepare_for_rsem_log     = channel.empty()
+    ch_umi_transcriptome_dedup_bam      = channel.empty()
+    ch_umi_transcriptome_sorted_bam     = channel.empty()
+    ch_umi_transcriptome_sorted_bam_bai = channel.empty()
+    ch_umi_transcriptome_filtered_bam   = channel.empty()
+    ch_umi_dedup_stats        = channel.empty()
+    ch_umi_dedup_bam          = channel.empty()
+    ch_umi_dedup_bai          = channel.empty()
+    ch_umi_dedup_flagstat     = channel.empty()
+    ch_umi_dedup_idxstats     = channel.empty()
+    ch_umi_dedup_tsv_edit_distance    = channel.empty()
+    ch_umi_dedup_tsv_per_umi          = channel.empty()
+    ch_umi_dedup_tsv_umi_per_position = channel.empty()
+    ch_samtools_bai           = channel.empty()
 
     //
     // Collect versions from topic channel (for modules that emit versions via topics)
@@ -173,6 +296,7 @@ workflow RNASEQ {
         ch_genome_bam
     )
     ch_genome_bam_index = params.bam_csi_index ? SAMTOOLS_INDEX.out.csi : SAMTOOLS_INDEX.out.bai
+    ch_samtools_bai     = params.bam_csi_index ? SAMTOOLS_INDEX.out.csi : SAMTOOLS_INDEX.out.bai // For publishing input BAM indices
     ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
 
     //
@@ -222,6 +346,31 @@ workflow RNASEQ {
     ch_strand_inferred_filtered_fastq = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.reads
     ch_trim_read_count                = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.trim_read_count
 
+    // Capture individual outputs for workflow outputs
+    ch_fastqc_raw_html    = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.fastqc_raw_html
+    ch_fastqc_raw_zip     = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.fastqc_raw_zip
+    ch_fastqc_trim_html   = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.fastqc_trim_html
+    ch_fastqc_trim_zip    = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.fastqc_trim_zip
+    ch_trim_html          = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.trim_html
+    ch_trim_zip           = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.trim_zip
+    ch_trim_log           = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.trim_log
+    ch_trim_json          = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.trim_json
+    ch_trim_unpaired      = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.trim_unpaired
+    ch_umi_log            = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.umi_log
+    ch_umi_reads          = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.umi_reads
+    ch_bbsplit_stats      = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.bbsplit_stats
+    ch_sortmerna_log      = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.sortmerna_log
+    ch_ribodetector_log   = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.ribodetector_log
+    ch_seqkit_stats       = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.seqkit_stats
+    ch_bowtie2_rrna_log   = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.bowtie2_log
+    ch_bowtie2_rrna_index = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.bowtie2_index
+    ch_seqkit_prefixed    = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.seqkit_prefixed
+    ch_seqkit_converted   = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.seqkit_converted
+    ch_lint_log_raw       = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.lint_log_raw
+    ch_lint_log_trimmed   = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.lint_log_trimmed
+    ch_lint_log_bbsplit   = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.lint_log_bbsplit
+    ch_lint_log_ribo      = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.lint_log_ribo
+
     ch_trim_status = ch_trim_read_count
         .map {
             meta, num_reads ->
@@ -232,6 +381,9 @@ workflow RNASEQ {
     // SUBWORKFLOW: Alignment with STAR and gene/transcript quantification with Salmon
     //
     ch_star_log            = channel.empty()
+    ch_star_log_out        = channel.empty()
+    ch_star_log_progress   = channel.empty()
+    ch_star_tab            = channel.empty()
     ch_unaligned_sequences = channel.empty()
 
     if (!params.skip_alignment && (params.aligner == 'star_salmon' || params.aligner == 'star_rsem')) {
@@ -252,54 +404,51 @@ workflow RNASEQ {
             params.seq_center ?: '',
             is_aws_igenome,
             ch_fasta.map { item -> [ [:], item ] },
-            params.use_sentieon_star
+            params.use_sentieon_star,
+            params.with_umi,
+            params.umi_dedup_tool,
+            params.umitools_dedup_stats,
+            params.bam_csi_index,
+            params.skip_markduplicates,
+            ch_transcript_fasta.map { item -> [ [:], item ] },
+            ch_genome_bam,
+            ch_genome_bam_index,
+            ch_transcriptome_bam
         )
 
-        ch_genome_bam                    = ch_genome_bam.mix(ALIGN_STAR.out.bam)
-        ch_genome_bam_index              = ch_genome_bam_index.mix(params.bam_csi_index ? ALIGN_STAR.out.csi : ALIGN_STAR.out.bai)
-        ch_transcriptome_bam             = ch_transcriptome_bam.mix(ALIGN_STAR.out.bam_transcript)
-        ch_percent_mapped                = ch_percent_mapped.mix(ALIGN_STAR.out.percent_mapped)
-        ch_unprocessed_bams              = ch_genome_bam.join(ch_transcriptome_bam)
+        ch_genome_bam            = ALIGN_STAR.out.bam
+        ch_genome_bam_index      = ALIGN_STAR.out.bai
+        ch_transcriptome_bam     = ALIGN_STAR.out.bam_transcript
+        ch_transcriptome_bam_out = ALIGN_STAR.out.bam_transcript
+        ch_percent_mapped        = ch_percent_mapped.mix(ALIGN_STAR.out.percent_mapped)
+        ch_unprocessed_bams              = ALIGN_STAR.out.orig_bam.join(ALIGN_STAR.out.bam_transcript)
         ch_star_log                      = ALIGN_STAR.out.log_final
+        ch_star_log_out                  = ALIGN_STAR.out.log_out
+        ch_star_log_progress             = ALIGN_STAR.out.log_progress
+        ch_star_tab                      = ALIGN_STAR.out.tab
+        ch_star_bam                      = ALIGN_STAR.out.bam
+        ch_star_bai                      = ALIGN_STAR.out.bai
+        ch_sorted_bam_stats              = ALIGN_STAR.out.stats
+        ch_sorted_bam_flagstat           = ALIGN_STAR.out.flagstat
+        ch_sorted_bam_idxstats           = ALIGN_STAR.out.idxstats
         ch_unaligned_sequences           = ALIGN_STAR.out.fastq
-        ch_multiqc_files                 = ch_multiqc_files.mix(ch_star_log.collect{ tuple -> tuple[1] })
-
+        ch_umi_genomic_dedup_log        = ch_umi_genomic_dedup_log.mix(ALIGN_STAR.out.umi_genomic_dedup_log)
+        ch_umi_transcriptomic_dedup_log = ch_umi_transcriptomic_dedup_log.mix(ALIGN_STAR.out.umi_transcriptomic_dedup_log)
+        ch_umi_prepare_for_rsem_log     = ch_umi_prepare_for_rsem_log.mix(ALIGN_STAR.out.umi_prepare_for_rsem_log)
+        ch_umi_transcriptome_dedup_bam      = ch_umi_transcriptome_dedup_bam.mix(ALIGN_STAR.out.umi_transcriptome_dedup_bam)
+        ch_umi_transcriptome_sorted_bam     = ch_umi_transcriptome_sorted_bam.mix(ALIGN_STAR.out.umi_transcriptome_sorted_bam)
+        ch_umi_transcriptome_sorted_bam_bai = ch_umi_transcriptome_sorted_bam_bai.mix(ALIGN_STAR.out.umi_transcriptome_sorted_bam_bai)
+        ch_umi_transcriptome_filtered_bam   = ch_umi_transcriptome_filtered_bam.mix(ALIGN_STAR.out.umi_transcriptome_filtered_bam)
+        ch_umi_dedup_stats    = ch_umi_dedup_stats.mix(ALIGN_STAR.out.umi_dedup_stats)
+        ch_umi_dedup_bam      = ch_umi_dedup_bam.mix(ALIGN_STAR.out.umi_dedup_bam)
+        ch_umi_dedup_bai      = ch_umi_dedup_bai.mix(ALIGN_STAR.out.umi_dedup_bai)
+        ch_umi_dedup_flagstat = ch_umi_dedup_flagstat.mix(ALIGN_STAR.out.umi_dedup_flagstat)
+        ch_umi_dedup_idxstats = ch_umi_dedup_idxstats.mix(ALIGN_STAR.out.umi_dedup_idxstats)
+        ch_umi_dedup_tsv_edit_distance    = ch_umi_dedup_tsv_edit_distance.mix(ALIGN_STAR.out.umi_dedup_tsv_edit_distance)
+        ch_umi_dedup_tsv_per_umi          = ch_umi_dedup_tsv_per_umi.mix(ALIGN_STAR.out.umi_dedup_tsv_per_umi)
+        ch_umi_dedup_tsv_umi_per_position = ch_umi_dedup_tsv_umi_per_position.mix(ALIGN_STAR.out.umi_dedup_tsv_umi_per_position)
+        ch_multiqc_files = ch_multiqc_files.mix(ALIGN_STAR.out.multiqc_files)
         ch_versions = ch_versions.mix(ALIGN_STAR.out.versions)
-
-        //
-        // SUBWORKFLOW: Remove duplicate reads from BAM file based on UMIs
-        //
-        if (params.with_umi) {
-
-            BAM_DEDUP_UMI_STAR(
-                ch_genome_bam.join(ch_genome_bam_index, by: [0]),
-                ch_fasta.map { item -> [ [:], item ] },
-                params.umi_dedup_tool,
-                params.umitools_dedup_stats,
-                params.bam_csi_index,
-                ch_transcriptome_bam,
-                ch_transcript_fasta.map { item -> [ [:], item ] }
-            )
-
-            ch_genome_bam        = BAM_DEDUP_UMI_STAR.out.bam
-            ch_transcriptome_bam = BAM_DEDUP_UMI_STAR.out.transcriptome_bam
-            ch_genome_bam_index  = BAM_DEDUP_UMI_STAR.out.bai
-            ch_versions          = ch_versions.mix(BAM_DEDUP_UMI_STAR.out.versions)
-
-            ch_multiqc_files = ch_multiqc_files
-                .mix(BAM_DEDUP_UMI_STAR.out.multiqc_files)
-
-        } else if (params.skip_markduplicates) {
-            // The deduplicated stats should take priority for MultiQC, but use
-            // them straight out of the aligner otherwise. If mark duplicates
-            // will run, those stats will be added later instead to avoid
-            // duplicate flagstat files in MultiQC.
-
-            ch_multiqc_files = ch_multiqc_files
-                .mix(ALIGN_STAR.out.stats.collect{ tuple -> tuple[1] })
-                .mix(ALIGN_STAR.out.flagstat.collect{ tuple -> tuple[1] })
-                .mix(ALIGN_STAR.out.idxstats.collect{ tuple -> tuple[1] })
-        }
     }
 
     if (params.aligner == 'star_rsem') {
@@ -309,6 +458,16 @@ workflow RNASEQ {
             ch_rsem_index,
             params.use_sentieon_star
         )
+        ch_rsem_stat              = QUANTIFY_RSEM.out.stat
+        ch_rsem_logs              = QUANTIFY_RSEM.out.logs
+        ch_rsem_counts_gene       = QUANTIFY_RSEM.out.counts_gene
+        ch_rsem_counts_transcript = QUANTIFY_RSEM.out.counts_transcript
+        ch_rsem_tpm_gene          = QUANTIFY_RSEM.out.merged_tpm_gene
+        ch_rsem_tpm_transcript    = QUANTIFY_RSEM.out.merged_tpm_transcript
+        ch_rsem_merged_counts_gene       = QUANTIFY_RSEM.out.merged_counts_gene
+        ch_rsem_merged_counts_transcript = QUANTIFY_RSEM.out.merged_counts_transcript
+        ch_rsem_merged_genes_long        = QUANTIFY_RSEM.out.merged_genes_long
+        ch_rsem_merged_isoforms_long     = QUANTIFY_RSEM.out.merged_isoforms_long
         ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_RSEM.out.stat.collect{ tuple -> tuple[1] })
         ch_versions = ch_versions.mix(QUANTIFY_RSEM.out.versions)
 
@@ -318,6 +477,14 @@ workflow RNASEQ {
                 ch_pca_header_multiqc,
                 ch_clustering_header_multiqc
             )
+            ch_deseq2_pca   = ch_deseq2_pca.mix(DESEQ2_QC_RSEM.out.pca_multiqc)
+            ch_deseq2_dists = ch_deseq2_dists.mix(DESEQ2_QC_RSEM.out.dists_multiqc)
+            ch_deseq2_pdf          = ch_deseq2_pdf.mix(DESEQ2_QC_RSEM.out.pdf)
+            ch_deseq2_rdata        = ch_deseq2_rdata.mix(DESEQ2_QC_RSEM.out.rdata)
+            ch_deseq2_pca_txt      = ch_deseq2_pca_txt.mix(DESEQ2_QC_RSEM.out.pca_txt)
+            ch_deseq2_dists_txt    = ch_deseq2_dists_txt.mix(DESEQ2_QC_RSEM.out.dists_txt)
+            ch_deseq2_log          = ch_deseq2_log.mix(DESEQ2_QC_RSEM.out.log)
+            ch_deseq2_size_factors = ch_deseq2_size_factors.mix(DESEQ2_QC_RSEM.out.size_factors)
             ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_RSEM.out.pca_multiqc.collect())
             ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_RSEM.out.dists_multiqc.collect())
             ch_versions = ch_versions.mix(DESEQ2_QC_RSEM.out.versions)
@@ -342,6 +509,18 @@ workflow RNASEQ {
             params.kallisto_quant_fraglen,
             params.kallisto_quant_fraglen_sd
         )
+        ch_star_salmon_quant         = QUANTIFY_STAR_SALMON.out.results
+        ch_star_salmon_tx2gene       = QUANTIFY_STAR_SALMON.out.tx2gene
+        ch_star_salmon_counts_gene   = QUANTIFY_STAR_SALMON.out.counts_gene
+        ch_star_salmon_counts_gene_length_scaled = QUANTIFY_STAR_SALMON.out.counts_gene_length_scaled
+        ch_star_salmon_counts_gene_scaled = QUANTIFY_STAR_SALMON.out.counts_gene_scaled
+        ch_star_salmon_counts_transcript = QUANTIFY_STAR_SALMON.out.counts_transcript
+        ch_star_salmon_lengths_gene  = QUANTIFY_STAR_SALMON.out.lengths_gene
+        ch_star_salmon_lengths_transcript = QUANTIFY_STAR_SALMON.out.lengths_transcript
+        ch_star_salmon_tpm_gene      = QUANTIFY_STAR_SALMON.out.tpm_gene
+        ch_star_salmon_tpm_transcript = QUANTIFY_STAR_SALMON.out.tpm_transcript
+        ch_star_salmon_merged_gene_rds       = QUANTIFY_STAR_SALMON.out.merged_gene_rds_unified
+        ch_star_salmon_merged_transcript_rds = QUANTIFY_STAR_SALMON.out.merged_transcript_rds_unified
         ch_versions = ch_versions.mix(QUANTIFY_STAR_SALMON.out.versions)
 
         if (!params.skip_qc & !params.skip_deseq2_qc) {
@@ -350,6 +529,14 @@ workflow RNASEQ {
                 ch_pca_header_multiqc,
                 ch_clustering_header_multiqc
             )
+            ch_deseq2_pca   = ch_deseq2_pca.mix(DESEQ2_QC_STAR_SALMON.out.pca_multiqc)
+            ch_deseq2_dists = ch_deseq2_dists.mix(DESEQ2_QC_STAR_SALMON.out.dists_multiqc)
+            ch_deseq2_pdf          = ch_deseq2_pdf.mix(DESEQ2_QC_STAR_SALMON.out.pdf)
+            ch_deseq2_rdata        = ch_deseq2_rdata.mix(DESEQ2_QC_STAR_SALMON.out.rdata)
+            ch_deseq2_pca_txt      = ch_deseq2_pca_txt.mix(DESEQ2_QC_STAR_SALMON.out.pca_txt)
+            ch_deseq2_dists_txt    = ch_deseq2_dists_txt.mix(DESEQ2_QC_STAR_SALMON.out.dists_txt)
+            ch_deseq2_log          = ch_deseq2_log.mix(DESEQ2_QC_STAR_SALMON.out.log)
+            ch_deseq2_size_factors = ch_deseq2_size_factors.mix(DESEQ2_QC_STAR_SALMON.out.size_factors)
             ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_STAR_SALMON.out.pca_multiqc.collect())
             ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_STAR_SALMON.out.dists_multiqc.collect())
             ch_versions = ch_versions.mix(DESEQ2_QC_STAR_SALMON.out.versions)
@@ -360,53 +547,46 @@ workflow RNASEQ {
     // SUBWORKFLOW: Alignment with HISAT2
     //
     if (!params.skip_alignment && params.aligner == 'hisat2') {
-        FASTQ_ALIGN_HISAT2 (
+        ALIGN_HISAT2 (
             ch_strand_inferred_filtered_fastq,
             ch_hisat2_index.map { item -> [ [:], item ] },
             ch_splicesites.map { item -> [ [:], item ] },
-            ch_fasta.map { item -> [ [:], item ] }
+            ch_fasta.map { item -> [ [:], item ] },
+            params.with_umi,
+            params.umi_dedup_tool,
+            params.umitools_dedup_stats,
+            params.bam_csi_index,
+            params.skip_markduplicates,
+            ch_transcriptome_bam,
+            ch_transcript_fasta.map { item -> [ [:], item ] },
+            ch_genome_bam,
+            ch_genome_bam_index
         )
-        ch_genome_bam          = ch_genome_bam.mix(FASTQ_ALIGN_HISAT2.out.bam)
-        ch_genome_bam_index    = ch_genome_bam_index.mix(params.bam_csi_index ? FASTQ_ALIGN_HISAT2.out.csi : FASTQ_ALIGN_HISAT2.out.bai)
-        ch_unprocessed_bams    = ch_genome_bam.map { meta, bam -> [ meta, bam, '' ] }
-        ch_unaligned_sequences = FASTQ_ALIGN_HISAT2.out.fastq
-        ch_multiqc_files = ch_multiqc_files.mix(FASTQ_ALIGN_HISAT2.out.summary.collect{ tuple -> tuple[1] })
-
-        ch_versions = ch_versions.mix(FASTQ_ALIGN_HISAT2.out.versions)
-
-        //
-        // SUBWORKFLOW: Remove duplicate reads from BAM file based on UMIs
-        //
-
-        if (params.with_umi) {
-
-            BAM_DEDUP_UMI_HISAT2(
-                ch_genome_bam.join(ch_genome_bam_index, by: [0]),
-                ch_fasta.map { item -> [ [:], item ] },
-                params.umi_dedup_tool,
-                params.umitools_dedup_stats,
-                params.bam_csi_index,
-                ch_transcriptome_bam,
-                ch_transcript_fasta.map { item -> [ [:], item ] }
-            )
-
-            ch_genome_bam        = BAM_DEDUP_UMI_HISAT2.out.bam
-            ch_genome_bam_index  = BAM_DEDUP_UMI_HISAT2.out.bai
-            ch_versions          = ch_versions.mix(BAM_DEDUP_UMI_HISAT2.out.versions)
-
-            ch_multiqc_files = ch_multiqc_files
-                .mix(BAM_DEDUP_UMI_HISAT2.out.multiqc_files)
-        } else if (params.skip_markduplicates) {
-
-            // The deduplicated stats should take priority for MultiQC, but use
-            // them straight out of the aligner otherwise. If mark duplicates
-            // will run, those stats will be added later instead to avoid
-            // duplicate flagstat files in MultiQC.
-            ch_multiqc_files = ch_multiqc_files
-                .mix(FASTQ_ALIGN_HISAT2.out.stats.collect{ tuple -> tuple[1] })
-                .mix(FASTQ_ALIGN_HISAT2.out.flagstat.collect{ tuple -> tuple[1] })
-                .mix(FASTQ_ALIGN_HISAT2.out.idxstats.collect{ tuple -> tuple[1] })
-        }
+        ch_genome_bam          = ALIGN_HISAT2.out.bam
+        ch_genome_bam_index    = ALIGN_HISAT2.out.bai
+        ch_unprocessed_bams    = ALIGN_HISAT2.out.orig_bam.map { meta, bam -> [ meta, bam, '' ] }
+        ch_unaligned_sequences = ALIGN_HISAT2.out.unaligned
+        ch_hisat2_summary      = ALIGN_HISAT2.out.summary
+        ch_sorted_bam_stats    = ch_sorted_bam_stats.mix(ALIGN_HISAT2.out.stats)
+        ch_sorted_bam_flagstat = ch_sorted_bam_flagstat.mix(ALIGN_HISAT2.out.flagstat)
+        ch_sorted_bam_idxstats = ch_sorted_bam_idxstats.mix(ALIGN_HISAT2.out.idxstats)
+        ch_umi_genomic_dedup_log        = ch_umi_genomic_dedup_log.mix(ALIGN_HISAT2.out.umi_genomic_dedup_log)
+        ch_umi_transcriptomic_dedup_log = ch_umi_transcriptomic_dedup_log.mix(ALIGN_HISAT2.out.umi_transcriptomic_dedup_log)
+        ch_umi_prepare_for_rsem_log     = ch_umi_prepare_for_rsem_log.mix(ALIGN_HISAT2.out.umi_prepare_for_rsem_log)
+        ch_umi_transcriptome_dedup_bam      = ch_umi_transcriptome_dedup_bam.mix(ALIGN_HISAT2.out.umi_transcriptome_dedup_bam)
+        ch_umi_transcriptome_sorted_bam     = ch_umi_transcriptome_sorted_bam.mix(ALIGN_HISAT2.out.umi_transcriptome_sorted_bam)
+        ch_umi_transcriptome_sorted_bam_bai = ch_umi_transcriptome_sorted_bam_bai.mix(ALIGN_HISAT2.out.umi_transcriptome_sorted_bam_bai)
+        ch_umi_transcriptome_filtered_bam   = ch_umi_transcriptome_filtered_bam.mix(ALIGN_HISAT2.out.umi_transcriptome_filtered_bam)
+        ch_umi_dedup_stats    = ch_umi_dedup_stats.mix(ALIGN_HISAT2.out.umi_dedup_stats)
+        ch_umi_dedup_bam      = ch_umi_dedup_bam.mix(ALIGN_HISAT2.out.umi_dedup_bam)
+        ch_umi_dedup_bai      = ch_umi_dedup_bai.mix(ALIGN_HISAT2.out.umi_dedup_bai)
+        ch_umi_dedup_flagstat = ch_umi_dedup_flagstat.mix(ALIGN_HISAT2.out.umi_dedup_flagstat)
+        ch_umi_dedup_idxstats = ch_umi_dedup_idxstats.mix(ALIGN_HISAT2.out.umi_dedup_idxstats)
+        ch_umi_dedup_tsv_edit_distance    = ch_umi_dedup_tsv_edit_distance.mix(ALIGN_HISAT2.out.umi_dedup_tsv_edit_distance)
+        ch_umi_dedup_tsv_per_umi          = ch_umi_dedup_tsv_per_umi.mix(ALIGN_HISAT2.out.umi_dedup_tsv_per_umi)
+        ch_umi_dedup_tsv_umi_per_position = ch_umi_dedup_tsv_umi_per_position.mix(ALIGN_HISAT2.out.umi_dedup_tsv_umi_per_position)
+        ch_multiqc_files = ch_multiqc_files.mix(ALIGN_HISAT2.out.multiqc_files)
+        ch_versions = ch_versions.mix(ALIGN_HISAT2.out.versions)
     }
 
     // Filter bam and index by percent mapped being present in the meta
@@ -467,6 +647,8 @@ workflow RNASEQ {
         PRESEQ_LCEXTRAP (
             ch_genome_bam
         )
+        ch_preseq_txt = PRESEQ_LCEXTRAP.out.lc_extrap
+        ch_preseq_log = PRESEQ_LCEXTRAP.out.log
         ch_multiqc_files = ch_multiqc_files.mix(PRESEQ_LCEXTRAP.out.lc_extrap.collect{ tuple -> tuple[1] })
         ch_versions = ch_versions.mix(PRESEQ_LCEXTRAP.out.versions.first())
     }
@@ -482,6 +664,12 @@ workflow RNASEQ {
         )
         ch_genome_bam       = BAM_MARKDUPLICATES_PICARD.out.bam
         ch_genome_bam_index = params.bam_csi_index ? BAM_MARKDUPLICATES_PICARD.out.csi : BAM_MARKDUPLICATES_PICARD.out.bai
+        ch_markdup_bam      = BAM_MARKDUPLICATES_PICARD.out.bam
+        ch_markdup_bai      = params.bam_csi_index ? BAM_MARKDUPLICATES_PICARD.out.csi : BAM_MARKDUPLICATES_PICARD.out.bai
+        ch_markdup_metrics  = BAM_MARKDUPLICATES_PICARD.out.metrics
+        ch_markdup_stats    = BAM_MARKDUPLICATES_PICARD.out.stats
+        ch_markdup_flagstat = BAM_MARKDUPLICATES_PICARD.out.flagstat
+        ch_markdup_idxstats = BAM_MARKDUPLICATES_PICARD.out.idxstats
         ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.stats.collect{ tuple -> tuple[1] })
         ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.flagstat.collect{ tuple -> tuple[1] })
         ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.idxstats.collect{ tuple -> tuple[1] })
@@ -498,6 +686,10 @@ workflow RNASEQ {
             ch_genome_bam,
             ch_gtf
         )
+        ch_stringtie_gtf        = STRINGTIE_STRINGTIE.out.transcript_gtf
+        ch_stringtie_coverage   = STRINGTIE_STRINGTIE.out.coverage_gtf
+        ch_stringtie_abundance  = STRINGTIE_STRINGTIE.out.abundance
+        ch_stringtie_ballgown   = STRINGTIE_STRINGTIE.out.ballgown
         ch_versions = ch_versions.mix(STRINGTIE_STRINGTIE.out.versions.first())
     }
 
@@ -522,12 +714,15 @@ workflow RNASEQ {
         SUBREAD_FEATURECOUNTS (
             ch_featurecounts
         )
+        ch_featurecounts_counts  = SUBREAD_FEATURECOUNTS.out.counts
+        ch_featurecounts_summary = SUBREAD_FEATURECOUNTS.out.summary
         ch_versions = ch_versions.mix(SUBREAD_FEATURECOUNTS.out.versions.first())
 
         MULTIQC_CUSTOM_BIOTYPE (
             SUBREAD_FEATURECOUNTS.out.counts,
             ch_biotypes_header_multiqc
         )
+        ch_biotype_counts = MULTIQC_CUSTOM_BIOTYPE.out.tsv
         ch_multiqc_files = ch_multiqc_files.mix(MULTIQC_CUSTOM_BIOTYPE.out.tsv.collect{ tuple -> tuple[1] })
         ch_versions = ch_versions.mix(MULTIQC_CUSTOM_BIOTYPE.out.versions.first())
     }
@@ -562,11 +757,13 @@ workflow RNASEQ {
             BEDTOOLS_GENOMECOV_FW.out.genomecov,
             ch_chrom_sizes
         )
+        ch_bigwig_forward = BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD.out.bigwig
 
         BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE (
             BEDTOOLS_GENOMECOV_REV.out.genomecov,
             ch_chrom_sizes
         )
+        ch_bigwig_reverse = BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE.out.bigwig
     }
 
     //
@@ -585,6 +782,7 @@ workflow RNASEQ {
                 SAMTOOLS_SORT_QUALIMAP.out.bam,
                 ch_gtf.map { item -> [ [:], item ] }
             )
+            ch_qualimap_results = QUALIMAP_RNASEQ.out.results
             ch_multiqc_files = ch_multiqc_files.mix(QUALIMAP_RNASEQ.out.results.collect{ tuple -> tuple[1] })
             ch_versions = ch_versions.mix(QUALIMAP_RNASEQ.out.versions.first())
         }
@@ -594,6 +792,11 @@ workflow RNASEQ {
                 ch_genome_bam,
                 ch_gtf.map { item -> [ [:], item ] }
             )
+            ch_dupradar_scatter   = DUPRADAR.out.scatter2d
+            ch_dupradar_boxplot   = DUPRADAR.out.boxplot
+            ch_dupradar_histogram = DUPRADAR.out.hist
+            ch_dupradar_gene_data = DUPRADAR.out.dupmatrix
+            ch_dupradar_intercept = DUPRADAR.out.intercept_slope
             ch_multiqc_files = ch_multiqc_files.mix(DUPRADAR.out.multiqc.collect{ tuple -> tuple[1] })
             ch_versions = ch_versions.mix(DUPRADAR.out.versions.first())
         }
@@ -613,6 +816,28 @@ workflow RNASEQ {
                 ch_gene_bed,
                 rseqc_modules
             )
+            ch_rseqc_bamstat              = BAM_RSEQC.out.bamstat_txt
+            ch_rseqc_inferexperiment      = BAM_RSEQC.out.inferexperiment_txt
+            ch_rseqc_junctionannotation_bed         = BAM_RSEQC.out.junctionannotation_bed
+            ch_rseqc_junctionannotation_interact_bed = BAM_RSEQC.out.junctionannotation_interact_bed
+            ch_rseqc_junctionannotation_xls          = BAM_RSEQC.out.junctionannotation_xls
+            ch_rseqc_junctionannotation_log = BAM_RSEQC.out.junctionannotation_log
+            ch_rseqc_junctionannotation_pdf        = BAM_RSEQC.out.junctionannotation_pdf
+            ch_rseqc_junctionannotation_events_pdf = BAM_RSEQC.out.junctionannotation_events_pdf
+            ch_rseqc_junctionannotation_r          = BAM_RSEQC.out.junctionannotation_rscript
+            ch_rseqc_junctionsaturation_pdf = BAM_RSEQC.out.junctionsaturation_pdf
+            ch_rseqc_junctionsaturation_r   = BAM_RSEQC.out.junctionsaturation_rscript
+            ch_rseqc_readduplication_pos_xls = BAM_RSEQC.out.readduplication_pos_xls
+            ch_rseqc_readduplication_seq_xls = BAM_RSEQC.out.readduplication_seq_xls
+            ch_rseqc_readduplication_pdf  = BAM_RSEQC.out.readduplication_pdf
+            ch_rseqc_readduplication_r    = BAM_RSEQC.out.readduplication_rscript
+            ch_rseqc_readdistribution     = BAM_RSEQC.out.readdistribution_txt
+            ch_rseqc_innerdistance_txt      = BAM_RSEQC.out.innerdistance_freq
+            ch_rseqc_innerdistance_distance = BAM_RSEQC.out.innerdistance_distance
+            ch_rseqc_innerdistance_mean     = BAM_RSEQC.out.innerdistance_mean
+            ch_rseqc_innerdistance_pdf      = BAM_RSEQC.out.innerdistance_pdf
+            ch_rseqc_innerdistance_r        = BAM_RSEQC.out.innerdistance_rscript
+            ch_rseqc_tin                  = BAM_RSEQC.out.tin_txt
             ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.bamstat_txt.collect{ tuple -> tuple[1] })
             ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.inferexperiment_txt.collect{ tuple -> tuple[1] })
             ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.innerdistance_freq.collect{ tuple -> tuple[1] })
@@ -690,6 +915,7 @@ workflow RNASEQ {
                 params.save_kraken_unassigned
             )
             ch_kraken_reports = KRAKEN2.out.report
+            ch_kraken_report  = KRAKEN2.out.report
             ch_versions = ch_versions.mix(KRAKEN2.out.versions)
 
             if (params.contaminant_screening == 'kraken2') {
@@ -699,6 +925,7 @@ workflow RNASEQ {
                     ch_kraken_reports,
                     params.kraken_db
                 )
+                ch_bracken_txt = BRACKEN.out.txt
                 ch_versions = ch_versions.mix(BRACKEN.out.versions)
                 ch_multiqc_files = ch_multiqc_files.mix(BRACKEN.out.txt.collect{ tuple -> tuple[1] })
             }
@@ -709,15 +936,17 @@ workflow RNASEQ {
                 ch_unaligned_sequences,
                 ch_sylph_databases
             )
-            ch_sylph_profile = SYLPH_PROFILE.out.profile_out.filter{ tuple -> !tuple[1].isEmpty() }
+            def sylph_profile_filtered = SYLPH_PROFILE.out.profile_out.filter{ tuple -> !tuple[1].isEmpty() }
+            ch_sylph_profile = SYLPH_PROFILE.out.profile_out
             ch_versions = ch_versions.mix(SYLPH_PROFILE.out.versions)
 
             def sylph_taxonomies = params.sylph_taxonomy ? params.sylph_taxonomy.split(',').collect{ path -> file(path.trim()) } : []
             ch_sylph_taxonomies = channel.value(sylph_taxonomies)
             SYLPHTAX_TAXPROF (
-                ch_sylph_profile,
+                sylph_profile_filtered,
                 ch_sylph_taxonomies
             )
+            ch_sylphtax_output = SYLPHTAX_TAXPROF.out.taxprof_output
             ch_versions = ch_versions.mix(SYLPHTAX_TAXPROF.out.versions)
             ch_multiqc_files = ch_multiqc_files.mix(SYLPHTAX_TAXPROF.out.taxprof_output.collect{ tuple -> tuple[1] })
         }
@@ -749,6 +978,18 @@ workflow RNASEQ {
             params.kallisto_quant_fraglen_sd
         )
         ch_counts_gene_length_scaled = QUANTIFY_PSEUDO_ALIGNMENT.out.counts_gene_length_scaled
+        ch_pseudo_quant              = QUANTIFY_PSEUDO_ALIGNMENT.out.results
+        ch_pseudo_tx2gene            = QUANTIFY_PSEUDO_ALIGNMENT.out.tx2gene
+        ch_pseudo_counts_gene        = QUANTIFY_PSEUDO_ALIGNMENT.out.counts_gene
+        ch_pseudo_counts_gene_length_scaled = QUANTIFY_PSEUDO_ALIGNMENT.out.counts_gene_length_scaled
+        ch_pseudo_counts_gene_scaled = QUANTIFY_PSEUDO_ALIGNMENT.out.counts_gene_scaled
+        ch_pseudo_counts_transcript  = QUANTIFY_PSEUDO_ALIGNMENT.out.counts_transcript
+        ch_pseudo_lengths_gene       = QUANTIFY_PSEUDO_ALIGNMENT.out.lengths_gene
+        ch_pseudo_lengths_transcript = QUANTIFY_PSEUDO_ALIGNMENT.out.lengths_transcript
+        ch_pseudo_tpm_gene           = QUANTIFY_PSEUDO_ALIGNMENT.out.tpm_gene
+        ch_pseudo_tpm_transcript     = QUANTIFY_PSEUDO_ALIGNMENT.out.tpm_transcript
+        ch_pseudo_merged_gene_rds       = QUANTIFY_PSEUDO_ALIGNMENT.out.merged_gene_rds_unified
+        ch_pseudo_merged_transcript_rds = QUANTIFY_PSEUDO_ALIGNMENT.out.merged_transcript_rds_unified
         ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_PSEUDO_ALIGNMENT.out.multiqc.collect{ tuple -> tuple[1] })
         ch_versions = ch_versions.mix(QUANTIFY_PSEUDO_ALIGNMENT.out.versions)
 
@@ -758,6 +999,15 @@ workflow RNASEQ {
                 ch_pca_header_multiqc,
                 ch_clustering_header_multiqc
             )
+            // Use separate channels for pseudo-aligner DESeq2 (published to different path)
+            ch_pseudo_deseq2_pca   = ch_pseudo_deseq2_pca.mix(DESEQ2_QC_PSEUDO.out.pca_multiqc)
+            ch_pseudo_deseq2_dists = ch_pseudo_deseq2_dists.mix(DESEQ2_QC_PSEUDO.out.dists_multiqc)
+            ch_pseudo_deseq2_pdf          = ch_pseudo_deseq2_pdf.mix(DESEQ2_QC_PSEUDO.out.pdf)
+            ch_pseudo_deseq2_rdata        = ch_pseudo_deseq2_rdata.mix(DESEQ2_QC_PSEUDO.out.rdata)
+            ch_pseudo_deseq2_pca_txt      = ch_pseudo_deseq2_pca_txt.mix(DESEQ2_QC_PSEUDO.out.pca_txt)
+            ch_pseudo_deseq2_dists_txt    = ch_pseudo_deseq2_dists_txt.mix(DESEQ2_QC_PSEUDO.out.dists_txt)
+            ch_pseudo_deseq2_log          = ch_pseudo_deseq2_log.mix(DESEQ2_QC_PSEUDO.out.log)
+            ch_pseudo_deseq2_size_factors = ch_pseudo_deseq2_size_factors.mix(DESEQ2_QC_PSEUDO.out.size_factors)
             ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_PSEUDO.out.pca_multiqc.collect())
             ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_PSEUDO.out.dists_multiqc.collect())
             ch_versions = ch_versions.mix(DESEQ2_QC_PSEUDO.out.versions)
@@ -770,12 +1020,14 @@ workflow RNASEQ {
     //
     ch_collated_versions = softwareVersionsToYAML(ch_versions.mix(topic_versions.versions_file))
         .mix(topic_versions_string)
-        .collectFile(storeDir: "${params.outdir}/pipeline_info", name: 'nf_core_rnaseq_software_mqc_versions.yml', sort: true, newLine: true)
+        .collectFile(name: 'nf_core_rnaseq_software_mqc_versions.yml', sort: true, newLine: true)
 
     //
     // MODULE: MultiQC
     //
     ch_multiqc_report = channel.empty()
+    ch_multiqc_data   = channel.empty()
+    ch_multiqc_plots  = channel.empty()
 
     if (!params.skip_multiqc) {
 
@@ -843,6 +1095,8 @@ workflow RNASEQ {
             []
         )
         ch_multiqc_report = MULTIQC.out.report
+        ch_multiqc_data   = MULTIQC.out.data
+        ch_multiqc_plots  = MULTIQC.out.plots
     }
 
     //
@@ -860,11 +1114,11 @@ workflow RNASEQ {
                 // Handle BAM paths (same for all runs of this sample)
                 def genome_bam_published = meta.has_genome_bam ?
                     (meta.original_genome_bam ?: '') :
-                    mapBamToPublishedPath(genome_bam, meta.id, params.aligner, params.outdir)
+                    mapBamToPublishedPath(genome_bam, meta.id, params.aligner)
 
                 def transcriptome_bam_published = meta.has_transcriptome_bam ?
                     (meta.original_transcriptome_bam ?: '') :
-                    mapBamToPublishedPath(transcriptome_bam, meta.id, params.aligner, params.outdir)
+                    mapBamToPublishedPath(transcriptome_bam, meta.id, params.aligner)
 
                 def fastq_1 = reads[0].toUriString()
                 def fastq_2 = reads.size() > 1 ? reads[1].toUriString() : ''
@@ -874,18 +1128,195 @@ workflow RNASEQ {
             }
             .collectFile(
                 name: 'samplesheet_with_bams.csv',
-                storeDir: "${params.outdir}/samplesheets",
+                storeDir: "${workflow.outputDir}/samplesheets",
                 newLine: true,
                 seed: 'sample,fastq_1,fastq_2,strandedness,genome_bam,percent_mapped,transcriptome_bam'
             )
     }
 
     emit:
-    trim_status    = ch_trim_status    // channel: [id, boolean]
-    map_status     = ch_map_status     // channel: [id, boolean]
-    strand_status  = ch_strand_status  // channel: [id, boolean]
-    multiqc_report = ch_multiqc_report // channel: /path/to/multiqc_report.html
-    versions       = ch_versions       // channel: [ path(versions.yml) ]
+    trim_status       = ch_trim_status       // channel: [id, boolean]
+    map_status        = ch_map_status        // channel: [id, boolean]
+    strand_status     = ch_strand_status     // channel: [id, boolean]
+    multiqc_report    = ch_multiqc_report    // channel: /path/to/multiqc_report.html
+    multiqc_data      = ch_multiqc_data      // channel: /path/to/multiqc_data/
+    multiqc_plots     = ch_multiqc_plots     // channel: /path/to/multiqc_plots/
+    versions          = ch_versions          // channel: [ path(versions.yml) ]
+    collated_versions = ch_collated_versions // channel: /path/to/collated_versions.yml
+
+    // QC and trimming outputs
+    fastqc_raw_html    = ch_fastqc_raw_html
+    fastqc_raw_zip     = ch_fastqc_raw_zip
+    fastqc_trim_html   = ch_fastqc_trim_html
+    fastqc_trim_zip    = ch_fastqc_trim_zip
+    trim_html          = ch_trim_html
+    trim_zip           = ch_trim_zip
+    trim_log           = ch_trim_log
+    trim_json          = ch_trim_json
+    trim_unpaired      = ch_trim_unpaired
+    umi_log            = ch_umi_log
+    umi_reads          = ch_umi_reads
+    umi_genomic_dedup_log        = ch_umi_genomic_dedup_log
+    umi_transcriptomic_dedup_log = ch_umi_transcriptomic_dedup_log
+    umi_prepare_for_rsem_log     = ch_umi_prepare_for_rsem_log
+    umi_transcriptome_dedup_bam      = ch_umi_transcriptome_dedup_bam
+    umi_transcriptome_sorted_bam     = ch_umi_transcriptome_sorted_bam
+    umi_transcriptome_sorted_bam_bai = ch_umi_transcriptome_sorted_bam_bai
+    umi_transcriptome_filtered_bam   = ch_umi_transcriptome_filtered_bam
+    umi_dedup_stats    = ch_umi_dedup_stats
+    umi_dedup_bam      = ch_umi_dedup_bam
+    umi_dedup_bai      = ch_umi_dedup_bai
+    umi_dedup_flagstat = ch_umi_dedup_flagstat
+    umi_dedup_idxstats = ch_umi_dedup_idxstats
+    umi_dedup_tsv_edit_distance    = ch_umi_dedup_tsv_edit_distance
+    umi_dedup_tsv_per_umi          = ch_umi_dedup_tsv_per_umi
+    umi_dedup_tsv_umi_per_position = ch_umi_dedup_tsv_umi_per_position
+    lint_log_raw       = ch_lint_log_raw
+    lint_log_trimmed   = ch_lint_log_trimmed
+    lint_log_bbsplit   = ch_lint_log_bbsplit
+    lint_log_ribo      = ch_lint_log_ribo
+    bbsplit_stats      = ch_bbsplit_stats
+    sortmerna_log      = ch_sortmerna_log
+    ribodetector_log   = ch_ribodetector_log
+    seqkit_stats       = ch_seqkit_stats
+    bowtie2_rrna_log   = ch_bowtie2_rrna_log
+    bowtie2_rrna_index = ch_bowtie2_rrna_index
+    seqkit_prefixed    = ch_seqkit_prefixed
+    seqkit_converted   = ch_seqkit_converted
+
+    // Alignment outputs
+    star_log           = ch_star_log
+    star_log_out       = ch_star_log_out
+    star_log_progress  = ch_star_log_progress
+    star_tab           = ch_star_tab
+    star_bam           = ch_star_bam
+    star_bai           = ch_star_bai
+    sorted_bam_stats    = ch_sorted_bam_stats
+    sorted_bam_flagstat = ch_sorted_bam_flagstat
+    sorted_bam_idxstats = ch_sorted_bam_idxstats
+    transcriptome_bam  = ch_transcriptome_bam_out
+    unaligned_sequences = ch_unaligned_sequences
+    hisat2_summary     = ch_hisat2_summary
+    samtools_bai       = ch_samtools_bai  // Input BAM indices for BAM input mode
+
+    // MarkDuplicates outputs
+    markdup_bam        = ch_markdup_bam
+    markdup_bai        = ch_markdup_bai
+    markdup_metrics    = ch_markdup_metrics
+    markdup_stats      = ch_markdup_stats
+    markdup_flagstat   = ch_markdup_flagstat
+    markdup_idxstats   = ch_markdup_idxstats
+
+    // QC outputs
+    preseq_txt         = ch_preseq_txt
+    preseq_log         = ch_preseq_log
+    qualimap_results   = ch_qualimap_results
+    dupradar_scatter   = ch_dupradar_scatter
+    dupradar_boxplot   = ch_dupradar_boxplot
+    dupradar_histogram = ch_dupradar_histogram
+    dupradar_gene_data = ch_dupradar_gene_data
+    dupradar_intercept = ch_dupradar_intercept
+
+    // RSeQC outputs
+    rseqc_bamstat              = ch_rseqc_bamstat
+    rseqc_inferexperiment      = ch_rseqc_inferexperiment
+    rseqc_junctionannotation_bed         = ch_rseqc_junctionannotation_bed
+    rseqc_junctionannotation_interact_bed = ch_rseqc_junctionannotation_interact_bed
+    rseqc_junctionannotation_xls          = ch_rseqc_junctionannotation_xls
+    rseqc_junctionannotation_log   = ch_rseqc_junctionannotation_log
+    rseqc_junctionannotation_pdf        = ch_rseqc_junctionannotation_pdf
+    rseqc_junctionannotation_events_pdf = ch_rseqc_junctionannotation_events_pdf
+    rseqc_junctionannotation_r          = ch_rseqc_junctionannotation_r
+    rseqc_junctionsaturation_pdf   = ch_rseqc_junctionsaturation_pdf
+    rseqc_junctionsaturation_r     = ch_rseqc_junctionsaturation_r
+    rseqc_readduplication_pos_xls  = ch_rseqc_readduplication_pos_xls
+    rseqc_readduplication_seq_xls  = ch_rseqc_readduplication_seq_xls
+    rseqc_readduplication_pdf      = ch_rseqc_readduplication_pdf
+    rseqc_readduplication_r        = ch_rseqc_readduplication_r
+    rseqc_readdistribution         = ch_rseqc_readdistribution
+    rseqc_innerdistance_txt        = ch_rseqc_innerdistance_txt
+    rseqc_innerdistance_distance   = ch_rseqc_innerdistance_distance
+    rseqc_innerdistance_mean       = ch_rseqc_innerdistance_mean
+    rseqc_innerdistance_pdf        = ch_rseqc_innerdistance_pdf
+    rseqc_innerdistance_r          = ch_rseqc_innerdistance_r
+    rseqc_tin                      = ch_rseqc_tin
+
+    // Contaminant screening outputs
+    kraken_report      = ch_kraken_report
+    bracken_txt        = ch_bracken_txt
+    sylph_profile      = ch_sylph_profile
+    sylphtax_output    = ch_sylphtax_output
+
+    // StringTie outputs → ${params.aligner}/stringtie
+    stringtie_outputs = ch_stringtie_gtf
+        .mix(ch_stringtie_coverage)
+        .mix(ch_stringtie_abundance)
+        .mix(ch_stringtie_ballgown)
+
+    // FeatureCounts outputs → ${params.aligner}/featurecounts
+    featurecounts_outputs = ch_featurecounts_counts
+        .mix(ch_featurecounts_summary)
+        .mix(ch_biotype_counts)
+
+    // BigWig outputs → ${params.aligner}/bigwig
+    bigwig_outputs = ch_bigwig_forward
+        .mix(ch_bigwig_reverse)
+
+    // Pseudo-alignment outputs → ${params.pseudo_aligner}
+    pseudo_outputs = ch_pseudo_quant
+        .mix(ch_pseudo_tx2gene)
+        .mix(ch_pseudo_counts_gene)
+        .mix(ch_pseudo_counts_gene_length_scaled)
+        .mix(ch_pseudo_counts_gene_scaled)
+        .mix(ch_pseudo_counts_transcript)
+        .mix(ch_pseudo_lengths_gene)
+        .mix(ch_pseudo_lengths_transcript)
+        .mix(ch_pseudo_tpm_gene)
+        .mix(ch_pseudo_tpm_transcript)
+        .mix(ch_pseudo_merged_gene_rds)
+        .mix(ch_pseudo_merged_transcript_rds)
+
+    // RSEM outputs → star_rsem (logs to star_rsem/log)
+    rsem_logs = ch_rsem_logs
+    rsem_results = ch_rsem_stat
+        .mix(ch_rsem_counts_gene)
+        .mix(ch_rsem_counts_transcript)
+        .mix(ch_rsem_tpm_gene)
+        .mix(ch_rsem_tpm_transcript)
+        .mix(ch_rsem_merged_counts_gene)
+        .mix(ch_rsem_merged_counts_transcript)
+        .mix(ch_rsem_merged_genes_long)
+        .mix(ch_rsem_merged_isoforms_long)
+
+    // STAR-Salmon outputs → star_salmon
+    star_salmon_outputs = ch_star_salmon_quant
+        .mix(ch_star_salmon_tx2gene)
+        .mix(ch_star_salmon_counts_gene)
+        .mix(ch_star_salmon_counts_gene_length_scaled)
+        .mix(ch_star_salmon_counts_gene_scaled)
+        .mix(ch_star_salmon_counts_transcript)
+        .mix(ch_star_salmon_lengths_gene)
+        .mix(ch_star_salmon_lengths_transcript)
+        .mix(ch_star_salmon_tpm_gene)
+        .mix(ch_star_salmon_tpm_transcript)
+        .mix(ch_star_salmon_merged_gene_rds)
+        .mix(ch_star_salmon_merged_transcript_rds)
+
+    // DESeq2 outputs (aligner-based) → ${params.aligner}/deseq2_qc
+    deseq2_outputs = ch_deseq2_pdf
+        .mix(ch_deseq2_rdata)
+        .mix(ch_deseq2_pca_txt)
+        .mix(ch_deseq2_dists_txt)
+        .mix(ch_deseq2_log)
+        .mix(ch_deseq2_size_factors)
+
+    // DESeq2 outputs (pseudo-aligner) → ${params.pseudo_aligner}/deseq2_qc
+    pseudo_deseq2_outputs = ch_pseudo_deseq2_pdf
+        .mix(ch_pseudo_deseq2_rdata)
+        .mix(ch_pseudo_deseq2_pca_txt)
+        .mix(ch_pseudo_deseq2_dists_txt)
+        .mix(ch_pseudo_deseq2_log)
+        .mix(ch_pseudo_deseq2_size_factors)
 }
 
 /*

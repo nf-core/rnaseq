@@ -55,6 +55,15 @@ nextflow_workflow {
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
                 ])
                 input[8] = use_sentieon_star
+                input[9] = false // with_umi
+                input[10] = 'umitools' // umi_dedup_tool
+                input[11] = false // umitools_dedup_stats
+                input[12] = false // bam_csi_index
+                input[13] = true // skip_markduplicates
+                input[14] = Channel.of([ [:], [] ]) // transcript_fasta
+                input[15] = Channel.empty() // input_genome_bam
+                input[16] = Channel.empty() // input_genome_bam_index
+                input[17] = Channel.empty() // input_transcriptome_bam
                 """
             }
         }
@@ -132,6 +141,15 @@ nextflow_workflow {
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
                 ])
                 input[8] = use_sentieon_star
+                input[9] = false // with_umi
+                input[10] = 'umitools' // umi_dedup_tool
+                input[11] = false // umitools_dedup_stats
+                input[12] = false // bam_csi_index
+                input[13] = true // skip_markduplicates
+                input[14] = Channel.of([ [:], [] ]) // transcript_fasta
+                input[15] = Channel.empty() // input_genome_bam
+                input[16] = Channel.empty() // input_genome_bam_index
+                input[17] = Channel.empty() // input_transcriptome_bam
                 """
             }
         }

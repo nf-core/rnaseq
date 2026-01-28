@@ -85,7 +85,8 @@ workflow NFCORE_RNASEQ {
         params.remove_ribo_rna ? params.ribo_removal_tool : null,
         params.skip_alignment,
         params.skip_pseudo_alignment,
-        params.use_sentieon_star
+        params.use_sentieon_star,
+        params.use_parabricks_star
     )
     ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
 

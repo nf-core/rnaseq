@@ -7,29 +7,9 @@ nextflow_pipeline {
 
     test("Params: default aligner parabricks") {
 
-        setup {
-
-            run("PARABRICKS_STARGENOMEGENERATE") {
-                script "../modules/nf-core/parabricks/stargenomegenerate/main.nf"
-                process {
-                    """
-                    input[0] = [
-                        [ id:'minigenome_fasta' ],
-                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/minigenome.fa')
-                    ]
-                    input[1] = [
-                        [ id:'minigenome_gtf' ],
-                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/minigenome.gtf')
-                    ]
-                    """
-                }
-            }
-        }
-
         when {
             params {
                 outdir = "$outputDir"
-                ch_star_index = PARABRICKS_STARGENOMEGENERATE.out.index[1]
                 use_parabricks_star = true
             }
         }

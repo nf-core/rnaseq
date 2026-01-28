@@ -3,7 +3,7 @@ nextflow_workflow {
     name "Test Workflow QUANTIFY_RSEM - Sentieon"
     script "../main.nf"
     workflow "QUANTIFY_RSEM"
-    config "./nextflow.config"
+    config "./sentieon.config"
 
     test("homo_sapiens - sentieon - stub") {
 

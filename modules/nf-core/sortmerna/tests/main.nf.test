@@ -29,7 +29,7 @@ nextflow_process {
                 { assert ! process.out.reads },
                 { assert snapshot(
                     file(process.out.index[0][1]).listFiles().findAll { !it.name.endsWith(".stats") }.sort { it.name },
-                    process.out.versions
+                    process.out.findAll { key, val -> key.startsWith("versions") }
                 ).match() }
             )
         }
@@ -58,7 +58,7 @@ nextflow_process {
                 { assert process.success },
                 { assert ! process.out.reads },
                 { assert snapshot(process.out.index).match("index_only_stub") },
-                { assert snapshot(process.out.versions).match("versions_index_only_stub") }
+                { assert snapshot(process.out.findAll { key, val -> key.startsWith("versions") }).match("versions_index_only_stub") }
             )
         }
 
@@ -97,7 +97,7 @@ nextflow_process {
                 { assert snapshot(
                     file(process.out.index[0][1]).listFiles().findAll { !it.name.endsWith(".stats") }.sort { it.name }
                 ).match("index_single_end")},
-                { assert snapshot(process.out.versions).match("versions_single_end") }
+                { assert snapshot(process.out.findAll { key, val -> key.startsWith("versions") }).match("versions_single_end") }
             )
         }
 
@@ -134,7 +134,7 @@ nextflow_process {
                     ).match("sarscov2 single_end-for_stub_match")
                 },
                 { assert snapshot(process.out.index).match("index_single_end_stub") },
-                { assert snapshot(process.out.versions).match("versions_single_end_stub") }
+                { assert snapshot(process.out.findAll { key, val -> key.startsWith("versions") }).match("versions_single_end_stub") }
             )
         }
 
@@ -177,7 +177,7 @@ nextflow_process {
                 { assert snapshot(
                     file(process.out.index[0][1]).listFiles().findAll { !it.name.endsWith(".stats") }.sort { it.name }
                 ).match("index_paired_end") },
-                { assert snapshot(process.out.versions).match("versions_paired_end") }
+                { assert snapshot(process.out.findAll { key, val -> key.startsWith("versions") }).match("versions_paired_end") }
 
             )
         }
@@ -218,7 +218,7 @@ nextflow_process {
                     ).match("sarscov2 paired_end-for_stub_match")
                 },
                 { assert snapshot(process.out.index).match("index_paired_end_stub") },
-                { assert snapshot(process.out.versions).match("versions_paired_end_stub") }
+                { assert snapshot(process.out.findAll { key, val -> key.startsWith("versions") }).match("versions_paired_end_stub") }
             )
         }
 
@@ -275,7 +275,7 @@ nextflow_process {
                 { assert snapshot(
                     file(process.out.index[0][1]).listFiles().findAll { !it.name.endsWith(".stats") }.sort{ it.name }
                 ).match("index_single_end_premade_index") },
-                { assert snapshot(process.out.versions).match("versions_single_end_premade_index") }
+                { assert snapshot(process.out.findAll { key, val -> key.startsWith("versions") }).match("versions_single_end_premade_index") }
             )
         }
     }
@@ -329,7 +329,7 @@ nextflow_process {
                     ).match("sarscov2 single_end_premade_index_match_stub")
                 },
                 { assert snapshot(process.out.index).match("index_single_end_premade_index_stub") },
-                { assert snapshot(process.out.versions).match("versions_single_end_premade_index_stub") }
+                { assert snapshot(process.out.findAll { key, val -> key.startsWith("versions") }).match("versions_single_end_premade_index_stub") }
             )
         }
     }

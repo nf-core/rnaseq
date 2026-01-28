@@ -335,8 +335,10 @@ The STAR section of the MultiQC report shows a bar plot with alignment rates: go
   - `*.transcript.bam`: If `--save_align_intermeds` is specified the BAM file from STAR alignment containing read alignments to the transcriptome will be placed in this directory. These files can be reused as `transcriptome_bam` input in future pipeline runs.
 - `star_rsem/<SAMPLE>.stat/`
   - `*.cnt`, `*.model`, `*.theta`: RSEM counts and statistics for each sample.
-  - `star_rsem/log/`
-  - `*.log`: STAR alignment report containing the mapping results summary.
+- `star_rsem/log/`
+  - `*.SJ.out.tab`: File containing filtered splice junctions detected after mapping the reads.
+  - `*.Log.final.out`: STAR alignment report containing the mapping results summary.
+  - `*.Log.out` and `*.Log.progress.out`: STAR log files containing detailed information about the run. Typically only useful for debugging purposes.
 
 </details>
 

@@ -27,12 +27,15 @@ process RSEQC_TIN {
         -i $bam \\
         -r $bed \\
         $args
+
+    mv ${bam.baseName}.summary.txt ${prefix}.summary.txt
+    mv ${bam.baseName}.tin.xls ${prefix}.tin.xls
     """
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    touch ${bam.fileName}.summary.txt
-    touch ${bam.fileName}.tin.xls
+    touch ${prefix}.summary.txt
+    touch ${prefix}.tin.xls
     """
 }

@@ -26,12 +26,12 @@ process CUSTOM_CATADDITIONALFASTA {
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     mkdir out
-    touch out/genome_transcriptome.fasta
-    touch out/genome_transcriptome.gtf
+    touch out/${prefix}.fasta
+    touch out/${prefix}.gtf
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        python: \$(python --version | grep -v "Python ")
+        python: \$(python --version | sed 's/Python //')
     END_VERSIONS
     """
 }

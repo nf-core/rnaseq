@@ -60,10 +60,32 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - "${prefix}.Log.final.out":
+      - "*Log.final.out":
           type: file
           description: STAR final log file
           pattern: "*Log.final.out"
+          ontologies: []
+  log_out:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*Log.out":
+          type: file
+          description: STAR lot out file
+          pattern: "*Log.out"
+          ontologies: []
+  log_progress:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*Log.progress.out":
+          type: file
+          description: STAR log progress file
+          pattern: "*Log.progress.out"
           ontologies: []
   versions:
     - versions.yml:

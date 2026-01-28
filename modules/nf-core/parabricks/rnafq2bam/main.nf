@@ -15,28 +15,26 @@ process PARABRICKS_RNAFQ2BAM {
     val mark_duplicates
 
     output:
-    tuple val(meta), path('*Log.final.out')                             , emit: log_final
-    tuple val(meta), path('*Log.out')                                   , emit: log_out
-    tuple val(meta), path('*Log.progress.out')                          , emit: log_progress
-    path  "versions.yml"                                                , emit: versions
-
-    tuple val(meta), path("${prefix}.bam")                              , optional:true, emit: bam
-    tuple val(meta), path("${prefix}.bai")                              , optional:true, emit: bai
-    tuple val(meta), path("${prefix}.sortedByCoord.out.bam")            , optional:true, emit: bam_sorted
-    tuple val(meta), path("${prefix}.Aligned.sortedByCoord.out.bam")    , optional:true, emit: bam_sorted_aligned
-    tuple val(meta), path('*toTranscriptome.out.bam')                   , optional:true, emit: bam_transcript
-    tuple val(meta), path('*Aligned.unsort.out.bam')                    , optional:true, emit: bam_unsorted
-    tuple val(meta), path('*fastq.gz')                                  , optional:true, emit: fastq
-    tuple val(meta), path('*.tab')                                      , optional:true, emit: tab
-    tuple val(meta), path('*.SJ.out.tab')                               , optional:true, emit: spl_junc_tab
-    tuple val(meta), path('*.ReadsPerGene.out.tab')                     , optional:true, emit: read_per_gene_tab
-    tuple val(meta), path('*.out.junction')                             , optional:true, emit: junction
-    tuple val(meta), path('*.out.sam')                                  , optional:true, emit: sam
-    tuple val(meta), path('*.wig')                                      , optional:true, emit: wig
-    tuple val(meta), path('*.bg')                                       , optional:true, emit: bedgraph
-    tuple val(meta), path("${prefix}_qc_metrics")                       , optional:true, emit: qc_metrics     
-    tuple val(meta), path("${prefix}.duplicate-metrics.txt")            , optional:true, emit: duplicate_metrics
-
+    tuple val(meta), path('Log.final.out'),                     emit: log_final
+    tuple val(meta), path('Log.out'),                           emit: log_out
+    tuple val(meta), path('Log.progress.out'),                  emit: log_progress
+    tuple val(meta), path("${prefix}.bam"),                     emit: bam,                  optional:true
+    tuple val(meta), path("${prefix}.bam.bai"),                 emit: bai,                  optional:true
+    tuple val(meta), path("*.sortedByCoord.out.bam"),           emit: bam_sorted,           optional:true
+    tuple val(meta), path("*.Aligned.sortedByCoord.out.bam"),   emit: bam_sorted_aligned,   optional:true
+    tuple val(meta), path('*toTranscriptome.out.bam'),          emit: bam_transcript,       optional:true
+    tuple val(meta), path('*Aligned.unsort.out.bam'),           emit: bam_unsorted,         optional:true
+    tuple val(meta), path('*fastq.gz'),                         emit: fastq,                optional:true
+    tuple val(meta), path('*.tab'),                             emit: tab,                  optional:true
+    tuple val(meta), path('*.SJ.out.tab'),                      emit: spl_junc_tab,         optional:true
+    tuple val(meta), path('*.ReadsPerGene.out.tab'),            emit: read_per_gene_tab,    optional:true
+    tuple val(meta), path('*.out.junction'),                    emit: junction,             optional:true
+    tuple val(meta), path('*.out.sam'),                         emit: sam,                  optional:true
+    tuple val(meta), path('*.wig'),                             emit: wig,                  optional:true
+    tuple val(meta), path('*.bg'),                              emit: bedgraph,             optional:true
+    tuple val(meta), path("${prefix}_qc_metrics"),              emit: qc_metrics,           optional:true
+    tuple val(meta), path("${prefix}.duplicate-metrics.txt"),   emit: duplicate_metrics,    optional:true
+    path "versions.yml", emit: versions
     when:
     task.ext.when == null || task.ext.when
 
@@ -55,6 +53,10 @@ process PARABRICKS_RNAFQ2BAM {
     def duplicate_metrics_command = mark_duplicates ? "--out-duplicate-metrics ${prefix}.duplicate-metrics.txt" : "--no-markdups"
 
     """
+    echo "args: ${task.ext.args}"
+    echo "cpus: ${task.cpus}"
+    echo "memory: ${task.memory}"
+
     pbrun \\
         rna_fq2bam  \\
         --ref ${fasta} \\

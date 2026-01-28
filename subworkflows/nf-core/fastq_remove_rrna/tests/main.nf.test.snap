@@ -18,7 +18,7 @@
     "homo_sapiens single-end [fastq] sortmerna": {
         "content": [
             [
-                "versions.yml:md5,d375aebf400213ebbd6e104a331b27ae"
+                
             ],
             "bdea4e3bbdbb7c301ff578b9d8976fb6"
         ],
@@ -26,7 +26,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-10T15:49:01.125046076"
+        "timestamp": "2026-01-19T15:59:26.891896799"
     },
     "homo_sapiens paired-end [fastq] bowtie2 with duplicate rrna databases": {
         "content": [
@@ -49,7 +49,7 @@
     "homo_sapiens paired-end [fastq] sortmerna": {
         "content": [
             [
-                "versions.yml:md5,d375aebf400213ebbd6e104a331b27ae"
+                
             ],
             "bdea4e3bbdbb7c301ff578b9d8976fb6",
             "1b83618177abebeb38c29d2258efdd4f"
@@ -58,7 +58,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-10T15:48:17.279619846"
+        "timestamp": "2026-01-19T15:58:00.962491308"
     },
     "homo_sapiens paired-end [fastq] ribodetector": {
         "content": [

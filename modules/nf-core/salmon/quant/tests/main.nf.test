@@ -49,7 +49,7 @@ nextflow_process {
                 { assert path(process.out.json_info.get(0).get(1)).exists() },
                 { assert path(process.out.results.get(0).get(1)).exists() },
                 { assert snapshot(
-                    process.out.versions,
+                    process.out.findAll { key, val -> key.startsWith("versions") },
                     process.out.lib_format_counts
                 ).match() }
             )
@@ -84,7 +84,7 @@ nextflow_process {
                 { assert path(process.out.json_info.get(0).get(1)).exists() },
                 { assert path(process.out.results.get(0).get(1)).exists() },
                 { assert snapshot(
-                    process.out.versions,
+                    process.out.findAll { key, val -> key.startsWith("versions") },
                     process.out.lib_format_counts
                 ).match() }
             )
@@ -119,7 +119,7 @@ nextflow_process {
                 { assert path(process.out.json_info.get(0).get(1)).exists() },
                 { assert path(process.out.results.get(0).get(1)).exists() },
                 { assert snapshot(
-                    process.out.versions,
+                    process.out.findAll { key, val -> key.startsWith("versions") },
                     process.out.lib_format_counts
                 ).match() }
             )
@@ -154,7 +154,7 @@ nextflow_process {
                 { assert path(process.out.json_info.get(0).get(1)).exists() },
                 { assert path(process.out.results.get(0).get(1)).exists() },
                 { assert snapshot(
-                    process.out.versions,
+                    process.out.findAll { key, val -> key.startsWith("versions") },
                     process.out.lib_format_counts
                 ).match() }
             )
@@ -192,7 +192,7 @@ nextflow_process {
                 { assert path(process.out.json_info.get(0).get(1)).exists() },
                 { assert path(process.out.results.get(0).get(1)).exists() },
                 { assert snapshot(
-                    process.out.versions,
+                    process.out.findAll { key, val -> key.startsWith("versions") },
                     process.out.lib_format_counts
                 ).match() }
             )
@@ -230,7 +230,7 @@ nextflow_process {
                 { assert path(process.out.json_info.get(0).get(1)).exists() },
                 { assert path(process.out.results.get(0).get(1)).exists() },
                 { assert snapshot(
-                    process.out.versions,
+                    process.out.findAll { key, val -> key.startsWith("versions") },
                     process.out.lib_format_counts
                 ).match() }
             )
@@ -270,7 +270,7 @@ nextflow_process {
                 { assert path(process.out.json_info.get(0).get(1)).exists() },
                 { assert path(process.out.results.get(0).get(1)).exists() },
                 { assert snapshot(
-                    process.out.versions,
+                    process.out.findAll { key, val -> key.startsWith("versions") },
                     process.out.lib_format_counts
                 ).match() }
             )
@@ -310,7 +310,7 @@ nextflow_process {
                 { assert path(process.out.json_info.get(0).get(1)).exists() },
                 { assert path(process.out.results.get(0).get(1)).exists() },
                 { assert snapshot(
-                    process.out.versions,
+                    process.out.findAll { key, val -> key.startsWith("versions") },
                     process.out.lib_format_counts
                 ).match() }
             )

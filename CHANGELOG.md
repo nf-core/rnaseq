@@ -12,6 +12,7 @@ Special thanks to the following for their contributions to the release:
 - [Chase Mateusiak](https://github.com/cmatKhan)
 - [Elad Herz](https://github.com/EladH1)
 - [Ezra Greenberg](https://github.com/egreenberg7)
+- [Gary Burnett](https://github.com/gburnett-nvidia)
 
 ### Enhancements and fixes
 
@@ -22,12 +23,15 @@ Special thanks to the following for their contributions to the release:
 - [PR #1667](https://github.com/nf-core/rnaseq/pull/1667) - Enhance RSEM output exports and remove unnecessary star_rsem check
 - [PR #1669](https://github.com/nf-core/rnaseq/pull/1669) - Enable SeqKit stats MultiQC module for RiboDetector rRNA removal
 - [PR #1672](https://github.com/nf-core/rnaseq/pull/1672) - Document star_rsem STAR aligner settings and customization
+- [PR #1677](https://github.com/nf-core/rnaseq/pull/1677) - Apply Nextflow 25 strict syntax fixes
+- [PR #1685](https://github.com/nf-core/rnaseq/pull/1685) - Add GPU-accelerated STAR alignment and mark duplicates using NVIDIA Parabricks rna_fq2bam (`--use_parabricks_star`)
 
 ### Parameters
 
-| Old parameter | New parameter         |
-| ------------- | --------------------- |
-|               | `--ribo_removal_tool` |
+| Old parameter | New parameter           |
+| ------------- | ----------------------- |
+|               | `--ribo_removal_tool`   |
+|               | `--use_parabricks_star` |
 
 > **NB:** Parameter has been **added** if just the new parameter information is present.
 

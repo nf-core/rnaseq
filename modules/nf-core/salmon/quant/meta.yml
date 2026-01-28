@@ -77,13 +77,29 @@ output:
           pattern: "*lib_format_counts.json"
           ontologies:
             - edam: http://edamontology.org/format_3464 # JSON
+  versions_salmon:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - salmon:
+          type: string
+          description: The tool name
+      - salmon --version | sed -e "s/salmon //g":
+          type: eval
+          description: The expression to obtain the version of the tool
+
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - salmon:
+          type: string
+          description: The tool name
+      - salmon --version | sed -e "s/salmon //g":
+          type: eval
+          description: The expression to obtain the version of the tool
+
 authors:
   - "@kevinmenden"
   - "@drpatelh"

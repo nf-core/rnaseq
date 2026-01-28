@@ -1362,7 +1362,7 @@
                     "cat": 9.5
                 },
                 "CUSTOM_CATADDITIONALFASTA": {
-                    "python": null
+                    "python": "3.12.2"
                 },
                 "FASTQC": {
                     "fastqc": "0.12.1"

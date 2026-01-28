@@ -38,10 +38,10 @@ process STAR_ALIGN_IGENOMES {
     def prefix = task.ext.prefix ?: "${meta.id}"
     def reads1 = []
     def reads2 = []
-    meta.single_end ? [reads].flatten().each{reads1 << it} : reads.eachWithIndex{ v, ix -> ( ix & 1 ? reads2 : reads1) << v }
-    def ignore_gtf      = star_ignore_sjdbgtf ? '' : "--sjdbGTFfile $gtf"
-    def seq_platform    = seq_platform ? "'PL:$seq_platform'" : ""
-    def seq_center      = seq_center ? "--outSAMattrRGline ID:$prefix 'CN:$seq_center' 'SM:$prefix' $seq_platform " : "--outSAMattrRGline ID:$prefix 'SM:$prefix' $seq_platform "
+    meta.single_end ? [reads].flatten().each{ read -> reads1 << read } : reads.eachWithIndex{ v, ix -> ( ix & 1 ? reads2 : reads1) << v }
+    def ignore_gtf       = star_ignore_sjdbgtf ? '' : "--sjdbGTFfile $gtf"
+    def seq_platform_str = seq_platform ? "'PL:$seq_platform'" : ""
+    def seq_center_str   = seq_center ? "--outSAMattrRGline ID:$prefix 'CN:$seq_center' 'SM:$prefix' $seq_platform_str " : "--outSAMattrRGline ID:$prefix 'SM:$prefix' $seq_platform_str "
     def out_sam_type    = (args.contains('--outSAMtype')) ? '' : '--outSAMtype BAM Unsorted'
     def mv_unsorted_bam = (args.contains('--outSAMtype BAM Unsorted SortedByCoordinate')) ? "mv ${prefix}.Aligned.out.bam ${prefix}.Aligned.unsort.out.bam" : ''
     """
@@ -52,7 +52,7 @@ process STAR_ALIGN_IGENOMES {
         --outFileNamePrefix $prefix. \\
         $out_sam_type \\
         $ignore_gtf \\
-        $seq_center \\
+        $seq_center_str \\
         $args
 
     $mv_unsorted_bam

@@ -17,7 +17,11 @@
                     
                 ],
                 "3": [
-                    "versions.yml:md5,05f671c6c6e530acedad0af0a5948dbd"
+                    [
+                        "GFFREAD",
+                        "gffread",
+                        "0.12.7"
+                    ]
                 ],
                 "gffread_fasta": [
                     
@@ -33,16 +37,20 @@
                         "test.gtf:md5,1ea0ae98d3388e0576407dc4a24ef428"
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,05f671c6c6e530acedad0af0a5948dbd"
+                "versions_gffread": [
+                    [
+                        "GFFREAD",
+                        "gffread",
+                        "0.12.7"
+                    ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-04-09T10:48:56.496187"
+        "timestamp": "2026-01-19T14:04:00.517880519"
     },
     "sarscov2-gff3-gff3": {
         "content": [
@@ -62,7 +70,11 @@
                     
                 ],
                 "3": [
-                    "versions.yml:md5,05f671c6c6e530acedad0af0a5948dbd"
+                    [
+                        "GFFREAD",
+                        "gffread",
+                        "0.12.7"
+                    ]
                 ],
                 "gffread_fasta": [
                     
@@ -78,16 +90,20 @@
                 "gtf": [
                     
                 ],
-                "versions": [
-                    "versions.yml:md5,05f671c6c6e530acedad0af0a5948dbd"
+                "versions_gffread": [
+                    [
+                        "GFFREAD",
+                        "gffread",
+                        "0.12.7"
+                    ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-04-09T10:49:00.892782"
+        "timestamp": "2026-01-19T14:04:11.054206957"
     },
     "sarscov2-gff3-gtf-stub": {
         "content": [
@@ -107,7 +123,11 @@
                     
                 ],
                 "3": [
-                    "versions.yml:md5,05f671c6c6e530acedad0af0a5948dbd"
+                    [
+                        "GFFREAD",
+                        "gffread",
+                        "0.12.7"
+                    ]
                 ],
                 "gffread_fasta": [
                     
@@ -123,16 +143,20 @@
                         "test.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,05f671c6c6e530acedad0af0a5948dbd"
+                "versions_gffread": [
+                    [
+                        "GFFREAD",
+                        "gffread",
+                        "0.12.7"
+                    ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-04-09T11:11:26.975666"
+        "timestamp": "2026-01-19T14:04:05.79250369"
     },
     "sarscov2-gff3-fasta-stub": {
         "content": [
@@ -152,7 +176,11 @@
                     ]
                 ],
                 "3": [
-                    "versions.yml:md5,05f671c6c6e530acedad0af0a5948dbd"
+                    [
+                        "GFFREAD",
+                        "gffread",
+                        "0.12.7"
+                    ]
                 ],
                 "gffread_fasta": [
                     [
@@ -168,16 +196,20 @@
                 "gtf": [
                     
                 ],
-                "versions": [
-                    "versions.yml:md5,05f671c6c6e530acedad0af0a5948dbd"
+                "versions_gffread": [
+                    [
+                        "GFFREAD",
+                        "gffread",
+                        "0.12.7"
+                    ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-04-09T11:11:44.34792"
+        "timestamp": "2026-01-19T14:04:26.781173161"
     },
     "sarscov2-gff3-gff3-stub": {
         "content": [
@@ -197,7 +229,11 @@
                     
                 ],
                 "3": [
-                    "versions.yml:md5,05f671c6c6e530acedad0af0a5948dbd"
+                    [
+                        "GFFREAD",
+                        "gffread",
+                        "0.12.7"
+                    ]
                 ],
                 "gffread_fasta": [
                     
@@ -213,16 +249,20 @@
                 "gtf": [
                     
                 ],
-                "versions": [
-                    "versions.yml:md5,05f671c6c6e530acedad0af0a5948dbd"
+                "versions_gffread": [
+                    [
+                        "GFFREAD",
+                        "gffread",
+                        "0.12.7"
+                    ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-04-09T11:11:35.221671"
+        "timestamp": "2026-01-19T14:04:16.265299123"
     },
     "sarscov2-gff3-fasta": {
         "content": [
@@ -242,7 +282,11 @@
                     ]
                 ],
                 "3": [
-                    "versions.yml:md5,05f671c6c6e530acedad0af0a5948dbd"
+                    [
+                        "GFFREAD",
+                        "gffread",
+                        "0.12.7"
+                    ]
                 ],
                 "gffread_fasta": [
                     [
@@ -258,15 +302,19 @@
                 "gtf": [
                     
                 ],
-                "versions": [
-                    "versions.yml:md5,05f671c6c6e530acedad0af0a5948dbd"
+                "versions_gffread": [
+                    [
+                        "GFFREAD",
+                        "gffread",
+                        "0.12.7"
+                    ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-04-09T10:54:02.88143"
+        "timestamp": "2026-01-19T14:04:21.551846584"
     }
 }

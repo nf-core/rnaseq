@@ -54,7 +54,7 @@ workflow NFCORE_RNASEQ {
 
     main:
 
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     //
     // SUBWORKFLOW: Prepare reference genome files
@@ -95,17 +95,17 @@ workflow NFCORE_RNASEQ {
         PREPARE_GENOME
             .out
             .fai
-            .map { checkMaxContigSize(it) }
+            .map { fai -> checkMaxContigSize(fai) }
     }
 
     //
     // WORKFLOW: Run nf-core/rnaseq workflow
     //
-    ch_samplesheet = Channel.value(file(params.input, checkIfExists: true))
+    ch_samplesheet = channel.value(file(params.input, checkIfExists: true))
 
     // Bowtie2 rRNA index is built on-demand inside the fastq_remove_rrna subworkflow
     // rather than in PREPARE_GENOME, to avoid duplicating the rRNA FASTA preparation logic
-    ch_bowtie2_index = Channel.empty()
+    ch_bowtie2_index = channel.empty()
 
     RNASEQ (
         ch_samplesheet,

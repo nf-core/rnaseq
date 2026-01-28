@@ -14,7 +14,7 @@ workflow QUANTIFY_RSEM {
 
     main:
 
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     //
     // Quantify reads with RSEM
@@ -23,23 +23,24 @@ workflow QUANTIFY_RSEM {
     if (use_sentieon_star){
         SENTIEON_RSEMCALCULATEEXPRESSION ( reads, index )
         ch_rsem_out = SENTIEON_RSEMCALCULATEEXPRESSION
+        // SENTIEON_RSEMCALCULATEEXPRESSION uses topic-based version reporting
     } else {
         RSEM_CALCULATEEXPRESSION ( reads, index )
         ch_rsem_out = RSEM_CALCULATEEXPRESSION
+        ch_versions = ch_versions.mix(RSEM_CALCULATEEXPRESSION.out.versions.first())
     }
 
     ch_counts_gene = ch_rsem_out.out.counts_gene
     ch_counts_transcript = ch_rsem_out.out.counts_transcript
     ch_stat = ch_rsem_out.out.stat
     ch_logs = ch_rsem_out.out.logs
-    ch_versions = ch_versions.mix(ch_rsem_out.out.versions.first())
 
     //
     // Merge counts across samples
     //
     RSEM_MERGE_COUNTS (
-        ch_counts_gene.collect{it[1]},       // [meta, counts]: Collect the second element (counts files) in the channel across all samples
-        ch_counts_transcript.collect{it[1]}
+        ch_counts_gene.collect{ tuple -> tuple[1] },       // [meta, counts]: Collect the second element (counts files) in the channel across all samples
+        ch_counts_transcript.collect{ tuple -> tuple[1] }
     )
     ch_versions = ch_versions.mix(RSEM_MERGE_COUNTS.out.versions)
 

@@ -17,11 +17,14 @@ process SENTIEON_RSEMCALCULATEEXPRESSION {
     tuple val(meta), path("*.isoforms.results"), emit: counts_transcript
     tuple val(meta), path("*.stat")            , emit: stat
     tuple val(meta), path("*.log")             , emit: logs, optional:true
-    path  "versions.yml"                       , emit: versions
 
     tuple val(meta), path("*.STAR.genome.bam")       , optional:true, emit: bam_star
     tuple val(meta), path("${prefix}.genome.bam")    , optional:true, emit: bam_genome
     tuple val(meta), path("${prefix}.transcript.bam"), optional:true, emit: bam_transcript
+
+    tuple val("${task.process}"), val('rsem'), eval('rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g"'), topic: versions, emit: versions_rsem
+    tuple val("${task.process}"), val('star'), eval('STAR --version | sed -e "s/STAR_//g"'), topic: versions, emit: versions_star
+    tuple val("${task.process}"), val('sentieon'), eval('sentieon driver --version 2>&1 | sed -e "s/sentieon-genomics-//g"'), topic: versions, emit: versions_sentieon
 
     when:
     task.ext.when == null || task.ext.when
@@ -49,6 +52,8 @@ process SENTIEON_RSEMCALCULATEEXPRESSION {
         : ""
 
     """
+    $sentieonLicense
+
     INDEX=`find -L ./ -name "*.grp" | sed 's/\\.grp\$//'`
 
     # Create symlink to sentieon in PATH
@@ -76,19 +81,16 @@ process SENTIEON_RSEMCALCULATEEXPRESSION {
         $reads \\
         \$INDEX \\
         $prefix
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        rsem: \$(rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g")
-        star: \$(STAR --version | sed -e "s/STAR_//g")
-        sentieon: \$(echo \$(sentieon driver --version 2>&1) | sed -e "s/sentieon-genomics-//g")
-    END_VERSIONS
     """
 
     stub:
     prefix = task.ext.prefix ?: "${meta.id}"
     def is_bam = reads.toString().toLowerCase().endsWith('.bam')
     """
+    # Create symlink to sentieon in PATH for version detection
+    ln -sf \$(which sentieon) ./STAR
+    export PATH=".:\$PATH"
+
     touch ${prefix}.genes.results
     touch ${prefix}.isoforms.results
     touch ${prefix}.stat
@@ -101,12 +103,5 @@ process SENTIEON_RSEMCALCULATEEXPRESSION {
 
     touch ${prefix}.genome.bam
     touch ${prefix}.transcript.bam
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        rsem: \$(rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g")
-        star: \$(STAR --version | sed -e "s/STAR_//g")
-        sentieon: \$(echo \$(sentieon driver --version 2>&1) | sed -e "s/sentieon-genomics-//g")
-    END_VERSIONS
     """
 }

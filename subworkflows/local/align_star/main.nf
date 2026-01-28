@@ -10,7 +10,7 @@ include { BAM_SORT_STATS_SAMTOOLS                           } from '../../nf-cor
 //
 // Function that parses and returns the alignment rate from the STAR log output
 //
-def getStarPercentMapped(params, align_log) {
+def getStarPercentMapped(_params, align_log) {
     def percent_aligned = 0
     def pattern = /Uniquely mapped reads %\s*\|\s*([\d\.]+)%/
     align_log.eachLine { line ->
@@ -39,7 +39,7 @@ workflow ALIGN_STAR {
 
     main:
 
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     //
     // Map reads with STAR
@@ -49,6 +49,7 @@ workflow ALIGN_STAR {
 
         SENTIEON_STAR_ALIGN(reads, index, gtf, star_ignore_sjdbgtf, seq_platform, seq_center)
         ch_star_out = SENTIEON_STAR_ALIGN
+        // SENTIEON_STAR_ALIGN uses topic-based version reporting
 
     } else if (use_parabricks_star) {
 
@@ -59,11 +60,13 @@ workflow ALIGN_STAR {
 
         STAR_ALIGN_IGENOMES(reads, index, gtf, star_ignore_sjdbgtf, seq_platform, seq_center)
         ch_star_out = STAR_ALIGN_IGENOMES
+        ch_versions = ch_versions.mix(STAR_ALIGN_IGENOMES.out.versions.first())
 
     } else {
 
         STAR_ALIGN(reads, index, gtf, star_ignore_sjdbgtf, seq_platform, seq_center)
         ch_star_out = STAR_ALIGN
+        ch_versions = ch_versions.mix(STAR_ALIGN.out.versions.first())
 
     }
 
@@ -75,7 +78,6 @@ workflow ALIGN_STAR {
     ch_bam_transcript = ch_star_out.out.bam_transcript
     ch_fastq = ch_star_out.out.fastq
     ch_tab = ch_star_out.out.tab
-    ch_versions = ch_versions.mix(ch_star_out.out.versions.first())
     ch_percent_mapped = ch_log_final.map { meta, log -> [ meta, getStarPercentMapped(params, log) ] }
 
     //

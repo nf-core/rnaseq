@@ -15,9 +15,9 @@ process PARABRICKS_RNAFQ2BAM {
     val mark_duplicates
 
     output:
-    tuple val(meta), path("${prefix}.Log.final.out")                    , emit: log_final
-    tuple val(meta), path("${prefix}.Log.out")                          , emit: log_out
-    tuple val(meta), path("${prefix}.Log.progress.out")                 , emit: log_progress
+    tuple val(meta), path('*Log.final.out')                             , emit: log_final
+    tuple val(meta), path('*Log.out')                                   , emit: log_out
+    tuple val(meta), path('*Log.progress.out')                          , emit: log_progress
     path  "versions.yml"                                                , emit: versions
 
     tuple val(meta), path("${prefix}.bam")                              , optional:true, emit: bam
@@ -88,6 +88,8 @@ process PARABRICKS_RNAFQ2BAM {
     touch ${prefix}.bam
     touch ${prefix}.bam.bai
     touch ${prefix}.Log.final.out
+    touch ${prefix}.Log.out
+    touch ${prefix}.Log.progress.out
     touch ${prefix}.sortedByCoord.out.bam
     touch ${prefix}.toTranscriptome.out.bam
     touch ${prefix}.Aligned.unsort.out.bam

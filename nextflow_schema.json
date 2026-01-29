@@ -402,7 +402,7 @@
                     "description": "Optionally accelerate STAR with Sentieon",
                     "fa_icon": "fas fa-running"
                 },
-                "use_parabrikcs_star": {
+                "use_parabricks_star": {
                     "type": "boolean",
                     "description": "Optionally accelerate STAR and MarkDuplicates with Parabricks"
                 },
@@ -455,7 +455,7 @@
                 },
                 "min_mapped_reads": {
                     "type": "number",
-                    "default": 5,
+                    "default": 5.0,
                     "fa_icon": "fas fa-percentage",
                     "description": "Minimum percentage of uniquely mapped reads below which samples are removed from further processing.",
                     "help_text": "Downstream pipeline steps may fail if this threshold is set too low."

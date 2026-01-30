@@ -15,9 +15,9 @@ process PARABRICKS_RNAFQ2BAM {
     val mark_duplicates
 
     output:
-    tuple val(meta), path('Log.final.out'),                     emit: log_final
-    tuple val(meta), path('Log.out'),                           emit: log_out
-    tuple val(meta), path('Log.progress.out'),                  emit: log_progress
+    tuple val(meta), path("${prefix}.Log.final.out"),           emit: log_final
+    tuple val(meta), path("*Log.out"),                          emit: log_out
+    tuple val(meta), path("*Log.progress.out"),                 emit: log_progress
     tuple val(meta), path("${prefix}.bam"),                     emit: bam,                  optional:true
     tuple val(meta), path("${prefix}.bam.bai"),                 emit: bai,                  optional:true
     tuple val(meta), path("*.sortedByCoord.out.bam"),           emit: bam_sorted,           optional:true

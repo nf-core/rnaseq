@@ -1,15 +1,14 @@
 nextflow_workflow {
 
-    name "Test Subworkflow ALIGN_STAR - Sentieon"
+    name "Test Subworkflow ALIGN_STAR - Parabricks"
     script "../main.nf"
     workflow "ALIGN_STAR"
-    config "./sentieon.config"
+    config "./parabricks.config"
 
-    test("sentieon star - no igenomes") {
-        tag "sentieon"
+    test("parabricks star") {
         setup {
-            run("STAR_GENOMEGENERATE") {
-                script "../../../../modules/nf-core/star/genomegenerate/main.nf"
+            run("PARABRICKS_STARGENOMEGENERATE") {
+                script "../../../../modules/nf-core/parabricks/stargenomegenerate/main.nf"
                 process {
                     """
                     input[0] = Channel.of([
@@ -32,8 +31,9 @@ nextflow_workflow {
                 seq_platform        = 'illumina'
                 seq_center          = false
                 is_aws_igenome      = false
-                use_sentieon_star   = true
-                use_parabricks_star = false
+                use_sentieon_star   = false
+                use_parabricks_star = true
+                skip_markduplicates = false
 
                 input[0] = Channel.of([
                     [ id:'test', single_end:false ], // meta map
@@ -42,7 +42,7 @@ nextflow_workflow {
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
                 ])
-                input[1] = STAR_GENOMEGENERATE.out.index
+                input[1] = PARABRICKS_STARGENOMEGENERATE.out.index
                 input[2] = Channel.of([
                     [ id:'test_gtf' ],
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
@@ -57,7 +57,7 @@ nextflow_workflow {
                 ])
                 input[8] = use_sentieon_star
                 input[9] = use_parabricks_star
-                input[10] = params.skip_markduplicates
+                input[10] = skip_markduplicates
                 """
             }
         }
@@ -83,13 +83,12 @@ nextflow_workflow {
         }
     }
 
-    test("sentieon star - no igenomes - stub") {
-        tag "sentieon"
+    test("parabricks star - stub") {
         options "-stub"
 
         setup {
-            run("STAR_GENOMEGENERATE") {
-                script "../../../../modules/nf-core/star/genomegenerate/main.nf"
+            run("PARABRICKS_STARGENOMEGENERATE") {
+                script "../../../../modules/nf-core/parabricks/stargenomegenerate/main.nf"
                 process {
                     """
                     input[0] = Channel.of([
@@ -112,10 +111,9 @@ nextflow_workflow {
                 seq_platform        = 'illumina'
                 seq_center          = false
                 is_aws_igenome      = false
-                use_sentieon_star   = true
-                use_parabricks_star = false
-                skip_markduplicates = true
-                use_parabricks_star = false
+                use_sentieon_star   = false
+                use_parabricks_star = true
+                skip_markduplicates = false
 
                 input[0] = Channel.of([
                     [ id:'test', single_end:false ], // meta map
@@ -124,7 +122,7 @@ nextflow_workflow {
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
                 ])
-                input[1] = STAR_GENOMEGENERATE.out.index
+                input[1] = PARABRICKS_STARGENOMEGENERATE.out.index
                 input[2] = Channel.of([
                     [ id:'test_gtf' ],
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
@@ -139,7 +137,7 @@ nextflow_workflow {
                 ])
                 input[8] = use_sentieon_star
                 input[9] = use_parabricks_star
-                input[10] = params.skip_markduplicates
+                input[10] = skip_markduplicates
                 """
             }
         }

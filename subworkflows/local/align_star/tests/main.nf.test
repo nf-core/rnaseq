@@ -33,6 +33,7 @@ nextflow_workflow {
                 seq_center          = false
                 is_aws_igenome      = false
                 use_sentieon_star   = false
+                use_parabricks_star = false
 
                 input[0] = Channel.of([
                     [ id:'test', single_end:false ], // meta map
@@ -55,6 +56,8 @@ nextflow_workflow {
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
                 ])
                 input[8] = use_sentieon_star
+                input[9] = use_parabricks_star
+                input[10] = params.skip_markduplicates
                 """
             }
         }
@@ -102,6 +105,7 @@ nextflow_workflow {
                 seq_center          = false
                 is_aws_igenome      = true
                 use_sentieon_star   = false
+                use_parabricks_star  = false
 
                 input[0] = Channel.of([
                     [ id:'test', single_end:false ], // meta map
@@ -124,6 +128,8 @@ nextflow_workflow {
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
                 ])
                 input[8] = use_sentieon_star
+                input[9] = use_parabricks_star
+                input[10] = params.skip_markduplicates
                 """
             }
         }
@@ -179,6 +185,7 @@ nextflow_workflow {
                 seq_center          = false
                 is_aws_igenome      = false
                 use_sentieon_star   = false
+                use_parabricks_star = false
 
                 input[0] = Channel.of([
                     [ id:'test', single_end:false ], // meta map
@@ -201,6 +208,8 @@ nextflow_workflow {
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
                 ])
                 input[8] = use_sentieon_star
+                input[9] = use_parabricks_star
+                input[10] = params.skip_markduplicates
                 """
             }
         }
@@ -251,6 +260,7 @@ nextflow_workflow {
                 seq_center          = false
                 is_aws_igenome      = true
                 use_sentieon_star   = false
+                use_parabricks_star = false
 
                 input[0] = Channel.of([
                     [ id:'test', single_end:false ], // meta map
@@ -273,6 +283,8 @@ nextflow_workflow {
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
                 ])
                 input[8] = use_sentieon_star
+                input[9] = use_parabricks_star
+                input[10] = params.skip_markduplicates
                 """
             }
         }

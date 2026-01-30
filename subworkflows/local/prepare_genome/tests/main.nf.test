@@ -56,7 +56,7 @@ nextflow_workflow {
                 { assert workflow.success},
                 { assert snapshot(
                     workflow.out.transcript_fasta,
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.fasta,
                     workflow.out.gtf,
                     workflow.out.fai,
@@ -64,10 +64,10 @@ nextflow_workflow {
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
             )
@@ -125,7 +125,7 @@ nextflow_workflow {
                 { assert workflow.success},
                 { assert snapshot(
                     workflow.out.transcript_fasta,
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.fasta,
                     workflow.out.gtf,
                     workflow.out.fai,
@@ -133,10 +133,10 @@ nextflow_workflow {
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
             )
@@ -194,7 +194,7 @@ nextflow_workflow {
                 { assert workflow.success},
                 { assert snapshot(
                     workflow.out.transcript_fasta,
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.fasta,
                     workflow.out.gtf,
                     workflow.out.fai,
@@ -202,10 +202,10 @@ nextflow_workflow {
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
             )
@@ -263,7 +263,7 @@ nextflow_workflow {
                 { assert workflow.success},
                 { assert snapshot(
                     workflow.out.transcript_fasta,
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.fasta,
                     workflow.out.gtf,
                     workflow.out.fai,
@@ -271,10 +271,10 @@ nextflow_workflow {
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
             )
@@ -332,7 +332,7 @@ nextflow_workflow {
                 { assert workflow.success},
                 { assert snapshot(
                     workflow.out.transcript_fasta,
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.fasta,
                     workflow.out.gtf,
                     workflow.out.fai,
@@ -340,10 +340,10 @@ nextflow_workflow {
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
             )
@@ -401,7 +401,7 @@ nextflow_workflow {
                 { assert workflow.success},
                 { assert snapshot(
                     workflow.out.transcript_fasta,
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.fasta,
                     workflow.out.gtf,
                     workflow.out.fai,
@@ -409,10 +409,10 @@ nextflow_workflow {
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
             )
@@ -470,7 +470,7 @@ nextflow_workflow {
                 { assert workflow.success},
                 { assert snapshot(
                     workflow.out.transcript_fasta,
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.fasta,
                     workflow.out.gtf,
                     workflow.out.fai,
@@ -478,10 +478,10 @@ nextflow_workflow {
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
             )
@@ -539,7 +539,7 @@ nextflow_workflow {
                 { assert workflow.success},
                 { assert snapshot(
                     workflow.out.transcript_fasta,
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.fasta,
                     workflow.out.gtf,
                     workflow.out.fai,
@@ -547,10 +547,10 @@ nextflow_workflow {
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
             )
@@ -608,7 +608,7 @@ nextflow_workflow {
                 { assert workflow.success},
                 { assert snapshot(
                     workflow.out.transcript_fasta,
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.fasta,
                     workflow.out.gtf,
                     workflow.out.fai,
@@ -616,10 +616,10 @@ nextflow_workflow {
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
             )
@@ -677,7 +677,7 @@ nextflow_workflow {
                 { assert workflow.success},
                 { assert snapshot(
                     workflow.out.transcript_fasta,
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.fasta,
                     workflow.out.gtf,
                     workflow.out.fai,
@@ -685,10 +685,10 @@ nextflow_workflow {
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
             )
@@ -746,7 +746,7 @@ nextflow_workflow {
                 { assert workflow.success},
                 { assert snapshot(
                     workflow.out.transcript_fasta,
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.fasta,
                     workflow.out.gtf,
                     workflow.out.fai,
@@ -754,10 +754,10 @@ nextflow_workflow {
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
             )
@@ -815,7 +815,7 @@ nextflow_workflow {
                 { assert workflow.success},
                 { assert snapshot(
                     workflow.out.transcript_fasta,
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.fasta,
                     workflow.out.gtf,
                     workflow.out.fai,
@@ -823,10 +823,10 @@ nextflow_workflow {
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
             )
@@ -884,7 +884,7 @@ nextflow_workflow {
                 { assert workflow.success},
                 { assert snapshot(
                     workflow.out.transcript_fasta,
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.fasta,
                     workflow.out.gtf,
                     workflow.out.fai,
@@ -892,10 +892,10 @@ nextflow_workflow {
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
             )
@@ -953,7 +953,7 @@ nextflow_workflow {
                 { assert workflow.success},
                 { assert snapshot(
                     workflow.out.transcript_fasta,
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.fasta,
                     workflow.out.gtf,
                     workflow.out.fai,
@@ -961,10 +961,10 @@ nextflow_workflow {
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
             )
@@ -1022,7 +1022,7 @@ nextflow_workflow {
                 { assert workflow.success},
                 { assert snapshot(
                     workflow.out.transcript_fasta,
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.fasta,
                     workflow.out.gtf,
                     workflow.out.fai,
@@ -1030,10 +1030,10 @@ nextflow_workflow {
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
             )
@@ -1091,7 +1091,7 @@ nextflow_workflow {
                 { assert workflow.success},
                 { assert snapshot(
                     workflow.out.transcript_fasta,
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.fasta,
                     workflow.out.gtf,
                     workflow.out.fai,
@@ -1099,10 +1099,10 @@ nextflow_workflow {
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
             )
@@ -1160,7 +1160,7 @@ nextflow_workflow {
                 { assert workflow.success},
                 { assert snapshot(
                     workflow.out.transcript_fasta,
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.fasta,
                     workflow.out.gtf,
                     workflow.out.fai,
@@ -1168,10 +1168,10 @@ nextflow_workflow {
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
             )
@@ -1229,7 +1229,7 @@ nextflow_workflow {
                 { assert workflow.success},
                 { assert snapshot(
                     workflow.out.transcript_fasta,
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.fasta,
                     workflow.out.gtf,
                     workflow.out.fai,
@@ -1237,10 +1237,10 @@ nextflow_workflow {
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
             )
@@ -1298,7 +1298,7 @@ nextflow_workflow {
                 { assert workflow.success},
                 { assert snapshot(
                     workflow.out.transcript_fasta,
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.fasta,
                     workflow.out.gtf,
                     workflow.out.fai,
@@ -1306,10 +1306,10 @@ nextflow_workflow {
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
             )
@@ -1367,7 +1367,7 @@ nextflow_workflow {
                 { assert workflow.success},
                 { assert snapshot(
                     workflow.out.transcript_fasta,
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.fasta,
                     workflow.out.gtf,
                     workflow.out.fai,
@@ -1375,10 +1375,10 @@ nextflow_workflow {
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
             )
@@ -1436,7 +1436,7 @@ nextflow_workflow {
                 { assert workflow.success},
                 { assert snapshot(
                     workflow.out.transcript_fasta,
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.fasta,
                     workflow.out.gtf,
                     workflow.out.fai,
@@ -1444,10 +1444,10 @@ nextflow_workflow {
                     workflow.out.chrom_sizes,
                     workflow.out.splicesites,
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
             )
@@ -1511,13 +1511,13 @@ nextflow_workflow {
                     workflow.out.fasta,
                     workflow.out.gene_bed,
                     workflow.out.gtf,
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.sortmerna_index,
                     workflow.out.splicesites,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.transcript_fasta,
                     workflow.out.versions
                 ).match() }
@@ -1582,13 +1582,13 @@ nextflow_workflow {
                     workflow.out.fasta,
                     workflow.out.gene_bed,
                     workflow.out.gtf,
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.sortmerna_index,
                     workflow.out.splicesites,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.transcript_fasta,
                     workflow.out.versions
                 ).match() }
@@ -1653,13 +1653,13 @@ nextflow_workflow {
                     workflow.out.fasta,
                     workflow.out.gene_bed,
                     workflow.out.gtf,
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.sortmerna_index,
                     workflow.out.splicesites,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.transcript_fasta,
                     workflow.out.versions
                 ).match() }
@@ -1780,13 +1780,13 @@ nextflow_workflow {
                     workflow.out.fasta,
                     workflow.out.gene_bed,
                     workflow.out.gtf,
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.sortmerna_index,
                     workflow.out.splicesites,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.transcript_fasta,
                     workflow.out.versions
                 ).match() }
@@ -1851,13 +1851,13 @@ nextflow_workflow {
                     workflow.out.fasta,
                     workflow.out.gene_bed,
                     workflow.out.gtf,
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.sortmerna_index,
                     workflow.out.splicesites,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.transcript_fasta,
                     workflow.out.versions
                 ).match() }
@@ -1922,13 +1922,13 @@ nextflow_workflow {
                     workflow.out.fasta,
                     workflow.out.gene_bed,
                     workflow.out.gtf,
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.sortmerna_index,
                     workflow.out.splicesites,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.transcript_fasta,
                     workflow.out.versions
                 ).match() }
@@ -1993,13 +1993,13 @@ nextflow_workflow {
                     workflow.out.fasta,
                     workflow.out.gene_bed,
                     workflow.out.gtf,
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.sortmerna_index,
                     workflow.out.splicesites,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.transcript_fasta,
                     workflow.out.versions
                 ).match() }
@@ -2064,13 +2064,13 @@ nextflow_workflow {
                     workflow.out.fasta,
                     workflow.out.gene_bed,
                     workflow.out.gtf,
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.sortmerna_index,
                     workflow.out.splicesites,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.transcript_fasta,
                     workflow.out.versions
                 ).match() }
@@ -2135,13 +2135,13 @@ nextflow_workflow {
                     workflow.out.fasta,
                     workflow.out.gene_bed,
                     workflow.out.gtf,
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.sortmerna_index,
                     workflow.out.splicesites,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.transcript_fasta,
                     workflow.out.versions
                 ).match() }
@@ -2206,13 +2206,13 @@ nextflow_workflow {
                     workflow.out.fasta,
                     workflow.out.gene_bed,
                     workflow.out.gtf,
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.sortmerna_index,
                     workflow.out.splicesites,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.transcript_fasta,
                     workflow.out.versions
                 ).match() }
@@ -2277,13 +2277,13 @@ nextflow_workflow {
                     workflow.out.fasta,
                     workflow.out.gene_bed,
                     workflow.out.gtf,
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.sortmerna_index,
                     workflow.out.splicesites,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.transcript_fasta,
                     workflow.out.versions
                 ).match() }
@@ -2348,13 +2348,13 @@ nextflow_workflow {
                     workflow.out.fasta,
                     workflow.out.gene_bed,
                     workflow.out.gtf,
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.sortmerna_index,
                     workflow.out.splicesites,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.transcript_fasta,
                     workflow.out.versions
                 ).match() }
@@ -2419,13 +2419,13 @@ nextflow_workflow {
                     workflow.out.fasta,
                     workflow.out.gene_bed,
                     workflow.out.gtf,
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.sortmerna_index,
                     workflow.out.splicesites,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.transcript_fasta,
                     workflow.out.versions
                 ).match() }
@@ -2490,13 +2490,13 @@ nextflow_workflow {
                     workflow.out.fasta,
                     workflow.out.gene_bed,
                     workflow.out.gtf,
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.sortmerna_index,
                     workflow.out.splicesites,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.transcript_fasta,
                     workflow.out.versions
                 ).match() }
@@ -2561,13 +2561,13 @@ nextflow_workflow {
                     workflow.out.fasta,
                     workflow.out.gene_bed,
                     workflow.out.gtf,
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.sortmerna_index,
                     workflow.out.splicesites,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.transcript_fasta,
                     workflow.out.versions
                 ).match() }
@@ -2632,13 +2632,13 @@ nextflow_workflow {
                     workflow.out.fasta,
                     workflow.out.gene_bed,
                     workflow.out.gtf,
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.sortmerna_index,
                     workflow.out.splicesites,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.transcript_fasta,
                     workflow.out.versions
                 ).match() }
@@ -2703,13 +2703,13 @@ nextflow_workflow {
                     workflow.out.fasta,
                     workflow.out.gene_bed,
                     workflow.out.gtf,
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.sortmerna_index,
                     workflow.out.splicesites,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.transcript_fasta,
                     workflow.out.versions
                 ).match() }
@@ -2830,13 +2830,13 @@ nextflow_workflow {
                     workflow.out.fasta,
                     workflow.out.gene_bed,
                     workflow.out.gtf,
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.sortmerna_index,
                     workflow.out.splicesites,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.transcript_fasta,
                     workflow.out.versions
                 ).match() }
@@ -2901,13 +2901,13 @@ nextflow_workflow {
                     workflow.out.fasta,
                     workflow.out.gene_bed,
                     workflow.out.gtf,
-                    workflow.out.hisat2_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { file(it[1]).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.sortmerna_index,
                     workflow.out.splicesites,
-                    workflow.out.star_index.collect { file(it).listFiles().collect { it.getName() }.sort().toString() },
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.transcript_fasta,
                     workflow.out.versions
                 ).match() }

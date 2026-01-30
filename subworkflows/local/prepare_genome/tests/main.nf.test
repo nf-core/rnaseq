@@ -771,7 +771,7 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon'
+                aligner                  = 'star_rsem'
                 pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
@@ -909,7 +909,7 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon'
+                aligner                  = 'hisat2'
                 pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
@@ -2229,7 +2229,7 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon'
+                aligner                  = 'star_rsem'
                 pseudo_aligner           = 'salmon'
                 skip_gtf_filter           = false
                 skip_bbsplit             = false
@@ -2371,7 +2371,7 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon'
+                aligner                  = 'hisat2'
                 pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false

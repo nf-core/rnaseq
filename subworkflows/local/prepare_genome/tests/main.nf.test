@@ -12,8 +12,8 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
                 ribo_removal_tool        = null
@@ -81,8 +81,8 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
                 ribo_removal_tool        = null
@@ -150,8 +150,8 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = true
                 skip_bbsplit             = false
                 ribo_removal_tool        = null
@@ -219,8 +219,8 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter           = false
                 skip_bbsplit             = true
                 ribo_removal_tool        = null
@@ -288,8 +288,8 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
                 ribo_removal_tool        = null
@@ -357,8 +357,8 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
                 ribo_removal_tool        = null
@@ -426,8 +426,8 @@ nextflow_workflow {
                 """
                 gencode                  = true
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
                 ribo_removal_tool        = null
@@ -495,8 +495,8 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
                 ribo_removal_tool        = null
@@ -564,8 +564,8 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
                 ribo_removal_tool        = null
@@ -633,8 +633,8 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
                 ribo_removal_tool        = null
@@ -702,8 +702,8 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
                 ribo_removal_tool        = null
@@ -771,8 +771,8 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
                 ribo_removal_tool        = null
@@ -840,8 +840,8 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
                 ribo_removal_tool        = null
@@ -909,8 +909,8 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
                 ribo_removal_tool        = null
@@ -978,8 +978,8 @@ nextflow_workflow {
                 """
                 gencode                  = true
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
                 ribo_removal_tool        = null
@@ -1047,8 +1047,8 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_type'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
                 ribo_removal_tool        = null
@@ -1116,8 +1116,8 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = true
                 skip_bbsplit             = false
                 ribo_removal_tool        = null
@@ -1185,8 +1185,8 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = false
                 skip_bbsplit             = true
                 ribo_removal_tool        = null
@@ -1254,8 +1254,8 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
                 ribo_removal_tool        = null
@@ -1323,8 +1323,8 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
                 ribo_removal_tool        = null
@@ -1392,8 +1392,8 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
                 ribo_removal_tool        = null
@@ -1463,8 +1463,8 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
                 ribo_removal_tool        = null
@@ -1534,8 +1534,8 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
                 ribo_removal_tool        = null
@@ -1605,8 +1605,8 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = true
                 skip_bbsplit             = false
                 ribo_removal_tool        = null
@@ -1676,8 +1676,8 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = false
                 skip_bbsplit             = true
                 ribo_removal_tool        = null
@@ -1732,8 +1732,8 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
                 ribo_removal_tool        = null
@@ -1803,8 +1803,8 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
                 ribo_removal_tool        = null
@@ -1874,8 +1874,8 @@ nextflow_workflow {
                 """
                 gencode                  = true
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
                 ribo_removal_tool        = null
@@ -1945,8 +1945,8 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
                 ribo_removal_tool        = null
@@ -2016,8 +2016,8 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
                 ribo_removal_tool        = null
@@ -2087,8 +2087,8 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
                 ribo_removal_tool        = null
@@ -2158,8 +2158,8 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter           = false
                 skip_bbsplit             = false
                 ribo_removal_tool        = null
@@ -2229,8 +2229,8 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter           = false
                 skip_bbsplit             = false
                 ribo_removal_tool        = null
@@ -2300,8 +2300,8 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
                 ribo_removal_tool        = null
@@ -2371,8 +2371,8 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
                 ribo_removal_tool        = null
@@ -2442,8 +2442,8 @@ nextflow_workflow {
                 """
                 gencode                  = true
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
                 ribo_removal_tool        = null
@@ -2513,8 +2513,8 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_type'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
                 ribo_removal_tool        = null
@@ -2584,8 +2584,8 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = true
                 skip_bbsplit             = false
                 ribo_removal_tool        = null
@@ -2655,8 +2655,8 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = false
                 skip_bbsplit             = true
                 ribo_removal_tool        = null
@@ -2711,8 +2711,8 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
                 ribo_removal_tool        = null
@@ -2782,8 +2782,8 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
                 ribo_removal_tool        = null
@@ -2853,8 +2853,8 @@ nextflow_workflow {
                 """
                 gencode                  = false
                 featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon,star_rsem,hisat2'
-                pseudo_aligner           = 'salmon,kallisto'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
                 skip_gtf_filter          = false
                 skip_bbsplit             = false
                 ribo_removal_tool        = null

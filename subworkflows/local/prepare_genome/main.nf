@@ -36,7 +36,7 @@ include { PREPROCESS_TRANSCRIPTS_FASTA_GENCODE } from '../../../modules/local/pr
 include { GTF2BED                              } from '../../../modules/local/gtf2bed'
 include { GTF_FILTER                           } from '../../../modules/local/gtf_filter'
 include { STAR_GENOMEGENERATE_IGENOMES         } from '../../../modules/local/star_genomegenerate_igenomes'
-include { PARABRICKS_STARGENOMEGENERATE       } from '../../../modules/nf-core/parabricks/stargenomegenerate'
+include { PARABRICKS_STARGENOMEGENERATE        } from '../../../modules/nf-core/parabricks/stargenomegenerate'
 
 workflow PREPARE_GENOME {
 
@@ -304,9 +304,9 @@ workflow PREPARE_GENOME {
                 ch_versions   = ch_versions.mix(STAR_GENOMEGENERATE_IGENOMES.out.versions)
             } else if (use_parabricks_star) {
                 ch_star_index = PARABRICKS_STARGENOMEGENERATE(
-                    ch_fasta.map { [ [:], it ] },
-                    ch_gtf.map   { [ [:], it ] }
-                ).index.map { it[1] }
+                    ch_fasta.map { item -> [ [:], item ] },
+                    ch_gtf.map   { item -> [ [:], item ] }
+                ).index.map { tuple -> tuple[1] }
                 ch_versions   = ch_versions.mix(PARABRICKS_STARGENOMEGENERATE.out.versions)
             } else {
                 ch_star_index = STAR_GENOMEGENERATE(

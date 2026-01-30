@@ -971,6 +971,75 @@ nextflow_workflow {
         }
     }
 
+    test("kallisto_index = false") {
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'kallisto'
+                skip_gtf_filter          = false
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
+                input[8]  = null
+                input[9]  = null
+                input[10] = file(params.pipelines_testdata_base_path + 'reference/rsem.tar.gz', checkIfExists: true)
+                input[11] = file(params.pipelines_testdata_base_path + 'reference/salmon.tar.gz', checkIfExists: true)
+                input[12] = false
+                input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
+                input[14] = null
+                input[15] = null
+                input[16] = gencode
+                input[17] = featurecounts_group_type
+                input[18] = aligner
+                input[19] = pseudo_aligner
+                input[20] = skip_gtf_filter
+                input[21] = skip_bbsplit
+                input[22] = ribo_removal_tool
+                input[23] = skip_alignment
+                input[24] = skip_pseudo_alignment
+                input[25] = use_sentieon_star
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out.transcript_fasta,
+                    workflow.out.salmon_index,
+                    workflow.out.fasta,
+                    workflow.out.gtf,
+                    workflow.out.fai,
+                    workflow.out.gene_bed,
+                    workflow.out.chrom_sizes,
+                    workflow.out.splicesites,
+                    workflow.out.sortmerna_index,
+                    workflow.out.star_index,
+                    workflow.out.rsem_index,
+                    workflow.out.hisat2_index,
+                    workflow.out.kallisto_index,
+                    workflow.out.versions
+                ).match() }
+            )
+        }
+    }
+
     test("gencode = true") {
 
         when {
@@ -2394,6 +2463,77 @@ nextflow_workflow {
                 input[11] = false
                 input[12] = null
                 input[13] = false
+                input[14] = null
+                input[15] = null
+                input[16] = gencode
+                input[17] = featurecounts_group_type
+                input[18] = aligner
+                input[19] = pseudo_aligner
+                input[20] = skip_gtf_filter
+                input[21] = skip_bbsplit
+                input[22] = ribo_removal_tool
+                input[23] = skip_alignment
+                input[24] = skip_pseudo_alignment
+                input[25] = use_sentieon_star
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out.chrom_sizes,
+                    workflow.out.fai,
+                    workflow.out.fasta,
+                    workflow.out.gene_bed,
+                    workflow.out.gtf,
+                    workflow.out.hisat2_index,
+                    workflow.out.kallisto_index,
+                    workflow.out.rsem_index,
+                    workflow.out.salmon_index,
+                    workflow.out.sortmerna_index,
+                    workflow.out.splicesites,
+                    workflow.out.star_index,
+                    workflow.out.transcript_fasta,
+                    workflow.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("kallisto_index = false - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'kallisto'
+                skip_gtf_filter          = false
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
+                input[8]  = null
+                input[9]  = null
+                input[10] = file(params.pipelines_testdata_base_path + 'reference/rsem.tar.gz', checkIfExists: true)
+                input[11] = file(params.pipelines_testdata_base_path + 'reference/salmon.tar.gz', checkIfExists: true)
+                input[12] = false
+                input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
                 input[16] = gencode

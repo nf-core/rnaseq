@@ -23,7 +23,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1669](https://github.com/nf-core/rnaseq/pull/1669) - Enable SeqKit stats MultiQC module for RiboDetector rRNA removal
 - [PR #1672](https://github.com/nf-core/rnaseq/pull/1672) - Document star_rsem STAR aligner settings and customization
 - [PR #1677](https://github.com/nf-core/rnaseq/pull/1677) - Apply Nextflow 25 strict syntax fixes
-- [PR #1687](https://github.com/nf-core/rnaseq/pull/1687) - Fix PREPARE_GENOME test coverage: use single aligner values, correct aligner assignments for index-specific tests, add Kallisto index test
+- [PR #1687](https://github.com/nf-core/rnaseq/pull/1687) - Fix PREPARE_GENOME tests: use single aligner values, correct aligner assignments for index-specific tests, add Kallisto test, remove ineffective Sentieon tests, fix non-deterministic index snapshots
 
 ### Parameters
 

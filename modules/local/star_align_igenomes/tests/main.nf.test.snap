@@ -496,7 +496,7 @@
                         "id": "test",
                         "single_end": true
                     },
-                    "test.Aligned.sortedByCoord.out.bam:md5,e5060a8dd60584378786c588c3f25b4d"
+                    "test.Aligned.sortedByCoord.out.bam:md5,4f22a1a4ed562860c2f4d218f042c175"
                 ]
             ],
             [
@@ -505,7 +505,7 @@
                         "id": "test",
                         "single_end": true
                     },
-                    "test.Aligned.sortedByCoord.out.bam:md5,e5060a8dd60584378786c588c3f25b4d"
+                    "test.Aligned.sortedByCoord.out.bam:md5,4f22a1a4ed562860c2f4d218f042c175"
                 ]
             ],
             [
@@ -541,10 +541,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2024-07-22T20:04:35.055193"
+        "timestamp": "2026-02-02T10:18:57.836511916"
     },
     "homo_sapiens - paired_end": {
         "content": [
@@ -557,7 +557,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.Aligned.sortedByCoord.out.bam:md5,b6cec9bba6b04b9b92eddbef128bdfbb"
+                    "test.Aligned.sortedByCoord.out.bam:md5,cc578672bb566acca477a771ce071cd5"
                 ]
             ],
             [
@@ -566,7 +566,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.Aligned.sortedByCoord.out.bam:md5,b6cec9bba6b04b9b92eddbef128bdfbb"
+                    "test.Aligned.sortedByCoord.out.bam:md5,cc578672bb566acca477a771ce071cd5"
                 ]
             ],
             [
@@ -602,10 +602,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2024-07-22T20:05:25.626464"
+        "timestamp": "2026-02-02T10:19:47.153059231"
     },
     "homo_sapiens - paired_end - multiple - stub": {
         "content": [
@@ -861,7 +861,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.Aligned.sortedByCoord.out.bam:md5,7b20152380dbc52ec23d2e95a7953710"
+                    "test.Aligned.sortedByCoord.out.bam:md5,401f1e3653b182ecbd1214f2fc23c281"
                 ]
             ],
             [
@@ -870,7 +870,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.Aligned.sortedByCoord.out.bam:md5,7b20152380dbc52ec23d2e95a7953710"
+                    "test.Aligned.sortedByCoord.out.bam:md5,401f1e3653b182ecbd1214f2fc23c281"
                 ]
             ],
             [
@@ -906,10 +906,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2024-07-22T20:12:16.618713"
+        "timestamp": "2026-02-02T10:25:57.5544571"
     },
     "homo_sapiens - paired_end - stub": {
         "content": [
@@ -1165,7 +1165,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.Aligned.out.bam:md5,7806e69c537f72e494f9ce8e95f16355"
+                    "test.Aligned.out.bam:md5,09680d4146f4c9098435c575b34e69bc"
                 ]
             ],
             [
@@ -1187,7 +1187,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.Chimeric.out.junction:md5,c6d4d8c641ebb1c152a10da44f0dbf20"
+                    "test.Chimeric.out.junction:md5,bc42ae576503ab611b3d141708285d0c"
                 ]
             ],
             null,
@@ -1210,10 +1210,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2024-07-22T20:10:49.022723"
+        "timestamp": "2026-02-02T10:24:37.286823534"
     },
     "homo_sapiens - paired_end - arriba": {
         "content": [

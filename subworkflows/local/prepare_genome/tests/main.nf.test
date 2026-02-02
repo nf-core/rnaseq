@@ -1014,6 +1014,7 @@ nextflow_workflow {
                 skip_alignment           = false
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = false
+                use_parabricks_star      = false
 
                 input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
                 input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
@@ -1041,6 +1042,7 @@ nextflow_workflow {
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
+                input[26] = use_parabricks_star
                 """
             }
         }
@@ -1728,7 +1730,7 @@ nextflow_workflow {
                 skip_alignment           = false
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = false
-                                use_parabricks_star      = false
+                use_parabricks_star      = false
 
                 input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
                 input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
@@ -2296,7 +2298,8 @@ nextflow_workflow {
                 ribo_removal_tool        = null
                 skip_alignment           = false
                 skip_pseudo_alignment    = false
-                use_sentieon_star         = false
+                use_sentieon_star        = false
+                use_parabricks_star      = false
 
                 input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
                 input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
@@ -2588,6 +2591,7 @@ nextflow_workflow {
                 skip_alignment           = false
                 skip_pseudo_alignment    = false
                 use_sentieon_star        = false
+                use_parabricks_star      = false
 
                 input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
                 input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
@@ -2615,6 +2619,7 @@ nextflow_workflow {
                 input[23] = skip_alignment
                 input[24] = skip_pseudo_alignment
                 input[25] = use_sentieon_star
+                input[26] = use_parabricks_star
                 """
             }
         }

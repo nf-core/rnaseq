@@ -4,6 +4,7 @@ nextflow_workflow {
     script "../main.nf"
     workflow "ALIGN_STAR"
     config "./parabricks.config"
+    tag "gpu"
 
     test("parabricks star") {
         setup {

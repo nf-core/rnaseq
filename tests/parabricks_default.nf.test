@@ -4,6 +4,7 @@ nextflow_pipeline {
     script "../main.nf"
     tag "pipeline"
     tag "parabricks"
+    tag "gpu"
 
     test("Params: default aligner parabricks (no markdups)") {
 

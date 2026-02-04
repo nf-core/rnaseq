@@ -45,7 +45,7 @@ jobs:
 
       - name: run nf-test-shard action
         id: set-shards
-        uses: ./.github/actions/nf-test-shard
+        uses: ./.github/actions/get-shards
         env:
           NFT_VER: ${{ env.NFT_VER }}
         with:

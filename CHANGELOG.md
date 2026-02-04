@@ -24,21 +24,24 @@ Special thanks to the following for their contributions to the release:
 - [PR #1672](https://github.com/nf-core/rnaseq/pull/1672) - Document star_rsem STAR aligner settings and customization
 - [PR #1677](https://github.com/nf-core/rnaseq/pull/1677) - Apply Nextflow 25 strict syntax fixes
 - [PR #1687](https://github.com/nf-core/rnaseq/pull/1687) - Fix PREPARE_GENOME tests: use single aligner values, correct aligner assignments for index-specific tests, add Kallisto test, remove ineffective Sentieon tests, use file-names-only snapshots for all non-deterministic indices (STAR, Salmon, Kallisto, RSEM, HISAT2)
+- [PR #1688](https://github.com/nf-core/rnaseq/pull/1688) - Add prokaryotic RNA-seq support: new `-profile prokaryotic` for bacterial/archaeal data with Bowtie2+Salmon alignment, GFFREAD transcript extraction for CDS-only annotations, and automatic STAR CDS configuration
 
 ### Parameters
 
-| Old parameter | New parameter         |
-| ------------- | --------------------- |
-|               | `--ribo_removal_tool` |
+| Old parameter | New parameter                |
+| ------------- | ---------------------------- |
+|               | `--ribo_removal_tool`        |
+|               | `--sylph_db`                 |
+|               | `--sylph_taxonomy`           |
+|               | `--gffread_transcript_fasta` |
 
 > **NB:** Parameter has been **added** if just the new parameter information is present.
 
-### Parameters
+### Profiles
 
-| Old parameter | New parameter      |
-| ------------- | ------------------ |
-|               | `--sylph_db`       |
-|               | `--sylph_taxonomy` |
+| Profile       | Description                                            |
+| ------------- | ------------------------------------------------------ |
+| `prokaryotic` | Settings optimized for bacterial/archaeal RNA-seq data |
 
 ### Software dependencies
 

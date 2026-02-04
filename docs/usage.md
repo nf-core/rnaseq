@@ -435,12 +435,94 @@ As well as the standard annotations, GENCODE also provides "basic" annotations, 
 
 #### Prokaryotic genome annotations
 
-This pipeline uses featureCounts to generate QC metrics based on [biotype](http://www.ensembl.org/info/genome/genebuild/biotypes.html) information available within GFF/GTF genome annotation files. The format of these annotation files can vary significantly depending on the source of the annotation and the type of organism. The default settings in the pipeline are tailored towards Ensembl GTF annotations available for eukaryotic genomes. Prokaryotic genome annotations tend to be distributed in GFF format which are structured differently in terms of the feature naming conventions. There are a number of ways you can tune the behaviour of the pipeline to cater for differences/absence of biotype information:
+The pipeline includes a dedicated profile for analysing bacterial and archaeal RNA-seq data:
 
-- Use `--skip_biotype_qc` to bypass this step altogether in case biotype information is of no interest or isn't present in your annotation file.
-- Use `--skip_rseqc` since features like splice junctions, transcription start (TSS) and ending sites (TES) are less prevalent and therefore, less informative in prokaryotes compared to eukaryotes.
-- Use `--featurecounts_feature_type transcript` instead of `--featurecounts_feature_type transcript exon` (default) since entries for the latter may not contain a `--featurecounts_group_type gene_biotype` entry in the last column of the annotation. You should make sure that the value defined by `--featurecounts_feature_type` ideally contain corresponding entries for `featurecounts_group_type`.
-- Use `--featurecounts_feature_type 'CDS' --featurecounts_group_type 'product'` to identify the number of hypothetical proteins. However, the featureCounts QC will no longer reflect the biotype information from your RNA.
+> [!NOTE]
+> This pipeline is primarily designed for eukaryotic RNA-seq. The prokaryotic profile provides basic support but does not include specialist features like operon detection or TSS mapping.
+
+```bash
+nextflow run nf-core/rnaseq \
+    --input samplesheet.csv \
+    --fasta genome.fasta \
+    --gff annotation.gff3 \
+    --outdir results \
+    -profile prokaryotic,docker
+```
+
+##### Input requirements
+
+| Input        | Parameter          | Requirements                                                                                                       |
+| ------------ | ------------------ | ------------------------------------------------------------------------------------------------------------------ |
+| Samplesheet  | `--input`          | Standard CSV format (see [Samplesheet input](#samplesheet-input))                                                  |
+| Genome FASTA | `--fasta`          | Genomic sequence file (`.fasta`, `.fa`, `.fna`, optionally gzipped)                                                |
+| Annotation   | `--gff` or `--gtf` | Must contain **CDS features** with `gene_id` attributes. GFF3 format (`.gff3`, `.gff`) is typical for prokaryotes. |
+
+**Key points:**
+
+- **Use GFF3 format**: Prokaryotic annotations are typically distributed as GFF3 (not GTF). The pipeline accepts both via `--gff` or `--gtf`.
+- **CDS features required**: The annotation must contain CDS (coding sequence) features. The pipeline extracts transcripts from these.
+- **Matching contig names**: Chromosome/contig names in your FASTA must exactly match those in your GFF/GTF (e.g., if your FASTA has `>NC_003197.2`, your GFF must use `NC_003197.2` in column 1).
+- **No transcript FASTA needed**: The pipeline generates the transcript FASTA automatically using GFFREAD.
+
+The `-profile prokaryotic` configures the pipeline with settings optimized for prokaryotic data:
+
+- **Bowtie2 alignment**: Uses Bowtie2 instead of STAR as the default aligner. Prokaryotic genomes lack introns, so splice-aware aligners are unnecessary.
+- **GFFREAD transcript extraction**: Uses GFFREAD instead of RSEM to generate transcript sequences. Prokaryotic annotations typically use CDS features rather than exon features, and RSEM requires exon features.
+- **CDS-based counting**: Sets `featurecounts_feature_type` to `CDS` for QC metrics.
+- **Skips eukaryote-specific QC**: Disables RSeQC and dupRadar, which assume eukaryotic gene structures.
+
+You can override the aligner while keeping other prokaryotic settings:
+
+```bash
+# Use STAR instead of Bowtie2 with prokaryotic settings
+nextflow run nf-core/rnaseq \
+    --input samplesheet.csv \
+    --fasta genome.fasta \
+    --gff annotation.gff3 \
+    --outdir results \
+    --aligner star_salmon \
+    -profile prokaryotic,docker
+```
+
+When using STAR with `-profile prokaryotic`, the pipeline automatically configures STAR to use CDS features instead of exons for both index building and alignment.
+
+##### Annotation sources
+
+For prokaryotic genomes, we recommend using annotations from [Ensembl Bacteria](https://bacteria.ensembl.org/) when available, as these follow consistent formatting conventions. NCBI/RefSeq annotations can also work but may require additional attention:
+
+- **Contig name matching**: Ensure chromosome/contig names in your FASTA match those in your GTF/GFF. This is a common source of errors when mixing files from different sources.
+- **Empty transcript IDs**: Some bacterial GTFs from RefSeq contain gene entries with empty `transcript_id` fields, which can cause Salmon errors. If you encounter issues, check your annotation file and consider filtering problematic entries.
+
+##### Using GFFREAD independently
+
+The `--gffread_transcript_fasta` parameter can also be used independently of `-profile prokaryotic` for any situation where RSEM fails to extract transcripts correctly (e.g., non-standard annotation formats):
+
+```bash
+nextflow run nf-core/rnaseq \
+    --input samplesheet.csv \
+    --fasta genome.fasta \
+    --gtf annotation.gtf \
+    --gffread_transcript_fasta \
+    --outdir results \
+    -profile docker
+```
+
+##### Manual configuration (advanced)
+
+If you prefer not to use the profile, you can manually configure the pipeline for prokaryotic data. The following parameters are set by `-profile prokaryotic`:
+
+| Parameter                      | Value            | Purpose                     |
+| ------------------------------ | ---------------- | --------------------------- |
+| `--aligner`                    | `bowtie2_salmon` | Splice-unaware alignment    |
+| `--gffread_transcript_fasta`   | `true`           | Handle CDS-only annotations |
+| `--featurecounts_feature_type` | `CDS`            | QC counting on CDS features |
+| `--skip_rseqc`                 | `true`           | Skip eukaryote-specific QC  |
+| `--skip_dupradar`              | `true`           | Skip eukaryote-specific QC  |
+
+Additionally, you may want to set:
+
+- `--skip_biotype_qc` - if biotype information is not present or not of interest
+- `--skip_deseq2_qc` - if you have fewer than 3 samples per condition
 
 Please get in touch with us on the #rnaseq channel in the [nf-core Slack workspace](https://nf-co.re/join) if you are having problems or need any advice.
 
@@ -624,6 +706,10 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
 - `test`
   - A profile with a complete configuration for automated testing
   - Includes links to test data so needs no other parameters
+- `test_prokaryotic`
+  - A test profile for prokaryotic (bacterial/archaeal) RNA-seq data
+  - Uses Salmonella Typhimurium SL1344 test data with Bowtie2 alignment
+  - Includes all prokaryotic-specific settings; use `--aligner star_salmon --skip_bigwig false` to test with STAR
 - `docker`
   - A generic configuration profile to be used with [Docker](https://docker.com/)
 - `singularity`
@@ -642,6 +728,8 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
   - A generic configuration profile to be used with [Conda](https://conda.io/docs/). Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity, Podman, Shifter, Charliecloud, or Apptainer.
 - `arm64`
   - A configuration profile that applies overrides supplying ARM-compatible containers and Conda environments. See [Running on Linux ARM architectures](#running-on-linux-arm-architectures).
+- `prokaryotic`
+  - A configuration profile optimized for bacterial and archaeal RNA-seq data. Uses Bowtie2 for alignment and configures the pipeline to handle CDS-based annotations. See [Prokaryotic genome annotations](#prokaryotic-genome-annotations).
 
 ### `-resume`
 

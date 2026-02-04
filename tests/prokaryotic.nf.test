@@ -14,10 +14,9 @@ nextflow_pipeline {
                 outdir = "$outputDir"
 
                 // Prokaryotic test data - Salmonella Typhimurium SL1344
-                // TODO: Update to nf-core/test-datasets/rnaseq after https://github.com/nf-core/test-datasets/pull/1858 is merged
-                input = 'https://raw.githubusercontent.com/pinin4fjords/test-datasets/prokaryotic-test-data/samplesheet/prokaryotic/samplesheet_test.csv'
-                fasta = 'https://raw.githubusercontent.com/pinin4fjords/test-datasets/prokaryotic-test-data/reference/prokaryotic/SL1344_sub.fasta'
-                gff   = 'https://raw.githubusercontent.com/pinin4fjords/test-datasets/prokaryotic-test-data/reference/prokaryotic/SL1344_sub.gff3'
+                input = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/samplesheet/prokaryotic/samplesheet_test.csv'
+                fasta = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/reference/prokaryotic/SL1344_sub.fasta'
+                gff   = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/reference/prokaryotic/SL1344_sub.gff3'
                 gtf   = null
                 transcript_fasta = null
                 additional_fasta = null
@@ -71,10 +70,9 @@ nextflow_pipeline {
                 outdir = "$outputDir"
 
                 // Prokaryotic test data - Salmonella Typhimurium SL1344
-                // TODO: Update to nf-core/test-datasets/rnaseq after https://github.com/nf-core/test-datasets/pull/1858 is merged
-                input = 'https://raw.githubusercontent.com/pinin4fjords/test-datasets/prokaryotic-test-data/samplesheet/prokaryotic/samplesheet_test.csv'
-                fasta = 'https://raw.githubusercontent.com/pinin4fjords/test-datasets/prokaryotic-test-data/reference/prokaryotic/SL1344_sub.fasta'
-                gff   = 'https://raw.githubusercontent.com/pinin4fjords/test-datasets/prokaryotic-test-data/reference/prokaryotic/SL1344_sub.gff3'
+                input = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/samplesheet/prokaryotic/samplesheet_test.csv'
+                fasta = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/reference/prokaryotic/SL1344_sub.fasta'
+                gff   = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/reference/prokaryotic/SL1344_sub.gff3'
                 gtf   = null
                 transcript_fasta = null
                 additional_fasta = null
@@ -130,10 +128,9 @@ nextflow_pipeline {
                 outdir = "$outputDir"
 
                 // Prokaryotic test data - Salmonella Typhimurium SL1344
-                // TODO: Update to nf-core/test-datasets/rnaseq after https://github.com/nf-core/test-datasets/pull/1858 is merged
-                input = 'https://raw.githubusercontent.com/pinin4fjords/test-datasets/prokaryotic-test-data/samplesheet/prokaryotic/samplesheet_test.csv'
-                fasta = 'https://raw.githubusercontent.com/pinin4fjords/test-datasets/prokaryotic-test-data/reference/prokaryotic/SL1344_sub.fasta'
-                gff   = 'https://raw.githubusercontent.com/pinin4fjords/test-datasets/prokaryotic-test-data/reference/prokaryotic/SL1344_sub.gff3'
+                input = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/samplesheet/prokaryotic/samplesheet_test.csv'
+                fasta = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/reference/prokaryotic/SL1344_sub.fasta'
+                gff   = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/reference/prokaryotic/SL1344_sub.gff3'
                 gtf   = null
                 transcript_fasta = null
                 additional_fasta = null
@@ -187,10 +184,9 @@ nextflow_pipeline {
                 outdir = "$outputDir"
 
                 // Prokaryotic test data - Salmonella Typhimurium SL1344
-                // TODO: Update to nf-core/test-datasets/rnaseq after https://github.com/nf-core/test-datasets/pull/1858 is merged
-                input = 'https://raw.githubusercontent.com/pinin4fjords/test-datasets/prokaryotic-test-data/samplesheet/prokaryotic/samplesheet_test.csv'
-                fasta = 'https://raw.githubusercontent.com/pinin4fjords/test-datasets/prokaryotic-test-data/reference/prokaryotic/SL1344_sub.fasta'
-                gff   = 'https://raw.githubusercontent.com/pinin4fjords/test-datasets/prokaryotic-test-data/reference/prokaryotic/SL1344_sub.gff3'
+                input = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/samplesheet/prokaryotic/samplesheet_test.csv'
+                fasta = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/reference/prokaryotic/SL1344_sub.fasta'
+                gff   = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/reference/prokaryotic/SL1344_sub.gff3'
                 gtf   = null
                 transcript_fasta = null
                 additional_fasta = null

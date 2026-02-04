@@ -90,7 +90,7 @@
                     [
                         "STAR_ALIGN_IGENOMES",
                         "gawk",
-                        "5.1.0\nCopyright (C) 1989\n\nThis program is free software; you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation; either version 3 of the License\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program. If not"
+                        "5.1.0"
                     ]
                 ],
                 "6": [
@@ -255,7 +255,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-04T15:23:21.987598166"
+        "timestamp": "2026-02-04T16:15:20.628177815"
     },
     "homo_sapiens - paired_end - arriba - stub": {
         "content": [
@@ -348,7 +348,7 @@
                     [
                         "STAR_ALIGN_IGENOMES",
                         "gawk",
-                        "5.1.0\nCopyright (C) 1989\n\nThis program is free software; you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation; either version 3 of the License\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program. If not"
+                        "5.1.0"
                     ]
                 ],
                 "6": [
@@ -513,7 +513,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-04T15:23:46.315425141"
+        "timestamp": "2026-02-04T16:15:44.706512221"
     },
     "homo_sapiens - single_end": {
         "content": [
@@ -724,7 +724,7 @@
                     [
                         "STAR_ALIGN_IGENOMES",
                         "gawk",
-                        "5.1.0\nCopyright (C) 1989\n\nThis program is free software; you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation; either version 3 of the License\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program. If not"
+                        "5.1.0"
                     ]
                 ],
                 "6": [
@@ -889,7 +889,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-04T15:24:10.792306507"
+        "timestamp": "2026-02-04T16:16:08.769625297"
     },
     "homo_sapiens - paired_end - multiple": {
         "content": [
@@ -1041,7 +1041,7 @@
                     [
                         "STAR_ALIGN_IGENOMES",
                         "gawk",
-                        "5.1.0\nCopyright (C) 1989\n\nThis program is free software; you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation; either version 3 of the License\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program. If not"
+                        "5.1.0"
                     ]
                 ],
                 "6": [
@@ -1206,7 +1206,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-04T15:23:34.16311377"
+        "timestamp": "2026-02-04T16:15:32.686306324"
     },
     "homo_sapiens - paired_end - starfusion": {
         "content": [
@@ -1409,7 +1409,7 @@
                     [
                         "STAR_ALIGN_IGENOMES",
                         "gawk",
-                        "5.1.0\nCopyright (C) 1989\n\nThis program is free software; you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation; either version 3 of the License\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program. If not"
+                        "5.1.0"
                     ]
                 ],
                 "6": [
@@ -1574,6 +1574,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-04T15:23:58.549396635"
+        "timestamp": "2026-02-04T16:15:56.550343836"
     }
 }

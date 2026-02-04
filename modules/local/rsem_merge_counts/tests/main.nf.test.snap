@@ -24,7 +24,7 @@
                     [
                         "RSEM_MERGE_COUNTS",
                         "sed",
-                        "4.7\nPackaged\nCopyright\nLicense\nThis\nThere\n\nWritten\nPaolo\nGNU\nGeneral\nE-mail"
+                        "4.7"
                     ]
                 ],
                 "counts_gene": [
@@ -51,7 +51,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-04T14:39:01.366727788"
+        "timestamp": "2026-02-04T16:04:10.303476579"
     },
     "Should run without failures": {
         "content": [
@@ -78,7 +78,7 @@
                     [
                         "RSEM_MERGE_COUNTS",
                         "sed",
-                        "4.7\nPackaged\nCopyright\nLicense\nThis\nThere\n\nWritten\nPaolo\nGNU\nGeneral\nE-mail"
+                        "4.7"
                     ]
                 ],
                 "counts_gene": [
@@ -105,6 +105,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-04T14:38:50.330615456"
+        "timestamp": "2026-02-04T16:03:59.136798954"
     }
 }

@@ -9,7 +9,7 @@
                     [
                         "GTF2BED",
                         "perl",
-                        "5.26.2\n\nCopyright 1987-2018, Larry Wall\n\nPerl may be copied only under the terms of either the Artistic License or the\nGNU General Public License, which may be found in the Perl 5 source kit.\n\nComplete documentation for Perl, including FAQ lists, should be found on\nthis system using \"man perl\" or \"perldoc perl\".  If you have access to the\nInternet, point your browser at http://www.perl.org/, the Perl Home Page."
+                        "5.26.2"
                     ]
                 ],
                 "bed": [
@@ -21,7 +21,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-04T14:37:19.636514198"
+        "timestamp": "2026-02-04T15:59:11.068236092"
     },
     "sarscov2 - bam": {
         "content": [
@@ -33,7 +33,7 @@
                     [
                         "GTF2BED",
                         "perl",
-                        "5.26.2\n\nCopyright 1987-2018, Larry Wall\n\nPerl may be copied only under the terms of either the Artistic License or the\nGNU General Public License, which may be found in the Perl 5 source kit.\n\nComplete documentation for Perl, including FAQ lists, should be found on\nthis system using \"man perl\" or \"perldoc perl\".  If you have access to the\nInternet, point your browser at http://www.perl.org/, the Perl Home Page."
+                        "5.26.2"
                     ]
                 ],
                 "bed": [
@@ -45,6 +45,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-04T14:37:07.938840447"
+        "timestamp": "2026-02-04T15:58:59.523870298"
     }
 }

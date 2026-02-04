@@ -17,7 +17,7 @@ process RSEM_MERGE_COUNTS {
     path "rsem.merged.transcript_tpm.tsv"   , emit: tpm_transcript
     path "rsem.merged.genes_long.tsv"       , emit: genes_long
     path "rsem.merged.isoforms_long.tsv"    , emit: isoforms_long
-    tuple val("${task.process}"), val('sed'), eval("sed --version 2>&1 | sed 's/^.*GNU sed) //; s/ .*\$//'"), topic: versions
+    tuple val("${task.process}"), val('sed'), eval("sed --version 2>&1 | sed '1!d;s/^.*) //'"), topic: versions
 
     when:
     task.ext.when == null || task.ext.when

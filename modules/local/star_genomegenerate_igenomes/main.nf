@@ -15,7 +15,7 @@ process STAR_GENOMEGENERATE_IGENOMES {
     path "star", emit: index
     tuple val("${task.process}"), val('star'), eval("STAR --version | sed 's/STAR_//'"), topic: versions
     tuple val("${task.process}"), val('samtools'), eval("samtools version | sed '1!d;s/.* //'"), topic: versions
-    tuple val("${task.process}"), val('gawk'), eval("gawk --version 2>&1 | sed 's/^.*GNU Awk //; s/, .*\$//'"), topic: versions
+    tuple val("${task.process}"), val('gawk'), eval("gawk --version 2>&1 | sed '1!d;s/^.*GNU Awk //;s/,.*//'"), topic: versions
 
     when:
     task.ext.when == null || task.ext.when

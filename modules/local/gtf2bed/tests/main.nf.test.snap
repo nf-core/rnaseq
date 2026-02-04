@@ -6,21 +6,22 @@
                     "genome.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
                 ],
                 "1": [
-                    "versions.yml:md5,d04d815c224b980b6f3818d4b2fd4fe3"
+                    [
+                        "GTF2BED",
+                        "perl",
+                        "5.26.2\n\nCopyright 1987-2018, Larry Wall\n\nPerl may be copied only under the terms of either the Artistic License or the\nGNU General Public License, which may be found in the Perl 5 source kit.\n\nComplete documentation for Perl, including FAQ lists, should be found on\nthis system using \"man perl\" or \"perldoc perl\".  If you have access to the\nInternet, point your browser at http://www.perl.org/, the Perl Home Page."
+                    ]
                 ],
                 "bed": [
                     "genome.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
-                ],
-                "versions": [
-                    "versions.yml:md5,d04d815c224b980b6f3818d4b2fd4fe3"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-06-21T11:46:28.123826"
+        "timestamp": "2026-02-04T14:37:19.636514198"
     },
     "sarscov2 - bam": {
         "content": [
@@ -29,20 +30,21 @@
                     "genome.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
                 ],
                 "1": [
-                    "versions.yml:md5,d04d815c224b980b6f3818d4b2fd4fe3"
+                    [
+                        "GTF2BED",
+                        "perl",
+                        "5.26.2\n\nCopyright 1987-2018, Larry Wall\n\nPerl may be copied only under the terms of either the Artistic License or the\nGNU General Public License, which may be found in the Perl 5 source kit.\n\nComplete documentation for Perl, including FAQ lists, should be found on\nthis system using \"man perl\" or \"perldoc perl\".  If you have access to the\nInternet, point your browser at http://www.perl.org/, the Perl Home Page."
+                    ]
                 ],
                 "bed": [
                     "genome.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
-                ],
-                "versions": [
-                    "versions.yml:md5,d04d815c224b980b6f3818d4b2fd4fe3"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-03-07T15:00:44.458214"
+        "timestamp": "2026-02-04T14:37:07.938840447"
     }
 }

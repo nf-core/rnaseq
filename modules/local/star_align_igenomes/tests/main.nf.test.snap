@@ -26,10 +26,35 @@
                             "id": "test",
                             "single_end": true
                         },
-                        "test.Chimeric.out.junction:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        [
+                            "test.unmapped_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test.unmapped_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                        ]
                     ]
                 ],
                 "11": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        [
+                            "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "12": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Chimeric.out.junction:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "13": [
                     [
                         {
                             "id": "test",
@@ -48,9 +73,27 @@
                     ]
                 ],
                 "3": [
-                    "versions.yml:md5,1d87ea190fd5f463b8ae318cf966c675"
+                    [
+                        "STAR_ALIGN_IGENOMES",
+                        "star",
+                        "2.6.1d"
+                    ]
                 ],
                 "4": [
+                    [
+                        "STAR_ALIGN_IGENOMES",
+                        "samtools",
+                        "1.21"
+                    ]
+                ],
+                "5": [
+                    [
+                        "STAR_ALIGN_IGENOMES",
+                        "gawk",
+                        "5.1.0\nCopyright (C) 1989\n\nThis program is free software; you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation; either version 3 of the License\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program. If not"
+                    ]
+                ],
+                "6": [
                     [
                         {
                             "id": "test",
@@ -63,7 +106,7 @@
                         ]
                     ]
                 ],
-                "5": [
+                "7": [
                     [
                         {
                             "id": "test",
@@ -75,7 +118,7 @@
                         ]
                     ]
                 ],
-                "6": [
+                "8": [
                     [
                         {
                             "id": "test",
@@ -84,38 +127,13 @@
                         "test.toTranscriptome.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "7": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test.Aligned.unsort.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "8": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        [
-                            "test.unmapped_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                            "test.unmapped_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
-                        ]
-                    ]
-                ],
                 "9": [
                     [
                         {
                             "id": "test",
                             "single_end": true
                         },
-                        [
-                            "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
-                        ]
+                        "test.Aligned.unsort.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "bam": [
@@ -230,17 +248,14 @@
                             "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
                         ]
                     ]
-                ],
-                "versions": [
-                    "versions.yml:md5,1d87ea190fd5f463b8ae318cf966c675"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-07-22T20:12:37.024869"
+        "timestamp": "2026-02-04T15:23:21.987598166"
     },
     "homo_sapiens - paired_end - arriba - stub": {
         "content": [
@@ -269,10 +284,35 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Chimeric.out.junction:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        [
+                            "test.unmapped_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test.unmapped_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                        ]
                     ]
                 ],
                 "11": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "12": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Chimeric.out.junction:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "13": [
                     [
                         {
                             "id": "test",
@@ -291,9 +331,27 @@
                     ]
                 ],
                 "3": [
-                    "versions.yml:md5,1d87ea190fd5f463b8ae318cf966c675"
+                    [
+                        "STAR_ALIGN_IGENOMES",
+                        "star",
+                        "2.6.1d"
+                    ]
                 ],
                 "4": [
+                    [
+                        "STAR_ALIGN_IGENOMES",
+                        "samtools",
+                        "1.21"
+                    ]
+                ],
+                "5": [
+                    [
+                        "STAR_ALIGN_IGENOMES",
+                        "gawk",
+                        "5.1.0\nCopyright (C) 1989\n\nThis program is free software; you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation; either version 3 of the License\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program. If not"
+                    ]
+                ],
+                "6": [
                     [
                         {
                             "id": "test",
@@ -306,7 +364,7 @@
                         ]
                     ]
                 ],
-                "5": [
+                "7": [
                     [
                         {
                             "id": "test",
@@ -318,7 +376,7 @@
                         ]
                     ]
                 ],
-                "6": [
+                "8": [
                     [
                         {
                             "id": "test",
@@ -327,38 +385,13 @@
                         "test.toTranscriptome.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "7": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.Aligned.unsort.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "8": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        [
-                            "test.unmapped_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                            "test.unmapped_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
-                        ]
-                    ]
-                ],
                 "9": [
                     [
                         {
                             "id": "test",
                             "single_end": false
                         },
-                        [
-                            "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
-                        ]
+                        "test.Aligned.unsort.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "bam": [
@@ -473,17 +506,14 @@
                             "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
                         ]
                     ]
-                ],
-                "versions": [
-                    "versions.yml:md5,1d87ea190fd5f463b8ae318cf966c675"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-07-22T20:13:17.56838"
+        "timestamp": "2026-02-04T15:23:46.315425141"
     },
     "homo_sapiens - single_end": {
         "content": [
@@ -536,15 +566,13 @@
                 ]
             ],
             null,
-            [
-                "versions.yml:md5,1d87ea190fd5f463b8ae318cf966c675"
-            ]
+            null
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-07-22T20:04:35.055193"
+        "timestamp": "2026-02-04T14:39:20.787072964"
     },
     "homo_sapiens - paired_end": {
         "content": [
@@ -597,15 +625,13 @@
                 ]
             ],
             null,
-            [
-                "versions.yml:md5,1d87ea190fd5f463b8ae318cf966c675"
-            ]
+            null
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-07-22T20:05:25.626464"
+        "timestamp": "2026-02-04T14:40:19.121146328"
     },
     "homo_sapiens - paired_end - multiple - stub": {
         "content": [
@@ -634,10 +660,35 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Chimeric.out.junction:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        [
+                            "test.unmapped_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test.unmapped_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                        ]
                     ]
                 ],
                 "11": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "12": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Chimeric.out.junction:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "13": [
                     [
                         {
                             "id": "test",
@@ -656,9 +707,27 @@
                     ]
                 ],
                 "3": [
-                    "versions.yml:md5,1d87ea190fd5f463b8ae318cf966c675"
+                    [
+                        "STAR_ALIGN_IGENOMES",
+                        "star",
+                        "2.6.1d"
+                    ]
                 ],
                 "4": [
+                    [
+                        "STAR_ALIGN_IGENOMES",
+                        "samtools",
+                        "1.21"
+                    ]
+                ],
+                "5": [
+                    [
+                        "STAR_ALIGN_IGENOMES",
+                        "gawk",
+                        "5.1.0\nCopyright (C) 1989\n\nThis program is free software; you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation; either version 3 of the License\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program. If not"
+                    ]
+                ],
+                "6": [
                     [
                         {
                             "id": "test",
@@ -671,7 +740,7 @@
                         ]
                     ]
                 ],
-                "5": [
+                "7": [
                     [
                         {
                             "id": "test",
@@ -683,7 +752,7 @@
                         ]
                     ]
                 ],
-                "6": [
+                "8": [
                     [
                         {
                             "id": "test",
@@ -692,38 +761,13 @@
                         "test.toTranscriptome.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "7": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.Aligned.unsort.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "8": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        [
-                            "test.unmapped_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                            "test.unmapped_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
-                        ]
-                    ]
-                ],
                 "9": [
                     [
                         {
                             "id": "test",
                             "single_end": false
                         },
-                        [
-                            "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
-                        ]
+                        "test.Aligned.unsort.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "bam": [
@@ -838,17 +882,14 @@
                             "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
                         ]
                     ]
-                ],
-                "versions": [
-                    "versions.yml:md5,1d87ea190fd5f463b8ae318cf966c675"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-07-22T20:14:00.135162"
+        "timestamp": "2026-02-04T15:24:10.792306507"
     },
     "homo_sapiens - paired_end - multiple": {
         "content": [
@@ -901,15 +942,13 @@
                 ]
             ],
             null,
-            [
-                "versions.yml:md5,1d87ea190fd5f463b8ae318cf966c675"
-            ]
+            null
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-07-22T20:12:16.618713"
+        "timestamp": "2026-02-04T14:48:57.91619146"
     },
     "homo_sapiens - paired_end - stub": {
         "content": [
@@ -938,10 +977,35 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Chimeric.out.junction:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        [
+                            "test.unmapped_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test.unmapped_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                        ]
                     ]
                 ],
                 "11": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "12": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Chimeric.out.junction:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "13": [
                     [
                         {
                             "id": "test",
@@ -960,9 +1024,27 @@
                     ]
                 ],
                 "3": [
-                    "versions.yml:md5,1d87ea190fd5f463b8ae318cf966c675"
+                    [
+                        "STAR_ALIGN_IGENOMES",
+                        "star",
+                        "2.6.1d"
+                    ]
                 ],
                 "4": [
+                    [
+                        "STAR_ALIGN_IGENOMES",
+                        "samtools",
+                        "1.21"
+                    ]
+                ],
+                "5": [
+                    [
+                        "STAR_ALIGN_IGENOMES",
+                        "gawk",
+                        "5.1.0\nCopyright (C) 1989\n\nThis program is free software; you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation; either version 3 of the License\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program. If not"
+                    ]
+                ],
+                "6": [
                     [
                         {
                             "id": "test",
@@ -975,7 +1057,7 @@
                         ]
                     ]
                 ],
-                "5": [
+                "7": [
                     [
                         {
                             "id": "test",
@@ -987,7 +1069,7 @@
                         ]
                     ]
                 ],
-                "6": [
+                "8": [
                     [
                         {
                             "id": "test",
@@ -996,38 +1078,13 @@
                         "test.toTranscriptome.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "7": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.Aligned.unsort.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "8": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        [
-                            "test.unmapped_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                            "test.unmapped_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
-                        ]
-                    ]
-                ],
                 "9": [
                     [
                         {
                             "id": "test",
                             "single_end": false
                         },
-                        [
-                            "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
-                        ]
+                        "test.Aligned.unsort.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "bam": [
@@ -1142,17 +1199,14 @@
                             "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
                         ]
                     ]
-                ],
-                "versions": [
-                    "versions.yml:md5,1d87ea190fd5f463b8ae318cf966c675"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-07-22T20:12:56.326797"
+        "timestamp": "2026-02-04T15:23:34.16311377"
     },
     "homo_sapiens - paired_end - starfusion": {
         "content": [
@@ -1205,15 +1259,13 @@
                 ]
             ],
             null,
-            [
-                "versions.yml:md5,1d87ea190fd5f463b8ae318cf966c675"
-            ]
+            null
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-07-22T20:10:49.022723"
+        "timestamp": "2026-02-04T14:47:13.494797605"
     },
     "homo_sapiens - paired_end - arriba": {
         "content": [
@@ -1258,15 +1310,13 @@
                 ]
             ],
             null,
-            [
-                "versions.yml:md5,1d87ea190fd5f463b8ae318cf966c675"
-            ]
+            null
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-07-22T20:07:19.724256"
+        "timestamp": "2026-02-04T14:42:44.649463039"
     },
     "homo_sapiens - paired_end - starfusion - stub": {
         "content": [
@@ -1295,10 +1345,35 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Chimeric.out.junction:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        [
+                            "test.unmapped_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test.unmapped_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                        ]
                     ]
                 ],
                 "11": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "12": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Chimeric.out.junction:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "13": [
                     [
                         {
                             "id": "test",
@@ -1317,9 +1392,27 @@
                     ]
                 ],
                 "3": [
-                    "versions.yml:md5,1d87ea190fd5f463b8ae318cf966c675"
+                    [
+                        "STAR_ALIGN_IGENOMES",
+                        "star",
+                        "2.6.1d"
+                    ]
                 ],
                 "4": [
+                    [
+                        "STAR_ALIGN_IGENOMES",
+                        "samtools",
+                        "1.21"
+                    ]
+                ],
+                "5": [
+                    [
+                        "STAR_ALIGN_IGENOMES",
+                        "gawk",
+                        "5.1.0\nCopyright (C) 1989\n\nThis program is free software; you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation; either version 3 of the License\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program. If not"
+                    ]
+                ],
+                "6": [
                     [
                         {
                             "id": "test",
@@ -1332,7 +1425,7 @@
                         ]
                     ]
                 ],
-                "5": [
+                "7": [
                     [
                         {
                             "id": "test",
@@ -1344,7 +1437,7 @@
                         ]
                     ]
                 ],
-                "6": [
+                "8": [
                     [
                         {
                             "id": "test",
@@ -1353,38 +1446,13 @@
                         "test.toTranscriptome.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "7": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.Aligned.unsort.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "8": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        [
-                            "test.unmapped_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                            "test.unmapped_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
-                        ]
-                    ]
-                ],
                 "9": [
                     [
                         {
                             "id": "test",
                             "single_end": false
                         },
-                        [
-                            "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
-                        ]
+                        "test.Aligned.unsort.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "bam": [
@@ -1499,16 +1567,13 @@
                             "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
                         ]
                     ]
-                ],
-                "versions": [
-                    "versions.yml:md5,1d87ea190fd5f463b8ae318cf966c675"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-07-22T20:13:37.606866"
+        "timestamp": "2026-02-04T15:23:58.549396635"
     }
 }

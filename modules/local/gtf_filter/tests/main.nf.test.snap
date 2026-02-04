@@ -6,21 +6,22 @@
                     "genome.filtered.gtf:md5,aa8b2aa1e0b5fbbba3b04d471e1b0535"
                 ],
                 "1": [
-                    "versions.yml:md5,4adf55ec05d247fd6d253459bd80856f"
+                    [
+                        "GTF_FILTER",
+                        "python",
+                        "3.9.5"
+                    ]
                 ],
                 "genome_gtf": [
                     "genome.filtered.gtf:md5,aa8b2aa1e0b5fbbba3b04d471e1b0535"
-                ],
-                "versions": [
-                    "versions.yml:md5,4adf55ec05d247fd6d253459bd80856f"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-06-21T11:47:56.314297"
+        "timestamp": "2026-02-04T14:37:34.541802092"
     },
     "sarscov2 - fasta - gtf - stub": {
         "content": [
@@ -29,20 +30,21 @@
                     "genome.filtered.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
                 ],
                 "1": [
-                    "versions.yml:md5,4adf55ec05d247fd6d253459bd80856f"
+                    [
+                        "GTF_FILTER",
+                        "python",
+                        "3.9.5"
+                    ]
                 ],
                 "genome_gtf": [
                     "genome.filtered.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
-                ],
-                "versions": [
-                    "versions.yml:md5,4adf55ec05d247fd6d253459bd80856f"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-06-21T11:48:19.085835"
+        "timestamp": "2026-02-04T14:37:45.189305689"
     }
 }

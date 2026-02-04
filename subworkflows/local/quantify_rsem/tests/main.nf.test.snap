@@ -287,8 +287,7 @@
             ],
             [
                 "rsem.merged.transcript_tpm.tsv:md5,d38f22667e3b8012f1d783b8d5159ccc"
-            ],
-            null
+            ]
         ],
         "meta": {
             "nf-test": "0.9.3",

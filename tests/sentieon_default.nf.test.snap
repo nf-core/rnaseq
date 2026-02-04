@@ -16,7 +16,7 @@
                     "fastqc": "0.12.1"
                 },
                 "FQ_LINT": {
-                    "fq": "0.12.0 (2024-07-08)"
+                    "fq": "0.12.0"
                 },
                 "GTF2BED": {
                     "perl": "5.26.2"
@@ -133,10 +133,10 @@
                     "fastqc": "0.12.1"
                 },
                 "FQ_LINT": {
-                    "fq": "0.12.0 (2024-07-08)"
+                    "fq": "0.12.0"
                 },
                 "FQ_SUBSAMPLE": {
-                    "fq": "0.12.0 (2024-07-08)"
+                    "fq": "0.12.0"
                 },
                 "GTF2BED": {
                     "perl": "5.26.2"
@@ -154,7 +154,7 @@
                     "python": "3.9.5"
                 },
                 "PICARD_MARKDUPLICATES": {
-                    "picard": "3.1.1"
+                    "picard": "3.4.0"
                 },
                 "QUALIMAP_RNASEQ": {
                     "qualimap": 2.3

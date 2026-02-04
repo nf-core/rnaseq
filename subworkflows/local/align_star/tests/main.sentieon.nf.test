@@ -74,8 +74,7 @@ nextflow_workflow {
                     workflow.out.idxstats,
                     bam(workflow.out.orig_bam[0][1]).getReadsMD5(),
                     workflow.out.stats,
-                    workflow.out.tab,
-                    workflow.out.versions).match()}
+                    workflow.out.tab).match()}
             )
         }
     }
@@ -152,8 +151,7 @@ nextflow_workflow {
                     workflow.out.log_progress,
                     workflow.out.orig_bam,
                     workflow.out.stats,
-                    workflow.out.tab,
-                    workflow.out.versions).match()}
+                    workflow.out.tab).match()}
             )
         }
     }

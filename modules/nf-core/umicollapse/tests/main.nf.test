@@ -29,7 +29,7 @@ nextflow_process {
                 { assert process.success },
                 { assert snapshot(
                     bam(process.out.bam[0][1]).getSamLinesMD5(),
-                    process.out.versions).match() }
+                    process.out.findAll { key, val -> key.startsWith('versions') }).match() }
             )
         }
 
@@ -56,7 +56,7 @@ nextflow_process {
                 { assert process.success },
                 { assert snapshot(
                     bam(process.out.bam[0][1]).getSamLinesMD5(),
-                    process.out.versions).match() }
+                    process.out.findAll { key, val -> key.startsWith('versions') }).match() }
             )
         }
 
@@ -83,7 +83,7 @@ nextflow_process {
                     { assert process.success },
                     { assert snapshot(
                         process.out.fastq,
-                        process.out.versions).match() }
+                        process.out.findAll { key, val -> key.startsWith('versions') }).match() }
                 )
             }
     }
@@ -109,7 +109,7 @@ nextflow_process {
                     { assert process.success },
                     { assert snapshot(
                         process.out.fastq,
-                        process.out.versions).match() }
+                        process.out.findAll { key, val -> key.startsWith('versions') }).match() }
                 )
             }
     }
@@ -139,7 +139,7 @@ nextflow_process {
                 { assert process.success },
                 { assert snapshot(
                     process.out.bam,
-                    process.out.versions).match() }
+                    process.out.findAll { key, val -> key.startsWith('versions') }).match() }
             )
         }
 
@@ -168,7 +168,7 @@ nextflow_process {
                 { assert process.success },
                 { assert snapshot(
                     process.out.bam,
-                    process.out.versions).match() }
+                    process.out.findAll { key, val -> key.startsWith('versions') }).match() }
             )
         }
 

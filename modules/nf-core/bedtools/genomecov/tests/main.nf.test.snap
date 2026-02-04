@@ -11,7 +11,11 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,5fd44452613992a6f71f2c73d2e117f2"
+                    [
+                        "BEDTOOLS_GENOMECOV",
+                        "bedtools",
+                        "2.31.1"
+                    ]
                 ],
                 "genomecov": [
                     [
@@ -21,16 +25,20 @@
                         "test.coverage.txt:md5,01291b6e1beab72e046653e709eb0e10"
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,5fd44452613992a6f71f2c73d2e117f2"
+                "versions_bedtools": [
+                    [
+                        "BEDTOOLS_GENOMECOV",
+                        "bedtools",
+                        "2.31.1"
+                    ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-07-05T11:59:33.898146"
+        "timestamp": "2026-01-21T11:30:01.187722797"
     },
     "sarscov2 - no scale - stub": {
         "content": [
@@ -44,7 +52,11 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,5fd44452613992a6f71f2c73d2e117f2"
+                    [
+                        "BEDTOOLS_GENOMECOV",
+                        "bedtools",
+                        "2.31.1"
+                    ]
                 ],
                 "genomecov": [
                     [
@@ -54,16 +66,20 @@
                         "test.coverage.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,5fd44452613992a6f71f2c73d2e117f2"
+                "versions_bedtools": [
+                    [
+                        "BEDTOOLS_GENOMECOV",
+                        "bedtools",
+                        "2.31.1"
+                    ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-07-05T11:59:52.483371"
+        "timestamp": "2026-01-21T11:30:16.248235814"
     },
     "sarscov2 - scale": {
         "content": [
@@ -77,7 +93,11 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,5fd44452613992a6f71f2c73d2e117f2"
+                    [
+                        "BEDTOOLS_GENOMECOV",
+                        "bedtools",
+                        "2.31.1"
+                    ]
                 ],
                 "genomecov": [
                     [
@@ -87,16 +107,20 @@
                         "test.coverage.txt:md5,de3c59c0ea123bcdbbad27bc0a0a601e"
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,5fd44452613992a6f71f2c73d2e117f2"
+                "versions_bedtools": [
+                    [
+                        "BEDTOOLS_GENOMECOV",
+                        "bedtools",
+                        "2.31.1"
+                    ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-07-05T11:59:43.69501"
+        "timestamp": "2026-01-21T11:30:08.76325362"
     },
     "sarscov2 - scale - stub": {
         "content": [
@@ -110,7 +134,11 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,5fd44452613992a6f71f2c73d2e117f2"
+                    [
+                        "BEDTOOLS_GENOMECOV",
+                        "bedtools",
+                        "2.31.1"
+                    ]
                 ],
                 "genomecov": [
                     [
@@ -120,16 +148,20 @@
                         "test.coverage.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,5fd44452613992a6f71f2c73d2e117f2"
+                "versions_bedtools": [
+                    [
+                        "BEDTOOLS_GENOMECOV",
+                        "bedtools",
+                        "2.31.1"
+                    ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-07-05T12:00:09.930036"
+        "timestamp": "2026-01-21T11:30:32.324649338"
     },
     "sarscov2 - no scale": {
         "content": [
@@ -143,7 +175,11 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,5fd44452613992a6f71f2c73d2e117f2"
+                    [
+                        "BEDTOOLS_GENOMECOV",
+                        "bedtools",
+                        "2.31.1"
+                    ]
                 ],
                 "genomecov": [
                     [
@@ -153,16 +189,20 @@
                         "test.coverage.txt:md5,66083198daca6c001d328ba9616e9b53"
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,5fd44452613992a6f71f2c73d2e117f2"
+                "versions_bedtools": [
+                    [
+                        "BEDTOOLS_GENOMECOV",
+                        "bedtools",
+                        "2.31.1"
+                    ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-07-05T11:59:25.448817"
+        "timestamp": "2026-01-21T11:29:54.109132031"
     },
     "sarscov2 - dummy sizes - stub": {
         "content": [
@@ -176,7 +216,11 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,5fd44452613992a6f71f2c73d2e117f2"
+                    [
+                        "BEDTOOLS_GENOMECOV",
+                        "bedtools",
+                        "2.31.1"
+                    ]
                 ],
                 "genomecov": [
                     [
@@ -186,15 +230,19 @@
                         "test.coverage.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,5fd44452613992a6f71f2c73d2e117f2"
+                "versions_bedtools": [
+                    [
+                        "BEDTOOLS_GENOMECOV",
+                        "bedtools",
+                        "2.31.1"
+                    ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-07-05T12:00:01.086433"
+        "timestamp": "2026-01-21T11:30:23.839839194"
     }
 }

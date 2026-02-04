@@ -14,7 +14,11 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,a6868ab89f7d31361a7791db2dea98e7"
+                    [
+                        "QUALIMAP_RNASEQ",
+                        "qualimap",
+                        "2.3"
+                    ]
                 ],
                 "results": [
                     [
@@ -27,29 +31,39 @@
                         ]
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,a6868ab89f7d31361a7791db2dea98e7"
+                "versions_qualimap": [
+                    [
+                        "QUALIMAP_RNASEQ",
+                        "qualimap",
+                        "2.3"
+                    ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2024-07-22T11:27:41.158111"
+        "timestamp": "2026-02-02T14:37:16.973048807"
     },
     "homo_sapiens [bam]": {
         "content": [
             "qualimapReport.html",
             "rnaseq_qc_results.txt:md5,b77878cac45beaa79a892af54aad2da3",
-            [
-                "versions.yml:md5,a6868ab89f7d31361a7791db2dea98e7"
-            ]
+            {
+                "versions_qualimap": [
+                    [
+                        "QUALIMAP_RNASEQ",
+                        "qualimap",
+                        "2.3"
+                    ]
+                ]
+            }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2024-07-22T11:27:30.782304"
+        "timestamp": "2026-02-02T14:37:10.64233656"
     }
 }

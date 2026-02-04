@@ -11,165 +11,115 @@
                     "test.log:md5,cb46ef02463f63fec5aac31a4adcac94"
                 ]
             ],
-            [
-                "versions.yml:md5,9956d7fa99ceece8d7ea0ec3e780d970"
-            ]
+            {
+                "versions_kallisto": [
+                    [
+                        "KALLISTO_QUANT",
+                        "kallisto",
+                        "0.51.1"
+                    ]
+                ]
+            }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2024-10-19T16:46:09.603634413"
+        "timestamp": "2026-02-02T17:41:02.882228634"
     },
     "sarscov2 paired-end - stub": {
         "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    [
+                        
+                    ]
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.run_info.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ],
             {
-                "0": [
+                "versions_kallisto": [
                     [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        [
-                            
-                        ]
+                        "KALLISTO_QUANT",
+                        "kallisto",
+                        "0.51.1"
                     ]
-                ],
-                "1": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.run_info.json:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "2": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.log:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "3": [
-                    "versions.yml:md5,9956d7fa99ceece8d7ea0ec3e780d970"
-                ],
-                "json_info": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.run_info.json:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "log": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.log:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "results": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        [
-                            
-                        ]
-                    ]
-                ],
-                "versions": [
-                    "versions.yml:md5,9956d7fa99ceece8d7ea0ec3e780d970"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-10-19T16:46:38.620702213"
+        "timestamp": "2026-02-02T17:04:52.776183"
     },
     "sarscov2 single-end - stub": {
         "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    [
+                        
+                    ]
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.run_info.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ],
             {
-                "0": [
+                "versions_kallisto": [
                     [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        [
-                            
-                        ]
+                        "KALLISTO_QUANT",
+                        "kallisto",
+                        "0.51.1"
                     ]
-                ],
-                "1": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test.run_info.json:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "2": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test.log:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "3": [
-                    "versions.yml:md5,9956d7fa99ceece8d7ea0ec3e780d970"
-                ],
-                "json_info": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test.run_info.json:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "log": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test.log:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "results": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        [
-                            
-                        ]
-                    ]
-                ],
-                "versions": [
-                    "versions.yml:md5,9956d7fa99ceece8d7ea0ec3e780d970"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-10-19T16:46:24.255840154"
+        "timestamp": "2026-02-02T17:04:38.704914"
     },
     "sarscov2 single-end": {
         "content": [
@@ -183,14 +133,20 @@
                     "test.log:md5,0cad96e4108b2ea1c152ad063198b21f"
                 ]
             ],
-            [
-                "versions.yml:md5,9956d7fa99ceece8d7ea0ec3e780d970"
-            ]
+            {
+                "versions_kallisto": [
+                    [
+                        "KALLISTO_QUANT",
+                        "kallisto",
+                        "0.51.1"
+                    ]
+                ]
+            }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2024-10-19T16:45:56.782215718"
+        "timestamp": "2026-02-02T17:40:56.333394652"
     }
 }

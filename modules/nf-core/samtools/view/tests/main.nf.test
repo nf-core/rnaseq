@@ -2,6 +2,7 @@ nextflow_process {
 
     name "Test Process SAMTOOLS_VIEW"
     script "../main.nf"
+    config "./nextflow.config"
     process "SAMTOOLS_VIEW"
 
     tag "modules"
@@ -10,15 +11,17 @@ nextflow_process {
     tag "samtools/view"
 
     test("bam") {
-
         when {
+            params {
+                samtools_args = ""
+            }
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false ], // meta map
+                input[0] = [
+                    [ id:'test' ],
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true),
                     []
-                ])
+                ]
                 input[1] = [[],[]]
                 input[2] = []
                 input[3] = []
@@ -35,17 +38,17 @@ nextflow_process {
     }
 
     test("bam_csi_index") {
-
-        config "./bam_index.config"
-
         when {
+            params {
+                samtools_args = "--output-fmt bam --write-index"
+            }
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false ], // meta map
+                input[0] = [
+                    [ id:'test' ],
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
                     []
-                ])
+                ]
                 input[1] = [[],[]]
                 input[2] = []
                 input[3] = 'csi'
@@ -62,17 +65,17 @@ nextflow_process {
     }
 
     test("bam_bai_index") {
-
-        config "./bam_index.config"
-
         when {
+            params {
+                samtools_args = "--output-fmt bam --write-index"
+            }
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false ], // meta map
+                input[0] = [
+                    [ id:'test' ],
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
                     []
-                ])
+                ]
                 input[1] = [[],[]]
                 input[2] = []
                 input[3] = 'bai'
@@ -89,17 +92,17 @@ nextflow_process {
     }
 
     test("bam_bai_index_unselected") {
-
-        config "./bam_index.config"
-
         when {
+            params {
+                samtools_args = "--output-fmt bam --write-index"
+            }
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false ], // meta map
+                input[0] = [
+                    [ id:'test' ],
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
                     []
-                ])
+                ]
                 input[1] = [[],[]]
                 input[2] = Channel.of('testN:1')
                     .collectFile(name: 'selected_reads.txt')
@@ -117,17 +120,17 @@ nextflow_process {
     }
 
     test("cram_crai_index_unselected") {
-
-        config "./cram_index.config"
-
         when {
+            params {
+                samtools_args = "--output-fmt cram --write-index"
+            }
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false ], // meta map
+                input[0] = [
+                    [ id:'test' ],
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
                     []
-                ])
+                ]
                 input[1] = [[],[]]
                 input[2] = Channel.of('testN:1')
                     .collectFile(name: 'selected_reads.txt')
@@ -145,19 +148,21 @@ nextflow_process {
     }
 
     test("cram") {
-
         when {
+            params {
+                samtools_args = ""
+            }
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false ], // meta map
+                input[0] = [
+                    [ id:'test' ],
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true),
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram.crai', checkIfExists: true)
-                ])
-                input[1] = Channel.of([
-                    [ id:'genome' ], // meta map
+                ]
+                input[1] = [
+                    [ id:'genome' ],
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
-                ])
+                ]
                 input[2] = []
                 input[3] = []
                 """
@@ -173,21 +178,21 @@ nextflow_process {
     }
 
     test("cram_to_bam") {
-
-        config "./bam.config"
-
         when {
+            params {
+                samtools_args = "--output-fmt bam"
+            }
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false ], // meta map
+                input[0] = [
+                    [ id:'test' ],
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true),
                     []
-                ])
-                input[1] = Channel.of([
-                    [ id:'genome' ], // meta map
+                ]
+                input[1] = [
+                    [ id:'genome' ],
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
-                ])
+                ]
                 input[2] = []
                 input[3] = []
                 """
@@ -203,21 +208,21 @@ nextflow_process {
     }
 
     test("cram_to_bam_index") {
-
-        config "./bam_index.config"
-
         when {
+            params {
+                samtools_args = "--output-fmt bam --write-index"
+            }
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false ], // meta map
+                input[0] = [
+                    [ id:'test' ],
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true),
                     []
-                ])
-                input[1] = Channel.of([
-                    [ id:'genome' ], // meta map
+                ]
+                input[1] = [
+                    [ id:'genome' ],
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
-                ])
+                ]
                 input[2] = []
                 input[3] = []
                 """
@@ -233,22 +238,23 @@ nextflow_process {
     }
 
     test("cram_to_bam_index_qname") {
-
-        config "./bam_index.config"
-
         when {
+            params {
+                samtools_args = "--output-fmt bam --write-index"
+            }
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false ], // meta map
+                input[0] = [
+                    [ id:'test' ],
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true),
                     []
-                ])
-                input[1] = Channel.of([
-                    [ id:'genome' ], // meta map
+                ]
+                input[1] = [
+                    [ id:'genome' ],
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
-                ])
-                input[2] = Channel.of("testN:2817", "testN:2814").collectFile(name: "readnames.list", newLine: true)
+                ]
+                input[2] = Channel.of("testN:2817", "testN:2814")
+                    .collectFile(name: "readnames.list", newLine: true)
                 input[3] = []
                 """
             }
@@ -265,16 +271,18 @@ nextflow_process {
     test("bam_stub") {
 
         options "-stub"
-        config "./bam_index.config"
 
         when {
+            params {
+                samtools_args = "--output-fmt bam --write-index"
+            }
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false ], // meta map
+                input[0] = [
+                    [ id:'test' ],
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true),
                     []
-                ])
+                ]
                 input[1] = [[],[]]
                 input[2] = []
                 input[3] = []
@@ -293,16 +301,18 @@ nextflow_process {
     test("bam_csi_index - stub") {
 
         options "-stub"
-        config "./bam_index.config"
 
         when {
+            params {
+                samtools_args = "--output-fmt bam --write-index"
+            }
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false ], // meta map
+                input[0] = [
+                    [ id:'test' ],
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
                     []
-                ])
+                ]
                 input[1] = [[],[]]
                 input[2] = []
                 input[3] = 'csi'
@@ -321,16 +331,18 @@ nextflow_process {
     test("bam_bai_index - stub") {
 
         options "-stub"
-        config "./bam_index.config"
 
         when {
+            params {
+                samtools_args = "--output-fmt bam --write-index"
+            }
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false ], // meta map
+                input[0] = [
+                    [ id:'test' ],
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
                     []
-                ])
+                ]
                 input[1] = [[],[]]
                 input[2] = []
                 input[3] = 'bai'
@@ -349,16 +361,18 @@ nextflow_process {
     test("bam_bai_index_uselected - stub") {
 
         options "-stub"
-        config "./bam_index.config"
 
         when {
+            params {
+                samtools_args = "--output-fmt bam --write-index"
+            }
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false ], // meta map
+                input[0] = [
+                    [ id:'test' ],
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
                     []
-                ])
+                ]
                 input[1] = [[],[]]
                 input[2] = Channel.of('testN:1')
                     .collectFile(name: 'selected_reads.txt')
@@ -378,16 +392,18 @@ nextflow_process {
     test("cram_crai_index_unselected - stub") {
 
         options "-stub"
-        config "./cram_index.config"
 
         when {
+            params {
+                samtools_args = "--output-fmt cram --write-index"
+            }
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false ], // meta map
+                input[0] = [
+                    [ id:'test' ],
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
                     []
-                ])
+                ]
                 input[1] = [[],[]]
                 input[2] = Channel.of('testN:1')
                     .collectFile(name: 'selected_reads.txt')

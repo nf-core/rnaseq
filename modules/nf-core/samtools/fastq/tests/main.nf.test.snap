@@ -29,86 +29,54 @@
     },
     "bam - stub": {
         "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    [
+                        "test_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                        "test_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ]
+            ],
+            [
+                
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test_singleton.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test_other.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                ]
+            ],
             {
-                "0": [
+                "versions_samtools": [
                     [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        [
-                            "test_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                            "test_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
-                        ]
+                        "SAMTOOLS_FASTQ",
+                        "samtools",
+                        "1.22.1"
                     ]
-                ],
-                "1": [
-                    
-                ],
-                "2": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test_singleton.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
-                    ]
-                ],
-                "3": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test_other.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
-                    ]
-                ],
-                "4": [
-                    "versions.yml:md5,391b9e4150ae63ea50d15781b61712c7"
-                ],
-                "fastq": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        [
-                            "test_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                            "test_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
-                        ]
-                    ]
-                ],
-                "interleaved": [
-                    
-                ],
-                "other": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test_other.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
-                    ]
-                ],
-                "singleton": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test_singleton.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
-                    ]
-                ],
-                "versions": [
-                    "versions.yml:md5,391b9e4150ae63ea50d15781b61712c7"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-10T13:18:13.675438"
+        "timestamp": "2026-02-02T17:05:55.514934"
     },
     "bam_fastq": {
         "content": [
@@ -175,27 +143,39 @@
     },
     "bam_versions": {
         "content": [
-            [
-                "versions.yml:md5,391b9e4150ae63ea50d15781b61712c7"
-            ]
+            {
+                "versions_samtools": [
+                    [
+                        "SAMTOOLS_FASTQ",
+                        "samtools",
+                        "1.22.1"
+                    ]
+                ]
+            }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-10T13:18:05.023407"
+        "timestamp": "2026-02-02T17:05:40.578464"
     },
     "bam_verinterleave_sions": {
         "content": [
-            [
-                "versions.yml:md5,391b9e4150ae63ea50d15781b61712c7"
-            ]
+            {
+                "versions_samtools": [
+                    [
+                        "SAMTOOLS_FASTQ",
+                        "samtools",
+                        "1.22.1"
+                    ]
+                ]
+            }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-10T13:18:09.490066"
+        "timestamp": "2026-02-02T17:05:47.62481"
     },
     "bam_singleton": {
         "content": [
@@ -221,67 +201,44 @@
     },
     "bam_interleave - stub": {
         "content": [
+            [
+                
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test_interleaved.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ],
+            [
+                
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test_other.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                ]
+            ],
             {
-                "0": [
-                    
-                ],
-                "1": [
+                "versions_samtools": [
                     [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test_interleaved.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "SAMTOOLS_FASTQ",
+                        "samtools",
+                        "1.22.1"
                     ]
-                ],
-                "2": [
-                    
-                ],
-                "3": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test_other.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
-                    ]
-                ],
-                "4": [
-                    "versions.yml:md5,391b9e4150ae63ea50d15781b61712c7"
-                ],
-                "fastq": [
-                    
-                ],
-                "interleaved": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test_interleaved.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "other": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test_other.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
-                    ]
-                ],
-                "singleton": [
-                    
-                ],
-                "versions": [
-                    "versions.yml:md5,391b9e4150ae63ea50d15781b61712c7"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-10T13:18:17.613509"
+        "timestamp": "2026-02-02T17:06:03.676263"
     }
 }

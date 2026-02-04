@@ -8,10 +8,14 @@ nextflow_process {
     tag "modules_nfcore"
     tag "samtools"
     tag "samtools/faidx"
+    config "./nextflow.config"
 
     test("test_samtools_faidx") {
 
         when {
+            params {
+                module_args = ''
+            }
             process {
                 """
                 input[0] = [ [ id:'test', single_end:false ], // meta map
@@ -23,9 +27,9 @@ nextflow_process {
         }
 
         then {
+            assert process.success
             assertAll(
-                { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(process.out).match()}
             )
         }
     }
@@ -33,6 +37,9 @@ nextflow_process {
     test("test_samtools_faidx_bgzip") {
 
         when {
+            params {
+                module_args = ''
+            }
             process {
                 """
                 input[0] = [ [ id:'test', single_end:false ], // meta map
@@ -44,18 +51,19 @@ nextflow_process {
         }
 
         then {
+            assert process.success
             assertAll(
-                { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(process.out).match()}
             )
         }
     }
 
     test("test_samtools_faidx_fasta") {
 
-        config "./nextflow.config"
-
         when {
+            params {
+                module_args = 'MT192765.1 -o extract.fa'
+            }
             process {
                 """
                 input[0] = [ [ id:'test', single_end:false ], // meta map
@@ -68,18 +76,20 @@ nextflow_process {
         }
 
         then {
+            assert process.success
             assertAll(
-                { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(process.out).match()}
             )
         }
     }
 
     test("test_samtools_faidx_stub_fasta") {
 
-        config "./nextflow2.config"
-
+        options "-stub"
         when {
+            params {
+                module_args = '-o extract.fa'
+            }
             process {
                 """
                 input[0] = [ [ id:'test', single_end:false ], // meta map
@@ -92,16 +102,20 @@ nextflow_process {
         }
 
         then {
+            assert process.success
             assertAll(
-                { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(process.out).match()}
             )
         }
     }
 
     test("test_samtools_faidx_stub_fai") {
 
+        options "-stub"
         when {
+            params {
+                module_args = ''
+            }
             process {
                 """
                 input[0] = [ [ id:'test', single_end:false ], // meta map
@@ -113,9 +127,9 @@ nextflow_process {
         }
 
         then {
+            assert process.success
             assertAll(
-                { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(process.out).match()}
             )
         }
     }
@@ -123,6 +137,9 @@ nextflow_process {
     test("test_samtools_faidx_get_sizes") {
 
         when {
+            params {
+                module_args = ''
+            }
             process {
                 """
                 input[0] = Channel.of([
@@ -136,9 +153,9 @@ nextflow_process {
         }
 
         then {
-            assertAll (
-                { assert process.success },
-                { assert snapshot(process.out).match() }
+            assert process.success
+            assertAll(
+                { assert snapshot(process.out).match()}
             )
         }
     }
@@ -146,6 +163,9 @@ nextflow_process {
     test("test_samtools_faidx_get_sizes_bgzip") {
 
         when {
+            params {
+                module_args = ''
+            }
             process {
                 """
                 input[0] = Channel.of([
@@ -159,9 +179,9 @@ nextflow_process {
         }
 
         then {
-            assertAll (
-                { assert process.success },
-                { assert snapshot(process.out).match() }
+            assert process.success
+            assertAll(
+                { assert snapshot(process.out).match()}
             )
         }
     }
@@ -171,6 +191,9 @@ nextflow_process {
         options "-stub"
 
         when {
+            params {
+                module_args = ''
+            }
             process {
                 """
                 input[0] = Channel.of([
@@ -184,9 +207,9 @@ nextflow_process {
         }
 
         then {
-            assertAll (
-                { assert process.success },
-                { assert snapshot(process.out).match() }
+            assert process.success
+            assertAll(
+                { assert snapshot(process.out).match()}
             )
         }
     }
@@ -196,6 +219,9 @@ nextflow_process {
         options "-stub"
 
         when {
+            params {
+                module_args = ''
+            }
             process {
                 """
                 input[0] = Channel.of([
@@ -209,9 +235,9 @@ nextflow_process {
         }
 
         then {
-            assertAll (
-                { assert process.success },
-                { assert snapshot(process.out).match() }
+            assert process.success
+            assertAll(
+                { assert snapshot(process.out).match()}
             )
         }
     }

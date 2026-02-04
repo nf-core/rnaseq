@@ -44,8 +44,7 @@ nextflow_workflow {
                     bam(workflow.out.bam[0][1]).getSamLinesMD5(),
                     workflow.out.stats,
                     workflow.out.flagstat,
-                    workflow.out.idxstats,
-                    workflow.out.versions
+                    workflow.out.idxstats
                 ).match() }
             )
         }

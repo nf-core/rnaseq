@@ -45,13 +45,67 @@ output:
           type: directory
           description: Folder containing the star index files
           pattern: "star"
+  versions_star:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - star:
+          type: string
+          description: The name of the tool
+      - 'STAR --version | sed -e "s/STAR_//g"':
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_samtools:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - samtools:
+          type: string
+          description: The name of the tool
+      - "samtools --version | sed -n '1s/samtools //p'":
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_gawk:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - gawk:
+          type: string
+          description: The name of the tool
+      - "gawk --version | sed -n '1{s/GNU Awk //;s/,.*//;p}'":
+          type: eval
+          description: The expression to obtain the version of the tool
+
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - star:
+          type: string
+          description: The name of the tool
+      - 'STAR --version | sed -e "s/STAR_//g"':
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - samtools:
+          type: string
+          description: The name of the tool
+      - "samtools --version | sed -n '1s/samtools //p'":
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - gawk:
+          type: string
+          description: The name of the tool
+      - "gawk --version | sed -n '1{s/GNU Awk //;s/,.*//;p}'":
+          type: eval
+          description: The expression to obtain the version of the tool
+
 authors:
   - "@kevinmenden"
   - "@drpatelh"

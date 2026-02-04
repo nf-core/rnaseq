@@ -12,8 +12,6 @@ nextflow_process {
 
     test("homo_sapiens - bam") {
 
-        config "./alignment.config"
-
         setup {
             run("SENTIEON_RSEMPREPAREREFERENCE") {
                 script "../../../sentieon/rsempreparereference/main.nf"

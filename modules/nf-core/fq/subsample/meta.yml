@@ -38,13 +38,29 @@ output:
           pattern: "*_R[12].fastq.gz"
           ontologies:
             - edam: http://edamontology.org/format_3989 # GZIP format
+  versions_fq:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - fq:
+          type: string
+          description: The name of the tool
+      - "fq subsample --version | sed 's/fq-subsample //; s/ .*//'":
+          type: eval
+          description: The expression to obtain the version of the tool
+
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - fq:
+          type: string
+          description: The name of the tool
+      - "fq subsample --version | sed 's/fq-subsample //; s/ .*//'":
+          type: eval
+          description: The expression to obtain the version of the tool
+
 authors:
   - "@adamrtalbot"
 maintainers:

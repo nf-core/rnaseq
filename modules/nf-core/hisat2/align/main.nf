@@ -16,7 +16,8 @@ process HISAT2_ALIGN {
     tuple val(meta), path("*.bam")                   , emit: bam
     tuple val(meta), path("*.log")                   , emit: summary
     tuple val(meta), path("*fastq.gz"), optional:true, emit: fastq
-    path  "versions.yml"                             , emit: versions
+    tuple val("${task.process}"), val('hisat2'), eval("hisat2 --version | sed -n '1s/.*version //p'"), emit: versions_hisat2, topic: versions
+    tuple val("${task.process}"), val('samtools'), eval("samtools --version | sed -n '1s/samtools //p'"), emit: versions_samtools, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -48,12 +49,6 @@ process HISAT2_ALIGN {
             $unaligned \\
             $args \\
             | samtools view -bS -F 4 -F 256 - > ${prefix}.bam
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            hisat2: \$(hisat2 --version | grep -o 'version [^ ]*' | cut -d ' ' -f 2)
-            samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-        END_VERSIONS
         """
     } else {
         def unaligned = params.save_unaligned || params.contaminant_screening ? "--un-conc-gz ${prefix}.unmapped.fastq.gz" : ''
@@ -80,12 +75,6 @@ process HISAT2_ALIGN {
         if [ -f ${prefix}.unmapped.fastq.2.gz ]; then
             mv ${prefix}.unmapped.fastq.2.gz ${prefix}.unmapped_2.fastq.gz
         fi
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            hisat2: \$(hisat2 --version | grep -o 'version [^ ]*' | cut -d ' ' -f 2)
-            samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-        END_VERSIONS
         """
     }
 
@@ -97,12 +86,6 @@ process HISAT2_ALIGN {
 
     touch ${prefix}.hisat2.summary.log
     touch ${prefix}.bam
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        hisat2: \$(hisat2 --version | grep -o 'version [^ ]*' | cut -d ' ' -f 2)
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-    END_VERSIONS
     """
 
 

@@ -173,7 +173,6 @@ workflow RNASEQ {
         ch_genome_bam
     )
     ch_genome_bam_index = params.bam_csi_index ? SAMTOOLS_INDEX.out.csi : SAMTOOLS_INDEX.out.bai
-    ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
 
     //
     // Run RNA-seq FASTQ preprocessing subworkflow
@@ -218,7 +217,6 @@ workflow RNASEQ {
     )
 
     ch_multiqc_files                  = ch_multiqc_files.mix(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.multiqc_files)
-    ch_versions                       = ch_versions.mix(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.versions)
     ch_strand_inferred_filtered_fastq = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.reads
     ch_trim_read_count                = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.trim_read_count
 
@@ -264,8 +262,6 @@ workflow RNASEQ {
         ch_unaligned_sequences           = ALIGN_STAR.out.fastq
         ch_multiqc_files                 = ch_multiqc_files.mix(ch_star_log.collect{ tuple -> tuple[1] })
 
-        ch_versions = ch_versions.mix(ALIGN_STAR.out.versions)
-
         //
         // SUBWORKFLOW: Remove duplicate reads from BAM file based on UMIs
         //
@@ -284,7 +280,6 @@ workflow RNASEQ {
             ch_genome_bam        = BAM_DEDUP_UMI_STAR.out.bam
             ch_transcriptome_bam = BAM_DEDUP_UMI_STAR.out.transcriptome_bam
             ch_genome_bam_index  = BAM_DEDUP_UMI_STAR.out.bai
-            ch_versions          = ch_versions.mix(BAM_DEDUP_UMI_STAR.out.versions)
 
             ch_multiqc_files = ch_multiqc_files
                 .mix(BAM_DEDUP_UMI_STAR.out.multiqc_files)
@@ -310,7 +305,6 @@ workflow RNASEQ {
             params.use_sentieon_star
         )
         ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_RSEM.out.stat.collect{ tuple -> tuple[1] })
-        ch_versions = ch_versions.mix(QUANTIFY_RSEM.out.versions)
 
         if (!params.skip_qc & !params.skip_deseq2_qc) {
             DESEQ2_QC_RSEM (
@@ -372,8 +366,6 @@ workflow RNASEQ {
         ch_unaligned_sequences = FASTQ_ALIGN_HISAT2.out.fastq
         ch_multiqc_files = ch_multiqc_files.mix(FASTQ_ALIGN_HISAT2.out.summary.collect{ tuple -> tuple[1] })
 
-        ch_versions = ch_versions.mix(FASTQ_ALIGN_HISAT2.out.versions)
-
         //
         // SUBWORKFLOW: Remove duplicate reads from BAM file based on UMIs
         //
@@ -392,7 +384,6 @@ workflow RNASEQ {
 
             ch_genome_bam        = BAM_DEDUP_UMI_HISAT2.out.bam
             ch_genome_bam_index  = BAM_DEDUP_UMI_HISAT2.out.bai
-            ch_versions          = ch_versions.mix(BAM_DEDUP_UMI_HISAT2.out.versions)
 
             ch_multiqc_files = ch_multiqc_files
                 .mix(BAM_DEDUP_UMI_HISAT2.out.multiqc_files)
@@ -468,7 +459,6 @@ workflow RNASEQ {
             ch_genome_bam
         )
         ch_multiqc_files = ch_multiqc_files.mix(PRESEQ_LCEXTRAP.out.lc_extrap.collect{ tuple -> tuple[1] })
-        ch_versions = ch_versions.mix(PRESEQ_LCEXTRAP.out.versions.first())
     }
 
     //
@@ -486,8 +476,6 @@ workflow RNASEQ {
         ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.flagstat.collect{ tuple -> tuple[1] })
         ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.idxstats.collect{ tuple -> tuple[1] })
         ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.metrics.collect{ tuple -> tuple[1] })
-
-        ch_versions = ch_versions.mix(BAM_MARKDUPLICATES_PICARD.out.versions)
     }
 
     //
@@ -498,7 +486,6 @@ workflow RNASEQ {
             ch_genome_bam,
             ch_gtf
         )
-        ch_versions = ch_versions.mix(STRINGTIE_STRINGTIE.out.versions.first())
     }
 
     //
@@ -522,14 +509,12 @@ workflow RNASEQ {
         SUBREAD_FEATURECOUNTS (
             ch_featurecounts
         )
-        ch_versions = ch_versions.mix(SUBREAD_FEATURECOUNTS.out.versions.first())
 
         MULTIQC_CUSTOM_BIOTYPE (
             SUBREAD_FEATURECOUNTS.out.counts,
             ch_biotypes_header_multiqc
         )
         ch_multiqc_files = ch_multiqc_files.mix(MULTIQC_CUSTOM_BIOTYPE.out.tsv.collect{ tuple -> tuple[1] })
-        ch_versions = ch_versions.mix(MULTIQC_CUSTOM_BIOTYPE.out.versions.first())
     }
 
     //
@@ -552,8 +537,6 @@ workflow RNASEQ {
             'bedGraph',
             true
         )
-
-        ch_versions = ch_versions.mix(BEDTOOLS_GENOMECOV_FW.out.versions.first())
 
         //
         // SUBWORKFLOW: Convert bedGraph to bigWig
@@ -586,7 +569,6 @@ workflow RNASEQ {
                 ch_gtf.map { item -> [ [:], item ] }
             )
             ch_multiqc_files = ch_multiqc_files.mix(QUALIMAP_RNASEQ.out.results.collect{ tuple -> tuple[1] })
-            ch_versions = ch_versions.mix(QUALIMAP_RNASEQ.out.versions.first())
         }
 
         if (!params.skip_dupradar) {

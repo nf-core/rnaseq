@@ -8,8 +8,7 @@
                 "bam": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.bam"
                     ]
@@ -23,8 +22,7 @@
                 "csi": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.bam.csi"
                     ]
@@ -48,10 +46,10 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-10-29T15:41:48.952660444"
+        "timestamp": "2026-02-03T16:49:14.82588493"
     },
     "bam_csi_index - stub": {
         "content": [
@@ -59,8 +57,7 @@
                 "0": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
@@ -77,8 +74,7 @@
                 "4": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.bam.csi:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
@@ -105,8 +101,7 @@
                 "bam": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
@@ -120,8 +115,7 @@
                 "csi": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.bam.csi:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
@@ -145,10 +139,10 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-10-29T15:42:14.881335093"
+        "timestamp": "2026-02-03T16:49:31.409368544"
     },
     "bam_csi_index": {
         "content": [
@@ -159,8 +153,7 @@
                 "bam": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.bam"
                     ]
@@ -174,8 +167,7 @@
                 "csi": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.bam.csi"
                     ]
@@ -199,10 +191,10 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-10-29T15:40:50.701779393"
+        "timestamp": "2026-02-03T16:48:46.36824035"
     },
     "cram_to_bam_index_qname": {
         "content": [
@@ -213,8 +205,7 @@
                 "bam": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.bam"
                     ]
@@ -228,8 +219,7 @@
                 "csi": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.bam.csi:md5,15d725bced7ececd45b4312b2af99a6b"
                     ]
@@ -240,8 +230,7 @@
                 "unselected": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.unselected.bam"
                     ]
@@ -249,8 +238,7 @@
                 "unselected_index": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.unselected.bam.csi"
                     ]
@@ -265,10 +253,10 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-10-29T15:41:58.085628072"
+        "timestamp": "2026-02-03T16:49:20.747636525"
     },
     "bam_bai_index_unselected": {
         "content": [
@@ -276,8 +264,7 @@
                 "bai": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.bam.bai"
                     ]
@@ -285,8 +272,7 @@
                 "bam": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.bam"
                     ]
@@ -306,8 +292,7 @@
                 "unselected": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.unselected.bam"
                     ]
@@ -315,8 +300,7 @@
                 "unselected_index": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.unselected.bam.csi"
                     ]
@@ -331,10 +315,10 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-10-29T15:41:10.249194373"
+        "timestamp": "2026-02-03T16:48:57.713608154"
     },
     "cram_crai_index_unselected - stub": {
         "content": [
@@ -345,8 +329,7 @@
                 "1": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.cram:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
@@ -363,8 +346,7 @@
                 "5": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.cram.crai:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
@@ -372,8 +354,7 @@
                 "6": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.unselected.cram:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
@@ -381,8 +362,7 @@
                 "7": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.unselected.cram.crai:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
@@ -403,8 +383,7 @@
                 "crai": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.cram.crai:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
@@ -412,8 +391,7 @@
                 "cram": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.cram:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
@@ -427,8 +405,7 @@
                 "unselected": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.unselected.cram:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
@@ -436,8 +413,7 @@
                 "unselected_index": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.unselected.cram.crai:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
@@ -452,10 +428,10 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-10-29T15:42:39.3240134"
+        "timestamp": "2026-02-03T16:49:48.092654899"
     },
     "bam": {
         "content": [
@@ -466,8 +442,7 @@
                 "bam": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.bam"
                     ]
@@ -500,10 +475,10 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-10-29T15:40:42.829284764"
+        "timestamp": "2026-02-03T16:48:27.608944526"
     },
     "bam_bai_index": {
         "content": [
@@ -511,8 +486,7 @@
                 "bai": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.bam.bai"
                     ]
@@ -520,8 +494,7 @@
                 "bam": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.bam"
                     ]
@@ -554,10 +527,10 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-10-29T15:41:00.734899949"
+        "timestamp": "2026-02-03T16:48:52.047178732"
     },
     "cram_to_bam": {
         "content": [
@@ -568,8 +541,7 @@
                 "bam": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.bam"
                     ]
@@ -602,10 +574,10 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-10-29T15:41:40.148480065"
+        "timestamp": "2026-02-03T16:50:41.727031999"
     },
     "bam_bai_index - stub": {
         "content": [
@@ -613,8 +585,7 @@
                 "0": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
@@ -628,8 +599,7 @@
                 "3": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
@@ -656,8 +626,7 @@
                 "bai": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
@@ -665,8 +634,7 @@
                 "bam": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
@@ -699,10 +667,10 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-10-29T15:42:22.748940869"
+        "timestamp": "2026-02-03T16:49:36.783381688"
     },
     "cram": {
         "content": [
@@ -719,8 +687,7 @@
                 "cram": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.cram"
                     ]
@@ -747,10 +714,10 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-10-29T15:41:30.602610389"
+        "timestamp": "2026-02-03T16:49:09.393102901"
     },
     "bam_bai_index_uselected - stub": {
         "content": [
@@ -758,8 +725,7 @@
                 "0": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
@@ -773,8 +739,7 @@
                 "3": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
@@ -788,8 +753,7 @@
                 "6": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.unselected.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
@@ -797,8 +761,7 @@
                 "7": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.unselected.bam.csi:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
@@ -813,8 +776,7 @@
                 "bai": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
@@ -822,8 +784,7 @@
                 "bam": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
@@ -843,8 +804,7 @@
                 "unselected": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.unselected.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
@@ -852,8 +812,7 @@
                 "unselected_index": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.unselected.bam.csi:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
@@ -868,10 +827,10 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-10-29T15:42:31.1133801"
+        "timestamp": "2026-02-03T16:49:42.344755528"
     },
     "cram_crai_index_unselected": {
         "content": [
@@ -885,8 +844,7 @@
                 "crai": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.cram.crai"
                     ]
@@ -894,8 +852,7 @@
                 "cram": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.cram:md5,9b6eeca8f6b4b744297ae7cc87c031a4"
                     ]
@@ -909,8 +866,7 @@
                 "unselected": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.unselected.cram"
                     ]
@@ -918,8 +874,7 @@
                 "unselected_index": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.unselected.cram.crai"
                     ]
@@ -934,10 +889,10 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-10-29T15:49:09.738258028"
+        "timestamp": "2026-02-03T16:49:03.431621547"
     },
     "bam_stub": {
         "content": [
@@ -948,8 +903,7 @@
                 "bam": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.bam"
                     ]
@@ -963,8 +917,7 @@
                 "csi": [
                     [
                         {
-                            "id": "test",
-                            "single_end": false
+                            "id": "test"
                         },
                         "test.bam.csi"
                     ]
@@ -988,9 +941,9 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-10-29T15:42:06.108061867"
+        "timestamp": "2026-02-03T16:49:26.152824543"
     }
 }

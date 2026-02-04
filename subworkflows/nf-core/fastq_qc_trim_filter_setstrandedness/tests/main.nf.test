@@ -98,7 +98,7 @@ nextflow_workflow {
             def pelines2 = path(workflow.out.reads[0][1][1]).linesGzip
 
             // First part of each fq lint report line is a timestamp, remove it before snapshotting
-            def processed_ribo_removal_lint_report = path(workflow.out.lint_log.find { entry -> entry[1].contains('fq_lint_after_ribo_removal')}?.getAt(1))
+            def processed_ribo_removal_lint_report = path(workflow.out.lint_log_ribo[0][1])
                 .getText()
                 .readLines()
                 .collect { line -> line.split(' ', 2)[1] } // Split by the first space and take everything after it
@@ -182,7 +182,7 @@ nextflow_workflow {
             def pelines2 = path(workflow.out.reads[0][1][1]).linesGzip
 
             // First part of each fq lint report line is a timestamp, remove it before snapshotting
-            def processed_ribo_removal_lint_report = path(workflow.out.lint_log.find { entry -> entry[1].contains('fq_lint_after_ribo_removal')}?.getAt(1))
+            def processed_ribo_removal_lint_report = path(workflow.out.lint_log_ribo[0][1])
                 .getText()
                 .readLines()
                 .collect { line -> line.split(' ', 2)[1] } // Split by the first space and take everything after it
@@ -268,7 +268,7 @@ nextflow_workflow {
             def pelines2 = path(workflow.out.reads[0][1][1]).linesGzip
 
             // First part of each fq lint report line is a timestamp, remove it before snapshotting
-            def processed_ribo_removal_lint_report = path(workflow.out.lint_log.find { entry -> entry[1].contains('fq_lint_after_ribo_removal')}?.getAt(1))
+            def processed_ribo_removal_lint_report = path(workflow.out.lint_log_ribo[0][1])
                 .getText()
                 .readLines()
                 .collect { line -> line.split(' ', 2)[1] } // Split by the first space and take everything after it
@@ -352,7 +352,7 @@ nextflow_workflow {
             def pelines2 = path(workflow.out.reads[0][1][1]).linesGzip
 
             // First part of each fq lint report line is a timestamp, remove it before snapshotting
-            def processed_ribo_removal_lint_report = path(workflow.out.lint_log.find { entry -> entry[1].contains('fq_lint_after_ribo_removal')}?.getAt(1))
+            def processed_ribo_removal_lint_report = path(workflow.out.lint_log_ribo[0][1])
                 .getText()
                 .readLines()
                 .collect { line -> line.split(' ', 2)[1] } // Split by the first space and take everything after it
@@ -460,7 +460,7 @@ nextflow_workflow {
             def selines = path(workflow.out.reads[0][1]).linesGzip
 
             // First part of each fq lint report line is a timestamp, remove it before snapshotting
-            def processed_ribo_removal_lint_report = path(workflow.out.lint_log.find { entry -> entry[1].contains('fq_lint_after_ribo_removal')}?.getAt(1))
+            def processed_ribo_removal_lint_report = path(workflow.out.lint_log_ribo[0][1])
                 .getText()
                 .readLines()
                 .collect { line -> line.split(' ', 2)[1] }
@@ -486,8 +486,7 @@ nextflow_workflow {
                 { assert bowtie2RrnaCount == 10 },   // 10 reads aligned to rRNA reference
                 { assert snapshot(
                     selines.join('\n').md5(),
-                    processed_ribo_removal_lint_report.md5(),
-                    workflow.out.versions
+                    processed_ribo_removal_lint_report.md5()
                 ).match() }
             )
         }

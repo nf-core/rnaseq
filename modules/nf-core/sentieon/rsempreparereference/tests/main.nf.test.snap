@@ -28,7 +28,7 @@
                     [
                         "SENTIEON_RSEMPREPAREREFERENCE",
                         "sentieon",
-                        "202503.01"
+                        "202503.02"
                     ]
                 ],
                 "index": [
@@ -50,7 +50,7 @@
                     [
                         "SENTIEON_RSEMPREPAREREFERENCE",
                         "sentieon",
-                        "202503.01"
+                        "202503.02"
                     ]
                 ],
                 "versions_star": [
@@ -63,10 +63,10 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "24.10.2"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-06-02T14:24:38.229417"
+        "timestamp": "2026-01-22T07:31:41.257694207"
     },
     "homo_sapiens": {
         "content": [
@@ -97,7 +97,7 @@
                     [
                         "SENTIEON_RSEMPREPAREREFERENCE",
                         "sentieon",
-                        "202503.01"
+                        "202503.02"
                     ]
                 ],
                 "versions_star": [
@@ -110,9 +110,9 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "24.10.2"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-08-21T08:24:30.085093141"
+        "timestamp": "2026-01-22T07:31:34.400783134"
     }
 }

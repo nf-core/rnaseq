@@ -25,19 +25,13 @@
                     },
                     "test.idxstats:md5,85d20a901eef23ca50c323638a2eb602"
                 ]
-            ],
-            [
-                "versions.yml:md5,0ebfc47a75bd075329a7434161100f8f",
-                "versions.yml:md5,a8989d3d3bf9dde36a1d0664e54fccb5",
-                "versions.yml:md5,c4d5d9b171cc7b206cb14f7043f16e45",
-                "versions.yml:md5,e687e4e909255370121fcbec5a4299d1"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-11-01T02:35:42.524116"
+        "timestamp": "2026-02-03T11:34:24.268180227"
     },
     "sarscov2_bam_bai - stub": {
         "content": [
@@ -63,18 +57,23 @@
                         {
                             "id": "test"
                         },
-                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test_edit_distance.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "3": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_per_umi.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "4": [
                     [
                         {
                             "id": "test"
                         },
-                        "test.stats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test_per_position.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "5": [
@@ -82,22 +81,35 @@
                         {
                             "id": "test"
                         },
-                        "test.flagstat:md5,67394650dbae96d1a4fcc70484822159"
+                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "6": [
+                    
+                ],
+                "7": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.stats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "8": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.flagstat:md5,67394650dbae96d1a4fcc70484822159"
+                    ]
+                ],
+                "9": [
                     [
                         {
                             "id": "test"
                         },
                         "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
-                ],
-                "7": [
-                    "versions.yml:md5,0ebfc47a75bd075329a7434161100f8f",
-                    "versions.yml:md5,a8989d3d3bf9dde36a1d0664e54fccb5",
-                    "versions.yml:md5,c4d5d9b171cc7b206cb14f7043f16e45",
-                    "versions.yml:md5,e687e4e909255370121fcbec5a4299d1"
                 ],
                 "bai": [
                     [
@@ -150,18 +162,36 @@
                         "test.stats:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,0ebfc47a75bd075329a7434161100f8f",
-                    "versions.yml:md5,a8989d3d3bf9dde36a1d0664e54fccb5",
-                    "versions.yml:md5,c4d5d9b171cc7b206cb14f7043f16e45",
-                    "versions.yml:md5,e687e4e909255370121fcbec5a4299d1"
+                "tsv_edit_distance": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_edit_distance.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "tsv_per_umi": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_per_umi.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "tsv_umi_per_position": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_per_position.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-11-01T02:35:58.59434"
+        "timestamp": "2026-02-03T11:13:20.927345248"
     }
 }

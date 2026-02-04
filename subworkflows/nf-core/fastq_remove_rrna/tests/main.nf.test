@@ -78,7 +78,6 @@ nextflow_workflow {
                 { assert pelines2.size() == 16636 },
                 { assert sortmernaRrnaCount == 20 },  // 10 pairs = 20 individual reads (100% detection)
                 { assert snapshot(
-                    workflow.out.versions,
                     pelines1.join('\n').md5(),
                     pelines2.join('\n').md5()
                 ).match() }
@@ -127,7 +126,6 @@ nextflow_workflow {
                 { assert pelines2.size() == 16648 },
                 { assert ribodetectorRrnaCount == 7 },  // 7 pairs detected (70% - ML model misses some)
                 { assert snapshot(
-                    workflow.out.versions,
                     sortedLines1.join('\n').md5(),
                     sortedLines2.join('\n').md5()
                 ).match() }
@@ -173,7 +171,6 @@ nextflow_workflow {
                 { assert pelines2.size() == 16636 },
                 { assert bowtie2RrnaCount == 17 },  // 17 mates aligned to rRNA reference
                 { assert snapshot(
-                    workflow.out.versions,
                     pelines1.join('\n').md5(),
                     pelines2.join('\n').md5()
                 ).match() }
@@ -236,7 +233,6 @@ nextflow_workflow {
                 { assert selines.size() == 16636 },  // 4159 reads × 4 lines/read
                 { assert bowtie2RrnaCount == 10 },   // 10 reads aligned to rRNA reference
                 { assert snapshot(
-                    workflow.out.versions,
                     selines.join('\n').md5()
                 ).match() }
             )
@@ -294,7 +290,6 @@ nextflow_workflow {
                 { assert selines.size() == 16636 },  // 4159 reads × 4 lines/read
                 { assert sortmernaRrnaCount == 10 },  // 10 reads detected (100% detection)
                 { assert snapshot(
-                    workflow.out.versions,
                     selines.join('\n').md5()
                 ).match() }
             )
@@ -338,7 +333,6 @@ nextflow_workflow {
             // even when the same rRNA databases are provided multiple times
             assertAll(
                 { assert workflow.success },
-                { assert snapshot(workflow.out.versions).match() },
                 { assert pelines1.size() >= 0 },  // Should have some reads
                 { assert pelines2.size() >= 0 },  // Should have some reads
                 { assert !workflow.stderr.contains("Duplicate entry") },  // No duplicate header errors in stderr

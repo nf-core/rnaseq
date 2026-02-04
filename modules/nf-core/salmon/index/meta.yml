@@ -29,13 +29,29 @@ output:
         type: directory
         description: Folder containing the star index files
         pattern: "salmon"
+  versions_salmon:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - salmon:
+          type: string
+          description: The name of the tool
+      - "salmon --version | sed 's/salmon //'":
+          type: eval
+          description: The expression to obtain the version of the tool
+
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - salmon:
+          type: string
+          description: The name of the tool
+      - "salmon --version | sed 's/salmon //'":
+          type: eval
+          description: The expression to obtain the version of the tool
+
 authors:
   - "@kevinmenden"
   - "@drpatelh"

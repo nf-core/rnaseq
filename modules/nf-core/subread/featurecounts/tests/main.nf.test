@@ -26,9 +26,11 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out.counts).match("forward_counts") },
-                { assert snapshot(process.out.summary).match("forward_summary") },
-                { assert snapshot(process.out.versions).match("forward_versions") }
+                { assert snapshot(
+                    process.out.counts,
+                    process.out.summary,
+                    process.out.findAll { key, val -> key.startsWith('versions') }
+                ).match() }
             )
         }
     }
@@ -74,9 +76,11 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out.counts).match("reverse_counts") },
-                { assert snapshot(process.out.summary).match("reverse_summary") },
-                { assert snapshot(process.out.versions).match("reverse_versions") }
+                { assert snapshot(
+                    process.out.counts,
+                    process.out.summary,
+                    process.out.findAll { key, val -> key.startsWith('versions') }
+                ).match() }
             )
         }
     }
@@ -122,9 +126,11 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out.counts).match("unstranded_counts") },
-                { assert snapshot(process.out.summary).match("unstranded_summary") },
-                { assert snapshot(process.out.versions).match("unstranded_versions") }
+                { assert snapshot(
+                    process.out.counts,
+                    process.out.summary,
+                    process.out.findAll { key, val -> key.startsWith('versions') }
+                ).match() }
             )
         }
     }

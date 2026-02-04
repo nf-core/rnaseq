@@ -39,7 +39,7 @@ nextflow_process {
                     process.out.reads,
                     process.out.reads_fail,
                     process.out.reads_merged,
-                    process.out.versions).match()
+                    process.out.findAll { key, val -> key.startsWith('versions') }).match()
                 }
             )
         }
@@ -80,7 +80,7 @@ nextflow_process {
                     process.out.reads,
                     process.out.reads_fail,
                     process.out.reads_merged,
-                    process.out.versions).match() }
+                    process.out.findAll { key, val -> key.startsWith('versions') }).match() }
             )
         }
     }
@@ -117,7 +117,7 @@ nextflow_process {
                 { assert process.out.reads_merged == [] },
                 { assert snapshot(
                     process.out.reads,
-                    process.out.versions).match() }
+                    process.out.findAll { key, val -> key.startsWith('versions') }).match() }
             )
         }
     }
@@ -154,7 +154,7 @@ nextflow_process {
                     process.out.reads,
                     process.out.reads_fail,
                     process.out.reads_merged,
-                    process.out.versions).match() }
+                    process.out.findAll { key, val -> key.startsWith('versions') }).match() }
             )
         }
     }
@@ -194,7 +194,7 @@ nextflow_process {
                     process.out.reads,
                     process.out.reads_fail,
                     process.out.reads_merged,
-                    process.out.versions).match() }
+                    process.out.findAll { key, val -> key.startsWith('versions') }).match() }
             )
         }
     }
@@ -233,7 +233,7 @@ nextflow_process {
                     process.out.reads,
                     process.out.reads_fail,
                     process.out.reads_merged,
-                    process.out.versions).match() },
+                    process.out.findAll { key, val -> key.startsWith('versions') }).match() },
             )
         }
     }
@@ -272,7 +272,7 @@ nextflow_process {
                     process.out.reads,
                     process.out.reads_fail,
                     process.out.reads_merged,
-                    process.out.versions).match() }
+                    process.out.findAll { key, val -> key.startsWith('versions') }).match() }
             )
         }
     }
@@ -312,7 +312,7 @@ nextflow_process {
                     process.out.reads_fail,
                     process.out.reads_merged,
                     process.out.reads_merged,
-                    process.out.versions).match() }
+                    process.out.findAll { key, val -> key.startsWith('versions') }).match() }
             )
         }
     }
@@ -354,7 +354,7 @@ nextflow_process {
                     process.out.reads_fail,
                     process.out.reads_merged,
                     process.out.reads_merged,
-                    process.out.versions).match() }
+                    process.out.findAll { key, val -> key.startsWith('versions') }).match() }
             )
         }
     }

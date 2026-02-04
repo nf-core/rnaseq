@@ -109,6 +109,9 @@
                 "BEDTOOLS_GENOMECOV_FW": {
                     "bedtools": "2.31.1"
                 },
+                "BEDTOOLS_GENOMECOV_REV": {
+                    "bedtools": "2.31.1"
+                },
                 "CAT_FASTQ": {
                     "cat": 9.5
                 },
@@ -133,6 +136,12 @@
                     "fastqc": "0.12.1"
                 },
                 "FQ_LINT": {
+                    "fq": "0.12.0"
+                },
+                "FQ_LINT_AFTER_BBSPLIT": {
+                    "fq": "0.12.0"
+                },
+                "FQ_LINT_AFTER_TRIMMING": {
                     "fq": "0.12.0"
                 },
                 "FQ_SUBSAMPLE": {

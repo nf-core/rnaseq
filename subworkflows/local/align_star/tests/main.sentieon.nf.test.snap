@@ -56,8 +56,7 @@
                     },
                     "test.SJ.out.tab:md5,844af19ab0fc8cd9a3f75228445aca0d"
                 ]
-            ],
-            null
+            ]
         ],
         "meta": {
             "nf-test": "0.9.3",
@@ -185,8 +184,7 @@
                         "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ]
-            ],
-            null
+            ]
         ],
         "meta": {
             "nf-test": "0.9.3",

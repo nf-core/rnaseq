@@ -4,6 +4,7 @@ nextflow_workflow {
     script "../main.nf"
     workflow "ALIGN_STAR"
     config "./nextflow.config"
+    tag "cpu"
 
     test("star - no igenomes") {
 

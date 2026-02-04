@@ -3,6 +3,7 @@ nextflow_pipeline {
     name "Test pipeline with dummy UMI settings"
     script "../main.nf"
     tag "pipeline"
+    tag "cpu"
 
     test("Params: --aligner hisat2 --umi_dedup_tool 'umicollapse'") {
 

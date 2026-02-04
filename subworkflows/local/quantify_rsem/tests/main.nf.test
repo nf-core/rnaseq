@@ -3,6 +3,7 @@ nextflow_workflow {
     name "Test Workflow QUANTIFY_RSEM"
     script "../main.nf"
     workflow "QUANTIFY_RSEM"
+    tag "cpu"
 
     test("homo_sapiens") {
         tag "test"

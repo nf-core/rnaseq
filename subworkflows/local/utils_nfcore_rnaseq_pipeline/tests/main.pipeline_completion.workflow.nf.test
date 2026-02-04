@@ -3,6 +3,7 @@ nextflow_workflow {
     name "Test Workflow PIPELINE_COMPLETION"
     script "../main.nf"
     workflow "PIPELINE_COMPLETION"
+    tag "cpu"
 
     test("test PIPELINE_COMPLETION successfully completes") {
 

@@ -4,6 +4,7 @@ nextflow_workflow {
     script "../main.nf"
     workflow "PREPARE_GENOME"
     config "./nextflow.config"
+    tag "cpu"
 
     test("default options") {
 

@@ -4,6 +4,7 @@ nextflow_pipeline {
     script "../main.nf"
     tag "pipeline"
     tag "remove_ribo_rna"
+    tag "cpu"
 
     test("Params: --remove_ribo_rna") {
 

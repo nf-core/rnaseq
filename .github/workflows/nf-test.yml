@@ -46,7 +46,7 @@ jobs:
           # Skip sentieon tests on fork PRs where secrets are not available
           SKIP_SENTIEON: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != 'nf-core/rnaseq' }}
         with:
-          tags-ignore: "gpu"
+          tags: "cpu"
           max_shards: 14
 
       - name: debug
@@ -103,7 +103,7 @@ jobs:
           profile: ${{ matrix.profile }}
           shard: ${{ matrix.shard }}
           total_shards: ${{ env.TOTAL_SHARDS }}
-          tags-ignore: "gpu"
+          tags: "cpu"
 
       - name: Report test status
         if: ${{ always() }}

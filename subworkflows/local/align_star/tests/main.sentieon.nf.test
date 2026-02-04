@@ -4,6 +4,7 @@ nextflow_workflow {
     script "../main.nf"
     workflow "ALIGN_STAR"
     config "./sentieon.config"
+    tag "cpu"
 
     test("sentieon star - no igenomes") {
         tag "sentieon"

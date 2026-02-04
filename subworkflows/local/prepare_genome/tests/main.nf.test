@@ -37,16 +37,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -67,6 +69,7 @@ nextflow_workflow {
                     workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
@@ -106,16 +109,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -136,6 +141,7 @@ nextflow_workflow {
                     workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
@@ -175,16 +181,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -205,6 +213,7 @@ nextflow_workflow {
                     workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
@@ -244,16 +253,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -274,6 +285,7 @@ nextflow_workflow {
                     workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
@@ -313,16 +325,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -343,6 +357,7 @@ nextflow_workflow {
                     workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
@@ -382,16 +397,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -412,6 +429,7 @@ nextflow_workflow {
                     workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
@@ -451,16 +469,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -481,6 +501,7 @@ nextflow_workflow {
                     workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
@@ -520,16 +541,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -550,6 +573,7 @@ nextflow_workflow {
                     workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
@@ -589,16 +613,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -619,6 +645,7 @@ nextflow_workflow {
                     workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
@@ -658,16 +685,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -688,6 +717,7 @@ nextflow_workflow {
                     workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
@@ -727,16 +757,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -757,6 +789,7 @@ nextflow_workflow {
                     workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
@@ -796,16 +829,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -826,6 +861,7 @@ nextflow_workflow {
                     workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
@@ -865,16 +901,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -895,6 +933,7 @@ nextflow_workflow {
                     workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
@@ -934,16 +973,18 @@ nextflow_workflow {
                 input[13] = false
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -964,6 +1005,7 @@ nextflow_workflow {
                     workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
@@ -1003,16 +1045,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -1033,6 +1077,7 @@ nextflow_workflow {
                     workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
@@ -1072,16 +1117,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -1102,6 +1149,7 @@ nextflow_workflow {
                     workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
@@ -1141,16 +1189,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -1171,6 +1221,7 @@ nextflow_workflow {
                     workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
@@ -1210,16 +1261,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -1240,6 +1293,7 @@ nextflow_workflow {
                     workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
@@ -1279,16 +1333,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -1309,6 +1365,7 @@ nextflow_workflow {
                     workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
@@ -1348,16 +1405,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -1378,6 +1437,7 @@ nextflow_workflow {
                     workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
@@ -1417,16 +1477,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -1447,6 +1509,7 @@ nextflow_workflow {
                     workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.versions
                 ).match() }
@@ -1488,16 +1551,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -1512,6 +1577,7 @@ nextflow_workflow {
                     workflow.out.gene_bed,
                     workflow.out.gtf,
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
@@ -1559,16 +1625,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -1583,6 +1651,7 @@ nextflow_workflow {
                     workflow.out.gene_bed,
                     workflow.out.gtf,
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
@@ -1630,16 +1699,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -1654,6 +1725,7 @@ nextflow_workflow {
                     workflow.out.gene_bed,
                     workflow.out.gtf,
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
@@ -1701,16 +1773,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -1757,16 +1831,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -1781,6 +1857,7 @@ nextflow_workflow {
                     workflow.out.gene_bed,
                     workflow.out.gtf,
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
@@ -1828,16 +1905,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -1852,6 +1931,7 @@ nextflow_workflow {
                     workflow.out.gene_bed,
                     workflow.out.gtf,
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
@@ -1899,16 +1979,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -1923,6 +2005,7 @@ nextflow_workflow {
                     workflow.out.gene_bed,
                     workflow.out.gtf,
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
@@ -1970,16 +2053,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -1994,6 +2079,7 @@ nextflow_workflow {
                     workflow.out.gene_bed,
                     workflow.out.gtf,
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
@@ -2041,16 +2127,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -2065,6 +2153,7 @@ nextflow_workflow {
                     workflow.out.gene_bed,
                     workflow.out.gtf,
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
@@ -2112,16 +2201,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -2136,6 +2227,7 @@ nextflow_workflow {
                     workflow.out.gene_bed,
                     workflow.out.gtf,
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
@@ -2183,16 +2275,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -2207,6 +2301,7 @@ nextflow_workflow {
                     workflow.out.gene_bed,
                     workflow.out.gtf,
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
@@ -2254,16 +2349,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -2278,6 +2375,7 @@ nextflow_workflow {
                     workflow.out.gene_bed,
                     workflow.out.gtf,
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
@@ -2325,16 +2423,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -2349,6 +2449,7 @@ nextflow_workflow {
                     workflow.out.gene_bed,
                     workflow.out.gtf,
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
@@ -2396,16 +2497,18 @@ nextflow_workflow {
                 input[13] = false
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -2420,6 +2523,7 @@ nextflow_workflow {
                     workflow.out.gene_bed,
                     workflow.out.gtf,
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
@@ -2467,16 +2571,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -2491,6 +2597,7 @@ nextflow_workflow {
                     workflow.out.gene_bed,
                     workflow.out.gtf,
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
@@ -2538,16 +2645,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -2562,6 +2671,7 @@ nextflow_workflow {
                     workflow.out.gene_bed,
                     workflow.out.gtf,
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
@@ -2609,16 +2719,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -2633,6 +2745,7 @@ nextflow_workflow {
                     workflow.out.gene_bed,
                     workflow.out.gtf,
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
@@ -2680,16 +2793,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -2704,6 +2819,7 @@ nextflow_workflow {
                     workflow.out.gene_bed,
                     workflow.out.gtf,
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
@@ -2751,16 +2867,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -2807,16 +2925,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -2831,6 +2951,7 @@ nextflow_workflow {
                     workflow.out.gene_bed,
                     workflow.out.gtf,
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
@@ -2878,16 +2999,18 @@ nextflow_workflow {
                 input[13] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
                 input[14] = null
                 input[15] = null
-                input[16] = gencode
-                input[17] = featurecounts_group_type
-                input[18] = aligner
-                input[19] = pseudo_aligner
-                input[20] = skip_gtf_filter
-                input[21] = skip_bbsplit
-                input[22] = ribo_removal_tool
-                input[23] = skip_alignment
-                input[24] = skip_pseudo_alignment
-                input[25] = use_sentieon_star
+                input[16] = null
+                input[17] = gencode
+                input[18] = false
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
                 """
             }
         }
@@ -2902,6 +3025,7 @@ nextflow_workflow {
                     workflow.out.gene_bed,
                     workflow.out.gtf,
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },

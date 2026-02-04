@@ -1,0 +1,239 @@
+nextflow_pipeline {
+
+    name "Test pipeline with prokaryotic settings"
+    script "../main.nf"
+    tag "pipeline"
+    tag "prokaryotic"
+
+    test("Params: --aligner star_salmon --prokaryotic - stub") {
+
+        options "-stub"
+
+        when {
+            params {
+                outdir = "$outputDir"
+
+                // Prokaryotic test data - Salmonella Typhimurium SL1344
+                // TODO: Update to nf-core/test-datasets/rnaseq after https://github.com/nf-core/test-datasets/pull/1858 is merged
+                input = 'https://raw.githubusercontent.com/pinin4fjords/test-datasets/prokaryotic-test-data/samplesheet/prokaryotic/samplesheet_test.csv'
+                fasta = 'https://raw.githubusercontent.com/pinin4fjords/test-datasets/prokaryotic-test-data/reference/prokaryotic/SL1344_sub.fasta'
+                gff   = 'https://raw.githubusercontent.com/pinin4fjords/test-datasets/prokaryotic-test-data/reference/prokaryotic/SL1344_sub.gff3'
+                gtf   = null
+                transcript_fasta = null
+                additional_fasta = null
+
+                // Prokaryotic-specific settings
+                prokaryotic = true
+                gffread_transcript_fasta = true
+                aligner = 'star_salmon'
+                featurecounts_feature_type = 'CDS'
+
+                // Skip eukaryote-specific QC tools
+                skip_rseqc = true
+                skip_dupradar = true
+                skip_qualimap = true
+                skip_biotype_qc = true
+                skip_deseq2_qc = true
+
+                // Skip unnecessary steps for faster testing
+                skip_bbsplit = true
+                skip_preseq = true
+                pseudo_aligner = null
+                min_trimmed_reads = 0
+            }
+        }
+
+        then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow and pipeline versions are removed (all from the workflow key)
+                    removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow"),
+                    // All stable path name, with a relative path
+                    stable_name,
+                    // All files with stable contents
+                    stable_path
+                ).match() }
+            )
+        }
+    }
+
+    test("Params: --aligner star_salmon --prokaryotic") {
+
+        when {
+            params {
+                outdir = "$outputDir"
+
+                // Prokaryotic test data - Salmonella Typhimurium SL1344
+                // TODO: Update to nf-core/test-datasets/rnaseq after https://github.com/nf-core/test-datasets/pull/1858 is merged
+                input = 'https://raw.githubusercontent.com/pinin4fjords/test-datasets/prokaryotic-test-data/samplesheet/prokaryotic/samplesheet_test.csv'
+                fasta = 'https://raw.githubusercontent.com/pinin4fjords/test-datasets/prokaryotic-test-data/reference/prokaryotic/SL1344_sub.fasta'
+                gff   = 'https://raw.githubusercontent.com/pinin4fjords/test-datasets/prokaryotic-test-data/reference/prokaryotic/SL1344_sub.gff3'
+                gtf   = null
+                transcript_fasta = null
+                additional_fasta = null
+
+                // Prokaryotic-specific settings
+                prokaryotic = true
+                gffread_transcript_fasta = true
+                aligner = 'star_salmon'
+                featurecounts_feature_type = 'CDS'
+
+                // Skip eukaryote-specific QC tools
+                skip_rseqc = true
+                skip_dupradar = true
+                skip_qualimap = true
+                skip_biotype_qc = true
+                skip_deseq2_qc = true
+
+                // Skip unnecessary steps for faster testing
+                skip_bbsplit = true
+                skip_preseq = true
+                pseudo_aligner = null
+                min_trimmed_reads = 0
+            }
+        }
+
+        then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow and pipeline versions are removed (all from the workflow key)
+                    removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow"),
+                    // All stable path name, with a relative path
+                    stable_name,
+                    // All files with stable contents
+                    stable_path
+                ).match() }
+            )
+        }
+    }
+
+    test("Params: --aligner bowtie2_salmon --gffread_transcript_fasta - stub") {
+
+        options "-stub"
+
+        when {
+            params {
+                outdir = "$outputDir"
+
+                // Prokaryotic test data - Salmonella Typhimurium SL1344
+                // TODO: Update to nf-core/test-datasets/rnaseq after https://github.com/nf-core/test-datasets/pull/1858 is merged
+                input = 'https://raw.githubusercontent.com/pinin4fjords/test-datasets/prokaryotic-test-data/samplesheet/prokaryotic/samplesheet_test.csv'
+                fasta = 'https://raw.githubusercontent.com/pinin4fjords/test-datasets/prokaryotic-test-data/reference/prokaryotic/SL1344_sub.fasta'
+                gff   = 'https://raw.githubusercontent.com/pinin4fjords/test-datasets/prokaryotic-test-data/reference/prokaryotic/SL1344_sub.gff3'
+                gtf   = null
+                transcript_fasta = null
+                additional_fasta = null
+
+                // Prokaryotic-specific settings
+                gffread_transcript_fasta = true
+                aligner = 'bowtie2_salmon'
+                skip_bigwig = true
+                featurecounts_feature_type = 'CDS'
+
+                // Skip eukaryote-specific QC tools
+                skip_rseqc = true
+                skip_dupradar = true
+                skip_qualimap = true
+                skip_biotype_qc = true
+                skip_deseq2_qc = true
+
+                // Skip unnecessary steps for faster testing
+                skip_bbsplit = true
+                skip_preseq = true
+                pseudo_aligner = null
+                min_trimmed_reads = 0
+            }
+        }
+
+        then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow and pipeline versions are removed (all from the workflow key)
+                    removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow"),
+                    // All stable path name, with a relative path
+                    stable_name,
+                    // All files with stable contents
+                    stable_path
+                ).match() }
+            )
+        }
+    }
+
+    test("Params: --aligner bowtie2_salmon --gffread_transcript_fasta") {
+
+        when {
+            params {
+                outdir = "$outputDir"
+
+                // Prokaryotic test data - Salmonella Typhimurium SL1344
+                // TODO: Update to nf-core/test-datasets/rnaseq after https://github.com/nf-core/test-datasets/pull/1858 is merged
+                input = 'https://raw.githubusercontent.com/pinin4fjords/test-datasets/prokaryotic-test-data/samplesheet/prokaryotic/samplesheet_test.csv'
+                fasta = 'https://raw.githubusercontent.com/pinin4fjords/test-datasets/prokaryotic-test-data/reference/prokaryotic/SL1344_sub.fasta'
+                gff   = 'https://raw.githubusercontent.com/pinin4fjords/test-datasets/prokaryotic-test-data/reference/prokaryotic/SL1344_sub.gff3'
+                gtf   = null
+                transcript_fasta = null
+                additional_fasta = null
+
+                // Prokaryotic-specific settings
+                gffread_transcript_fasta = true
+                aligner = 'bowtie2_salmon'
+                skip_bigwig = true
+                featurecounts_feature_type = 'CDS'
+
+                // Skip eukaryote-specific QC tools
+                skip_rseqc = true
+                skip_dupradar = true
+                skip_qualimap = true
+                skip_biotype_qc = true
+                skip_deseq2_qc = true
+
+                // Skip unnecessary steps for faster testing
+                skip_bbsplit = true
+                skip_preseq = true
+                pseudo_aligner = null
+                min_trimmed_reads = 0
+            }
+        }
+
+        then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow and pipeline versions are removed (all from the workflow key)
+                    removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow"),
+                    // All stable path name, with a relative path
+                    stable_name,
+                    // All files with stable contents
+                    stable_path
+                ).match() }
+            )
+        }
+    }
+}

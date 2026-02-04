@@ -7,7 +7,7 @@
 //
 // MODULE: Loaded from modules/local/
 //
-include { DESEQ2_QC as DESEQ2_QC_STAR_SALMON } from '../../modules/local/deseq2_qc'
+include { DESEQ2_QC as DESEQ2_QC_BAM_SALMON } from '../../modules/local/deseq2_qc'
 include { DESEQ2_QC as DESEQ2_QC_RSEM        } from '../../modules/local/deseq2_qc'
 include { DESEQ2_QC as DESEQ2_QC_PSEUDO      } from '../../modules/local/deseq2_qc'
 include { MULTIQC_CUSTOM_BIOTYPE             } from '../../modules/local/multiqc_custom_biotype'
@@ -16,9 +16,9 @@ include { MULTIQC_CUSTOM_BIOTYPE             } from '../../modules/local/multiqc
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 include { ALIGN_STAR                            } from '../../subworkflows/local/align_star'
+include { ALIGN_BOWTIE2                         } from '../../subworkflows/local/align_bowtie2'
 include { QUANTIFY_RSEM                         } from '../../subworkflows/local/quantify_rsem'
-include { BAM_DEDUP_UMI as BAM_DEDUP_UMI_STAR   } from '../../subworkflows/nf-core/bam_dedup_umi'
-include { BAM_DEDUP_UMI as BAM_DEDUP_UMI_HISAT2 } from '../../subworkflows/nf-core/bam_dedup_umi'
+include { BAM_DEDUP_UMI                         } from '../../subworkflows/nf-core/bam_dedup_umi'
 
 include { checkSamplesAfterGrouping      } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { multiqcTsvFromList             } from '../../subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness'
@@ -63,7 +63,7 @@ include { BAM_MARKDUPLICATES_PICARD        } from '../../subworkflows/nf-core/ba
 include { BAM_RSEQC                        } from '../../subworkflows/nf-core/bam_rseqc'
 include { BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG as BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD } from '../../subworkflows/nf-core/bedgraph_bedclip_bedgraphtobigwig'
 include { BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG as BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE } from '../../subworkflows/nf-core/bedgraph_bedclip_bedgraphtobigwig'
-include { QUANTIFY_PSEUDO_ALIGNMENT as QUANTIFY_STAR_SALMON } from '../../subworkflows/nf-core/quantify_pseudo_alignment'
+include { QUANTIFY_PSEUDO_ALIGNMENT as QUANTIFY_BAM_SALMON } from '../../subworkflows/nf-core/quantify_pseudo_alignment'
 include { QUANTIFY_PSEUDO_ALIGNMENT                         } from '../../subworkflows/nf-core/quantify_pseudo_alignment'
 include { FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS              } from '../../subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness'
 
@@ -76,24 +76,25 @@ include { FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS              } from '../../subwor
 workflow RNASEQ {
 
     take:
-    ch_samplesheet       // channel: path(sample_sheet.csv)
-    ch_versions          // channel: [ path(versions.yml) ]
-    ch_fasta             // channel: path(genome.fasta)
-    ch_gtf               // channel: path(genome.gtf)
-    ch_fai               // channel: path(genome.fai)
-    ch_chrom_sizes       // channel: path(genome.sizes)
-    ch_gene_bed          // channel: path(gene.bed)
-    ch_transcript_fasta  // channel: path(transcript.fasta)
-    ch_star_index        // channel: path(star/index/)
-    ch_rsem_index        // channel: path(rsem/index/)
-    ch_hisat2_index      // channel: path(hisat2/index/)
-    ch_salmon_index      // channel: path(salmon/index/)
-    ch_kallisto_index    // channel: [ meta, path(kallisto/index/) ]
-    ch_bbsplit_index     // channel: path(bbsplit/index/)
-    ch_ribo_db           // channel: path(sortmerna_fasta_list)
-    ch_sortmerna_index   // channel: path(sortmerna/index/)
-    ch_bowtie2_index     // channel: path(bowtie2/index/) for rRNA removal
-    ch_splicesites       // channel: path(genome.splicesites.txt)
+    ch_samplesheet          // channel: path(sample_sheet.csv)
+    ch_versions             // channel: [ path(versions.yml) ]
+    ch_fasta                // channel: path(genome.fasta)
+    ch_gtf                  // channel: path(genome.gtf)
+    ch_fai                  // channel: path(genome.fai)
+    ch_chrom_sizes          // channel: path(genome.sizes)
+    ch_gene_bed             // channel: path(gene.bed)
+    ch_transcript_fasta     // channel: path(transcript.fasta)
+    ch_star_index           // channel: path(star/index/)
+    ch_rsem_index           // channel: path(rsem/index/)
+    ch_hisat2_index         // channel: path(hisat2/index/)
+    ch_bowtie2_index        // channel: path(bowtie2/index/) for alignment
+    ch_salmon_index         // channel: path(salmon/index/)
+    ch_kallisto_index       // channel: [ meta, path(kallisto/index/) ]
+    ch_bbsplit_index        // channel: path(bbsplit/index/)
+    ch_ribo_db              // channel: path(sortmerna_fasta_list)
+    ch_sortmerna_index      // channel: path(sortmerna/index/)
+    ch_bowtie2_rrna_index   // channel: path(bowtie2/index/) for rRNA removal
+    ch_splicesites          // channel: path(genome.splicesites.txt)
 
     main:
 
@@ -194,7 +195,7 @@ workflow RNASEQ {
         ch_gtf,                                     // ch_gtf
         ch_salmon_index,                            // ch_salmon_index
         ch_sortmerna_index,                         // ch_sortmerna_index
-        ch_bowtie2_index,                           // ch_bowtie2_index
+        ch_bowtie2_rrna_index,                      // ch_bowtie2_index (for rRNA removal)
         ch_bbsplit_index,                           // ch_bbsplit_index
         ch_ribo_db,                                 // ch_rrna_fastas
         params.skip_bbsplit || !params.fasta,       // skip_bbsplit
@@ -266,30 +267,7 @@ workflow RNASEQ {
 
         ch_versions = ch_versions.mix(ALIGN_STAR.out.versions)
 
-        //
-        // SUBWORKFLOW: Remove duplicate reads from BAM file based on UMIs
-        //
-        if (params.with_umi) {
-
-            BAM_DEDUP_UMI_STAR(
-                ch_genome_bam.join(ch_genome_bam_index, by: [0]),
-                ch_fasta.map { item -> [ [:], item ] },
-                params.umi_dedup_tool,
-                params.umitools_dedup_stats,
-                params.bam_csi_index,
-                ch_transcriptome_bam,
-                ch_transcript_fasta.map { item -> [ [:], item ] }
-            )
-
-            ch_genome_bam        = BAM_DEDUP_UMI_STAR.out.bam
-            ch_transcriptome_bam = BAM_DEDUP_UMI_STAR.out.transcriptome_bam
-            ch_genome_bam_index  = BAM_DEDUP_UMI_STAR.out.bai
-            ch_versions          = ch_versions.mix(BAM_DEDUP_UMI_STAR.out.versions)
-
-            ch_multiqc_files = ch_multiqc_files
-                .mix(BAM_DEDUP_UMI_STAR.out.multiqc_files)
-
-        } else if (params.skip_markduplicates) {
+        if (!params.with_umi && params.skip_markduplicates) {
             // The deduplicated stats should take priority for MultiQC, but use
             // them straight out of the aligner otherwise. If mark duplicates
             // will run, those stats will be added later instead to avoid
@@ -302,57 +280,35 @@ workflow RNASEQ {
         }
     }
 
-    if (params.aligner == 'star_rsem') {
+    //
+    // SUBWORKFLOW: Alignment with Bowtie2
+    //
+    ch_bowtie2_log = channel.empty()
+    if (!params.skip_alignment && params.aligner == 'bowtie2_salmon') {
 
-        QUANTIFY_RSEM (
-            ch_transcriptome_bam,
-            ch_rsem_index,
-            params.use_sentieon_star
+        ALIGN_BOWTIE2 (
+            ch_strand_inferred_filtered_fastq,
+            ch_bowtie2_index,
+            ch_fasta.map { item -> [ [:], item ] }
         )
-        ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_RSEM.out.stat.collect{ tuple -> tuple[1] })
-        ch_versions = ch_versions.mix(QUANTIFY_RSEM.out.versions)
 
-        if (!params.skip_qc & !params.skip_deseq2_qc) {
-            DESEQ2_QC_RSEM (
-                QUANTIFY_RSEM.out.merged_counts_gene,
-                ch_pca_header_multiqc,
-                ch_clustering_header_multiqc
-            )
-            ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_RSEM.out.pca_multiqc.collect())
-            ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_RSEM.out.dists_multiqc.collect())
-            ch_versions = ch_versions.mix(DESEQ2_QC_RSEM.out.versions)
-        }
+        // For Bowtie2+Salmon, the BAM is aligned to transcriptome so it's the "transcriptome_bam"
+        // Use orig_bam (query-grouped) for Salmon - coordinate-sorted BAM breaks paired-end quantification
+        ch_genome_bam                    = ch_genome_bam.mix(ALIGN_BOWTIE2.out.bam)
+        ch_genome_bam_index              = ch_genome_bam_index.mix(params.bam_csi_index ? ALIGN_BOWTIE2.out.csi : ALIGN_BOWTIE2.out.bai)
+        ch_transcriptome_bam             = ch_transcriptome_bam.mix(ALIGN_BOWTIE2.out.orig_bam)
+        ch_percent_mapped                = ch_percent_mapped.mix(ALIGN_BOWTIE2.out.percent_mapped)
+        ch_unprocessed_bams              = ch_genome_bam.map { meta, bam -> [ meta, bam, '' ] }
+        ch_bowtie2_log                   = ALIGN_BOWTIE2.out.log_final
+        ch_multiqc_files                 = ch_multiqc_files.mix(ch_bowtie2_log.collect{ tuple -> tuple[1] })
 
-    } else if (params.aligner == 'star_salmon') {
+        ch_versions = ch_versions.mix(ALIGN_BOWTIE2.out.versions)
 
-        //
-        // SUBWORKFLOW: Count reads from BAM alignments using Salmon
-        //
-        QUANTIFY_STAR_SALMON (
-            ch_samplesheet.map { item -> [ [:], item ] },
-            ch_transcriptome_bam,
-            ch_dummy_file,
-            ch_transcript_fasta,
-            ch_gtf,
-            params.gtf_group_features,
-            params.gtf_extra_attributes,
-            'salmon',
-            true,
-            params.salmon_quant_libtype ?: '',
-            params.kallisto_quant_fraglen,
-            params.kallisto_quant_fraglen_sd
-        )
-        ch_versions = ch_versions.mix(QUANTIFY_STAR_SALMON.out.versions)
-
-        if (!params.skip_qc & !params.skip_deseq2_qc) {
-            DESEQ2_QC_STAR_SALMON (
-                QUANTIFY_STAR_SALMON.out.counts_gene_length_scaled.map { tuple -> tuple[1] },
-                ch_pca_header_multiqc,
-                ch_clustering_header_multiqc
-            )
-            ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_STAR_SALMON.out.pca_multiqc.collect())
-            ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_STAR_SALMON.out.dists_multiqc.collect())
-            ch_versions = ch_versions.mix(DESEQ2_QC_STAR_SALMON.out.versions)
+        if (!params.with_umi && params.skip_markduplicates) {
+            ch_multiqc_files = ch_multiqc_files
+                .mix(ALIGN_BOWTIE2.out.stats.collect{ tuple -> tuple[1] })
+                .mix(ALIGN_BOWTIE2.out.flagstat.collect{ tuple -> tuple[1] })
+                .mix(ALIGN_BOWTIE2.out.idxstats.collect{ tuple -> tuple[1] })
         }
     }
 
@@ -374,30 +330,7 @@ workflow RNASEQ {
 
         ch_versions = ch_versions.mix(FASTQ_ALIGN_HISAT2.out.versions)
 
-        //
-        // SUBWORKFLOW: Remove duplicate reads from BAM file based on UMIs
-        //
-
-        if (params.with_umi) {
-
-            BAM_DEDUP_UMI_HISAT2(
-                ch_genome_bam.join(ch_genome_bam_index, by: [0]),
-                ch_fasta.map { item -> [ [:], item ] },
-                params.umi_dedup_tool,
-                params.umitools_dedup_stats,
-                params.bam_csi_index,
-                ch_transcriptome_bam,
-                ch_transcript_fasta.map { item -> [ [:], item ] }
-            )
-
-            ch_genome_bam        = BAM_DEDUP_UMI_HISAT2.out.bam
-            ch_genome_bam_index  = BAM_DEDUP_UMI_HISAT2.out.bai
-            ch_versions          = ch_versions.mix(BAM_DEDUP_UMI_HISAT2.out.versions)
-
-            ch_multiqc_files = ch_multiqc_files
-                .mix(BAM_DEDUP_UMI_HISAT2.out.multiqc_files)
-        } else if (params.skip_markduplicates) {
-
+        if (!params.with_umi && params.skip_markduplicates) {
             // The deduplicated stats should take priority for MultiQC, but use
             // them straight out of the aligner otherwise. If mark duplicates
             // will run, those stats will be added later instead to avoid
@@ -406,6 +339,87 @@ workflow RNASEQ {
                 .mix(FASTQ_ALIGN_HISAT2.out.stats.collect{ tuple -> tuple[1] })
                 .mix(FASTQ_ALIGN_HISAT2.out.flagstat.collect{ tuple -> tuple[1] })
                 .mix(FASTQ_ALIGN_HISAT2.out.idxstats.collect{ tuple -> tuple[1] })
+        }
+    }
+
+    //
+    // SUBWORKFLOW: Remove duplicate reads from BAM file based on UMIs
+    //
+    if (!params.skip_alignment && params.with_umi) {
+
+        BAM_DEDUP_UMI(
+            ch_genome_bam.join(ch_genome_bam_index, by: [0]),
+            ch_fasta.map { item -> [ [:], item ] },
+            params.umi_dedup_tool,
+            params.umitools_dedup_stats,
+            params.bam_csi_index,
+            ch_transcriptome_bam,
+            ch_transcript_fasta.map { item -> [ [:], item ] }
+        )
+
+        ch_genome_bam        = BAM_DEDUP_UMI.out.bam
+        ch_transcriptome_bam = BAM_DEDUP_UMI.out.transcriptome_bam
+        ch_genome_bam_index  = BAM_DEDUP_UMI.out.bai
+        ch_versions          = ch_versions.mix(BAM_DEDUP_UMI.out.versions)
+
+        ch_multiqc_files = ch_multiqc_files
+            .mix(BAM_DEDUP_UMI.out.multiqc_files)
+    }
+
+    //
+    // Quantification
+    //
+    if (params.aligner == 'star_rsem') {
+
+        QUANTIFY_RSEM (
+            ch_transcriptome_bam,
+            ch_rsem_index,
+            params.use_sentieon_star
+        )
+        ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_RSEM.out.stat.collect{ tuple -> tuple[1] })
+        ch_versions = ch_versions.mix(QUANTIFY_RSEM.out.versions)
+
+        if (!params.skip_qc & !params.skip_deseq2_qc) {
+            DESEQ2_QC_RSEM (
+                QUANTIFY_RSEM.out.merged_counts_gene,
+                ch_pca_header_multiqc,
+                ch_clustering_header_multiqc
+            )
+            ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_RSEM.out.pca_multiqc.collect())
+            ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_RSEM.out.dists_multiqc.collect())
+            ch_versions = ch_versions.mix(DESEQ2_QC_RSEM.out.versions)
+        }
+
+    } else if (params.aligner in ['star_salmon', 'bowtie2_salmon']) {
+
+        //
+        // SUBWORKFLOW: Count reads from BAM alignments using Salmon
+        //
+        QUANTIFY_BAM_SALMON (
+            ch_samplesheet.map { item -> [ [:], item ] },
+            ch_transcriptome_bam,
+            ch_dummy_file,
+            ch_transcript_fasta,
+            ch_gtf,
+            params.gtf_group_features,
+            params.gtf_extra_attributes,
+            'salmon',
+            true,
+            params.salmon_quant_libtype ?: '',
+            params.kallisto_quant_fraglen,
+            params.kallisto_quant_fraglen_sd
+        )
+        ch_versions = ch_versions.mix(QUANTIFY_BAM_SALMON.out.versions)
+
+        if (!params.skip_qc & !params.skip_deseq2_qc) {
+            DESEQ2_QC_BAM_SALMON (
+                QUANTIFY_BAM_SALMON.out.counts_gene_length_scaled.map { tuple -> tuple[1] },
+                ch_pca_header_multiqc,
+                ch_clustering_header_multiqc
+            )
+            ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_BAM_SALMON.out.pca_multiqc.collect())
+            ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_BAM_SALMON.out.dists_multiqc.collect())
+            ch_versions = ch_versions.mix(DESEQ2_QC_BAM_SALMON.out.versions)
         }
     }
 

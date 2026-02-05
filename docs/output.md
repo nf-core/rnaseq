@@ -378,9 +378,12 @@ You can choose to align and quantify your data with RSEM by providing the `--ali
 
 </details>
 
-[Bowtie2](https://github.com/BenLangmead/bowtie2) is a fast and memory-efficient tool for aligning reads to reference sequences. Unlike STAR or HISAT2, Bowtie2 is not splice-aware, which makes it well-suited for prokaryotic RNA-seq data where introns are absent. When using `--aligner bowtie2_salmon`, reads are aligned directly to the transcriptome and quantified with Salmon.
+[Bowtie2](https://github.com/BenLangmead/bowtie2) is a fast and memory-efficient tool for aligning unspliced reads to reference sequences. When using `--aligner bowtie2_salmon`, reads are aligned directly to the transcriptome and quantified with Salmon.
 
-This aligner is the default when using `-profile prokaryotic` and is recommended for bacterial and archaeal RNA-seq analysis. For prokaryotic data, splice-aware aligners like STAR are unnecessary and Bowtie2 provides efficient, accurate alignments.
+This aligner is the default when using `-profile prokaryotic` for bacterial and archaeal RNA-seq analysis.
+
+> [!NOTE]
+> For prokaryotic data, the transcript-level and gene-level output files will typically contain identical values since prokaryotic annotations usually have a 1:1 mapping between CDS features and genes (no alternative splicing). The transcript-level files are included for consistency with Salmon's standard output format, but users should focus on the gene-level results.
 
 You can use this aligner by providing the `--aligner bowtie2_salmon` parameter or by using `-profile prokaryotic`.
 

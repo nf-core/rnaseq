@@ -42,7 +42,7 @@ workflow ALIGN_BOWTIE2 {
         reads,
         index.map { index_path -> [ [id: 'genome'], index_path ] },
         [ [:], [] ],    // No fasta needed for BAM output
-        false,          // save_unaligned
+        params.save_unaligned,  // save_unaligned - enable for downstream analysis of unmapped reads
         false           // sort_bam - we'll sort with samtools for consistency
     )
     ch_versions = ch_versions.mix(BOWTIE2_ALIGN.out.versions.first())

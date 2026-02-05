@@ -511,13 +511,15 @@ nextflow run nf-core/rnaseq \
 
 If you prefer not to use the profile, you can manually configure the pipeline for prokaryotic data. The following parameters are set by `-profile prokaryotic`:
 
-| Parameter                      | Value            | Purpose                     |
-| ------------------------------ | ---------------- | --------------------------- |
-| `--aligner`                    | `bowtie2_salmon` | Splice-unaware alignment    |
-| `--gffread_transcript_fasta`   | `true`           | Handle CDS-only annotations |
-| `--featurecounts_feature_type` | `CDS`            | QC counting on CDS features |
-| `--skip_rseqc`                 | `true`           | Skip eukaryote-specific QC  |
-| `--skip_dupradar`              | `true`           | Skip eukaryote-specific QC  |
+| Parameter                      | Value            | Purpose                                  |
+| ------------------------------ | ---------------- | ---------------------------------------- |
+| `--aligner`                    | `bowtie2_salmon` | Splice-unaware alignment                 |
+| `--gffread_transcript_fasta`   | `true`           | Handle CDS-only annotations              |
+| `--featurecounts_feature_type` | `CDS`            | QC counting on CDS features              |
+| `--skip_rseqc`                 | `true`           | Skip eukaryote-specific QC               |
+| `--skip_dupradar`              | `true`           | Skip eukaryote-specific QC               |
+| `--skip_qualimap`              | `true`           | Skip eukaryote-specific QC               |
+| `--skip_bigwig`                | `true`           | Inappropriate for transcriptomic alignments |
 
 Additionally, you may want to set:
 
@@ -689,7 +691,7 @@ To further assist in reproducibility, you can use share and reuse [parameter fil
 
 ### `-profile`
 
-Use this parameter to choose a configuration profile. Profiles can give configuration presets for different compute environments.
+Use this parameter to choose a configuration profile. Profiles can give configuration presets for different compute environments or analyses.
 
 Several generic profiles are bundled with the pipeline which instruct the pipeline to use software packaged using different methods (Docker, Singularity, Podman, Shifter, Charliecloud, Apptainer, Conda) - see below.
 

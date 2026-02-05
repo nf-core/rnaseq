@@ -395,7 +395,7 @@ workflow PREPARE_GENOME {
         else if (ch_transcript_fasta) {
             // Build Bowtie2 index from transcript FASTA for alignment-based Salmon quantification
             BOWTIE2_BUILD(
-                ch_transcript_fasta.map { fasta_file -> [ [id: 'transcriptome'], fasta_file ] }
+                ch_transcript_fasta.map { fasta_file -> [ [id: 'transcripts'], fasta_file ] }
             )
             ch_bowtie2_index = BOWTIE2_BUILD.out.index.map { meta, index -> index }
             ch_versions      = ch_versions.mix(BOWTIE2_BUILD.out.versions)

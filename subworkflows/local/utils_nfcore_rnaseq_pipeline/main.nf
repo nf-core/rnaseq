@@ -596,7 +596,7 @@ def rsemProkaryoticError() {
         "  features instead of exon features, which is typical for prokaryotic\n" +
         "  annotations.\n\n" +
         "  Please use one of the following aligners instead:\n" +
-        "    - '--aligner star_salmon' (recommended with '-profile prokaryotic')\n" +
+        "    - '--aligner star_salmon' (alternative with '-profile prokaryotic')\n" +
         "    - '--aligner bowtie2_salmon' (default for '-profile prokaryotic')\n" +
         "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
     error(error_string)

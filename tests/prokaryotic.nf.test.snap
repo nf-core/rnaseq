@@ -6,6 +6,9 @@
                 "BEDTOOLS_GENOMECOV_FW": {
                     "bedtools": "2.31.1"
                 },
+                "BEDTOOLS_GENOMECOV_REV": {
+                    "bedtools": "2.31.1"
+                },
                 "CUSTOM_TX2GENE": {
                     "python": "3.10.4"
                 },
@@ -13,7 +16,10 @@
                     "fastqc": "0.12.1"
                 },
                 "FQ_LINT": {
-                    "fq": "0.12.0 (2024-07-08)"
+                    "fq": "0.12.0"
+                },
+                "FQ_LINT_AFTER_TRIMMING": {
+                    "fq": "0.12.0"
                 },
                 "GFFREAD": {
                     "gffread": "0.12.7"
@@ -28,7 +34,7 @@
                     "python": "3.9.5"
                 },
                 "PICARD_MARKDUPLICATES": {
-                    "picard": "3.1.1"
+                    "picard": "3.4.0"
                 },
                 "SALMON_QUANT": {
                     "salmon": "1.10.3"
@@ -467,7 +473,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-05T12:57:08.525724592"
+        "timestamp": "2026-02-05T16:39:52.030435223"
     },
     "Params: --aligner bowtie2_salmon --gffread_transcript_fasta": {
         "content": [
@@ -488,7 +494,10 @@
                     "fastqc": "0.12.1"
                 },
                 "FQ_LINT": {
-                    "fq": "0.12.0 (2024-07-08)"
+                    "fq": "0.12.0"
+                },
+                "FQ_LINT_AFTER_TRIMMING": {
+                    "fq": "0.12.0"
                 },
                 "GFFREAD": {
                     "gffread": "0.12.7"
@@ -503,7 +512,7 @@
                     "python": "3.9.5"
                 },
                 "PICARD_MARKDUPLICATES": {
-                    "picard": "3.1.1"
+                    "picard": "3.4.0"
                 },
                 "SALMON_QUANT": {
                     "salmon": "1.10.3"
@@ -909,7 +918,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-04T10:33:46.57362972"
+        "timestamp": "2026-02-05T16:41:42.047478035"
     },
     "Params: --aligner bowtie2_salmon --gffread_transcript_fasta - stub": {
         "content": [
@@ -930,7 +939,10 @@
                     "fastqc": "0.12.1"
                 },
                 "FQ_LINT": {
-                    "fq": "0.12.0 (2024-07-08)"
+                    "fq": "0.12.0"
+                },
+                "FQ_LINT_AFTER_TRIMMING": {
+                    "fq": "0.12.0"
                 },
                 "GFFREAD": {
                     "gffread": "0.12.7"
@@ -1050,7 +1062,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-04T10:32:42.67965236"
+        "timestamp": "2026-02-05T16:40:37.895587458"
     },
     "Params: --aligner star_salmon --prokaryotic - stub": {
         "content": [
@@ -1063,7 +1075,10 @@
                     "fastqc": "0.12.1"
                 },
                 "FQ_LINT": {
-                    "fq": "0.12.0 (2024-07-08)"
+                    "fq": "0.12.0"
+                },
+                "FQ_LINT_AFTER_TRIMMING": {
+                    "fq": "0.12.0"
                 },
                 "GFFREAD": {
                     "gffread": "0.12.7"
@@ -1209,6 +1224,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-04T10:30:53.498464074"
+        "timestamp": "2026-02-05T16:38:47.779452443"
     }
 }

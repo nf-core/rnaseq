@@ -9,6 +9,9 @@
                 "BEDTOOLS_GENOMECOV_FW": {
                     "bedtools": "2.31.1"
                 },
+                "BEDTOOLS_GENOMECOV_REV": {
+                    "bedtools": "2.31.1"
+                },
                 "CAT_FASTQ": {
                     "cat": 9.5
                 },
@@ -33,10 +36,16 @@
                     "fastqc": "0.12.1"
                 },
                 "FQ_LINT": {
-                    "fq": "0.12.0 (2024-07-08)"
+                    "fq": "0.12.0"
+                },
+                "FQ_LINT_AFTER_BBSPLIT": {
+                    "fq": "0.12.0"
+                },
+                "FQ_LINT_AFTER_TRIMMING": {
+                    "fq": "0.12.0"
                 },
                 "FQ_SUBSAMPLE": {
-                    "fq": "0.12.0 (2024-07-08)"
+                    "fq": "0.12.0"
                 },
                 "GTF2BED": {
                     "perl": "5.26.2"
@@ -54,7 +63,7 @@
                     "python": "3.9.5"
                 },
                 "PICARD_MARKDUPLICATES": {
-                    "picard": "3.1.1"
+                    "picard": "3.4.0"
                 },
                 "QUALIMAP_RNASEQ": {
                     "qualimap": 2.3
@@ -1349,7 +1358,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-18T14:20:47.272873356"
+        "timestamp": "2026-02-04T17:44:50.39285274"
     },
     "Params: --aligner star_rsem - stub": {
         "content": [
@@ -1368,7 +1377,7 @@
                     "fastqc": "0.12.1"
                 },
                 "FQ_LINT": {
-                    "fq": "0.12.0 (2024-07-08)"
+                    "fq": "0.12.0"
                 },
                 "GTF2BED": {
                     "perl": "5.26.2"
@@ -1453,6 +1462,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-18T14:21:23.514955288"
+        "timestamp": "2026-02-04T17:45:23.417817921"
     }
 }

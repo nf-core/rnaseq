@@ -174,7 +174,6 @@ workflow RNASEQ {
         ch_genome_bam
     )
     ch_genome_bam_index = params.bam_csi_index ? SAMTOOLS_INDEX.out.csi : SAMTOOLS_INDEX.out.bai
-    ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
 
     //
     // Run RNA-seq FASTQ preprocessing subworkflow
@@ -219,7 +218,6 @@ workflow RNASEQ {
     )
 
     ch_multiqc_files                  = ch_multiqc_files.mix(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.multiqc_files)
-    ch_versions                       = ch_versions.mix(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.versions)
     ch_strand_inferred_filtered_fastq = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.reads
     ch_trim_read_count                = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.trim_read_count
 
@@ -482,7 +480,6 @@ workflow RNASEQ {
             ch_genome_bam
         )
         ch_multiqc_files = ch_multiqc_files.mix(PRESEQ_LCEXTRAP.out.lc_extrap.collect{ tuple -> tuple[1] })
-        ch_versions = ch_versions.mix(PRESEQ_LCEXTRAP.out.versions.first())
     }
 
     //
@@ -500,8 +497,6 @@ workflow RNASEQ {
         ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.flagstat.collect{ tuple -> tuple[1] })
         ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.idxstats.collect{ tuple -> tuple[1] })
         ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.metrics.collect{ tuple -> tuple[1] })
-
-        ch_versions = ch_versions.mix(BAM_MARKDUPLICATES_PICARD.out.versions)
     }
 
     //
@@ -512,7 +507,6 @@ workflow RNASEQ {
             ch_genome_bam,
             ch_gtf
         )
-        ch_versions = ch_versions.mix(STRINGTIE_STRINGTIE.out.versions.first())
     }
 
     //
@@ -536,14 +530,12 @@ workflow RNASEQ {
         SUBREAD_FEATURECOUNTS (
             ch_featurecounts
         )
-        ch_versions = ch_versions.mix(SUBREAD_FEATURECOUNTS.out.versions.first())
 
         MULTIQC_CUSTOM_BIOTYPE (
             SUBREAD_FEATURECOUNTS.out.counts,
             ch_biotypes_header_multiqc
         )
         ch_multiqc_files = ch_multiqc_files.mix(MULTIQC_CUSTOM_BIOTYPE.out.tsv.collect{ tuple -> tuple[1] })
-        ch_versions = ch_versions.mix(MULTIQC_CUSTOM_BIOTYPE.out.versions.first())
     }
 
     //
@@ -566,8 +558,6 @@ workflow RNASEQ {
             'bedGraph',
             true
         )
-
-        ch_versions = ch_versions.mix(BEDTOOLS_GENOMECOV_FW.out.versions.first())
 
         //
         // SUBWORKFLOW: Convert bedGraph to bigWig
@@ -600,7 +590,6 @@ workflow RNASEQ {
                 ch_gtf.map { item -> [ [:], item ] }
             )
             ch_multiqc_files = ch_multiqc_files.mix(QUALIMAP_RNASEQ.out.results.collect{ tuple -> tuple[1] })
-            ch_versions = ch_versions.mix(QUALIMAP_RNASEQ.out.versions.first())
         }
 
         if (!params.skip_dupradar) {
@@ -704,7 +693,6 @@ workflow RNASEQ {
                 params.save_kraken_unassigned
             )
             ch_kraken_reports = KRAKEN2.out.report
-            ch_versions = ch_versions.mix(KRAKEN2.out.versions)
 
             if (params.contaminant_screening == 'kraken2') {
                 ch_multiqc_files = ch_multiqc_files.mix(KRAKEN2.out.report.collect{ tuple -> tuple[1] })
@@ -713,7 +701,6 @@ workflow RNASEQ {
                     ch_kraken_reports,
                     params.kraken_db
                 )
-                ch_versions = ch_versions.mix(BRACKEN.out.versions)
                 ch_multiqc_files = ch_multiqc_files.mix(BRACKEN.out.txt.collect{ tuple -> tuple[1] })
             }
         } else if (params.contaminant_screening == 'sylph') {
@@ -724,7 +711,6 @@ workflow RNASEQ {
                 ch_sylph_databases
             )
             ch_sylph_profile = SYLPH_PROFILE.out.profile_out.filter{ tuple -> !tuple[1].isEmpty() }
-            ch_versions = ch_versions.mix(SYLPH_PROFILE.out.versions)
 
             def sylph_taxonomies = params.sylph_taxonomy ? params.sylph_taxonomy.split(',').collect{ path -> file(path.trim()) } : []
             ch_sylph_taxonomies = channel.value(sylph_taxonomies)
@@ -732,7 +718,6 @@ workflow RNASEQ {
                 ch_sylph_profile,
                 ch_sylph_taxonomies
             )
-            ch_versions = ch_versions.mix(SYLPHTAX_TAXPROF.out.versions)
             ch_multiqc_files = ch_multiqc_files.mix(SYLPHTAX_TAXPROF.out.taxprof_output.collect{ tuple -> tuple[1] })
         }
     }

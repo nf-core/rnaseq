@@ -63,7 +63,7 @@ nextflow_process {
                 { assert snapshot(
                     path("${process.out.results[0][1]}/abundance.tsv"),
                     process.out.log,
-                    process.out.versions).match() }
+                    process.out.findAll { key, val -> key.startsWith('versions') }).match() }
             )
         }
     }
@@ -96,7 +96,7 @@ nextflow_process {
                 { assert snapshot(
                     path("${process.out.results[0][1]}/abundance.tsv"),
                     process.out.log,
-                    process.out.versions).match() }
+                    process.out.findAll { key, val -> key.startsWith('versions') }).match() }
             )
         }
     }
@@ -129,7 +129,11 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(
+                    process.out.results,
+                    process.out.json_info,
+                    process.out.log,
+                    process.out.findAll { key, val -> key.startsWith('versions') }).match() }
             )
         }
     }
@@ -162,7 +166,11 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(
+                    process.out.results,
+                    process.out.json_info,
+                    process.out.log,
+                    process.out.findAll { key, val -> key.startsWith('versions') }).match() }
             )
         }
     }

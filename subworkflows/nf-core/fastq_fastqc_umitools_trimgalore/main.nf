@@ -36,7 +36,6 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
     min_trimmed_reads // integer: > 0
 
     main:
-    ch_versions = channel.empty()
     fastqc_html = channel.empty()
     fastqc_zip = channel.empty()
     if (!skip_fastqc) {
@@ -45,13 +44,14 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
         fastqc_zip = FASTQC.out.zip
     }
 
-    umi_reads = reads
+    trimmer_reads = reads
     umi_log = channel.empty()
+    umi_reads = channel.empty()
     if (with_umi && !skip_umi_extract) {
         UMITOOLS_EXTRACT(reads)
+        trimmer_reads = UMITOOLS_EXTRACT.out.reads
         umi_reads = UMITOOLS_EXTRACT.out.reads
         umi_log = UMITOOLS_EXTRACT.out.log
-        ch_versions = ch_versions.mix(UMITOOLS_EXTRACT.out.versions.first())
 
         // Discard R1 / R2 if required
         if (umi_discard_read in [1, 2]) {
@@ -59,18 +59,18 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
                 .map { meta, reads_ ->
                     meta.single_end ? [meta, reads_] : [meta + ['single_end': true], reads_[umi_discard_read % 2]]
                 }
-                .set { umi_reads }
+                .set { trimmer_reads }
         }
     }
 
-    trim_reads = umi_reads
+    trim_reads = trimmer_reads
     trim_unpaired = channel.empty()
     trim_html = channel.empty()
     trim_zip = channel.empty()
     trim_log = channel.empty()
     trim_read_count = channel.empty()
     if (!skip_trimming) {
-        TRIMGALORE(umi_reads)
+        TRIMGALORE(trimmer_reads)
         trim_unpaired = TRIMGALORE.out.unpaired
         trim_html = TRIMGALORE.out.html
         trim_zip = TRIMGALORE.out.zip
@@ -107,10 +107,10 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
     fastqc_html     // channel: [ val(meta), [ html ] ]
     fastqc_zip      // channel: [ val(meta), [ zip ] ]
     umi_log         // channel: [ val(meta), [ log ] ]
+    umi_reads       // channel: [ val(meta), [ reads ] ]
     trim_unpaired   // channel: [ val(meta), [ reads ] ]
     trim_html       // channel: [ val(meta), [ html ] ]
     trim_zip        // channel: [ val(meta), [ zip ] ]
     trim_log        // channel: [ val(meta), [ txt ] ]
     trim_read_count // channel: [ val(meta), val(count) ]
-    versions        = ch_versions // channel: [ versions.yml ]
 }

@@ -1,6 +1,7 @@
 {
-    "single_end - lc_extrap": {
+    "sarscov2 - single_end": {
         "content": [
+            "test.command.log",
             [
                 [
                     {
@@ -9,35 +10,22 @@
                     },
                     "test.lc_extrap.txt:md5,1fa5cdd601079329618f61660bee00de"
                 ]
-            ]
+            ],
+            {
+                "versions_preseq": [
+                    [
+                        "PRESEQ_LCEXTRAP",
+                        "preseq",
+                        "3.2.0"
+                    ]
+                ]
+            }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2023-11-23T17:20:40.735535"
-    },
-    "paired_end - log": {
-        "content": [
-            "test.command.log"
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
-        },
-        "timestamp": "2023-11-23T17:20:51.981746"
-    },
-    "single_end - versions": {
-        "content": [
-            [
-                "versions.yml:md5,e099c02ff6a63c1dacc6c79fd3d0223e"
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
-        },
-        "timestamp": "2024-10-19T16:55:55.821665692"
+        "timestamp": "2026-02-02T14:35:59.779654786"
     },
     "sarscov2 - single_end - stub": {
         "content": [
@@ -61,7 +49,11 @@
                     ]
                 ],
                 "2": [
-                    "versions.yml:md5,e099c02ff6a63c1dacc6c79fd3d0223e"
+                    [
+                        "PRESEQ_LCEXTRAP",
+                        "preseq",
+                        "3.2.0"
+                    ]
                 ],
                 "lc_extrap": [
                     [
@@ -81,41 +73,24 @@
                         "test.command.log:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,e099c02ff6a63c1dacc6c79fd3d0223e"
+                "versions_preseq": [
+                    [
+                        "PRESEQ_LCEXTRAP",
+                        "preseq",
+                        "3.2.0"
+                    ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2024-10-19T16:56:11.779385911"
+        "timestamp": "2026-02-02T14:36:05.164534216"
     },
-    "paired_end - versions": {
+    "sarscov2 - paired_end": {
         "content": [
-            [
-                "versions.yml:md5,e099c02ff6a63c1dacc6c79fd3d0223e"
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
-        },
-        "timestamp": "2024-10-19T16:56:31.353046182"
-    },
-    "single_end - log": {
-        "content": [
-            "test.command.log"
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
-        },
-        "timestamp": "2023-11-23T17:20:40.72985"
-    },
-    "paired_end - lc_extrap": {
-        "content": [
+            "test.command.log",
             [
                 [
                     {
@@ -124,13 +99,22 @@
                     },
                     "test.lc_extrap.txt:md5,10e5ea860e87fb6f5dc10f4f20c62040"
                 ]
-            ]
+            ],
+            {
+                "versions_preseq": [
+                    [
+                        "PRESEQ_LCEXTRAP",
+                        "preseq",
+                        "3.2.0"
+                    ]
+                ]
+            }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2023-11-23T17:20:51.998533"
+        "timestamp": "2026-02-02T14:36:10.713888585"
     },
     "sarscov2 - paired_end - stub": {
         "content": [
@@ -154,7 +138,11 @@
                     ]
                 ],
                 "2": [
-                    "versions.yml:md5,e099c02ff6a63c1dacc6c79fd3d0223e"
+                    [
+                        "PRESEQ_LCEXTRAP",
+                        "preseq",
+                        "3.2.0"
+                    ]
                 ],
                 "lc_extrap": [
                     [
@@ -174,15 +162,19 @@
                         "test.command.log:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,e099c02ff6a63c1dacc6c79fd3d0223e"
+                "versions_preseq": [
+                    [
+                        "PRESEQ_LCEXTRAP",
+                        "preseq",
+                        "3.2.0"
+                    ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2024-10-19T16:56:45.034808313"
+        "timestamp": "2026-02-02T14:36:16.120076691"
     }
 }

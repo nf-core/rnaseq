@@ -41,8 +41,6 @@ workflow PIPELINE_INITIALISATION {
 
     main:
 
-    ch_versions = channel.empty()
-
     //
     // Print version and exit if required and dump pipeline parameters to JSON file
     //
@@ -99,9 +97,6 @@ ${colors.purple}  nf-core/rnaseq ${workflow.manifest.version}${colors.reset}
     // Custom validation for pipeline parameters
     //
     validateInputParameters()
-
-    emit:
-    versions    = ch_versions
 }
 
 /*

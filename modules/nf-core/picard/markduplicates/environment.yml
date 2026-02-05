@@ -5,4 +5,4 @@ channels:
   - bioconda
 dependencies:
   # renovate: datasource=conda depName=bioconda/picard
-  - bioconda::picard=3.1.1
+  - bioconda::picard=3.4.0

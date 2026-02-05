@@ -12,7 +12,11 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,bdc0bfb2b0542580e7cd65e80d8570bc"
+                    [
+                        "SAMTOOLS_FLAGSTAT",
+                        "samtools",
+                        "1.22.1"
+                    ]
                 ],
                 "flagstat": [
                     [
@@ -23,16 +27,20 @@
                         "test.flagstat:md5,67394650dbae96d1a4fcc70484822159"
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,bdc0bfb2b0542580e7cd65e80d8570bc"
+                "versions_samtools": [
+                    [
+                        "SAMTOOLS_FLAGSTAT",
+                        "samtools",
+                        "1.22.1"
+                    ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-09-15T15:02:00.813612"
+        "timestamp": "2026-02-03T11:14:30.820969684"
     },
     "BAM": {
         "content": [
@@ -47,7 +55,11 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,bdc0bfb2b0542580e7cd65e80d8570bc"
+                    [
+                        "SAMTOOLS_FLAGSTAT",
+                        "samtools",
+                        "1.22.1"
+                    ]
                 ],
                 "flagstat": [
                     [
@@ -58,15 +70,19 @@
                         "test.flagstat:md5,4f7ffd1e6a5e85524d443209ac97d783"
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,bdc0bfb2b0542580e7cd65e80d8570bc"
+                "versions_samtools": [
+                    [
+                        "SAMTOOLS_FLAGSTAT",
+                        "samtools",
+                        "1.22.1"
+                    ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-09-15T15:01:55.232954"
+        "timestamp": "2026-02-03T11:14:25.581619424"
     }
 }

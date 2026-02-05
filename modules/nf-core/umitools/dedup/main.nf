@@ -17,7 +17,7 @@ process UMITOOLS_DEDUP {
     tuple val(meta), path("*edit_distance.tsv"), optional:true, emit: tsv_edit_distance
     tuple val(meta), path("*per_umi.tsv")      , optional:true, emit: tsv_per_umi
     tuple val(meta), path("*per_position.tsv") , optional:true, emit: tsv_umi_per_position
-    path  "versions.yml"                       , emit: versions
+    tuple val("${task.process}"), val('umitools'), eval("umi_tools --version | sed 's/UMI-tools version: //'"), emit: versions_umitools, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -42,11 +42,6 @@ process UMITOOLS_DEDUP {
         $stats \\
         $paired \\
         $args
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        umitools: \$( umi_tools --version | sed '/version:/!d; s/.*: //' )
-    END_VERSIONS
     """
 
     stub:
@@ -57,10 +52,5 @@ process UMITOOLS_DEDUP {
     touch ${prefix}_edit_distance.tsv
     touch ${prefix}_per_umi.tsv
     touch ${prefix}_per_position.tsv
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        umitools: \$( umi_tools --version | sed '/version:/!d; s/.*: //' )
-    END_VERSIONS
     """
 }

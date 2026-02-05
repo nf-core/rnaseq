@@ -40,13 +40,29 @@ output:
           pattern: "*.{fasta,fastq,fa,fq,fas,fna,faa}*"
           ontologies:
             - edam: http://edamontology.org/format_1930 # FASTQ
+  versions_seqkit:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - seqkit:
+          type: string
+          description: The name of the tool
+      - "seqkit version | sed 's/seqkit v//'":
+          type: eval
+          description: The expression to obtain the version of seqkit
+
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - seqkit:
+          type: string
+          description: The name of the tool
+      - "seqkit version | sed 's/seqkit v//'":
+          type: eval
+          description: The expression to obtain the version of seqkit
+
 authors:
   - "@mjcipriano"
 maintainers:

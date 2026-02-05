@@ -47,7 +47,7 @@ nextflow_process {
                     file(process.out.bam[0][1]).name,
                     process.out.log,
                     process.out.fastq,
-                    process.out.versions
+                    process.out.findAll { key, val -> key.startsWith('versions') }
                 ).match() }
             )
         }
@@ -93,7 +93,7 @@ nextflow_process {
                     file(process.out.sam[0][1]).readLines()[0..4],
                     process.out.log,
                     process.out.fastq,
-                    process.out.versions
+                    process.out.findAll { key, val -> key.startsWith('versions') }
                 ).match() }
             )
         }
@@ -139,7 +139,7 @@ nextflow_process {
                     file(process.out.sam[0][1]).readLines()[0..4],
                     process.out.log,
                     process.out.fastq,
-                    process.out.versions
+                    process.out.findAll { key, val -> key.startsWith('versions') }
                 ).match() }
             )
         }
@@ -184,7 +184,7 @@ nextflow_process {
                     file(process.out.bam[0][1]).name,
                     process.out.log,
                     process.out.fastq,
-                    process.out.versions
+                    process.out.findAll { key, val -> key.startsWith('versions') }
                 ).match() }
             )
         }
@@ -232,7 +232,7 @@ nextflow_process {
                     file(process.out.bam[0][1]).name,
                     process.out.log,
                     process.out.fastq,
-                    process.out.versions
+                    process.out.findAll { key, val -> key.startsWith('versions') }
                 ).match() }
             )
         }
@@ -280,7 +280,7 @@ nextflow_process {
                     file(process.out.bam[0][1]).name,
                     process.out.log,
                     process.out.fastq,
-                    process.out.versions
+                    process.out.findAll { key, val -> key.startsWith('versions') }
                 ).match() }
             )
         }
@@ -326,7 +326,7 @@ nextflow_process {
                     file(process.out.bam[0][1]).name,
                     process.out.log,
                     process.out.fastq,
-                    process.out.versions
+                    process.out.findAll { key, val -> key.startsWith('versions') }
                 ).match() }
             )
         }
@@ -375,7 +375,7 @@ nextflow_process {
                     file(process.out.bam[0][1]).name,
                     process.out.log,
                     process.out.fastq,
-                    process.out.versions
+                    process.out.findAll { key, val -> key.startsWith('versions') }
                 ).match() }
             )
         }
@@ -423,7 +423,7 @@ nextflow_process {
                     file(process.out.bam[0][1]).name,
                     process.out.log,
                     process.out.fastq,
-                    process.out.versions
+                    process.out.findAll { key, val -> key.startsWith('versions') }
                 ).match() }
             )
         }
@@ -468,7 +468,7 @@ nextflow_process {
                     file(process.out.bam[0][1]).name,
                     process.out.log,
                     process.out.fastq,
-                    process.out.versions
+                    process.out.findAll { key, val -> key.startsWith('versions') }
                 ).match() }
 
             )
@@ -566,7 +566,7 @@ nextflow_process {
                     file(process.out.csi[0][1]).name,
                     file(process.out.log[0][1]).name,
                     process.out.fastq,
-                    process.out.versions
+                    process.out.findAll { key, val -> key.startsWith('versions') }
                 ).match() }
             )
         }
@@ -613,7 +613,7 @@ nextflow_process {
                     file(process.out.csi[0][1]).name,
                     file(process.out.log[0][1]).name,
                     process.out.fastq,
-                    process.out.versions
+                    process.out.findAll { key, val -> key.startsWith('versions') }
                 ).match() }
             )
         }

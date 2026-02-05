@@ -12,7 +12,7 @@ process BOWTIE2_BUILD {
 
     output:
     tuple val(meta), path('bowtie2')    , emit: index
-    path "versions.yml"                 , emit: versions
+    tuple val("${task.process}"), val('bowtie2'), eval('bowtie2 --version 2>&1 | head -1 | sed "s/^.*bowtie2-align-s version //; s/ .*//"'), emit: versions_bowtie2, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -22,10 +22,6 @@ process BOWTIE2_BUILD {
     """
     mkdir bowtie2
     bowtie2-build $args --threads $task.cpus $fasta bowtie2/${fasta.baseName}
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        bowtie2: \$(echo \$(bowtie2 --version 2>&1) | sed 's/^.*bowtie2-align-s version //; s/ .*\$//')
-    END_VERSIONS
     """
 
     stub:
@@ -33,10 +29,5 @@ process BOWTIE2_BUILD {
     mkdir bowtie2
     touch bowtie2/${fasta.baseName}.{1..4}.bt2
     touch bowtie2/${fasta.baseName}.rev.{1,2}.bt2
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        bowtie2: \$(echo \$(bowtie2 --version 2>&1) | sed 's/^.*bowtie2-align-s version //; s/ .*\$//')
-    END_VERSIONS
     """
 }

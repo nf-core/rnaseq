@@ -18,21 +18,17 @@ workflow FASTQ_SUBSAMPLE_FQ_SALMON {
 
     main:
 
-    ch_versions = channel.empty()
-
     //
     // Create Salmon index if required
     //
     if (make_index) {
         ch_index = SALMON_INDEX ( ch_genome_fasta, ch_transcript_fasta ).index
-        ch_versions = ch_versions.mix(SALMON_INDEX.out.versions)
     }
 
     //
     // Sub-sample FastQ files with fq
     //
     FQ_SUBSAMPLE ( ch_reads )
-    ch_versions = ch_versions.mix(FQ_SUBSAMPLE.out.versions.first())
 
     //
     // Pseudo-alignment with Salmon
@@ -49,6 +45,4 @@ workflow FASTQ_SUBSAMPLE_FQ_SALMON {
     results           = SALMON_QUANT.out.results           // channel: [ val(meta), results_dir ]
     json_info         = SALMON_QUANT.out.json_info         // channel: [ val(meta), json_info
     lib_format_counts = SALMON_QUANT.out.lib_format_counts // channel: [ val(meta), json_info
-
-    versions          = ch_versions                        // channel: [ versions.yml ]
 }

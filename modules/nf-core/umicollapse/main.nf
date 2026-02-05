@@ -16,7 +16,7 @@ process UMICOLLAPSE {
     tuple val(meta), path("*.bam"),                   emit: bam,        optional: true
     tuple val(meta), path("*dedup*fastq.gz"),         emit: fastq,      optional: true
     tuple val(meta), path("*_UMICollapse.log"),       emit: log
-    path  "versions.yml" ,                            emit: versions
+    tuple val("${task.process}"), val('umicollapse'), eval("echo ${VERSION}"), emit: versions_umicollapse, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -24,7 +24,7 @@ process UMICOLLAPSE {
     script:
     def args   = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def VERSION = '1.1.0-0' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
+    VERSION = '1.1.0-0' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
     // Memory allocation: We need to make sure that both heap and stack size is sufficiently large for
     // umicollapse. We set the stack size to 5% of the available memory, the heap size to 90%
     // which leaves 5% for stuff happening outside of java without the scheduler killing the process.
@@ -48,16 +48,11 @@ process UMICOLLAPSE {
         -i ${input} \\
         -o ${prefix}.${extension} \\
         $args | tee ${prefix}_UMICollapse.log
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        umicollapse: $VERSION
-    END_VERSIONS
     """
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def VERSION = '1.0.0-1'
+    VERSION = '1.1.0-0' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
     if ( mode !in [ 'fastq', 'bam' ] ) {
         error "Mode must be one of 'fastq' or 'bam'."
     }
@@ -65,9 +60,5 @@ process UMICOLLAPSE {
     """
     touch ${prefix}.dedup.${extension}
     touch ${prefix}_UMICollapse.log
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        umicollapse: $VERSION
-    END_VERSIONS
     """
 }

@@ -27,16 +27,13 @@
                     },
                     "test_lib_format_counts.json:md5,0b0e2dc090e5ad88f9a9d6dbe9c3e4a0"
                 ]
-            ],
-            [
-                "versions.yml:md5,eb47b2c20a3565e58b613f66521da320"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-01-19T15:48:44.886628"
+        "timestamp": "2026-02-02T17:19:36.509463"
     },
     "homo_sapiens paired-end [fastq] - stub": {
         "content": [
@@ -101,9 +98,6 @@
                         "test_lib_format_counts.json:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "5": [
-                    "versions.yml:md5,eb47b2c20a3565e58b613f66521da320"
-                ],
                 "index": [
                     [
                         "complete_ref_lens.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -160,12 +154,9 @@
                             "single_end": false
                         },
                         [
-                            
+
                         ]
                     ]
-                ],
-                "versions": [
-                    "versions.yml:md5,eb47b2c20a3565e58b613f66521da320"
                 ]
             }
         ],
@@ -173,6 +164,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-01-19T15:48:54.66733"
+        "timestamp": "2026-02-02T17:19:51.908726"
     }
 }

@@ -16,7 +16,7 @@
                     "python": "3.12.2"
                 },
                 "FQ_LINT": {
-                    "fq": "0.12.0 (2024-07-08)"
+                    "fq": "0.12.0"
                 },
                 "GTF2BED": {
                     "perl": "5.26.2"
@@ -127,7 +127,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-18T14:06:43.267215244"
+        "timestamp": "2026-02-04T17:29:20.563878423"
     },
     "Params: --remove_ribo_rna": {
         "content": [
@@ -146,10 +146,19 @@
                     "python": "3.10.4"
                 },
                 "FQ_LINT": {
-                    "fq": "0.12.0 (2024-07-08)"
+                    "fq": "0.12.0"
+                },
+                "FQ_LINT_AFTER_BBSPLIT": {
+                    "fq": "0.12.0"
+                },
+                "FQ_LINT_AFTER_RIBO_REMOVAL": {
+                    "fq": "0.12.0"
+                },
+                "FQ_LINT_AFTER_TRIMMING": {
+                    "fq": "0.12.0"
                 },
                 "FQ_SUBSAMPLE": {
-                    "fq": "0.12.0 (2024-07-08)"
+                    "fq": "0.12.0"
                 },
                 "GTF2BED": {
                     "perl": "5.26.2"
@@ -164,7 +173,7 @@
                     "gunzip": 1.13
                 },
                 "PICARD_MARKDUPLICATES": {
-                    "picard": "3.1.1"
+                    "picard": "3.4.0"
                 },
                 "SALMON_QUANT": {
                     "salmon": "1.10.3"
@@ -803,7 +812,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-18T14:00:09.906325155"
+        "timestamp": "2026-02-04T17:22:57.024372709"
     },
     "Params: --remove_ribo_rna - stub": {
         "content": [
@@ -819,7 +828,7 @@
                     "python": "3.12.2"
                 },
                 "FQ_LINT": {
-                    "fq": "0.12.0 (2024-07-08)"
+                    "fq": "0.12.0"
                 },
                 "GTF2BED": {
                     "perl": "5.26.2"
@@ -892,7 +901,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-18T14:00:45.105569138"
+        "timestamp": "2026-02-04T17:23:29.432103647"
     },
     "Params: --remove_ribo_rna --ribo_removal_tool bowtie2": {
         "content": [
@@ -924,10 +933,19 @@
                     "python": "3.10.4"
                 },
                 "FQ_LINT": {
-                    "fq": "0.12.0 (2024-07-08)"
+                    "fq": "0.12.0"
+                },
+                "FQ_LINT_AFTER_BBSPLIT": {
+                    "fq": "0.12.0"
+                },
+                "FQ_LINT_AFTER_RIBO_REMOVAL": {
+                    "fq": "0.12.0"
+                },
+                "FQ_LINT_AFTER_TRIMMING": {
+                    "fq": "0.12.0"
                 },
                 "FQ_SUBSAMPLE": {
-                    "fq": "0.12.0 (2024-07-08)"
+                    "fq": "0.12.0"
                 },
                 "GTF2BED": {
                     "perl": "5.26.2"
@@ -942,7 +960,7 @@
                     "gunzip": 1.13
                 },
                 "PICARD_MARKDUPLICATES": {
-                    "picard": "3.1.1"
+                    "picard": "3.4.0"
                 },
                 "SALMON_QUANT": {
                     "salmon": "1.10.3"
@@ -1628,6 +1646,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-18T14:06:03.39529504"
+        "timestamp": "2026-02-04T17:28:44.276346032"
     }
 }

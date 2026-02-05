@@ -12,7 +12,7 @@ process MULTIQC_CUSTOM_BIOTYPE {
 
     output:
     tuple val(meta), path("*.tsv"), emit: tsv
-    path "versions.yml"           , emit: versions
+    tuple val("${task.process}"), val('python'), eval("python --version | sed 's/Python //g'"), topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -27,11 +27,6 @@ process MULTIQC_CUSTOM_BIOTYPE {
         -s $meta.id \\
         -f rRNA \\
         -o ${prefix}.biotype_counts_rrna_mqc.tsv
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        python: \$(python --version | sed 's/Python //g')
-    END_VERSIONS
     """
 
     stub:
@@ -39,10 +34,5 @@ process MULTIQC_CUSTOM_BIOTYPE {
     """
     touch ${prefix}.biotype_counts_mqc.tsv
     touch ${prefix}.biotype_counts_rrna_mqc.tsv
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        python: \$(python --version | sed 's/Python //g')
-    END_VERSIONS
     """
 }

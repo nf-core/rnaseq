@@ -20,9 +20,6 @@
                         "test.isoforms.results:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "10": [
-                    "versions.yml:md5,2aa5252eb2ffb409cf556a165d40f8a9"
-                ],
                 "2": [
                     [
                         {
@@ -112,9 +109,6 @@
                         },
                         "test.stat:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
-                ],
-                "versions": [
-                    "versions.yml:md5,2aa5252eb2ffb409cf556a165d40f8a9"
                 ]
             }
         ],

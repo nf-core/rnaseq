@@ -192,13 +192,6 @@ output:
         - count:
             type: integer
             description: Number of reads after trimming
-  - versions:
-      description: File containing software versions
-      structure:
-        - versions:
-            type: file
-            description: File containing software versions
-            pattern: "versions.yml"
   - lint_log:
       description: Log files from FastQ linting
       structure:

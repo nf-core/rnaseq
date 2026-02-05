@@ -12,7 +12,7 @@ process SAMTOOLS_FLAGSTAT {
 
     output:
     tuple val(meta), path("*.flagstat"), emit: flagstat
-    path  "versions.yml"               , emit: versions
+    tuple val("${task.process}"), val('samtools'), eval("samtools version | sed '1!d;s/.* //'"), emit: versions_samtools, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -25,11 +25,6 @@ process SAMTOOLS_FLAGSTAT {
         --threads ${task.cpus} \\
         $bam \\
         > ${prefix}.flagstat
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-    END_VERSIONS
     """
 
     stub:
@@ -48,10 +43,5 @@ process SAMTOOLS_FLAGSTAT {
     850000 + 0 with mate mapped to a different chr
     50000 + 0 with mate mapped to a different chr (mapQ>=5)
     END_FLAGSTAT
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-    END_VERSIONS
     """
 }

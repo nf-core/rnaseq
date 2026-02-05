@@ -672,7 +672,6 @@ workflow RNASEQ {
                 params.save_kraken_unassigned
             )
             ch_kraken_reports = KRAKEN2.out.report
-            ch_versions = ch_versions.mix(KRAKEN2.out.versions)
 
             if (params.contaminant_screening == 'kraken2') {
                 ch_multiqc_files = ch_multiqc_files.mix(KRAKEN2.out.report.collect{ tuple -> tuple[1] })
@@ -681,7 +680,6 @@ workflow RNASEQ {
                     ch_kraken_reports,
                     params.kraken_db
                 )
-                ch_versions = ch_versions.mix(BRACKEN.out.versions)
                 ch_multiqc_files = ch_multiqc_files.mix(BRACKEN.out.txt.collect{ tuple -> tuple[1] })
             }
         } else if (params.contaminant_screening == 'sylph') {
@@ -692,7 +690,6 @@ workflow RNASEQ {
                 ch_sylph_databases
             )
             ch_sylph_profile = SYLPH_PROFILE.out.profile_out.filter{ tuple -> !tuple[1].isEmpty() }
-            ch_versions = ch_versions.mix(SYLPH_PROFILE.out.versions)
 
             def sylph_taxonomies = params.sylph_taxonomy ? params.sylph_taxonomy.split(',').collect{ path -> file(path.trim()) } : []
             ch_sylph_taxonomies = channel.value(sylph_taxonomies)
@@ -700,7 +697,6 @@ workflow RNASEQ {
                 ch_sylph_profile,
                 ch_sylph_taxonomies
             )
-            ch_versions = ch_versions.mix(SYLPHTAX_TAXPROF.out.versions)
             ch_multiqc_files = ch_multiqc_files.mix(SYLPHTAX_TAXPROF.out.taxprof_output.collect{ tuple -> tuple[1] })
         }
     }

@@ -21,11 +21,11 @@
                 "CUSTOM_TX2GENE": {
                     "python": "3.10.4"
                 },
-                "DESEQ2_QC_PSEUDO": {
+                "DESEQ2_QC_BAM_SALMON": {
                     "bioconductor-deseq2": "1.46.0",
                     "r-base": "4.4.2"
                 },
-                "DESEQ2_QC_STAR_SALMON": {
+                "DESEQ2_QC_PSEUDO": {
                     "bioconductor-deseq2": "1.46.0",
                     "r-base": "4.4.2"
                 },

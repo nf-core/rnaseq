@@ -28,6 +28,7 @@ params.rsem_index       = getGenomeAttribute('rsem')
 params.hisat2_index     = getGenomeAttribute('hisat2')
 params.salmon_index     = getGenomeAttribute('salmon')
 params.kallisto_index   = getGenomeAttribute('kallisto')
+params.bowtie2_index    = getGenomeAttribute('bowtie2')
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -74,9 +75,11 @@ workflow NFCORE_RNASEQ {
         params.salmon_index,
         params.kallisto_index,
         params.hisat2_index,
+        params.bowtie2_index,
         params.bbsplit_index,
         params.sortmerna_index,
         params.gencode,
+        params.gffread_transcript_fasta,
         params.featurecounts_group_type,
         params.aligner,
         params.pseudo_aligner,
@@ -104,7 +107,7 @@ workflow NFCORE_RNASEQ {
 
     // Bowtie2 rRNA index is built on-demand inside the fastq_remove_rrna subworkflow
     // rather than in PREPARE_GENOME, to avoid duplicating the rRNA FASTA preparation logic
-    ch_bowtie2_index = channel.empty()
+    ch_bowtie2_rrna_index = channel.empty()
 
     RNASEQ (
         ch_samplesheet,
@@ -118,12 +121,13 @@ workflow NFCORE_RNASEQ {
         PREPARE_GENOME.out.star_index,
         PREPARE_GENOME.out.rsem_index,
         PREPARE_GENOME.out.hisat2_index,
+        PREPARE_GENOME.out.bowtie2_index,
         PREPARE_GENOME.out.salmon_index,
         PREPARE_GENOME.out.kallisto_index,
         PREPARE_GENOME.out.bbsplit_index,
         PREPARE_GENOME.out.rrna_fastas,
         PREPARE_GENOME.out.sortmerna_index,
-        ch_bowtie2_index,
+        ch_bowtie2_rrna_index,
         PREPARE_GENOME.out.splicesites
     )
     ch_versions = ch_versions.mix(RNASEQ.out.versions)

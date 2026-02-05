@@ -263,8 +263,6 @@ workflow RNASEQ {
         ch_unaligned_sequences           = ALIGN_STAR.out.fastq
         ch_multiqc_files                 = ch_multiqc_files.mix(ch_star_log.collect{ tuple -> tuple[1] })
 
-        ch_versions = ch_versions.mix(ALIGN_STAR.out.versions)
-
         if (!params.with_umi && params.skip_markduplicates) {
             // The deduplicated stats should take priority for MultiQC, but use
             // them straight out of the aligner otherwise. If mark duplicates
@@ -300,8 +298,6 @@ workflow RNASEQ {
         ch_bowtie2_log                   = ALIGN_BOWTIE2.out.log_final
         ch_multiqc_files                 = ch_multiqc_files.mix(ch_bowtie2_log.collect{ tuple -> tuple[1] })
 
-        ch_versions = ch_versions.mix(ALIGN_BOWTIE2.out.versions)
-
         if (!params.with_umi && params.skip_markduplicates) {
             ch_multiqc_files = ch_multiqc_files
                 .mix(ALIGN_BOWTIE2.out.stats.collect{ tuple -> tuple[1] })
@@ -325,8 +321,6 @@ workflow RNASEQ {
         ch_unprocessed_bams    = ch_genome_bam.map { meta, bam -> [ meta, bam, '' ] }
         ch_unaligned_sequences = FASTQ_ALIGN_HISAT2.out.fastq
         ch_multiqc_files = ch_multiqc_files.mix(FASTQ_ALIGN_HISAT2.out.summary.collect{ tuple -> tuple[1] })
-
-        ch_versions = ch_versions.mix(FASTQ_ALIGN_HISAT2.out.versions)
 
         if (!params.with_umi && params.skip_markduplicates) {
             // The deduplicated stats should take priority for MultiQC, but use
@@ -358,7 +352,6 @@ workflow RNASEQ {
         ch_genome_bam        = BAM_DEDUP_UMI.out.bam
         ch_transcriptome_bam = BAM_DEDUP_UMI.out.transcriptome_bam
         ch_genome_bam_index  = BAM_DEDUP_UMI.out.bai
-        ch_versions          = ch_versions.mix(BAM_DEDUP_UMI.out.versions)
 
         ch_multiqc_files = ch_multiqc_files
             .mix(BAM_DEDUP_UMI.out.multiqc_files)
@@ -375,7 +368,6 @@ workflow RNASEQ {
             params.use_sentieon_star
         )
         ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_RSEM.out.stat.collect{ tuple -> tuple[1] })
-        ch_versions = ch_versions.mix(QUANTIFY_RSEM.out.versions)
 
         if (!params.skip_qc & !params.skip_deseq2_qc) {
             DESEQ2_QC_RSEM (

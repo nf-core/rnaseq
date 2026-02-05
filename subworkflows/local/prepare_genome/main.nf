@@ -386,7 +386,6 @@ workflow PREPARE_GENOME {
                 ch_transcript_fasta.map { fasta_file -> [ [id: 'transcripts'], fasta_file ] }
             )
             ch_bowtie2_index = BOWTIE2_BUILD.out.index.map { meta, index -> index }
-            ch_versions      = ch_versions.mix(BOWTIE2_BUILD.out.versions)
         }
     }
 

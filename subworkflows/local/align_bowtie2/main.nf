@@ -33,8 +33,6 @@ workflow ALIGN_BOWTIE2 {
 
     main:
 
-    ch_versions = channel.empty()
-
     //
     // Map reads with Bowtie2
     //
@@ -45,7 +43,6 @@ workflow ALIGN_BOWTIE2 {
         params.save_unaligned,  // save_unaligned - enable for downstream analysis of unmapped reads
         false           // sort_bam - we'll sort with samtools for consistency
     )
-    ch_versions = ch_versions.mix(BOWTIE2_ALIGN.out.versions.first())
 
     ch_orig_bam = BOWTIE2_ALIGN.out.bam
     ch_log = BOWTIE2_ALIGN.out.log
@@ -57,7 +54,6 @@ workflow ALIGN_BOWTIE2 {
     // Sort, index BAM file and run samtools stats, flagstat and idxstats
     //
     BAM_SORT_STATS_SAMTOOLS(ch_orig_bam, fasta)
-    ch_versions = ch_versions.mix(BAM_SORT_STATS_SAMTOOLS.out.versions)
 
     emit:
     orig_bam       = ch_orig_bam                          // channel: [ val(meta), bam ]
@@ -69,5 +65,4 @@ workflow ALIGN_BOWTIE2 {
     flagstat       = BAM_SORT_STATS_SAMTOOLS.out.flagstat // channel: [ val(meta), [ flagstat ] ]
     idxstats       = BAM_SORT_STATS_SAMTOOLS.out.idxstats // channel: [ val(meta), [ idxstats ] ]
     percent_mapped = ch_percent_mapped                    // channel: [ val(meta), percent_mapped ]
-    versions       = ch_versions                          // channel: [ versions.yml ]
 }

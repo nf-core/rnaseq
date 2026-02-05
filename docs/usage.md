@@ -511,14 +511,14 @@ nextflow run nf-core/rnaseq \
 
 If you prefer not to use the profile, you can manually configure the pipeline for prokaryotic data. The following parameters are set by `-profile prokaryotic`:
 
-| Parameter                      | Value            | Purpose                                  |
-| ------------------------------ | ---------------- | ---------------------------------------- |
-| `--aligner`                    | `bowtie2_salmon` | Splice-unaware alignment                 |
-| `--gffread_transcript_fasta`   | `true`           | Handle CDS-only annotations              |
-| `--featurecounts_feature_type` | `CDS`            | QC counting on CDS features              |
-| `--skip_rseqc`                 | `true`           | Skip eukaryote-specific QC               |
-| `--skip_dupradar`              | `true`           | Skip eukaryote-specific QC               |
-| `--skip_qualimap`              | `true`           | Skip eukaryote-specific QC               |
+| Parameter                      | Value            | Purpose                                     |
+| ------------------------------ | ---------------- | ------------------------------------------- |
+| `--aligner`                    | `bowtie2_salmon` | Splice-unaware alignment                    |
+| `--gffread_transcript_fasta`   | `true`           | Handle CDS-only annotations                 |
+| `--featurecounts_feature_type` | `CDS`            | QC counting on CDS features                 |
+| `--skip_rseqc`                 | `true`           | Skip eukaryote-specific QC                  |
+| `--skip_dupradar`              | `true`           | Skip eukaryote-specific QC                  |
+| `--skip_qualimap`              | `true`           | Skip eukaryote-specific QC                  |
 | `--skip_bigwig`                | `true`           | Inappropriate for transcriptomic alignments |
 
 Additionally, you may want to set:

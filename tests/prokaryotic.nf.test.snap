@@ -433,13 +433,13 @@
                 "multiqc_citations.txt:md5,0b337b55350382b77a59f0ae5374e7cd",
                 "multiqc_fastqc_fastqc_raw.txt:md5,42c1cc19c4b9104eb499ce499f335951",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,8be94d69e0c458017cf5064fa1fa86a0",
-                "multiqc_samtools_idxstats.txt:md5,4414480a3a48711d99a403e577272e77",
+                "multiqc_samtools_idxstats.txt:md5,6949b8e77b72655f069f7ffd9a298d68",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "samtools-idxstats-mapped-reads-plot_Normalised_Counts.txt:md5,04107c7f4adc54ec7a30cdb5357f9f34",
                 "samtools-idxstats-mapped-reads-plot_Observed_over_Expected_Counts.txt:md5,04107c7f4adc54ec7a30cdb5357f9f34",
-                "samtools-idxstats-mapped-reads-plot_Raw_Counts.txt:md5,71137229a9743c6b36599d052c8e2567",
+                "samtools-idxstats-mapped-reads-plot_Raw_Counts.txt:md5,086f13628e34b8cc363b223d6a1d9e4d",
                 "ambig_info.tsv:md5,7713bea97f1a7d1b29d9d3ff75c9c247",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
@@ -457,7 +457,7 @@
                 "i2t.ctab:md5,8df3306abca08ac33f4473c7ed0446dd",
                 "i_data.ctab:md5,db3a5f082fe2231d4b7e68cf3996b62d",
                 "e2t.ctab:md5,18eaeb363605980a232768e91e2e67bc",
-                "e_data.ctab:md5,ca8a7982928eb70b33d22417b981c8b9",
+                "e_data.ctab:md5,261b2228f585d869612e9cc7a6497bc2",
                 "i2t.ctab:md5,8df3306abca08ac33f4473c7ed0446dd",
                 "i_data.ctab:md5,db3a5f082fe2231d4b7e68cf3996b62d",
                 "tx2gene.tsv:md5,02c8aa14dbbbd6c4e45cf0a1b916b1ab"
@@ -467,7 +467,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-04T10:31:57.083445432"
+        "timestamp": "2026-02-05T12:57:08.525724592"
     },
     "Params: --aligner bowtie2_salmon --gffread_transcript_fasta": {
         "content": [

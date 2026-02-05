@@ -3,6 +3,12 @@ nextflow_process {
     name "Test Process HISAT2_ALIGN"
     script "../main.nf"
     process "HISAT2_ALIGN"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "hisat2"
+    tag "hisat2/align"
+    tag "hisat2/build"
+    tag "hisat2/extractsplicesites"
 
     test("Single-End") {
 
@@ -57,7 +63,7 @@ nextflow_process {
                 { assert process.success },
                 { assert snapshot(process.out.summary).match("se_summary") },
                 { assert snapshot(process.out.fastq).match("se_fastq") },
-                { assert snapshot(process.out.versions).match("se_versions") }
+                { assert snapshot(process.out.findAll { key, val -> key.startsWith('versions') }).match("se_versions") }
             )
         }
     }
@@ -173,7 +179,7 @@ nextflow_process {
                 { assert process.success },
                 { assert snapshot(process.out.summary).match("pe_summary") },
                 { assert snapshot(process.out.fastq).match("pe_fastq") },
-                { assert snapshot(process.out.versions).match("pe_versions") }
+                { assert snapshot(process.out.findAll { key, val -> key.startsWith('versions') }).match("pe_versions") }
             )
         }
     }
@@ -275,7 +281,7 @@ nextflow_process {
                 { assert process.success },
                 { assert snapshot(process.out.summary).match("se_no_ss_summary") },
                 { assert snapshot(process.out.fastq).match("se_no_ss_fastq") },
-                { assert snapshot(process.out.versions).match("se_no_ss_versions") }
+                { assert snapshot(process.out.findAll { key, val -> key.startsWith('versions') }).match("se_no_ss_versions") }
             )
         }
     }
@@ -363,7 +369,7 @@ nextflow_process {
                 { assert process.success },
                 { assert snapshot(process.out.summary).match("pe_no_ss_summary") },
                 { assert snapshot(process.out.fastq).match("pe_no_ss_fastq") },
-                { assert snapshot(process.out.versions).match("pe_no_ss_versions") }
+                { assert snapshot(process.out.findAll { key, val -> key.startsWith('versions') }).match("pe_no_ss_versions") }
             )
         }
     }

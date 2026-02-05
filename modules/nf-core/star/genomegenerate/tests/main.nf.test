@@ -30,7 +30,7 @@ nextflow_process {
                 { assert process.success },
                 { assert snapshot(
                     file(process.out.index[0][1]).listFiles().collect { it.getName() }.sort().toString(),
-                    process.out.versions)
+                    process.out.findAll { key, val -> key.startsWith('versions') })
                 .match() }
             )
         }
@@ -55,7 +55,7 @@ nextflow_process {
                 { assert process.success },
                 { assert snapshot(
                     file(process.out.index[0][1]).listFiles().collect { it.getName() }.sort().toString(),
-                    process.out.versions
+                    process.out.findAll { key, val -> key.startsWith('versions') }
                 ).match() }
             )
         }

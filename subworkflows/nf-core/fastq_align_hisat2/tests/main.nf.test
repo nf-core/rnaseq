@@ -113,8 +113,7 @@ nextflow_workflow {
                     workflow.out.flagstat,
                     workflow.out.idxstats,
                     workflow.out.stats,
-                    workflow.out.summary,
-                    workflow.out.versions).match()}
+                    workflow.out.summary).match()}
             )
         }
     }
@@ -152,8 +151,7 @@ nextflow_workflow {
                     workflow.out.flagstat,
                     workflow.out.idxstats,
                     workflow.out.stats,
-                    workflow.out.summary,
-                    workflow.out.versions).match()}
+                    workflow.out.summary).match()}
             )
         }
     }

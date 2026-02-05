@@ -23,9 +23,11 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(file(process.out.log[0][1]).name).match("single_end - log") },
-                { assert snapshot(process.out.lc_extrap).match("single_end - lc_extrap") },
-                { assert snapshot(process.out.versions).match("single_end - versions") }
+                { assert snapshot(
+                    file(process.out.log[0][1]).name,
+                    process.out.lc_extrap,
+                    process.out.findAll { key, val -> key.startsWith('versions') }
+                ).match() }
             )
         }
     }
@@ -68,9 +70,11 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(file(process.out.log[0][1]).name).match("paired_end - log") },
-                { assert snapshot(process.out.lc_extrap).match("paired_end - lc_extrap") },
-                { assert snapshot(process.out.versions).match("paired_end - versions") }
+                { assert snapshot(
+                    file(process.out.log[0][1]).name,
+                    process.out.lc_extrap,
+                    process.out.findAll { key, val -> key.startsWith('versions') }
+                ).match() }
             )
         }
     }

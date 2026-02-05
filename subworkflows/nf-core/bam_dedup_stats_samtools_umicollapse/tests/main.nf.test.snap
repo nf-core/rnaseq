@@ -11,25 +11,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
-        },
-        "timestamp": "2025-09-10T13:32:36.707395"
-    },
-    "test_bam_dedup_stats_samtools_umicollapse_versions": {
-        "content": [
-            [
-                "versions.yml:md5,15a99b83c8965f9b29d0e9e6dbdef621",
-                "versions.yml:md5,61bd927f2f2121e34d94692a62305955",
-                "versions.yml:md5,657bce03545b4c57f9c5fc4314bf85f7",
-                "versions.yml:md5,71d8ff70a0f65311659c446278f10b1a"
-            ]
-        ],
-        "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-11-01T02:35:06.350407"
+        "timestamp": "2026-02-03T09:58:09.220141052"
     },
     "test_bam_dedup_stats_samtools_umicollapse_flagstats": {
         "content": [
@@ -43,10 +28,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.10.1"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2024-11-24T13:57:02.366866"
+        "timestamp": "2026-02-03T09:58:09.226353172"
     },
     "test_bam_dedup_stats_samtools_umicollapse_idxstats": {
         "content": [
@@ -60,19 +45,19 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.10.1"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2024-11-24T13:57:02.410712"
+        "timestamp": "2026-02-03T09:58:09.233354058"
     },
     "test_bam_dedup_stats_samtools_umicollapse_bam": {
         "content": [
             "b7be15ac7aae194b04bdbb56f3534495"
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.10.1"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2024-11-25T18:39:15.613319"
+        "timestamp": "2026-02-03T09:58:09.209299524"
     }
 }

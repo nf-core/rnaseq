@@ -16,7 +16,7 @@ process SAMTOOLS_FASTQ {
     tuple val(meta), path("*_interleaved.fastq")   , optional:true, emit: interleaved
     tuple val(meta), path("*_singleton.fastq.gz")  , optional:true, emit: singleton
     tuple val(meta), path("*_other.fastq.gz")      , optional:true, emit: other
-    path  "versions.yml"                           , emit: versions
+    tuple val("${task.process}"), val('samtools'), eval("samtools version | sed '1!d;s/.* //'"), emit: versions_samtools, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -36,11 +36,6 @@ process SAMTOOLS_FASTQ {
         -0 ${prefix}_other.fastq.gz \\
         $input \\
         $output
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-    END_VERSIONS
     """
 
     stub:
@@ -51,10 +46,5 @@ process SAMTOOLS_FASTQ {
     """
     ${output}
     echo | gzip > ${prefix}_other.fastq.gz
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-    END_VERSIONS
     """
 }

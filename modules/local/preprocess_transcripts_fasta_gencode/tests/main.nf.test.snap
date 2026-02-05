@@ -6,21 +6,22 @@
                     "gencodeFasta.fixed.fa:md5,e9267fa40efc784cc92575b5ba8a441b"
                 ],
                 "1": [
-                    "versions.yml:md5,e2c7f636c472887a914b128d1444737e"
+                    [
+                        "PREPROCESS_TRANSCRIPTS_FASTA_GENCODE",
+                        "sed",
+                        "4.7"
+                    ]
                 ],
                 "fasta": [
                     "gencodeFasta.fixed.fa:md5,e9267fa40efc784cc92575b5ba8a441b"
-                ],
-                "versions": [
-                    "versions.yml:md5,e2c7f636c472887a914b128d1444737e"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-03-06T16:16:36.494744"
+        "timestamp": "2026-02-04T15:59:40.238809244"
     },
     "gencode fasta - stub": {
         "content": [
@@ -29,20 +30,21 @@
                     "gencodeFasta.fixed.fa:md5,d41d8cd98f00b204e9800998ecf8427e"
                 ],
                 "1": [
-                    "versions.yml:md5,e2c7f636c472887a914b128d1444737e"
+                    [
+                        "PREPROCESS_TRANSCRIPTS_FASTA_GENCODE",
+                        "sed",
+                        "4.7"
+                    ]
                 ],
                 "fasta": [
                     "gencodeFasta.fixed.fa:md5,d41d8cd98f00b204e9800998ecf8427e"
-                ],
-                "versions": [
-                    "versions.yml:md5,e2c7f636c472887a914b128d1444737e"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-06-21T11:54:20.291494"
+        "timestamp": "2026-02-04T15:59:48.074469078"
     }
 }

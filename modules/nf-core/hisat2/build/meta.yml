@@ -59,13 +59,29 @@ output:
           description: HISAT2 genome index file
           pattern: "*.ht2"
           ontologies: []
+  versions_hisat2:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - hisat2:
+          type: string
+          description: The name of the tool
+      - "hisat2 --version | sed -n 's/.*version \\([^ ]*\\).*/\\1/p'":
+          type: eval
+          description: The expression to obtain the version of the tool
+
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - hisat2:
+          type: string
+          description: The name of the tool
+      - "hisat2 --version | sed -n 's/.*version \\([^ ]*\\).*/\\1/p'":
+          type: eval
+          description: The expression to obtain the version of the tool
+
 authors:
   - "@ntoda03"
 maintainers:

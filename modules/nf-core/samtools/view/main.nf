@@ -22,7 +22,7 @@ process SAMTOOLS_VIEW {
     tuple val(meta), path("${prefix}.${file_type}.crai"),                      emit: crai,             optional: true
     tuple val(meta), path("${prefix}.unselected.${file_type}"),                emit: unselected,       optional: true
     tuple val(meta), path("${prefix}.unselected.${file_type}.{csi,crai}"),     emit: unselected_index, optional: true
-    tuple val("${task.process}"), val('samtools'), eval('samtools --version | head -1 | sed -e "s/samtools //"'), emit: versions_samtools, topic: versions
+    tuple val("${task.process}"), val('samtools'), eval('samtools version | sed "1!d;s/.* //"'), emit: versions_samtools, topic: versions
 
     when:
     task.ext.when == null || task.ext.when

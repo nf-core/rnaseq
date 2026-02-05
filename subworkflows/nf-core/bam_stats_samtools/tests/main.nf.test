@@ -36,8 +36,7 @@ nextflow_workflow {
                 { assert snapshot(
                     workflow.out.flagstat,
                     workflow.out.idxstats,
-                    workflow.out.stats,
-                    workflow.out.versions).match() }
+                    workflow.out.stats).match() }
             )
         }
     }
@@ -66,8 +65,7 @@ nextflow_workflow {
                 { assert snapshot(
                     workflow.out.flagstat,
                     workflow.out.idxstats,
-                    workflow.out.stats,
-                    workflow.out.versions).match() }
+                    workflow.out.stats).match() }
             )
         }
     }
@@ -96,8 +94,7 @@ nextflow_workflow {
                 { assert snapshot(
                     workflow.out.flagstat,
                     workflow.out.idxstats,
-                    workflow.out.stats,
-                    workflow.out.versions).match() }
+                    workflow.out.stats).match() }
             )
         }
     }

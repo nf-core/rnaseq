@@ -32,7 +32,7 @@ nextflow_process {
                 { assert snapshot(process.out.interleaved).match("bam_interleaved") },
                 { assert snapshot(file(process.out.singleton[0][1]).name).match("bam_singleton") },
                 { assert snapshot(file(process.out.other[0][1]).name).match("bam_other") },
-                { assert snapshot(process.out.versions).match("bam_versions") }
+                { assert snapshot(process.out.findAll { key, val -> key.startsWith('versions') }).match("bam_versions") }
             )
         }
     }
@@ -60,7 +60,7 @@ nextflow_process {
                 { assert snapshot(path(process.out.interleaved[0][1]).readLines()[0..6]).match("bam_interlinterleave_eaved") },
                 { assert snapshot(process.out.singleton).match("bam_singinterleave_leton") },
                 { assert snapshot(file(process.out.other[0][1]).name).match("bam_interleave_other") },
-                { assert snapshot(process.out.versions).match("bam_verinterleave_sions") }
+                { assert snapshot(process.out.findAll { key, val -> key.startsWith('versions') }).match("bam_verinterleave_sions") }
             )
         }
     }
@@ -86,7 +86,13 @@ nextflow_process {
         then {
             assertAll (
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(
+                    process.out.fastq,
+                    process.out.interleaved,
+                    process.out.singleton,
+                    process.out.other,
+                    process.out.findAll { key, val -> key.startsWith('versions') }
+                ).match() }
             )
         }
     }
@@ -112,7 +118,13 @@ nextflow_process {
         then {
             assertAll (
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(
+                    process.out.fastq,
+                    process.out.interleaved,
+                    process.out.singleton,
+                    process.out.other,
+                    process.out.findAll { key, val -> key.startsWith('versions') }
+                ).match() }
             )
         }
     }

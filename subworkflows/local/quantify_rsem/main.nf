@@ -14,8 +14,6 @@ workflow QUANTIFY_RSEM {
 
     main:
 
-    ch_versions = channel.empty()
-
     //
     // Quantify reads with RSEM
     //
@@ -23,11 +21,9 @@ workflow QUANTIFY_RSEM {
     if (use_sentieon_star){
         SENTIEON_RSEMCALCULATEEXPRESSION ( reads, index )
         ch_rsem_out = SENTIEON_RSEMCALCULATEEXPRESSION
-        // SENTIEON_RSEMCALCULATEEXPRESSION uses topic-based version reporting
     } else {
         RSEM_CALCULATEEXPRESSION ( reads, index )
         ch_rsem_out = RSEM_CALCULATEEXPRESSION
-        ch_versions = ch_versions.mix(RSEM_CALCULATEEXPRESSION.out.versions.first())
     }
 
     ch_counts_gene = ch_rsem_out.out.counts_gene
@@ -42,7 +38,6 @@ workflow QUANTIFY_RSEM {
         ch_counts_gene.collect{ tuple -> tuple[1] },       // [meta, counts]: Collect the second element (counts files) in the channel across all samples
         ch_counts_transcript.collect{ tuple -> tuple[1] }
     )
-    ch_versions = ch_versions.mix(RSEM_MERGE_COUNTS.out.versions)
 
     emit:
     counts_gene              = ch_counts_gene                                 // channel: [ val(meta), counts ]
@@ -56,6 +51,4 @@ workflow QUANTIFY_RSEM {
     merged_tpm_transcript    = RSEM_MERGE_COUNTS.out.tpm_transcript           //    path: *.transcript_tpm.tsv
     merged_genes_long        = RSEM_MERGE_COUNTS.out.genes_long               //    path: *.genes_long.tsv
     merged_isoforms_long     = RSEM_MERGE_COUNTS.out.isoforms_long            //    path: *.isoforms_long.tsv
-
-    versions                 = ch_versions                                    // channel: [ versions.yml ]
 }

@@ -1,35 +1,5 @@
 {
-    "versions_sarscov2_bam": {
-        "content": [
-            [
-                "versions.yml:md5,4f175c0153cb80ee2f66f724e8d77b26"
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
-        },
-        "timestamp": "2025-09-11T09:52:43.959969"
-    },
-    "bam_sarscov2_bam": {
-        "content": [
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.bam:md5,fe4b8302182615651e4e7784ec67c819"
-                ]
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
-        },
-        "timestamp": "2024-02-12T17:33:02.066537672"
-    },
-    "bam_sarscov2_bam - stub": {
+    "sarscov2 - bam - stub": {
         "content": [
             [
                 [
@@ -39,24 +9,48 @@
                     },
                     "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                 ]
-            ]
+            ],
+            {
+                "versions_umitools": [
+                    [
+                        "UMITOOLS_PREPAREFORRSEM",
+                        "umitools",
+                        "1.1.6"
+                    ]
+                ]
+            }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-02-12T17:33:39.36279218"
+        "timestamp": "2026-02-03T09:49:37.596393"
     },
-    "versions_sarscov2_bam - stub": {
+    "sarscov2 - bam": {
         "content": [
             [
-                "versions.yml:md5,4f175c0153cb80ee2f66f724e8d77b26"
-            ]
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.bam:md5,fe4b8302182615651e4e7784ec67c819"
+                ]
+            ],
+            {
+                "versions_umitools": [
+                    [
+                        "UMITOOLS_PREPAREFORRSEM",
+                        "umitools",
+                        "1.1.6"
+                    ]
+                ]
+            }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-11T09:52:50.388349"
+        "timestamp": "2026-02-03T09:49:09.172528"
     }
 }

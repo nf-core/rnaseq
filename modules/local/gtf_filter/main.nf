@@ -12,7 +12,7 @@ process GTF_FILTER {
 
     output:
     path "*.filtered.gtf", emit: genome_gtf
-    path "versions.yml"  , emit: versions
+    tuple val("${task.process}"), val('python'), eval("python --version | sed 's/Python //g'"), topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -27,20 +27,10 @@ process GTF_FILTER {
         --gtf $gtf \\
         $fasta_text \\
         --prefix ${gtf.baseName}
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        python: \$(python --version | sed 's/Python //g')
-    END_VERSIONS
     """
 
     stub:
     """
     touch ${fasta.baseName}.filtered.gtf
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        python: \$(python --version | sed 's/Python //g')
-    END_VERSIONS
     """
 }

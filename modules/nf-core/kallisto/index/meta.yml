@@ -6,9 +6,9 @@ keywords:
   - index
 tools:
   - kallisto:
-      description: Quantifying abundances of transcripts from bulk and single-cell RNA-Seq
-        data, or more generally of target sequences using high-throughput sequencing
-        reads.
+      description: Quantifying abundances of transcripts from bulk and single-cell
+        RNA-Seq data, or more generally of target sequences using high-throughput
+        sequencing reads.
       homepage: https://pachterlab.github.io/kallisto/
       documentation: https://pachterlab.github.io/kallisto/manual
       tool_dev_url: https://github.com/pachterlab/kallisto
@@ -36,13 +36,29 @@ output:
           type: directory
           description: Kallisto genome index
           pattern: "*.idx"
+  versions_kallisto:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - kallisto:
+          type: string
+          description: The name of the tool
+      - kallisto 2>&1 | head -1 | sed "s/^kallisto //; s/Usage.*//":
+          type: eval
+          description: The expression to obtain the version of the tool
+
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - kallisto:
+          type: string
+          description: The name of the tool
+      - kallisto 2>&1 | head -1 | sed "s/^kallisto //; s/Usage.*//":
+          type: eval
+          description: The expression to obtain the version of the tool
+
 authors:
   - "@ggabernet"
 maintainers:

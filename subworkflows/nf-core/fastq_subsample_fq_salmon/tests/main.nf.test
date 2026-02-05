@@ -58,8 +58,7 @@ nextflow_workflow {
                     readlines1.size(),
                     readlines2[0..5],
                     readlines2.size(),
-                    workflow.out.lib_format_counts,
-                    workflow.out.versions).match() }
+                    workflow.out.lib_format_counts).match() }
             )
         }
     }

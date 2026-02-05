@@ -42,7 +42,6 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(bam(workflow.out.bam[0][1]).getSamLinesMD5()).match("test_bam_dedup_stats_samtools_umicollapse_bam")},  // separate, because of linting error otherwise
-                { assert snapshot(workflow.out.versions).match("test_bam_dedup_stats_samtools_umicollapse_versions") },
                 { assert workflow.out.bam.get(0).get(1) ==~ ".*.bam"},
                 { assert workflow.out.bai.get(0).get(1) ==~ ".*.bai"},
                 { assert workflow.out.dedup_stats.get(0).get(1) ==~ ".*_UMICollapse.log"},

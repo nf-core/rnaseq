@@ -1,9 +1,15 @@
 {
     "stub sarscov2 illumina single-end [fastq_gz]": {
         "content": [
-            [
-                "versions.yml:md5,bdbbd22b3e721ba2027d3e6cb1dc4bb4"
-            ],
+            {
+                "versions_sylphtax": [
+                    [
+                        "SYLPHTAX_TAXPROF",
+                        "sylph-tax",
+                        "1.2.0"
+                    ]
+                ]
+            },
             [
                 [
                     {
@@ -14,30 +20,36 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "24.10.5"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-04-07T15:28:04.026470884"
+        "timestamp": "2026-02-02T14:48:37.167778561"
     },
     "sarscov2 illumina single-end [fastq_gz]": {
         "content": [
-            [
-                "versions.yml:md5,bdbbd22b3e721ba2027d3e6cb1dc4bb4"
-            ],
+            {
+                "versions_sylphtax": [
+                    [
+                        "SYLPHTAX_TAXPROF",
+                        "sylph-tax",
+                        "1.2.0"
+                    ]
+                ]
+            },
             [
                 [
                     {
                         "id": "test",
                         "single_end": true
                     },
-                    "test.sylphmpa:md5,a9743c21a53ba766226e57d2a25f6167"
+                    "test.sylphmpa:md5,1fd81c2f226e4766853d324d7aca1fc9"
                 ]
             ]
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "24.10.5"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-04-07T15:27:55.45776116"
+        "timestamp": "2026-02-02T14:48:30.003068972"
     }
 }

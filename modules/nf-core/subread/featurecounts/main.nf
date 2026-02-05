@@ -13,7 +13,7 @@ process SUBREAD_FEATURECOUNTS {
     output:
     tuple val(meta), path("*featureCounts.tsv"), emit: counts
     tuple val(meta), path("*featureCounts.tsv.summary"), emit: summary
-    path "versions.yml", emit: versions
+    tuple val("${task.process}"), val('subread'), eval("featureCounts -v 2>&1 | sed 's/featureCounts v//'"), emit: versions_subread, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -39,11 +39,6 @@ process SUBREAD_FEATURECOUNTS {
         -s ${strandedness} \\
         -o ${prefix}.featureCounts.tsv \\
         ${bams.join(' ')}
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        subread: \$( echo \$(featureCounts -v 2>&1) | sed -e "s/featureCounts v//g")
-    END_VERSIONS
     """
 
     stub:
@@ -51,10 +46,5 @@ process SUBREAD_FEATURECOUNTS {
     """
     touch ${prefix}.featureCounts.tsv
     touch ${prefix}.featureCounts.tsv.summary
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        subread: \$( echo \$(featureCounts -v 2>&1) | sed -e "s/featureCounts v//g")
-    END_VERSIONS
     """
 }

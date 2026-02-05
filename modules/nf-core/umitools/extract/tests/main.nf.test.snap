@@ -24,7 +24,11 @@
                     ]
                 ],
                 "2": [
-                    "versions.yml:md5,790fd5299d092a7a2e26760c74500bf0"
+                    [
+                        "UMITOOLS_EXTRACT",
+                        "umitools",
+                        "1.1.6"
+                    ]
                 ],
                 "log": [
                     [
@@ -47,16 +51,20 @@
                         ]
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,790fd5299d092a7a2e26760c74500bf0"
+                "versions_umitools": [
+                    [
+                        "UMITOOLS_EXTRACT",
+                        "umitools",
+                        "1.1.6"
+                    ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-09-11T09:43:12.767854"
+        "timestamp": "2026-02-03T13:17:55.612739621"
     },
     "single end - stub": {
         "content": [
@@ -80,7 +88,11 @@
                     ]
                 ],
                 "2": [
-                    "versions.yml:md5,790fd5299d092a7a2e26760c74500bf0"
+                    [
+                        "UMITOOLS_EXTRACT",
+                        "umitools",
+                        "1.1.6"
+                    ]
                 ],
                 "log": [
                     [
@@ -100,16 +112,20 @@
                         "test.umi_extract.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,790fd5299d092a7a2e26760c74500bf0"
+                "versions_umitools": [
+                    [
+                        "UMITOOLS_EXTRACT",
+                        "umitools",
+                        "1.1.6"
+                    ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-09-11T09:42:56.099105"
+        "timestamp": "2026-02-03T13:17:37.310716092"
     },
     "pair end": {
         "content": [
@@ -124,15 +140,21 @@
                     "test.umi_extract.log"
                 ]
             ],
-            [
-                "versions.yml:md5,790fd5299d092a7a2e26760c74500bf0"
-            ]
+            {
+                "versions_umitools": [
+                    [
+                        "UMITOOLS_EXTRACT",
+                        "umitools",
+                        "1.1.6"
+                    ]
+                ]
+            }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-09-11T09:43:06.347769"
+        "timestamp": "2026-02-03T13:17:47.683802227"
     },
     "single end": {
         "content": [
@@ -154,14 +176,20 @@
                     "test.umi_extract.log"
                 ]
             ],
-            [
-                "versions.yml:md5,790fd5299d092a7a2e26760c74500bf0"
-            ]
+            {
+                "versions_umitools": [
+                    [
+                        "UMITOOLS_EXTRACT",
+                        "umitools",
+                        "1.1.6"
+                    ]
+                ]
+            }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-09-11T09:42:49.251315"
+        "timestamp": "2026-02-03T13:17:29.607052009"
     }
 }

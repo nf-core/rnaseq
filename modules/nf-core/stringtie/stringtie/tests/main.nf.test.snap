@@ -34,15 +34,21 @@
                     "test.transcripts.gtf:md5,37154e7bda96544f24506ee902bb561d"
                 ]
             ],
-            [
-                "versions.yml:md5,06593ea00cc35bf06f2de2753e0c3913"
-            ]
+            {
+                "versions_stringtie": [
+                    [
+                        "STRINGTIE_STRINGTIE",
+                        "stringtie",
+                        "2.2.3"
+                    ]
+                ]
+            }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2024-10-18T09:56:50.294157199"
+        "timestamp": "2026-02-02T16:30:11.16528789"
     },
     "sarscov2 [bam] - forward strandedness": {
         "content": [
@@ -64,15 +70,21 @@
                     "test.transcripts.gtf:md5,6087dfc9700a52d9e4a1ae3fcd1d1dfd"
                 ]
             ],
-            [
-                "versions.yml:md5,06593ea00cc35bf06f2de2753e0c3913"
-            ]
+            {
+                "versions_stringtie": [
+                    [
+                        "STRINGTIE_STRINGTIE",
+                        "stringtie",
+                        "2.2.3"
+                    ]
+                ]
+            }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2024-10-18T09:56:39.4249133"
+        "timestamp": "2026-02-02T16:30:05.908980074"
     },
     "sarscov2 [bam] - forward strandedness - stub": {
         "content": [
@@ -114,7 +126,11 @@
                     ]
                 ],
                 "4": [
-                    "versions.yml:md5,06593ea00cc35bf06f2de2753e0c3913"
+                    [
+                        "STRINGTIE_STRINGTIE",
+                        "stringtie",
+                        "2.2.3"
+                    ]
                 ],
                 "abundance": [
                     [
@@ -152,16 +168,20 @@
                         "test.transcripts.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,06593ea00cc35bf06f2de2753e0c3913"
+                "versions_stringtie": [
+                    [
+                        "STRINGTIE_STRINGTIE",
+                        "stringtie",
+                        "2.2.3"
+                    ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2024-10-18T09:57:23.008470065"
+        "timestamp": "2026-02-02T16:30:26.94909715"
     },
     "sarscov2 [bam] - forward strandedness + reference annotation - stub": {
         "content": [
@@ -203,7 +223,11 @@
                     ]
                 ],
                 "4": [
-                    "versions.yml:md5,06593ea00cc35bf06f2de2753e0c3913"
+                    [
+                        "STRINGTIE_STRINGTIE",
+                        "stringtie",
+                        "2.2.3"
+                    ]
                 ],
                 "abundance": [
                     [
@@ -241,16 +265,20 @@
                         "test.transcripts.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,06593ea00cc35bf06f2de2753e0c3913"
+                "versions_stringtie": [
+                    [
+                        "STRINGTIE_STRINGTIE",
+                        "stringtie",
+                        "2.2.3"
+                    ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2024-10-18T09:57:33.622824981"
+        "timestamp": "2026-02-02T16:30:32.157264403"
     },
     "sarscov2 [bam] - reverse strandedness + reference annotation - stub": {
         "content": [
@@ -292,7 +320,11 @@
                     ]
                 ],
                 "4": [
-                    "versions.yml:md5,06593ea00cc35bf06f2de2753e0c3913"
+                    [
+                        "STRINGTIE_STRINGTIE",
+                        "stringtie",
+                        "2.2.3"
+                    ]
                 ],
                 "abundance": [
                     [
@@ -330,16 +362,20 @@
                         "test.transcripts.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,06593ea00cc35bf06f2de2753e0c3913"
+                "versions_stringtie": [
+                    [
+                        "STRINGTIE_STRINGTIE",
+                        "stringtie",
+                        "2.2.3"
+                    ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2024-10-18T09:57:55.803421433"
+        "timestamp": "2026-02-02T16:30:42.741125528"
     },
     "sarscov2 [bam] - reverse strandedness - stub": {
         "content": [
@@ -381,7 +417,11 @@
                     ]
                 ],
                 "4": [
-                    "versions.yml:md5,06593ea00cc35bf06f2de2753e0c3913"
+                    [
+                        "STRINGTIE_STRINGTIE",
+                        "stringtie",
+                        "2.2.3"
+                    ]
                 ],
                 "abundance": [
                     [
@@ -419,16 +459,20 @@
                         "test.transcripts.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,06593ea00cc35bf06f2de2753e0c3913"
+                "versions_stringtie": [
+                    [
+                        "STRINGTIE_STRINGTIE",
+                        "stringtie",
+                        "2.2.3"
+                    ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2024-10-18T09:57:44.825389635"
+        "timestamp": "2026-02-02T16:30:37.444482002"
     },
     "sarscov2 [bam] - reverse strandedness + reference annotation": {
         "content": [
@@ -465,15 +509,21 @@
                     "test.transcripts.gtf:md5,fbabb4e3888bbede67f11f692e484880"
                 ]
             ],
-            [
-                "versions.yml:md5,06593ea00cc35bf06f2de2753e0c3913"
-            ]
+            {
+                "versions_stringtie": [
+                    [
+                        "STRINGTIE_STRINGTIE",
+                        "stringtie",
+                        "2.2.3"
+                    ]
+                ]
+            }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2024-10-18T09:57:11.793664242"
+        "timestamp": "2026-02-02T16:30:21.762442003"
     },
     "sarscov2 [bam] - reverse strandedness": {
         "content": [
@@ -495,14 +545,20 @@
                     "test.transcripts.gtf:md5,01d6da00a3c458420841e57427297183"
                 ]
             ],
-            [
-                "versions.yml:md5,06593ea00cc35bf06f2de2753e0c3913"
-            ]
+            {
+                "versions_stringtie": [
+                    [
+                        "STRINGTIE_STRINGTIE",
+                        "stringtie",
+                        "2.2.3"
+                    ]
+                ]
+            }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2024-10-18T09:57:01.166309777"
+        "timestamp": "2026-02-02T16:30:16.466823767"
     }
 }

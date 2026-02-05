@@ -14,7 +14,7 @@ process SAMTOOLS_INDEX {
     tuple val(meta), path("*.bai") , optional:true, emit: bai
     tuple val(meta), path("*.csi") , optional:true, emit: csi
     tuple val(meta), path("*.crai"), optional:true, emit: crai
-    path  "versions.yml"           , emit: versions
+    tuple val("${task.process}"), val('samtools'), eval("samtools version | sed '1!d;s/.* //'"), emit: versions_samtools, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -27,11 +27,6 @@ process SAMTOOLS_INDEX {
         -@ ${task.cpus} \\
         $args \\
         $input
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-    END_VERSIONS
     """
 
     stub:
@@ -40,10 +35,5 @@ process SAMTOOLS_INDEX {
                     "crai" : args.contains("-c") ?  "csi" : "bai"
     """
     touch ${input}.${extension}
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-    END_VERSIONS
     """
 }

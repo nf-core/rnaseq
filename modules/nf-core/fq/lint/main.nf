@@ -12,7 +12,7 @@ process FQ_LINT {
 
     output:
     tuple val(meta), path("*.fq_lint.txt"), emit: lint
-    path "versions.yml"                   , emit: versions
+    tuple val("${task.process}"), val('fq'), eval("fq lint --version | sed 's/fq-lint //; s/ .*//'"), emit: versions_fq, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -24,21 +24,11 @@ process FQ_LINT {
     fq lint \\
         $args \\
         $fastq > ${prefix}.fq_lint.txt
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        fq: \$(echo \$(fq lint --version | sed 's/fq-lint //g'))
-    END_VERSIONS
     """
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     touch ${prefix}.fq_lint.txt
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        fq: \$(echo \$(fq lint --version | sed 's/fq-lint //g'))
-    END_VERSIONS
     """
 }

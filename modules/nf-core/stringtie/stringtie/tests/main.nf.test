@@ -29,7 +29,7 @@ nextflow_process {
                 { assert snapshot(
                     process.out.abundance,
                     process.out.transcript_gtf,
-                    process.out.versions
+                    process.out.findAll { key, val -> key.startsWith('versions') }
                 ).match() }
             )
         }
@@ -56,7 +56,7 @@ nextflow_process {
                     process.out.abundance,
                     process.out.ballgown,
                     process.out.transcript_gtf,
-                    process.out.versions
+                    process.out.findAll { key, val -> key.startsWith('versions') }
                 ).match() }
             )
         }
@@ -82,7 +82,7 @@ nextflow_process {
                 { assert snapshot(
                     process.out.abundance,
                     process.out.transcript_gtf,
-                    process.out.versions
+                    process.out.findAll { key, val -> key.startsWith('versions') }
                 ).match() }
             )
         }
@@ -109,7 +109,7 @@ nextflow_process {
                     process.out.abundance,
                     process.out.ballgown,
                     process.out.transcript_gtf,
-                    process.out.versions
+                    process.out.findAll { key, val -> key.startsWith('versions') }
                 ).match() }
             )
         }

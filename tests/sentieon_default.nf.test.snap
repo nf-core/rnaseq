@@ -214,7 +214,7 @@
                     "samtools": "1.22.1"
                 },
                 "SENTIEON_STAR_ALIGN": {
-                    "sentieon": 202503.01,
+                    "sentieon": 202503.02,
                     "star": "2.7.10b"
                 },
                 "SE_GENE_UNIFIED": {

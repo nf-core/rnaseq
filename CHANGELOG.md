@@ -15,6 +15,7 @@ Special thanks to the following for their contributions to the release:
 - [Ezra Greenberg](https://github.com/egreenberg7)
 - [Juliana Assis](https://github.com/Juassis)
 - [Marine Cambon](https://github.com/marccamb)
+- [Matthias Zepper](https://github.com/MatthiasZepper)
 - [Sebastian Schulz](https://github.com/sebschulz1)
 
 ### Enhancements and fixes

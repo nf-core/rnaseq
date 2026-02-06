@@ -53,10 +53,6 @@ process PARABRICKS_RNAFQ2BAM {
     def duplicate_metrics_command = mark_duplicates ? "--out-duplicate-metrics ${prefix}.duplicate-metrics.txt" : "--no-markdups"
 
     """
-    echo "args: ${task.ext.args}"
-    echo "cpus: ${task.cpus}"
-    echo "memory: ${task.memory}"
-
     pbrun \\
         rna_fq2bam  \\
         --ref ${fasta} \\

@@ -10,6 +10,7 @@ nextflow_pipeline {
 
         when {
             params {
+                input = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/samplesheet/prokaryotic/samplesheet_test.csv'
                 outdir = "$outputDir"
                 use_parabricks_star = true
                 skip_markduplicates = true
@@ -42,6 +43,7 @@ nextflow_pipeline {
 
         when {
             params {
+                input = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/samplesheet/prokaryotic/samplesheet_test.csv'
                 outdir = "$outputDir"
                 use_parabricks_star = true
                 skip_markduplicates = false
@@ -76,6 +78,7 @@ nextflow_pipeline {
 
         when {
             params {
+                input = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/samplesheet/prokaryotic/samplesheet_test.csv'
                 outdir = "$outputDir"
                 use_parabricks_star = true
                 skip_markduplicates = true
@@ -110,6 +113,7 @@ nextflow_pipeline {
 
         when {
             params {
+                input = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/samplesheet/prokaryotic/samplesheet_test.csv'
                 outdir = "$outputDir"
                 use_parabricks_star = true
                 skip_markduplicates = false

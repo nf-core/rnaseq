@@ -92,7 +92,7 @@
                     {
                         "id": "test"
                     },
-                    "test.paired_end.sorted.summary.txt:md5,9d98447e178b89a89f6f5aba7a772fe6"
+                    "test.summary.txt:md5,9d98447e178b89a89f6f5aba7a772fe6"
                 ]
             ]
         ],
@@ -302,7 +302,7 @@
                         {
                             "id": "test"
                         },
-                        "test.paired_end.sorted.bam.summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "3": [
@@ -686,7 +686,7 @@
                         {
                             "id": "test"
                         },
-                        "test.paired_end.sorted.bam.summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ]
             }

@@ -22,7 +22,9 @@ process BOWTIE2_ALIGN {
     tuple val(meta), path("*.crai")     , emit: crai    , optional:true
     tuple val(meta), path("*.log")      , emit: log
     tuple val(meta), path("*fastq.gz")  , emit: fastq   , optional:true
-    path  "versions.yml"                , emit: versions
+    tuple val("${task.process}"), val('bowtie2'), eval("bowtie2 --version 2>&1 | sed -n '1s/.*bowtie2-align-s version //p'"), emit: versions_bowtie2, topic: versions
+    tuple val("${task.process}"), val('samtools'), eval("samtools version | sed '1!d;s/.* //'"), emit: versions_samtools, topic: versions
+    tuple val("${task.process}"), val('pigz'), eval("pigz --version 2>&1 | sed 's/pigz //'"), emit: versions_pigz, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -70,13 +72,6 @@ process BOWTIE2_ALIGN {
     if [ -f ${prefix}.unmapped.fastq.2.gz ]; then
         mv ${prefix}.unmapped.fastq.2.gz ${prefix}.unmapped_2.fastq.gz
     fi
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        bowtie2: \$(echo \$(bowtie2 --version 2>&1) | sed 's/^.*bowtie2-align-s version //; s/ .*\$//')
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-        pigz: \$( pigz --version 2>&1 | sed 's/pigz //g' )
-    END_VERSIONS
     """
 
     stub:
@@ -104,13 +99,6 @@ process BOWTIE2_ALIGN {
     ${create_index}
     touch ${prefix}.bowtie2.log
     ${create_unmapped}
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        bowtie2: \$(echo \$(bowtie2 --version 2>&1) | sed 's/^.*bowtie2-align-s version //; s/ .*\$//')
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-        pigz: \$( pigz --version 2>&1 | sed 's/pigz //g' )
-    END_VERSIONS
     """
 
 }

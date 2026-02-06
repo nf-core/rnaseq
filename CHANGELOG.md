@@ -9,10 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Special thanks to the following for their contributions to the release:
 
+- [Albert Palleja](https://github.com/apalleja)
 - [Chase Mateusiak](https://github.com/cmatKhan)
 - [Elad Herz](https://github.com/EladH1)
 - [Ezra Greenberg](https://github.com/egreenberg7)
 - [Gary Burnett](https://github.com/gburnett-nvidia)
+- [Juliana Assis](https://github.com/Juassis)
+- [Marine Cambon](https://github.com/marccamb)
+- [Matthias Zepper](https://github.com/MatthiasZepper)
+- [Sebastian Schulz](https://github.com/sebschulz1)
 
 ### Enhancements and fixes
 
@@ -26,22 +31,27 @@ Special thanks to the following for their contributions to the release:
 - [PR #1677](https://github.com/nf-core/rnaseq/pull/1677) - Apply Nextflow 25 strict syntax fixes
 - [PR #1685](https://github.com/nf-core/rnaseq/pull/1685) - Add GPU-accelerated STAR alignment and mark duplicates using NVIDIA Parabricks rna_fq2bam (`--use_parabricks_star`)
 - [PR #1687](https://github.com/nf-core/rnaseq/pull/1687) - Fix PREPARE_GENOME tests: use single aligner values, correct aligner assignments for index-specific tests, add Kallisto test, remove ineffective Sentieon tests, use file-names-only snapshots for all non-deterministic indices (STAR, Salmon, Kallisto, RSEM, HISAT2)
+- [PR #1688](https://github.com/nf-core/rnaseq/pull/1688) - Significantly improved prokaryotic RNA-seq support: new `-profile prokaryotic` for bacterial/archaeal data with Bowtie2+Salmon alignment, GFFREAD transcript extraction for CDS-only annotations, and automatic STAR CDS configuration. We would like to thank [Juliana Assis](https://github.com/Juassis), [Sebastian Schulz](https://github.com/sebschulz1), [Albert Palleja](https://github.com/apalleja) and [Marine Cambon](https://github.com/marccamb) for their [recommendations and extensive testing](https://github.com/nf-core/rnaseq/issues/1512).
+- [PR #1689](https://github.com/nf-core/rnaseq/pull/1689) - Migrate to topic-based version reporting for nf-core modules/subworkflows and local modules
 
 ### Parameters
 
-| Old parameter | New parameter           |
-| ------------- | ----------------------- |
-|               | `--ribo_removal_tool`   |
-|               | `--use_parabricks_star` |
+| Old parameter | New parameter                |
+| ------------- | ---------------------------- |
+|               | `--ribo_removal_tool`        |
+|               | `--sylph_db`                 |
+|               | `--sylph_taxonomy`           |
+|               | `--gffread_transcript_fasta` |
+|               | `--extra_bowtie2_align_args` |
+|               | `--use_parabricks_star`      |
 
 > **NB:** Parameter has been **added** if just the new parameter information is present.
 
-### Parameters
+### Profiles
 
-| Old parameter | New parameter      |
-| ------------- | ------------------ |
-|               | `--sylph_db`       |
-|               | `--sylph_taxonomy` |
+| Profile       | Description                                            |
+| ------------- | ------------------------------------------------------ |
+| `prokaryotic` | Settings optimized for bacterial/archaeal RNA-seq data |
 
 ### Software dependencies
 

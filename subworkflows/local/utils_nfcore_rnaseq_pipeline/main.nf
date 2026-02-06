@@ -41,8 +41,6 @@ workflow PIPELINE_INITIALISATION {
 
     main:
 
-    ch_versions = channel.empty()
-
     //
     // Print version and exit if required and dump pipeline parameters to JSON file
     //
@@ -99,9 +97,6 @@ ${colors.purple}  nf-core/rnaseq ${workflow.manifest.version}${colors.reset}
     // Custom validation for pipeline parameters
     //
     validateInputParameters()
-
-    emit:
-    versions    = ch_versions
 }
 
 /*
@@ -323,6 +318,14 @@ def validateInputParameters() {
         if (params.aligner  == 'star_rsem' && params.extra_star_align_args) {
             rsemStarExtraArgumentsWarn()
         }
+        if (params.prokaryotic || params.gffread_transcript_fasta) {
+            rsemProkaryoticError()
+        }
+    }
+
+    // Checks for prokaryotic mode with untested aligners
+    if ((params.prokaryotic || params.gffread_transcript_fasta) && params.aligner == 'hisat2') {
+        untestedProkaryoticAlignerWarn()
     }
 
     // Warn if --additional_fasta provided with aligner index
@@ -575,6 +578,36 @@ def rsemStarExtraArgumentsWarn() {
         "  to STAR will be ignored. Alternatively, choose the STAR+Salmon route.\n\n" +
         "  This warning has been generated because you have provided both\n" +
         "  '--aligner star_rsem' and '--extra_star_align_args'.\n\n" +
+        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+}
+
+//
+// Print an error if using '--aligner star_rsem' with prokaryotic settings
+//
+def rsemProkaryoticError() {
+    def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
+        "  '--aligner star_rsem' is incompatible with prokaryotic RNA-seq settings.\n\n" +
+        "  RSEM's rsem-prepare-reference cannot handle GTF/GFF files that use CDS\n" +
+        "  features instead of exon features, which is typical for prokaryotic\n" +
+        "  annotations.\n\n" +
+        "  Please use one of the following aligners instead:\n" +
+        "    - '--aligner star_salmon' (alternative with '-profile prokaryotic')\n" +
+        "    - '--aligner bowtie2_salmon' (default for '-profile prokaryotic')\n" +
+        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    error(error_string)
+}
+
+//
+// Print a warning if using prokaryotic settings with an untested aligner
+//
+def untestedProkaryoticAlignerWarn() {
+    log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
+        "  Using prokaryotic settings with '--aligner hisat2'.\n\n" +
+        "  This aligner combination has not been extensively tested with\n" +
+        "  prokaryotic data. The recommended aligners for prokaryotic RNA-seq are:\n" +
+        "    - '--aligner bowtie2_salmon' (default for '-profile prokaryotic')\n" +
+        "    - '--aligner star_salmon'\n\n" +
+        "  Proceed with caution and verify your results.\n" +
         "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 }
 

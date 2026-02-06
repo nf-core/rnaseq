@@ -23,7 +23,10 @@ nextflow_process {
         then {
             assertAll (
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(
+                    process.out.bai,
+                    process.out.findAll { key, val -> key.startsWith('versions') }
+                ).match() }
             )
         }
     }
@@ -43,7 +46,10 @@ nextflow_process {
         then {
             assertAll (
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(
+                    process.out.crai,
+                    process.out.findAll { key, val -> key.startsWith('versions') }
+                ).match() }
             )
         }
     }
@@ -67,7 +73,7 @@ nextflow_process {
                 { assert process.success },
                 { assert snapshot(
                     file(process.out.csi[0][1]).name,
-                    process.out.versions
+                    process.out.findAll { key, val -> key.startsWith('versions') }
                 ).match() }
             )
         }
@@ -89,7 +95,10 @@ nextflow_process {
         then {
             assertAll (
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(
+                    process.out.bai,
+                    process.out.findAll { key, val -> key.startsWith('versions') }
+                ).match() }
             )
         }
     }
@@ -110,7 +119,10 @@ nextflow_process {
         then {
             assertAll (
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(
+                    process.out.crai,
+                    process.out.findAll { key, val -> key.startsWith('versions') }
+                ).match() }
             )
         }
     }
@@ -133,7 +145,10 @@ nextflow_process {
         then {
             assertAll (
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(
+                    process.out.csi,
+                    process.out.findAll { key, val -> key.startsWith('versions') }
+                ).match() }
             )
         }
     }

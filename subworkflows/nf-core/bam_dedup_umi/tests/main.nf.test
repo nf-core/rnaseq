@@ -50,8 +50,7 @@ nextflow_workflow {
                     bam(workflow.out.transcriptome_bam[0][1]).getReadsMD5(),
                     workflow.out.stats,
                     workflow.out.flagstat,
-                    workflow.out.idxstats,
-                    workflow.out.versions
+                    workflow.out.idxstats
                 ).match() },
                 { assert path(workflow.out.bai.get(0).get(1)).exists() }
             )
@@ -89,8 +88,7 @@ nextflow_workflow {
                     bam(workflow.out.bam[0][1]).getReadsMD5(),
                     workflow.out.stats,
                     workflow.out.flagstat,
-                    workflow.out.idxstats,
-                    workflow.out.versions
+                    workflow.out.idxstats
                 ).match() },
                 { assert path(workflow.out.bai.get(0).get(1)).exists() }
             )

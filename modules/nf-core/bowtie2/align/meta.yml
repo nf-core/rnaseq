@@ -123,13 +123,67 @@ output:
           pattern: "*.fastq.gz"
           ontologies:
             - edam: http://edamontology.org/format_3989 # GZIP format
+  versions_bowtie2:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - bowtie2:
+          type: string
+          description: The name of the tool
+      - "bowtie2 --version 2>&1 | sed -n '1s/.*bowtie2-align-s version //p'":
+          type: eval
+          description: The expression to obtain the version of bowtie2
+  versions_samtools:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - samtools:
+          type: string
+          description: The name of the tool
+      - "samtools version | sed '1!d;s/.* //'":
+          type: eval
+          description: The expression to obtain the version of samtools
+  versions_pigz:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - pigz:
+          type: string
+          description: The name of the tool
+      - "pigz --version 2>&1 | sed 's/pigz //'":
+          type: eval
+          description: The expression to obtain the version of pigz
+
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - bowtie2:
+          type: string
+          description: The name of the tool
+      - "bowtie2 --version 2>&1 | sed -n '1s/.*bowtie2-align-s version //p'":
+          type: eval
+          description: The expression to obtain the version of bowtie2
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - samtools:
+          type: string
+          description: The name of the tool
+      - "samtools version | sed '1!d;s/.* //'":
+          type: eval
+          description: The expression to obtain the version of samtools
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - pigz:
+          type: string
+          description: The name of the tool
+      - "pigz --version 2>&1 | sed 's/pigz //'":
+          type: eval
+          description: The expression to obtain the version of pigz
+
 authors:
   - "@joseespinosa"
   - "@drpatelh"

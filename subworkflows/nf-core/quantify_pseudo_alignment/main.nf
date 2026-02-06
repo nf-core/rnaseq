@@ -54,7 +54,6 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
         )
         ch_pseudo_results = KALLISTO_QUANT.out.results
         ch_pseudo_multiqc = KALLISTO_QUANT.out.log
-        ch_versions = ch_versions.mix(KALLISTO_QUANT.out.versions.first())
     }
 
     CUSTOM_TX2GENE (
@@ -102,6 +101,7 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
     emit:
     results                       = ch_pseudo_results                              // channel: [ val(meta), results_dir ]
     multiqc                       = ch_pseudo_multiqc                              // channel: [ val(meta), files_for_multiqc ]
+    tx2gene                       = CUSTOM_TX2GENE.out.tx2gene                     // channel: [ val(meta), tx2gene.tsv ]
 
     tpm_gene                      = TXIMETA_TXIMPORT.out.tpm_gene                  //    path: *gene_tpm.tsv
     counts_gene                   = TXIMETA_TXIMPORT.out.counts_gene               //    path: *gene_counts.tsv

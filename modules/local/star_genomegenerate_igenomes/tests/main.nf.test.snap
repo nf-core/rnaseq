@@ -2,15 +2,13 @@
     "fasta with gtf": {
         "content": [
             "[]",
-            [
-                "versions.yml:md5,fcd34fef756da88336a9685d41433075"
-            ]
+            null
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-07-22T20:14:17.250178"
+        "timestamp": "2026-02-04T14:50:18.931902524"
     },
     "fasta no gtf - stub": {
         "content": [
@@ -29,7 +27,25 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,fcd34fef756da88336a9685d41433075"
+                    [
+                        "STAR_GENOMEGENERATE_IGENOMES",
+                        "star",
+                        "2.6.1d"
+                    ]
+                ],
+                "2": [
+                    [
+                        "STAR_GENOMEGENERATE_IGENOMES",
+                        "samtools",
+                        "1.21"
+                    ]
+                ],
+                "3": [
+                    [
+                        "STAR_GENOMEGENERATE_IGENOMES",
+                        "gawk",
+                        "5.1.0"
+                    ]
                 ],
                 "index": [
                     [
@@ -43,30 +59,25 @@
                         "chrStart.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                         "genomeParameters.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
-                ],
-                "versions": [
-                    "versions.yml:md5,fcd34fef756da88336a9685d41433075"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-07-22T20:15:09.671637"
+        "timestamp": "2026-02-04T16:16:59.319610582"
     },
     "fasta no gtf": {
         "content": [
             "[]",
-            [
-                "versions.yml:md5,fcd34fef756da88336a9685d41433075"
-            ]
+            null
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-07-22T20:14:35.674278"
+        "timestamp": "2026-02-04T14:50:29.716915816"
     },
     "fasta with gtf - stub": {
         "content": [
@@ -92,7 +103,25 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,fcd34fef756da88336a9685d41433075"
+                    [
+                        "STAR_GENOMEGENERATE_IGENOMES",
+                        "star",
+                        "2.6.1d"
+                    ]
+                ],
+                "2": [
+                    [
+                        "STAR_GENOMEGENERATE_IGENOMES",
+                        "samtools",
+                        "1.21"
+                    ]
+                ],
+                "3": [
+                    [
+                        "STAR_GENOMEGENERATE_IGENOMES",
+                        "gawk",
+                        "5.1.0"
+                    ]
                 ],
                 "index": [
                     [
@@ -113,16 +142,13 @@
                         "sjdbList.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
                         "transcriptInfo.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
-                ],
-                "versions": [
-                    "versions.yml:md5,fcd34fef756da88336a9685d41433075"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-07-22T20:14:52.732323"
+        "timestamp": "2026-02-04T16:16:48.541372377"
     }
 }

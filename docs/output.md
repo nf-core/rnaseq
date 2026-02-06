@@ -33,6 +33,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
   - [Alignment and quantification](#alignment-and-quantification)
     - [STAR, Salmon and Kallisto](#star-salmon-and-kallisto)
     - [STAR via RSEM](#star-via-rsem)
+    - [Bowtie2 and Salmon (Prokaryotic)](#bowtie2-and-salmon-prokaryotic)
     - [HISAT2](#hisat2)
   - [Alignment post-processing](#alignment-post-processing)
     - [SAMtools](#samtools)
@@ -349,6 +350,42 @@ You can choose to align and quantify your data with RSEM by providing the `--ali
 ![MultiQC - RSEM alignment scores plot](images/mqc_rsem_mapped.png)
 
 ![MultiQC - RSEM uniquely mapped plot](images/mqc_rsem_multimapped.png)
+
+### Bowtie2 and Salmon (Prokaryotic)
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `bowtie2_salmon/`
+  - `*.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the transcriptome will be placed in this directory.
+  - `salmon.merged.gene_counts.tsv`: Matrix of gene-level raw counts across all samples.
+  - `salmon.merged.gene_tpm.tsv`: Matrix of gene-level TPM values across all samples.
+  - `salmon.merged.gene.SummarizedExperiment.rds`: RDS object containing a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) with gene-level abundance data.
+  - `salmon.merged.gene_lengths.tsv`: Matrix of average within-sample transcript lengths for each gene across all samples.
+  - `salmon.merged.gene_counts_scaled.tsv`: Matrix of gene-level library size-scaled estimated counts across all samples.
+  - `salmon.merged.gene_counts_length_scaled.tsv`: Matrix of gene-level length-scaled estimated counts across all samples.
+  - `salmon.merged.transcript_counts.tsv`: Matrix of isoform-level raw counts across all samples.
+  - `salmon.merged.transcript_tpm.tsv`: Matrix of isoform-level TPM values across all samples.
+  - `salmon.merged.transcript.SummarizedExperiment.rds`: RDS object containing a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) with transcript-level abundance data.
+  - `tx2gene.tsv`: Tab-delimited file containing gene to transcript ID mappings.
+- `bowtie2_salmon/<SAMPLE>/`
+  - `quant.sf`: Salmon transcript-level quantification results.
+  - `quant.genes.sf`: Salmon gene-level quantification results.
+- `bowtie2_salmon/<SAMPLE>/logs/`
+  - `salmon_quant.log`: Salmon quantification log file.
+- `bowtie2_salmon/log/`
+  - `*.bowtie2.log`: Bowtie2 alignment report containing mapping statistics.
+
+</details>
+
+[Bowtie2](https://github.com/BenLangmead/bowtie2) is a fast and memory-efficient tool for aligning unspliced reads to reference sequences. When using `--aligner bowtie2_salmon`, reads are aligned directly to the transcriptome and quantified with Salmon.
+
+This aligner is the default when using `-profile prokaryotic` for bacterial and archaeal RNA-seq analysis.
+
+> [!NOTE]
+> For prokaryotic data, the transcript-level and gene-level output files will typically contain identical values since prokaryotic annotations usually have a 1:1 mapping between CDS features and genes (no alternative splicing). The transcript-level files are included for consistency with Salmon's standard output format, but users should focus on the gene-level results.
+
+You can use this aligner by providing the `--aligner bowtie2_salmon` parameter or by using `-profile prokaryotic`.
 
 ### HISAT2
 

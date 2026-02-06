@@ -30,7 +30,7 @@ nextflow_process {
                 { assert snapshot(
                     file("${process.out.results[0][1]}/qualimapReport.html").name,
                     path("${process.out.results[0][1]}/rnaseq_qc_results.txt"),
-                    process.out.versions
+                    process.out.findAll { key, val -> key.startsWith('versions') }
                 ).match() }
             )
         }

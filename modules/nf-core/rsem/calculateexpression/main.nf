@@ -16,7 +16,8 @@ process RSEM_CALCULATEEXPRESSION {
     tuple val(meta), path("*.isoforms.results"), emit: counts_transcript
     tuple val(meta), path("*.stat")            , emit: stat
     tuple val(meta), path("*.log")             , emit: logs, optional:true
-    path  "versions.yml"                       , emit: versions
+    tuple val("${task.process}"), val('rsem'), eval("rsem-calculate-expression --version | sed 's/Current version: RSEM v//'"), emit: versions_rsem, topic: versions
+    tuple val("${task.process}"), val('star'), eval('STAR --version | sed -e "s/STAR_//g"'), emit: versions_star, topic: versions
 
     tuple val(meta), path("*.STAR.genome.bam")       , optional:true, emit: bam_star
     tuple val(meta), path("${prefix}.genome.bam")    , optional:true, emit: bam_genome
@@ -67,12 +68,6 @@ process RSEM_CALCULATEEXPRESSION {
         $reads \\
         \$INDEX \\
         $prefix
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        rsem: \$(rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g")
-        star: \$(STAR --version | sed -e "s/STAR_//g")
-    END_VERSIONS
     """
 
     stub:
@@ -91,11 +86,5 @@ process RSEM_CALCULATEEXPRESSION {
 
     touch ${prefix}.genome.bam
     touch ${prefix}.transcript.bam
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        rsem: \$(rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g")
-        star: \$(STAR --version | sed -e "s/STAR_//g")
-    END_VERSIONS
     """
 }

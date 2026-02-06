@@ -5,8 +5,8 @@ process SENTIEON_RSEMCALCULATEEXPRESSION {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/61/618669d3715d81208a7936180c7170c7dad065c187d3ad933efa01d81a9fc193/data' :
-        'community.wave.seqera.io/library/rsem_sentieon:1d3ad86b89bf5cc7' }"
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/39/39a3e1a85912520836ad054c8ac0497b463bb5170e0e907183dbd08509dad997/data' :
+        'community.wave.seqera.io/library/rsem_sentieon:3e4315fa0b636313' }"
 
     input:
     tuple val(meta), path(reads)  // FASTQ files or BAM file for --alignments mode

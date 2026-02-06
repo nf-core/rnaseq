@@ -33,7 +33,7 @@ nextflow_process {
                 { assert path("${process.out.log[0][1]}").exists() },
                 { assert snapshot(
                     bam(process.out.bam[0][1]).getSamLinesMD5(),
-                    process.out.versions).match() }
+                    process.out.findAll { key, val -> key.startsWith('versions') }).match() }
             )
         }
     }
@@ -62,7 +62,7 @@ nextflow_process {
                 { assert path("${process.out.log[0][1]}").exists() },
                 { assert snapshot(
                     bam(process.out.bam[0][1]).getSamLinesMD5(),
-                    process.out.versions).match() }
+                    process.out.findAll { key, val -> key.startsWith('versions') }).match() }
             )
         }
     }
@@ -94,7 +94,7 @@ nextflow_process {
                     process.out.tsv_edit_distance,
                     process.out.tsv_per_umi,
                     process.out.tsv_umi_per_position,
-                    process.out.versions).match() }
+                    process.out.findAll { key, val -> key.startsWith('versions') }).match() }
             )
         }
     }

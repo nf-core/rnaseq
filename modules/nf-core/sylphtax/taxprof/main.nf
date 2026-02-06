@@ -14,7 +14,7 @@ process SYLPHTAX_TAXPROF {
 
     output:
     tuple val(meta), path("*.sylphmpa"), emit: taxprof_output
-    path "versions.yml"                , emit: versions
+    tuple val("${task.process}"), val('sylph-tax'), eval("sylph-tax --version 2>&1 | tail -1"), emit: versions_sylphtax, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -32,22 +32,11 @@ process SYLPHTAX_TAXPROF {
         -t $taxonomy
 
     mv *.sylphmpa ${prefix}.sylphmpa
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        sylph-tax: \$(sylph-tax --version)
-    END_VERSIONS
     """
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    export SYLPH_TAXONOMY_CONFIG="/tmp/config.json"
     touch ${prefix}.sylphmpa
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        sylph-tax: \$(sylph-tax --version)
-    END_VERSIONS
     """
 }

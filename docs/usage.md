@@ -291,6 +291,41 @@ If you're looking for documentation on how the nf-core Sentieon GitHub Actions a
 For detailed instructions on how to test the modules and subworkflows separately, see [here](https://github.com/nf-core/modules/blob/master/modules/nf-core/sentieon/README.md).
 :::
 
+### Parabricks GPU acceleration for STAR
+
+The STAR aligner can also be GPU-accelerated using NVIDIA Parabricks via the `--use_parabricks_star` parameter. Parabricks runs STAR alignment on NVIDIA GPUs, significantly reducing wall-clock time for large datasets.
+
+```bash
+nextflow run nf-core/rnaseq \
+    --input samplesheet.csv \
+    --outdir results \
+    --fasta genome.fa \
+    --gtf annotation.gtf \
+    --use_parabricks_star \
+    -profile docker
+```
+
+#### Requirements
+
+- One or more NVIDIA GPUs (with appropriate drivers installed)
+- Docker or Singularity (Conda/Mamba is **not** supported for this module)
+- The Parabricks container (`nvcr.io/nvidia/clara/clara-parabricks:4.6.0-1`) will be pulled automatically
+
+#### Behaviour differences
+
+When using Parabricks, the pipeline automatically handles mark duplicates during the alignment step (via `pbrun rna_fq2bam`), so the separate Picard MarkDuplicates step is skipped.
+
+#### Known differences from native STAR
+
+Parabricks `rna_fq2bam` is based on STAR 2.7.2a. The following native STAR flags have no pbrun equivalent and are therefore not applied:
+
+- `--outFilterType BySJout` — pbrun uses its own splice junction filtering defaults
+- `--sjdbScore 1` — affects junction scoring priority
+- `--quantTranscriptomeBan Singleend` — Salmon handles mixed single/paired-end transcriptome records gracefully
+- `--runRNGseed 0` — pbrun uses deterministic primary alignment selection
+
+These differences are unlikely to materially affect downstream quantification results, but users should be aware of them for reproducibility purposes. All other STAR parameters (multi-mapping limits, intron sizes, mate gap, splice junction overhangs, etc.) have pbrun equivalents and are applied consistently.
+
 ## Quantification options
 
 The current options align with STAR and quantify using either Salmon (`--aligner star_salmon`) / RSEM (`--aligner star_rsem`). You also have the option to pseudoalign and quantify your data with Salmon or Kallisto by providing the `--pseudo_aligner salmon` or `--pseudo_aligner kallisto` parameter, respectively.

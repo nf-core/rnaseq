@@ -51,6 +51,8 @@ jobs:
           NFT_VER: ${{ env.NFT_VER }}
           # Skip sentieon tests - no ARM containers available
           SKIP_SENTIEON: true
+          # Skip parabricks tests - requires NVIDIA GPU
+          SKIP_PARABRICKS: true
         with:
           max_shards: 14
 
@@ -101,6 +103,8 @@ jobs:
           NXF_VERSION: ${{ matrix.NXF_VER }}
           # Skip sentieon tests - no ARM containers available
           SKIP_SENTIEON: true
+          # Skip parabricks tests - requires NVIDIA GPU
+          SKIP_PARABRICKS: true
         with:
           profile: ${{ matrix.profile }},${{ matrix.archProfile }}
           shard: ${{ matrix.shard }}

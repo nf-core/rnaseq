@@ -2,111 +2,67 @@
     "use_parabricks_star = true": {
         "content": [
             [
-                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
+                "genome.transcripts.fa:md5,adf2cb5733dd37ea27dead3b99ec7726"
             ],
             [
-                "[]"
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/genome.fasta"
             ],
             [
-                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055"
+                "genes_with_empty_tid.filtered.gtf:md5,ef6fccd153a21c329670462d602ed2d0"
             ],
             [
-                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28"
+                "genome.fasta.fai:md5,2cd76d936cbfa386b14154506c2041b2"
             ],
             [
-                "genome_gfp.fasta.fai:md5,8fa54c6bd2ea6a369efbb8ab4f30156a"
+                "genes_with_empty_tid.filtered.bed:md5,e507dc33673e76c32abe344f4dc07952"
             ],
             [
-                "genome_gfp.bed:md5,991993ebef1def1d5823632c21177ec3"
-            ],
-            [
-                "genome_gfp.fasta.sizes:md5,9b755f8f349b14accefb4d859f84de26"
-            ],
-            [
-
-            ],
-            [
-
+                "genome.fasta.sizes:md5,29218009212157c49dbc6596621ec780"
             ],
             [
                 "[Genome, SA, SAindex, chrLength.txt, chrName.txt, chrNameLength.txt, chrStart.txt, exonGeTrInfo.tab, exonInfo.tab, geneInfo.tab, genomeParameters.txt, sjdbInfo.txt, sjdbList.fromGTF.out.tab, sjdbList.out.tab, transcriptInfo.tab]"
             ],
             [
-
-            ],
-            [
-
-            ],
-            [
-
-            ],
-            [
-                "versions.yml:md5,04400316552e6253e0008f052b20d866",
-                "versions.yml:md5,2ed4fadc0038a6a8f46063219d23d3ef",
-                "versions.yml:md5,71252f1a221be05593361acccb99506b",
-                "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
                 "versions.yml:md5,e23bff7c4966aad0e8f3a771f43fabc2"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nextflow": "25.04.0"
         },
-        "timestamp": "2026-02-02T06:58:02.410135924"
+        "timestamp": "2026-02-06T11:08:37.000000000"
     },
     "use_parabricks_star = true - stub": {
         "content": [
             [
-                "genome_transcriptome.fasta.sizes:md5,d41d8cd98f00b204e9800998ecf8427e"
+                "genome.fasta.sizes:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
-                "genome_transcriptome.fasta.fai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                "genome.fasta.fai:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
-                "genome_transcriptome.fasta:md5,d41d8cd98f00b204e9800998ecf8427e"
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/genome.fasta"
             ],
             [
-                "genome_transcriptome.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
+                "genome.filtered.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
-                "genome_transcriptome.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
-            ],
-            [
-
-            ],
-            [
-
-            ],
-            [
-
-            ],
-            [
-                "[]"
-            ],
-            [
-
-            ],
-            [
-
+                "genome.filtered.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
                 "[Genome, Log.out, SA, SAindex, chrLength.txt, chrName.txt, chrNameLength.txt, chrStart.txt, exonGeTrInfo.tab, exonInfo.tab, geneInfo.tab, genomeParameters.txt, sjdbInfo.txt, sjdbList.fromGTF.out.tab, sjdbList.out.tab, transcriptInfo.tab]"
             ],
             [
-                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/transcriptome.fasta"
+                "genome.transcripts.fa:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
-                "versions.yml:md5,1b71d037313dd6cfb54f9f1914cc3601",
-                "versions.yml:md5,71252f1a221be05593361acccb99506b",
-                "versions.yml:md5,80e9dd350be8cd4c11909d75c914757a",
-                "versions.yml:md5,d475dace58c4e9b4911e8a60bda85041",
                 "versions.yml:md5,e23bff7c4966aad0e8f3a771f43fabc2"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nextflow": "25.04.0"
         },
-        "timestamp": "2026-02-02T10:07:57.489667089"
+        "timestamp": "2026-02-06T11:07:04.000000000"
     }
 }

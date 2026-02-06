@@ -6,13 +6,14 @@ nextflow_pipeline {
     tag "parabricks"
     tag "gpu"
 
-    test("Params: default aligner parabricks (no markdups)") {
+    test("Params: parabricks star_salmon (no markdups)") {
 
         when {
             params {
                 outdir = "$outputDir"
                 use_parabricks_star = true
-                skip_markduplicates = false
+                skip_markduplicates = true
+                extra_star_align_args = '--memory-limit 15 --read-files-command zcat --x3'
             }
         }
 
@@ -37,7 +38,39 @@ nextflow_pipeline {
         }
     }
 
-    test("Params: default aligner parabricks (no markdups) - stub") {
+    test("Params: parabricks star_salmon (with markdups)") {
+
+        when {
+            params {
+                outdir = "$outputDir"
+                use_parabricks_star = true
+                skip_markduplicates = false
+                extra_star_align_args = '--memory-limit 15 --read-files-command zcat --x3'
+            }
+        }
+
+        then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow and pipeline versions are removed (all from the workflow key)
+                    removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow"),
+                    // All stable path name, with a relative path
+                    stable_name,
+                    // All files with stable contents
+                    stable_path
+                ).match() }
+            )
+        }
+    }
+
+    test("Params: parabricks star_salmon (no markdups) - stub") {
 
         options "-stub"
 
@@ -46,6 +79,7 @@ nextflow_pipeline {
                 outdir = "$outputDir"
                 use_parabricks_star = true
                 skip_markduplicates = true
+                extra_star_align_args = '--memory-limit 15 --read-files-command zcat --x3'
             }
         }
 
@@ -70,38 +104,7 @@ nextflow_pipeline {
         }
     }
 
-    test("Params: default aligner parabricks (with markdups)") {
-
-        when {
-            params {
-                outdir = "$outputDir"
-                use_parabricks_star = true
-                skip_markduplicates = false
-            }
-        }
-
-        then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
-            assertAll(
-                { assert workflow.success},
-                { assert snapshot(
-                    // Number of successful tasks
-                    workflow.trace.succeeded().size(),
-                    // pipeline versions.yml file for multiqc from which Nextflow and pipeline versions are removed (all from the workflow key)
-                    removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow"),
-                    // All stable path name, with a relative path
-                    stable_name,
-                    // All files with stable contents
-                    stable_path
-                ).match() }
-            )
-        }
-    }
-
-    test("Params: default aligner parabricks (with markdups) - stub") {
+    test("Params: parabricks star_salmon (with markdups) - stub") {
 
         options "-stub"
 
@@ -110,6 +113,7 @@ nextflow_pipeline {
                 outdir = "$outputDir"
                 use_parabricks_star = true
                 skip_markduplicates = false
+                extra_star_align_args = '--memory-limit 15 --read-files-command zcat --x3'
             }
         }
 

@@ -51,6 +51,8 @@ workflow ALIGN_STAR {
 
     } else if (use_parabricks_star) {
 
+        // TODO: pbrun emits versions.yml but ALIGN_STAR doesn't collect it.
+        // Migrate to topic-based version reporting when module is upstreamed to nf-core/modules.
         PARABRICKS_RNA_FQ2BAM(reads, fasta, index, true, !skip_markduplicates)
         ch_star_out = PARABRICKS_RNA_FQ2BAM
 

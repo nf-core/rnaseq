@@ -2,7 +2,6 @@ nextflow_function {
 
     name "Test Functions"
     script "../main.nf"
-    tag "cpu"
 
     test("Test Function getStarPercentMapped pass") {
 

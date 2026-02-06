@@ -71,7 +71,7 @@ jobs:
       needs.get-shards.outputs.total_shards > 0 &&
       (
         github.event_name != 'push' ||
-        ( github.event_name == 'push' && github.repository == 'nf-core/methylseq' )
+        ( github.event_name == 'push' && github.repository == 'nf-core/rnaseq' )
       )
     strategy:
       fail-fast: false

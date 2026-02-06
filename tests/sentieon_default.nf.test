@@ -5,7 +5,6 @@ nextflow_pipeline {
     config "./sentieon.config"
     tag "pipeline"
     tag "sentieon"
-    tag "cpu"
 
     test("Params: default --use_sentieon_star") {
 

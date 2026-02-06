@@ -16,10 +16,16 @@
                     "python": "3.10.4"
                 },
                 "FQ_LINT": {
-                    "fq": "0.12.0 (2024-07-08)"
+                    "fq": "0.12.0"
+                },
+                "FQ_LINT_AFTER_BBSPLIT": {
+                    "fq": "0.12.0"
+                },
+                "FQ_LINT_AFTER_TRIMMING": {
+                    "fq": "0.12.0"
                 },
                 "FQ_SUBSAMPLE": {
-                    "fq": "0.12.0 (2024-07-08)"
+                    "fq": "0.12.0"
                 },
                 "GTF2BED": {
                     "perl": "5.26.2"
@@ -325,40 +331,40 @@
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,67efd0858e5903ccd14b831c1539e928",
+                "cmd_info.json:md5,138b27764a97d468418b3dac5e7f1cef",
                 "lib_format_counts.json:md5,c24ffe28d70476b5ccdd8bc2d22c0ac1",
                 "ambig_info.tsv:md5,45f252b4f0e11e6730cf0c29f800fdbb",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,9d2707b94fe3bf56dece3585100014c8",
+                "cmd_info.json:md5,87bcf1e84fc31a794e3c8f8b227d11c3",
                 "lib_format_counts.json:md5,f6d44c0221f7fd559f11a9afe04c9935",
                 "ambig_info.tsv:md5,6dcc2891ea572e9b8d1ba52cd434ab84",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,5178bc67f845ca08c1ce3be22bc398bf",
+                "cmd_info.json:md5,ec504469f9b0e33c94f85846f1486d7f",
                 "lib_format_counts.json:md5,7c562bf2f70e42f3a7292687dfd328c3",
                 "ambig_info.tsv:md5,194f574e0586416155e3f33d42e2b167",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,3d5299da44520e29009655797baef266",
+                "cmd_info.json:md5,591436d401b6df6f3c6a8b16913158f4",
                 "lib_format_counts.json:md5,d46250bb3677d72feeefc435fe6395a6",
                 "ambig_info.tsv:md5,a26e3f936e65d7da66392603c2f91f6f",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,86b6b9423ebb676bcc26801a184cad46",
+                "cmd_info.json:md5,fe66c9d876645b9260d8c2488157d4d4",
                 "lib_format_counts.json:md5,088fd51db07022ffde47033bbd029400",
                 "tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-02T12:04:58.189100984"
+        "timestamp": "2026-02-04T17:31:06.698495453"
     },
     "Params: --pseudo_aligner salmon --skip_qc --skip_alignment - stub": {
         "content": [
@@ -374,7 +380,7 @@
                     "python": "3.12.2"
                 },
                 "FQ_LINT": {
-                    "fq": "0.12.0 (2024-07-08)"
+                    "fq": "0.12.0"
                 },
                 "GTF2BED": {
                     "perl": "5.26.2"
@@ -438,6 +444,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-18T14:09:04.576264233"
+        "timestamp": "2026-02-04T17:31:37.170058949"
     }
 }

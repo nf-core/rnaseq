@@ -17,10 +17,13 @@
                     "fastqc": "0.12.1"
                 },
                 "FQ_LINT": {
-                    "fq": "0.12.0 (2024-07-08)"
+                    "fq": "0.12.0"
+                },
+                "FQ_LINT_AFTER_TRIMMING": {
+                    "fq": "0.12.0"
                 },
                 "FQ_SUBSAMPLE": {
-                    "fq": "0.12.0 (2024-07-08)"
+                    "fq": "0.12.0"
                 },
                 "GTF2BED": {
                     "perl": "5.26.2"
@@ -387,39 +390,39 @@
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,afd8c7bd12662e522bd1027742460b0a",
+                "cmd_info.json:md5,e89ce91f3cc03732bee42c381f3b1d1b",
                 "lib_format_counts.json:md5,288063651e63fda4ed95834d252cefd3",
                 "ambig_info.tsv:md5,12e70e29f44c7786f081e4b59e4ce7ce",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,554ec02fc53148f58d90cfd2790db0f9",
+                "cmd_info.json:md5,d4db8fa9cb231648076bda1ec4e34114",
                 "lib_format_counts.json:md5,8a2ab54a8ec1d78be040c9bec57b5101",
                 "ambig_info.tsv:md5,fe67ac3fc0f0fc813216c09aec21c4e8",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,e5f1f14b2435492a66444a74db0826ec",
+                "cmd_info.json:md5,394264c8964da0cdd1c40d1c16995ceb",
                 "lib_format_counts.json:md5,c1ed7330956d6411d833fed78f1182bd",
                 "ambig_info.tsv:md5,3bc4e9d9fb9a95086a94c8c01349e67f",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,3b43fbcbae7cae12810c82b6a4eb0f19",
+                "cmd_info.json:md5,8009941fa85ff1e32128bceafc974ea8",
                 "lib_format_counts.json:md5,bcb3207290115f621a93a198ec5b6dfd",
                 "ambig_info.tsv:md5,f7304f8876d8c47aab65205236d7b721",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,ecc0e34727cf42edaaaac7bd6da64f8b",
+                "cmd_info.json:md5,3e6d06d032abd3f5cd7e79df1b5bcde0",
                 "lib_format_counts.json:md5,fce2c4840048c294c016f45f0df15384",
                 "tx2gene.tsv:md5,1be389a28cc26d94b19ea918959ac72e"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-02T11:37:20.925333204"
+        "timestamp": "2026-02-04T17:15:53.915777638"
     }
 }

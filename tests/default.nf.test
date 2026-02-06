@@ -3,7 +3,6 @@ nextflow_pipeline {
     name "Test pipeline with default settings"
     script "../main.nf"
     tag "pipeline"
-    tag "cpu"
 
     test("Params: default") {
 

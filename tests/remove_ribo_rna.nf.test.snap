@@ -16,7 +16,7 @@
                     "python": "3.12.2"
                 },
                 "FQ_LINT": {
-                    "fq": "0.12.0 (2024-07-08)"
+                    "fq": "0.12.0"
                 },
                 "GTF2BED": {
                     "perl": "5.26.2"
@@ -127,7 +127,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-18T14:06:43.267215244"
+        "timestamp": "2026-02-04T17:29:20.563878423"
     },
     "Params: --remove_ribo_rna": {
         "content": [
@@ -146,10 +146,19 @@
                     "python": "3.10.4"
                 },
                 "FQ_LINT": {
-                    "fq": "0.12.0 (2024-07-08)"
+                    "fq": "0.12.0"
+                },
+                "FQ_LINT_AFTER_BBSPLIT": {
+                    "fq": "0.12.0"
+                },
+                "FQ_LINT_AFTER_RIBO_REMOVAL": {
+                    "fq": "0.12.0"
+                },
+                "FQ_LINT_AFTER_TRIMMING": {
+                    "fq": "0.12.0"
                 },
                 "FQ_SUBSAMPLE": {
-                    "fq": "0.12.0 (2024-07-08)"
+                    "fq": "0.12.0"
                 },
                 "GTF2BED": {
                     "perl": "5.26.2"
@@ -164,7 +173,7 @@
                     "gunzip": 1.13
                 },
                 "PICARD_MARKDUPLICATES": {
-                    "picard": "3.1.1"
+                    "picard": "3.4.0"
                 },
                 "SALMON_QUANT": {
                     "salmon": "1.10.3"
@@ -739,58 +748,58 @@
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,47f4082e037a65924fbde0ee66475668",
+                "cmd_info.json:md5,3fa4eede50b6057d7ea52ca8aff1d641",
                 "lib_format_counts.json:md5,b814fed52bd197a64544086dba0f127a",
                 "ambig_info.tsv:md5,c83b0f9ebe9b8dfc284595ec56d4f092",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,a16d8e80ef0b4333b7b76fd38206d817",
+                "cmd_info.json:md5,c5c31cc1202236ae2c800526c8a72827",
                 "lib_format_counts.json:md5,3f4d67ace359562564dd336aa47a479c",
                 "ambig_info.tsv:md5,00a1f9de7095a68dfb43e0a0301b6ecd",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,ae4fd06bf1978750baacc46171463675",
+                "cmd_info.json:md5,e20c14f481b4468e11664f04ac06b166",
                 "lib_format_counts.json:md5,f56087bcbd494c7fa78200f65a2400e2",
                 "ambig_info.tsv:md5,54d942ddf69b4e8f1598064e09428256",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,43ebe2d584f81626687361cec691acb1",
+                "cmd_info.json:md5,8e239ec68573adbfcbcbac9238a1d433",
                 "lib_format_counts.json:md5,43fc5463eada79e466d6ba9848739f06",
                 "ambig_info.tsv:md5,933feffdaf6cf6ff407469ade0d7684d",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,12c17007378daeeb8611c2a8e9e3ccea",
+                "cmd_info.json:md5,fa7b659f1ba90e16b0d0a375ff318b01",
                 "lib_format_counts.json:md5,e6e3d7746e9abee6a0e097ae0ee1781a",
                 "tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "ambig_info.tsv:md5,6cd02367152bb2dd59a6f1f70df2d7f8",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,7699e051043e6f8c0d6c3c429b9fb172",
+                "cmd_info.json:md5,21395500c85658c70ce5fa0ac05b339a",
                 "ambig_info.tsv:md5,8611b6c03f6aa1a5f3dfceb0e65ad4ef",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,8992ab15acadcb4d720ed90611fda704",
+                "cmd_info.json:md5,faf70330c73fdce087631bb06de8a12f",
                 "ambig_info.tsv:md5,1b69f9b651dfa6799e310004c1e3309f",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,c41bb667e8e2ec527737a3efaa35e02b",
+                "cmd_info.json:md5,563fd8191cc965524621c2afea7983ff",
                 "ambig_info.tsv:md5,070c7d50eab5ce0f211cdb06f9d7cc29",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,3b4290af43973a006d70152e2a2daf3e",
+                "cmd_info.json:md5,867de0b90aeccb5f9627e821a973aea7",
                 "ambig_info.tsv:md5,b8c61854b56a1c9a0fc8f158ea0c7599",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,b1f6e6f4321ea83e46045c121561cc11",
+                "cmd_info.json:md5,3a51e7db950cee84bed0b13e329f1934",
                 "RAP1_IAA_30M_REP1.SJ.out.tab:md5,ea95e243278af55534f2c52eb5fff7ee",
                 "RAP1_UNINDUCED_REP1.SJ.out.tab:md5,e548d13942535dc0821f3ec6d9743ec8",
                 "RAP1_UNINDUCED_REP2.SJ.out.tab:md5,1f294365343a1a5e95682792fdb77033",
@@ -801,9 +810,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-02T14:36:15.682791438"
+        "timestamp": "2026-02-04T17:22:57.024372709"
     },
     "Params: --remove_ribo_rna - stub": {
         "content": [
@@ -819,7 +828,7 @@
                     "python": "3.12.2"
                 },
                 "FQ_LINT": {
-                    "fq": "0.12.0 (2024-07-08)"
+                    "fq": "0.12.0"
                 },
                 "GTF2BED": {
                     "perl": "5.26.2"
@@ -892,7 +901,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-18T14:00:45.105569138"
+        "timestamp": "2026-02-04T17:23:29.432103647"
     },
     "Params: --remove_ribo_rna --ribo_removal_tool bowtie2": {
         "content": [
@@ -924,10 +933,19 @@
                     "python": "3.10.4"
                 },
                 "FQ_LINT": {
-                    "fq": "0.12.0 (2024-07-08)"
+                    "fq": "0.12.0"
+                },
+                "FQ_LINT_AFTER_BBSPLIT": {
+                    "fq": "0.12.0"
+                },
+                "FQ_LINT_AFTER_RIBO_REMOVAL": {
+                    "fq": "0.12.0"
+                },
+                "FQ_LINT_AFTER_TRIMMING": {
+                    "fq": "0.12.0"
                 },
                 "FQ_SUBSAMPLE": {
-                    "fq": "0.12.0 (2024-07-08)"
+                    "fq": "0.12.0"
                 },
                 "GTF2BED": {
                     "perl": "5.26.2"
@@ -942,7 +960,7 @@
                     "gunzip": 1.13
                 },
                 "PICARD_MARKDUPLICATES": {
-                    "picard": "3.1.1"
+                    "picard": "3.4.0"
                 },
                 "SALMON_QUANT": {
                     "salmon": "1.10.3"
@@ -1548,31 +1566,31 @@
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,0ec0748a34a53cf3d5a165be55e7c7d3",
+                "cmd_info.json:md5,f1cfb9d255b1468d124358893b9ac7f3",
                 "lib_format_counts.json:md5,c5e106a5c91a98e03ed6f17bedbc047e",
                 "ambig_info.tsv:md5,16bdab31c3184847567e5354b8812680",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,db21e34beeff0fde4b5a754b1d2d19ef",
+                "cmd_info.json:md5,695c1ce9ed4f9713f7b8920d1073840a",
                 "lib_format_counts.json:md5,164f6e06e2eeb4bebc53d8881faa378c",
                 "ambig_info.tsv:md5,bd89401312e3c097466ce2e76eecd0fb",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,4f41f7a03b94c939573aa329c24e83a3",
+                "cmd_info.json:md5,c028c0b86c75820b17face939047186c",
                 "lib_format_counts.json:md5,e008ad0fd2b97a798be8808626bc9c88",
                 "ambig_info.tsv:md5,b4f1a74374255ed3a3d4edf1d1916735",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,e6f60956c3f91402a7ad2324d4fcc734",
+                "cmd_info.json:md5,da4959aea2d9b71e348c4ae902eb1401",
                 "lib_format_counts.json:md5,187c1ec77c0be2b14e0acaa161dba89b",
                 "ambig_info.tsv:md5,a7b29692d5b72d0c4567554d64fed4c4",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,7848f0267784b20379b53fbd1bdff26d",
+                "cmd_info.json:md5,994cf13defc7a9d70bd4baf5477bfe31",
                 "lib_format_counts.json:md5,309cc18331216e02a46db112c69f16d2",
                 "tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "rfam-5.8s-database-id98_dna_converted.fasta:md5,990436ac4aa6cacf24cd5d1c1365f28a",
@@ -1595,27 +1613,27 @@
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,7699e051043e6f8c0d6c3c429b9fb172",
+                "cmd_info.json:md5,21395500c85658c70ce5fa0ac05b339a",
                 "ambig_info.tsv:md5,e2df22cd99806e57b85073a057d64266",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,8992ab15acadcb4d720ed90611fda704",
+                "cmd_info.json:md5,faf70330c73fdce087631bb06de8a12f",
                 "ambig_info.tsv:md5,6f1fb0084625628933ee0ab4a5c01258",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,c41bb667e8e2ec527737a3efaa35e02b",
+                "cmd_info.json:md5,563fd8191cc965524621c2afea7983ff",
                 "ambig_info.tsv:md5,934f234ade7ce4c2d48c026a4e7a84e1",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,3b4290af43973a006d70152e2a2daf3e",
+                "cmd_info.json:md5,867de0b90aeccb5f9627e821a973aea7",
                 "ambig_info.tsv:md5,24043f65cfdc8f26f62a0579aa54afaa",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,b1f6e6f4321ea83e46045c121561cc11",
+                "cmd_info.json:md5,3a51e7db950cee84bed0b13e329f1934",
                 "RAP1_IAA_30M_REP1.SJ.out.tab:md5,ea95e243278af55534f2c52eb5fff7ee",
                 "RAP1_UNINDUCED_REP1.SJ.out.tab:md5,e548d13942535dc0821f3ec6d9743ec8",
                 "RAP1_UNINDUCED_REP2.SJ.out.tab:md5,1f294365343a1a5e95682792fdb77033",
@@ -1626,8 +1644,8 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-02T12:02:17.441394293"
+        "timestamp": "2026-02-04T17:28:44.276346032"
     }
 }

@@ -4,7 +4,6 @@ nextflow_workflow {
     script "../main.nf"
     workflow "ALIGN_STAR"
     config "./sentieon.config"
-    tag "cpu"
 
     test("sentieon star - no igenomes") {
         tag "sentieon"
@@ -34,7 +33,6 @@ nextflow_workflow {
                 seq_center          = false
                 is_aws_igenome      = false
                 use_sentieon_star   = true
-                use_parabricks_star = false
 
                 input[0] = Channel.of([
                     [ id:'test', single_end:false ], // meta map
@@ -57,8 +55,6 @@ nextflow_workflow {
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
                 ])
                 input[8] = use_sentieon_star
-                input[9] = use_parabricks_star
-                input[10] = params.skip_markduplicates
                 """
             }
         }
@@ -78,8 +74,7 @@ nextflow_workflow {
                     workflow.out.idxstats,
                     bam(workflow.out.orig_bam[0][1]).getReadsMD5(),
                     workflow.out.stats,
-                    workflow.out.tab,
-                    workflow.out.versions).match()}
+                    workflow.out.tab).match()}
             )
         }
     }
@@ -114,9 +109,6 @@ nextflow_workflow {
                 seq_center          = false
                 is_aws_igenome      = false
                 use_sentieon_star   = true
-                use_parabricks_star = false
-                skip_markduplicates = true
-                use_parabricks_star = false
 
                 input[0] = Channel.of([
                     [ id:'test', single_end:false ], // meta map
@@ -139,8 +131,6 @@ nextflow_workflow {
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
                 ])
                 input[8] = use_sentieon_star
-                input[9] = use_parabricks_star
-                input[10] = params.skip_markduplicates
                 """
             }
         }
@@ -161,8 +151,7 @@ nextflow_workflow {
                     workflow.out.log_progress,
                     workflow.out.orig_bam,
                     workflow.out.stats,
-                    workflow.out.tab,
-                    workflow.out.versions).match()}
+                    workflow.out.tab).match()}
             )
         }
     }

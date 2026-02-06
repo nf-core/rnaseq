@@ -3,7 +3,6 @@ nextflow_pipeline {
     name "Test pipeline by omitting fasta input"
     script "../main.nf"
     tag "pipeline"
-    tag "cpu"
 
     test("Params: no fasta") {
 

@@ -3,7 +3,6 @@ nextflow_pipeline {
     name "Test pipeline with BAM files as input"
     script "../main.nf"
     tag "pipeline"
-    tag "cpu"
 
     test("BAM input for Salmon") {
 

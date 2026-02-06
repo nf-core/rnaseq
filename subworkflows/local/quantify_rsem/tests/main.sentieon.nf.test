@@ -4,7 +4,6 @@ nextflow_workflow {
     script "../main.nf"
     workflow "QUANTIFY_RSEM"
     config "./sentieon.config"
-    tag "cpu"
 
     test("homo_sapiens - sentieon - stub") {
 

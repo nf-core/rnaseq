@@ -11,38 +11,9 @@ nextflow_pipeline {
         when {
             params {
                 outdir = "$outputDir"
-
-                // Prokaryotic test data - Salmonella Typhimurium SL1344 (small)
-                input = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/samplesheet/prokaryotic/samplesheet_test.csv'
-                fasta = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/reference/prokaryotic/SL1344_sub.fasta'
-                gff   = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/reference/prokaryotic/SL1344_sub.gff3'
-                gtf   = null
-                transcript_fasta = null
-                additional_fasta = null
-
-                // Prokaryotic-specific settings
-                prokaryotic = true
-                gffread_transcript_fasta = true
-                aligner = 'star_salmon'
-                featurecounts_feature_type = 'CDS'
-
-                // Parabricks settings
                 use_parabricks_star = true
                 skip_markduplicates = true
                 extra_star_align_args = '--memory-limit 15 --read-files-command zcat --x3'
-
-                // Skip eukaryote-specific QC tools
-                skip_rseqc = true
-                skip_dupradar = true
-                skip_qualimap = true
-                skip_biotype_qc = true
-                skip_deseq2_qc = true
-
-                // Skip unnecessary steps for faster testing
-                skip_bbsplit = true
-                skip_preseq = true
-                pseudo_aligner = null
-                min_trimmed_reads = 0
             }
         }
 
@@ -72,38 +43,9 @@ nextflow_pipeline {
         when {
             params {
                 outdir = "$outputDir"
-
-                // Prokaryotic test data - Salmonella Typhimurium SL1344 (small)
-                input = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/samplesheet/prokaryotic/samplesheet_test.csv'
-                fasta = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/reference/prokaryotic/SL1344_sub.fasta'
-                gff   = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/reference/prokaryotic/SL1344_sub.gff3'
-                gtf   = null
-                transcript_fasta = null
-                additional_fasta = null
-
-                // Prokaryotic-specific settings
-                prokaryotic = true
-                gffread_transcript_fasta = true
-                aligner = 'star_salmon'
-                featurecounts_feature_type = 'CDS'
-
-                // Parabricks settings
                 use_parabricks_star = true
                 skip_markduplicates = false
                 extra_star_align_args = '--memory-limit 15 --read-files-command zcat --x3'
-
-                // Skip eukaryote-specific QC tools
-                skip_rseqc = true
-                skip_dupradar = true
-                skip_qualimap = true
-                skip_biotype_qc = true
-                skip_deseq2_qc = true
-
-                // Skip unnecessary steps for faster testing
-                skip_bbsplit = true
-                skip_preseq = true
-                pseudo_aligner = null
-                min_trimmed_reads = 0
             }
         }
 
@@ -135,38 +77,9 @@ nextflow_pipeline {
         when {
             params {
                 outdir = "$outputDir"
-
-                // Prokaryotic test data - Salmonella Typhimurium SL1344 (small)
-                input = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/samplesheet/prokaryotic/samplesheet_test.csv'
-                fasta = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/reference/prokaryotic/SL1344_sub.fasta'
-                gff   = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/reference/prokaryotic/SL1344_sub.gff3'
-                gtf   = null
-                transcript_fasta = null
-                additional_fasta = null
-
-                // Prokaryotic-specific settings
-                prokaryotic = true
-                gffread_transcript_fasta = true
-                aligner = 'star_salmon'
-                featurecounts_feature_type = 'CDS'
-
-                // Parabricks settings
                 use_parabricks_star = true
                 skip_markduplicates = true
                 extra_star_align_args = '--memory-limit 15 --read-files-command zcat --x3'
-
-                // Skip eukaryote-specific QC tools
-                skip_rseqc = true
-                skip_dupradar = true
-                skip_qualimap = true
-                skip_biotype_qc = true
-                skip_deseq2_qc = true
-
-                // Skip unnecessary steps for faster testing
-                skip_bbsplit = true
-                skip_preseq = true
-                pseudo_aligner = null
-                min_trimmed_reads = 0
             }
         }
 
@@ -198,38 +111,9 @@ nextflow_pipeline {
         when {
             params {
                 outdir = "$outputDir"
-
-                // Prokaryotic test data - Salmonella Typhimurium SL1344 (small)
-                input = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/samplesheet/prokaryotic/samplesheet_test.csv'
-                fasta = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/reference/prokaryotic/SL1344_sub.fasta'
-                gff   = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/reference/prokaryotic/SL1344_sub.gff3'
-                gtf   = null
-                transcript_fasta = null
-                additional_fasta = null
-
-                // Prokaryotic-specific settings
-                prokaryotic = true
-                gffread_transcript_fasta = true
-                aligner = 'star_salmon'
-                featurecounts_feature_type = 'CDS'
-
-                // Parabricks settings
                 use_parabricks_star = true
                 skip_markduplicates = false
                 extra_star_align_args = '--memory-limit 15 --read-files-command zcat --x3'
-
-                // Skip eukaryote-specific QC tools
-                skip_rseqc = true
-                skip_dupradar = true
-                skip_qualimap = true
-                skip_biotype_qc = true
-                skip_deseq2_qc = true
-
-                // Skip unnecessary steps for faster testing
-                skip_bbsplit = true
-                skip_preseq = true
-                pseudo_aligner = null
-                min_trimmed_reads = 0
             }
         }
 

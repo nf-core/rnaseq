@@ -10,11 +10,10 @@ nextflow_pipeline {
 
         when {
             params {
-                input = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/samplesheet/prokaryotic/samplesheet_test.csv'
                 outdir = "$outputDir"
                 use_parabricks_star = true
                 skip_markduplicates = true
-                extra_star_align_args = '--memory-limit 15 --read-files-command zcat --x3'
+                extra_star_align_args = '--low-memory --read-files-command zcat --x3'
             }
         }
 
@@ -43,11 +42,10 @@ nextflow_pipeline {
 
         when {
             params {
-                input = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/samplesheet/prokaryotic/samplesheet_test.csv'
                 outdir = "$outputDir"
                 use_parabricks_star = true
                 skip_markduplicates = false
-                extra_star_align_args = '--memory-limit 15 --read-files-command zcat --x3'
+                extra_star_align_args = '--low-memory --read-files-command zcat --x3'
             }
         }
 
@@ -78,11 +76,10 @@ nextflow_pipeline {
 
         when {
             params {
-                input = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/samplesheet/prokaryotic/samplesheet_test.csv'
                 outdir = "$outputDir"
                 use_parabricks_star = true
                 skip_markduplicates = true
-                extra_star_align_args = '--memory-limit 15 --read-files-command zcat --x3'
+                extra_star_align_args = '--low-memory --read-files-command zcat --x3'
             }
         }
 
@@ -113,11 +110,10 @@ nextflow_pipeline {
 
         when {
             params {
-                input = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/samplesheet/prokaryotic/samplesheet_test.csv'
                 outdir = "$outputDir"
                 use_parabricks_star = true
                 skip_markduplicates = false
-                extra_star_align_args = '--memory-limit 15 --read-files-command zcat --x3'
+                extra_star_align_args = '--low-memory --read-files-command zcat --x3'
             }
         }
 

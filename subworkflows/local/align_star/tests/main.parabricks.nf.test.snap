@@ -4,7 +4,7 @@
             "test.Log.final.out",
             "Log.out",
             "sorted_.bam.bai",
-            "66fd15b5a9ea06695405fcead06d4a28",
+            "d5861e7d7a76e47e17bfaa03be48447c",
             [
                 
             ],
@@ -14,7 +14,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "Log.progress.out:md5,b2bd061d6cbaaf3d6d3b1fed547f69b8"
+                    "Log.progress.out:md5,bda74ec359fb536d8fb69d20f1b50d64"
                 ]
             ],
             [
@@ -26,7 +26,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.flagstat:md5,d4247cd2ba8e46873bb31d9231ae10da"
+                    "test.flagstat:md5,7ffdfbb9d18429bfaf4195936daea832"
                 ]
             ],
             [
@@ -35,17 +35,17 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.idxstats:md5,107ca94dd426cc44db316f0d402307c5"
+                    "test.idxstats:md5,e05df3feaca581e80c6bb159dac585d8"
                 ]
             ],
-            "66fd15b5a9ea06695405fcead06d4a28",
+            "d5861e7d7a76e47e17bfaa03be48447c",
             [
                 [
                     {
                         "id": "test",
                         "single_end": false
                     },
-                    "test.stats:md5,f5568208690ea5b8d4dcd7ae4740a2cf"
+                    "test.stats:md5,db5a6592852bdddaf15c8d38d5e454ee"
                 ]
             ],
             [
@@ -54,14 +54,10 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "SJ.out.tab:md5,844af19ab0fc8cd9a3f75228445aca0d"
+                    "SJ.out.tab:md5,9864f53ee8de98e6b3dd5bf644c3650f"
                 ]
             ],
-            [
-                "versions.yml:md5,9cd9b324968896fdc5b73426d7427930",
-                "versions.yml:md5,a52502c04d4db8ae4a0882b9fbbe30e0",
-                "versions.yml:md5,f21f8f18b50461bcd4b56352d9d35365"
-            ]
+            null
         ],
         "meta": {
             "nf-test": "0.9.3",
@@ -111,7 +107,7 @@
                 ]
             ],
             [
-                
+
             ],
             [
                 [
@@ -189,11 +185,7 @@
                     ]
                 ]
             ],
-            [
-                "versions.yml:md5,9cd9b324968896fdc5b73426d7427930",
-                "versions.yml:md5,a52502c04d4db8ae4a0882b9fbbe30e0",
-                "versions.yml:md5,f21f8f18b50461bcd4b56352d9d35365"
-            ]
+            null
         ],
         "meta": {
             "nf-test": "0.9.3",

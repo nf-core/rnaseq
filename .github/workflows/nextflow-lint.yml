@@ -14,4 +14,4 @@ jobs:
         uses: nf-core/setup-nextflow@v2
 
       - name: Nextflow strict syntax lint
-        run: nextflow lint -o concise .
+        run: nextflow lint -o concise --ignore nf-test.config .

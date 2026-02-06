@@ -52,7 +52,7 @@ input:
       description: Optionally report QC metrics
   - mark_duplicates:
       type: boolean
-      description: Optionally mark duplicates 
+      description: Optionally mark duplicates
 output:
   log_final:
     - - meta:
@@ -60,9 +60,9 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - "*Log.final.out":
+      - ${prefix}.Log.final.out: 
           type: file
-          description: STAR final log file
+          description: STAR log final out file
           pattern: "*Log.final.out"
           ontologies: []
   log_out:
@@ -87,20 +87,13 @@ output:
           description: STAR log progress file
           pattern: "*Log.progress.out"
           ontologies: []
-  versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
   bam:
     - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - "${prefix}.bam":
+      - ${prefix}.bam:
           type: file
           description: Output BAM file containing read alignments
           pattern: "*.{bam}"
@@ -111,7 +104,7 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - "${prefix}.bam.bai":
+      - ${prefix}.bam.bai:
           type: file
           description: Output BAM index file
           pattern: "*.{bam}.{bai}"
@@ -122,10 +115,10 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - ${prefix}.sortedByCoord.out.bam:
+      - "*.sortedByCoord.out.bam": 
           type: file
-          description: Sorted BAM file of read alignments (optional)
-          pattern: "*sortedByCoord.out.bam"
+          description: Output BAM file of read alignments sorted by coordinate (optional)
+          pattern: "*.sortedByCoord.out.bam"
           ontologies: []
   bam_sorted_aligned:
     - - meta:
@@ -133,9 +126,9 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - ${prefix}.Aligned.sortedByCoord.out.bam:
+      - "*.Aligned.sortedByCoord.out.bam": 
           type: file
-          description: Sorted BAM file of read alignments (optional)
+          description: Output BAM file of read alignments sorted by coordinate (optional)
           pattern: "*.Aligned.sortedByCoord.out.bam"
           ontologies: []
   bam_transcript:
@@ -258,10 +251,10 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - "*_qc_metrics":
-          type: file
-          description: Path of the directory where QC metrics will be generated. (optional)
-          pattern: "${prefix}_qc_metrics"
+      - ${prefix}_qc_metrics: 
+          type: directory
+          description: Directory containing QC metrics output by STAR (optional)
+          pattern: "*_qc_metrics"
           ontologies: []
   duplicate_metrics:
     - - meta:
@@ -269,11 +262,18 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - "*.duplicate-metrics.txt":
+      - ${prefix}.duplicate-metrics.txt: 
           type: file
-          description: Path of duplicate metrics file after marking duplicates. (optional)
-          pattern: "${prefix}.duplicate-metrics.txt"
+          description: File containing duplicate metrics output by STAR (optional)
+          pattern: "*.duplicate-metrics.txt"
           ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@gburnett-nvidia"
 maintainers:

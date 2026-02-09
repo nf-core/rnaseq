@@ -26,6 +26,7 @@ include { BOWTIE2_BUILD                     } from '../../../modules/nf-core/bow
 include { BBMAP_BBSPLIT                     } from '../../../modules/nf-core/bbmap/bbsplit'
 include { SORTMERNA as SORTMERNA_INDEX      } from '../../../modules/nf-core/sortmerna'
 include { STAR_GENOMEGENERATE               } from '../../../modules/nf-core/star/genomegenerate'
+include { STAR_GENOMEGENERATE as PARABRICKS_STARGENOMEGENERATE } from '../../../modules/nf-core/star/genomegenerate'
 include { HISAT2_EXTRACTSPLICESITES         } from '../../../modules/nf-core/hisat2/extractsplicesites'
 include { HISAT2_BUILD                      } from '../../../modules/nf-core/hisat2/build'
 include { SALMON_INDEX                      } from '../../../modules/nf-core/salmon/index'
@@ -39,7 +40,6 @@ include { PREPROCESS_TRANSCRIPTS_FASTA_GENCODE } from '../../../modules/local/pr
 include { GTF2BED                              } from '../../../modules/local/gtf2bed'
 include { GTF_FILTER                           } from '../../../modules/local/gtf_filter'
 include { STAR_GENOMEGENERATE_IGENOMES         } from '../../../modules/local/star_genomegenerate_igenomes'
-include { PARABRICKS_STARGENOMEGENERATE        } from '../../../modules/nf-core/parabricks/stargenomegenerate'
 
 workflow PREPARE_GENOME {
 
@@ -312,7 +312,6 @@ workflow PREPARE_GENOME {
                     ch_fasta.map { item -> [ [:], item ] },
                     ch_gtf.map   { item -> [ [:], item ] }
                 ).index.map { tuple -> tuple[1] }
-                ch_versions   = ch_versions.mix(PARABRICKS_STARGENOMEGENERATE.out.versions)
             } else {
                 ch_star_index = STAR_GENOMEGENERATE(
                     ch_fasta.map { item -> [ [:], item ] },

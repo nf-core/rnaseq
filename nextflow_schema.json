@@ -426,7 +426,8 @@
                 },
                 "use_parabricks_star": {
                     "type": "boolean",
-                    "description": "Optionally accelerate STAR and MarkDuplicates with Parabricks"
+                    "description": "Optionally accelerate STAR and MarkDuplicates with Parabricks",
+                    "fa_icon": "fas fa-running"
                 },
                 "pseudo_aligner": {
                     "type": "string",

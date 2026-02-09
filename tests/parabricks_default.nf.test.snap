@@ -50,6 +50,9 @@
                 "GUNZIP_GTF": {
                     "gunzip": 1.13
                 },
+                "PARABRICKS_RNA_FQ2BAM": {
+                    "parabricks": "4.6.0-1"
+                },
                 "PARABRICKS_STARGENOMEGENERATE": {
                     "gawk": "5.1.0",
                     "samtools": 1.21,
@@ -731,7 +734,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-02-06T12:49:02.463484411"
+        "timestamp": "2026-02-09T11:01:14.364447839"
     },
     "Params: parabricks star_salmon (with markdups) - stub": {
         "content": [
@@ -983,6 +986,9 @@
                 },
                 "GUNZIP_GTF": {
                     "gunzip": 1.13
+                },
+                "PARABRICKS_RNA_FQ2BAM": {
+                    "parabricks": "4.6.0-1"
                 },
                 "PARABRICKS_STARGENOMEGENERATE": {
                     "gawk": "5.1.0",
@@ -1608,6 +1614,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-02-06T12:52:12.256848625"
+        "timestamp": "2026-02-09T11:13:00.399098759"
     }
 }

@@ -23,14 +23,14 @@
                 "[Genome, SA, SAindex, chrLength.txt, chrName.txt, chrNameLength.txt, chrStart.txt, exonGeTrInfo.tab, exonInfo.tab, geneInfo.tab, genomeParameters.txt, sjdbInfo.txt, sjdbList.fromGTF.out.tab, sjdbList.out.tab, transcriptInfo.tab]"
             ],
             [
-                "versions.yml:md5,e23bff7c4966aad0e8f3a771f43fabc2"
+                
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.0"
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2026-02-06T11:08:37.000000000"
+        "timestamp": "2026-02-09T12:05:21.682389751"
     },
     "use_parabricks_star = true - stub": {
         "content": [
@@ -56,13 +56,13 @@
                 "genome.transcripts.fa:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
-                "versions.yml:md5,e23bff7c4966aad0e8f3a771f43fabc2"
+                
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.0"
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2026-02-06T11:07:04.000000000"
+        "timestamp": "2026-02-09T12:05:43.914011531"
     }
 }

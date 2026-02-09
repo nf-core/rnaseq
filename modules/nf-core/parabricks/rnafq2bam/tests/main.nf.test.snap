@@ -94,7 +94,11 @@
                     
                 ],
                 "19": [
-                    "versions.yml:md5,14e2c774c7104a002c6a53086745c17d"
+                    [
+                        "PARABRICKS_RNAFQ2BAM",
+                        "parabricks",
+                        "4.6.0-1"
+                    ]
                 ],
                 "2": [
                     [
@@ -334,8 +338,12 @@
                         ]
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,14e2c774c7104a002c6a53086745c17d"
+                "versions_parabricks": [
+                    [
+                        "PARABRICKS_RNAFQ2BAM",
+                        "parabricks",
+                        "4.6.0-1"
+                    ]
                 ],
                 "wig": [
                     [
@@ -352,7 +360,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-02-06T10:40:30.823801167"
+        "timestamp": "2026-02-09T09:28:46.515275982"
     },
     "homo_sapiens_chimeric - stub": {
         "content": [
@@ -449,7 +457,11 @@
                     
                 ],
                 "19": [
-                    "versions.yml:md5,14e2c774c7104a002c6a53086745c17d"
+                    [
+                        "PARABRICKS_RNAFQ2BAM",
+                        "parabricks",
+                        "4.6.0-1"
+                    ]
                 ],
                 "2": [
                     [
@@ -689,8 +701,12 @@
                         ]
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,14e2c774c7104a002c6a53086745c17d"
+                "versions_parabricks": [
+                    [
+                        "PARABRICKS_RNAFQ2BAM",
+                        "parabricks",
+                        "4.6.0-1"
+                    ]
                 ],
                 "wig": [
                     [
@@ -707,18 +723,19 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-02-06T11:39:51.415884787"
+        "timestamp": "2026-02-09T09:29:54.340122816"
     },
     "homo_sapiens": {
         "content": [
             "test.Log.final.out",
-            [
-                "versions.yml:md5,14e2c774c7104a002c6a53086745c17d"
-            ],
             {
-                "PARABRICKS_RNAFQ2BAM": {
-                    "pbrun": "4.6.0-1"
-                }
+                "versions_parabricks": [
+                    [
+                        "PARABRICKS_RNAFQ2BAM",
+                        "parabricks",
+                        "4.6.0-1"
+                    ]
+                ]
             },
             "220938db5c88cdfcb9d98e10630a9e31"
         ],
@@ -726,16 +743,20 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-02-06T10:40:20.129987214"
+        "timestamp": "2026-02-09T09:27:02.147122093"
     },
     "homo_sapiens_chimeric": {
         "content": [
             "220938db5c88cdfcb9d98e10630a9e31",
             "test.bam.bai",
-            "Chimeric.out.junction",
+            "test.Chimeric.out.junction",
             {
-                "versions": [
-                    "versions.yml:md5,14e2c774c7104a002c6a53086745c17d"
+                "versions_parabricks": [
+                    [
+                        "PARABRICKS_RNAFQ2BAM",
+                        "parabricks",
+                        "4.6.0-1"
+                    ]
                 ]
             }
         ],
@@ -743,6 +764,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-02-06T11:41:27.886492636"
+        "timestamp": "2026-02-09T09:29:44.105218347"
     }
 }

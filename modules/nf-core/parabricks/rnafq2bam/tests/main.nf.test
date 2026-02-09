@@ -63,8 +63,7 @@ nextflow_process {
                 { assert process.success },
                 { assert snapshot(
                     file(process.out.log_final[0][1]).name,
-                    process.out.versions,
-                    path(process.out.versions[0]).yaml,
+                    process.out.findAll { key, val -> key.startsWith('versions') },
                     bam(process.out.bam[0][1]).getReadsMD5()
                 ).match() }
             )

@@ -6,25 +6,25 @@ nextflow_workflow {
     config "./parabricks.config"
     tag "gpu"
 
-    test("parabricks star") {
-        setup {
-            run("PARABRICKS_STARGENOMEGENERATE") {
-                script "../../../../modules/nf-core/parabricks/stargenomegenerate/main.nf"
-                process {
-                    """
-                    input[0] = Channel.of([
-                        [ id:'test_fasta' ],
-                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
-                    ])
-                    input[1] = Channel.of([
-                        [ id:'test_gtf' ],
-                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
-                    ])
-                    """
-                }
+    setup {
+        run("STAR_GENOMEGENERATE", alias: "PARABRICKS_STARGENOMEGENERATE") {
+            script "../../../../modules/nf-core/star/genomegenerate/main.nf"
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test_fasta' ],
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                ])
+                input[1] = Channel.of([
+                    [ id:'test_gtf' ],
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                ])
+                """
             }
         }
+    }
 
+    test("parabricks star") {
         when {
             workflow {
                 """
@@ -86,24 +86,6 @@ nextflow_workflow {
 
     test("parabricks star - stub") {
         options "-stub"
-
-        setup {
-            run("PARABRICKS_STARGENOMEGENERATE") {
-                script "../../../../modules/nf-core/parabricks/stargenomegenerate/main.nf"
-                process {
-                    """
-                    input[0] = Channel.of([
-                        [ id:'test_fasta' ],
-                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
-                    ])
-                    input[1] = Channel.of([
-                        [ id:'test_gtf' ],
-                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
-                    ])
-                    """
-                }
-            }
-        }
 
         when {
             workflow {

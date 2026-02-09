@@ -103,7 +103,7 @@ jobs:
           # Skip parabricks/GPU tests on CPU runners
           SKIP_PARABRICKS: "true"
         with:
-          profile: ${{ matrix.profile }}
+          profile: test,${{ matrix.profile }}
           shard: ${{ matrix.shard }}
           total_shards: ${{ env.TOTAL_SHARDS }}
 

@@ -106,7 +106,7 @@ jobs:
           # Skip parabricks tests - requires NVIDIA GPU
           SKIP_PARABRICKS: true
         with:
-          profile: ${{ matrix.profile }},${{ matrix.archProfile }}
+          profile: test,${{ matrix.profile }},${{ matrix.archProfile }}
           shard: ${{ matrix.shard }}
           total_shards: ${{ env.TOTAL_SHARDS }}
 

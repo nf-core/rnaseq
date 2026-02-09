@@ -572,8 +572,6 @@
                 "star_salmon/deseq2_qc/size_factors/WT_REP2.txt",
                 "star_salmon/deseq2_qc/size_factors/deseq2.size_factors.RData",
                 "star_salmon/log",
-                "star_salmon/log/Log.out",
-                "star_salmon/log/Log.progress.out",
                 "star_salmon/log/RAP1_IAA_30M_REP1.Log.final.out",
                 "star_salmon/log/RAP1_UNINDUCED_REP1.Log.final.out",
                 "star_salmon/log/RAP1_UNINDUCED_REP2.Log.final.out",
@@ -707,8 +705,6 @@
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "cmd_info.json:md5,2b4664e1961d9fc7a5b26fe5bbc0f55b",
-                "Log.out:md5,bff08cabcec8fb3214ba621b6274adc0",
-                "Log.progress.out:md5,5b779d288c9b8c7db068a14e9eef24e0",
                 "SJ.out.tab:md5,1350c2fa6a675bf107386c6cd3fc5204",
                 "tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
             ]
@@ -1439,8 +1435,6 @@
                 "star_salmon/deseq2_qc/size_factors/WT_REP2.txt",
                 "star_salmon/deseq2_qc/size_factors/deseq2.size_factors.RData",
                 "star_salmon/log",
-                "star_salmon/log/Log.out",
-                "star_salmon/log/Log.progress.out",
                 "star_salmon/log/RAP1_IAA_30M_REP1.Log.final.out",
                 "star_salmon/log/RAP1_UNINDUCED_REP1.Log.final.out",
                 "star_salmon/log/RAP1_UNINDUCED_REP2.Log.final.out",
@@ -1570,8 +1564,6 @@
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "cmd_info.json:md5,2b4664e1961d9fc7a5b26fe5bbc0f55b",
-                "Log.out:md5,872019eb26d1ec9340586037b6cf9878",
-                "Log.progress.out:md5,9556c78596eec3b258bc23b972340252",
                 "SJ.out.tab:md5,1350c2fa6a675bf107386c6cd3fc5204",
                 "tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
             ]

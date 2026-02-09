@@ -16,8 +16,8 @@ process PARABRICKS_RNAFQ2BAM {
 
     output:
     tuple val(meta), path("${prefix}.Log.final.out"),           emit: log_final
-    tuple val(meta), path("*Log.out"),                          emit: log_out
-    tuple val(meta), path("*Log.progress.out"),                 emit: log_progress
+    tuple val(meta), path("${prefix}.Log.out"),                  emit: log_out
+    tuple val(meta), path("${prefix}.Log.progress.out"),        emit: log_progress
     tuple val(meta), path("${prefix}.bam"),                     emit: bam,                  optional:true
     tuple val(meta), path("${prefix}.bam.bai"),                 emit: bai,                  optional:true
     tuple val(meta), path("*.sortedByCoord.out.bam"),           emit: bam_sorted,           optional:true
@@ -61,6 +61,7 @@ process PARABRICKS_RNAFQ2BAM {
         --genome-lib-dir ${index} \\
         --out-bam ${prefix}.bam \\
         --logfile ${prefix}.Log.final.out \\
+        --out-prefix ${prefix}. \\
         ${num_gpus} \\
         ${qc_metrics_command} \\
         ${duplicate_metrics_command} \\

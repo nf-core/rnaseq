@@ -2,13 +2,13 @@
     "parabricks star": {
         "content": [
             "test.Log.final.out",
-            "Log.out",
+            "test.Log.out",
             "sorted_.bam.bai",
             "d5861e7d7a76e47e17bfaa03be48447c",
             [
                 
             ],
-            "Log.progress.out",
+            "test.Log.progress.out",
             [
                 
             ],
@@ -46,7 +46,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "SJ.out.tab:md5,9864f53ee8de98e6b3dd5bf644c3650f"
+                    "test.SJ.out.tab:md5,9864f53ee8de98e6b3dd5bf644c3650f"
                 ]
             ],
             null

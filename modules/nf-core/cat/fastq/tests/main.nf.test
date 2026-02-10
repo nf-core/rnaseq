@@ -7,6 +7,7 @@ nextflow_process {
     tag "modules_nfcore"
     tag "cat"
     tag "cat/fastq"
+    tag "gunzip"
 
     test("test_cat_fastq_single_end") {
 
@@ -88,6 +89,76 @@ nextflow_process {
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)]
                 ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("test_cat_fastq_single_end_uncompressed") {
+
+        setup {
+            run("GUNZIP") {
+                script "../../../gunzip/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of(
+                        [[ id:'r1' ], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)],
+                        [[ id:'r2' ], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)]
+                    )
+                    """
+                }
+            }
+        }
+
+        when {
+            process {
+                """
+                input[0] = GUNZIP.out.gunzip
+                    .toSortedList { a, b -> a[0].id <=> b[0].id }
+                    .map { items -> [[ id: 'test', single_end: true ], items.collect { it[1] }] }
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("test_cat_fastq_paired_end_uncompressed") {
+
+        setup {
+            run("GUNZIP") {
+                script "../../../gunzip/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of(
+                        [[ id:'a' ], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)],
+                        [[ id:'b' ], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)],
+                        [[ id:'c' ], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test2_1.fastq.gz', checkIfExists: true)],
+                        [[ id:'d' ], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test2_2.fastq.gz', checkIfExists: true)]
+                    )
+                    """
+                }
+            }
+        }
+
+        when {
+            process {
+                """
+                input[0] = GUNZIP.out.gunzip
+                    .toSortedList { a, b -> a[0].id <=> b[0].id }
+                    .map { items -> [[ id: 'test', single_end: false ], items.collect { it[1] }] }
                 """
             }
         }

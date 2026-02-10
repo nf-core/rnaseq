@@ -1,11 +1,12 @@
 //
 // Alignment with STAR
 //
-include { SENTIEON_STARALIGN as SENTIEON_STAR_ALIGN         } from '../../../modules/nf-core/sentieon/staralign/main'
-include { PARABRICKS_RNAFQ2BAM as PARABRICKS_RNA_FQ2BAM     } from '../../../modules/nf-core/parabricks/rnafq2bam/main'
-include { STAR_ALIGN                                        } from '../../../modules/nf-core/star/align'
-include { STAR_ALIGN_IGENOMES                               } from '../../../modules/local/star_align_igenomes'
-include { BAM_SORT_STATS_SAMTOOLS                           } from '../../nf-core/bam_sort_stats_samtools'
+include { SENTIEON_STARALIGN as SENTIEON_STAR_ALIGN } from '../../../modules/nf-core/sentieon/staralign/main'
+include { PARABRICKS_RNAFQ2BAM as PARABRICKS_RNA_FQ2BAM } from '../../../modules/nf-core/parabricks/rnafq2bam/main'
+include { STAR_ALIGN                                } from '../../../modules/nf-core/star/align'
+include { STAR_ALIGN as STAR_ALIGN_IGENOMES          } from '../../../modules/nf-core/star/align'
+include { BAM_SORT_STATS_SAMTOOLS                   } from '../../nf-core/bam_sort_stats_samtools'
+
 
 //
 // Function that parses and returns the alignment rate from the STAR log output

@@ -39,7 +39,7 @@ include { SENTIEON_RSEMPREPAREREFERENCE as SENTIEON_MAKE_TRANSCRIPTS_FASTA      
 include { PREPROCESS_TRANSCRIPTS_FASTA_GENCODE } from '../../../modules/local/preprocess_transcripts_fasta_gencode'
 include { GTF2BED                              } from '../../../modules/local/gtf2bed'
 include { GTF_FILTER                           } from '../../../modules/local/gtf_filter'
-include { STAR_GENOMEGENERATE_IGENOMES         } from '../../../modules/local/star_genomegenerate_igenomes'
+include { STAR_GENOMEGENERATE as STAR_GENOMEGENERATE_IGENOMES } from '../../../modules/nf-core/star/genomegenerate'
 
 workflow PREPARE_GENOME {
 
@@ -306,7 +306,10 @@ workflow PREPARE_GENOME {
                 is_aws_igenome = true
             }
             if (is_aws_igenome) {
-                ch_star_index = STAR_GENOMEGENERATE_IGENOMES(ch_fasta, ch_gtf).index
+                ch_star_index = STAR_GENOMEGENERATE_IGENOMES(
+                    ch_fasta.map { item -> [ [:], item ] },
+                    ch_gtf.map   { item -> [ [:], item ] }
+                ).index.map { tuple -> tuple[1] }
             } else if (use_parabricks_star) {
                 ch_star_index = PARABRICKS_STARGENOMEGENERATE(
                     ch_fasta.map { item -> [ [:], item ] },

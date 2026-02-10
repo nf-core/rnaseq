@@ -1,9 +1,10 @@
 name: cat_fastq
-description: Concatenates fastq files
+description: Concatenates fastq files. Supports both compressed (.gz) and uncompressed inputs; uncompressed files are automatically gzip-compressed during concatenation.
 keywords:
   - cat
   - fastq
   - concatenate
+  - compress
 tools:
   - cat:
       description: |
@@ -21,6 +22,7 @@ input:
         type: file
         description: |
           List of input FastQ files to be concatenated.
+          Accepts both gzip-compressed (.fastq.gz) and uncompressed (.fastq) files.
         ontologies: []
 output:
   reads:

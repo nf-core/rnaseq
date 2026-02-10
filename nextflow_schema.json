@@ -236,6 +236,13 @@
                     "hidden": true,
                     "help_text": "Prevent loading of `igenomes.config` when running the pipeline. Use this option if you encounter conflicts between custom parameters and those in the iGenomes configuration."
                 },
+                "arm": {
+                    "type": "boolean",
+                    "description": "Use ARM architecture containers.",
+                    "fa_icon": "fas fa-microchip",
+                    "hidden": true,
+                    "help_text": "Set automatically by the arm64 profile. When enabled, skips loading default x86_64 iGenomes STAR container overrides in favour of ARM-specific containers from conf/arm.config."
+                },
                 "igenomes_base": {
                     "type": "string",
                     "format": "directory-path",

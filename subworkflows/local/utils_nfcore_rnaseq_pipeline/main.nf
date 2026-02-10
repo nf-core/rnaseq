@@ -199,6 +199,12 @@ def checkSamplesAfterGrouping(input) {
         error("Please check input samplesheet -> Multiple runs of a sample must be of the same datatype i.e. single-end or paired-end: ${metas[0].id}")
     }
 
+    // Check that multiple runs of the same sample are not mixed compressed/uncompressed
+    def compression_ok = fastqs.flatten().collect{ fq -> fq.name.endsWith('.gz') }.unique().size == 1
+    if (!compression_ok) {
+        error("Please check input samplesheet -> Multiple runs of a sample must not mix compressed and uncompressed FASTQ files: ${metas[0].id}")
+    }
+
     // Return format depends on whether BAM data was provided
     if (genome_bams != null || transcriptome_bams != null) {
         def genome_bam = genome_bams?.find { bam -> bam != null }

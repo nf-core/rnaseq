@@ -157,9 +157,9 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
 
     ch_reads
         .branch { meta, fastqs ->
-            single: fastqs.size() == 1
+            single: fastqs.size() == 1 && fastqs.flatten()[0].name.endsWith('.gz')
             return [meta, fastqs.flatten()]
-            multiple: fastqs.size() > 1
+            multiple: true
             return [meta, fastqs.flatten()]
         }
         .set { ch_fastq }

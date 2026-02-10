@@ -3,7 +3,7 @@
 //
 include { SENTIEON_STARALIGN as SENTIEON_STAR_ALIGN } from '../../../modules/nf-core/sentieon/staralign/main'
 include { STAR_ALIGN                                } from '../../../modules/nf-core/star/align'
-include { STAR_ALIGN_IGENOMES                       } from '../../../modules/local/star_align_igenomes'
+include { STAR_ALIGN as STAR_ALIGN_IGENOMES          } from '../../../modules/nf-core/star/align'
 include { BAM_SORT_STATS_SAMTOOLS                   } from '../../nf-core/bam_sort_stats_samtools'
 
 

@@ -283,10 +283,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    [
-                        "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
+                    "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                 ]
             ],
             [
@@ -299,7 +296,7 @@
                 ]
             ],
             [
-                
+
             ],
             [
                 [

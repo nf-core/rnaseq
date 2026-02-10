@@ -241,7 +241,7 @@
                     "description": "Use ARM architecture containers.",
                     "fa_icon": "fas fa-microchip",
                     "hidden": true,
-                    "help_text": "Set automatically by the arm64 profile. When enabled, skips loading default x86_64 iGenomes STAR container overrides in favour of ARM-specific containers from conf/arm.config."
+                    "help_text": "Set automatically by the arm64 profile. Signals ARM architecture so that container closures can select ARM-compatible images where needed (e.g. STAR 2.6.1d in nf-test configs)."
                 },
                 "igenomes_base": {
                     "type": "string",

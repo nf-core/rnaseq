@@ -150,6 +150,98 @@
         },
         "timestamp": "2025-12-10T14:32:06.262192935"
     },
+    "test_cat_fastq_single_end_uncompressed": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.merged.fastq.gz:md5,ee314a9bd568d06617171b0c85f508da"
+                    ]
+                ],
+                "1": [
+                    [
+                        "CAT_FASTQ",
+                        "cat",
+                        "9.5"
+                    ]
+                ],
+                "reads": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.merged.fastq.gz:md5,ee314a9bd568d06617171b0c85f508da"
+                    ]
+                ],
+                "versions_cat": [
+                    [
+                        "CAT_FASTQ",
+                        "cat",
+                        "9.5"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-02-09T10:03:24.344628"
+    },
+    "test_cat_fastq_paired_end_uncompressed": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test_1.merged.fastq.gz:md5,3ad9406595fafec8172368f9cd0b6a22",
+                            "test_2.merged.fastq.gz:md5,a52cab0b840c7178b0ea83df1fdbe8d5"
+                        ]
+                    ]
+                ],
+                "1": [
+                    [
+                        "CAT_FASTQ",
+                        "cat",
+                        "9.5"
+                    ]
+                ],
+                "reads": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test_1.merged.fastq.gz:md5,3ad9406595fafec8172368f9cd0b6a22",
+                            "test_2.merged.fastq.gz:md5,a52cab0b840c7178b0ea83df1fdbe8d5"
+                        ]
+                    ]
+                ],
+                "versions_cat": [
+                    [
+                        "CAT_FASTQ",
+                        "cat",
+                        "9.5"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-02-09T10:03:37.568053"
+    },
     "test_cat_fastq_single_end": {
         "content": [
             {

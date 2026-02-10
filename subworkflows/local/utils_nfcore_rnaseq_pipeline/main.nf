@@ -297,6 +297,10 @@ def validateInputParameters() {
         error("Parabricks (--use_parabricks_star) is not supported on ARM architecture. Parabricks requires an x86_64 host with NVIDIA GPUs.")
     }
 
+    if (params.use_parabricks_star && params.use_sentieon_star) {
+        error("Cannot use both --use_parabricks_star and --use_sentieon_star. Please choose one accelerator.")
+    }
+
     if (params.with_umi && !params.skip_umi_extract) {
         if (!params.umitools_bc_pattern && !params.umitools_bc_pattern2) {
             error("UMI-tools requires a barcode pattern to extract barcodes from the reads.")

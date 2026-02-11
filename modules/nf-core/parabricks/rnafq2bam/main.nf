@@ -35,7 +35,7 @@ process PARABRICKS_RNAFQ2BAM {
     tuple val(meta), path("${prefix}_qc_metrics"),                              emit: qc_metrics,           optional:true
     tuple val(meta), path("${prefix}.duplicate-metrics.txt"),                   emit: duplicate_metrics,    optional:true
     tuple val("${task.process}"), val("parabricks"), eval("pbrun version 2>&1 | grep -Po '(?<=^pbrun: ).*'"),   emit: versions_parabricks,  topic: versions
-    
+
     when:
     task.ext.when == null || task.ext.when
 
@@ -75,8 +75,8 @@ process PARABRICKS_RNAFQ2BAM {
         error("Parabricks module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
     prefix = task.ext.prefix ?: "${meta.id}"
-    def qc_metrics_output = args.contains("--out-qc-metrics-dir") ? "mkdir ${prefix}_qc_metrics" : ""
-    def duplicate_metrics_output = args.contains("--out-duplicate-metrics") ? "touch ${prefix}.duplicate-metrics.txt" : ""
+    def qc_metrics_output = qc_metrics ? "mkdir ${prefix}_qc_metrics" : ""
+    def duplicate_metrics_output = mark_duplicates ? "touch ${prefix}.duplicate-metrics.txt" : ""
     """
     echo "" | gzip > ${prefix}.unmapped_1.fastq.gz
     echo "" | gzip > ${prefix}.unmapped_2.fastq.gz

@@ -4,17 +4,17 @@ nextflow_process {
     script "../main.nf"
     process "PARABRICKS_RNAFQ2BAM"
 
-    tag "gpu"
+    tag "gpu_highmem"
     tag "modules"
     tag "modules_nfcore"
     tag "parabricks"
     tag "parabricks/rnafq2bam"
-    tag "parabricks/stargenomegenerate"
+    tag "star/genomegenerate"
 
     setup {
 
-        run("PARABRICKS_STARGENOMEGENERATE") {
-            script "../../stargenomegenerate/main.nf"
+        run("STAR_GENOMEGENERATE") {
+            script "../../../star/genomegenerate/main.nf"
             process {
                 """
                 input[0] = [
@@ -43,7 +43,7 @@ nextflow_process {
             }
             process {
                 """
-                 input[0] = Channel.of([
+                input[0] = Channel.of([
                     [ id:'test', single_end:true ], // meta map
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/test_starfusion_rnaseq_1.fastq.gz', checkIfExists: true) ]
                 ])
@@ -51,7 +51,7 @@ nextflow_process {
                     [ id:'test' ], // meta map
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
                 ])
-                input[2] = PARABRICKS_STARGENOMEGENERATE.out.index
+                input[2] = STAR_GENOMEGENERATE.out.index
                 input[3] = false
                 input[4] = false
                 """
@@ -89,7 +89,7 @@ nextflow_process {
                     [ id:'test' ], // meta map
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/minigenome.fa', checkIfExists: true)
                 ])
-                input[2] = PARABRICKS_STARGENOMEGENERATE.out.index
+                input[2] = STAR_GENOMEGENERATE.out.index
                 input[3] = false
                 input[4] = false
                 """
@@ -125,7 +125,7 @@ nextflow_process {
                     [ id:'test' ], // meta map
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
                 ])
-                input[2] = PARABRICKS_STARGENOMEGENERATE.out.index
+                input[2] = STAR_GENOMEGENERATE.out.index
                 input[3] = false
                 input[4] = false
                 """
@@ -164,7 +164,7 @@ nextflow_process {
                     [ id:'test' ], // meta map
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
                 ])
-                input[2] = PARABRICKS_STARGENOMEGENERATE.out.index
+                input[2] = STAR_GENOMEGENERATE.out.index
                 input[3] = false
                 input[4] = false
                 """

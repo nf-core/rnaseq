@@ -301,6 +301,10 @@ def validateInputParameters() {
         error("Cannot use both --use_parabricks_star and --use_sentieon_star. Please choose one accelerator.")
     }
 
+    if (params.use_parabricks_star && (params.prokaryotic ?: false)) {
+        error("Parabricks rna_fq2bam does not support --sjdbGTFfeatureExon CDS, which is required for prokaryotic alignment. Please use standard STAR instead.")
+    }
+
     if (params.with_umi && !params.skip_umi_extract) {
         if (!params.umitools_bc_pattern && !params.umitools_bc_pattern2) {
             error("UMI-tools requires a barcode pattern to extract barcodes from the reads.")

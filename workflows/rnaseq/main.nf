@@ -265,11 +265,13 @@ workflow RNASEQ {
         ch_unaligned_sequences           = ALIGN_STAR.out.fastq
         ch_multiqc_files                 = ch_multiqc_files.mix(ch_star_log.collect{ tuple -> tuple[1] })
 
-        if (!params.with_umi && params.skip_markduplicates) {
+        if (!params.with_umi && (params.skip_markduplicates || params.use_parabricks_star)) {
             // The deduplicated stats should take priority for MultiQC, but use
             // them straight out of the aligner otherwise. If mark duplicates
             // will run, those stats will be added later instead to avoid
             // duplicate flagstat files in MultiQC.
+            // When Parabricks handles markduplicates internally, Picard is
+            // skipped, so we also need to add alignment stats here.
 
             ch_multiqc_files = ch_multiqc_files
                 .mix(ALIGN_STAR.out.stats.collect{ tuple -> tuple[1] })

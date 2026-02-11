@@ -4,7 +4,7 @@ nextflow_pipeline {
     script "../main.nf"
     tag "pipeline"
     tag "parabricks"
-    tag "gpu"
+    tag "gpu_highmem"
 
     test("Params: parabricks star_salmon (no markdups)") {
 

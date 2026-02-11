@@ -4,7 +4,7 @@ nextflow_workflow {
     script "../main.nf"
     workflow "ALIGN_STAR"
     config "./parabricks.config"
-    tag "gpu"
+    tag "gpu_highmem"
 
     setup {
         run("STAR_GENOMEGENERATE", alias: "PARABRICKS_STARGENOMEGENERATE") {

@@ -49,7 +49,7 @@ jobs:
         env:
           NFT_VER: ${{ env.NFT_VER }}
         with:
-          tags: "gpu,gpu_highmem"
+          tags: "gpu"
           max_shards: 2
 
       - name: Set outputs
@@ -60,8 +60,8 @@ jobs:
 
   nf-test-gpu:
     needs: [get-shards]
-    runs-on: "runs-on=${{ github.run_id }}/family=${{ matrix.runner }}/image=ubuntu24-gpu-x64"
-    name: "GPU Test | ${{ matrix.runner }} | ${{ matrix.profile }} | ${{ matrix.shard }} | ${{ matrix.NXF_VER }} | ${{ matrix.filters }}"
+    runs-on: "runs-on=${{ github.run_id }}/family=g5.2xlarge/image=ubuntu24-gpu-x64"
+    name: "GPU Test | ${{ matrix.profile }} | ${{ matrix.shard }} | ${{ matrix.NXF_VER }} | ${{ matrix.filters }}"
     env:
       NXF_VER: ${{ matrix.NXF_VER }}
 
@@ -81,11 +81,6 @@ jobs:
         NXF_VER:
           - "25.04.0"
         filters: [pipeline]
-        include:
-          - runner: g4dn.xlarge
-            tag: gpu
-          - runner: g4dn.2xlarge
-            tag: gpu_highmem
 
     steps:
       - name: Check out pipeline code
@@ -104,7 +99,7 @@ jobs:
           shard: ${{ matrix.shard }}
           total_shards: ${{ needs.get-shards.outputs.total_shards }}
           filters: ${{ matrix.filters }}
-          tags: ${{ matrix.tag }}
+          tags: "gpu"
 
   confirm-pass-gpu:
     runs-on:

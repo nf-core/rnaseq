@@ -1,30 +1,30 @@
 nextflow_workflow {
 
-    name "Test Subworkflow ALIGN_STAR - Sentieon"
+    name "Test Subworkflow ALIGN_STAR - Parabricks"
     script "../main.nf"
     workflow "ALIGN_STAR"
-    config "./sentieon.config"
+    config "./parabricks.config"
+    tag "gpu"
 
-    test("sentieon star - no igenomes") {
-        tag "sentieon"
-        setup {
-            run("STAR_GENOMEGENERATE") {
-                script "../../../../modules/nf-core/star/genomegenerate/main.nf"
-                process {
-                    """
-                    input[0] = Channel.of([
-                        [ id:'test_fasta' ],
-                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
-                    ])
-                    input[1] = Channel.of([
-                        [ id:'test_gtf' ],
-                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
-                    ])
-                    """
-                }
+    setup {
+        run("STAR_GENOMEGENERATE", alias: "PARABRICKS_STARGENOMEGENERATE") {
+            script "../../../../modules/nf-core/star/genomegenerate/main.nf"
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test_fasta' ],
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                ])
+                input[1] = Channel.of([
+                    [ id:'test_gtf' ],
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                ])
+                """
             }
         }
+    }
 
+    test("parabricks star") {
         when {
             workflow {
                 """
@@ -32,9 +32,9 @@ nextflow_workflow {
                 seq_platform        = 'illumina'
                 seq_center          = false
                 is_aws_igenome      = false
-                use_sentieon_star    = true
-                use_parabricks_star  = false
-                skip_markduplicates  = false
+                use_sentieon_star   = false
+                use_parabricks_star = true
+                skip_markduplicates = false
 
                 input[0] = Channel.of([
                     [ id:'test', single_end:false ], // meta map
@@ -43,7 +43,7 @@ nextflow_workflow {
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
                 ])
-                input[1] = STAR_GENOMEGENERATE.out.index
+                input[1] = PARABRICKS_STARGENOMEGENERATE.out.index
                 input[2] = Channel.of([
                     [ id:'test_gtf' ],
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
@@ -72,38 +72,20 @@ nextflow_workflow {
                     file(workflow.out.bai[0][1]).name,
                     bam(workflow.out.bam[0][1]).getReadsMD5(),
                     workflow.out.csi,
-                    workflow.out.log_progress,
+                    file(workflow.out.log_progress[0][1]).name,
                     workflow.out.fastq,
                     workflow.out.flagstat,
                     workflow.out.idxstats,
                     bam(workflow.out.orig_bam[0][1]).getReadsMD5(),
                     workflow.out.stats,
-                    workflow.out.tab).match()}
+                    workflow.out.tab,
+                    workflow.out.versions).match()}
             )
         }
     }
 
-    test("sentieon star - no igenomes - stub") {
-        tag "sentieon"
+    test("parabricks star - stub") {
         options "-stub"
-
-        setup {
-            run("STAR_GENOMEGENERATE") {
-                script "../../../../modules/nf-core/star/genomegenerate/main.nf"
-                process {
-                    """
-                    input[0] = Channel.of([
-                        [ id:'test_fasta' ],
-                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
-                    ])
-                    input[1] = Channel.of([
-                        [ id:'test_gtf' ],
-                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
-                    ])
-                    """
-                }
-            }
-        }
 
         when {
             workflow {
@@ -112,9 +94,9 @@ nextflow_workflow {
                 seq_platform        = 'illumina'
                 seq_center          = false
                 is_aws_igenome      = false
-                use_sentieon_star    = true
-                use_parabricks_star  = false
-                skip_markduplicates  = false
+                use_sentieon_star   = false
+                use_parabricks_star = true
+                skip_markduplicates = false
 
                 input[0] = Channel.of([
                     [ id:'test', single_end:false ], // meta map
@@ -123,7 +105,7 @@ nextflow_workflow {
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
                 ])
-                input[1] = STAR_GENOMEGENERATE.out.index
+                input[1] = PARABRICKS_STARGENOMEGENERATE.out.index
                 input[2] = Channel.of([
                     [ id:'test_gtf' ],
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
@@ -159,7 +141,8 @@ nextflow_workflow {
                     workflow.out.log_progress,
                     workflow.out.orig_bam,
                     workflow.out.stats,
-                    workflow.out.tab).match()}
+                    workflow.out.tab,
+                    workflow.out.versions).match()}
             )
         }
     }

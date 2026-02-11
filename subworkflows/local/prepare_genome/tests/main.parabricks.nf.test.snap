@@ -1,0 +1,68 @@
+{
+    "use_parabricks_star = true": {
+        "content": [
+            [
+                "genome.transcripts.fa:md5,adf2cb5733dd37ea27dead3b99ec7726"
+            ],
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/genome.fasta"
+            ],
+            [
+                "genes_with_empty_tid.filtered.gtf:md5,ef6fccd153a21c329670462d602ed2d0"
+            ],
+            [
+                "genome.fasta.fai:md5,2cd76d936cbfa386b14154506c2041b2"
+            ],
+            [
+                "genes_with_empty_tid.filtered.bed:md5,e507dc33673e76c32abe344f4dc07952"
+            ],
+            [
+                "genome.fasta.sizes:md5,29218009212157c49dbc6596621ec780"
+            ],
+            [
+                "[Genome, SA, SAindex, chrLength.txt, chrName.txt, chrNameLength.txt, chrStart.txt, exonGeTrInfo.tab, exonInfo.tab, geneInfo.tab, genomeParameters.txt, sjdbInfo.txt, sjdbList.fromGTF.out.tab, sjdbList.out.tab, transcriptInfo.tab]"
+            ],
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-09T12:05:21.682389751"
+    },
+    "use_parabricks_star = true - stub": {
+        "content": [
+            [
+                "genome.fasta.sizes:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome.fasta.fai:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/genome.fasta"
+            ],
+            [
+                "genome.filtered.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "genome.filtered.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "[Genome, Log.out, SA, SAindex, chrLength.txt, chrName.txt, chrNameLength.txt, chrStart.txt, exonGeTrInfo.tab, exonInfo.tab, geneInfo.tab, genomeParameters.txt, sjdbInfo.txt, sjdbList.fromGTF.out.tab, sjdbList.out.tab, transcriptInfo.tab]"
+            ],
+            [
+                "genome.transcripts.fa:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-09T12:05:43.914011531"
+    }
+}

@@ -251,7 +251,9 @@ workflow RNASEQ {
             params.seq_center ?: '',
             is_aws_igenome,
             ch_fasta.map { item -> [ [:], item ] },
-            params.use_sentieon_star
+            params.use_sentieon_star,
+            params.use_parabricks_star,
+            params.skip_markduplicates
         )
 
         ch_genome_bam                    = ch_genome_bam.mix(ALIGN_STAR.out.bam)
@@ -263,11 +265,13 @@ workflow RNASEQ {
         ch_unaligned_sequences           = ALIGN_STAR.out.fastq
         ch_multiqc_files                 = ch_multiqc_files.mix(ch_star_log.collect{ tuple -> tuple[1] })
 
-        if (!params.with_umi && params.skip_markduplicates) {
+        if (!params.with_umi && (params.skip_markduplicates || params.use_parabricks_star)) {
             // The deduplicated stats should take priority for MultiQC, but use
             // them straight out of the aligner otherwise. If mark duplicates
             // will run, those stats will be added later instead to avoid
             // duplicate flagstat files in MultiQC.
+            // When Parabricks handles markduplicates internally, Picard is
+            // skipped, so we also need to add alignment stats here.
 
             ch_multiqc_files = ch_multiqc_files
                 .mix(ALIGN_STAR.out.stats.collect{ tuple -> tuple[1] })
@@ -477,7 +481,10 @@ workflow RNASEQ {
     //
     // SUBWORKFLOW: Mark duplicate reads
     //
-    if (!params.skip_markduplicates && !params.with_umi) {
+
+    // Some tools (Ex. Parabricks) may have already run marked duplicates during alignment
+    def markdups_done = !params.skip_markduplicates && params.use_parabricks_star
+    if (!params.skip_markduplicates && !params.with_umi && !markdups_done) {
         BAM_MARKDUPLICATES_PICARD (
             ch_genome_bam,
             ch_fasta.map { item -> [ [:], item ] },

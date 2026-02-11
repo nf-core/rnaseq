@@ -116,6 +116,11 @@
                         "git_sha": "80cba9452fb1e9bb79884976fa1ca0e671949aa2",
                         "installed_by": ["modules"]
                     },
+                    "parabricks/rnafq2bam": {
+                        "branch": "master",
+                        "git_sha": "0c44f69eefe8a8c373c7cdd9528b3e1d60cb895f",
+                        "installed_by": ["modules"]
+                    },
                     "picard/markduplicates": {
                         "branch": "master",
                         "git_sha": "66d5808eaaabd9de8997c4c31a9e8cdd3b56c080",

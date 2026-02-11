@@ -26,6 +26,7 @@ include { BOWTIE2_BUILD                     } from '../../../modules/nf-core/bow
 include { BBMAP_BBSPLIT                     } from '../../../modules/nf-core/bbmap/bbsplit'
 include { SORTMERNA as SORTMERNA_INDEX      } from '../../../modules/nf-core/sortmerna'
 include { STAR_GENOMEGENERATE               } from '../../../modules/nf-core/star/genomegenerate'
+include { STAR_GENOMEGENERATE as PARABRICKS_STARGENOMEGENERATE } from '../../../modules/nf-core/star/genomegenerate'
 include { HISAT2_EXTRACTSPLICESITES         } from '../../../modules/nf-core/hisat2/extractsplicesites'
 include { HISAT2_BUILD                      } from '../../../modules/nf-core/hisat2/build'
 include { SALMON_INDEX                      } from '../../../modules/nf-core/salmon/index'
@@ -71,6 +72,7 @@ workflow PREPARE_GENOME {
     skip_alignment           // boolean: Skip all of the alignment-based processes within the pipeline
     skip_pseudo_alignment    // boolean: Skip all of the pseudoalignment-based processes within the pipeline
     use_sentieon_star        // boolean: whether to use sentieon STAR version
+    use_parabricks_star      // boolean: whether to use parabricks STAR version
 
     main:
     // Versions collector
@@ -305,6 +307,11 @@ workflow PREPARE_GENOME {
             }
             if (is_aws_igenome) {
                 ch_star_index = STAR_GENOMEGENERATE_IGENOMES(
+                    ch_fasta.map { item -> [ [:], item ] },
+                    ch_gtf.map   { item -> [ [:], item ] }
+                ).index.map { tuple -> tuple[1] }
+            } else if (use_parabricks_star) {
+                ch_star_index = PARABRICKS_STARGENOMEGENERATE(
                     ch_fasta.map { item -> [ [:], item ] },
                     ch_gtf.map   { item -> [ [:], item ] }
                 ).index.map { tuple -> tuple[1] }

@@ -218,7 +218,7 @@ workflow RNASEQ {
             ch_star_index.map { [ [:], it ] },
             ch_gtf.map { [ [:], it ] },
             params.star_ignore_sjdbgtf,
-            '',
+            params.seq_platform ?: '',
             params.seq_center ?: '',
             is_aws_igenome,
             ch_fasta.map { [ [:], it ] },

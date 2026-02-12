@@ -3,6 +3,72 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## dev - xxxx-xx-xx
+
+### Credits
+
+Special thanks to the following for their contributions to the release:
+
+- [Albert Palleja](https://github.com/apalleja)
+- [Chase Mateusiak](https://github.com/cmatKhan)
+- [Elad Herz](https://github.com/EladH1)
+- [Ezra Greenberg](https://github.com/egreenberg7)
+- [Gary Burnett](https://github.com/gburnett-nvidia)
+- [Juliana Assis](https://github.com/Juassis)
+- [Marine Cambon](https://github.com/marccamb)
+- [Matthias Zepper](https://github.com/MatthiasZepper)
+- [Sebastian Schulz](https://github.com/sebschulz1)
+
+### Enhancements and fixes
+
+- [PR #1616](https://github.com/nf-core/rnaseq/pull/1616) - Add Sylph for contamination detection.
+- [PR #1663](https://github.com/nf-core/rnaseq/pull/1663) - Bump version after release 3.22.2
+- [PR #1664](https://github.com/nf-core/rnaseq/pull/1664) - Add support for multiple rRNA removal tools (`--ribo_removal_tool`): SortMeRNA (default), Bowtie2, and RiboDetector; enable BBSplit MultiQC reporting; add paired-end read grouping in MultiQC
+- [PR #1665](https://github.com/nf-core/rnaseq/pull/1665) - Bulk update modules/subworkflows; replace CUSTOM_GETCHROMSIZES with SAMTOOLS_FAIDX; update RSEQC modules with Wave containers for ARM compatibility; update ARM containers for RSEQC and UMITOOLS
+- [PR #1667](https://github.com/nf-core/rnaseq/pull/1667) - Enhance RSEM output exports and remove unnecessary star_rsem check
+- [PR #1669](https://github.com/nf-core/rnaseq/pull/1669) - Enable SeqKit stats MultiQC module for RiboDetector rRNA removal
+- [PR #1672](https://github.com/nf-core/rnaseq/pull/1672) - Document star_rsem STAR aligner settings and customization
+- [PR #1677](https://github.com/nf-core/rnaseq/pull/1677) - Apply Nextflow 25 strict syntax fixes
+- [PR #1685](https://github.com/nf-core/rnaseq/pull/1685) - Add GPU-accelerated STAR alignment and mark duplicates using NVIDIA Parabricks rna_fq2bam (`--use_parabricks_star`)
+- [PR #1686](https://github.com/nf-core/rnaseq/pull/1686) - Add support for uncompressed FASTQ input files ([#1343](https://github.com/nf-core/rnaseq/issues/1343))
+- [PR #1687](https://github.com/nf-core/rnaseq/pull/1687) - Fix PREPARE_GENOME tests: use single aligner values, correct aligner assignments for index-specific tests, add Kallisto test, remove ineffective Sentieon tests, use file-names-only snapshots for all non-deterministic indices (STAR, Salmon, Kallisto, RSEM, HISAT2)
+- [PR #1688](https://github.com/nf-core/rnaseq/pull/1688) - Significantly improved prokaryotic RNA-seq support: new `-profile prokaryotic` for bacterial/archaeal data with Bowtie2+Salmon alignment, GFFREAD transcript extraction for CDS-only annotations, and automatic STAR CDS configuration. We would like to thank [Juliana Assis](https://github.com/Juassis), [Sebastian Schulz](https://github.com/sebschulz1), [Albert Palleja](https://github.com/apalleja) and [Marine Cambon](https://github.com/marccamb) for their [recommendations and extensive testing](https://github.com/nf-core/rnaseq/issues/1512).
+- [PR #1689](https://github.com/nf-core/rnaseq/pull/1689) - Migrate to topic-based version reporting for nf-core modules/subworkflows and local modules
+- [PR #1694](https://github.com/nf-core/rnaseq/pull/1694) - Replace local iGenomes STAR modules with nf-core module aliases and config-based container overrides
+- [PR #1696](https://github.com/nf-core/rnaseq/pull/1696) - Fix offline mode by skipping `igenomes_base` validation when `NXF_OFFLINE=true` ([#1690](https://github.com/nf-core/rnaseq/issues/1690))
+
+### Parameters
+
+| Old parameter | New parameter                |
+| ------------- | ---------------------------- |
+|               | `--ribo_removal_tool`        |
+|               | `--sylph_db`                 |
+|               | `--sylph_taxonomy`           |
+|               | `--gffread_transcript_fasta` |
+|               | `--extra_bowtie2_align_args` |
+|               | `--use_parabricks_star`      |
+
+> **NB:** Parameter has been **added** if just the new parameter information is present.
+
+### Profiles
+
+| Profile       | Description                                            |
+| ------------- | ------------------------------------------------------ |
+| `prokaryotic` | Settings optimized for bacterial/archaeal RNA-seq data |
+
+### Software dependencies
+
+| Dependency  | Old version | New version |
+| ----------- | ----------- | ----------- |
+| `sylph`     |             | 0.7.0       |
+| `sylph-tax` |             | 1.2.0       |
+
+> **NB:** Dependency has been **updated** if both old and new version information is present.
+>
+> **NB:** Dependency has been **added** if just the new version information is present.
+>
+> **NB:** Dependency has been **removed** if new version information isn't present.
+
 ## [[3.22.2](https://github.com/nf-core/rnaseq/releases/tag/3.22.2)] - 2025-12-11
 
 ### Credits

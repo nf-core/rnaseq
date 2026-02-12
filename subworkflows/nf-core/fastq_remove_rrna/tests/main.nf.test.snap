@@ -1,0 +1,55 @@
+{
+    "homo_sapiens single-end [fastq] bowtie2": {
+        "content": [
+            "bdea4e3bbdbb7c301ff578b9d8976fb6"
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-03T16:41:53.175993721"
+    },
+    "homo_sapiens single-end [fastq] sortmerna": {
+        "content": [
+            "bdea4e3bbdbb7c301ff578b9d8976fb6"
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-01-19T15:59:26.891896799"
+    },
+    "homo_sapiens paired-end [fastq] sortmerna": {
+        "content": [
+            "bdea4e3bbdbb7c301ff578b9d8976fb6",
+            "1b83618177abebeb38c29d2258efdd4f"
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-01-19T15:58:00.962491308"
+    },
+    "homo_sapiens paired-end [fastq] ribodetector": {
+        "content": [
+            "ec0260bcdeef6af8a9b6d470eafb5603",
+            "a0ef8564218df5741dee81f03db13600"
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-03T13:31:06.238303048"
+    },
+    "homo_sapiens paired-end [fastq] bowtie2": {
+        "content": [
+            "4ef4e259208497288aaefaa88770975d",
+            "63198a2af4a4a8fb949b01a8b2c4cb7c"
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-03T16:41:41.386593991"
+    }
+}

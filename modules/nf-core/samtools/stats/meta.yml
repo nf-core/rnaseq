@@ -27,10 +27,12 @@ input:
         type: file
         description: BAM/CRAM file from alignment
         pattern: "*.{bam,cram}"
+        ontologies: []
     - input_index:
         type: file
         description: BAI/CRAI file from alignment
         pattern: "*.{bai,crai}"
+        ontologies: []
   - - meta2:
         type: map
         description: |
@@ -40,9 +42,10 @@ input:
         type: file
         description: Reference file the CRAM was created with (optional)
         pattern: "*.{fasta,fa}"
+        ontologies: []
 output:
-  - stats:
-      - meta:
+  stats:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -51,11 +54,30 @@ output:
           type: file
           description: File containing samtools stats output
           pattern: "*.{stats}"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions_samtools:
+    - - ${task.process}:
+          type: string
+          description: Name of the process
+      - samtools:
+          type: string
+          description: Name of the tool
+      - samtools version | sed "1!d;s/.* //":
+          type: eval
+          description: The expression to obtain the version of the tool
+
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: Name of the process
+      - samtools:
+          type: string
+          description: Name of the tool
+      - samtools version | sed "1!d;s/.* //":
+          type: eval
+          description: The expression to obtain the version of the tool
+
 authors:
   - "@drpatelh"
   - "@FriederikeHanssen"

@@ -51,8 +51,10 @@
                     "rsem.merged.transcript_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                 ],
                 "8": [
-                    "versions.yml:md5,2aa5252eb2ffb409cf556a165d40f8a9",
-                    "versions.yml:md5,773c15c4ecb7d486a4bdd8ef73e7ac5d"
+                    "rsem.merged.genes_long.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "9": [
+                    "rsem.merged.isoforms_long.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                 ],
                 "counts_gene": [
                     [
@@ -87,6 +89,12 @@
                 "merged_counts_transcript": [
                     "rsem.merged.transcript_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                 ],
+                "merged_genes_long": [
+                    "rsem.merged.genes_long.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "merged_isoforms_long": [
+                    "rsem.merged.isoforms_long.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
                 "merged_tpm_gene": [
                     "rsem.merged.gene_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                 ],
@@ -101,10 +109,6 @@
                         },
                         "test.stat:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
-                ],
-                "versions": [
-                    "versions.yml:md5,2aa5252eb2ffb409cf556a165d40f8a9",
-                    "versions.yml:md5,773c15c4ecb7d486a4bdd8ef73e7ac5d"
                 ]
             }
         ],

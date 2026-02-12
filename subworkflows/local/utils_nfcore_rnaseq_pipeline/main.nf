@@ -34,14 +34,12 @@ workflow PIPELINE_INITIALISATION {
     monochrome_logs   // boolean: Do not use coloured log outputs
     nextflow_cli_args //   array: List of positional nextflow CLI args
     outdir            //  string: The output directory where the results will be saved
-    input             //  string: Path to input samplesheet
+    _input            //  string: Path to input samplesheet
     help              // boolean: Display help message and exit
     help_full         // boolean: Show the full help message
     show_hidden       // boolean: Show hidden parameters in the help message
 
     main:
-
-    ch_versions = channel.empty()
 
     //
     // Print version and exit if required and dump pipeline parameters to JSON file
@@ -56,15 +54,16 @@ workflow PIPELINE_INITIALISATION {
     //
     // Validate parameters and generate parameter summary to stdout
     //
+    def colors = logColours(monochrome_logs)
     before_text = """
--\033[2m----------------------------------------------------\033[0m-
-                                        \033[0;32m,--.\033[0;30m/\033[0;32m,-.\033[0m
-\033[0;34m        ___     __   __   __   ___     \033[0;32m/,-._.--~\'\033[0m
-\033[0;34m  |\\ | |__  __ /  ` /  \\ |__) |__         \033[0;33m}  {\033[0m
-\033[0;34m  | \\| |       \\__, \\__/ |  \\ |___     \033[0;32m\\`-._,-`-,\033[0m
-                                        \033[0;32m`._,._,\'\033[0m
-\033[0;35m  nf-core/rnaseq ${workflow.manifest.version}\033[0m
--\033[2m----------------------------------------------------\033[0m-
+-${colors.dim}----------------------------------------------------${colors.reset}-
+                                        ${colors.green},--.${colors.black}/${colors.green},-.${colors.reset}
+${colors.blue}        ___     __   __   __   ___     ${colors.green}/,-._.--~\'${colors.reset}
+${colors.blue}  |\\ | |__  __ /  ` /  \\ |__) |__         ${colors.yellow}}  {${colors.reset}
+${colors.blue}  | \\| |       \\__, \\__/ |  \\ |___     ${colors.green}\\`-._,-`-,${colors.reset}
+                                        ${colors.green}`._,._,\'${colors.reset}
+${colors.purple}  nf-core/rnaseq ${workflow.manifest.version}${colors.reset}
+-${colors.dim}----------------------------------------------------${colors.reset}-
 """
     after_text = """${workflow.manifest.doi ? "\n* The pipeline\n" : ""}${workflow.manifest.doi.tokenize(",").collect { doi -> "    https://doi.org/${doi.trim().replace('https://doi.org/','')}"}.join("\n")}${workflow.manifest.doi ? "\n" : ""}
 * The nf-core framework
@@ -98,9 +97,6 @@ workflow PIPELINE_INITIALISATION {
     // Custom validation for pipeline parameters
     //
     validateInputParameters()
-
-    emit:
-    versions    = ch_versions
 }
 
 /*
@@ -185,14 +181,14 @@ workflow PIPELINE_COMPLETION {
 //
 def checkSamplesAfterGrouping(input) {
     // Handle both old format [id, metas, fastqs] and new format with BAMs [id, metas, fastqs, genome_bams, transcriptome_bams]
-    def id = input[0]
+    def _id = input[0]
     def metas = input[1]
     def fastqs = input[2]
     def genome_bams = input.size() > 3 ? input[3] : null
     def transcriptome_bams = input.size() > 4 ? input[4] : null
 
     // Check that multiple runs of the same sample are of the same strandedness
-    def strandedness_ok = metas.collect{ it.strandedness }.unique().size == 1
+    def strandedness_ok = metas.collect{ meta -> meta.strandedness }.unique().size == 1
     if (!strandedness_ok) {
         error("Please check input samplesheet -> Multiple runs of a sample must have the same strandedness!: ${metas[0].id}")
     }
@@ -203,10 +199,16 @@ def checkSamplesAfterGrouping(input) {
         error("Please check input samplesheet -> Multiple runs of a sample must be of the same datatype i.e. single-end or paired-end: ${metas[0].id}")
     }
 
+    // Check that multiple runs of the same sample are not mixed compressed/uncompressed
+    def compression_ok = fastqs.flatten().collect{ fq -> fq.name.endsWith('.gz') }.unique().size == 1
+    if (!compression_ok) {
+        error("Please check input samplesheet -> Multiple runs of a sample must not mix compressed and uncompressed FASTQ files: ${metas[0].id}")
+    }
+
     // Return format depends on whether BAM data was provided
     if (genome_bams != null || transcriptome_bams != null) {
-        def genome_bam = genome_bams?.find { it != null }
-        def transcriptome_bam = transcriptome_bams?.find { it != null }
+        def genome_bam = genome_bams?.find { bam -> bam != null }
+        def transcriptome_bam = transcriptome_bams?.find { bam -> bam != null }
 
         // Add BAM flags and original paths to meta
         def meta_with_bams = metas[0] + [
@@ -287,8 +289,20 @@ def validateInputParameters() {
         error("Please provide either --bbsplit_fasta_list / --bbsplit_index to run BBSplit.")
     }
 
-    if (params.remove_ribo_rna && !params.ribo_database_manifest) {
-        error("Please provide --ribo_database_manifest to remove ribosomal RNA with SortMeRNA.")
+    if (params.remove_ribo_rna && params.ribo_removal_tool in ['sortmerna', 'bowtie2'] && !params.ribo_database_manifest) {
+        error("Please provide --ribo_database_manifest to remove ribosomal RNA with SortMeRNA or Bowtie2.")
+    }
+
+    if (params.use_parabricks_star && (params.arm ?: false)) {
+        error("Parabricks (--use_parabricks_star) is not supported on ARM architecture. Parabricks requires an x86_64 host with NVIDIA GPUs.")
+    }
+
+    if (params.use_parabricks_star && params.use_sentieon_star) {
+        error("Cannot use both --use_parabricks_star and --use_sentieon_star. Please choose one accelerator.")
+    }
+
+    if (params.use_parabricks_star && (params.prokaryotic ?: false)) {
+        error("Parabricks rna_fq2bam does not support --sjdbGTFfeatureExon CDS, which is required for prokaryotic alignment. Please use standard STAR instead.")
     }
 
     if (params.with_umi && !params.skip_umi_extract) {
@@ -322,6 +336,14 @@ def validateInputParameters() {
         if (params.aligner  == 'star_rsem' && params.extra_star_align_args) {
             rsemStarExtraArgumentsWarn()
         }
+        if (params.prokaryotic || params.gffread_transcript_fasta) {
+            rsemProkaryoticError()
+        }
+    }
+
+    // Checks for prokaryotic mode with untested aligners
+    if ((params.prokaryotic || params.gffread_transcript_fasta) && params.aligner == 'hisat2') {
+        untestedProkaryoticAlignerWarn()
     }
 
     // Warn if --additional_fasta provided with aligner index
@@ -341,32 +363,24 @@ def validateInputParameters() {
         }
     }
 
-    //General checks for if contaminant screening is used
-    if (params.contaminant_screening) {
-        if (params.aligner == 'star_rsem') {
-            error("Contaminant screening cannot be done with --aligner star_rsem since unaligned reads are not saved. Please use --aligner star_salmon or --aligner hisat2.")
-        }
+    // Check that Kraken/Bracken database provided if using kraken2/bracken
+    if (params.contaminant_screening in ['kraken2', 'kraken2_bracken'] && !params.kraken_db) {
+        error("Contaminant screening set to kraken2 but no database was provided. Please provide a database with the --kraken_db option.")
     }
 
-    // Check that Kraken/Bracken database provided if using kraken2/bracken
-    if (params.contaminant_screening in ['kraken2', 'kraken2_bracken']) {
-        if (!params.kraken_db) {
-            error("Contaminant screening set to kraken2 but not database is provided. Please provide a database with the --kraken_db option.")
+    // Check that Sylph database and taxonomy is provided if using Sylph
+    if (params.contaminant_screening == 'sylph') {
+        if (!params.sylph_db) {
+            error("Contaminant screening is set to Sylph but no database was provided. Please provide a database with the --sylph_db option.")
         }
-    // Check that Kraken/Bracken parameters are not provided when Kraken2 is not being used
-    } else {
-        if (!params.bracken_precision.equals('S')) {
-            brackenPrecisionWithoutKrakenDBWarn()
-        }
-
-        if (params.save_kraken_assignments || params.save_kraken_unassigned || params.kraken_db) {
-            krakenArgumentsWithoutKrakenDBWarn()
+        if (!params.sylph_taxonomy) {
+            error("Contaminant screening is set to Sylph but no taxonomy was provided. Please provide a taxonomy with the --sylph_taxonomy option.")
         }
     }
 
     // Check which RSeQC modules we are running
     def valid_rseqc_modules = ['bam_stat', 'inner_distance', 'infer_experiment', 'junction_annotation', 'junction_saturation', 'read_distribution', 'read_duplication', 'tin']
-    def rseqc_modules = params.rseqc_modules ? params.rseqc_modules.split(',').collect{ it.trim().toLowerCase() } : []
+    def rseqc_modules = params.rseqc_modules ? params.rseqc_modules.split(',').collect{ module -> module.trim().toLowerCase() } : []
     if ((valid_rseqc_modules + rseqc_modules).unique().size() != valid_rseqc_modules.size()) {
         error("Invalid option: ${params.rseqc_modules}. Valid options for '--rseqc_modules': ${valid_rseqc_modules.join(', ')}")
     }
@@ -586,6 +600,36 @@ def rsemStarExtraArgumentsWarn() {
 }
 
 //
+// Print an error if using '--aligner star_rsem' with prokaryotic settings
+//
+def rsemProkaryoticError() {
+    def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
+        "  '--aligner star_rsem' is incompatible with prokaryotic RNA-seq settings.\n\n" +
+        "  RSEM's rsem-prepare-reference cannot handle GTF/GFF files that use CDS\n" +
+        "  features instead of exon features, which is typical for prokaryotic\n" +
+        "  annotations.\n\n" +
+        "  Please use one of the following aligners instead:\n" +
+        "    - '--aligner star_salmon' (alternative with '-profile prokaryotic')\n" +
+        "    - '--aligner bowtie2_salmon' (default for '-profile prokaryotic')\n" +
+        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    error(error_string)
+}
+
+//
+// Print a warning if using prokaryotic settings with an untested aligner
+//
+def untestedProkaryoticAlignerWarn() {
+    log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
+        "  Using prokaryotic settings with '--aligner hisat2'.\n\n" +
+        "  This aligner combination has not been extensively tested with\n" +
+        "  prokaryotic data. The recommended aligners for prokaryotic RNA-seq are:\n" +
+        "    - '--aligner bowtie2_salmon' (default for '-profile prokaryotic')\n" +
+        "    - '--aligner star_salmon'\n\n" +
+        "  Proceed with caution and verify your results.\n" +
+        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+}
+
+//
 // Print a warning if using '--additional_fasta' and '--<ALIGNER>_index'
 //
 def additionaFastaIndexWarn(index) {
@@ -599,26 +643,6 @@ def additionaFastaIndexWarn(index) {
         "  Ignore this warning if you know that the index already contains transgenes.\n\n" +
         "  Please see:\n" +
         "  https://github.com/nf-core/rnaseq/issues/556\n" +
-        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-}
-
-//
-// Print a warning if --save_kraken_assignments or --save_kraken_unassigned is provided without --kraken_db
-//
-def krakenArgumentsWithoutKrakenDBWarn() {
-    log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
-        "  'Kraken2 related arguments have been provided without setting contaminant\n" +
-        "  screening to Kraken2. Kraken2 is not being run so these will not be used.\n" +
-        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-}
-
-///
-/// Print a warning if --bracken-precision is provided without --kraken_db
-///
-def brackenPrecisionWithoutKrakenDBWarn() {
-    log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
-        "  '--bracken-precision' parameter has been provided without Kraken2 contaminant screening.\n" +
-        "  Bracken will not run so precision will not be set.\n" +
         "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 }
 
@@ -730,9 +754,9 @@ def mapBamToPublishedPath(bam_path, sample_id, aligner, outdir) {
 def rnaseqSummary(monochrome_logs=true, pass_mapped_reads=[:], pass_trimmed_reads=[:], pass_strand_check=[:]) {
     def colors = logColours(monochrome_logs)
 
-    def fail_mapped_count  = pass_mapped_reads.count  { key, value -> value == false }
-    def fail_trimmed_count = pass_trimmed_reads.count { key, value -> value == false }
-    def fail_strand_count  = pass_strand_check.count  { key, value -> value == false }
+    def fail_mapped_count  = pass_mapped_reads.count  { _key, value -> value == false }
+    def fail_trimmed_count = pass_trimmed_reads.count { _key, value -> value == false }
+    def fail_strand_count  = pass_strand_check.count  { _key, value -> value == false }
     if (workflow.success) {
         def color = colors.green
         def status = []

@@ -4,6 +4,10 @@ nextflow_process {
     script "../main.nf"
     process "UMITOOLS_PREPAREFORRSEM"
 
+    tag "modules"
+    tag "modules_nfcore"
+    tag "umitools"
+    tag "umitools/prepareforrsem"
 
     test("sarscov2 - bam") {
 
@@ -22,8 +26,10 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out.bam).match('bam_sarscov2_bam') },
-                { assert snapshot(process.out.versions).match('versions_sarscov2_bam') }
+                { assert snapshot(
+                    process.out.bam,
+                    process.out.findAll { key, val -> key.startsWith('versions') }
+                ).match() }
             )
         }
 
@@ -48,8 +54,10 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out.bam).match('bam_sarscov2_bam - stub') },
-                { assert snapshot(process.out.versions).match('versions_sarscov2_bam - stub') }
+                { assert snapshot(
+                    process.out.bam,
+                    process.out.findAll { key, val -> key.startsWith('versions') }
+                ).match() }
             )
         }
 

@@ -24,39 +24,64 @@ input:
         type: file
         description: Input BAM file
         pattern: "*.{bam}"
+        ontologies: []
     - bai:
         type: file
         description: Index for input BAM file
         pattern: "*.{bai}"
-  - - bed:
-        type: file
-        description: BED file containing the reference gene model
-        pattern: "*.{bed}"
+        ontologies: []
+  - bed:
+      type: file
+      description: BED file containing the reference gene model
+      pattern: "*.{bed}"
+      ontologies: []
 output:
-  - txt:
-      - meta:
+  txt:
+    - - meta:
           type: file
           description: TXT file containing tin.py results summary
           pattern: "*.txt"
+          ontologies: []
       - "*.txt":
           type: file
           description: TXT file containing tin.py results summary
           pattern: "*.txt"
-  - xls:
-      - meta:
+          ontologies: []
+  xls:
+    - - meta:
           type: file
-          description: XLS file containing tin.py results
-          pattern: "*.xls"
+          description: TXT file containing tin.py results summary
+          pattern: "*.txt"
+          ontologies: []
       - "*.xls":
           type: file
           description: XLS file containing tin.py results
           pattern: "*.xls"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions_rseqc:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - rseqc:
+          type: string
+          description: The tool name
+      - tin.py --version | sed "s/tin.py //":
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - rseqc:
+          type: string
+          description: The tool name
+      - tin.py --version | sed "s/tin.py //":
+          type: eval
+          description: The expression to obtain the version of the tool
 authors:
   - "@drpatelh"
+  - "@rhassaine"
 maintainers:
   - "@drpatelh"
+  - "@rhassaine"

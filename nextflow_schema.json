@@ -88,11 +88,11 @@
                     "format": "file-path",
                     "exists": true,
                     "mimetype": "text/plain",
-                    "pattern": "^\\S+\\.gff(\\.gz)?$",
+                    "pattern": "^\\S+\\.gff3?(\\.gz)?$",
                     "fa_icon": "fas fa-code-branch",
                     "description": "Path to GFF3 annotation file.",
                     "help_text": "This parameter must be specified if neither `--genome` nor `--gtf` is provided.",
-                    "errorMessage": "The GFF file must have a .gff or .gff.gz extension, must not contain spaces, and must exist."
+                    "errorMessage": "The GFF file must have a .gff, .gff3, .gff.gz, or .gff3.gz extension, must not contain spaces, and must exist."
                 },
                 "gene_bed": {
                     "type": "string",
@@ -167,6 +167,14 @@
                     "fa_icon": "fas fa-bezier-curve",
                     "description": "Path to directory or tar.gz archive for pre-built Kallisto index."
                 },
+                "bowtie2_index": {
+                    "type": "string",
+                    "format": "path",
+                    "exists": true,
+                    "fa_icon": "fas fa-bezier-curve",
+                    "description": "Path to directory or tar.gz archive for pre-built Bowtie2 index.",
+                    "help_text": "Required when using `--aligner bowtie2_salmon`. If not provided, the index will be built from the transcript FASTA file for use with Salmon alignment-based quantification."
+                },
                 "hisat2_build_memory": {
                     "type": "string",
                     "default": "200.GB",
@@ -181,6 +189,19 @@
                     "fa_icon": "fas fa-code-branch",
                     "description": "Specify if your GTF annotation is in GENCODE format.",
                     "help_text": "If your GTF file is in GENCODE format and you want to run Salmon (using `--pseudo_aligner salmon`), enable this parameter to build the Salmon index correctly."
+                },
+                "prokaryotic": {
+                    "type": "boolean",
+                    "hidden": true,
+                    "fa_icon": "fas fa-bacterium",
+                    "description": "Enable prokaryotic mode for bacterial/archaeal RNA-seq data.",
+                    "help_text": "Prokaryotic genomes have different annotation conventions than eukaryotes. This configures STAR to use CDS features instead of exons. Use `-profile prokaryotic` to enable this along with other recommended prokaryotic settings."
+                },
+                "gffread_transcript_fasta": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-file-code",
+                    "description": "Use gffread to generate transcript FASTA instead of RSEM.",
+                    "help_text": "By default, RSEM is used to extract transcript sequences from the genome FASTA and GTF. RSEM expects exon features in the GTF, which may not be present in some annotations (e.g., prokaryotic). Enable this to use gffread instead, which handles CDS-only annotations correctly. This is automatically enabled by `-profile prokaryotic`."
                 },
                 "gtf_extra_attributes": {
                     "type": "string",
@@ -214,6 +235,13 @@
                     "fa_icon": "fas fa-ban",
                     "hidden": true,
                     "help_text": "Prevent loading of `igenomes.config` when running the pipeline. Use this option if you encounter conflicts between custom parameters and those in the iGenomes configuration."
+                },
+                "arm": {
+                    "type": "boolean",
+                    "description": "Use ARM architecture containers.",
+                    "fa_icon": "fas fa-microchip",
+                    "hidden": true,
+                    "help_text": "Set automatically by the arm64 profile. Signals ARM architecture so that container closures can select ARM-compatible images where needed (e.g. STAR 2.6.1d in nf-test configs)."
                 },
                 "igenomes_base": {
                     "type": "string",
@@ -292,8 +320,16 @@
                 "remove_ribo_rna": {
                     "type": "boolean",
                     "fa_icon": "fas fa-trash-alt",
-                    "description": "Enable the removal of reads derived from ribosomal RNA using SortMeRNA.",
-                    "help_text": "Any patterns found in sequences defined by the `--ribo_database_manifest` parameter will be used for filtering."
+                    "description": "Enable the removal of reads derived from ribosomal RNA.",
+                    "help_text": "Any patterns found in sequences defined by the `--ribo_database_manifest` parameter will be used for filtering (when using SortMeRNA or Bowtie2)."
+                },
+                "ribo_removal_tool": {
+                    "type": "string",
+                    "default": "sortmerna",
+                    "fa_icon": "fas fa-tools",
+                    "description": "Tool to use for rRNA removal.",
+                    "help_text": "Choose between 'sortmerna' (default), 'bowtie2', or 'ribodetector' for rRNA removal.\n\n- **sortmerna**: Reference-based filtering (default). Requires `--ribo_database_manifest`. Note: Default databases include SILVA sequences requiring licensing for commercial use.\n- **bowtie2**: Alignment-based filtering. Requires `--ribo_database_manifest`. Recommended for users with SILVA licensing concerns as it supports custom databases.\n- **ribodetector**: \u26a0\ufe0f EXPERIMENTAL - ML-based detection without reference requirement. Known ONNX multiprocessing issues can cause hangs in containerized environments. See https://github.com/hzi-bifo/RiboDetector/pull/61",
+                    "enum": ["sortmerna", "ribodetector", "bowtie2"]
                 },
                 "ribo_database_manifest": {
                     "type": "string",
@@ -385,13 +421,19 @@
                 "aligner": {
                     "type": "string",
                     "default": "star_salmon",
-                    "description": "Specifies the alignment algorithm to use - available options are 'star_salmon', 'star_rsem' and 'hisat2'.",
+                    "description": "Specifies the alignment algorithm to use - available options are 'star_salmon', 'star_rsem', 'hisat2', and 'bowtie2_salmon'.",
                     "fa_icon": "fas fa-map-signs",
-                    "enum": ["star_salmon", "star_rsem", "hisat2"]
+                    "enum": ["star_salmon", "star_rsem", "hisat2", "bowtie2_salmon"],
+                    "help_text": "Use 'bowtie2_salmon' for prokaryotic RNA-seq data. Bowtie2 is a splice-unaware aligner and is not recommended for eukaryotic data."
                 },
                 "use_sentieon_star": {
                     "type": "boolean",
                     "description": "Optionally accelerate STAR with Sentieon",
+                    "fa_icon": "fas fa-running"
+                },
+                "use_parabricks_star": {
+                    "type": "boolean",
+                    "description": "Optionally accelerate STAR and MarkDuplicates with Parabricks",
                     "fa_icon": "fas fa-running"
                 },
                 "pseudo_aligner": {
@@ -469,6 +511,12 @@
                     "type": "string",
                     "minLength": 1,
                     "description": "Extra arguments to pass to STAR alignment command in addition to defaults defined by the pipeline. Only available for the STAR-Salmon route.",
+                    "fa_icon": "fas fa-plus"
+                },
+                "extra_bowtie2_align_args": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Extra arguments to pass to Bowtie2 alignment command in addition to defaults defined by the pipeline. Only available when using --aligner bowtie2_salmon.",
                     "fa_icon": "fas fa-plus"
                 },
                 "extra_salmon_quant_args": {
@@ -606,15 +654,15 @@
                 },
                 "contaminant_screening": {
                     "type": "string",
-                    "description": "Tool to use for detecting contaminants in unaligned reads - available options are 'kraken2' and 'kraken2_bracken'",
+                    "description": "Tool to use for detecting contaminants in unaligned reads - available options are 'sylph', 'kraken2', or 'kraken2_bracken'",
                     "fa_icon": "fas fa-virus-slash",
-                    "enum": ["kraken2", "kraken2_bracken"]
+                    "enum": ["kraken2", "kraken2_bracken", "sylph"]
                 },
                 "kraken_db": {
                     "type": "string",
                     "format": "directory-path",
                     "description": "Database when using Kraken2/Bracken for contaminant screening.",
-                    "help_text": "See the usage documentation for more information on setting up and using Kraken2 databases.",
+                    "help_text": "See the usage documentation for more information on setting up and using Kraken2 databases. Requires the --contaminant_screening option to be set to 'kraken2' or 'kraken2_bracken' to have an effect",
                     "fa_icon": "fas fa-fish"
                 },
                 "bracken_precision": {
@@ -622,8 +670,22 @@
                     "default": "S",
                     "fa_icon": "fas fa-tree",
                     "description": "Taxonomic level for Bracken abundance estimations.",
-                    "help_text": "Use the first letter of taxonomic levels: Domain, Phylum, Class, Order, Family, Genus, or Species.",
+                    "help_text": "Use the first letter of taxonomic levels: Domain, Phylum, Class, Order, Family, Genus, or Species. Requires --contaminant_screening option to be set to 'kraken2_bracken' to have an effect.",
                     "enum": ["D", "P", "C", "O", "F", "G", "S"]
+                },
+                "sylph_db": {
+                    "type": "string",
+                    "format": "file-path",
+                    "description": "Comma separated list of databases to profile against when using Sylph for contamination detection",
+                    "help_text": "See the usage documentation for more information on setting up and using Sylph databases. Requires --contaminant_screening option to be set to 'sylph' to have an effect.",
+                    "fa_icon": "fas fa-database"
+                },
+                "sylph_taxonomy": {
+                    "type": "string",
+                    "description": "Comma separated list of taxonomies when using Sylph for contamination detection",
+                    "help_text": "See the usage documentation for more information on Sylph taxonomies. Requires --contaminant_screening option to be set to 'sylph' to have an effect.",
+                    "fa_icon": "fas fa-tree",
+                    "format": "file-path"
                 }
             }
         },

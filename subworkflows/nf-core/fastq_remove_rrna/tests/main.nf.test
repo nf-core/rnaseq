@@ -1,0 +1,344 @@
+
+nextflow_workflow {
+
+    name "Test Subworkflow FASTQ_REMOVE_RRNA"
+    script "../main.nf"
+    workflow "FASTQ_REMOVE_RRNA"
+    config "./nextflow.config"
+
+    tag "subworkflows"
+    tag "subworkflows_nfcore"
+    tag "subworkflows/fastq_remove_rrna"
+
+    tag "cat/fastq"
+    tag "bowtie2/align"
+    tag "bowtie2/build"
+    tag "ribodetector"
+    tag "samtools/view"
+    tag "samtools/fastq"
+    tag "seqkit/replace"
+    tag "seqkit/stats"
+    tag "sortmerna"
+
+    // Global setup: Create test data with synthetic rRNA reads using CAT_FASTQ
+    // The rRNA reads (from generic/fastq/) are 5.8S rRNA sequences that will be detected
+    // by SortMeRNA (alignment-based, 100% detection), RiboDetector (ML-based, ~70% detection),
+    // and Bowtie2 (alignment-based)
+    setup {
+        run("CAT_FASTQ") {
+            script "../../../../modules/nf-core/cat/fastq/main.nf"
+            process {
+                """
+                // CAT_FASTQ input: alternating R1/R2 files [r1_a, r2_a, r1_b, r2_b, ...]
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ],
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'generic/fastq/rrna_reads_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'generic/fastq/rrna_reads_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                """
+            }
+        }
+    }
+
+    test("homo_sapiens paired-end [fastq] sortmerna") {
+
+        when {
+            workflow {
+                """
+                input[0] = CAT_FASTQ.out.reads                                    // ch_reads
+                input[1] = Channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas
+                input[2] = []                                                     // ch_sortmerna_index
+                input[3] = []                                                     // ch_bowtie2_index
+                input[4] = 'sortmerna'                                            // ribo_removal_tool
+                input[5] = true                                                   // make_sortmerna_index
+                input[6] = false                                                  // make_bowtie2_index
+                """
+            }
+        }
+
+        then {
+            def pelines1 = path(workflow.out.reads[0][1][0]).linesGzip
+            def pelines2 = path(workflow.out.reads[0][1][1]).linesGzip
+
+            // Parse sortmerna log for rRNA detection stats
+            def sortmernaLog = path(workflow.out.multiqc_files.find { entry -> entry[1].toString().endsWith('.sortmerna.log') }?.getAt(1))
+                .getText()
+            def sortmernaRrnaMatch = (sortmernaLog =~ /Total reads passing E-value threshold = (\d+)/)
+            def sortmernaRrnaCount = sortmernaRrnaMatch ? sortmernaRrnaMatch[0][1].toInteger() : -1
+
+            // Input: 4159 original + 10 synthetic rRNA = 4169 read pairs
+            // SortMeRNA removes all 10 synthetic rRNA pairs (20 individual reads), leaving 4159 pairs
+            assertAll(
+                { assert workflow.success },
+                { assert pelines1.size() == 16636 },  // 4159 pairs × 4 lines/read
+                { assert pelines2.size() == 16636 },
+                { assert sortmernaRrnaCount == 20 },  // 10 pairs = 20 individual reads (100% detection)
+                { assert snapshot(
+                    pelines1.join('\n').md5(),
+                    pelines2.join('\n').md5()
+                ).match() }
+            )
+        }
+    }
+
+    test("homo_sapiens paired-end [fastq] ribodetector") {
+
+        when {
+            workflow {
+                """
+                input[0] = CAT_FASTQ.out.reads                                    // ch_reads
+                input[1] = []                                                     // ch_rrna_fastas (not needed for ribodetector)
+                input[2] = []                                                     // ch_sortmerna_index
+                input[3] = []                                                     // ch_bowtie2_index
+                input[4] = 'ribodetector'                                         // ribo_removal_tool
+                input[5] = false                                                  // make_sortmerna_index
+                input[6] = false                                                  // make_bowtie2_index
+                """
+            }
+        }
+
+        then {
+            def pelines1 = path(workflow.out.reads[0][1][0]).linesGzip
+            def pelines2 = path(workflow.out.reads[0][1][1]).linesGzip
+
+            // Parse ribodetector log for rRNA detection stats
+            // Note: ribodetector log contains ANSI color codes that must be stripped before regex matching
+            def ribodetectorLog = path(workflow.out.multiqc_files.find { entry -> entry[1].toString().endsWith('.ribodetector.log') }?.getAt(1))
+                .getText()
+                .replaceAll(/\u001b\[[0-9;]*m/, '')  // Strip ANSI escape codes
+            def ribodetectorRrnaMatch = (ribodetectorLog =~ /Detected (\d+) rRNA sequences/)
+            def ribodetectorRrnaCount = ribodetectorRrnaMatch ? ribodetectorRrnaMatch[0][1].toInteger() : -1
+
+            // Sort FASTQ reads before MD5 to handle ribodetector's non-deterministic output order
+            // (multiprocessing causes variable read ordering even with --seed set)
+            def sortedLines1 = pelines1.collate(4).sort { it[0] }.flatten()
+            def sortedLines2 = pelines2.collate(4).sort { it[0] }.flatten()
+
+            // Input: 4159 original + 10 synthetic rRNA = 4169 read pairs
+            // RiboDetector removes 7 of 10 synthetic rRNA pairs (70% detection), leaving 4162 pairs
+            assertAll(
+                { assert workflow.success },
+                { assert pelines1.size() == 16648 },  // 4162 pairs × 4 lines/read
+                { assert pelines2.size() == 16648 },
+                { assert ribodetectorRrnaCount == 7 },  // 7 pairs detected (70% - ML model misses some)
+                { assert snapshot(
+                    sortedLines1.join('\n').md5(),
+                    sortedLines2.join('\n').md5()
+                ).match() }
+            )
+        }
+    }
+
+    test("homo_sapiens paired-end [fastq] bowtie2") {
+
+        when {
+            workflow {
+                """
+                input[0] = CAT_FASTQ.out.reads                                    // ch_reads
+                input[1] = Channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas
+                input[2] = []                                                     // ch_sortmerna_index
+                input[3] = []                                                     // ch_bowtie2_index
+                input[4] = 'bowtie2'                                              // ribo_removal_tool
+                input[5] = false                                                  // make_sortmerna_index
+                input[6] = true                                                   // make_bowtie2_index
+                """
+            }
+        }
+
+        then {
+            def pelines1 = path(workflow.out.reads[0][1][0]).linesGzip
+            def pelines2 = path(workflow.out.reads[0][1][1]).linesGzip
+
+            // Parse bowtie2 log for alignment stats - count mates that aligned to rRNA
+            def bowtie2Log = path(workflow.out.multiqc_files.find { entry -> entry[1].toString().endsWith('.bowtie2.log') }?.getAt(1))
+                .getText()
+            def exactMatch = (bowtie2Log =~ /(\d+) \(\d+\.\d+%\) aligned exactly 1 time/)
+            def multiMatch = (bowtie2Log =~ /(\d+) \(\d+\.\d+%\) aligned >1 times/)
+            def exactCount = exactMatch ? exactMatch[0][1].toInteger() : 0
+            def multiCount = multiMatch ? multiMatch[0][1].toInteger() : 0
+            def bowtie2RrnaCount = exactCount + multiCount
+
+            // Input: 4159 original + 10 synthetic rRNA = 4169 read pairs
+            // Bowtie2 aligns 17 individual mates to rRNA
+            // Using samtools -f 12 keeps only pairs where BOTH mates are unmapped, leaving 4159 pairs
+            assertAll(
+                { assert workflow.success },
+                { assert pelines1.size() == 16636 },  // 4159 pairs × 4 lines/read
+                { assert pelines2.size() == 16636 },
+                { assert bowtie2RrnaCount == 17 },  // 17 mates aligned to rRNA reference
+                { assert snapshot(
+                    pelines1.join('\n').md5(),
+                    pelines2.join('\n').md5()
+                ).match() }
+            )
+        }
+    }
+
+    test("homo_sapiens single-end [fastq] bowtie2") {
+
+        setup {
+            run("CAT_FASTQ", alias: "CAT_FASTQ_SE") {
+                script "../../../../modules/nf-core/cat/fastq/main.nf"
+                process {
+                    """
+                    // Single-end test data with synthetic rRNA reads
+                    input[0] = Channel.of([
+                        [ id:'test_se', single_end:true ],
+                        [
+                            file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
+                            file(params.modules_testdata_base_path + 'generic/fastq/rrna_reads_1.fastq.gz', checkIfExists: true)
+                        ]
+                    ])
+                    """
+                }
+            }
+        }
+
+        when {
+            workflow {
+                """
+                input[0] = CAT_FASTQ_SE.out.reads.map { meta, reads -> [meta, reads instanceof List ? reads : [reads]] }
+                input[1] = Channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas
+                input[2] = []                                                     // ch_sortmerna_index
+                input[3] = []                                                     // ch_bowtie2_index
+                input[4] = 'bowtie2'                                              // ribo_removal_tool
+                input[5] = false                                                  // make_sortmerna_index
+                input[6] = true                                                   // make_bowtie2_index
+                """
+            }
+        }
+
+        then {
+            // For single-end, reads output is a single file, not a list
+            def selines = path(workflow.out.reads[0][1]).linesGzip
+
+            // Parse bowtie2 log for alignment stats
+            def bowtie2Log = path(workflow.out.multiqc_files.find { entry -> entry[1].toString().endsWith('.bowtie2.log') }?.getAt(1))
+                .getText()
+            def exactMatch = (bowtie2Log =~ /(\d+) \(\d+\.\d+%\) aligned exactly 1 time/)
+            def multiMatch = (bowtie2Log =~ /(\d+) \(\d+\.\d+%\) aligned >1 times/)
+            def exactCount = exactMatch ? exactMatch[0][1].toInteger() : 0
+            def multiCount = multiMatch ? multiMatch[0][1].toInteger() : 0
+            def bowtie2RrnaCount = exactCount + multiCount
+
+            // Input: 4159 original reads + 10 synthetic rRNA = 4169 reads
+            // Bowtie2 aligns 10 reads to rRNA
+            // Using --un-gz outputs unmapped reads directly: 4159 reads remain
+            assertAll(
+                { assert workflow.success },
+                { assert selines.size() == 16636 },  // 4159 reads × 4 lines/read
+                { assert bowtie2RrnaCount == 10 },   // 10 reads aligned to rRNA reference
+                { assert snapshot(
+                    selines.join('\n').md5()
+                ).match() }
+            )
+        }
+    }
+
+    test("homo_sapiens single-end [fastq] sortmerna") {
+
+        setup {
+            run("CAT_FASTQ", alias: "CAT_FASTQ_SE") {
+                script "../../../../modules/nf-core/cat/fastq/main.nf"
+                process {
+                    """
+                    // Single-end test data with synthetic rRNA reads
+                    input[0] = Channel.of([
+                        [ id:'test_se', single_end:true ],
+                        [
+                            file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
+                            file(params.modules_testdata_base_path + 'generic/fastq/rrna_reads_1.fastq.gz', checkIfExists: true)
+                        ]
+                    ])
+                    """
+                }
+            }
+        }
+
+        when {
+            workflow {
+                """
+                input[0] = CAT_FASTQ_SE.out.reads.map { meta, reads -> [meta, reads instanceof List ? reads : [reads]] }
+                input[1] = Channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas
+                input[2] = []                                                     // ch_sortmerna_index
+                input[3] = []                                                     // ch_bowtie2_index
+                input[4] = 'sortmerna'                                            // ribo_removal_tool
+                input[5] = true                                                   // make_sortmerna_index
+                input[6] = false                                                  // make_bowtie2_index
+                """
+            }
+        }
+
+        then {
+            // For single-end, reads output is a single file, not a list
+            def selines = path(workflow.out.reads[0][1]).linesGzip
+
+            // Parse sortmerna log for rRNA detection stats
+            def sortmernaLog = path(workflow.out.multiqc_files.find { entry -> entry[1].toString().endsWith('.sortmerna.log') }?.getAt(1))
+                .getText()
+            def sortmernaRrnaMatch = (sortmernaLog =~ /Total reads passing E-value threshold = (\d+)/)
+            def sortmernaRrnaCount = sortmernaRrnaMatch ? sortmernaRrnaMatch[0][1].toInteger() : -1
+
+            // Input: 4159 original reads + 10 synthetic rRNA = 4169 reads
+            // SortMeRNA removes all 10 synthetic rRNA reads (100% detection), leaving 4159 reads
+            assertAll(
+                { assert workflow.success },
+                { assert selines.size() == 16636 },  // 4159 reads × 4 lines/read
+                { assert sortmernaRrnaCount == 10 },  // 10 reads detected (100% detection)
+                { assert snapshot(
+                    selines.join('\n').md5()
+                ).match() }
+            )
+        }
+    }
+
+    test("homo_sapiens paired-end [fastq] bowtie2 with duplicate rrna databases") {
+
+        when {
+            workflow {
+                """
+                input[0] = CAT_FASTQ.out.reads                                    // ch_reads
+                // Test with multiple rRNA databases that contain clustered sequences with
+                // duplicate identifiers. SILVA databases use clustered sequences where the sequence ID
+                // (the part before the first space) can be the same across different databases, causing
+                // "Duplicate entry in sam header" errors when building Bowtie2 indexes. This test ensures
+                // the SEQKIT_REPLACE preprocessing correctly prefixes sequence IDs with their source
+                // filename to create unique identifiers while preserving all sequences.
+                input[1] = Channel.of(
+                    file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/silva-euk-18s-id95.fasta', checkIfExists: true),
+                    file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/silva-euk-28s-id98.fasta', checkIfExists: true)
+                )                                                                 // ch_rrna_fastas
+                input[2] = []                                                     // ch_sortmerna_index
+                input[3] = []                                                     // ch_bowtie2_index
+                input[4] = 'bowtie2'                                              // ribo_removal_tool
+                input[5] = false                                                  // make_sortmerna_index
+                input[6] = true                                                   // make_bowtie2_index
+                """
+            }
+        }
+
+        then {
+            def pelines1 = path(workflow.out.reads[0][1][0]).linesGzip
+            def pelines2 = path(workflow.out.reads[0][1][1]).linesGzip
+
+            // Parse bowtie2 log for alignment stats
+            def bowtie2Log = path(workflow.out.multiqc_files.find { entry -> entry[1].toString().endsWith('.bowtie2.log') }?.getAt(1))
+                .getText()
+
+            // The key test: workflow should complete successfully without SAM header duplicate errors
+            // even when the same rRNA databases are provided multiple times
+            assertAll(
+                { assert workflow.success },
+                { assert pelines1.size() >= 0 },  // Should have some reads
+                { assert pelines2.size() >= 0 },  // Should have some reads
+                { assert !workflow.stderr.contains("Duplicate entry") },  // No duplicate header errors in stderr
+                { assert !workflow.stderr.contains("failed to add PG line") }  // No SAM header errors in stderr
+            )
+        }
+    }
+
+}

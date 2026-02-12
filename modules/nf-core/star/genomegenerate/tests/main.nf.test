@@ -3,6 +3,10 @@ nextflow_process {
     name "Test Process STAR_GENOMEGENERATE"
     script "../main.nf"
     process "STAR_GENOMEGENERATE"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "star"
+    tag "star/genomegenerate"
 
     test("fasta_gtf") {
 
@@ -26,7 +30,7 @@ nextflow_process {
                 { assert process.success },
                 { assert snapshot(
                     file(process.out.index[0][1]).listFiles().collect { it.getName() }.sort().toString(),
-                    process.out.versions)
+                    process.out.findAll { key, val -> key.startsWith('versions') })
                 .match() }
             )
         }
@@ -51,7 +55,7 @@ nextflow_process {
                 { assert process.success },
                 { assert snapshot(
                     file(process.out.index[0][1]).listFiles().collect { it.getName() }.sort().toString(),
-                    process.out.versions
+                    process.out.findAll { key, val -> key.startsWith('versions') }
                 ).match() }
             )
         }

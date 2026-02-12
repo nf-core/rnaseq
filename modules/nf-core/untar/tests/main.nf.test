@@ -3,6 +3,9 @@ nextflow_process {
     name "Test Process UNTAR"
     script "../main.nf"
     process "UNTAR"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "untar"
 
     test("test_untar") {
 
@@ -17,7 +20,10 @@ nextflow_process {
         then {
             assertAll (
                 { assert process.success },
-                { assert snapshot(process.out).match() },
+                { assert snapshot(
+                    process.out.untar,
+                    process.out.findAll { key, val -> key.startsWith('versions') }
+                ).match() },
             )
         }
     }
@@ -35,7 +41,10 @@ nextflow_process {
         then {
             assertAll (
                 { assert process.success },
-                { assert snapshot(process.out).match() },
+                { assert snapshot(
+                    process.out.untar,
+                    process.out.findAll { key, val -> key.startsWith('versions') }
+                ).match() },
             )
         }
     }
@@ -55,7 +64,10 @@ nextflow_process {
         then {
             assertAll (
                 { assert process.success },
-                { assert snapshot(process.out).match() },
+                { assert snapshot(
+                    process.out.untar,
+                    process.out.findAll { key, val -> key.startsWith('versions') }
+                ).match() },
             )
         }
     }
@@ -75,7 +87,10 @@ nextflow_process {
         then {
             assertAll (
                 { assert process.success },
-                { assert snapshot(process.out).match() },
+                { assert snapshot(
+                    process.out.untar,
+                    process.out.findAll { key, val -> key.startsWith('versions') }
+                ).match() },
             )
         }
     }

@@ -179,9 +179,75 @@ If you would like to reduce the number of reads used in the analysis, for exampl
 
 > **NB:** TrimGalore! will only run using multiple cores if you are able to use more than > 5 and > 6 CPUs for single- and paired-end data, respectively. The total cores available to TrimGalore! will also be capped at 4 (7 and 8 CPUs in total for single- and paired-end data, respectively) because there is no longer a run-time benefit. See [release notes](https://github.com/FelixKrueger/TrimGalore/blob/master/Changelog.md#version-060-release-on-1-mar-2019) and [discussion whilst adding this logic to the nf-core/atacseq pipeline](https://github.com/nf-core/atacseq/pull/65).
 
+## rRNA removal options
+
+Ribosomal RNA (rRNA) removal can be enabled with the `--remove_ribo_rna` parameter. The pipeline supports three different tools for rRNA removal, selectable via the `--ribo_removal_tool` parameter.
+
+> [!TIP]
+> For tools that use a reference database (SortMeRNA and Bowtie2), although rRNA is the primary target, the reference database can include additional abundant contaminant sequences you wish to remove, such as tRNAs or other non-coding RNAs. Simply add the paths to your custom FASTA files in the manifest file.
+
+### SortMeRNA (default)
+
+[SortMeRNA](https://github.com/biocore/sortmerna) uses k-mer matching against rRNA databases to identify and filter rRNA reads. This is the default option and requires an rRNA database manifest file.
+
+```bash
+nextflow run nf-core/rnaseq --remove_ribo_rna --ribo_removal_tool sortmerna ...
+```
+
+By default, [rRNA databases](https://github.com/biocore/sortmerna/tree/master/data/rRNA_databases) defined in the SortMeRNA GitHub repo are used. You can see an example in the pipeline GitHub repository in `assets/rrna-db-defaults.txt` which is used by default via the `--ribo_database_manifest` parameter.
+
+> [!NOTE]
+> The default databases are based on SILVA 119, which requires [licensing for commercial use](https://www.arb-silva.de/silva-license-information). SILVA 138+ uses CC-BY 4.0 licensing that freely permits commercial use with attribution. If you have licensing concerns, consider using Bowtie2 with custom rRNA reference sequences via `--ribo_removal_tool bowtie2`.
+
+### Bowtie2
+
+[Bowtie2](https://github.com/BenLangmead/bowtie2) performs alignment-based filtering against rRNA reference sequences. Reads that align to the rRNA references are filtered out, and unaligned reads are kept for downstream analysis. This option also requires an rRNA database manifest file specified via `--ribo_database_manifest`.
+
+```bash
+nextflow run nf-core/rnaseq --remove_ribo_rna --ribo_removal_tool bowtie2 ...
+```
+
+### RiboDetector
+
+> [!WARNING]
+> RiboDetector has known issues with ONNX multiprocessing that can cause hangs in containerized environments (Docker, Singularity). This makes it unreliable for production use in Nextflow pipelines. We recommend using SortMeRNA or Bowtie2 for rRNA removal until these issues are resolved upstream. See [hzi-bifo/RiboDetector#61](https://github.com/hzi-bifo/RiboDetector/pull/61) for details.
+
+[RiboDetector](https://github.com/hzi-bifo/RiboDetector) uses machine learning to identify rRNA reads without requiring a reference database. This makes it particularly useful when working with organisms that lack well-characterized rRNA sequences, or when you want to avoid database licensing requirements.
+
+```bash
+nextflow run nf-core/rnaseq --remove_ribo_rna --ribo_removal_tool ribodetector ...
+```
+
+RiboDetector automatically determines read length from your data and uses its pre-trained neural network model to classify reads.
+
 ## Alignment options
 
 By default, the pipeline uses [STAR](https://github.com/alexdobin/STAR) (i.e. `--aligner star_salmon`) to map the raw FastQ reads to the reference genome, project the alignments onto the transcriptome and to perform the downstream BAM-level quantification with [Salmon](https://salmon.readthedocs.io/en/latest/salmon.html). STAR is fast but requires a lot of memory to run, typically around 38GB for the Human GRCh37 reference genome. Both `--aligner star_salmon` and `--aligner star_rsem` use STAR for alignment, so you should use the [HISAT2](https://ccb.jhu.edu/software/hisat2/index.shtml) aligner (i.e. `--aligner hisat2`) if you have memory limitations.
+
+:::note
+Selecting `star_rsem` automatically applies the same STAR settings as [rsem-calculate-expression](https://deweylab.github.io/RSEM/rsem-calculate-expression.html) with the `--star` option. These are based on the ENCODE3 STAR settings, and are as follows:
+
+<details>
+<summary>View STAR parameters</summary>
+
+```raw
+--outSAMunmapped Within
+--outFilterType BySJout
+--outFilterMultimapNmax 20
+--outFilterMismatchNmax 999
+--outFilterMismatchNoverLmax 0.04
+--alignIntronMin 20
+--alignIntronMax 1000000
+--alignMatesGapMax 1000000
+--alignSJoverhangMin 8
+--alignSJDBoverhangMin 1
+--sjdbScore 1
+```
+
+</details>
+
+**NOTE**: The pipeline parameter [`--extra_star_align_args`](#custom-star-parameters) cannot be used with aligner option `star_rsem`. It is possible to set, via [custom tool arguments](#custom-tool-arguments), custom settings to the process `STAR_ALIGN` via `ext.args`. However, we discourage this and consider adjusting the STAR aligner while using RSEM to be an unsupported option in this pipeline. If you need to pass in custom star alignment options, we recommend using the aligner option `star_salmon`. After this warning, if you still wish to set custom STAR settings and use RSEM for quantification, then please reference [this configuration file](https://github.com/nf-core/rnaseq/blob/master/subworkflows/local/align_star/nextflow.config).
+:::
 
 You also have the option to pseudoalign and quantify your data directly with [Salmon](https://salmon.readthedocs.io/en/latest/salmon.html) or [Kallisto](https://pachterlab.github.io/kallisto/) by specifying `salmon` or `kallisto` to the `--pseudo_aligner` parameter. The selected pseudoaligner will then be run in addition to the standard alignment workflow defined by `--aligner`, mainly because it allows you to obtain QC metrics with respect to the genomic alignments. However, you can provide the `--skip_alignment` parameter if you would like to run Salmon or Kallisto in isolation. By default, the pipeline will use the genome fasta and gtf file to generate the transcripts fasta file, and then to build the Salmon index. You can override these parameters using the `--transcript_fasta` and `--salmon_index` parameters, respectively.
 
@@ -224,6 +290,41 @@ If you're looking for documentation on how the nf-core Sentieon GitHub Actions a
 
 For detailed instructions on how to test the modules and subworkflows separately, see [here](https://github.com/nf-core/modules/blob/master/modules/nf-core/sentieon/README.md).
 :::
+
+### Parabricks GPU acceleration for STAR
+
+The STAR aligner can also be GPU-accelerated using NVIDIA Parabricks via the `--use_parabricks_star` parameter. Parabricks runs STAR alignment on NVIDIA GPUs, significantly reducing wall-clock time for large datasets.
+
+```bash
+nextflow run nf-core/rnaseq \
+    --input samplesheet.csv \
+    --outdir results \
+    --fasta genome.fa \
+    --gtf annotation.gtf \
+    --use_parabricks_star \
+    -profile docker
+```
+
+#### Requirements
+
+- One or more NVIDIA GPUs (with appropriate drivers installed)
+- Docker or Singularity (Conda/Mamba is **not** supported for this module)
+- The Parabricks container (`nvcr.io/nvidia/clara/clara-parabricks:4.6.0-1`) will be pulled automatically
+
+#### Behaviour differences
+
+When using Parabricks, the pipeline automatically handles mark duplicates during the alignment step (via `pbrun rna_fq2bam`), so the separate Picard MarkDuplicates step is skipped.
+
+#### Known differences from native STAR
+
+Parabricks `rna_fq2bam` is based on STAR 2.7.2a. The following native STAR flags have no pbrun equivalent and are therefore not applied:
+
+- `--outFilterType BySJout` — pbrun uses its own splice junction filtering defaults
+- `--sjdbScore 1` — affects junction scoring priority
+- `--quantTranscriptomeBan Singleend` — Salmon handles mixed single/paired-end transcriptome records gracefully
+- `--runRNGseed 0` — pbrun uses deterministic primary alignment selection
+
+These differences are unlikely to materially affect downstream quantification results, but users should be aware of them for reproducibility purposes. All other STAR parameters (multi-mapping limits, intron sizes, mate gap, splice junction overhangs, etc.) have pbrun equivalents and are applied consistently.
 
 ## Quantification options
 
@@ -369,12 +470,96 @@ As well as the standard annotations, GENCODE also provides "basic" annotations, 
 
 #### Prokaryotic genome annotations
 
-This pipeline uses featureCounts to generate QC metrics based on [biotype](http://www.ensembl.org/info/genome/genebuild/biotypes.html) information available within GFF/GTF genome annotation files. The format of these annotation files can vary significantly depending on the source of the annotation and the type of organism. The default settings in the pipeline are tailored towards Ensembl GTF annotations available for eukaryotic genomes. Prokaryotic genome annotations tend to be distributed in GFF format which are structured differently in terms of the feature naming conventions. There are a number of ways you can tune the behaviour of the pipeline to cater for differences/absence of biotype information:
+The pipeline includes a dedicated profile for analysing bacterial and archaeal RNA-seq data:
 
-- Use `--skip_biotype_qc` to bypass this step altogether in case biotype information is of no interest or isn't present in your annotation file.
-- Use `--skip_rseqc` since features like splice junctions, transcription start (TSS) and ending sites (TES) are less prevalent and therefore, less informative in prokaryotes compared to eukaryotes.
-- Use `--featurecounts_feature_type transcript` instead of `--featurecounts_feature_type transcript exon` (default) since entries for the latter may not contain a `--featurecounts_group_type gene_biotype` entry in the last column of the annotation. You should make sure that the value defined by `--featurecounts_feature_type` ideally contain corresponding entries for `featurecounts_group_type`.
-- Use `--featurecounts_feature_type 'CDS' --featurecounts_group_type 'product'` to identify the number of hypothetical proteins. However, the featureCounts QC will no longer reflect the biotype information from your RNA.
+> [!NOTE]
+> This pipeline is primarily designed for eukaryotic RNA-seq. The prokaryotic profile provides basic support but does not include specialist features like operon detection or TSS mapping.
+
+```bash
+nextflow run nf-core/rnaseq \
+    --input samplesheet.csv \
+    --fasta genome.fasta \
+    --gff annotation.gff3 \
+    --outdir results \
+    -profile prokaryotic,docker
+```
+
+##### Input requirements
+
+| Input        | Parameter          | Requirements                                                                                                       |
+| ------------ | ------------------ | ------------------------------------------------------------------------------------------------------------------ |
+| Samplesheet  | `--input`          | Standard CSV format (see [Samplesheet input](#samplesheet-input))                                                  |
+| Genome FASTA | `--fasta`          | Genomic sequence file (`.fasta`, `.fa`, `.fna`, optionally gzipped)                                                |
+| Annotation   | `--gff` or `--gtf` | Must contain **CDS features** with `gene_id` attributes. GFF3 format (`.gff3`, `.gff`) is typical for prokaryotes. |
+
+**Key points:**
+
+- **Use GFF3 format**: Prokaryotic annotations are typically distributed as GFF3 (not GTF). The pipeline accepts both via `--gff` or `--gtf`.
+- **CDS features required**: The annotation must contain CDS (coding sequence) features. The pipeline extracts transcripts from these.
+- **Matching contig names**: Chromosome/contig names in your FASTA must exactly match those in your GFF/GTF (e.g., if your FASTA has `>NC_003197.2`, your GFF must use `NC_003197.2` in column 1).
+- **No transcript FASTA needed**: The pipeline generates the transcript FASTA automatically using GFFREAD.
+
+The `-profile prokaryotic` configures the pipeline with settings optimized for prokaryotic data:
+
+- **Bowtie2 alignment**: Uses Bowtie2 instead of STAR as the default aligner. Prokaryotic genomes lack introns, so splice-aware aligners are unnecessary.
+- **GFFREAD transcript extraction**: Uses GFFREAD instead of RSEM to generate transcript sequences. Prokaryotic annotations typically use CDS features rather than exon features, and RSEM requires exon features.
+- **CDS-based counting**: Sets `featurecounts_feature_type` to `CDS` for QC metrics.
+- **Skips eukaryote-specific QC**: Disables RSeQC and dupRadar, which assume eukaryotic gene structures.
+
+You can override the aligner while keeping other prokaryotic settings:
+
+```bash
+# Use STAR instead of Bowtie2 with prokaryotic settings
+nextflow run nf-core/rnaseq \
+    --input samplesheet.csv \
+    --fasta genome.fasta \
+    --gff annotation.gff3 \
+    --outdir results \
+    --aligner star_salmon \
+    -profile prokaryotic,docker
+```
+
+When using STAR with `-profile prokaryotic`, the pipeline automatically configures STAR to use CDS features instead of exons for both index building and alignment.
+
+##### Annotation sources
+
+For prokaryotic genomes, we recommend using annotations from [Ensembl Bacteria](https://bacteria.ensembl.org/) when available, as these follow consistent formatting conventions. NCBI/RefSeq annotations can also work but may require additional attention:
+
+- **Contig name matching**: Ensure chromosome/contig names in your FASTA match those in your GTF/GFF. This is a common source of errors when mixing files from different sources.
+- **Empty transcript IDs**: Some bacterial GTFs from RefSeq contain gene entries with empty `transcript_id` fields, which can cause Salmon errors. If you encounter issues, check your annotation file and consider filtering problematic entries.
+
+##### Using GFFREAD independently
+
+The `--gffread_transcript_fasta` parameter can also be used independently of `-profile prokaryotic` for any situation where RSEM fails to extract transcripts correctly (e.g., non-standard annotation formats):
+
+```bash
+nextflow run nf-core/rnaseq \
+    --input samplesheet.csv \
+    --fasta genome.fasta \
+    --gtf annotation.gtf \
+    --gffread_transcript_fasta \
+    --outdir results \
+    -profile docker
+```
+
+##### Manual configuration (advanced)
+
+If you prefer not to use the profile, you can manually configure the pipeline for prokaryotic data. The following parameters are set by `-profile prokaryotic`:
+
+| Parameter                      | Value            | Purpose                                     |
+| ------------------------------ | ---------------- | ------------------------------------------- |
+| `--aligner`                    | `bowtie2_salmon` | Splice-unaware alignment                    |
+| `--gffread_transcript_fasta`   | `true`           | Handle CDS-only annotations                 |
+| `--featurecounts_feature_type` | `CDS`            | QC counting on CDS features                 |
+| `--skip_rseqc`                 | `true`           | Skip eukaryote-specific QC                  |
+| `--skip_dupradar`              | `true`           | Skip eukaryote-specific QC                  |
+| `--skip_qualimap`              | `true`           | Skip eukaryote-specific QC                  |
+| `--skip_bigwig`                | `true`           | Inappropriate for transcriptomic alignments |
+
+Additionally, you may want to set:
+
+- `--skip_biotype_qc` - if biotype information is not present or not of interest
+- `--skip_deseq2_qc` - if you have fewer than 3 samples per condition
 
 Please get in touch with us on the #rnaseq channel in the [nf-core Slack workspace](https://nf-co.re/join) if you are having problems or need any advice.
 
@@ -414,11 +599,15 @@ By default, the input GTF file will be filtered to ensure that sequence names co
 
 ## Contamination screening options
 
-The pipeline provides the option to scan unaligned reads for contamination from other species using [Kraken2](https://ccb.jhu.edu/software/kraken2/), with the possibility of applying corrections from [Bracken](https://ccb.jhu.edu/software/bracken/). Since running Bracken is not computationally expensive, we recommend always using it to refine the abundance estimates generated by Kraken2.
+The pipeline provides the option to scan unaligned reads for contamination from other species using either [Sylph](https://sylph-docs.github.io/) or [Kraken2](https://ccb.jhu.edu/software/kraken2/), with the possibility of applying corrections from [Bracken](https://ccb.jhu.edu/software/bracken/). Since running Bracken is not computationally expensive, we recommend always using it to refine the abundance estimates generated by Kraken2.
 
-It is important to note that the accuracy of Kraken2 is [highly dependent on the database](https://doi.org/10.1099/mgen.0.000949) used. Specifically, it is [crucial](https://doi.org/10.1128/mbio.01607-23) to ensure that the host genome is included in the database. If you are particularly concerned about certain contaminants, it may be beneficial to use a smaller, more focused database containing primarily those contaminants instead of the full standard database. Various pre-built databases [are available for download](https://benlangmead.github.io/aws-indexes/k2), and instructions for building a custom database can be found in the [Kraken2 documentation](https://github.com/DerrickWood/kraken2/blob/master/docs/MANUAL.markdown). Additionally, genomes of contaminants detected in previous sequencing experiments are available on the [OpenContami website](https://openlooper.hgc.jp/opencontami/help/help_oct.php).
+Sylph is a [faster and much more memory-efficient tool](https://doi.org/10.1038/s41587-024-02412-y) with about equal precision in species detection to Kraken2/Bracken. Sylph also has lower rates of false positives. However, Sylph does not assign specific reads to species; it only provides overall abundance estimates. Sylph abundance estimates also [cannot assign a certain percentage of reads as unclassified](https://github.com/bluenote-1577/sylph/issues/49).
 
-While Kraken2 is capable of detecting low-abundance contaminants in a sample, false positives can occur. Therefore, if only a very small number of reads from a contaminating species are detected, these results should be interpreted with caution.
+Pre-constructed sylph databases can be found [here](https://sylph-docs.github.io/pre%E2%80%90built-databases/) and taxonomies [here](https://sylph-docs.github.io/sylph-tax/). The [documentation](https://sylph-docs.github.io/sylph-tax/) also has instructions on creating custom databases/taxonomies. As a newer tool, the effect of database choice on Sylph's performance has not been explored as thoroughly as for Kraken2 or Bracken. However, the following comments on choosing databases for Kraken2 are very likely still applicable to an extent for Sylph.
+
+The accuracy of Kraken2 is [highly dependent on the database](https://doi.org/10.1099/mgen.0.000949) used. Specifically, it is [crucial](https://doi.org/10.1128/mbio.01607-23) to ensure that the host genome/transcriptome is included in the database. (Note that the pre-built sylph databases do _not_ appear to contain the human genome/transcriptome). If you are particularly concerned about certain contaminants, it may be beneficial to use a smaller, more focused database containing primarily those contaminants instead of the full standard database. Various pre-built databases [are available for download](https://benlangmead.github.io/aws-indexes/k2), and instructions for building a custom database can be found in the [Kraken2 documentation](https://github.com/DerrickWood/kraken2/blob/master/docs/MANUAL.markdown). Additionally, genomes of contaminants detected in previous sequencing experiments are available on the [OpenContami website](https://openlooper.hgc.jp/opencontami/help/help_oct.php).
+
+While Kraken2 is capable of detecting low-abundance contaminants in a sample, false positives can occur. Therefore, if only a very small number of reads from a contaminating species are detected, these results should be interpreted with caution. Lastly, while Kraken2 can be used without Bracken, since running Bracken is not computationally expensive, we recommend always using it to refine the abundance estimates generated by Kraken2.
 
 ## Running the pipeline
 
@@ -537,7 +726,7 @@ To further assist in reproducibility, you can use share and reuse [parameter fil
 
 ### `-profile`
 
-Use this parameter to choose a configuration profile. Profiles can give configuration presets for different compute environments.
+Use this parameter to choose a configuration profile. Profiles can give configuration presets for different compute environments or analyses.
 
 Several generic profiles are bundled with the pipeline which instruct the pipeline to use software packaged using different methods (Docker, Singularity, Podman, Shifter, Charliecloud, Apptainer, Conda) - see below.
 
@@ -554,6 +743,10 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
 - `test`
   - A profile with a complete configuration for automated testing
   - Includes links to test data so needs no other parameters
+- `test_prokaryotic`
+  - A test profile for prokaryotic (bacterial/archaeal) RNA-seq data
+  - Uses Salmonella Typhimurium SL1344 test data with Bowtie2 alignment
+  - Includes all prokaryotic-specific settings; use `--aligner star_salmon --skip_bigwig false` to test with STAR
 - `docker`
   - A generic configuration profile to be used with [Docker](https://docker.com/)
 - `singularity`
@@ -572,6 +765,8 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
   - A generic configuration profile to be used with [Conda](https://conda.io/docs/). Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity, Podman, Shifter, Charliecloud, or Apptainer.
 - `arm64`
   - A configuration profile that applies overrides supplying ARM-compatible containers and Conda environments. See [Running on Linux ARM architectures](#running-on-linux-arm-architectures).
+- `prokaryotic`
+  - A configuration profile optimized for bacterial and archaeal RNA-seq data. Uses Bowtie2 for alignment and configures the pipeline to handle CDS-based annotations. See [Prokaryotic genome annotations](#prokaryotic-genome-annotations).
 
 ### `-resume`
 

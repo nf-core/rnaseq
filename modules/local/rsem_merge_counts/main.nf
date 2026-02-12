@@ -17,7 +17,7 @@ process RSEM_MERGE_COUNTS {
     path "rsem.merged.transcript_tpm.tsv"   , emit: tpm_transcript
     path "rsem.merged.genes_long.tsv"       , emit: genes_long
     path "rsem.merged.isoforms_long.tsv"    , emit: isoforms_long
-    path "versions.yml"                     , emit: versions
+    tuple val("${task.process}"), val('sed'), eval("sed --version 2>&1 | sed '1!d;s/^.*) //'"), topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -62,11 +62,6 @@ process RSEM_MERGE_COUNTS {
         samplename=`basename \$fileid | sed s/\\.isoforms.results\$//g`
         tail -n+2 \$fileid | awk -v sample=\$samplename 'BEGIN{OFS="\t"}{print sample,\$1,\$2,\$3,\$4,\$5,\$6,\$7,\$8}' >> rsem.merged.isoforms_long.tsv
     done
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        sed: \$(echo \$(sed --version 2>&1) | sed 's/^.*GNU sed) //; s/ .*\$//')
-    END_VERSIONS
     """
 
     stub:
@@ -77,10 +72,5 @@ process RSEM_MERGE_COUNTS {
     touch rsem.merged.transcript_tpm.tsv
     touch rsem.merged.genes_long.tsv
     touch rsem.merged.isoforms_long.tsv
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        sed: \$(echo \$(sed --version 2>&1) | sed 's/^.*GNU sed) //; s/ .*\$//')
-    END_VERSIONS
     """
 }

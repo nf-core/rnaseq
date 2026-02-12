@@ -1,9 +1,10 @@
 name: cat_fastq
-description: Concatenates fastq files
+description: Concatenates fastq files. Supports both compressed (.gz) and uncompressed inputs; uncompressed files are automatically gzip-compressed during concatenation.
 keywords:
   - cat
   - fastq
   - concatenate
+  - compress
 tools:
   - cat:
       description: |
@@ -21,9 +22,11 @@ input:
         type: file
         description: |
           List of input FastQ files to be concatenated.
+          Accepts both gzip-compressed (.fastq.gz) and uncompressed (.fastq) files.
+        ontologies: []
 output:
-  - reads:
-      - meta:
+  reads:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -32,11 +35,30 @@ output:
           type: file
           description: Merged fastq file
           pattern: "*.{merged.fastq.gz}"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions_cat:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - cat:
+          type: string
+          description: The tool name
+      - cat --version 2>&1 | head -n 1 | sed 's/^.*coreutils) //; s/ .*\$//':
+          type: eval
+          description: The expression to obtain the version of the tool
+
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - cat:
+          type: string
+          description: The tool name
+      - cat --version 2>&1 | head -n 1 | sed 's/^.*coreutils) //; s/ .*\$//':
+          type: eval
+          description: The expression to obtain the version of the tool
+
 authors:
   - "@joseespinosa"
   - "@drpatelh"

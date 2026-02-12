@@ -5,8 +5,8 @@ process UMITOOLS_EXTRACT {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/umi_tools:1.1.5--py39hf95cd2a_0' :
-        'biocontainers/umi_tools:1.1.5--py39hf95cd2a_0' }"
+        'https://depot.galaxyproject.org/singularity/umi_tools:1.1.6--py311haab0aaa_0' :
+        'biocontainers/umi_tools:1.1.6--py311haab0aaa_0' }"
 
     input:
     tuple val(meta), path(reads)
@@ -14,7 +14,7 @@ process UMITOOLS_EXTRACT {
     output:
     tuple val(meta), path("*.fastq.gz"), emit: reads
     tuple val(meta), path("*.log")     , emit: log
-    path  "versions.yml"               , emit: versions
+    tuple val("${task.process}"), val('umitools'), eval("umi_tools --version | sed -n '/version:/s/.*: //p'"), emit: versions_umitools, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -30,11 +30,6 @@ process UMITOOLS_EXTRACT {
             -S ${prefix}.umi_extract.fastq.gz \\
             $args \\
             > ${prefix}.umi_extract.log
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            umitools: \$( umi_tools --version | sed '/version:/!d; s/.*: //' )
-        END_VERSIONS
         """
     }  else {
         """
@@ -46,11 +41,6 @@ process UMITOOLS_EXTRACT {
             --read2-out=${prefix}.umi_extract_2.fastq.gz \\
             $args \\
             > ${prefix}.umi_extract.log
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            umitools: \$( umi_tools --version | sed '/version:/!d; s/.*: //' )
-        END_VERSIONS
         """
     }
 
@@ -65,10 +55,5 @@ process UMITOOLS_EXTRACT {
     """
     touch ${prefix}.umi_extract.log
     ${output_command}
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        umitools: \$( umi_tools --version | sed '/version:/!d; s/.*: //' )
-    END_VERSIONS
     """
 }

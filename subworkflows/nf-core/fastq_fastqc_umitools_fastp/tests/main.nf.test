@@ -5,6 +5,13 @@ nextflow_workflow {
     workflow "FASTQ_FASTQC_UMITOOLS_FASTP"
     config './nextflow.config'
 
+    tag "subworkflows"
+    tag "subworkflows_nfcore"
+    tag "subworkflows/fastq_fastqc_umitools_fastp"
+    tag "fastq_fastqc_umitools_fastp"
+    tag "fastqc"
+    tag "umitools/extract"
+    tag "fastp"
 
 
     test("sarscov2 paired-end [fastq]") {
@@ -16,7 +23,6 @@ nextflow_workflow {
                 skip_umi_extract  = false
                 umi_discard_read  = 1
                 skip_trimming     = false
-                adapter_fasta     = []
                 save_trimmed_fail = false
                 save_merged       = false
                 min_trimmed_reads = 1
@@ -29,24 +35,24 @@ nextflow_workflow {
                     [
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
-                    ]
+                    ],
+                    []
                 ])
                 input[1] = params.skip_fastqc
                 input[2] = params.with_umi
                 input[3] = params.skip_umi_extract
                 input[4] = params.umi_discard_read
                 input[5] = params.skip_trimming
-                input[6] = params.adapter_fasta
-                input[7] = params.save_trimmed_fail
-                input[8] = params.save_merged
-                input[9] = params.min_trimmed_reads
+                input[6] = params.save_trimmed_fail
+                input[7] = params.save_merged
+                input[8] = params.min_trimmed_reads
                 """
             }
         }
 
         then {
+            assert workflow.success
             assertAll(
-                { assert workflow.success },
                 { assert workflow.out.fastqc_raw_html },
                 { assert workflow.out.fastqc_raw_zip },
                 { assert workflow.out.fastqc_trim_html },
@@ -56,12 +62,10 @@ nextflow_workflow {
                 { assert snapshot(
                         workflow.out.adapter_seq,
                         workflow.out.reads,
-                        workflow.out.trim_json,
                         workflow.out.trim_read_count,
                         workflow.out.trim_reads_fail,
                         workflow.out.trim_reads_merged,
-                        workflow.out.umi_log,
-                        workflow.out.versions
+                        workflow.out.umi_log
                     ).match()
                 }
             )
@@ -77,7 +81,6 @@ nextflow_workflow {
                 skip_umi_extract  = false
                 umi_discard_read  = 1
                 skip_trimming     = false
-                adapter_fasta     = []
                 save_trimmed_fail = false
                 save_merged       = false
                 min_trimmed_reads = 1
@@ -90,24 +93,24 @@ nextflow_workflow {
                     [
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
-                    ]
+                    ],
+                    []
                 ])
                 input[1] = params.skip_fastqc
                 input[2] = params.with_umi
                 input[3] = params.skip_umi_extract
                 input[4] = params.umi_discard_read
                 input[5] = params.skip_trimming
-                input[6] = params.adapter_fasta
-                input[7] = params.save_trimmed_fail
-                input[8] = params.save_merged
-                input[9] = params.min_trimmed_reads
+                input[6] = params.save_trimmed_fail
+                input[7] = params.save_merged
+                input[8] = params.min_trimmed_reads
                 """
             }
         }
 
         then {
+            assert workflow.success
             assertAll(
-                { assert workflow.success },
                 { assert workflow.out.trim_html },
                 { assert workflow.out.trim_log },
                 { assert !workflow.out.fastqc_raw_html },
@@ -117,12 +120,10 @@ nextflow_workflow {
                 { assert snapshot(
                         workflow.out.adapter_seq,
                         workflow.out.reads,
-                        workflow.out.trim_json,
                         workflow.out.trim_read_count,
                         workflow.out.trim_reads_fail,
                         workflow.out.trim_reads_merged,
-                        workflow.out.umi_log,
-                        workflow.out.versions
+                        workflow.out.umi_log
                     ).match()
                 }
             )
@@ -138,7 +139,6 @@ nextflow_workflow {
                 skip_umi_extract  = false
                 umi_discard_read  = 1
                 skip_trimming     = false
-                adapter_fasta     = []
                 save_trimmed_fail = false
                 save_merged       = false
                 min_trimmed_reads = 1
@@ -151,38 +151,34 @@ nextflow_workflow {
                     [
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
-                    ]
+                    ],
+                    []
                 ])
                 input[1] = params.skip_fastqc
                 input[2] = params.with_umi
                 input[3] = params.skip_umi_extract
                 input[4] = params.umi_discard_read
                 input[5] = params.skip_trimming
-                input[6] = params.adapter_fasta
-                input[7] = params.save_trimmed_fail
-                input[8] = params.save_merged
-                input[9] = params.min_trimmed_reads
+                input[6] = params.save_trimmed_fail
+                input[7] = params.save_merged
+                input[8] = params.min_trimmed_reads
                 """
             }
         }
 
         then {
+            assert workflow.success
             assertAll(
-                { assert workflow.success },
                 { assert workflow.out.fastqc_raw_html },
                 { assert workflow.out.fastqc_raw_zip },
-                { assert workflow.out.fastqc_trim_html },
-                { assert workflow.out.fastqc_trim_zip },
                 { assert workflow.out.trim_html },
                 { assert workflow.out.trim_log },
                 { assert snapshot(
                         workflow.out.adapter_seq,
                         workflow.out.reads,
-                        workflow.out.trim_json,
                         workflow.out.trim_read_count,
                         workflow.out.trim_reads_fail,
-                        workflow.out.trim_reads_merged,
-                        workflow.out.versions
+                        workflow.out.trim_reads_merged
                     ).match()
                 }
             )
@@ -199,7 +195,6 @@ nextflow_workflow {
                 skip_umi_extract  = true
                 umi_discard_read  = 1
                 skip_trimming     = false
-                adapter_fasta     = []
                 save_trimmed_fail = false
                 save_merged       = false
                 min_trimmed_reads = 1
@@ -212,24 +207,24 @@ nextflow_workflow {
                     [
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
-                    ]
+                    ],
+                    []
                 ])
                 input[1] = params.skip_fastqc
                 input[2] = params.with_umi
                 input[3] = params.skip_umi_extract
                 input[4] = params.umi_discard_read
                 input[5] = params.skip_trimming
-                input[6] = params.adapter_fasta
-                input[7] = params.save_trimmed_fail
-                input[8] = params.save_merged
-                input[9] = params.min_trimmed_reads
+                input[6] = params.save_trimmed_fail
+                input[7] = params.save_merged
+                input[8] = params.min_trimmed_reads
                 """
             }
         }
 
         then {
+            assert workflow.success
             assertAll(
-                { assert workflow.success },
                 { assert workflow.out.fastqc_raw_html },
                 { assert workflow.out.fastqc_raw_zip },
                 { assert workflow.out.fastqc_trim_html },
@@ -239,12 +234,10 @@ nextflow_workflow {
                 { assert snapshot(
                         workflow.out.adapter_seq,
                         workflow.out.reads,
-                        workflow.out.trim_json,
                         workflow.out.trim_read_count,
                         workflow.out.trim_reads_fail,
                         workflow.out.trim_reads_merged,
-                        workflow.out.umi_log,
-                        workflow.out.versions
+                        workflow.out.umi_log
                     ).match()
                 }
             )
@@ -260,7 +253,6 @@ nextflow_workflow {
                 skip_umi_extract  = true
                 umi_discard_read  = 2
                 skip_trimming     = false
-                adapter_fasta     = []
                 save_trimmed_fail = false
                 save_merged       = false
                 min_trimmed_reads = 1
@@ -273,24 +265,24 @@ nextflow_workflow {
                     [
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
-                    ]
+                    ],
+                    []
                 ])
                 input[1] = params.skip_fastqc
                 input[2] = params.with_umi
                 input[3] = params.skip_umi_extract
                 input[4] = params.umi_discard_read
                 input[5] = params.skip_trimming
-                input[6] = params.adapter_fasta
-                input[7] = params.save_trimmed_fail
-                input[8] = params.save_merged
-                input[9] = params.min_trimmed_reads
+                input[6] = params.save_trimmed_fail
+                input[7] = params.save_merged
+                input[8] = params.min_trimmed_reads
                 """
             }
         }
 
         then {
+            assert workflow.success
             assertAll(
-                { assert workflow.success },
                 { assert workflow.out.fastqc_raw_html },
                 { assert workflow.out.fastqc_raw_zip },
                 { assert workflow.out.fastqc_trim_html },
@@ -300,12 +292,10 @@ nextflow_workflow {
                 { assert snapshot(
                         workflow.out.adapter_seq,
                         workflow.out.reads,
-                        workflow.out.trim_json,
                         workflow.out.trim_read_count,
                         workflow.out.trim_reads_fail,
                         workflow.out.trim_reads_merged,
-                        workflow.out.umi_log,
-                        workflow.out.versions
+                        workflow.out.umi_log
                     ).match()
                 }
             )
@@ -321,7 +311,6 @@ nextflow_workflow {
                 skip_umi_extract  = false
                 umi_discard_read  = 1
                 skip_trimming     = true
-                adapter_fasta     = []
                 save_trimmed_fail = false
                 save_merged       = false
                 min_trimmed_reads = 1
@@ -334,24 +323,24 @@ nextflow_workflow {
                     [
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
-                    ]
+                    ],
+                    []
                 ])
                 input[1] = params.skip_fastqc
                 input[2] = params.with_umi
                 input[3] = params.skip_umi_extract
                 input[4] = params.umi_discard_read
                 input[5] = params.skip_trimming
-                input[6] = params.adapter_fasta
-                input[7] = params.save_trimmed_fail
-                input[8] = params.save_merged
-                input[9] = params.min_trimmed_reads
+                input[6] = params.save_trimmed_fail
+                input[7] = params.save_merged
+                input[8] = params.min_trimmed_reads
                 """
             }
         }
 
         then {
+            assert workflow.success
             assertAll(
-                { assert workflow.success },
                 { assert workflow.out.fastqc_raw_html },
                 { assert workflow.out.fastqc_raw_zip },
                 { assert !workflow.out.fastqc_trim_html },
@@ -362,12 +351,10 @@ nextflow_workflow {
                         // If we skip trimming then input is output, so not snapshotting
                         workflow.out.adapter_seq,
                         workflow.out.reads.get(0).get(0), // Reads meta map
-                        workflow.out.trim_json,
                         workflow.out.trim_read_count,
                         workflow.out.trim_reads_fail,
                         workflow.out.trim_reads_merged,
-                        workflow.out.umi_log,
-                        workflow.out.versions
+                        workflow.out.umi_log
                     ).match()
                 }
             )
@@ -383,7 +370,6 @@ nextflow_workflow {
                 skip_umi_extract  = false
                 umi_discard_read  = 1
                 skip_trimming     = false
-                adapter_fasta     = []
                 save_trimmed_fail = true
                 save_merged       = false
                 min_trimmed_reads = 1
@@ -396,24 +382,24 @@ nextflow_workflow {
                     [
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
-                    ]
+                    ],
+                    []
                 ])
                 input[1] = params.skip_fastqc
                 input[2] = params.with_umi
                 input[3] = params.skip_umi_extract
                 input[4] = params.umi_discard_read
                 input[5] = params.skip_trimming
-                input[6] = params.adapter_fasta
-                input[7] = params.save_trimmed_fail
-                input[8] = params.save_merged
-                input[9] = params.min_trimmed_reads
+                input[6] = params.save_trimmed_fail
+                input[7] = params.save_merged
+                input[8] = params.min_trimmed_reads
                 """
             }
         }
 
         then {
+            assert workflow.success
             assertAll(
-                { assert workflow.success },
                 { assert workflow.out.fastqc_raw_html },
                 { assert workflow.out.fastqc_raw_zip },
                 { assert workflow.out.fastqc_trim_html },
@@ -423,12 +409,10 @@ nextflow_workflow {
                 { assert snapshot(
                         workflow.out.adapter_seq,
                         workflow.out.reads,
-                        workflow.out.trim_json,
                         workflow.out.trim_read_count,
                         workflow.out.trim_reads_fail,
                         workflow.out.trim_reads_merged,
-                        workflow.out.umi_log,
-                        workflow.out.versions
+                        workflow.out.umi_log
                     ).match()
                 }
             )
@@ -444,7 +428,6 @@ nextflow_workflow {
                 skip_umi_extract  = false
                 umi_discard_read  = 1
                 skip_trimming     = false
-                adapter_fasta     = []
                 save_trimmed_fail = false
                 save_merged       = true
                 min_trimmed_reads = 1
@@ -457,24 +440,24 @@ nextflow_workflow {
                     [
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
-                    ]
+                    ],
+                    []
                 ])
                 input[1] = params.skip_fastqc
                 input[2] = params.with_umi
                 input[3] = params.skip_umi_extract
                 input[4] = params.umi_discard_read
                 input[5] = params.skip_trimming
-                input[6] = params.adapter_fasta
-                input[7] = params.save_trimmed_fail
-                input[8] = params.save_merged
-                input[9] = params.min_trimmed_reads
+                input[6] = params.save_trimmed_fail
+                input[7] = params.save_merged
+                input[8] = params.min_trimmed_reads
                 """
             }
         }
 
         then {
+            assert workflow.success
             assertAll(
-                { assert workflow.success },
                 { assert workflow.out.fastqc_raw_html },
                 { assert workflow.out.fastqc_raw_zip },
                 { assert workflow.out.fastqc_trim_html },
@@ -484,12 +467,10 @@ nextflow_workflow {
                 { assert snapshot(
                         workflow.out.adapter_seq,
                         workflow.out.reads,
-                        workflow.out.trim_json,
                         workflow.out.trim_read_count,
                         workflow.out.trim_reads_fail,
                         workflow.out.trim_reads_merged,
-                        workflow.out.umi_log,
-                        workflow.out.versions
+                        workflow.out.umi_log
                     ).match()
                 }
             )
@@ -506,7 +487,6 @@ nextflow_workflow {
                 skip_umi_extract  = false
                 umi_discard_read  = 1
                 skip_trimming     = false
-                adapter_fasta     = []
                 save_trimmed_fail = false
                 save_merged       = true
                 min_trimmed_reads = 26
@@ -519,24 +499,24 @@ nextflow_workflow {
                     [
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
-                    ]
+                    ],
+                    []
                 ])
                 input[1] = params.skip_fastqc
                 input[2] = params.with_umi
                 input[3] = params.skip_umi_extract
                 input[4] = params.umi_discard_read
                 input[5] = params.skip_trimming
-                input[6] = params.adapter_fasta
-                input[7] = params.save_trimmed_fail
-                input[8] = params.save_merged
-                input[9] = params.min_trimmed_reads
+                input[6] = params.save_trimmed_fail
+                input[7] = params.save_merged
+                input[8] = params.min_trimmed_reads
                 """
             }
         }
 
         then {
+            assert workflow.success
             assertAll(
-                { assert workflow.success },
                 { assert workflow.out.fastqc_raw_html },
                 { assert workflow.out.fastqc_raw_zip },
                 { assert workflow.out.fastqc_trim_html },
@@ -546,12 +526,10 @@ nextflow_workflow {
                 { assert snapshot(
                         workflow.out.adapter_seq,
                         workflow.out.reads,
-                        workflow.out.trim_json,
                         workflow.out.trim_read_count,
                         workflow.out.trim_reads_fail,
                         workflow.out.trim_reads_merged,
-                        workflow.out.umi_log,
-                        workflow.out.versions
+                        workflow.out.umi_log
                     ).match()
                 }
             )
@@ -568,7 +546,6 @@ nextflow_workflow {
                 skip_umi_extract  = false
                 umi_discard_read  = 1
                 skip_trimming     = false
-                adapter_fasta     = []
                 save_trimmed_fail = false
                 save_merged       = false
                 min_trimmed_reads = 1
@@ -581,24 +558,24 @@ nextflow_workflow {
                     [
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
-                    ]
+                    ],
+                    []
                 ])
                 input[1] = params.skip_fastqc
                 input[2] = params.with_umi
                 input[3] = params.skip_umi_extract
                 input[4] = params.umi_discard_read
                 input[5] = params.skip_trimming
-                input[6] = params.adapter_fasta
-                input[7] = params.save_trimmed_fail
-                input[8] = params.save_merged
-                input[9] = params.min_trimmed_reads
+                input[6] = params.save_trimmed_fail
+                input[7] = params.save_merged
+                input[8] = params.min_trimmed_reads
                 """
             }
         }
 
         then {
+            assert workflow.success
             assertAll(
-                { assert workflow.success },
                 { assert snapshot(workflow.out).match() }
             )
         }
@@ -614,7 +591,6 @@ nextflow_workflow {
                 skip_umi_extract  = false
                 umi_discard_read  = 1
                 skip_trimming     = false
-                adapter_fasta     = []
                 save_trimmed_fail = false
                 save_merged       = false
                 min_trimmed_reads = 1
@@ -627,24 +603,24 @@ nextflow_workflow {
                     [
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
-                    ]
+                    ],
+                    []
                 ])
                 input[1] = params.skip_fastqc
                 input[2] = params.with_umi
                 input[3] = params.skip_umi_extract
                 input[4] = params.umi_discard_read
                 input[5] = params.skip_trimming
-                input[6] = params.adapter_fasta
-                input[7] = params.save_trimmed_fail
-                input[8] = params.save_merged
-                input[9] = params.min_trimmed_reads
+                input[6] = params.save_trimmed_fail
+                input[7] = params.save_merged
+                input[8] = params.min_trimmed_reads
                 """
             }
         }
 
         then {
+            assert workflow.success
             assertAll(
-                { assert workflow.success },
                 { assert snapshot(workflow.out).match() }
             )
         }
@@ -660,7 +636,6 @@ nextflow_workflow {
                 skip_umi_extract  = false
                 umi_discard_read  = 1
                 skip_trimming     = false
-                adapter_fasta     = []
                 save_trimmed_fail = false
                 save_merged       = false
                 min_trimmed_reads = 1
@@ -673,17 +648,17 @@ nextflow_workflow {
                     [
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
-                    ]
+                    ],
+                    []
                 ])
                 input[1] = params.skip_fastqc
                 input[2] = params.with_umi
                 input[3] = params.skip_umi_extract
                 input[4] = params.umi_discard_read
                 input[5] = params.skip_trimming
-                input[6] = params.adapter_fasta
-                input[7] = params.save_trimmed_fail
-                input[8] = params.save_merged
-                input[9] = params.min_trimmed_reads
+                input[6] = params.save_trimmed_fail
+                input[7] = params.save_merged
+                input[8] = params.min_trimmed_reads
                 """
             }
         }
@@ -707,7 +682,6 @@ nextflow_workflow {
                 skip_umi_extract  = true
                 umi_discard_read  = 1
                 skip_trimming     = false
-                adapter_fasta     = []
                 save_trimmed_fail = false
                 save_merged       = false
                 min_trimmed_reads = 1
@@ -720,24 +694,24 @@ nextflow_workflow {
                     [
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
-                    ]
+                    ],
+                    []
                 ])
                 input[1] = params.skip_fastqc
                 input[2] = params.with_umi
                 input[3] = params.skip_umi_extract
                 input[4] = params.umi_discard_read
                 input[5] = params.skip_trimming
-                input[6] = params.adapter_fasta
-                input[7] = params.save_trimmed_fail
-                input[8] = params.save_merged
-                input[9] = params.min_trimmed_reads
+                input[6] = params.save_trimmed_fail
+                input[7] = params.save_merged
+                input[8] = params.min_trimmed_reads
                 """
             }
         }
 
         then {
+            assert workflow.success
             assertAll(
-                { assert workflow.success },
                 { assert snapshot(workflow.out).match() }
             )
         }
@@ -753,7 +727,6 @@ nextflow_workflow {
                 skip_umi_extract  = true
                 umi_discard_read  = 2
                 skip_trimming     = false
-                adapter_fasta     = []
                 save_trimmed_fail = false
                 save_merged       = false
                 min_trimmed_reads = 1
@@ -766,24 +739,24 @@ nextflow_workflow {
                     [
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
-                    ]
+                    ],
+                    []
                 ])
                 input[1] = params.skip_fastqc
                 input[2] = params.with_umi
                 input[3] = params.skip_umi_extract
                 input[4] = params.umi_discard_read
                 input[5] = params.skip_trimming
-                input[6] = params.adapter_fasta
-                input[7] = params.save_trimmed_fail
-                input[8] = params.save_merged
-                input[9] = params.min_trimmed_reads
+                input[6] = params.save_trimmed_fail
+                input[7] = params.save_merged
+                input[8] = params.min_trimmed_reads
                 """
             }
         }
 
         then {
+            assert workflow.success
             assertAll(
-                { assert workflow.success },
                 { assert snapshot(workflow.out).match() }
             )
         }
@@ -799,7 +772,6 @@ nextflow_workflow {
                 skip_umi_extract  = false
                 umi_discard_read  = 1
                 skip_trimming     = true
-                adapter_fasta     = []
                 save_trimmed_fail = false
                 save_merged       = false
                 min_trimmed_reads = 1
@@ -812,17 +784,17 @@ nextflow_workflow {
                     [
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
-                    ]
+                    ],
+                    []
                 ])
                 input[1] = params.skip_fastqc
                 input[2] = params.with_umi
                 input[3] = params.skip_umi_extract
                 input[4] = params.umi_discard_read
                 input[5] = params.skip_trimming
-                input[6] = params.adapter_fasta
-                input[7] = params.save_trimmed_fail
-                input[8] = params.save_merged
-                input[9] = params.min_trimmed_reads
+                input[6] = params.save_trimmed_fail
+                input[7] = params.save_merged
+                input[8] = params.min_trimmed_reads
                 """
             }
         }
@@ -842,8 +814,7 @@ nextflow_workflow {
                     workflow.out.trim_read_count,
                     workflow.out.trim_reads_fail,
                     workflow.out.trim_reads_merged,
-                    workflow.out.umi_log,
-                    workflow.out.versions).match() }
+                    workflow.out.umi_log).match() }
             )
         }
     }
@@ -858,7 +829,6 @@ nextflow_workflow {
                 skip_umi_extract  = false
                 umi_discard_read  = 1
                 skip_trimming     = false
-                adapter_fasta     = []
                 save_trimmed_fail = true
                 save_merged       = false
                 min_trimmed_reads = 1
@@ -871,24 +841,24 @@ nextflow_workflow {
                     [
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
-                    ]
+                    ],
+                    []
                 ])
                 input[1] = params.skip_fastqc
                 input[2] = params.with_umi
                 input[3] = params.skip_umi_extract
                 input[4] = params.umi_discard_read
                 input[5] = params.skip_trimming
-                input[6] = params.adapter_fasta
-                input[7] = params.save_trimmed_fail
-                input[8] = params.save_merged
-                input[9] = params.min_trimmed_reads
+                input[6] = params.save_trimmed_fail
+                input[7] = params.save_merged
+                input[8] = params.min_trimmed_reads
                 """
             }
         }
 
         then {
+            assert workflow.success
             assertAll(
-                { assert workflow.success },
                 { assert snapshot(workflow.out).match() }
             )
         }
@@ -904,7 +874,6 @@ nextflow_workflow {
                 skip_umi_extract  = false
                 umi_discard_read  = 1
                 skip_trimming     = false
-                adapter_fasta     = []
                 save_trimmed_fail = false
                 save_merged       = true
                 min_trimmed_reads = 1
@@ -917,17 +886,17 @@ nextflow_workflow {
                     [
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
-                    ]
+                    ],
+                    []
                 ])
                 input[1] = params.skip_fastqc
                 input[2] = params.with_umi
                 input[3] = params.skip_umi_extract
                 input[4] = params.umi_discard_read
                 input[5] = params.skip_trimming
-                input[6] = params.adapter_fasta
-                input[7] = params.save_trimmed_fail
-                input[8] = params.save_merged
-                input[9] = params.min_trimmed_reads
+                input[6] = params.save_trimmed_fail
+                input[7] = params.save_merged
+                input[8] = params.min_trimmed_reads
                 """
             }
         }
@@ -951,7 +920,6 @@ nextflow_workflow {
                 skip_umi_extract  = false
                 umi_discard_read  = 1
                 skip_trimming     = false
-                adapter_fasta     = []
                 save_trimmed_fail = false
                 save_merged       = true
                 min_trimmed_reads = 26
@@ -964,24 +932,24 @@ nextflow_workflow {
                     [
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
-                    ]
+                    ],
+                    []
                 ])
                 input[1] = params.skip_fastqc
                 input[2] = params.with_umi
                 input[3] = params.skip_umi_extract
                 input[4] = params.umi_discard_read
                 input[5] = params.skip_trimming
-                input[6] = params.adapter_fasta
-                input[7] = params.save_trimmed_fail
-                input[8] = params.save_merged
-                input[9] = params.min_trimmed_reads
+                input[6] = params.save_trimmed_fail
+                input[7] = params.save_merged
+                input[8] = params.min_trimmed_reads
                 """
             }
         }
 
         then {
+            assert workflow.success
             assertAll(
-                { assert workflow.success },
                 { assert snapshot(workflow.out).match() }
             )
         }

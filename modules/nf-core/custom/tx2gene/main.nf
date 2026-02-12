@@ -25,8 +25,9 @@ process CUSTOM_TX2GENE {
     template 'tx2gene.py'
 
     stub:
+    def prefix = task.ext.prefix ?: meta.id
     """
-    touch ${meta.id}.tx2gene.tsv
+    touch ${prefix}.tx2gene.tsv
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

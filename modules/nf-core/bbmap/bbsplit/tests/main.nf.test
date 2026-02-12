@@ -30,7 +30,7 @@ nextflow_process {
                 { assert process.success },
                 { assert path("${process.out.index[0]}").exists() },
                 { assert path(process.out.log[0][1]).text.contains("No index available") },
-                { assert snapshot(process.out.versions).match() }
+                { assert snapshot(process.out.findAll { key, val -> key.startsWith("versions") }).match() }
             )
         }
     }
@@ -104,7 +104,7 @@ nextflow_process {
                 { assert snapshot(
                     process.out.primary_fastq,
                     process.out.stats,
-                    process.out.versions
+                    process.out.findAll { key, val -> key.startsWith("versions") }
                 ).match()}
             )
         }

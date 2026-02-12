@@ -2,10 +2,10 @@ Changes in component 'nf-core/umitools/prepareforrsem'
 Changes in 'umitools/prepareforrsem/environment.yml':
 --- modules/nf-core/umitools/prepareforrsem/environment.yml
 +++ modules/nf-core/umitools/prepareforrsem/environment.yml
-@@ -5,3 +5,12 @@
-   - bioconda
+@@ -6,3 +6,12 @@
  dependencies:
-   - bioconda::umi_tools=1.1.5
+   # renovate: datasource=conda depName=bioconda/umi_tools
+   - bioconda::umi_tools=1.1.6
 +  - python=3.9.18
 +  - matplotlib=3.8.2
 +  - scipy=1.12.0

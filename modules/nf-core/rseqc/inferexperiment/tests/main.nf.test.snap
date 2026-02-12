@@ -11,7 +11,11 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,f56ba5c6208ae720dd730f3a432e3ba7"
+                    [
+                        "RSEQC_INFEREXPERIMENT",
+                        "rseqc",
+                        "5.0.4"
+                    ]
                 ],
                 "txt": [
                     [
@@ -21,16 +25,20 @@
                         "test.infer_experiment.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,f56ba5c6208ae720dd730f3a432e3ba7"
+                "versions_rseqc": [
+                    [
+                        "RSEQC_INFEREXPERIMENT",
+                        "rseqc",
+                        "5.0.4"
+                    ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-06-21T09:34:31.050305"
+        "timestamp": "2025-12-10T13:17:45.425228866"
     },
     "sarscov2 - [[meta] - bam] - bed": {
         "content": [
@@ -44,7 +52,11 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,f56ba5c6208ae720dd730f3a432e3ba7"
+                    [
+                        "RSEQC_INFEREXPERIMENT",
+                        "rseqc",
+                        "5.0.4"
+                    ]
                 ],
                 "txt": [
                     [
@@ -54,15 +66,19 @@
                         "test.infer_experiment.txt:md5,f9d0bfc239df637cd8aeda40ade3c59a"
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,f56ba5c6208ae720dd730f3a432e3ba7"
+                "versions_rseqc": [
+                    [
+                        "RSEQC_INFEREXPERIMENT",
+                        "rseqc",
+                        "5.0.4"
+                    ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.01.0"
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-02-26T14:33:19.853327"
+        "timestamp": "2025-12-10T13:15:34.201975881"
     }
 }

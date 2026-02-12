@@ -53,13 +53,28 @@ output:
           description: FastQC report archive
           pattern: "*_{fastqc.zip}"
           ontologies: []
+  versions_fastqc:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - fastqc:
+          type: string
+          description: The tool name
+      - fastqc --version | sed "/FastQC v/!d; s/.*v//":
+          type: eval
+          description: The expression to obtain the version of the tool
+
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - fastqc:
+          type: string
+          description: The tool name
+      - fastqc --version | sed "/FastQC v/!d; s/.*v//":
+          type: eval
+          description: The expression to obtain the version of the tool
 authors:
   - "@drpatelh"
   - "@grst"
@@ -70,3 +85,27 @@ maintainers:
   - "@grst"
   - "@ewels"
   - "@FelixKrueger"
+containers:
+  conda:
+    linux_amd64:
+      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-af7a5314d5015c29_1/condalock
+    linux_arm64:
+      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-df99cb252670875a_2/condalock
+  docker:
+    linux_amd64:
+      build_id: bd-af7a5314d5015c29_1
+      name: community.wave.seqera.io/library/fastqc:0.12.1--af7a5314d5015c29
+      scanId: sc-a618548acbee5a8a_30
+    linux_arm64:
+      build_id: bd-df99cb252670875a_2
+      name: community.wave.seqera.io/library/fastqc:0.12.1--df99cb252670875a
+      scanId: sc-b5913ed5d42b22d2_18
+  singularity:
+    linux_amd64:
+      build_id: bd-104d26ddd9519960_1
+      name: oras://community.wave.seqera.io/library/fastqc:0.12.1--104d26ddd9519960
+      https: https://community.wave.seqera.io/v2/library/fastqc/blobs/sha256:e0c976cb2eca5fee72618a581537a4f8ea42fcae24c9b201e2e0f764fd28648a
+    linux_arm64:
+      build_id: bd-d56b505a93aef38a_1
+      name: oras://community.wave.seqera.io/library/fastqc:0.12.1--d56b505a93aef38a
+      https: https://community.wave.seqera.io/v2/library/fastqc/blobs/sha256:fd39534bf298698cbe3ee4d4a6f1e73330ec4bca44c38dd9a4d06cb5ea838017

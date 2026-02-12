@@ -1,51 +1,48 @@
 {
     "sarscov2 transcriptome.fasta - stub": {
         "content": [
+            [
+                [
+                    {
+                        "id": "transcriptome"
+                    },
+                    [
+                        
+                    ]
+                ]
+            ],
             {
-                "0": [
+                "versions_kallisto": [
                     [
-                        {
-                            "id": "transcriptome"
-                        },
-                        [
-                            
-                        ]
+                        "KALLISTO_INDEX",
+                        "kallisto",
+                        "0.51.1"
                     ]
-                ],
-                "1": [
-                    "versions.yml:md5,e23afe0f9a5d0dc20b05c27fe59ad041"
-                ],
-                "index": [
-                    [
-                        {
-                            "id": "transcriptome"
-                        },
-                        [
-                            
-                        ]
-                    ]
-                ],
-                "versions": [
-                    "versions.yml:md5,e23afe0f9a5d0dc20b05c27fe59ad041"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-10-19T18:51:55.402665844"
+        "timestamp": "2026-01-28T17:53:06.991465"
     },
     "sarscov2 transcriptome.fasta": {
         "content": [
-            [
-                "versions.yml:md5,e23afe0f9a5d0dc20b05c27fe59ad041"
-            ]
+            {
+                "versions_kallisto": [
+                    [
+                        "KALLISTO_INDEX",
+                        "kallisto",
+                        "0.51.1"
+                    ]
+                ]
+            }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-10-19T18:51:42.328144373"
+        "timestamp": "2026-01-28T17:52:50.923273"
     }
 }

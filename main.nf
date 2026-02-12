@@ -28,6 +28,7 @@ params.rsem_index       = getGenomeAttribute('rsem')
 params.hisat2_index     = getGenomeAttribute('hisat2')
 params.salmon_index     = getGenomeAttribute('salmon')
 params.kallisto_index   = getGenomeAttribute('kallisto')
+params.bowtie2_index    = getGenomeAttribute('bowtie2')
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -54,7 +55,7 @@ workflow NFCORE_RNASEQ {
 
     main:
 
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     //
     // SUBWORKFLOW: Prepare reference genome files
@@ -74,18 +75,21 @@ workflow NFCORE_RNASEQ {
         params.salmon_index,
         params.kallisto_index,
         params.hisat2_index,
+        params.bowtie2_index,
         params.bbsplit_index,
         params.sortmerna_index,
         params.gencode,
+        params.gffread_transcript_fasta,
         params.featurecounts_group_type,
         params.aligner,
         params.pseudo_aligner,
         params.skip_gtf_filter,
         params.skip_bbsplit,
-        !params.remove_ribo_rna,
+        params.remove_ribo_rna ? params.ribo_removal_tool : null,
         params.skip_alignment,
         params.skip_pseudo_alignment,
-        params.use_sentieon_star
+        params.use_sentieon_star,
+        params.use_parabricks_star
     )
     ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
 
@@ -94,13 +98,18 @@ workflow NFCORE_RNASEQ {
         PREPARE_GENOME
             .out
             .fai
-            .map { checkMaxContigSize(it) }
+            .map { fai -> checkMaxContigSize(fai) }
     }
 
     //
     // WORKFLOW: Run nf-core/rnaseq workflow
     //
-    ch_samplesheet = Channel.value(file(params.input, checkIfExists: true))
+    ch_samplesheet = channel.value(file(params.input, checkIfExists: true))
+
+    // Bowtie2 rRNA index is built on-demand inside the fastq_remove_rrna subworkflow
+    // rather than in PREPARE_GENOME, to avoid duplicating the rRNA FASTA preparation logic
+    ch_bowtie2_rrna_index = channel.empty()
+
     RNASEQ (
         ch_samplesheet,
         ch_versions,
@@ -113,11 +122,13 @@ workflow NFCORE_RNASEQ {
         PREPARE_GENOME.out.star_index,
         PREPARE_GENOME.out.rsem_index,
         PREPARE_GENOME.out.hisat2_index,
+        PREPARE_GENOME.out.bowtie2_index,
         PREPARE_GENOME.out.salmon_index,
         PREPARE_GENOME.out.kallisto_index,
         PREPARE_GENOME.out.bbsplit_index,
         PREPARE_GENOME.out.rrna_fastas,
         PREPARE_GENOME.out.sortmerna_index,
+        ch_bowtie2_rrna_index,
         PREPARE_GENOME.out.splicesites
     )
     ch_versions = ch_versions.mix(RNASEQ.out.versions)

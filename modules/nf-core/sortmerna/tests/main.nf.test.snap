@@ -1,15 +1,21 @@
 {
     "versions_paired_end_stub": {
         "content": [
-            [
-                "versions.yml:md5,1ba8f45ec168b6ebfceb9d4a4203f655"
-            ]
+            {
+                "versions_sortmerna": [
+                    [
+                        "SORTMERNA",
+                        "sortmerna",
+                        "4.3.7"
+                    ]
+                ]
+            }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.2"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-05-27T16:48:08.251216694"
+        "timestamp": "2026-01-19T17:23:41.371837471"
     },
     "index_paired_end_stub": {
         "content": [
@@ -32,27 +38,39 @@
     },
     "versions_paired_end": {
         "content": [
-            [
-                "versions.yml:md5,1ba8f45ec168b6ebfceb9d4a4203f655"
-            ]
+            {
+                "versions_sortmerna": [
+                    [
+                        "SORTMERNA",
+                        "sortmerna",
+                        "4.3.7"
+                    ]
+                ]
+            }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.2"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-05-27T16:47:57.934896622"
+        "timestamp": "2026-01-19T17:23:35.889332842"
     },
     "versions_single_end_stub": {
         "content": [
-            [
-                "versions.yml:md5,1ba8f45ec168b6ebfceb9d4a4203f655"
-            ]
+            {
+                "versions_sortmerna": [
+                    [
+                        "SORTMERNA",
+                        "sortmerna",
+                        "4.3.7"
+                    ]
+                ]
+            }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.2"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-05-27T16:47:46.144044374"
+        "timestamp": "2026-01-19T17:23:29.270369464"
     },
     "sarscov2 single_end_match": {
         "content": [
@@ -103,15 +121,21 @@
     },
     "versions_single_end_premade_index": {
         "content": [
-            [
-                "versions.yml:md5,1ba8f45ec168b6ebfceb9d4a4203f655"
-            ]
+            {
+                "versions_sortmerna": [
+                    [
+                        "SORTMERNA",
+                        "sortmerna",
+                        "4.3.7"
+                    ]
+                ]
+            }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.2"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-05-27T16:48:20.839706567"
+        "timestamp": "2026-01-19T17:23:48.659750701"
     },
     "sarscov2 paired_end-for_stub_match": {
         "content": [
@@ -137,15 +161,21 @@
                 "2415186086593376314.kmer_0.dat:md5,4a0bcb71b120f6a6949b7969292ef2e7",
                 "2415186086593376314.pos_0.dat:md5,bc2875e4cc4017707306565e396839ef"
             ],
-            [
-                "versions.yml:md5,1ba8f45ec168b6ebfceb9d4a4203f655"
-            ]
+            {
+                "versions_sortmerna": [
+                    [
+                        "SORTMERNA",
+                        "sortmerna",
+                        "4.3.7"
+                    ]
+                ]
+            }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.2"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-06-03T09:42:00.868287579"
+        "timestamp": "2026-01-19T17:23:11.933438391"
     },
     "index_paired_end": {
         "content": [
@@ -208,27 +238,39 @@
     },
     "versions_single_end": {
         "content": [
-            [
-                "versions.yml:md5,1ba8f45ec168b6ebfceb9d4a4203f655"
-            ]
+            {
+                "versions_sortmerna": [
+                    [
+                        "SORTMERNA",
+                        "sortmerna",
+                        "4.3.7"
+                    ]
+                ]
+            }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.2"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-05-27T16:47:35.26956893"
+        "timestamp": "2026-01-19T17:23:23.954370601"
     },
     "versions_single_end_premade_index_stub": {
         "content": [
-            [
-                "versions.yml:md5,1ba8f45ec168b6ebfceb9d4a4203f655"
-            ]
+            {
+                "versions_sortmerna": [
+                    [
+                        "SORTMERNA",
+                        "sortmerna",
+                        "4.3.7"
+                    ]
+                ]
+            }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.2"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-05-27T16:48:32.170638722"
+        "timestamp": "2026-01-19T17:23:54.679653966"
     },
     "index_single_end_stub": {
         "content": [
@@ -251,15 +293,21 @@
     },
     "versions_index_only_stub": {
         "content": [
-            [
-                "versions.yml:md5,1ba8f45ec168b6ebfceb9d4a4203f655"
-            ]
+            {
+                "versions_sortmerna": [
+                    [
+                        "SORTMERNA",
+                        "sortmerna",
+                        "4.3.7"
+                    ]
+                ]
+            }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.2"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-05-27T16:47:23.422761188"
+        "timestamp": "2026-01-19T17:23:17.3325412"
     },
     "index_single_end_premade_index_stub": {
         "content": [

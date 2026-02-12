@@ -13,7 +13,7 @@ process QUALIMAP_RNASEQ {
 
     output:
     tuple val(meta), path("${prefix}"), emit: results
-    path  "versions.yml"              , emit: versions
+    tuple val("${task.process}"), val('qualimap'), eval("qualimap 2>&1 | sed -n 's/.*QualiMap v.\\(.*\\)/\\1/p'"), emit: versions_qualimap, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -43,21 +43,11 @@ process QUALIMAP_RNASEQ {
         -p $strandedness \\
         $paired_end \\
         -outdir $prefix
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        qualimap: \$(echo \$(qualimap 2>&1) | sed 's/^.*QualiMap v.//; s/Built.*\$//')
-    END_VERSIONS
     """
 
     stub:
     prefix = task.ext.prefix ?: "${meta.id}"
     """
     mkdir ${prefix}
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        qualimap: \$(echo \$(qualimap 2>&1) | sed 's/^.*QualiMap v.//; s/Built.*\$//')
-    END_VERSIONS
     """
 }

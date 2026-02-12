@@ -22,21 +22,42 @@ input:
         type: file
         description: FASTQ file list
         pattern: "*.fastq{,.gz}"
+        ontologies: []
 output:
-  - lint:
-      - meta:
+  lint:
+    - - meta:
           type: file
           description: Lint output
           pattern: "*.fq_lint.txt"
+          ontologies: []
       - "*.fq_lint.txt":
           type: file
           description: Lint output
           pattern: "*.fq_lint.txt"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions_fq:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - fq:
+          type: string
+          description: The name of the tool
+      - "fq lint --version | sed 's/fq-lint //; s/ .*//'":
+          type: eval
+          description: The expression to obtain the version of the tool
+
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - fq:
+          type: string
+          description: The name of the tool
+      - "fq lint --version | sed 's/fq-lint //; s/ .*//'":
+          type: eval
+          description: The expression to obtain the version of the tool
+
 authors:
   - "@adamrtalbot"
 maintainers:

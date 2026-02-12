@@ -1,0 +1,67 @@
+nextflow_process {
+
+    name "Test Process RIBODETECTOR"
+    script "../main.nf"
+    process "RIBODETECTOR"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "ribodetector"
+
+    test("ribodetector - rnaseq PE input") {
+        when {
+            process {
+                """
+               input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
+                    ]
+                ]
+                input[1] = 150
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert process.out.fastq },
+                { assert process.out.log },
+                { assert path(process.out.log[0][1]).getText().contains("Writing output non-rRNA sequences") },
+                { assert snapshot(process.out.findAll { key, val -> key.startsWith("versions") }).match() }
+            )
+        }
+
+    }
+
+    test("ribodetector - stub rnaseq PE input") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
+                    ]
+                ]
+                input[1] = 150
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
+}

@@ -4,7 +4,8 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::umi_tools=1.1.5
+  # renovate: datasource=conda depName=bioconda/umi_tools
+  - bioconda::umi_tools=1.1.6
   - python=3.9.18
   - matplotlib=3.8.2
   - scipy=1.12.0

@@ -20,6 +20,9 @@
                         "test.isoforms.results:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
+                "10": [
+                    "versions.yml:md5,2aa5252eb2ffb409cf556a165d40f8a9"
+                ],
                 "2": [
                     [
                         {
@@ -51,8 +54,10 @@
                     "rsem.merged.transcript_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                 ],
                 "8": [
-                    "versions.yml:md5,2aa5252eb2ffb409cf556a165d40f8a9",
-                    "versions.yml:md5,773c15c4ecb7d486a4bdd8ef73e7ac5d"
+                    "rsem.merged.genes_long.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "9": [
+                    "rsem.merged.isoforms_long.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                 ],
                 "counts_gene": [
                     [
@@ -87,6 +92,12 @@
                 "merged_counts_transcript": [
                     "rsem.merged.transcript_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                 ],
+                "merged_genes_long": [
+                    "rsem.merged.genes_long.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "merged_isoforms_long": [
+                    "rsem.merged.isoforms_long.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
                 "merged_tpm_gene": [
                     "rsem.merged.gene_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                 ],
@@ -103,8 +114,7 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,2aa5252eb2ffb409cf556a165d40f8a9",
-                    "versions.yml:md5,773c15c4ecb7d486a4bdd8ef73e7ac5d"
+                    "versions.yml:md5,2aa5252eb2ffb409cf556a165d40f8a9"
                 ]
             }
         ],
@@ -166,8 +176,10 @@
                     "rsem.merged.transcript_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                 ],
                 "8": [
-                    "versions.yml:md5,2aa5252eb2ffb409cf556a165d40f8a9",
-                    "versions.yml:md5,ae1676b60b6335fff8f1188288103a1c"
+                    "rsem.merged.genes_long.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "9": [
+                    "rsem.merged.isoforms_long.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                 ],
                 "counts_gene": [
                     [
@@ -202,6 +214,12 @@
                 "merged_counts_transcript": [
                     "rsem.merged.transcript_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                 ],
+                "merged_genes_long": [
+                    "rsem.merged.genes_long.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "merged_isoforms_long": [
+                    "rsem.merged.isoforms_long.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
                 "merged_tpm_gene": [
                     "rsem.merged.gene_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                 ],
@@ -216,18 +234,14 @@
                         },
                         "test.stat:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
-                ],
-                "versions": [
-                    "versions.yml:md5,2aa5252eb2ffb409cf556a165d40f8a9",
-                    "versions.yml:md5,ae1676b60b6335fff8f1188288103a1c"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.6"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-11-27T16:26:03.792661891"
+        "timestamp": "2026-02-04T14:59:42.647064759"
     },
     "homo_sapiens": {
         "content": [
@@ -273,16 +287,12 @@
             ],
             [
                 "rsem.merged.transcript_tpm.tsv:md5,d38f22667e3b8012f1d783b8d5159ccc"
-            ],
-            [
-                "versions.yml:md5,2aa5252eb2ffb409cf556a165d40f8a9",
-                "versions.yml:md5,ae1676b60b6335fff8f1188288103a1c"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.6"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-11-27T17:10:37.825495549"
+        "timestamp": "2026-02-04T14:59:30.184415746"
     }
 }

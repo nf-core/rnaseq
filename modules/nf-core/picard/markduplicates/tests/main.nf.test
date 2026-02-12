@@ -4,6 +4,10 @@ nextflow_process {
     script "../main.nf"
     process "PICARD_MARKDUPLICATES"
     config "./nextflow.config"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "picard"
+    tag "picard/markduplicates"
 
     test("sarscov2 [unsorted bam]") {
 
@@ -26,7 +30,7 @@ nextflow_process {
                 { assert snapshot(
                     file(process.out.bam[0][1]).name,
                     path(process.out.metrics.get(0).get(1)).readLines()[0..2],
-                    process.out.versions)
+                    process.out.findAll { key, val -> key.startsWith("versions") })
                 .match() }
             )
         }
@@ -53,7 +57,7 @@ nextflow_process {
                 { assert snapshot(
                     file(process.out.bam[0][1]).name,
                     path(process.out.metrics.get(0).get(1)).readLines()[0..2],
-                    process.out.versions)
+                    process.out.findAll { key, val -> key.startsWith("versions") })
                 .match() }
             )
         }
@@ -86,7 +90,7 @@ nextflow_process {
                 { assert snapshot(
                     file(process.out.cram[0][1]).name,
                     path(process.out.metrics.get(0).get(1)).readLines()[0..2],
-                    process.out.versions)
+                    process.out.findAll { key, val -> key.startsWith("versions") })
                 .match() }
             )
         }

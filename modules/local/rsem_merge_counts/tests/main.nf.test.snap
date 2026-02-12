@@ -21,7 +21,11 @@
                     "rsem.merged.isoforms_long.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                 ],
                 "6": [
-                    "versions.yml:md5,48ca3e12c91829af8019462b3f6aa29c"
+                    [
+                        "RSEM_MERGE_COUNTS",
+                        "sed",
+                        "4.7"
+                    ]
                 ],
                 "counts_gene": [
                     "rsem.merged.gene_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
@@ -40,17 +44,14 @@
                 ],
                 "tpm_transcript": [
                     "rsem.merged.transcript_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
-                ],
-                "versions": [
-                    "versions.yml:md5,48ca3e12c91829af8019462b3f6aa29c"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.6"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-11-27T17:09:36.795867708"
+        "timestamp": "2026-02-04T16:04:10.303476579"
     },
     "Should run without failures": {
         "content": [
@@ -74,7 +75,11 @@
                     "rsem.merged.isoforms_long.tsv:md5,33b189595600493b917d786a542de8e9"
                 ],
                 "6": [
-                    "versions.yml:md5,48ca3e12c91829af8019462b3f6aa29c"
+                    [
+                        "RSEM_MERGE_COUNTS",
+                        "sed",
+                        "4.7"
+                    ]
                 ],
                 "counts_gene": [
                     "rsem.merged.gene_counts.tsv:md5,7d1da94077dc2f90cfb2c793ca5b7446"
@@ -93,16 +98,13 @@
                 ],
                 "tpm_transcript": [
                     "rsem.merged.transcript_tpm.tsv:md5,abbaac45f9938716c58d604299ea284e"
-                ],
-                "versions": [
-                    "versions.yml:md5,48ca3e12c91829af8019462b3f6aa29c"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.6"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-11-27T17:09:28.461621756"
+        "timestamp": "2026-02-04T16:03:59.136798954"
     }
 }

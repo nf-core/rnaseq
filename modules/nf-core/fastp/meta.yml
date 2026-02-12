@@ -24,25 +24,27 @@ input:
           List of input FastQ files of size 1 and 2 for single-end and paired-end data,
           respectively. If you wish to run interleaved paired-end data,  supply as single-end data
           but with `--interleaved_in` in your `modules.conf`'s `ext.args` for the module.
-  - - adapter_fasta:
+        ontologies: []
+    - adapter_fasta:
         type: file
         description: File in FASTA format containing possible adapters to remove.
         pattern: "*.{fasta,fna,fas,fa}"
-  - - discard_trimmed_pass:
-        type: boolean
-        description: |
-          Specify true to not write any reads that pass trimming thresholds.
-          This can be used to use fastp for the output report only.
-  - - save_trimmed_fail:
-        type: boolean
-        description: Specify true to save files that failed to pass trimming thresholds
-          ending in `*.fail.fastq.gz`
-  - - save_merged:
-        type: boolean
-        description: Specify true to save all merged reads to a file ending in `*.merged.fastq.gz`
+        ontologies: []
+  - discard_trimmed_pass:
+      type: boolean
+      description: |
+        Specify true to not write any reads that pass trimming thresholds.
+        This can be used to use fastp for the output report only.
+  - save_trimmed_fail:
+      type: boolean
+      description: Specify true to save files that failed to pass trimming thresholds
+        ending in `*.fail.fastq.gz`
+  - save_merged:
+      type: boolean
+      description: Specify true to save all merged reads to a file ending in `*.merged.fastq.gz`
 output:
-  - reads:
-      - meta:
+  reads:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -51,8 +53,11 @@ output:
           type: file
           description: The trimmed/modified/unmerged fastq reads
           pattern: "*fastp.fastq.gz"
-  - json:
-      - meta:
+          ontologies:
+            - edam: http://edamontology.org/format_1930 # FASTQ
+            - edam: http://edamontology.org/format_3989 # GZIP format
+  json:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -61,8 +66,10 @@ output:
           type: file
           description: Results in JSON format
           pattern: "*.json"
-  - html:
-      - meta:
+          ontologies:
+            - edam: http://edamontology.org/format_3464 # JSON
+  html:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -71,8 +78,9 @@ output:
           type: file
           description: Results in HTML format
           pattern: "*.html"
-  - log:
-      - meta:
+          ontologies: []
+  log:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -81,8 +89,9 @@ output:
           type: file
           description: fastq log file
           pattern: "*.log"
-  - reads_fail:
-      - meta:
+          ontologies: []
+  reads_fail:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -91,8 +100,11 @@ output:
           type: file
           description: Reads the failed the preprocessing
           pattern: "*fail.fastq.gz"
-  - reads_merged:
-      - meta:
+          ontologies:
+            - edam: http://edamontology.org/format_1930 # FASTQ
+            - edam: http://edamontology.org/format_3989 # GZIP format
+  reads_merged:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -101,14 +113,32 @@ output:
           type: file
           description: Reads that were successfully merged
           pattern: "*.{merged.fastq.gz}"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions_fastp:
+    - - "${task.process}":
+          type: string
+          description: The name of the process
+      - fastp:
+          type: string
+          description: The name of the tool
+      - 'fastp --version 2>&1 | sed -e "s/fastp //g"':
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - "${task.process}":
+          type: string
+          description: The name of the process
+      - fastp:
+          type: string
+          description: The name of the tool
+      - 'fastp --version 2>&1 | sed -e "s/fastp //g"':
+          type: eval
+          description: The expression to obtain the version of the tool
 authors:
   - "@drpatelh"
   - "@kevinmenden"
+  - "@eit-maxlcummins"
 maintainers:
   - "@drpatelh"
   - "@kevinmenden"

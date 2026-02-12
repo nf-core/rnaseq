@@ -5,17 +5,22 @@ nextflow_process {
     process "RSEQC_INFEREXPERIMENT"
     config "./nextflow.config"
 
+    tag "modules"
+    tag "modules_nfcore"
+    tag "rseqc"
+    tag "rseqc/inferexperiment"
 
     test("sarscov2 - [[meta] - bam] - bed") {
 
         when {
             process {
                 """
-                input[0] = Channel.of([
+                input[0] = channel.of([
                     [ id:'test' ], // meta map
-                file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true)
+                file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true),
+                file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam.bai", checkIfExists: true)
                 ])
-                input[1] = Channel.of(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/bed/test.bed", checkIfExists: true))
+                input[1] = channel.of(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/bed/test.bed", checkIfExists: true))
                 """
             }
         }
@@ -33,11 +38,12 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
+                input[0] = channel.of([
                     [ id:'test' ], // meta map
-                file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true)
+                file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true),
+                file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam.bai", checkIfExists: true)
                 ])
-                input[1] = Channel.of(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/bed/test.bed", checkIfExists: true))
+                input[1] = channel.of(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/bed/test.bed", checkIfExists: true))
                 """
             }
         }

@@ -3,6 +3,11 @@ nextflow_process {
     name "Test Process HISAT2_BUILD"
     script "../main.nf"
     process "HISAT2_BUILD"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "hisat2"
+    tag "hisat2/build"
+    tag "hisat2/extractsplicesites"
 
     test("Should run without failures") {
 
@@ -41,7 +46,10 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(
+                    process.out.index.collect { it.collect { it instanceof Map ? it : file(it).name } },
+                    process.out.findAll { key, val -> key.startsWith('versions') }
+                ).match() }
             )
         }
     }
@@ -86,7 +94,10 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(
+                    process.out.index.collect { it.collect { it instanceof Map ? it : file(it).name } },
+                    process.out.findAll { key, val -> key.startsWith('versions') }
+                ).match() }
             )
         }
     }

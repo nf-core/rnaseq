@@ -43,6 +43,9 @@ input:
           Metadata on matrix features. One column must contain all matrix row
           IDs.
         pattern: "*.{csv,tsv}"
+        ontologies:
+          - edam: http://edamontology.org/format_3752 # CSV
+          - edam: http://edamontology.org/format_3475 # TSV
   - - meta3:
         type: map
         description: |
@@ -55,9 +58,12 @@ input:
           Metadata on matrix columns. One column must contain all matrix column
           IDs.
         pattern: "*.{csv,tsv}"
+        ontologies:
+          - edam: http://edamontology.org/format_3752 # CSV
+          - edam: http://edamontology.org/format_3475 # TSV
 output:
-  - rds:
-      - meta:
+  rds:
+    - - meta:
           type: map
           description: |
             Groovy Map containing information related to the experiment as a whole
@@ -66,8 +72,9 @@ output:
           type: file
           description: Serialised SummarizedExperiment object
           pattern: "*.SummarizedExperiment.rds"
-  - log:
-      - meta:
+          ontologies: []
+  log:
+    - - meta:
           type: map
           description: |
             Groovy Map containing information related to the experiment as a whole
@@ -76,11 +83,14 @@ output:
           type: file
           description: dump of R SessionInfo
           pattern: "*.log"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@pinin4fjords"
 maintainers:

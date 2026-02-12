@@ -14,8 +14,6 @@ workflow QUANTIFY_RSEM {
 
     main:
 
-    ch_versions = Channel.empty()
-
     //
     // Quantify reads with RSEM
     //
@@ -32,16 +30,14 @@ workflow QUANTIFY_RSEM {
     ch_counts_transcript = ch_rsem_out.out.counts_transcript
     ch_stat = ch_rsem_out.out.stat
     ch_logs = ch_rsem_out.out.logs
-    ch_versions = ch_versions.mix(ch_rsem_out.out.versions.first())
 
     //
     // Merge counts across samples
     //
     RSEM_MERGE_COUNTS (
-        ch_counts_gene.collect{it[1]},       // [meta, counts]: Collect the second element (counts files) in the channel across all samples
-        ch_counts_transcript.collect{it[1]}
+        ch_counts_gene.collect{ tuple -> tuple[1] },       // [meta, counts]: Collect the second element (counts files) in the channel across all samples
+        ch_counts_transcript.collect{ tuple -> tuple[1] }
     )
-    ch_versions = ch_versions.mix(RSEM_MERGE_COUNTS.out.versions)
 
     emit:
     counts_gene              = ch_counts_gene                                 // channel: [ val(meta), counts ]
@@ -53,6 +49,6 @@ workflow QUANTIFY_RSEM {
     merged_tpm_gene          = RSEM_MERGE_COUNTS.out.tpm_gene                 //    path: *.gene_tpm.tsv
     merged_counts_transcript = RSEM_MERGE_COUNTS.out.counts_transcript        //    path: *.transcript_counts.tsv
     merged_tpm_transcript    = RSEM_MERGE_COUNTS.out.tpm_transcript           //    path: *.transcript_tpm.tsv
-
-    versions                 = ch_versions                                    // channel: [ versions.yml ]
+    merged_genes_long        = RSEM_MERGE_COUNTS.out.genes_long               //    path: *.genes_long.tsv
+    merged_isoforms_long     = RSEM_MERGE_COUNTS.out.isoforms_long            //    path: *.isoforms_long.tsv
 }

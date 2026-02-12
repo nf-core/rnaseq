@@ -3,6 +3,10 @@ nextflow_process {
     name "Test Process SALMON_INDEX"
     script "../main.nf"
     process "SALMON_INDEX"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "salmon"
+    tag "salmon/index"
 
     test("sarscov2") {
 
@@ -24,7 +28,7 @@ nextflow_process {
                 { assert path(process.out.index.get(0)).exists() },
                 { assert snapshot(
                     file(process.out.index[0]).listFiles().collect { it.getName() }.sort().toString(),
-                    process.out.versions
+                    process.out.findAll { key, val -> key.startsWith('versions') }
                 ).match()}
             )
         }
@@ -51,7 +55,7 @@ nextflow_process {
                 { assert path(process.out.index.get(0)).exists() },
                 { assert snapshot(
                     file(process.out.index[0]).listFiles().collect { it.getName() }.sort().toString(),
-                    process.out.versions
+                    process.out.findAll { key, val -> key.startsWith('versions') }
                 ).match()}
             )
         }
@@ -78,7 +82,7 @@ nextflow_process {
                 { assert path(process.out.index.get(0)).exists() },
                 { assert snapshot(
                     file(process.out.index[0]).listFiles().collect { it.getName() }.sort().toString(),
-                    process.out.versions
+                    process.out.findAll { key, val -> key.startsWith('versions') }
                 ).match()}
             )
         }

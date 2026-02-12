@@ -13,7 +13,7 @@ process SALMON_INDEX {
 
     output:
     path "salmon"      , emit: index
-    path "versions.yml", emit: versions
+    tuple val("${task.process}"), val('salmon'), eval("salmon --version | sed 's/salmon //'"), emit: versions_salmon, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -22,15 +22,15 @@ process SALMON_INDEX {
     def args = task.ext.args ?: ''
     def decoys = ''
     def fasta = transcript_fasta
-    if (genome_fasta){
-        if (genome_fasta.endsWith('.gz')) {
-            genome_fasta = "<(gunzip -c $genome_fasta)"
+    if (genome_fasta) {
+        if ("${genome_fasta}".endsWith('.gz')) {
+            genome_fasta = "<(gunzip -c ${genome_fasta})"
         }
         decoys='-d decoys.txt'
         fasta='gentrome.fa'
     }
-    if (transcript_fasta.endsWith('.gz')) {
-        transcript_fasta = "<(gunzip -c $transcript_fasta)"
+    if ("${transcript_fasta}".endsWith('.gz')) {
+        transcript_fasta = "<(gunzip -c ${transcript_fasta})"
     }
     """
     if [ -n '$genome_fasta' ]; then
@@ -45,11 +45,6 @@ process SALMON_INDEX {
         $decoys \\
         $args \\
         -i salmon
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        salmon: \$(echo \$(salmon --version) | sed -e "s/salmon //g")
-    END_VERSIONS
     """
 
     stub:
@@ -70,10 +65,5 @@ process SALMON_INDEX {
     touch salmon/refseq.bin
     touch salmon/seq.bin
     touch salmon/versionInfo.json
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        salmon: \$(echo \$(salmon --version) | sed -e "s/salmon //g")
-    END_VERSIONS
     """
 }

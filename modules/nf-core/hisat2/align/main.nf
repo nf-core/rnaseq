@@ -34,7 +34,7 @@ process HISAT2_ALIGN {
     }
     ss = "$splicesites" ? "--known-splicesite-infile $splicesites" : ''
     def seq_center = params.seq_center ? "CN:${params.seq_center.replaceAll('\\s','_')}" : ''
-    def seq_platform = params.seq_platform ? "PL:${params.seq_platform.replaceAll('\\s','_')}" : ''
+    def seq_platform = meta.seq_platform ? "PL:${meta.seq_platform.replaceAll('\\s','_')}" : ''
     def rg_tags = []
     rg_tags << "ID:${prefix}"
     rg_tags << "SM:${prefix}"

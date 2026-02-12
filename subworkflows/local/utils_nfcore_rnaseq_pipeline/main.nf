@@ -193,6 +193,13 @@ def checkSamplesAfterGrouping(input) {
         error("Please check input samplesheet -> Multiple runs of a sample must have the same strandedness!: ${metas[0].id}")
     }
 
+    // Check that multiple runs of the same sample have the same sequencing platform
+    def seq_platform_ok = metas.collect { meta -> meta.seq_platform ?: '' }.unique().size == 1
+    if (!seq_platform_ok) {
+        error("Please check input samplesheet -> Multiple runs of a sample must have the same seq_platform!: ${metas[0].id}")
+    }
+
+
     // Check that multiple runs of the same sample are of the same datatype i.e. single-end / paired-end
     def endedness_ok = metas.collect{ meta -> meta.single_end }.unique().size == 1
     if (!endedness_ok) {

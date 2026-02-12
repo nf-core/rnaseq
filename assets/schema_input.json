@@ -33,6 +33,10 @@
                 "enum": ["forward", "reverse", "unstranded", "auto"],
                 "meta": ["strandedness"]
             },
+            "seq_platform": {
+                "type": "string",
+                "meta": ["seq_platform"]
+            },
             "genome_bam": {
                 "type": "string",
                 "format": "file-path",

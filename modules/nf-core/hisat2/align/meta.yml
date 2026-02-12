@@ -20,7 +20,7 @@ input:
         type: map
         description: |
           Groovy Map containing sample information
-          e.g. [ id:'test', single_end:false ]
+          e.g. [ id:'test', single_end:false, seq_platform:'ILLUMINA' ]
     - reads:
         type: file
         description: |

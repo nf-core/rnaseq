@@ -10,6 +10,7 @@ keywords:
 components:
   - bbmap/bbsplit
   - cat/fastq
+  - fastqc
   - fq/lint
   - fastq_remove_rrna
   - fastq_subsample_fq_salmon
@@ -202,6 +203,26 @@ output:
             type: file
             description: FastQ lint log file
             pattern: "*.log"
+  - fastqc_filtered_html:
+      description: FastQC report HTML files for filtered reads (after BBSplit and/or rRNA removal)
+      structure:
+        - meta:
+            type: map
+            description: Groovy Map containing sample information
+        - html:
+            type: file
+            description: FastQC report HTML file
+            pattern: "*.html"
+  - fastqc_filtered_zip:
+      description: FastQC report ZIP files for filtered reads (after BBSplit and/or rRNA removal)
+      structure:
+        - meta:
+            type: map
+            description: Groovy Map containing sample information
+        - zip:
+            type: file
+            description: FastQC report ZIP file
+            pattern: "*.zip"
 
 authors:
   - "@pinin4fjords"

@@ -30,6 +30,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [fastp](#fastp)
     - [BBSplit](#bbsplit)
     - [rRNA removal](#rrna-removal)
+    - [FastQC (filtered)](#fastqc-filtered)
   - [Alignment and quantification](#alignment-and-quantification)
     - [STAR, Salmon and Kallisto](#star-salmon-and-kallisto)
     - [STAR via RSEM](#star-via-rsem)
@@ -258,6 +259,19 @@ When `--ribo_removal_tool bowtie2` is specified, the pipeline uses [Bowtie2](htt
 </details>
 
 When `--ribo_removal_tool ribodetector` is specified, the pipeline uses [RiboDetector](https://github.com/hzi-bifo/RiboDetector), a machine learning-based tool that identifies rRNA reads without requiring a reference database.
+
+### FastQC (filtered)
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `fastqc/filtered/`
+  - `*_fastqc.html`: FastQC report containing quality metrics for read 1 (_and read2 if paired-end_) **after** contaminant removal (BBSplit) and/or ribosomal RNA removal.
+  - `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images.
+
+</details>
+
+When BBSplit and/or rRNA removal is enabled, an additional [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) step runs on the filtered reads. This provides QC metrics on the reads that will actually be used for alignment and quantification, allowing you to verify that filtering steps worked as expected. This section will only appear in the results when at least one filtering step (BBSplit or rRNA removal) is active and FastQC is not skipped.
 
 ## Alignment and quantification
 

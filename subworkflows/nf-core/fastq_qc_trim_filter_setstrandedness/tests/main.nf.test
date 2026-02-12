@@ -122,7 +122,11 @@ nextflow_workflow {
                 { assert snapshot(
                     pelines1.join('\n').md5(),
                     pelines2.join('\n').md5(),
-                    processed_ribo_removal_lint_report
+                    processed_ribo_removal_lint_report,
+                    file(workflow.out.fastqc_filtered_html[0][1][0]).name,
+                    file(workflow.out.fastqc_filtered_html[0][1][1]).name,
+                    file(workflow.out.fastqc_filtered_zip[0][1][0]).name,
+                    file(workflow.out.fastqc_filtered_zip[0][1][1]).name,
                 ).match() }
             )
         }
@@ -208,7 +212,11 @@ nextflow_workflow {
                 { assert snapshot(
                     pelines1.join('\n').md5(),
                     pelines2.join('\n').md5(),
-                    processed_ribo_removal_lint_report.md5()
+                    processed_ribo_removal_lint_report.md5(),
+                    file(workflow.out.fastqc_filtered_html[0][1][0]).name,
+                    file(workflow.out.fastqc_filtered_html[0][1][1]).name,
+                    file(workflow.out.fastqc_filtered_zip[0][1][0]).name,
+                    file(workflow.out.fastqc_filtered_zip[0][1][1]).name,
                 ).match() }
             )
         }
@@ -292,7 +300,11 @@ nextflow_workflow {
                 { assert snapshot(
                     pelines1.join('\n').md5(),
                     pelines2.join('\n').md5(),
-                    processed_ribo_removal_lint_report.md5()
+                    processed_ribo_removal_lint_report.md5(),
+                    file(workflow.out.fastqc_filtered_html[0][1][0]).name,
+                    file(workflow.out.fastqc_filtered_html[0][1][1]).name,
+                    file(workflow.out.fastqc_filtered_zip[0][1][0]).name,
+                    file(workflow.out.fastqc_filtered_zip[0][1][1]).name,
                 ).match() }
             )
         }
@@ -382,7 +394,11 @@ nextflow_workflow {
                 { assert snapshot(
                     pelines1.join('\n').md5(),
                     pelines2.join('\n').md5(),
-                    processed_ribo_removal_lint_report.md5()
+                    processed_ribo_removal_lint_report.md5(),
+                    file(workflow.out.fastqc_filtered_html[0][1][0]).name,
+                    file(workflow.out.fastqc_filtered_html[0][1][1]).name,
+                    file(workflow.out.fastqc_filtered_zip[0][1][0]).name,
+                    file(workflow.out.fastqc_filtered_zip[0][1][1]).name,
                 ).match() }
             )
         }
@@ -486,7 +502,9 @@ nextflow_workflow {
                 { assert bowtie2RrnaCount == 10 },   // 10 reads aligned to rRNA reference
                 { assert snapshot(
                     selines.join('\n').md5(),
-                    processed_ribo_removal_lint_report.md5()
+                    processed_ribo_removal_lint_report.md5(),
+                    file(workflow.out.fastqc_filtered_html[0][1]).name,
+                    file(workflow.out.fastqc_filtered_zip[0][1]).name,
                 ).match() }
             )
         }

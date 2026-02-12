@@ -54,7 +54,10 @@ umitools/*.umi_extract.log
 {multiqc,multiqc/**}/.stub
 {multiqc,multiqc/**}/multiqc_report.html
 {multiqc,multiqc/**}/multiqc_report_data/multiqc.parquet
+{multiqc,multiqc/**}/multiqc_report_data/fastqc_filtered*.txt
+{multiqc,multiqc/**}/multiqc_report_data/fastqc_sequence_length_distribution_plot.txt
 {multiqc,multiqc/**}/multiqc_report_data/fastqc_{raw,trimmed}_top_overrepresented_sequences_table.txt
+{multiqc,multiqc/**}/multiqc_report_data/multiqc_fastqc_fastqc_filtered.txt
 {multiqc,multiqc/**}/multiqc_report_data/hisat2_pe_plot.txt
 {multiqc,multiqc/**}/multiqc_report_data/hisat2_se_plot.txt
 {multiqc,multiqc/**}/multiqc_report_data/junction_saturation_known.txt

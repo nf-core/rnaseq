@@ -1,7 +1,7 @@
 {
     "Params: --skip_trimming": {
         "content": [
-            204,
+            209,
             {
                 "BBMAP_BBSPLIT": {
                     "bbmap": 39.18
@@ -33,6 +33,9 @@
                     "bioconductor-dupradar": "1.38.0"
                 },
                 "FASTQC": {
+                    "fastqc": "0.12.1"
+                },
+                "FASTQC_FILTERED": {
                     "fastqc": "0.12.1"
                 },
                 "FQ_LINT": {
@@ -157,6 +160,23 @@
                 "custom/out/genome_gfp.fasta",
                 "custom/out/genome_gfp.gtf",
                 "fastqc",
+                "fastqc/filtered",
+                "fastqc/filtered/RAP1_IAA_30M_REP1_filtered_1_fastqc.html",
+                "fastqc/filtered/RAP1_IAA_30M_REP1_filtered_1_fastqc.zip",
+                "fastqc/filtered/RAP1_IAA_30M_REP1_filtered_2_fastqc.html",
+                "fastqc/filtered/RAP1_IAA_30M_REP1_filtered_2_fastqc.zip",
+                "fastqc/filtered/RAP1_UNINDUCED_REP1_filtered_fastqc.html",
+                "fastqc/filtered/RAP1_UNINDUCED_REP1_filtered_fastqc.zip",
+                "fastqc/filtered/RAP1_UNINDUCED_REP2_filtered_fastqc.html",
+                "fastqc/filtered/RAP1_UNINDUCED_REP2_filtered_fastqc.zip",
+                "fastqc/filtered/WT_REP1_filtered_1_fastqc.html",
+                "fastqc/filtered/WT_REP1_filtered_1_fastqc.zip",
+                "fastqc/filtered/WT_REP1_filtered_2_fastqc.html",
+                "fastqc/filtered/WT_REP1_filtered_2_fastqc.zip",
+                "fastqc/filtered/WT_REP2_filtered_1_fastqc.html",
+                "fastqc/filtered/WT_REP2_filtered_1_fastqc.zip",
+                "fastqc/filtered/WT_REP2_filtered_2_fastqc.html",
+                "fastqc/filtered/WT_REP2_filtered_2_fastqc.zip",
                 "fastqc/raw",
                 "fastqc/raw/RAP1_IAA_30M_REP1_raw_1_fastqc.html",
                 "fastqc/raw/RAP1_IAA_30M_REP1_raw_1_fastqc.zip",
@@ -194,6 +214,17 @@
                 "multiqc/star_salmon/multiqc_report_data/bbmap-bbsplit_plot.txt",
                 "multiqc/star_salmon/multiqc_report_data/bbmap.txt",
                 "multiqc/star_salmon/multiqc_report_data/bbsplit_stats_table.txt",
+                "multiqc/star_salmon/multiqc_report_data/fastqc_filtered-status-check-heatmap.txt",
+                "multiqc/star_salmon/multiqc_report_data/fastqc_filtered_adapter_content_plot.txt",
+                "multiqc/star_salmon/multiqc_report_data/fastqc_filtered_overrepresented_sequences_plot.txt",
+                "multiqc/star_salmon/multiqc_report_data/fastqc_filtered_per_base_n_content_plot.txt",
+                "multiqc/star_salmon/multiqc_report_data/fastqc_filtered_per_base_sequence_quality_plot.txt",
+                "multiqc/star_salmon/multiqc_report_data/fastqc_filtered_per_sequence_gc_content_plot_Counts.txt",
+                "multiqc/star_salmon/multiqc_report_data/fastqc_filtered_per_sequence_gc_content_plot_Percentages.txt",
+                "multiqc/star_salmon/multiqc_report_data/fastqc_filtered_per_sequence_quality_scores_plot.txt",
+                "multiqc/star_salmon/multiqc_report_data/fastqc_filtered_sequence_counts_plot.txt",
+                "multiqc/star_salmon/multiqc_report_data/fastqc_filtered_sequence_duplication_levels_plot.txt",
+                "multiqc/star_salmon/multiqc_report_data/fastqc_filtered_top_overrepresented_sequences_table.txt",
                 "multiqc/star_salmon/multiqc_report_data/fastqc_raw-status-check-heatmap.txt",
                 "multiqc/star_salmon/multiqc_report_data/fastqc_raw_adapter_content_plot.txt",
                 "multiqc/star_salmon/multiqc_report_data/fastqc_raw_overrepresented_sequences_plot.txt",
@@ -214,6 +245,7 @@
                 "multiqc/star_salmon/multiqc_report_data/multiqc_data.json",
                 "multiqc/star_salmon/multiqc_report_data/multiqc_dupradar.txt",
                 "multiqc/star_salmon/multiqc_report_data/multiqc_fail_strand_check_table.txt",
+                "multiqc/star_salmon/multiqc_report_data/multiqc_fastqc_fastqc_filtered.txt",
                 "multiqc/star_salmon/multiqc_report_data/multiqc_fastqc_fastqc_raw.txt",
                 "multiqc/star_salmon/multiqc_report_data/multiqc_featurecounts_biotype_plot.txt",
                 "multiqc/star_salmon/multiqc_report_data/multiqc_general_stats.txt",
@@ -274,6 +306,18 @@
                 "multiqc/star_salmon/multiqc_report_plots/pdf/bbsplit_stats_table.pdf",
                 "multiqc/star_salmon/multiqc_report_plots/pdf/dupradar.pdf",
                 "multiqc/star_salmon/multiqc_report_plots/pdf/fail_strand_check_table.pdf",
+                "multiqc/star_salmon/multiqc_report_plots/pdf/fastqc_filtered-status-check-heatmap.pdf",
+                "multiqc/star_salmon/multiqc_report_plots/pdf/fastqc_filtered_adapter_content_plot.pdf",
+                "multiqc/star_salmon/multiqc_report_plots/pdf/fastqc_filtered_overrepresented_sequences_plot.pdf",
+                "multiqc/star_salmon/multiqc_report_plots/pdf/fastqc_filtered_per_base_n_content_plot.pdf",
+                "multiqc/star_salmon/multiqc_report_plots/pdf/fastqc_filtered_per_base_sequence_quality_plot.pdf",
+                "multiqc/star_salmon/multiqc_report_plots/pdf/fastqc_filtered_per_sequence_gc_content_plot_Counts.pdf",
+                "multiqc/star_salmon/multiqc_report_plots/pdf/fastqc_filtered_per_sequence_gc_content_plot_Percentages.pdf",
+                "multiqc/star_salmon/multiqc_report_plots/pdf/fastqc_filtered_per_sequence_quality_scores_plot.pdf",
+                "multiqc/star_salmon/multiqc_report_plots/pdf/fastqc_filtered_sequence_counts_plot-cnt.pdf",
+                "multiqc/star_salmon/multiqc_report_plots/pdf/fastqc_filtered_sequence_counts_plot-pct.pdf",
+                "multiqc/star_salmon/multiqc_report_plots/pdf/fastqc_filtered_sequence_duplication_levels_plot.pdf",
+                "multiqc/star_salmon/multiqc_report_plots/pdf/fastqc_filtered_top_overrepresented_sequences_table.pdf",
                 "multiqc/star_salmon/multiqc_report_plots/pdf/fastqc_raw-status-check-heatmap.pdf",
                 "multiqc/star_salmon/multiqc_report_plots/pdf/fastqc_raw_adapter_content_plot.pdf",
                 "multiqc/star_salmon/multiqc_report_plots/pdf/fastqc_raw_overrepresented_sequences_plot.pdf",
@@ -333,6 +377,18 @@
                 "multiqc/star_salmon/multiqc_report_plots/png/bbsplit_stats_table.png",
                 "multiqc/star_salmon/multiqc_report_plots/png/dupradar.png",
                 "multiqc/star_salmon/multiqc_report_plots/png/fail_strand_check_table.png",
+                "multiqc/star_salmon/multiqc_report_plots/png/fastqc_filtered-status-check-heatmap.png",
+                "multiqc/star_salmon/multiqc_report_plots/png/fastqc_filtered_adapter_content_plot.png",
+                "multiqc/star_salmon/multiqc_report_plots/png/fastqc_filtered_overrepresented_sequences_plot.png",
+                "multiqc/star_salmon/multiqc_report_plots/png/fastqc_filtered_per_base_n_content_plot.png",
+                "multiqc/star_salmon/multiqc_report_plots/png/fastqc_filtered_per_base_sequence_quality_plot.png",
+                "multiqc/star_salmon/multiqc_report_plots/png/fastqc_filtered_per_sequence_gc_content_plot_Counts.png",
+                "multiqc/star_salmon/multiqc_report_plots/png/fastqc_filtered_per_sequence_gc_content_plot_Percentages.png",
+                "multiqc/star_salmon/multiqc_report_plots/png/fastqc_filtered_per_sequence_quality_scores_plot.png",
+                "multiqc/star_salmon/multiqc_report_plots/png/fastqc_filtered_sequence_counts_plot-cnt.png",
+                "multiqc/star_salmon/multiqc_report_plots/png/fastqc_filtered_sequence_counts_plot-pct.png",
+                "multiqc/star_salmon/multiqc_report_plots/png/fastqc_filtered_sequence_duplication_levels_plot.png",
+                "multiqc/star_salmon/multiqc_report_plots/png/fastqc_filtered_top_overrepresented_sequences_table.png",
                 "multiqc/star_salmon/multiqc_report_plots/png/fastqc_raw-status-check-heatmap.png",
                 "multiqc/star_salmon/multiqc_report_plots/png/fastqc_raw_adapter_content_plot.png",
                 "multiqc/star_salmon/multiqc_report_plots/png/fastqc_raw_overrepresented_sequences_plot.png",
@@ -392,6 +448,18 @@
                 "multiqc/star_salmon/multiqc_report_plots/svg/bbsplit_stats_table.svg",
                 "multiqc/star_salmon/multiqc_report_plots/svg/dupradar.svg",
                 "multiqc/star_salmon/multiqc_report_plots/svg/fail_strand_check_table.svg",
+                "multiqc/star_salmon/multiqc_report_plots/svg/fastqc_filtered-status-check-heatmap.svg",
+                "multiqc/star_salmon/multiqc_report_plots/svg/fastqc_filtered_adapter_content_plot.svg",
+                "multiqc/star_salmon/multiqc_report_plots/svg/fastqc_filtered_overrepresented_sequences_plot.svg",
+                "multiqc/star_salmon/multiqc_report_plots/svg/fastqc_filtered_per_base_n_content_plot.svg",
+                "multiqc/star_salmon/multiqc_report_plots/svg/fastqc_filtered_per_base_sequence_quality_plot.svg",
+                "multiqc/star_salmon/multiqc_report_plots/svg/fastqc_filtered_per_sequence_gc_content_plot_Counts.svg",
+                "multiqc/star_salmon/multiqc_report_plots/svg/fastqc_filtered_per_sequence_gc_content_plot_Percentages.svg",
+                "multiqc/star_salmon/multiqc_report_plots/svg/fastqc_filtered_per_sequence_quality_scores_plot.svg",
+                "multiqc/star_salmon/multiqc_report_plots/svg/fastqc_filtered_sequence_counts_plot-cnt.svg",
+                "multiqc/star_salmon/multiqc_report_plots/svg/fastqc_filtered_sequence_counts_plot-pct.svg",
+                "multiqc/star_salmon/multiqc_report_plots/svg/fastqc_filtered_sequence_duplication_levels_plot.svg",
+                "multiqc/star_salmon/multiqc_report_plots/svg/fastqc_filtered_top_overrepresented_sequences_table.svg",
                 "multiqc/star_salmon/multiqc_report_plots/svg/fastqc_raw-status-check-heatmap.svg",
                 "multiqc/star_salmon/multiqc_report_plots/svg/fastqc_raw_adapter_content_plot.svg",
                 "multiqc/star_salmon/multiqc_report_plots/svg/fastqc_raw_overrepresented_sequences_plot.svg",
@@ -1289,6 +1357,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-04T17:41:27.43355921"
+        "timestamp": "2026-02-12T12:03:27.756874334"
     }
 }

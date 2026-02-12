@@ -36,6 +36,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1689](https://github.com/nf-core/rnaseq/pull/1689) - Migrate to topic-based version reporting for nf-core modules/subworkflows and local modules
 - [PR #1694](https://github.com/nf-core/rnaseq/pull/1694) - Replace local iGenomes STAR modules with nf-core module aliases and config-based container overrides
 - [PR #1696](https://github.com/nf-core/rnaseq/pull/1696) - Fix offline mode by skipping `igenomes_base` validation when `NXF_OFFLINE=true` ([#1690](https://github.com/nf-core/rnaseq/issues/1690))
+- [PR #1700](https://github.com/nf-core/rnaseq/pull/1700) - Add FastQC step after BBSplit/rRNA filtering to provide QC metrics on reads used for alignment ([#1276](https://github.com/nf-core/rnaseq/issues/1276))
 
 ### Parameters
 

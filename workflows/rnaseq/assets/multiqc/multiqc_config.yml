@@ -26,6 +26,8 @@ report_section_order:
     order: 4001
   bowtie2_rrna:
     order: 4000
+  fastqc_filtered:
+    order: 3999
   # Alignment
   star:
     order: 3000
@@ -147,12 +149,20 @@ module_order:
       anchor: "bowtie2_rrna"
       name: "Bowtie2 (rRNA removal)"
       info: "This section shows Bowtie2 alignment statistics for rRNA removal. Reads were aligned against an rRNA reference to filter out ribosomal RNA contamination."
+  - fastqc:
+      anchor: "fastqc_filtered"
+      name: "FastQC (filtered)"
+      info: "This section of the report shows FastQC results after contaminant removal (BBSplit) and/or ribosomal RNA removal."
+      path_filters:
+        - "*_filtered*fastqc.zip"
 
 # Don't show % Dups in the General Stats table (we have this from Picard)
 table_columns_visible:
   "FastQC (raw)":
     percent_duplicates: false
   "FastQC (trimmed)":
+    percent_duplicates: false
+  "FastQC (filtered)":
     percent_duplicates: false
 
 extra_fn_clean_exts:
@@ -166,6 +176,8 @@ extra_fn_clean_exts:
     pattern: "_raw"
   - type: remove
     pattern: "_trimmed"
+  - type: remove
+    pattern: "_filtered"
 
 # Customise the module search patterns to speed up execution time
 #  - Skip module sub-tools that we are not interested in

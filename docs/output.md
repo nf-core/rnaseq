@@ -337,13 +337,26 @@ The STAR section of the MultiQC report shows a bar plot with alignment rates: go
 <details markdown="1">
 <summary>Output files</summary>
 
-- `star_rsem/`
-  - `rsem.merged.gene_counts.tsv`: Matrix of gene-level raw counts across all samples.
+- `star_rsem/` - tximport-processed outputs (matching the Salmon/Kallisto format):
+  - `rsem.merged.gene_counts.tsv`: Matrix of gene-level estimated counts across all samples.
+  - `rsem.merged.gene_counts_length_scaled.tsv`: Matrix of gene-level length-scaled counts (used for DESeq2 QC).
+  - `rsem.merged.gene_counts_scaled.tsv`: Matrix of gene-level scaled counts.
+  - `rsem.merged.gene_lengths.tsv`: Matrix of gene-level effective lengths across all samples.
   - `rsem.merged.gene_tpm.tsv`: Matrix of gene-level TPM values across all samples.
-  - `rsem.merged.transcript_counts.tsv`: Matrix of isoform-level raw counts across all samples.
-  - `rsem.merged.transcript_tpm.tsv`: Matrix of isoform-level TPM values across all samples.
-  - `rsem.merged.genes_long.tsv`: long format contains length, expected_count, TPM, and FPKM across all samples.
-  - `rsem.merged.isoforms_long.tsv`: long format contains length, expected_count, TPM, FPKM, and IsoPct across all samples.
+  - `rsem.merged.transcript_counts.tsv`: Matrix of transcript-level estimated counts across all samples.
+  - `rsem.merged.transcript_lengths.tsv`: Matrix of transcript-level effective lengths across all samples.
+  - `rsem.merged.transcript_tpm.tsv`: Matrix of transcript-level TPM values across all samples.
+  - `rsem.merged.tx2gene.tsv`: Transcript-to-gene mapping file generated from the GTF.
+  - `*_gene.SummarizedExperiment.rds`: Gene-level SummarizedExperiment R object containing counts, TPM, and length matrices.
+  - `*_transcript.SummarizedExperiment.rds`: Transcript-level SummarizedExperiment R object containing counts, TPM, and length matrices.
+- `star_rsem/rsem_merge_counts/` - legacy RSEM merge script outputs:
+  - `*.gene_counts.tsv`: Matrix of gene-level raw counts (RSEM expected_count) across all samples.
+  - `*.gene_tpm.tsv`: Matrix of gene-level TPM values across all samples.
+  - `*.transcript_counts.tsv`: Matrix of isoform-level raw counts across all samples.
+  - `*.transcript_tpm.tsv`: Matrix of isoform-level TPM values across all samples.
+  - `*.genes_long.tsv`: Long format containing length, expected_count, TPM, and FPKM across all samples.
+  - `*.isoforms_long.tsv`: Long format containing length, expected_count, TPM, FPKM, and IsoPct across all samples.
+- `star_rsem/` - per-sample outputs:
   - `*.genes.results`: RSEM gene-level quantification results for each sample.
   - `*.isoforms.results`: RSEM isoform-level quantification results for each sample.
   - `*.STAR.genome.bam`: If `--save_align_intermeds` is specified the BAM file from STAR alignment containing read alignments to the reference genome will be placed in this directory. These files can be reused as `genome_bam` input in future pipeline runs.
@@ -358,6 +371,8 @@ The STAR section of the MultiQC report shows a bar plot with alignment rates: go
 </details>
 
 [RSEM](https://github.com/deweylab/RSEM) is a software package for estimating gene and isoform expression levels from RNA-seq data. It has been widely touted as one of the most accurate quantification tools for RNA-seq analysis. When using `--aligner star_rsem`, the pipeline first runs STAR alignment with RSEM-compatible parameters to generate genome and transcriptome BAM files, then RSEM quantifies expression using these pre-aligned BAMs via the `--alignments` mode. This approach ensures optimal compatibility while maintaining RSEM's ability to effectively use ambiguously-mapping reads.
+
+RSEM results are additionally processed through [tximport](https://bioconductor.org/packages/tximport/) to produce length-scaled counts, effective length matrices, and SummarizedExperiment R objects, matching the output parity of the Salmon and Kallisto pseudoalignment paths. These outputs are directly compatible with downstream tools like [nf-core/differentialabundance](https://nf-co.re/differentialabundance).
 
 You can choose to align and quantify your data with RSEM by providing the `--aligner star_rsem` parameter.
 

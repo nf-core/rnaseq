@@ -1,3 +1,5 @@
+nextflow.preview.types = true
+
 //
 // Pseudoalignment and quantification with Salmon or Kallisto
 //
@@ -9,6 +11,22 @@ include { TXIMETA_TXIMPORT } from '../../../modules/nf-core/tximeta/tximport'
 
 include { SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT as SE_GENE_UNIFIED       } from '../../../modules/nf-core/summarizedexperiment/summarizedexperiment'
 include { SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT as SE_TRANSCRIPT_UNIFIED } from '../../../modules/nf-core/summarizedexperiment/summarizedexperiment'
+
+record QuantResult {
+    meta:                      Map
+    results:                   Path?
+    tx2gene:                   Path?
+    counts_gene:               Path?
+    counts_gene_length_scaled: Path?
+    counts_gene_scaled:        Path?
+    counts_transcript:         Path?
+    lengths_gene:              Path?
+    lengths_transcript:        Path?
+    tpm_gene:                  Path?
+    tpm_transcript:            Path?
+    merged_gene_rds:           Path?
+    merged_transcript_rds:     Path?
+}
 
 workflow QUANTIFY_PSEUDO_ALIGNMENT {
     take:
@@ -52,9 +70,8 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
             kallisto_quant_fraglen,
             kallisto_quant_fraglen_sd
         )
-        ch_pseudo_results = KALLISTO_QUANT.out.results
-        ch_pseudo_multiqc = KALLISTO_QUANT.out.log
-        ch_versions = ch_versions.mix(KALLISTO_QUANT.out.versions.first())
+        ch_pseudo_results = KALLISTO_QUANT.out.map { r -> [r.meta, r.results] }
+        ch_pseudo_multiqc = KALLISTO_QUANT.out.map { r -> [r.meta, r.log] }
     }
 
     CUSTOM_TX2GENE (
@@ -71,14 +88,10 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
         CUSTOM_TX2GENE.out.tx2gene,
         pseudo_aligner
     )
-    ch_versions = ch_versions.mix(TXIMETA_TXIMPORT.out.versions)
 
-    ch_gene_unified = TXIMETA_TXIMPORT.out.counts_gene
-                        .join(TXIMETA_TXIMPORT.out.counts_gene_length_scaled)
-                        .join(TXIMETA_TXIMPORT.out.counts_gene_scaled)
-                        .join(TXIMETA_TXIMPORT.out.lengths_gene)
-                        .join(TXIMETA_TXIMPORT.out.tpm_gene)
-                        .map{ row -> tuple(row[0], row.tail()) }
+    // Extract fields directly from TximportResult record (replaces 5 join() calls)
+    ch_gene_unified = TXIMETA_TXIMPORT.out
+        .map { r -> tuple(r.meta, [r.counts_gene, r.counts_gene_length_scaled, r.counts_gene_scaled, r.lengths_gene, r.tpm_gene]) }
 
     SE_GENE_UNIFIED (
         ch_gene_unified,
@@ -87,10 +100,8 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
     )
     ch_versions = ch_versions.mix(SE_GENE_UNIFIED.out.versions)
 
-    ch_transcript_unified = TXIMETA_TXIMPORT.out.counts_transcript
-                        .join(TXIMETA_TXIMPORT.out.lengths_transcript)
-                        .join(TXIMETA_TXIMPORT.out.tpm_transcript)
-                        .map{ row -> tuple(row[0], row.tail()) }
+    ch_transcript_unified = TXIMETA_TXIMPORT.out
+        .map { r -> tuple(r.meta, [r.counts_transcript, r.lengths_transcript, r.tpm_transcript]) }
 
     SE_TRANSCRIPT_UNIFIED (
         ch_transcript_unified,
@@ -99,22 +110,28 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
     )
     ch_versions = ch_versions.mix(SE_TRANSCRIPT_UNIFIED.out.versions)
 
+    // Combine per-sample results with pipeline-wide aggregate outputs.
+    // The TximportResult record lets us combine() once instead of 8 separate times.
+    ch_tximport = TXIMETA_TXIMPORT.out
+
     emit:
-    results                       = ch_pseudo_results                              // channel: [ val(meta), results_dir ]
-    multiqc                       = ch_pseudo_multiqc                              // channel: [ val(meta), files_for_multiqc ]
-    tx2gene                       = CUSTOM_TX2GENE.out.tx2gene                     // channel: [ val(meta), tx2gene.tsv ]
-
-    tpm_gene                      = TXIMETA_TXIMPORT.out.tpm_gene                  //    path: *gene_tpm.tsv
-    counts_gene                   = TXIMETA_TXIMPORT.out.counts_gene               //    path: *gene_counts.tsv
-    lengths_gene                  = TXIMETA_TXIMPORT.out.lengths_gene              //    path: *gene_lengths.tsv
-    counts_gene_length_scaled     = TXIMETA_TXIMPORT.out.counts_gene_length_scaled //    path: *gene_counts_length_scaled.tsv
-    counts_gene_scaled            = TXIMETA_TXIMPORT.out.counts_gene_scaled        //    path: *gene_counts_scaled.tsv
-    tpm_transcript                = TXIMETA_TXIMPORT.out.tpm_transcript            //    path: *gene_tpm.tsv
-    counts_transcript             = TXIMETA_TXIMPORT.out.counts_transcript         //    path: *transcript_counts.tsv
-    lengths_transcript            = TXIMETA_TXIMPORT.out.lengths_transcript        //    path: *transcript_lengths.tsv
-
-    merged_gene_rds_unified       = SE_GENE_UNIFIED.out.rds                        //    path: *.rds
-    merged_transcript_rds_unified = SE_TRANSCRIPT_UNIFIED.out.rds                  //    path: *.rds
-
-    versions                      = ch_versions                                    // channel: [ versions.yml ]
+    result = ch_pseudo_results
+        .combine(CUSTOM_TX2GENE.out.tx2gene.map { _meta, path -> path })
+        .combine(ch_tximport)
+        .combine(SE_GENE_UNIFIED.out.rds.map { _meta, path -> path })
+        .combine(SE_TRANSCRIPT_UNIFIED.out.rds.map { _meta, path -> path })
+        .map { meta, results, tx2gene, txi, rds_g, rds_t ->
+            record(
+                meta: meta,
+                results: results, tx2gene: tx2gene,
+                counts_gene: txi.counts_gene, counts_gene_length_scaled: txi.counts_gene_length_scaled,
+                counts_gene_scaled: txi.counts_gene_scaled, counts_transcript: txi.counts_transcript,
+                lengths_gene: txi.lengths_gene, lengths_transcript: txi.lengths_transcript,
+                tpm_gene: txi.tpm_gene, tpm_transcript: txi.tpm_transcript,
+                merged_gene_rds: rds_g, merged_transcript_rds: rds_t
+            )
+        }
+    multiqc                   = ch_pseudo_multiqc
+    counts_gene_length_scaled = ch_tximport.map { r -> [r.meta, r.counts_gene_length_scaled] }
+    versions                  = ch_versions
 }

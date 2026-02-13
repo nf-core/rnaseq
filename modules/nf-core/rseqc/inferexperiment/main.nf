@@ -1,3 +1,10 @@
+nextflow.preview.types = true
+
+record InferExperimentResult {
+    meta: Map
+    txt:  Path
+}
+
 process RSEQC_INFEREXPERIMENT {
     tag "$meta.id"
     label 'process_medium'
@@ -8,12 +15,12 @@ process RSEQC_INFEREXPERIMENT {
         'community.wave.seqera.io/library/rseqc_r-base:2e29d2dfda9cef15' }"
 
     input:
-    tuple val(meta), path(bam), path(bai)
-    path  bed
+    (meta: Map, bam: Path, bai: Path): Record
+    bed: Path
 
     output:
-    tuple val(meta), path("*.infer_experiment.txt"), emit: txt
-    tuple val("${task.process}"), val('rseqc'), eval('infer_experiment.py --version | sed "s/infer_experiment.py //"'), emit: versions_rseqc, topic: versions
+    record(meta: meta, txt: file("*.infer_experiment.txt"))
+    tuple val("${task.process}"), val('rseqc'), eval('infer_experiment.py --version | sed "s/infer_experiment.py //"'), topic: versions
 
     when:
     task.ext.when == null || task.ext.when

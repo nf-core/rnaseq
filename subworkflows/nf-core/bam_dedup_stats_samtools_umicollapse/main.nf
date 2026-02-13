@@ -24,11 +24,14 @@ workflow BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE {
     // Index BAM file and run samtools stats, flagstat and idxstats
     //
     SAMTOOLS_INDEX ( UMICOLLAPSE.out.bam )
-    ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
+
+    // Extract index fields from SamtoolsIndexResult record
+    ch_index_bai = SAMTOOLS_INDEX.out.map { r -> [r.meta, r.bai] }
+    ch_index_csi = SAMTOOLS_INDEX.out.map { r -> [r.meta, r.csi] }
 
     ch_bam_bai_dedup = UMICOLLAPSE.out.bam
-        .join(SAMTOOLS_INDEX.out.bai, by: [0], remainder: true)
-        .join(SAMTOOLS_INDEX.out.csi, by: [0], remainder: true)
+        .join(ch_index_bai, by: [0], remainder: true)
+        .join(ch_index_csi, by: [0], remainder: true)
         .map {
             meta, bam, bai, csi ->
                 if (bai) {
@@ -44,8 +47,8 @@ workflow BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE {
     emit:
     bam            = UMICOLLAPSE.out.bam             // channel: [ val(meta), path(bam) ]
 
-    bai            = SAMTOOLS_INDEX.out.bai          // channel: [ val(meta), path(bai) ]
-    csi            = SAMTOOLS_INDEX.out.csi          // channel: [ val(meta), path(csi) ]
+    bai            = ch_index_bai                     // channel: [ val(meta), path(bai) ]
+    csi            = ch_index_csi                     // channel: [ val(meta), path(csi) ]
     dedup_stats    = UMICOLLAPSE.out.log             // channel: [ val(meta), path(stats) ]
     stats          = BAM_STATS_SAMTOOLS.out.stats    // channel: [ val(meta), path(stats) ]
     flagstat       = BAM_STATS_SAMTOOLS.out.flagstat // channel: [ val(meta), path(flagstat) ]

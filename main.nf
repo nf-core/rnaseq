@@ -166,21 +166,7 @@ workflow NFCORE_RNASEQ {
     trim_unpaired      = RNASEQ.out.trim_unpaired
     umi_log            = RNASEQ.out.umi_log
     umi_reads          = RNASEQ.out.umi_reads
-    umi_genomic_dedup_log        = RNASEQ.out.umi_genomic_dedup_log
-    umi_transcriptomic_dedup_log = RNASEQ.out.umi_transcriptomic_dedup_log
-    umi_prepare_for_rsem_log     = RNASEQ.out.umi_prepare_for_rsem_log
-    umi_transcriptome_dedup_bam      = RNASEQ.out.umi_transcriptome_dedup_bam
-    umi_transcriptome_sorted_bam     = RNASEQ.out.umi_transcriptome_sorted_bam
-    umi_transcriptome_sorted_bam_bai = RNASEQ.out.umi_transcriptome_sorted_bam_bai
-    umi_transcriptome_filtered_bam   = RNASEQ.out.umi_transcriptome_filtered_bam
-    umi_dedup_stats    = RNASEQ.out.umi_dedup_stats
-    umi_dedup_bam      = RNASEQ.out.umi_dedup_bam
-    umi_dedup_bai      = RNASEQ.out.umi_dedup_bai
-    umi_dedup_flagstat = RNASEQ.out.umi_dedup_flagstat
-    umi_dedup_idxstats = RNASEQ.out.umi_dedup_idxstats
-    umi_dedup_tsv_edit_distance    = RNASEQ.out.umi_dedup_tsv_edit_distance
-    umi_dedup_tsv_per_umi          = RNASEQ.out.umi_dedup_tsv_per_umi
-    umi_dedup_tsv_umi_per_position = RNASEQ.out.umi_dedup_tsv_umi_per_position
+    umi_dedup          = RNASEQ.out.umi_dedup
     lint_log_raw       = RNASEQ.out.lint_log_raw
     lint_log_trimmed   = RNASEQ.out.lint_log_trimmed
     lint_log_bbsplit   = RNASEQ.out.lint_log_bbsplit
@@ -195,61 +181,24 @@ workflow NFCORE_RNASEQ {
     seqkit_converted   = RNASEQ.out.seqkit_converted
 
     // Alignment outputs
-    star_log           = RNASEQ.out.star_log
-    star_log_out       = RNASEQ.out.star_log_out
-    star_log_progress  = RNASEQ.out.star_log_progress
-    star_tab           = RNASEQ.out.star_tab
-    star_bam           = RNASEQ.out.star_bam
-    star_bai           = RNASEQ.out.star_bai
-    sorted_bam_stats    = RNASEQ.out.sorted_bam_stats
-    sorted_bam_flagstat = RNASEQ.out.sorted_bam_flagstat
-    sorted_bam_idxstats = RNASEQ.out.sorted_bam_idxstats
+    star               = RNASEQ.out.star
+    samtools           = RNASEQ.out.samtools
     transcriptome_bam  = RNASEQ.out.transcriptome_bam
     unaligned_sequences = RNASEQ.out.unaligned_sequences
     hisat2_summary     = RNASEQ.out.hisat2_summary
     samtools_bai       = RNASEQ.out.samtools_bai
 
     // MarkDuplicates outputs
-    markdup_bam        = RNASEQ.out.markdup_bam
-    markdup_bai        = RNASEQ.out.markdup_bai
-    markdup_metrics    = RNASEQ.out.markdup_metrics
-    markdup_stats      = RNASEQ.out.markdup_stats
-    markdup_flagstat   = RNASEQ.out.markdup_flagstat
-    markdup_idxstats   = RNASEQ.out.markdup_idxstats
+    markdup            = RNASEQ.out.markdup
 
     // QC outputs
     preseq_txt         = RNASEQ.out.preseq_txt
     preseq_log         = RNASEQ.out.preseq_log
     qualimap_results   = RNASEQ.out.qualimap_results
-    dupradar_scatter   = RNASEQ.out.dupradar_scatter
-    dupradar_boxplot   = RNASEQ.out.dupradar_boxplot
-    dupradar_histogram = RNASEQ.out.dupradar_histogram
-    dupradar_gene_data = RNASEQ.out.dupradar_gene_data
-    dupradar_intercept = RNASEQ.out.dupradar_intercept
+    dupradar           = RNASEQ.out.dupradar
 
     // RSeQC outputs
-    rseqc_bamstat              = RNASEQ.out.rseqc_bamstat
-    rseqc_inferexperiment      = RNASEQ.out.rseqc_inferexperiment
-    rseqc_junctionannotation_bed         = RNASEQ.out.rseqc_junctionannotation_bed
-    rseqc_junctionannotation_interact_bed = RNASEQ.out.rseqc_junctionannotation_interact_bed
-    rseqc_junctionannotation_xls          = RNASEQ.out.rseqc_junctionannotation_xls
-    rseqc_junctionannotation_log   = RNASEQ.out.rseqc_junctionannotation_log
-    rseqc_junctionannotation_pdf        = RNASEQ.out.rseqc_junctionannotation_pdf
-    rseqc_junctionannotation_events_pdf = RNASEQ.out.rseqc_junctionannotation_events_pdf
-    rseqc_junctionannotation_r          = RNASEQ.out.rseqc_junctionannotation_r
-    rseqc_junctionsaturation_pdf   = RNASEQ.out.rseqc_junctionsaturation_pdf
-    rseqc_junctionsaturation_r     = RNASEQ.out.rseqc_junctionsaturation_r
-    rseqc_readduplication_pos_xls  = RNASEQ.out.rseqc_readduplication_pos_xls
-    rseqc_readduplication_seq_xls  = RNASEQ.out.rseqc_readduplication_seq_xls
-    rseqc_readduplication_pdf      = RNASEQ.out.rseqc_readduplication_pdf
-    rseqc_readduplication_r        = RNASEQ.out.rseqc_readduplication_r
-    rseqc_readdistribution         = RNASEQ.out.rseqc_readdistribution
-    rseqc_innerdistance_txt        = RNASEQ.out.rseqc_innerdistance_txt
-    rseqc_innerdistance_distance   = RNASEQ.out.rseqc_innerdistance_distance
-    rseqc_innerdistance_mean       = RNASEQ.out.rseqc_innerdistance_mean
-    rseqc_innerdistance_pdf        = RNASEQ.out.rseqc_innerdistance_pdf
-    rseqc_innerdistance_r          = RNASEQ.out.rseqc_innerdistance_r
-    rseqc_tin                      = RNASEQ.out.rseqc_tin
+    rseqc              = RNASEQ.out.rseqc
 
     // Contaminant screening outputs
     kraken_report      = RNASEQ.out.kraken_report
@@ -261,12 +210,11 @@ workflow NFCORE_RNASEQ {
     stringtie_outputs     = RNASEQ.out.stringtie_outputs
     featurecounts_outputs = RNASEQ.out.featurecounts_outputs
     bigwig_outputs        = RNASEQ.out.bigwig_outputs
-    pseudo_outputs        = RNASEQ.out.pseudo_outputs
-    rsem_logs             = RNASEQ.out.rsem_logs
-    rsem_results          = RNASEQ.out.rsem_results
-    star_salmon_outputs   = RNASEQ.out.star_salmon_outputs
-    deseq2_outputs        = RNASEQ.out.deseq2_outputs
-    pseudo_deseq2_outputs = RNASEQ.out.pseudo_deseq2_outputs
+    pseudo             = RNASEQ.out.pseudo
+    rsem               = RNASEQ.out.rsem
+    star_salmon        = RNASEQ.out.star_salmon
+    deseq2             = RNASEQ.out.deseq2
+    pseudo_deseq2      = RNASEQ.out.pseudo_deseq2
 
     // MultiQC outputs
     multiqc_data           = RNASEQ.out.multiqc_data
@@ -350,21 +298,24 @@ workflow {
     trim_unpaired      = NFCORE_RNASEQ.out.trim_unpaired.ifEmpty([])
     umi_log            = NFCORE_RNASEQ.out.umi_log.ifEmpty([])
     umi_reads          = NFCORE_RNASEQ.out.umi_reads.ifEmpty([])
-    umi_genomic_dedup_log        = NFCORE_RNASEQ.out.umi_genomic_dedup_log.ifEmpty([])
-    umi_transcriptomic_dedup_log = NFCORE_RNASEQ.out.umi_transcriptomic_dedup_log.ifEmpty([])
-    umi_prepare_for_rsem_log     = NFCORE_RNASEQ.out.umi_prepare_for_rsem_log.ifEmpty([])
-    umi_transcriptome_dedup_bam      = NFCORE_RNASEQ.out.umi_transcriptome_dedup_bam.ifEmpty([])
-    umi_transcriptome_sorted_bam     = NFCORE_RNASEQ.out.umi_transcriptome_sorted_bam.ifEmpty([])
-    umi_transcriptome_sorted_bam_bai = NFCORE_RNASEQ.out.umi_transcriptome_sorted_bam_bai.ifEmpty([])
-    umi_transcriptome_filtered_bam   = NFCORE_RNASEQ.out.umi_transcriptome_filtered_bam.ifEmpty([])
-    umi_dedup_stats    = NFCORE_RNASEQ.out.umi_dedup_stats.ifEmpty([])
-    umi_dedup_bam      = NFCORE_RNASEQ.out.umi_dedup_bam.ifEmpty([])
-    umi_dedup_bai      = NFCORE_RNASEQ.out.umi_dedup_bai.ifEmpty([])
-    umi_dedup_flagstat = NFCORE_RNASEQ.out.umi_dedup_flagstat.ifEmpty([])
-    umi_dedup_idxstats = NFCORE_RNASEQ.out.umi_dedup_idxstats.ifEmpty([])
-    umi_dedup_tsv_edit_distance    = NFCORE_RNASEQ.out.umi_dedup_tsv_edit_distance.ifEmpty([])
-    umi_dedup_tsv_per_umi          = NFCORE_RNASEQ.out.umi_dedup_tsv_per_umi.ifEmpty([])
-    umi_dedup_tsv_umi_per_position = NFCORE_RNASEQ.out.umi_dedup_tsv_umi_per_position.ifEmpty([])
+    umi_genomic_dedup_log        = NFCORE_RNASEQ.out.umi_dedup.map { r -> [r.meta, r.genomic_dedup_log] }.ifEmpty([])
+    umi_transcriptomic_dedup_log = NFCORE_RNASEQ.out.umi_dedup.map { r -> [r.meta, r.transcriptomic_dedup_log] }.ifEmpty([])
+    umi_prepare_for_rsem_log     = NFCORE_RNASEQ.out.umi_dedup.map { r -> [r.meta, r.prepare_for_rsem_log] }.ifEmpty([])
+    umi_transcriptome_dedup_bam      = NFCORE_RNASEQ.out.umi_dedup.map { r -> [r.meta, r.transcriptome_dedup_bam] }.ifEmpty([])
+    umi_transcriptome_sorted_bam     = NFCORE_RNASEQ.out.umi_dedup.map { r -> [r.meta, r.transcriptome_sorted_bam] }.ifEmpty([])
+    umi_transcriptome_sorted_bam_bai = NFCORE_RNASEQ.out.umi_dedup.map { r -> [r.meta, r.transcriptome_sorted_bam_bai] }.ifEmpty([])
+    umi_transcriptome_filtered_bam   = NFCORE_RNASEQ.out.umi_dedup.map { r -> [r.meta, r.transcriptome_filtered_bam] }.ifEmpty([])
+    umi_dedup_genome_stats    = NFCORE_RNASEQ.out.umi_dedup.map { r -> [r.meta, r.genome_stats] }.ifEmpty([])
+    umi_dedup_genome_flagstat = NFCORE_RNASEQ.out.umi_dedup.map { r -> [r.meta, r.genome_flagstat] }.ifEmpty([])
+    umi_dedup_genome_idxstats = NFCORE_RNASEQ.out.umi_dedup.map { r -> [r.meta, r.genome_idxstats] }.ifEmpty([])
+    umi_dedup_transcriptome_stats    = NFCORE_RNASEQ.out.umi_dedup.map { r -> [r.meta, r.transcriptome_stats] }.ifEmpty([])
+    umi_dedup_transcriptome_flagstat = NFCORE_RNASEQ.out.umi_dedup.map { r -> [r.meta, r.transcriptome_flagstat] }.ifEmpty([])
+    umi_dedup_transcriptome_idxstats = NFCORE_RNASEQ.out.umi_dedup.map { r -> [r.meta, r.transcriptome_idxstats] }.ifEmpty([])
+    umi_dedup_bam      = NFCORE_RNASEQ.out.umi_dedup.map { r -> [r.meta, r.bam] }.ifEmpty([])
+    umi_dedup_bai      = NFCORE_RNASEQ.out.umi_dedup.map { r -> [r.meta, r.bai] }.ifEmpty([])
+    umi_dedup_tsv_edit_distance    = NFCORE_RNASEQ.out.umi_dedup.map { r -> [r.meta, r.tsv_edit_distance] }.ifEmpty([])
+    umi_dedup_tsv_per_umi          = NFCORE_RNASEQ.out.umi_dedup.map { r -> [r.meta, r.tsv_per_umi] }.ifEmpty([])
+    umi_dedup_tsv_umi_per_position = NFCORE_RNASEQ.out.umi_dedup.map { r -> [r.meta, r.tsv_umi_per_position] }.ifEmpty([])
     lint_log_raw       = NFCORE_RNASEQ.out.lint_log_raw.ifEmpty([])
     lint_log_trimmed   = NFCORE_RNASEQ.out.lint_log_trimmed.ifEmpty([])
     lint_log_bbsplit   = NFCORE_RNASEQ.out.lint_log_bbsplit.ifEmpty([])
@@ -378,62 +329,62 @@ workflow {
     seqkit_prefixed    = NFCORE_RNASEQ.out.seqkit_prefixed.ifEmpty([])
     seqkit_converted   = NFCORE_RNASEQ.out.seqkit_converted.ifEmpty([])
 
-    // Alignment outputs
-    star_log           = NFCORE_RNASEQ.out.star_log.ifEmpty([])
-    star_log_out       = NFCORE_RNASEQ.out.star_log_out.ifEmpty([])
-    star_log_progress  = NFCORE_RNASEQ.out.star_log_progress.ifEmpty([])
-    star_tab           = NFCORE_RNASEQ.out.star_tab.ifEmpty([])
-    star_bam           = NFCORE_RNASEQ.out.star_bam.ifEmpty([])
-    star_bai           = NFCORE_RNASEQ.out.star_bai.ifEmpty([])
-    sorted_bam_stats    = NFCORE_RNASEQ.out.sorted_bam_stats.ifEmpty([])
-    sorted_bam_flagstat = NFCORE_RNASEQ.out.sorted_bam_flagstat.ifEmpty([])
-    sorted_bam_idxstats = NFCORE_RNASEQ.out.sorted_bam_idxstats.ifEmpty([])
+    // Alignment outputs - extract from StarAlignResult and SamtoolsResult records
+    star_log           = NFCORE_RNASEQ.out.star.map { r -> [r.meta, r.log_final] }.ifEmpty([])
+    star_log_out       = NFCORE_RNASEQ.out.star.map { r -> [r.meta, r.log_out] }.ifEmpty([])
+    star_log_progress  = NFCORE_RNASEQ.out.star.map { r -> [r.meta, r.log_progress] }.ifEmpty([])
+    star_tab           = NFCORE_RNASEQ.out.star.map { r -> [r.meta, r.tab] }.ifEmpty([])
+    star_bam           = NFCORE_RNASEQ.out.star.map { r -> [r.meta, r.bam] }.ifEmpty([])
+    star_bai           = NFCORE_RNASEQ.out.samtools.map { r -> [r.meta, r.bai] }.ifEmpty([])
+    sorted_bam_stats    = NFCORE_RNASEQ.out.samtools.map { r -> [r.meta, r.stats] }.ifEmpty([])
+    sorted_bam_flagstat = NFCORE_RNASEQ.out.samtools.map { r -> [r.meta, r.flagstat] }.ifEmpty([])
+    sorted_bam_idxstats = NFCORE_RNASEQ.out.samtools.map { r -> [r.meta, r.idxstats] }.ifEmpty([])
     transcriptome_bam  = NFCORE_RNASEQ.out.transcriptome_bam.ifEmpty([])
     unaligned_sequences = NFCORE_RNASEQ.out.unaligned_sequences.ifEmpty([])
     hisat2_summary     = NFCORE_RNASEQ.out.hisat2_summary.ifEmpty([])
     samtools_bai       = NFCORE_RNASEQ.out.samtools_bai.ifEmpty([])
 
-    // MarkDuplicates outputs
-    markdup_bam        = NFCORE_RNASEQ.out.markdup_bam.ifEmpty([])
-    markdup_bai        = NFCORE_RNASEQ.out.markdup_bai.ifEmpty([])
-    markdup_metrics    = NFCORE_RNASEQ.out.markdup_metrics.ifEmpty([])
-    markdup_stats      = NFCORE_RNASEQ.out.markdup_stats.ifEmpty([])
-    markdup_flagstat   = NFCORE_RNASEQ.out.markdup_flagstat.ifEmpty([])
-    markdup_idxstats   = NFCORE_RNASEQ.out.markdup_idxstats.ifEmpty([])
+    // MarkDuplicates outputs - extract from MarkDupResult record
+    markdup_bam        = NFCORE_RNASEQ.out.markdup.map { r -> [r.meta, r.bam] }.ifEmpty([])
+    markdup_bai        = NFCORE_RNASEQ.out.markdup.map { r -> [r.meta, r.bai] }.ifEmpty([])
+    markdup_metrics    = NFCORE_RNASEQ.out.markdup.map { r -> [r.meta, r.metrics] }.ifEmpty([])
+    markdup_stats      = NFCORE_RNASEQ.out.markdup.map { r -> [r.meta, r.stats] }.ifEmpty([])
+    markdup_flagstat   = NFCORE_RNASEQ.out.markdup.map { r -> [r.meta, r.flagstat] }.ifEmpty([])
+    markdup_idxstats   = NFCORE_RNASEQ.out.markdup.map { r -> [r.meta, r.idxstats] }.ifEmpty([])
 
     // QC outputs
     preseq_txt         = NFCORE_RNASEQ.out.preseq_txt.ifEmpty([])
     preseq_log         = NFCORE_RNASEQ.out.preseq_log.ifEmpty([])
     qualimap_results   = NFCORE_RNASEQ.out.qualimap_results.ifEmpty([])
-    dupradar_scatter   = NFCORE_RNASEQ.out.dupradar_scatter.ifEmpty([])
-    dupradar_boxplot   = NFCORE_RNASEQ.out.dupradar_boxplot.ifEmpty([])
-    dupradar_histogram = NFCORE_RNASEQ.out.dupradar_histogram.ifEmpty([])
-    dupradar_gene_data = NFCORE_RNASEQ.out.dupradar_gene_data.ifEmpty([])
-    dupradar_intercept = NFCORE_RNASEQ.out.dupradar_intercept.ifEmpty([])
+    dupradar_scatter   = NFCORE_RNASEQ.out.dupradar.map { r -> [r.meta, r.scatter] }.ifEmpty([])
+    dupradar_boxplot   = NFCORE_RNASEQ.out.dupradar.map { r -> [r.meta, r.boxplot] }.ifEmpty([])
+    dupradar_histogram = NFCORE_RNASEQ.out.dupradar.map { r -> [r.meta, r.histogram] }.ifEmpty([])
+    dupradar_gene_data = NFCORE_RNASEQ.out.dupradar.map { r -> [r.meta, r.gene_data] }.ifEmpty([])
+    dupradar_intercept = NFCORE_RNASEQ.out.dupradar.map { r -> [r.meta, r.intercept] }.ifEmpty([])
 
-    // RSeQC outputs
-    rseqc_bamstat              = NFCORE_RNASEQ.out.rseqc_bamstat.ifEmpty([])
-    rseqc_inferexperiment      = NFCORE_RNASEQ.out.rseqc_inferexperiment.ifEmpty([])
-    rseqc_junctionannotation_bed         = NFCORE_RNASEQ.out.rseqc_junctionannotation_bed.ifEmpty([])
-    rseqc_junctionannotation_interact_bed = NFCORE_RNASEQ.out.rseqc_junctionannotation_interact_bed.ifEmpty([])
-    rseqc_junctionannotation_xls          = NFCORE_RNASEQ.out.rseqc_junctionannotation_xls.ifEmpty([])
-    rseqc_junctionannotation_log   = NFCORE_RNASEQ.out.rseqc_junctionannotation_log.ifEmpty([])
-    rseqc_junctionannotation_pdf        = NFCORE_RNASEQ.out.rseqc_junctionannotation_pdf.ifEmpty([])
-    rseqc_junctionannotation_events_pdf = NFCORE_RNASEQ.out.rseqc_junctionannotation_events_pdf.ifEmpty([])
-    rseqc_junctionannotation_r          = NFCORE_RNASEQ.out.rseqc_junctionannotation_r.ifEmpty([])
-    rseqc_junctionsaturation_pdf   = NFCORE_RNASEQ.out.rseqc_junctionsaturation_pdf.ifEmpty([])
-    rseqc_junctionsaturation_r     = NFCORE_RNASEQ.out.rseqc_junctionsaturation_r.ifEmpty([])
-    rseqc_readduplication_pos_xls  = NFCORE_RNASEQ.out.rseqc_readduplication_pos_xls.ifEmpty([])
-    rseqc_readduplication_seq_xls  = NFCORE_RNASEQ.out.rseqc_readduplication_seq_xls.ifEmpty([])
-    rseqc_readduplication_pdf      = NFCORE_RNASEQ.out.rseqc_readduplication_pdf.ifEmpty([])
-    rseqc_readduplication_r        = NFCORE_RNASEQ.out.rseqc_readduplication_r.ifEmpty([])
-    rseqc_readdistribution         = NFCORE_RNASEQ.out.rseqc_readdistribution.ifEmpty([])
-    rseqc_innerdistance_txt        = NFCORE_RNASEQ.out.rseqc_innerdistance_txt.ifEmpty([])
-    rseqc_innerdistance_distance   = NFCORE_RNASEQ.out.rseqc_innerdistance_distance.ifEmpty([])
-    rseqc_innerdistance_mean       = NFCORE_RNASEQ.out.rseqc_innerdistance_mean.ifEmpty([])
-    rseqc_innerdistance_pdf        = NFCORE_RNASEQ.out.rseqc_innerdistance_pdf.ifEmpty([])
-    rseqc_innerdistance_r          = NFCORE_RNASEQ.out.rseqc_innerdistance_r.ifEmpty([])
-    rseqc_tin                      = NFCORE_RNASEQ.out.rseqc_tin.ifEmpty([])
+    // RSeQC outputs - use .map to extract fields; null-safe ?. for nested records
+    rseqc_bamstat              = NFCORE_RNASEQ.out.rseqc.map { r -> [r.meta, r.bamstat] }.ifEmpty([])
+    rseqc_inferexperiment      = NFCORE_RNASEQ.out.rseqc.map { r -> [r.meta, r.inferexperiment] }.ifEmpty([])
+    rseqc_junctionannotation_bed         = NFCORE_RNASEQ.out.rseqc.map { r -> [r.meta, r.junction_annotation?.bed] }.ifEmpty([])
+    rseqc_junctionannotation_interact_bed = NFCORE_RNASEQ.out.rseqc.map { r -> [r.meta, r.junction_annotation?.interact_bed] }.ifEmpty([])
+    rseqc_junctionannotation_xls          = NFCORE_RNASEQ.out.rseqc.map { r -> [r.meta, r.junction_annotation?.xls] }.ifEmpty([])
+    rseqc_junctionannotation_log   = NFCORE_RNASEQ.out.rseqc.map { r -> [r.meta, r.junction_annotation?.log] }.ifEmpty([])
+    rseqc_junctionannotation_pdf        = NFCORE_RNASEQ.out.rseqc.map { r -> [r.meta, r.junction_annotation?.pdf] }.ifEmpty([])
+    rseqc_junctionannotation_events_pdf = NFCORE_RNASEQ.out.rseqc.map { r -> [r.meta, r.junction_annotation?.events_pdf] }.ifEmpty([])
+    rseqc_junctionannotation_r          = NFCORE_RNASEQ.out.rseqc.map { r -> [r.meta, r.junction_annotation?.rscript] }.ifEmpty([])
+    rseqc_junctionsaturation_pdf   = NFCORE_RNASEQ.out.rseqc.map { r -> [r.meta, r.junctionsaturation_pdf] }.ifEmpty([])
+    rseqc_junctionsaturation_r     = NFCORE_RNASEQ.out.rseqc.map { r -> [r.meta, r.junctionsaturation_r] }.ifEmpty([])
+    rseqc_readduplication_pos_xls  = NFCORE_RNASEQ.out.rseqc.map { r -> [r.meta, r.read_duplication?.pos_xls] }.ifEmpty([])
+    rseqc_readduplication_seq_xls  = NFCORE_RNASEQ.out.rseqc.map { r -> [r.meta, r.read_duplication?.seq_xls] }.ifEmpty([])
+    rseqc_readduplication_pdf      = NFCORE_RNASEQ.out.rseqc.map { r -> [r.meta, r.read_duplication?.pdf] }.ifEmpty([])
+    rseqc_readduplication_r        = NFCORE_RNASEQ.out.rseqc.map { r -> [r.meta, r.read_duplication?.rscript] }.ifEmpty([])
+    rseqc_readdistribution         = NFCORE_RNASEQ.out.rseqc.map { r -> [r.meta, r.readdistribution] }.ifEmpty([])
+    rseqc_innerdistance_txt        = NFCORE_RNASEQ.out.rseqc.map { r -> [r.meta, r.inner_distance?.freq] }.ifEmpty([])
+    rseqc_innerdistance_distance   = NFCORE_RNASEQ.out.rseqc.map { r -> [r.meta, r.inner_distance?.distance] }.ifEmpty([])
+    rseqc_innerdistance_mean       = NFCORE_RNASEQ.out.rseqc.map { r -> [r.meta, r.inner_distance?.mean] }.ifEmpty([])
+    rseqc_innerdistance_pdf        = NFCORE_RNASEQ.out.rseqc.map { r -> [r.meta, r.inner_distance?.pdf] }.ifEmpty([])
+    rseqc_innerdistance_r          = NFCORE_RNASEQ.out.rseqc.map { r -> [r.meta, r.inner_distance?.rscript] }.ifEmpty([])
+    rseqc_tin                      = NFCORE_RNASEQ.out.rseqc.map { r -> [r.meta, r.tin] }.ifEmpty([])
 
     // Contaminant screening outputs
     kraken_report      = NFCORE_RNASEQ.out.kraken_report.ifEmpty([])
@@ -441,16 +392,15 @@ workflow {
     sylph_profile      = NFCORE_RNASEQ.out.sylph_profile.ifEmpty([])
     sylphtax_output    = NFCORE_RNASEQ.out.sylphtax_output.ifEmpty([])
 
-    // Consolidated outputs
+    // Consolidated outputs - records publish all fields to their respective directories
     stringtie_outputs     = NFCORE_RNASEQ.out.stringtie_outputs.ifEmpty([])
     featurecounts_outputs = NFCORE_RNASEQ.out.featurecounts_outputs.ifEmpty([])
     bigwig_outputs        = NFCORE_RNASEQ.out.bigwig_outputs.ifEmpty([])
-    pseudo_outputs        = NFCORE_RNASEQ.out.pseudo_outputs.ifEmpty([])
-    rsem_logs             = NFCORE_RNASEQ.out.rsem_logs.ifEmpty([])
-    rsem_results          = NFCORE_RNASEQ.out.rsem_results.ifEmpty([])
-    star_salmon_outputs   = NFCORE_RNASEQ.out.star_salmon_outputs.ifEmpty([])
-    deseq2_outputs        = NFCORE_RNASEQ.out.deseq2_outputs.ifEmpty([])
-    pseudo_deseq2_outputs = NFCORE_RNASEQ.out.pseudo_deseq2_outputs.ifEmpty([])
+    pseudo                = NFCORE_RNASEQ.out.pseudo.ifEmpty([])
+    rsem                  = NFCORE_RNASEQ.out.rsem.ifEmpty([])
+    star_salmon           = NFCORE_RNASEQ.out.star_salmon.ifEmpty([])
+    deseq2                = NFCORE_RNASEQ.out.deseq2.ifEmpty([])
+    pseudo_deseq2         = NFCORE_RNASEQ.out.pseudo_deseq2.ifEmpty([])
 
     // MultiQC report
     multiqc_report         = NFCORE_RNASEQ.out.multiqc_report.ifEmpty([])
@@ -505,11 +455,14 @@ output {
     umi_transcriptome_sorted_bam     { path { params.aligner } }
     umi_transcriptome_sorted_bam_bai { path { params.aligner } }
     umi_transcriptome_filtered_bam   { path { params.aligner } }
-    umi_dedup_stats  { path { "${params.aligner}/samtools_stats" } }
+    umi_dedup_genome_stats             { path { "${params.aligner}/samtools_stats" } }
+    umi_dedup_genome_flagstat          { path { "${params.aligner}/samtools_stats" } }
+    umi_dedup_genome_idxstats          { path { "${params.aligner}/samtools_stats" } }
+    umi_dedup_transcriptome_stats      { path { "${params.aligner}/samtools_stats" } }
+    umi_dedup_transcriptome_flagstat   { path { "${params.aligner}/samtools_stats" } }
+    umi_dedup_transcriptome_idxstats   { path { "${params.aligner}/samtools_stats" } }
     umi_dedup_bam    { path { params.aligner } }
     umi_dedup_bai    { path { params.aligner } }
-    umi_dedup_flagstat { path { "${params.aligner}/samtools_stats" } }
-    umi_dedup_idxstats { path { "${params.aligner}/samtools_stats" } }
     umi_dedup_tsv_edit_distance    { path { "${params.aligner}/${params.umi_dedup_tool}" } }
     umi_dedup_tsv_per_umi          { path { "${params.aligner}/${params.umi_dedup_tool}" } }
     umi_dedup_tsv_umi_per_position { path { "${params.aligner}/${params.umi_dedup_tool}" } }
@@ -589,18 +542,15 @@ output {
     sylph_profile   { path { "${params.aligner}/contaminants/sylph" } }
     sylphtax_output { path { "${params.aligner}/contaminants/sylph" } }
 
-    // Consolidated outputs
+    // Consolidated outputs - record channels publish all fields to one directory
     stringtie_outputs     { path { "${params.aligner}/stringtie" } }
     featurecounts_outputs { path { "${params.aligner}/featurecounts" } }
     bigwig_outputs        { path { "${params.aligner}/bigwig" } }
-    pseudo_outputs        { path { params.pseudo_aligner } }
-    star_salmon_outputs   { path 'star_salmon' }
-    deseq2_outputs        { path { "${params.aligner}/deseq2_qc" } }
-    pseudo_deseq2_outputs { path { "${params.pseudo_aligner}/deseq2_qc" } }
-
-    // RSEM outputs
-    rsem_logs    { path 'star_rsem/log' }
-    rsem_results { path 'star_rsem' }
+    pseudo                { path { params.pseudo_aligner } }
+    star_salmon           { path 'star_salmon' }
+    deseq2                { path { "${params.aligner}/deseq2_qc" } }
+    pseudo_deseq2         { path { "${params.pseudo_aligner}/deseq2_qc" } }
+    rsem                  { path 'star_rsem' }
 
     // MultiQC report
     multiqc_report { path { params.skip_alignment ? 'multiqc' : "multiqc/${params.aligner}" } }

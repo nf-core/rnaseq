@@ -243,18 +243,6 @@ sink()
 ## VERSIONS FILE                              ##
 ################################################
 ################################################
-
-r.version <- strsplit(version[['version.string']], ' ')[[1]][3]
-tximeta.version <- as.character(packageVersion('tximeta'))
-
-writeLines(
-    c(
-        '"${task.process}":',
-        paste('    bioconductor-tximeta:', tximeta.version)
-    ),
-'versions.yml')
-
-################################################
 ################################################
 ################################################
 ################################################

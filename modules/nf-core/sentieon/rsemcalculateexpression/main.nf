@@ -1,3 +1,16 @@
+nextflow.preview.types = true
+
+record RsemCalcResult {
+    meta:              Map
+    counts_gene:       Path
+    counts_transcript: Path
+    stat:              Path
+    logs:              Path?
+    bam_star:          Path?
+    bam_genome:        Path?
+    bam_transcript:    Path?
+}
+
 process SENTIEON_RSEMCALCULATEEXPRESSION {
     tag "$meta.id"
     label 'process_high'
@@ -9,22 +22,23 @@ process SENTIEON_RSEMCALCULATEEXPRESSION {
         'community.wave.seqera.io/library/rsem_sentieon:1d3ad86b89bf5cc7' }"
 
     input:
-    tuple val(meta), path(reads)  // FASTQ files or BAM file for --alignments mode
-    path  index
+    (meta: Map, reads: Path): Record  // FASTQ files or BAM file for --alignments mode
+    index: Path
 
     output:
-    tuple val(meta), path("*.genes.results")   , emit: counts_gene
-    tuple val(meta), path("*.isoforms.results"), emit: counts_transcript
-    tuple val(meta), path("*.stat")            , emit: stat
-    tuple val(meta), path("*.log")             , emit: logs, optional:true
-
-    tuple val(meta), path("*.STAR.genome.bam")       , optional:true, emit: bam_star
-    tuple val(meta), path("${prefix}.genome.bam")    , optional:true, emit: bam_genome
-    tuple val(meta), path("${prefix}.transcript.bam"), optional:true, emit: bam_transcript
-
-    tuple val("${task.process}"), val('rsem'), eval('rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g"'), topic: versions, emit: versions_rsem
-    tuple val("${task.process}"), val('star'), eval('STAR --version | sed -e "s/STAR_//g"'), topic: versions, emit: versions_star
-    tuple val("${task.process}"), val('sentieon'), eval('sentieon driver --version 2>&1 | sed -e "s/sentieon-genomics-//g"'), topic: versions, emit: versions_sentieon
+    record(
+        meta:              meta,
+        counts_gene:       file("*.genes.results"),
+        counts_transcript: file("*.isoforms.results"),
+        stat:              file("*.stat"),
+        logs:              file("*.log",                    optional: true),
+        bam_star:          file("*.STAR.genome.bam",        optional: true),
+        bam_genome:        file("${prefix}.genome.bam",     optional: true),
+        bam_transcript:    file("${prefix}.transcript.bam", optional: true)
+    )
+    tuple val("${task.process}"), val('rsem'), eval('rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g"'), topic: versions
+    tuple val("${task.process}"), val('star'), eval('STAR --version | sed -e "s/STAR_//g"'), topic: versions
+    tuple val("${task.process}"), val('sentieon'), eval('sentieon driver --version 2>&1 | sed -e "s/sentieon-genomics-//g"'), topic: versions
 
     when:
     task.ext.when == null || task.ext.when

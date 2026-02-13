@@ -1,3 +1,16 @@
+nextflow.preview.types = true
+
+record RsemCalcResult {
+    meta:              Map
+    counts_gene:       Path
+    counts_transcript: Path
+    stat:              Path
+    logs:              Path?
+    bam_star:          Path?
+    bam_genome:        Path?
+    bam_transcript:    Path?
+}
+
 process RSEM_CALCULATEEXPRESSION {
     tag "$meta.id"
     label 'process_high'
@@ -8,19 +21,22 @@ process RSEM_CALCULATEEXPRESSION {
         'community.wave.seqera.io/library/rsem_star:5acb4e8c03239c32' }"
 
     input:
-    tuple val(meta), path(reads)  // FASTQ files or BAM file for --alignments mode
-    path  index
+    (meta: Map, reads: Path): Record  // FASTQ files or BAM file for --alignments mode
+    index: Path
 
     output:
-    tuple val(meta), path("*.genes.results")   , emit: counts_gene
-    tuple val(meta), path("*.isoforms.results"), emit: counts_transcript
-    tuple val(meta), path("*.stat")            , emit: stat
-    tuple val(meta), path("*.log")             , emit: logs, optional:true
-    path  "versions.yml"                       , emit: versions
-
-    tuple val(meta), path("*.STAR.genome.bam")       , optional:true, emit: bam_star
-    tuple val(meta), path("${prefix}.genome.bam")    , optional:true, emit: bam_genome
-    tuple val(meta), path("${prefix}.transcript.bam"), optional:true, emit: bam_transcript
+    record(
+        meta:              meta,
+        counts_gene:       file("*.genes.results"),
+        counts_transcript: file("*.isoforms.results"),
+        stat:              file("*.stat"),
+        logs:              file("*.log",                    optional: true),
+        bam_star:          file("*.STAR.genome.bam",        optional: true),
+        bam_genome:        file("${prefix}.genome.bam",     optional: true),
+        bam_transcript:    file("${prefix}.transcript.bam", optional: true)
+    )
+    tuple val("${task.process}"), val('rsem'), eval('rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g"'), topic: versions
+    tuple val("${task.process}"), val('star'), eval('STAR --version | sed -e "s/STAR_//g"'), topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -67,12 +83,6 @@ process RSEM_CALCULATEEXPRESSION {
         $reads \\
         \$INDEX \\
         $prefix
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        rsem: \$(rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g")
-        star: \$(STAR --version | sed -e "s/STAR_//g")
-    END_VERSIONS
     """
 
     stub:
@@ -91,11 +101,5 @@ process RSEM_CALCULATEEXPRESSION {
 
     touch ${prefix}.genome.bam
     touch ${prefix}.transcript.bam
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        rsem: \$(rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g")
-        star: \$(STAR --version | sed -e "s/STAR_//g")
-    END_VERSIONS
     """
 }

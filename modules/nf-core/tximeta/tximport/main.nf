@@ -1,3 +1,17 @@
+nextflow.preview.types = true
+
+record TximportResult {
+    meta:                       Map
+    tpm_gene:                   Path
+    counts_gene:                Path
+    counts_gene_length_scaled:  Path
+    counts_gene_scaled:         Path
+    lengths_gene:               Path
+    tpm_transcript:             Path
+    counts_transcript:          Path
+    lengths_transcript:         Path
+}
+
 process TXIMETA_TXIMPORT {
     label "process_medium"
 
@@ -7,20 +21,26 @@ process TXIMETA_TXIMPORT {
         'biocontainers/bioconductor-tximeta:1.20.1--r43hdfd78af_0' }"
 
     input:
-    tuple val(meta), path("quants/*")
-    tuple val(meta2), path(tx2gene)
-    val quant_type
+    (meta: Map, quants: Path): Record
+    (meta2: Map, tx2gene: Path): Record
+
+    stage:
+    stageAs(quants, 'quants/*')
+    quant_type: String
 
     output:
-    tuple val(meta), path("*gene_tpm.tsv")                 , emit: tpm_gene
-    tuple val(meta), path("*gene_counts.tsv")              , emit: counts_gene
-    tuple val(meta), path("*gene_counts_length_scaled.tsv"), emit: counts_gene_length_scaled
-    tuple val(meta), path("*gene_counts_scaled.tsv")       , emit: counts_gene_scaled
-    tuple val(meta), path("*gene_lengths.tsv")             , emit: lengths_gene
-    tuple val(meta), path("*transcript_tpm.tsv")           , emit: tpm_transcript
-    tuple val(meta), path("*transcript_counts.tsv")        , emit: counts_transcript
-    tuple val(meta), path("*transcript_lengths.tsv")       , emit: lengths_transcript
-    path "versions.yml"                                    , emit: versions
+    record(
+        meta:                      meta,
+        tpm_gene:                  file("*gene_tpm.tsv"),
+        counts_gene:               file("*gene_counts.tsv"),
+        counts_gene_length_scaled: file("*gene_counts_length_scaled.tsv"),
+        counts_gene_scaled:        file("*gene_counts_scaled.tsv"),
+        lengths_gene:              file("*gene_lengths.tsv"),
+        tpm_transcript:            file("*transcript_tpm.tsv"),
+        counts_transcript:         file("*transcript_counts.tsv"),
+        lengths_transcript:        file("*transcript_lengths.tsv")
+    )
+    tuple val("${task.process}"), val('bioconductor-tximeta'), eval('Rscript -e "library(tximeta); cat(as.character(packageVersion(\'tximeta\')))"'), topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -38,10 +58,5 @@ process TXIMETA_TXIMPORT {
     touch ${meta.id}.transcript_tpm.tsv
     touch ${meta.id}.transcript_counts.tsv
     touch ${meta.id}.transcript_lengths.tsv
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        bioconductor-tximeta: \$(Rscript -e "library(tximeta); cat(as.character(packageVersion('tximeta')))")
-    END_VERSIONS
     """
 }

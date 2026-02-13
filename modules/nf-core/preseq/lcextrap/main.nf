@@ -1,3 +1,11 @@
+nextflow.preview.types = true
+
+record PreseqResult {
+    meta:      Map
+    lc_extrap: Path
+    log:       Path
+}
+
 process PRESEQ_LCEXTRAP {
     tag "$meta.id"
     label 'process_single'
@@ -9,12 +17,15 @@ process PRESEQ_LCEXTRAP {
         'biocontainers/preseq:3.2.0--hdcf5f25_6' }"
 
     input:
-    tuple val(meta), path(bam)
+    (meta: Map, bam: Path): Record
 
     output:
-    tuple val(meta), path("*.lc_extrap.txt"), emit: lc_extrap
-    tuple val(meta), path("*.log")          , emit: log
-    path  "versions.yml"                    , emit: versions
+    record(
+        meta:      meta,
+        lc_extrap: file("*.lc_extrap.txt"),
+        log:       file("*.log")
+    )
+    tuple val("${task.process}"), val('preseq'), eval('echo $(preseq 2>&1) | sed "s/^.*Version: //; s/Usage.*$//"'), topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -32,11 +43,6 @@ process PRESEQ_LCEXTRAP {
         -output ${prefix}.lc_extrap.txt \\
         $bam
     cp .command.err ${prefix}.command.log
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        preseq: \$(echo \$(preseq 2>&1) | sed 's/^.*Version: //; s/Usage:.*\$//')
-    END_VERSIONS
     """
 
     stub:
@@ -44,10 +50,5 @@ process PRESEQ_LCEXTRAP {
     """
     touch ${prefix}.lc_extrap.txt
     touch ${prefix}.command.log
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        preseq: \$(echo \$(preseq 2>&1) | sed 's/^.*Version: //; s/Usage:.*\$//')
-    END_VERSIONS
     """
 }

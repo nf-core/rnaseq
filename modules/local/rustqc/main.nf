@@ -7,7 +7,6 @@ process RUSTQC {
     input:
     tuple val(meta), path(bam)
     tuple val(meta2), path(gtf)
-    path(bed)
 
     output:
     // dupRadar outputs
@@ -59,12 +58,10 @@ process RUSTQC {
         strandedness = 2
     }
     def paired = meta.single_end ? '' : '--paired'
-    def bed_arg = bed ? "--bed ${bed}" : ''
     """
     rustqc rna \\
         ${bam} \\
         --gtf ${gtf} \\
-        ${bed_arg} \\
         --stranded ${strandedness} \\
         ${paired} \\
         --threads ${task.cpus} \\

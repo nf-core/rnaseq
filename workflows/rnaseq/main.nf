@@ -535,7 +535,6 @@ workflow RNASEQ {
         RUSTQC (
             ch_genome_bam,
             ch_gtf.map { item -> [ [:], item ] },
-            ch_gene_bed,
         )
         ch_versions = ch_versions.mix(RUSTQC.out.versions.first())
 

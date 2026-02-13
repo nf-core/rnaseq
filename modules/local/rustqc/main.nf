@@ -2,7 +2,7 @@ process RUSTQC {
     tag "$meta.id"
     label 'process_medium'
 
-    container "ghcr.io/ewels/rustqc:latest"
+    container "ghcr.io/ewels/rustqc:dev"
 
     input:
     tuple val(meta), path(bam)

@@ -86,9 +86,12 @@ nextflow_workflow {
                 input[23] = false          // with_umi
                 input[24] = 0              // umi_discard_read
 
+                // Merging options
+                input[25] = false          // save_merged_fastq
+
                 // Strandedness thresholds
-                input[25] = 0.8            // stranded_threshold
-                input[26] = 0.1            // unstranded_threshold
+                input[26] = 0.8            // stranded_threshold
+                input[27] = 0.1            // unstranded_threshold
                 """
             }
         }
@@ -174,9 +177,12 @@ nextflow_workflow {
                 input[23] = false          // with_umi
                 input[24] = 0              // umi_discard_read
 
+                // Merging options
+                input[25] = false          // save_merged_fastq
+
                 // Strandedness thresholds
-                input[25] = 0.8            // stranded_threshold
-                input[26] = 0.1            // unstranded_threshold
+                input[26] = 0.8            // stranded_threshold
+                input[27] = 0.1            // unstranded_threshold
                 """
             }
         }
@@ -264,9 +270,12 @@ nextflow_workflow {
                 input[23] = false          // with_umi
                 input[24] = 0              // umi_discard_read
 
+                // Merging options
+                input[25] = false          // save_merged_fastq
+
                 // Strandedness thresholds
-                input[25] = 0.8            // stranded_threshold
-                input[26] = 0.1            // unstranded_threshold
+                input[26] = 0.8            // stranded_threshold
+                input[27] = 0.1            // unstranded_threshold
                 """
             }
         }
@@ -352,9 +361,12 @@ nextflow_workflow {
                 input[23] = false          // with_umi
                 input[24] = 0              // umi_discard_read
 
+                // Merging options
+                input[25] = false          // save_merged_fastq
+
                 // Strandedness thresholds
-                input[25] = 0.8            // stranded_threshold
-                input[26] = 0.1            // unstranded_threshold
+                input[26] = 0.8            // stranded_threshold
+                input[27] = 0.1            // unstranded_threshold
                 """
             }
         }
@@ -464,9 +476,12 @@ nextflow_workflow {
                 input[23] = false          // with_umi
                 input[24] = 0              // umi_discard_read
 
+                // Merging options
+                input[25] = false          // save_merged_fastq
+
                 // Strandedness thresholds
-                input[25] = 0.8            // stranded_threshold
-                input[26] = 0.1            // unstranded_threshold
+                input[26] = 0.8            // stranded_threshold
+                input[27] = 0.1            // unstranded_threshold
                 """
             }
         }

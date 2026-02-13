@@ -1,3 +1,12 @@
+nextflow.preview.types = true
+
+record KallistoQuantResult {
+    meta:      Map
+    results:   Path
+    json_info: Path
+    log:       Path
+}
+
 process KALLISTO_QUANT {
     tag "$meta.id"
     label 'process_high'
@@ -8,18 +17,21 @@ process KALLISTO_QUANT {
         'biocontainers/kallisto:0.51.1--heb0cbe2_0' }"
 
     input:
-    tuple val(meta), path(reads)
-    tuple val(meta2), path(index)
-    path gtf
-    path chromosomes
-    val fragment_length
-    val fragment_length_sd
+    (meta: Map, reads: Path): Record
+    (meta2: Map, index: Path): Record
+    gtf: Path?
+    chromosomes: Path?
+    fragment_length: String?
+    fragment_length_sd: String?
 
     output:
-    tuple val(meta), path("${prefix}")        , emit: results
-    tuple val(meta), path("*.run_info.json")  , emit: json_info
-    tuple val(meta), path("*.log")            , emit: log
-    path "versions.yml"                       , emit: versions
+    record(
+        meta:      meta,
+        results:   file("${prefix}"),
+        json_info: file("*.run_info.json"),
+        log:       file("*.log")
+    )
+    tuple val("${task.process}"), val('kallisto'), eval('echo $(kallisto version) | sed "s/kallisto, version //g"'), topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -61,11 +73,6 @@ process KALLISTO_QUANT {
 
     cp ${prefix}/kallisto_quant.log ${prefix}.log
     cp ${prefix}/run_info.json ${prefix}.run_info.json
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        kallisto: \$(echo \$(kallisto version) | sed "s/kallisto, version //g" )
-    END_VERSIONS
     """
 
     stub:
@@ -75,10 +82,5 @@ process KALLISTO_QUANT {
     mkdir -p $prefix
     touch ${prefix}.log
     touch ${prefix}.run_info.json
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        kallisto: \$(echo \$(kallisto version) | sed "s/kallisto, version //g" )
-    END_VERSIONS
     """
 }

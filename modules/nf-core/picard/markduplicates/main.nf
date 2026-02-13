@@ -1,3 +1,13 @@
+nextflow.preview.types = true
+
+record PicardMarkDupResult {
+    meta:    Map
+    bam:     Path?
+    bai:     Path?
+    cram:    Path?
+    metrics: Path
+}
+
 process PICARD_MARKDUPLICATES {
     tag "$meta.id"
     label 'process_medium'
@@ -8,16 +18,19 @@ process PICARD_MARKDUPLICATES {
         'biocontainers/picard:3.1.1--hdfd78af_0' }"
 
     input:
-    tuple val(meta), path(reads)
-    tuple val(meta2), path(fasta)
-    tuple val(meta3), path(fai)
+    (meta: Map, reads: Path): Record
+    (meta2: Map, fasta: Path): Record
+    (meta3: Map, fai: Path): Record
 
     output:
-    tuple val(meta), path("*.bam") , emit: bam,  optional: true
-    tuple val(meta), path("*.bai") , emit: bai,  optional: true
-    tuple val(meta), path("*.cram"), emit: cram, optional: true
-    tuple val(meta), path("*.metrics.txt"), emit: metrics
-    path  "versions.yml"                  , emit: versions
+    record(
+        meta:    meta,
+        bam:     file("*.bam",          optional: true),
+        bai:     file("*.bai",          optional: true),
+        cram:    file("*.cram",         optional: true),
+        metrics: file("*.metrics.txt")
+    )
+    tuple val("${task.process}"), val('picard'), eval('echo $(picard MarkDuplicates --version 2>&1) | grep -o "Version:.*" | cut -f2- -d:'), topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -45,11 +58,6 @@ process PICARD_MARKDUPLICATES {
         --OUTPUT ${prefix}.${suffix} \\
         $reference \\
         --METRICS_FILE ${prefix}.MarkDuplicates.metrics.txt
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        picard: \$(echo \$(picard MarkDuplicates --version 2>&1) | grep -o 'Version:.*' | cut -f2- -d:)
-    END_VERSIONS
     """
 
     stub:
@@ -59,10 +67,5 @@ process PICARD_MARKDUPLICATES {
     """
     touch ${prefix}.${suffix}
     touch ${prefix}.MarkDuplicates.metrics.txt
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        picard: \$(echo \$(picard MarkDuplicates --version 2>&1) | grep -o 'Version:.*' | cut -f2- -d:)
-    END_VERSIONS
     """
 }

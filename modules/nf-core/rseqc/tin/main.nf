@@ -1,3 +1,11 @@
+nextflow.preview.types = true
+
+record TinResult {
+    meta: Map
+    txt:  Path
+    xls:  Path
+}
+
 process RSEQC_TIN {
     tag "$meta.id"
     label 'process_high'
@@ -8,13 +16,12 @@ process RSEQC_TIN {
         'community.wave.seqera.io/library/rseqc_r-base:2e29d2dfda9cef15' }"
 
     input:
-    tuple val(meta), path(bam), path(bai)
-    path  bed
+    (meta: Map, bam: Path, bai: Path): Record
+    bed: Path
 
     output:
-    tuple val(meta), path("*.txt"), emit: txt
-    tuple val(meta), path("*.xls"), emit: xls
-    tuple val("${task.process}"), val('rseqc'), eval('tin.py --version | sed "s/tin.py //"'), emit: versions_rseqc, topic: versions
+    record(meta: meta, txt: file("*.txt"), xls: file("*.xls"))
+    tuple val("${task.process}"), val('rseqc'), eval('tin.py --version | sed "s/tin.py //"'), topic: versions
 
     when:
     task.ext.when == null || task.ext.when

@@ -26,18 +26,20 @@ workflow FASTQ_ALIGN_HISAT2 {
     BAM_SORT_STATS_SAMTOOLS ( HISAT2_ALIGN.out.bam, ch_fasta )
     ch_versions = ch_versions.mix(BAM_SORT_STATS_SAMTOOLS.out.versions)
 
+    // Extract individual fields from SamtoolsResult record
+    ch_samtools = BAM_SORT_STATS_SAMTOOLS.out.result
 
     emit:
-    orig_bam = HISAT2_ALIGN.out.bam                 // channel: [ val(meta), bam   ]
-    summary  = HISAT2_ALIGN.out.summary             // channel: [ val(meta), log   ]
-    fastq    = HISAT2_ALIGN.out.fastq               // channel: [ val(meta), fastq ]
+    orig_bam = HISAT2_ALIGN.out.bam                      // channel: [ val(meta), bam   ]
+    summary  = HISAT2_ALIGN.out.summary                   // channel: [ val(meta), log   ]
+    fastq    = HISAT2_ALIGN.out.fastq                     // channel: [ val(meta), fastq ]
 
-    bam      = BAM_SORT_STATS_SAMTOOLS.out.bam      // channel: [ val(meta), [ bam ] ]
-    bai      = BAM_SORT_STATS_SAMTOOLS.out.bai      // channel: [ val(meta), [ bai ] ]
-    csi      = BAM_SORT_STATS_SAMTOOLS.out.csi      // channel: [ val(meta), [ csi ] ]
-    stats    = BAM_SORT_STATS_SAMTOOLS.out.stats    // channel: [ val(meta), [ stats ] ]
-    flagstat = BAM_SORT_STATS_SAMTOOLS.out.flagstat // channel: [ val(meta), [ flagstat ] ]
-    idxstats = BAM_SORT_STATS_SAMTOOLS.out.idxstats // channel: [ val(meta), [ idxstats ] ]
+    bam      = ch_samtools.map { r -> [r.meta, r.bam] }      // channel: [ val(meta), [ bam ] ]
+    bai      = ch_samtools.map { r -> [r.meta, r.bai] }      // channel: [ val(meta), [ bai ] ]
+    csi      = ch_samtools.map { r -> [r.meta, r.csi] }      // channel: [ val(meta), [ csi ] ]
+    stats    = ch_samtools.map { r -> [r.meta, r.stats] }    // channel: [ val(meta), [ stats ] ]
+    flagstat = ch_samtools.map { r -> [r.meta, r.flagstat] }  // channel: [ val(meta), [ flagstat ] ]
+    idxstats = ch_samtools.map { r -> [r.meta, r.idxstats] }  // channel: [ val(meta), [ idxstats ] ]
 
-    versions = ch_versions                          // channel: [ versions.yml ]
+    versions = ch_versions                                 // channel: [ versions.yml ]
 }

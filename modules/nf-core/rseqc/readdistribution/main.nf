@@ -1,3 +1,10 @@
+nextflow.preview.types = true
+
+record ReadDistributionResult {
+    meta: Map
+    txt:  Path
+}
+
 process RSEQC_READDISTRIBUTION {
     tag "$meta.id"
     label 'process_medium'
@@ -8,12 +15,12 @@ process RSEQC_READDISTRIBUTION {
         'community.wave.seqera.io/library/rseqc_r-base:2e29d2dfda9cef15' }"
 
     input:
-    tuple val(meta), path(bam), path(bai)
-    path  bed
+    (meta: Map, bam: Path, bai: Path): Record
+    bed: Path
 
     output:
-    tuple val(meta), path("*.read_distribution.txt"), emit: txt
-    tuple val("${task.process}"), val('rseqc'), eval('read_distribution.py --version | sed "s/read_distribution.py //"'), emit: versions_rseqc, topic: versions
+    record(meta: meta, txt: file("*.read_distribution.txt"))
+    tuple val("${task.process}"), val('rseqc'), eval('read_distribution.py --version | sed "s/read_distribution.py //"'), topic: versions
 
     when:
     task.ext.when == null || task.ext.when

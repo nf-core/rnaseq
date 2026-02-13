@@ -1,3 +1,26 @@
+nextflow.preview.types = true
+
+// Uses the same record type as STAR_ALIGN
+record StarAlignResult {
+    meta:               Map
+    bam:                Path?
+    bam_sorted:         Path?
+    bam_sorted_aligned: Path?
+    bam_transcript:     Path?
+    bam_unsorted:       Path?
+    log_final:          Path
+    log_out:            Path
+    log_progress:       Path
+    fastq:              Path?
+    tab:                Path?
+    spl_junc_tab:       Path?
+    read_per_gene_tab:  Path?
+    junction:           Path?
+    sam:                Path?
+    wig:                Path?
+    bedgraph:           Path?
+}
+
 process SENTIEON_STARALIGN {
     tag "${meta.id}"
     label 'process_high'
@@ -10,32 +33,38 @@ process SENTIEON_STARALIGN {
         : 'community.wave.seqera.io/library/sentieon:202503.01--1863def31ed8e4d5'}"
 
     input:
-    tuple val(meta), path(reads, stageAs: "input*/*")
-    tuple val(meta2), path(index)
-    tuple val(meta3), path(gtf)
-    val star_ignore_sjdbgtf
-    val seq_platform
-    val seq_center
+    (meta: Map, reads: Path): Record
+    (meta2: Map, index: Path): Record
+
+    stage:
+    stageAs(reads, 'input*/*')
+    (meta3: Map, gtf: Path): Record
+    star_ignore_sjdbgtf: String?
+    seq_platform: String?
+    seq_center: String?
 
     output:
-    tuple val(meta), path('*Log.final.out'),                          emit: log_final
-    tuple val(meta), path('*Log.out'),                                emit: log_out
-    tuple val(meta), path('*Log.progress.out'),                       emit: log_progress
-    tuple val(meta), path('*d.out.bam'),                              emit: bam,                optional: true
-    tuple val(meta), path("${prefix}.sortedByCoord.out.bam"),         emit: bam_sorted,         optional: true
-    tuple val(meta), path("${prefix}.Aligned.sortedByCoord.out.bam"), emit: bam_sorted_aligned, optional: true
-    tuple val(meta), path('*toTranscriptome.out.bam'),                emit: bam_transcript,     optional: true
-    tuple val(meta), path('*Aligned.unsort.out.bam'),                 emit: bam_unsorted,       optional: true
-    tuple val(meta), path('*fastq.gz'),                               emit: fastq,              optional: true
-    tuple val(meta), path('*.tab'),                                   emit: tab,                optional: true
-    tuple val(meta), path('*.SJ.out.tab'),                            emit: spl_junc_tab,       optional: true
-    tuple val(meta), path('*.ReadsPerGene.out.tab'),                  emit: read_per_gene_tab,  optional: true
-    tuple val(meta), path('*.out.junction'),                          emit: junction,           optional: true
-    tuple val(meta), path('*.out.sam'),                               emit: sam,                optional: true
-    tuple val(meta), path('*.wig'),                                   emit: wig,                optional: true
-    tuple val(meta), path('*.bg'),                                    emit: bedgraph,           optional: true
-    tuple val("${task.process}"), val('star'), eval('sentieon STAR --version | sed -e "s/STAR_//g"'), topic: versions, emit: versions_star
-    tuple val("${task.process}"), val('sentieon'), eval('sentieon driver --version 2>&1 | sed -e "s/sentieon-genomics-//g"'), topic: versions, emit: versions_sentieon
+    record(
+        meta:               meta,
+        bam:                file('*d.out.bam', optional: true),
+        bam_sorted:         file("${prefix}.sortedByCoord.out.bam", optional: true),
+        bam_sorted_aligned: file("${prefix}.Aligned.sortedByCoord.out.bam", optional: true),
+        bam_transcript:     file('*toTranscriptome.out.bam', optional: true),
+        bam_unsorted:       file('*Aligned.unsort.out.bam', optional: true),
+        log_final:          file('*Log.final.out'),
+        log_out:            file('*Log.out'),
+        log_progress:       file('*Log.progress.out'),
+        fastq:              file('*fastq.gz', optional: true),
+        tab:                file('*.tab', optional: true),
+        spl_junc_tab:       file('*.SJ.out.tab', optional: true),
+        read_per_gene_tab:  file('*.ReadsPerGene.out.tab', optional: true),
+        junction:           file('*.out.junction', optional: true),
+        sam:                file('*.out.sam', optional: true),
+        wig:                file('*.wig', optional: true),
+        bedgraph:           file('*.bg', optional: true)
+    )
+    tuple val("${task.process}"), val('star'), eval('sentieon STAR --version | sed -e "s/STAR_//g"'), topic: versions
+    tuple val("${task.process}"), val('sentieon'), eval('sentieon driver --version 2>&1 | sed -e "s/sentieon-genomics-//g"'), topic: versions
 
     when:
     task.ext.when == null || task.ext.when

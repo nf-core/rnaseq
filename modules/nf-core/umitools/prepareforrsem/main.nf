@@ -1,3 +1,11 @@
+nextflow.preview.types = true
+
+record PrepareForRsemResult {
+    meta: Map
+    bam:  Path
+    log:  Path
+}
+
 process UMITOOLS_PREPAREFORRSEM {
     tag "$meta.id"
     label 'process_medium'
@@ -8,12 +16,15 @@ process UMITOOLS_PREPAREFORRSEM {
         'biocontainers/umi_tools:1.1.6--py311haab0aaa_0' }"
 
     input:
-    tuple val(meta), path(bam), path(bai)
+    (meta: Map, bam: Path, bai: Path): Record
 
     output:
-    tuple val(meta), path('*.bam'), emit: bam
-    tuple val(meta), path('*.log'), emit: log
-    path  "versions.yml"          , emit: versions
+    record(
+        meta: meta,
+        bam:  file('*.bam'),
+        log:  file('*.log')
+    )
+    tuple val("${task.process}"), val('umi_tools'), eval('umi_tools --version | sed "/version:/!d; s/.*: //"'), topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -28,21 +39,11 @@ process UMITOOLS_PREPAREFORRSEM {
         --stdout=${prefix}.bam \\
         --log=${prefix}.prepare_for_rsem.log \\
         $args
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        umitools: \$( umi_tools --version | sed '/version:/!d; s/.*: //' )
-    END_VERSIONS
     """
 
     stub:
     """
     touch ${meta.id}.bam
     touch ${meta.id}.log
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        umitools: \$( umi_tools --version | sed '/version:/!d; s/.*: //' )
-    END_VERSIONS
     """
 }

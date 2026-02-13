@@ -1,3 +1,14 @@
+nextflow.preview.types = true
+
+record InnerDistanceResult {
+    meta:     Map
+    distance: Path?
+    freq:     Path?
+    mean:     Path?
+    pdf:      Path?
+    rscript:  Path?
+}
+
 process RSEQC_INNERDISTANCE {
     tag "$meta.id"
     label 'process_medium'
@@ -8,16 +19,19 @@ process RSEQC_INNERDISTANCE {
         'community.wave.seqera.io/library/rseqc_r-base:2e29d2dfda9cef15' }"
 
     input:
-    tuple val(meta), path(bam), path(bai)
-    path  bed
+    (meta: Map, bam: Path, bai: Path): Record
+    bed: Path
 
     output:
-    tuple val(meta), path("*distance.txt"), optional:true, emit: distance
-    tuple val(meta), path("*freq.txt")    , optional:true, emit: freq
-    tuple val(meta), path("*mean.txt")    , optional:true, emit: mean
-    tuple val(meta), path("*.pdf")        , optional:true, emit: pdf
-    tuple val(meta), path("*.r")          , optional:true, emit: rscript
-    tuple val("${task.process}"), val('rseqc'), eval('inner_distance.py --version | sed "s/inner_distance.py //"'), emit: versions_rseqc, topic: versions
+    record(
+        meta:     meta,
+        distance: file("*distance.txt", optional: true),
+        freq:     file("*freq.txt",     optional: true),
+        mean:     file("*mean.txt",     optional: true),
+        pdf:      file("*.pdf",         optional: true),
+        rscript:  file("*.r",           optional: true)
+    )
+    tuple val("${task.process}"), val('rseqc'), eval('inner_distance.py --version | sed "s/inner_distance.py //"'), topic: versions
 
     when:
     task.ext.when == null || task.ext.when

@@ -1,3 +1,16 @@
+nextflow.preview.types = true
+
+record DeSeq2Result {
+    pdf:           Path?
+    rdata:         Path?
+    pca_txt:       Path?
+    pca_multiqc:   Path?
+    dists_txt:     Path?
+    dists_multiqc: Path?
+    log:           Path?
+    size_factors:  Path?
+}
+
 process DESEQ2_QC {
     label "process_medium"
 
@@ -9,20 +22,23 @@ process DESEQ2_QC {
         'community.wave.seqera.io/library/r-base_r-optparse_r-ggplot2_r-rcolorbrewer_pruned:9e75394d0bc21987' }"
 
     input:
-    path counts
-    path pca_header_multiqc
-    path clustering_header_multiqc
+    counts: Path
+    pca_header_multiqc: Path
+    clustering_header_multiqc: Path
 
     output:
-    path "*.pdf"                , optional:true, emit: pdf
-    path "*.RData"              , optional:true, emit: rdata
-    path "*pca.vals.txt"        , optional:true, emit: pca_txt
-    path "*pca.vals_mqc.tsv"    , optional:true, emit: pca_multiqc
-    path "*sample.dists.txt"    , optional:true, emit: dists_txt
-    path "*sample.dists_mqc.tsv", optional:true, emit: dists_multiqc
-    path "*.log"                , optional:true, emit: log
-    path "size_factors"         , optional:true, emit: size_factors
-    path "versions.yml"         , emit: versions
+    record(
+        pdf:           file("*.pdf",                 optional: true),
+        rdata:         file("*.RData",               optional: true),
+        pca_txt:       file("*pca.vals.txt",         optional: true),
+        pca_multiqc:   file("*pca.vals_mqc.tsv",     optional: true),
+        dists_txt:     file("*sample.dists.txt",     optional: true),
+        dists_multiqc: file("*sample.dists_mqc.tsv", optional: true),
+        log:           file("*.log",                 optional: true),
+        size_factors:  file("size_factors",          optional: true)
+    )
+    tuple val("${task.process}"), val('r-base'), eval('echo $(R --version 2>&1) | sed "s/^.*R version //; s/ .*$//"'), topic: versions
+    tuple val("${task.process}"), val('bioconductor-deseq2'), eval('Rscript -e "library(DESeq2); cat(as.character(packageVersion(\'DESeq2\')))"'), topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -54,12 +70,6 @@ process DESEQ2_QC {
         cat clustering_header.tmp *.sample.dists.txt > ${label_lower}.sample.dists_mqc.tsv
         rm clustering_header.tmp
     fi
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        r-base: \$(echo \$(R --version 2>&1) | sed 's/^.*R version //; s/ .*\$//')
-        bioconductor-deseq2: \$(Rscript -e "library(DESeq2); cat(as.character(packageVersion('DESeq2')))")
-    END_VERSIONS
     """
 
     stub:
@@ -81,11 +91,5 @@ process DESEQ2_QC {
     do
         touch size_factors/\${i}.size_factors.RData
     done
-
-    cat <<-END_VERSIONS >versions.yml
-    "${task.process}":
-        r-base: \$(echo \$(R --version 2>&1) | sed 's/^.*R version //; s/ .*\$//')
-        bioconductor-deseq2: \$(Rscript -e "library(DESeq2); cat(as.character(packageVersion('DESeq2')))")
-    END_VERSIONS
     """
 }

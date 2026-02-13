@@ -1,3 +1,16 @@
+nextflow.preview.types = true
+
+record DupRadarResult {
+    meta:         Map
+    scatter:      Path
+    boxplot:      Path
+    histogram:    Path
+    gene_data:    Path
+    intercept:    Path
+    multiqc:      Path
+    session_info: Path
+}
+
 process DUPRADAR {
     tag "$meta.id"
     label 'process_long'
@@ -8,18 +21,21 @@ process DUPRADAR {
         'community.wave.seqera.io/library/bioconductor-dupradar:1.38.0--831da16eb40a64ab' }"
 
     input:
-    tuple val(meta), path(bam)
-    tuple val(meta2), path(gtf)
+    (meta: Map, bam: Path): Record
+    (meta2: Map, gtf: Path): Record
 
     output:
-    tuple val(meta), path("*_duprateExpDens.pdf")   , emit: scatter2d
-    tuple val(meta), path("*_duprateExpBoxplot.pdf"), emit: boxplot
-    tuple val(meta), path("*_expressionHist.pdf")   , emit: hist
-    tuple val(meta), path("*_dupMatrix.txt")        , emit: dupmatrix
-    tuple val(meta), path("*_intercept_slope.txt")  , emit: intercept_slope
-    tuple val(meta), path("*_mqc.txt")              , emit: multiqc
-    tuple val(meta), path("*.R_sessionInfo.log")    , emit: session_info
-    path "versions.yml"                             , emit: versions
+    record(
+        meta:         meta,
+        scatter:      file("*_duprateExpDens.pdf"),
+        boxplot:      file("*_duprateExpBoxplot.pdf"),
+        histogram:    file("*_expressionHist.pdf"),
+        gene_data:    file("*_dupMatrix.txt"),
+        intercept:    file("*_intercept_slope.txt"),
+        multiqc:      file("*_mqc.txt"),
+        session_info: file("*.R_sessionInfo.log")
+    )
+    tuple val("${task.process}"), val('bioconductor-dupradar'), eval('Rscript -e "library(dupRadar); cat(as.character(packageVersion(\'dupRadar\')))"'), topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -37,10 +53,5 @@ process DUPRADAR {
     touch ${meta.id}_dup_intercept_mqc.txt
     touch ${meta.id}_duprateExpDensCurve_mqc.txt
     touch ${meta.id}.R_sessionInfo.log
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        bioconductor-dupradar: \$(Rscript -e "library(dupRadar); cat(as.character(packageVersion('dupRadar')))")
-    END_VERSIONS
     """
 }

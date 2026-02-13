@@ -7,24 +7,43 @@ process RUSTQC {
     input:
     tuple val(meta), path(bam)
     tuple val(meta2), path(gtf)
+    path(bed)
 
     output:
     // dupRadar outputs
-    tuple val(meta), path("*_duprateExpDens.png")          , emit: scatter2d
-    tuple val(meta), path("*_duprateExpBoxplot.png")       , emit: boxplot
-    tuple val(meta), path("*_expressionHist.png")          , emit: hist
-    tuple val(meta), path("*_dupMatrix.txt")               , emit: dupmatrix
-    tuple val(meta), path("*_intercept_slope.txt")         , emit: intercept_slope
-    tuple val(meta), path("*_dup_intercept_mqc.txt")       , emit: multiqc_intercept
-    tuple val(meta), path("*_duprateExpDensCurve_mqc.txt") , emit: multiqc_curve
+    tuple val(meta), path("*_duprateExpDens.png")          , emit: scatter2d         , optional: true
+    tuple val(meta), path("*_duprateExpBoxplot.png")       , emit: boxplot           , optional: true
+    tuple val(meta), path("*_expressionHist.png")          , emit: hist              , optional: true
+    tuple val(meta), path("*_dupMatrix.txt")               , emit: dupmatrix         , optional: true
+    tuple val(meta), path("*_intercept_slope.txt")         , emit: intercept_slope   , optional: true
+    tuple val(meta), path("*_dup_intercept_mqc.txt")       , emit: multiqc_intercept , optional: true
+    tuple val(meta), path("*_duprateExpDensCurve_mqc.txt") , emit: multiqc_curve     , optional: true
     // featureCounts / biotype outputs
-    tuple val(meta), path("*.featureCounts.tsv")           , emit: featurecounts
-    tuple val(meta), path("*.featureCounts.tsv.summary")   , emit: featurecounts_summary
-    tuple val(meta), path("*.biotype_counts.tsv")          , emit: biotype_counts_raw
-    tuple val(meta), path("*.biotype_counts_mqc.tsv")      , emit: biotype_counts
-    tuple val(meta), path("*.biotype_counts_rrna_mqc.tsv") , emit: biotype_rrna
-    // MultiQC and versions
-    tuple val(meta), path("*_mqc.{txt,tsv}")               , emit: multiqc
+    tuple val(meta), path("*.featureCounts.tsv")           , emit: featurecounts         , optional: true
+    tuple val(meta), path("*.featureCounts.tsv.summary")   , emit: featurecounts_summary , optional: true
+    tuple val(meta), path("*.biotype_counts.tsv")          , emit: biotype_counts_raw    , optional: true
+    tuple val(meta), path("*.biotype_counts_mqc.tsv")      , emit: biotype_counts        , optional: true
+    tuple val(meta), path("*.biotype_counts_rrna_mqc.tsv") , emit: biotype_rrna          , optional: true
+    // RSeQC: bam_stat
+    tuple val(meta), path("*.bam_stat.txt")                , emit: bamstat_txt                , optional: true
+    // RSeQC: infer_experiment
+    tuple val(meta), path("*.infer_experiment.txt")        , emit: inferexperiment_txt        , optional: true
+    // RSeQC: read_duplication
+    tuple val(meta), path("*.pos.DupRate.xls")             , emit: readduplication_pos_xls    , optional: true
+    tuple val(meta), path("*.seq.DupRate.xls")             , emit: readduplication_seq_xls    , optional: true
+    // RSeQC: read_distribution
+    tuple val(meta), path("*.read_distribution.txt")       , emit: readdistribution_txt       , optional: true
+    // RSeQC: junction_annotation
+    tuple val(meta), path("*.junction.xls")                , emit: junctionannotation_xls     , optional: true
+    tuple val(meta), path("*.junction.bed")                , emit: junctionannotation_bed     , optional: true
+    tuple val(meta), path("*.junction_plot.r")             , emit: junctionannotation_rscript , optional: true
+    tuple val(meta), path("*.junction_annotation.txt")     , emit: junctionannotation_log     , optional: true
+    // RSeQC: junction_saturation
+    tuple val(meta), path("*.junctionSaturation_plot.r")   , emit: junctionsaturation_rscript , optional: true
+    // RSeQC: inner_distance
+    tuple val(meta), path("*.inner_distance_freq.txt")     , emit: innerdistance_freq         , optional: true
+    tuple val(meta), path("*.inner_distance.txt")          , emit: innerdistance_txt          , optional: true
+    // versions
     path "versions.yml"                                    , emit: versions
 
     when:
@@ -40,10 +59,12 @@ process RUSTQC {
         strandedness = 2
     }
     def paired = meta.single_end ? '' : '--paired'
+    def bed_arg = bed ? "--bed ${bed}" : ''
     """
     rustqc rna \\
         ${bam} \\
-        ${gtf} \\
+        --gtf ${gtf} \\
+        ${bed_arg} \\
         --stranded ${strandedness} \\
         ${paired} \\
         --threads ${task.cpus} \\
@@ -71,6 +92,18 @@ process RUSTQC {
     touch ${prefix}.biotype_counts.tsv
     touch ${prefix}.biotype_counts_mqc.tsv
     touch ${prefix}.biotype_counts_rrna_mqc.tsv
+    touch ${prefix}.bam_stat.txt
+    touch ${prefix}.infer_experiment.txt
+    touch ${prefix}.pos.DupRate.xls
+    touch ${prefix}.seq.DupRate.xls
+    touch ${prefix}.read_distribution.txt
+    touch ${prefix}.junction.xls
+    touch ${prefix}.junction.bed
+    touch ${prefix}.junction_plot.r
+    touch ${prefix}.junction_annotation.txt
+    touch ${prefix}.junctionSaturation_plot.r
+    touch ${prefix}.inner_distance.txt
+    touch ${prefix}.inner_distance_freq.txt
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

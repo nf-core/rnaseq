@@ -100,7 +100,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "all_samples.SummarizedExperiment.rds"
                     ]
                 ],
                 "12": [
@@ -108,7 +108,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "all_samples.SummarizedExperiment.rds"
                     ]
                 ],
                 "13": [
@@ -234,7 +234,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "all_samples.SummarizedExperiment.rds"
                     ]
                 ],
                 "merged_transcript_rds_unified": [
@@ -242,7 +242,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "all_samples.SummarizedExperiment.rds"
                     ]
                 ],
                 "multiqc": [
@@ -337,7 +337,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "all_samples.SummarizedExperiment.rds"
                     ]
                 ],
                 "12": [
@@ -345,7 +345,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "all_samples.SummarizedExperiment.rds"
                     ]
                 ],
                 "13": [
@@ -471,7 +471,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "all_samples.SummarizedExperiment.rds"
                     ]
                 ],
                 "merged_transcript_rds_unified": [
@@ -479,7 +479,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "all_samples.SummarizedExperiment.rds"
                     ]
                 ],
                 "multiqc": [

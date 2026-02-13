@@ -89,7 +89,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "all_samples.SummarizedExperiment.rds"
                     ]
                 ],
                 "19": [
@@ -97,7 +97,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "all_samples.SummarizedExperiment.rds"
                     ]
                 ],
                 "2": [
@@ -258,7 +258,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "all_samples.SummarizedExperiment.rds"
                     ]
                 ],
                 "merged_genes_long": [
@@ -298,7 +298,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "all_samples.SummarizedExperiment.rds"
                     ]
                 ],
                 "raw_counts_gene": [
@@ -682,7 +682,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "all_samples.SummarizedExperiment.rds"
                     ]
                 ],
                 "19": [
@@ -690,7 +690,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "all_samples.SummarizedExperiment.rds"
                     ]
                 ],
                 "2": [
@@ -851,7 +851,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "all_samples.SummarizedExperiment.rds"
                     ]
                 ],
                 "merged_genes_long": [
@@ -891,7 +891,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "all_samples.SummarizedExperiment.rds"
                     ]
                 ],
                 "raw_counts_gene": [

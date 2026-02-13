@@ -112,7 +112,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "all_samples.SummarizedExperiment.rds"
                     ]
                 ],
                 "11": [
@@ -182,7 +182,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "all_samples.SummarizedExperiment.rds"
                     ]
                 ],
                 "counts_gene": [
@@ -238,7 +238,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "all_samples.SummarizedExperiment.rds"
                     ]
                 ],
                 "merged_transcript_rds": [
@@ -246,7 +246,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "all_samples.SummarizedExperiment.rds"
                     ]
                 ],
                 "tpm_gene": [
@@ -311,7 +311,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "all_samples.SummarizedExperiment.rds"
                     ]
                 ],
                 "11": [
@@ -381,7 +381,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "all_samples.SummarizedExperiment.rds"
                     ]
                 ],
                 "counts_gene": [
@@ -437,7 +437,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "all_samples.SummarizedExperiment.rds"
                     ]
                 ],
                 "merged_transcript_rds": [
@@ -445,7 +445,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "all_samples.SummarizedExperiment.rds"
                     ]
                 ],
                 "tpm_gene": [
@@ -510,7 +510,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "all_samples.SummarizedExperiment.rds"
                     ]
                 ],
                 "11": [
@@ -580,7 +580,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "all_samples.SummarizedExperiment.rds"
                     ]
                 ],
                 "counts_gene": [
@@ -636,7 +636,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "all_samples.SummarizedExperiment.rds"
                     ]
                 ],
                 "merged_transcript_rds": [
@@ -644,7 +644,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "all_samples.SummarizedExperiment.rds"
                     ]
                 ],
                 "tpm_gene": [

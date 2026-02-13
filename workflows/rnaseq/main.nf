@@ -10,6 +10,7 @@
 include { DESEQ2_QC as DESEQ2_QC_BAM_SALMON } from '../../modules/local/deseq2_qc'
 include { DESEQ2_QC as DESEQ2_QC_RSEM        } from '../../modules/local/deseq2_qc'
 include { DESEQ2_QC as DESEQ2_QC_PSEUDO      } from '../../modules/local/deseq2_qc'
+include { RUSTQC                              } from '../../modules/local/rustqc'
 include { MULTIQC_CUSTOM_BIOTYPE             } from '../../modules/local/multiqc_custom_biotype'
 
 //
@@ -514,10 +515,32 @@ workflow RNASEQ {
     }
 
     //
+    // MODULE: RustQC - fast duplicate rate analysis and biotype QC (opt-in replacement for dupRadar + featureCounts biotype)
+    //
+    if (!params.skip_rustqc) {
+        RUSTQC (
+            ch_genome_bam,
+            ch_gtf.map { item -> [ [:], item ] }
+        )
+        ch_versions = ch_versions.mix(RUSTQC.out.versions.first())
+
+        // dupRadar-equivalent MultiQC outputs (unless dupRadar QC is skipped entirely)
+        if (!params.skip_qc && !params.skip_dupradar) {
+            ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.multiqc.collect{ tuple -> tuple[1] })
+        }
+
+        // Biotype QC MultiQC outputs (unless biotype QC is skipped)
+        if (!params.skip_qc && !params.skip_biotype_qc) {
+            ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.biotype_counts.collect{ tuple -> tuple[1] })
+            ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.biotype_rrna.collect{ tuple -> tuple[1] })
+        }
+    }
+
+    //
     // MODULE: Feature biotype QC using featureCounts
     //
     def biotype = params.gencode ? "gene_type" : params.featurecounts_group_type
-    if (!params.skip_qc && !params.skip_biotype_qc && biotype) {
+    if (!params.skip_qc && !params.skip_biotype_qc && biotype && params.skip_rustqc) {
 
         ch_gtf
             .map { gtf -> biotypeInGtf(gtf, biotype) }
@@ -596,7 +619,7 @@ workflow RNASEQ {
             ch_multiqc_files = ch_multiqc_files.mix(QUALIMAP_RNASEQ.out.results.collect{ _meta, results -> results })
         }
 
-        if (!params.skip_dupradar) {
+        if (!params.skip_dupradar && params.skip_rustqc) {
             DUPRADAR (
                 ch_genome_bam,
                 ch_gtf.map { item -> [ [:], item ] }

@@ -1,0 +1,9 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/conda-forge/conda-smithy/main/conda_smithy/data/conda-forge-pinning-feedstock-environment.yml
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  # rustqc is not yet available on conda - use the Docker container
+  # This file is a placeholder for future conda support
+  - python=3.12

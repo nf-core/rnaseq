@@ -213,6 +213,7 @@ workflow RNASEQ {
         params.ribo_removal_tool,                   // ribo_removal_tool
         params.with_umi,                            // with_umi
         params.umi_discard_read,                    // umi_discard_read
+        params.save_merged_fastq,                   // save_merged_fastq
         params.stranded_threshold,                  // stranded_threshold
         params.unstranded_threshold                 // unstranded_threshold
     )

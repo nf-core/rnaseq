@@ -347,8 +347,8 @@ The STAR section of the MultiQC report shows a bar plot with alignment rates: go
   - `rsem.merged.transcript_lengths.tsv`: Matrix of transcript-level effective lengths across all samples.
   - `rsem.merged.transcript_tpm.tsv`: Matrix of transcript-level TPM values across all samples.
   - `rsem.merged.tx2gene.tsv`: Transcript-to-gene mapping file generated from the GTF.
-  - `*_gene.SummarizedExperiment.rds`: Gene-level SummarizedExperiment R object containing counts, TPM, and length matrices.
-  - `*_transcript.SummarizedExperiment.rds`: Transcript-level SummarizedExperiment R object containing counts, TPM, and length matrices.
+  - `rsem.merged.gene.SummarizedExperiment.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the abundance TPM (`tpm`), estimated counts (`counts`) and gene length (`lengths`), estimated library size-scaled counts (`counts_scaled`), estimated length-scaled counts (`counts_length_scaled`) in the assays slot for genes.
+  - `rsem.merged.transcript.SummarizedExperiment.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the abundance TPM (`tpm`), estimated isoform-level raw counts (`counts`) and transcript length (`lengths`) in the assays slot for transcripts.
 - `star_rsem/rsem_merge_counts/` - legacy RSEM merge script outputs:
   - `*.gene_counts.tsv`: Matrix of gene-level raw counts (RSEM expected_count) across all samples.
   - `*.gene_tpm.tsv`: Matrix of gene-level TPM values across all samples.

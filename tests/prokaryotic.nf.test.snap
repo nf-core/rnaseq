@@ -1042,7 +1042,6 @@
                 "trimgalore/SALM_REP2_trimmed_2.fastq.gz_trimming_report.txt"
             ],
             [
-                "all_samples.SummarizedExperiment.rds",
                 "all_samples.gene_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "all_samples.gene_counts_length_scaled.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "all_samples.gene_counts_scaled.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -1197,7 +1196,6 @@
                 "trimgalore/SALM_REP2_trimmed_2.fastq.gz_trimming_report.txt"
             ],
             [
-                "all_samples.SummarizedExperiment.rds",
                 "all_samples.gene_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "all_samples.gene_counts_length_scaled.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "all_samples.gene_counts_scaled.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",

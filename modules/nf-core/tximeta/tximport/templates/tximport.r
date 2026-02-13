@@ -161,14 +161,25 @@ for (ao in names(args_opt)) {
 }
 
 # Define pattern for file names based on quantification type
-pattern <- ifelse('$quant_type' == "kallisto", "abundance.tsv", "quant.sf")
-fns <- list.files('quants', pattern = pattern, recursive = T, full.names = T)
-names <- basename(dirname(fns))
-names(fns) <- names
-dropInfReps <- '$quant_type' == "kallisto"
+if ('$quant_type' == "rsem") {
+    # RSEM: .isoforms.results files are flat in quants/ directory (not in subdirectories)
+    fns <- list.files('quants', pattern = 'isoforms\\\\.results\$', recursive = TRUE, full.names = TRUE)
+    names <- gsub("\\\\.isoforms\\\\.results\$", "", basename(fns))
+    names(fns) <- names
 
-# Import transcript-level quantifications
-txi <- tximport(fns, type = '$quant_type', txOut = TRUE, dropInfReps = dropInfReps)
+    # Import transcript-level quantifications from RSEM isoform results
+    txi <- tximport(fns, type = 'rsem', txIn = TRUE, txOut = TRUE)
+} else {
+    # Salmon/Kallisto: files are in sample subdirectories
+    pattern <- ifelse('$quant_type' == "kallisto", "abundance.tsv", "quant.sf")
+    fns <- list.files('quants', pattern = pattern, recursive = TRUE, full.names = TRUE)
+    names <- basename(dirname(fns))
+    names(fns) <- names
+    dropInfReps <- '$quant_type' == "kallisto"
+
+    # Import transcript-level quantifications
+    txi <- tximport(fns, type = '$quant_type', txOut = TRUE, dropInfReps = dropInfReps)
+}
 
 # Read transcript and sample data
 transcript_info <- read_transcript_info('$tx2gene', opt\$tx_col, opt\$gene_id_col, opt\$gene_name_col)

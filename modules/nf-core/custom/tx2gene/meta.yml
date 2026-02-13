@@ -6,6 +6,7 @@ keywords:
   - gene
   - gtf
   - pseudoalignment
+  - rsem
   - transcript
 tools:
   - "custom":
@@ -37,7 +38,7 @@ input:
         description: quants file
   - quant_type:
       type: string
-      description: Quantification type, 'kallisto' or 'salmon'
+      description: Quantification type, 'kallisto', 'salmon', or 'rsem'
   - id:
       type: string
       description: Gene ID attribute in the GTF file (default= gene_id)

@@ -1,0 +1,962 @@
+{
+    "homo_sapiens - fastq - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.genes.results:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.isoforms.results:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "10": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "11": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "12": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_counts_length_scaled.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "13": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_counts_scaled.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "14": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_lengths.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "15": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.transcript_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "16": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.transcript_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "17": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.transcript_lengths.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "18": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "19": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.stat:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "20": [
+                    [
+                        {
+                            
+                        },
+                        "rsem.merged.tx2gene.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "21": [
+                    "versions.yml:md5,06462f0acfe182a5b229d6921255e503",
+                    "versions.yml:md5,48f5d583d45f72f1affcfa7148f8713a",
+                    "versions.yml:md5,e91394edec7b4a9d000e7d5918c73b6a",
+                    "versions.yml:md5,eea9eb3ab29ffe5ab879224a1fc2024d"
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "4": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "rsem.merged.gene_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "5": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "rsem.merged.gene_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "6": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "rsem.merged.transcript_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "7": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "rsem.merged.transcript_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "8": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "rsem.merged.genes_long.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "9": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "rsem.merged.isoforms_long.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "counts_gene": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "counts_gene_length_scaled": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_counts_length_scaled.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "counts_gene_scaled": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_counts_scaled.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "counts_transcript": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.transcript_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "lengths_gene": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_lengths.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "lengths_transcript": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.transcript_lengths.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "logs": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "merged_counts_gene": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "rsem.merged.gene_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "merged_counts_transcript": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "rsem.merged.transcript_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "merged_gene_rds_unified": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "merged_genes_long": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "rsem.merged.genes_long.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "merged_isoforms_long": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "rsem.merged.isoforms_long.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "merged_tpm_gene": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "rsem.merged.gene_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "merged_tpm_transcript": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "rsem.merged.transcript_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "merged_transcript_rds_unified": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "raw_counts_gene": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.genes.results:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "raw_counts_transcript": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.isoforms.results:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "stat": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.stat:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "tpm_gene": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "tpm_transcript": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.transcript_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "tx2gene": [
+                    [
+                        {
+                            
+                        },
+                        "rsem.merged.tx2gene.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,06462f0acfe182a5b229d6921255e503",
+                    "versions.yml:md5,48f5d583d45f72f1affcfa7148f8713a",
+                    "versions.yml:md5,e91394edec7b4a9d000e7d5918c73b6a",
+                    "versions.yml:md5,eea9eb3ab29ffe5ab879224a1fc2024d"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-13T10:29:38.21920929"
+    },
+    "homo_sapiens - fastq": {
+        "content": [
+            "all_samples_gene.SummarizedExperiment.rds",
+            "all_samples_transcript.SummarizedExperiment.rds",
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "rsem.merged.gene_tpm.tsv:md5,73d3b2edcdbc7542254adb0002206c8e"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "rsem.merged.gene_counts.tsv:md5,c7534e0307cf03977e691492ea676276"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "rsem.merged.gene_counts_length_scaled.tsv:md5,c7534e0307cf03977e691492ea676276"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "rsem.merged.gene_counts_scaled.tsv:md5,c7534e0307cf03977e691492ea676276"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "rsem.merged.gene_lengths.tsv:md5,5e020fb7578a6f273274ee62e2b8572e"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "rsem.merged.transcript_tpm.tsv:md5,7d8ddc9830b4d6ba23e444d5c96a1187"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "rsem.merged.transcript_counts.tsv:md5,ee15b83b2e680b8ba131ceea40a319bb"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "rsem.merged.transcript_lengths.tsv:md5,1fe09362b8bfa54fbe3fc7e8820bbeb5"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "rsem.merged.gene_counts.tsv:md5,f3b586000c97c89aec45360772e73df1"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "rsem.merged.gene_tpm.tsv:md5,e6ae3dfa9913a7c15b705ec27c376212"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "rsem.merged.transcript_counts.tsv:md5,235c002b811360183494a2aac74d1f5b"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "rsem.merged.transcript_tpm.tsv:md5,d38f22667e3b8012f1d783b8d5159ccc"
+                ]
+            ],
+            [
+                "versions.yml:md5,06462f0acfe182a5b229d6921255e503",
+                "versions.yml:md5,48f5d583d45f72f1affcfa7148f8713a",
+                "versions.yml:md5,8220852da982162f4ce0899b9361b095",
+                "versions.yml:md5,eea9eb3ab29ffe5ab879224a1fc2024d"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-13T10:28:51.879652676"
+    },
+    "homo_sapiens - bam": {
+        "content": [
+            "all_samples_gene.SummarizedExperiment.rds",
+            "all_samples_transcript.SummarizedExperiment.rds",
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "rsem.merged.gene_tpm.tsv:md5,73d3b2edcdbc7542254adb0002206c8e"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "rsem.merged.gene_counts.tsv:md5,c7534e0307cf03977e691492ea676276"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "rsem.merged.gene_counts_length_scaled.tsv:md5,c7534e0307cf03977e691492ea676276"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "rsem.merged.gene_counts_scaled.tsv:md5,c7534e0307cf03977e691492ea676276"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "rsem.merged.gene_lengths.tsv:md5,5e020fb7578a6f273274ee62e2b8572e"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "rsem.merged.transcript_tpm.tsv:md5,7d8ddc9830b4d6ba23e444d5c96a1187"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "rsem.merged.transcript_counts.tsv:md5,ee15b83b2e680b8ba131ceea40a319bb"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "rsem.merged.transcript_lengths.tsv:md5,1fe09362b8bfa54fbe3fc7e8820bbeb5"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "rsem.merged.gene_counts.tsv:md5,f3b586000c97c89aec45360772e73df1"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "rsem.merged.gene_tpm.tsv:md5,e6ae3dfa9913a7c15b705ec27c376212"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "rsem.merged.transcript_counts.tsv:md5,235c002b811360183494a2aac74d1f5b"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "all_samples"
+                    },
+                    "rsem.merged.transcript_tpm.tsv:md5,d38f22667e3b8012f1d783b8d5159ccc"
+                ]
+            ],
+            [
+                "versions.yml:md5,06462f0acfe182a5b229d6921255e503",
+                "versions.yml:md5,48f5d583d45f72f1affcfa7148f8713a",
+                "versions.yml:md5,8220852da982162f4ce0899b9361b095",
+                "versions.yml:md5,eea9eb3ab29ffe5ab879224a1fc2024d"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-13T10:26:52.287784486"
+    },
+    "homo_sapiens - bam - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.genes.results:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.isoforms.results:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "10": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "11": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "12": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_counts_length_scaled.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "13": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_counts_scaled.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "14": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_lengths.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "15": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.transcript_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "16": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.transcript_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "17": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.transcript_lengths.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "18": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "19": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.stat:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "20": [
+                    [
+                        {
+                            
+                        },
+                        "rsem.merged.tx2gene.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "21": [
+                    "versions.yml:md5,06462f0acfe182a5b229d6921255e503",
+                    "versions.yml:md5,48f5d583d45f72f1affcfa7148f8713a",
+                    "versions.yml:md5,e91394edec7b4a9d000e7d5918c73b6a",
+                    "versions.yml:md5,eea9eb3ab29ffe5ab879224a1fc2024d"
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "4": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "rsem.merged.gene_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "5": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "rsem.merged.gene_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "6": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "rsem.merged.transcript_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "7": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "rsem.merged.transcript_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "8": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "rsem.merged.genes_long.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "9": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "rsem.merged.isoforms_long.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "counts_gene": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "counts_gene_length_scaled": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_counts_length_scaled.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "counts_gene_scaled": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_counts_scaled.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "counts_transcript": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.transcript_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "lengths_gene": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_lengths.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "lengths_transcript": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.transcript_lengths.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "logs": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "merged_counts_gene": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "rsem.merged.gene_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "merged_counts_transcript": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "rsem.merged.transcript_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "merged_gene_rds_unified": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "merged_genes_long": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "rsem.merged.genes_long.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "merged_isoforms_long": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "rsem.merged.isoforms_long.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "merged_tpm_gene": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "rsem.merged.gene_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "merged_tpm_transcript": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "rsem.merged.transcript_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "merged_transcript_rds_unified": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "raw_counts_gene": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.genes.results:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "raw_counts_transcript": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.isoforms.results:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "stat": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.stat:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "tpm_gene": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.gene_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "tpm_transcript": [
+                    [
+                        {
+                            "id": "all_samples"
+                        },
+                        "all_samples.transcript_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "tx2gene": [
+                    [
+                        {
+                            
+                        },
+                        "rsem.merged.tx2gene.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,06462f0acfe182a5b229d6921255e503",
+                    "versions.yml:md5,48f5d583d45f72f1affcfa7148f8713a",
+                    "versions.yml:md5,e91394edec7b4a9d000e7d5918c73b6a",
+                    "versions.yml:md5,eea9eb3ab29ffe5ab879224a1fc2024d"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-13T10:29:15.137497991"
+    }
+}

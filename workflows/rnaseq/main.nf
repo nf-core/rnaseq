@@ -17,7 +17,7 @@ include { MULTIQC_CUSTOM_BIOTYPE             } from '../../modules/local/multiqc
 //
 include { ALIGN_STAR                            } from '../../subworkflows/local/align_star'
 include { ALIGN_BOWTIE2                         } from '../../subworkflows/local/align_bowtie2'
-include { QUANTIFY_RSEM                         } from '../../subworkflows/local/quantify_rsem'
+include { QUANTIFY_RSEM                         } from '../../subworkflows/nf-core/quantify_rsem'
 include { BAM_DEDUP_UMI                         } from '../../subworkflows/nf-core/bam_dedup_umi'
 
 include { checkSamplesAfterGrouping      } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
@@ -368,15 +368,20 @@ workflow RNASEQ {
     if (params.aligner == 'star_rsem') {
 
         QUANTIFY_RSEM (
+            ch_samplesheet.map { item -> [ [:], item ] },
             ch_transcriptome_bam,
             ch_rsem_index,
+            ch_gtf,
+            params.gtf_group_features,
+            params.gtf_extra_attributes,
             params.use_sentieon_star
         )
         ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_RSEM.out.stat.collect{ tuple -> tuple[1] })
+        ch_versions = ch_versions.mix(QUANTIFY_RSEM.out.versions)
 
         if (!params.skip_qc & !params.skip_deseq2_qc) {
             DESEQ2_QC_RSEM (
-                QUANTIFY_RSEM.out.merged_counts_gene,
+                QUANTIFY_RSEM.out.counts_gene_length_scaled.map { tuple -> tuple[1] },
                 ch_pca_header_multiqc,
                 ch_clustering_header_multiqc
             )

@@ -620,7 +620,7 @@
                 "salmon/salmon.merged.transcript_counts.tsv",
                 "salmon/salmon.merged.transcript_lengths.tsv",
                 "salmon/salmon.merged.transcript_tpm.tsv",
-                "salmon/tx2gene.tsv",
+                "salmon/salmon.merged.tx2gene.tsv",
                 "star_salmon",
                 "star_salmon/RAP1_IAA_30M_REP1",
                 "star_salmon/RAP1_IAA_30M_REP1.umi_dedup.sorted.bam",
@@ -1130,6 +1130,7 @@
                 "star_salmon/salmon.merged.transcript_counts.tsv",
                 "star_salmon/salmon.merged.transcript_lengths.tsv",
                 "star_salmon/salmon.merged.transcript_tpm.tsv",
+                "star_salmon/salmon.merged.tx2gene.tsv",
                 "star_salmon/samtools_stats",
                 "star_salmon/samtools_stats/RAP1_IAA_30M_REP1.sorted.bam.flagstat",
                 "star_salmon/samtools_stats/RAP1_IAA_30M_REP1.sorted.bam.idxstats",
@@ -1176,7 +1177,6 @@
                 "star_salmon/samtools_stats/WT_REP2.umi_dedup.transcriptome.sorted.bam.flagstat",
                 "star_salmon/samtools_stats/WT_REP2.umi_dedup.transcriptome.sorted.bam.idxstats",
                 "star_salmon/samtools_stats/WT_REP2.umi_dedup.transcriptome.sorted.bam.stats",
-                "star_salmon/tx2gene.tsv",
                 "star_salmon/umitools",
                 "star_salmon/umitools/RAP1_IAA_30M_REP1.umi_dedup.sorted_edit_distance.tsv",
                 "star_salmon/umitools/RAP1_IAA_30M_REP1.umi_dedup.sorted_per_umi.tsv",
@@ -1318,7 +1318,6 @@
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "cmd_info.json:md5,809380ddce725a8fab75dd7741b64bf6",
                 "lib_format_counts.json:md5,d231ba7624b67eb654989f69530e2925",
-                "tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "ambig_info.tsv:md5,0f0e3687e731243392685c550fb1d93f",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
@@ -1384,7 +1383,6 @@
                 "RAP1_UNINDUCED_REP2.infer_experiment.txt:md5,cf770d32a803c668c843253813d0764d",
                 "WT_REP1.infer_experiment.txt:md5,63c888e13ef0fa915abd6e7c26ffde48",
                 "WT_REP2.infer_experiment.txt:md5,3e6940ec81e6a809f929362ba4ba4a56",
-                "tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "RAP1_IAA_30M_REP1.umi_dedup.sorted_edit_distance.tsv:md5,c10c34b83b200187b53d530372ceffad",
                 "RAP1_IAA_30M_REP1.umi_dedup.sorted_per_umi.tsv:md5,c6ce5764c03a128aba62f5ed13148a26",
                 "RAP1_IAA_30M_REP1.umi_dedup.sorted_per_umi_per_position.tsv:md5,f37b7f5a783425506b434c9e5ff90f25",
@@ -1429,7 +1427,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-04T17:51:21.46004804"
+        "timestamp": "2026-02-13T16:01:57.515116604"
     },
     "Params: --aligner hisat2 --umi_dedup_tool 'umicollapse'": {
         "content": [
@@ -2457,7 +2455,7 @@
                 "salmon/salmon.merged.transcript_counts.tsv",
                 "salmon/salmon.merged.transcript_lengths.tsv",
                 "salmon/salmon.merged.transcript_tpm.tsv",
-                "salmon/tx2gene.tsv",
+                "salmon/salmon.merged.tx2gene.tsv",
                 "trimgalore",
                 "trimgalore/RAP1_IAA_30M_REP1_trimmed_1.fastq.gz_trimming_report.txt",
                 "trimgalore/RAP1_IAA_30M_REP1_trimmed_2.fastq.gz_trimming_report.txt",
@@ -2590,7 +2588,6 @@
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "cmd_info.json:md5,809380ddce725a8fab75dd7741b64bf6",
                 "lib_format_counts.json:md5,d231ba7624b67eb654989f69530e2925",
-                "tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "RAP1_IAA_30M_REP1.umi_extract_1.fastq.gz:md5,e83d7f738fbbfaa541a2e71fe4663447",
                 "RAP1_IAA_30M_REP1.umi_extract_2.fastq.gz:md5,4f2873cbf584d6e84187238a4ae2b8fa",
                 "RAP1_UNINDUCED_REP1.umi_extract.fastq.gz:md5,9e42242fd68baac592140f63a8a716ce",
@@ -2605,7 +2602,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-04T17:47:46.6225859"
+        "timestamp": "2026-02-13T15:58:21.195090844"
     },
     "--umi_dedup_tool 'umitools - stub": {
         "content": [

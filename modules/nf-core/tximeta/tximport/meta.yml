@@ -7,6 +7,7 @@ keywords:
   - gene
   - kallisto
   - pseudoalignment
+  - rsem
   - salmon
   - transcript
 tools:
@@ -44,7 +45,7 @@ input:
           - edam: http://edamontology.org/format_3475 # TSV
   - quant_type:
       type: string
-      description: Quantification type, `kallisto` or `salmon`
+      description: Quantification type, `kallisto`, `salmon`, or `rsem`
 output:
   tpm_gene:
     - - meta:

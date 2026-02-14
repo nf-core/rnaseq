@@ -13,6 +13,7 @@ nextflow_workflow {
     tag "salmon/quant"
     tag "kallisto/index"
     tag "kallisto/quant"
+    tag "subworkflows/quant_tximport_summarizedexperiment"
     tag "custom/tx2gene"
     tag "tximeta/tximport"
     tag "summarizedexperiment/summarizedexperiment"
@@ -69,8 +70,7 @@ nextflow_workflow {
                         workflow.out.counts_gene_length_scaled,
                         workflow.out.lengths_gene,
                         workflow.out.lengths_transcript,
-                        workflow.out.merged_counts_transcript,
-                        workflow.out.merged_tpm_transcript,
+                        workflow.out.counts_transcript,
                         workflow.out.tpm_gene,
                         workflow.out.tpm_transcript,
                         workflow.out.versions

@@ -348,7 +348,7 @@
                 "salmon/salmon.merged.transcript_counts.tsv",
                 "salmon/salmon.merged.transcript_lengths.tsv",
                 "salmon/salmon.merged.transcript_tpm.tsv",
-                "salmon/tx2gene.tsv",
+                "salmon/salmon.merged.tx2gene.tsv",
                 "trimgalore",
                 "trimgalore/RAP1_IAA_30M_REP1_trimmed_1.fastq.gz_trimming_report.txt",
                 "trimgalore/RAP1_IAA_30M_REP1_trimmed_2.fastq.gz_trimming_report.txt",
@@ -414,14 +414,13 @@
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "cmd_info.json:md5,3e6d06d032abd3f5cd7e79df1b5bcde0",
-                "lib_format_counts.json:md5,fce2c4840048c294c016f45f0df15384",
-                "tx2gene.tsv:md5,1be389a28cc26d94b19ea918959ac72e"
+                "lib_format_counts.json:md5,fce2c4840048c294c016f45f0df15384"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-04T17:15:53.915777638"
+        "timestamp": "2026-02-13T15:18:11.846686066"
     }
 }

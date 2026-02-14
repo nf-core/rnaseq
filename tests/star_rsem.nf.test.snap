@@ -1,7 +1,7 @@
 {
     "Params: --aligner star_rsem": {
         "content": [
-            217,
+            221,
             {
                 "BBMAP_BBSPLIT": {
                     "bbmap": 39.18
@@ -17,6 +17,9 @@
                 },
                 "CUSTOM_CATADDITIONALFASTA": {
                     "python": "3.12.2"
+                },
+                "CUSTOM_RSEMMERGECOUNTS": {
+                    "sed": 4.7
                 },
                 "CUSTOM_TX2GENE": {
                     "python": "3.10.4"
@@ -74,9 +77,6 @@
                 "RSEM_CALCULATEEXPRESSION": {
                     "rsem": "1.3.1",
                     "star": "2.7.10a"
-                },
-                "RSEM_MERGE_COUNTS": {
-                    "sed": 4.7
                 },
                 "RSEM_PREPAREREFERENCE_GENOME": {
                     "rsem": "1.3.1",
@@ -731,7 +731,7 @@
                 "salmon/salmon.merged.transcript_counts.tsv",
                 "salmon/salmon.merged.transcript_lengths.tsv",
                 "salmon/salmon.merged.transcript_tpm.tsv",
-                "salmon/tx2gene.tsv",
+                "salmon/salmon.merged.tx2gene.tsv",
                 "star_rsem",
                 "star_rsem/RAP1_IAA_30M_REP1.genes.results",
                 "star_rsem/RAP1_IAA_30M_REP1.isoforms.results",
@@ -1067,12 +1067,24 @@
                 "star_rsem/qualimap/WT_REP2/raw_data_qualimapReport/coverage_profile_along_genes_(low).txt",
                 "star_rsem/qualimap/WT_REP2/raw_data_qualimapReport/coverage_profile_along_genes_(total).txt",
                 "star_rsem/qualimap/WT_REP2/rnaseq_qc_results.txt",
+                "star_rsem/rsem.merged.gene.SummarizedExperiment.rds",
                 "star_rsem/rsem.merged.gene_counts.tsv",
+                "star_rsem/rsem.merged.gene_counts_length_scaled.tsv",
+                "star_rsem/rsem.merged.gene_counts_scaled.tsv",
+                "star_rsem/rsem.merged.gene_lengths.tsv",
                 "star_rsem/rsem.merged.gene_tpm.tsv",
-                "star_rsem/rsem.merged.genes_long.tsv",
-                "star_rsem/rsem.merged.isoforms_long.tsv",
+                "star_rsem/rsem.merged.transcript.SummarizedExperiment.rds",
                 "star_rsem/rsem.merged.transcript_counts.tsv",
+                "star_rsem/rsem.merged.transcript_lengths.tsv",
                 "star_rsem/rsem.merged.transcript_tpm.tsv",
+                "star_rsem/rsem.merged.tx2gene.tsv",
+                "star_rsem/rsem_merge_counts",
+                "star_rsem/rsem_merge_counts/rsem.merged.gene_counts.tsv",
+                "star_rsem/rsem_merge_counts/rsem.merged.gene_tpm.tsv",
+                "star_rsem/rsem_merge_counts/rsem.merged.genes_long.tsv",
+                "star_rsem/rsem_merge_counts/rsem.merged.isoforms_long.tsv",
+                "star_rsem/rsem_merge_counts/rsem.merged.transcript_counts.tsv",
+                "star_rsem/rsem_merge_counts/rsem.merged.transcript_tpm.tsv",
                 "star_rsem/rseqc",
                 "star_rsem/rseqc/bam_stat",
                 "star_rsem/rseqc/bam_stat/RAP1_IAA_30M_REP1.bam_stat.txt",
@@ -1348,7 +1360,6 @@
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "cmd_info.json:md5,fe66c9d876645b9260d8c2488157d4d4",
                 "lib_format_counts.json:md5,088fd51db07022ffde47033bbd029400",
-                "tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "RAP1_IAA_30M_REP1.biotype_counts_mqc.tsv:md5,5a7a4291e8ff6cc25a4eb72dfdf06b51",
                 "RAP1_IAA_30M_REP1.biotype_counts_rrna_mqc.tsv:md5,dde2de0cb90e10d0195c726f768e9941",
                 "RAP1_IAA_30M_REP1.featureCounts.tsv:md5,9cf6f9377ea65e3bdb16b55992028d66",
@@ -1384,6 +1395,15 @@
                 "coverage_profile_along_genes_(high).txt:md5,a73462b9ecbd1d2c45d7ca84b5f7925b",
                 "coverage_profile_along_genes_(low).txt:md5,7adc228bc15e344abb7938ea4d35a846",
                 "coverage_profile_along_genes_(total).txt:md5,7adc228bc15e344abb7938ea4d35a846",
+                "rsem.merged.gene_counts.tsv:md5,91223fb1d835d6bc5140a5e095ad5b3e",
+                "rsem.merged.gene_counts_length_scaled.tsv:md5,ec0e98882128ff058169354fd1ccb240",
+                "rsem.merged.gene_counts_scaled.tsv:md5,59ec3256b6ecf3c58d9a86c6dfde51fd",
+                "rsem.merged.gene_lengths.tsv:md5,acdee55d5bd05d5cc83e4ca029b960b2",
+                "rsem.merged.gene_tpm.tsv:md5,8068aa3bb3369b818af7ece24977d8da",
+                "rsem.merged.transcript_counts.tsv:md5,535ab7cf11f6efde878283dc722dea0b",
+                "rsem.merged.transcript_lengths.tsv:md5,cb304a9c4932075da049cea5fe2a8165",
+                "rsem.merged.transcript_tpm.tsv:md5,8fe690a435900ef5a3c1cf639192ac5d",
+                "rsem.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "rsem.merged.gene_counts.tsv:md5,990cdaf5071c9bfd3d2d99296feb68f3",
                 "rsem.merged.gene_tpm.tsv:md5,349f2184161d6b269a0f5c4da1dee07a",
                 "rsem.merged.genes_long.tsv:md5,42e9a0220b0e3a505d7b59df279ce89a",
@@ -1421,7 +1441,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-12T11:55:36.003154412"
+        "timestamp": "2026-02-13T15:55:49.418838249"
     },
     "Params: --aligner star_rsem - stub": {
         "content": [
@@ -1525,6 +1545,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-04T17:45:23.417817921"
+        "timestamp": "2026-02-13T11:34:58.939150504"
     }
 }

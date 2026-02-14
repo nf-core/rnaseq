@@ -538,7 +538,7 @@
                 "salmon/salmon.merged.transcript_counts.tsv",
                 "salmon/salmon.merged.transcript_lengths.tsv",
                 "salmon/salmon.merged.transcript_tpm.tsv",
-                "salmon/tx2gene.tsv",
+                "salmon/salmon.merged.tx2gene.tsv",
                 "star_salmon",
                 "star_salmon/RAP1_IAA_30M_REP1",
                 "star_salmon/RAP1_IAA_30M_REP1.sorted.bam",
@@ -669,6 +669,7 @@
                 "star_salmon/salmon.merged.transcript_counts.tsv",
                 "star_salmon/salmon.merged.transcript_lengths.tsv",
                 "star_salmon/salmon.merged.transcript_tpm.tsv",
+                "star_salmon/salmon.merged.tx2gene.tsv",
                 "star_salmon/samtools_stats",
                 "star_salmon/samtools_stats/RAP1_IAA_30M_REP1.sorted.bam.flagstat",
                 "star_salmon/samtools_stats/RAP1_IAA_30M_REP1.sorted.bam.idxstats",
@@ -685,7 +686,6 @@
                 "star_salmon/samtools_stats/WT_REP2.sorted.bam.flagstat",
                 "star_salmon/samtools_stats/WT_REP2.sorted.bam.idxstats",
                 "star_salmon/samtools_stats/WT_REP2.sorted.bam.stats",
-                "star_salmon/tx2gene.tsv",
                 "trimgalore",
                 "trimgalore/RAP1_IAA_30M_REP1_trimmed_1.fastq.gz_trimming_report.txt",
                 "trimgalore/RAP1_IAA_30M_REP1_trimmed_2.fastq.gz_trimming_report.txt",
@@ -754,7 +754,6 @@
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "cmd_info.json:md5,fe66c9d876645b9260d8c2488157d4d4",
                 "lib_format_counts.json:md5,088fd51db07022ffde47033bbd029400",
-                "tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
@@ -779,8 +778,7 @@
                 "RAP1_UNINDUCED_REP1.SJ.out.tab:md5,e548d13942535dc0821f3ec6d9743ec8",
                 "RAP1_UNINDUCED_REP2.SJ.out.tab:md5,1f294365343a1a5e95682792fdb77033",
                 "WT_REP1.SJ.out.tab:md5,1350c2fa6a675bf107386c6cd3fc5204",
-                "WT_REP2.SJ.out.tab:md5,f6cc03643a5e3c1025a5b4754eb1be23",
-                "tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
+                "WT_REP2.SJ.out.tab:md5,f6cc03643a5e3c1025a5b4754eb1be23"
             ]
         ],
         "meta": {
@@ -1528,7 +1526,7 @@
                 "salmon/salmon.merged.transcript_counts.tsv",
                 "salmon/salmon.merged.transcript_lengths.tsv",
                 "salmon/salmon.merged.transcript_tpm.tsv",
-                "salmon/tx2gene.tsv",
+                "salmon/salmon.merged.tx2gene.tsv",
                 "star_salmon",
                 "star_salmon/RAP1_IAA_30M_REP1",
                 "star_salmon/RAP1_IAA_30M_REP1/aux_info",
@@ -1649,6 +1647,7 @@
                 "star_salmon/salmon.merged.transcript_counts.tsv",
                 "star_salmon/salmon.merged.transcript_lengths.tsv",
                 "star_salmon/salmon.merged.transcript_tpm.tsv",
+                "star_salmon/salmon.merged.tx2gene.tsv",
                 "star_salmon/samtools_stats",
                 "star_salmon/samtools_stats/RAP1_IAA_30M_REP1.sorted.bam.flagstat",
                 "star_salmon/samtools_stats/RAP1_IAA_30M_REP1.sorted.bam.idxstats",
@@ -1665,7 +1664,6 @@
                 "star_salmon/samtools_stats/WT_REP2.sorted.bam.flagstat",
                 "star_salmon/samtools_stats/WT_REP2.sorted.bam.idxstats",
                 "star_salmon/samtools_stats/WT_REP2.sorted.bam.stats",
-                "star_salmon/tx2gene.tsv",
                 "trimgalore",
                 "trimgalore/RAP1_IAA_30M_REP1_trimmed_1.fastq.gz_trimming_report.txt",
                 "trimgalore/RAP1_IAA_30M_REP1_trimmed_2.fastq.gz_trimming_report.txt",
@@ -1734,7 +1732,6 @@
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "cmd_info.json:md5,fe66c9d876645b9260d8c2488157d4d4",
                 "lib_format_counts.json:md5,088fd51db07022ffde47033bbd029400",
-                "tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
@@ -1759,8 +1756,7 @@
                 "RAP1_UNINDUCED_REP1.SJ.out.tab:md5,e548d13942535dc0821f3ec6d9743ec8",
                 "RAP1_UNINDUCED_REP2.SJ.out.tab:md5,1f294365343a1a5e95682792fdb77033",
                 "WT_REP1.SJ.out.tab:md5,1350c2fa6a675bf107386c6cd3fc5204",
-                "WT_REP2.SJ.out.tab:md5,f6cc03643a5e3c1025a5b4754eb1be23",
-                "tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
+                "WT_REP2.SJ.out.tab:md5,f6cc03643a5e3c1025a5b4754eb1be23"
             ]
         ],
         "meta": {

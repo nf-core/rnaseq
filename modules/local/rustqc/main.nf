@@ -30,6 +30,7 @@ process RUSTQC {
     // RSeQC: read_duplication
     tuple val(meta), path("*.pos.DupRate.xls")             , emit: readduplication_pos_xls    , optional: true
     tuple val(meta), path("*.seq.DupRate.xls")             , emit: readduplication_seq_xls    , optional: true
+    tuple val(meta), path("*.DupRate_plot.png")             , emit: readduplication_plot       , optional: true
     // RSeQC: read_distribution
     tuple val(meta), path("*.read_distribution.txt")       , emit: readdistribution_txt       , optional: true
     // RSeQC: junction_annotation
@@ -37,11 +38,18 @@ process RUSTQC {
     tuple val(meta), path("*.junction.bed")                , emit: junctionannotation_bed     , optional: true
     tuple val(meta), path("*.junction_plot.r")             , emit: junctionannotation_rscript , optional: true
     tuple val(meta), path("*.junction_annotation.txt")     , emit: junctionannotation_log     , optional: true
+    tuple val(meta), path("*.splice_events.png")           , emit: junctionannotation_events  , optional: true
+    tuple val(meta), path("*.splice_junction.png")         , emit: junctionannotation_junctions, optional: true
     // RSeQC: junction_saturation
     tuple val(meta), path("*.junctionSaturation_plot.r")   , emit: junctionsaturation_rscript , optional: true
+    tuple val(meta), path("*.junctionSaturation_plot.png") , emit: junctionsaturation_plot    , optional: true
+    tuple val(meta), path("*.junctionSaturation_summary.txt"), emit: junctionsaturation_summary, optional: true
     // RSeQC: inner_distance
     tuple val(meta), path("*.inner_distance_freq.txt")     , emit: innerdistance_freq         , optional: true
     tuple val(meta), path("*.inner_distance.txt")          , emit: innerdistance_txt          , optional: true
+    tuple val(meta), path("*.inner_distance_plot.png")     , emit: innerdistance_plot         , optional: true
+    tuple val(meta), path("*.inner_distance_plot.r")       , emit: innerdistance_rscript      , optional: true
+    tuple val(meta), path("*.inner_distance_summary.txt")  , emit: innerdistance_summary      , optional: true
     // versions
     path "versions.yml"                                    , emit: versions
 
@@ -98,9 +106,17 @@ process RUSTQC {
     touch ${prefix}.junction.bed
     touch ${prefix}.junction_plot.r
     touch ${prefix}.junction_annotation.txt
+    touch ${prefix}.splice_events.png
+    touch ${prefix}.splice_junction.png
     touch ${prefix}.junctionSaturation_plot.r
+    touch ${prefix}.junctionSaturation_plot.png
+    touch ${prefix}.junctionSaturation_summary.txt
+    touch ${prefix}.DupRate_plot.png
     touch ${prefix}.inner_distance.txt
     touch ${prefix}.inner_distance_freq.txt
+    touch ${prefix}.inner_distance_plot.png
+    touch ${prefix}.inner_distance_plot.r
+    touch ${prefix}.inner_distance_summary.txt
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

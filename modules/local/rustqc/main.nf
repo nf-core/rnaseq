@@ -10,9 +10,12 @@ process RUSTQC {
 
     output:
     // dupRadar outputs
-    tuple val(meta), path("*_duprateExpDens.png")          , emit: scatter2d         , optional: true
-    tuple val(meta), path("*_duprateExpBoxplot.png")       , emit: boxplot           , optional: true
-    tuple val(meta), path("*_expressionHist.png")          , emit: hist              , optional: true
+    tuple val(meta), path("*_duprateExpDens.png")          , emit: scatter2d_png     , optional: true
+    tuple val(meta), path("*_duprateExpDens.svg")          , emit: scatter2d_svg     , optional: true
+    tuple val(meta), path("*_duprateExpBoxplot.png")       , emit: boxplot_png       , optional: true
+    tuple val(meta), path("*_duprateExpBoxplot.svg")       , emit: boxplot_svg       , optional: true
+    tuple val(meta), path("*_expressionHist.png")          , emit: hist_png          , optional: true
+    tuple val(meta), path("*_expressionHist.svg")          , emit: hist_svg          , optional: true
     tuple val(meta), path("*_dupMatrix.txt")               , emit: dupmatrix         , optional: true
     tuple val(meta), path("*_intercept_slope.txt")         , emit: intercept_slope   , optional: true
     tuple val(meta), path("*_dup_intercept_mqc.txt")       , emit: multiqc_intercept , optional: true
@@ -30,7 +33,8 @@ process RUSTQC {
     // RSeQC: read_duplication
     tuple val(meta), path("*.pos.DupRate.xls")             , emit: readduplication_pos_xls    , optional: true
     tuple val(meta), path("*.seq.DupRate.xls")             , emit: readduplication_seq_xls    , optional: true
-    tuple val(meta), path("*.DupRate_plot.png")             , emit: readduplication_plot       , optional: true
+    tuple val(meta), path("*.DupRate_plot.png")            , emit: readduplication_plot_png   , optional: true
+    tuple val(meta), path("*.DupRate_plot.svg")            , emit: readduplication_plot_svg   , optional: true
     // RSeQC: read_distribution
     tuple val(meta), path("*.read_distribution.txt")       , emit: readdistribution_txt       , optional: true
     // RSeQC: junction_annotation
@@ -38,16 +42,20 @@ process RUSTQC {
     tuple val(meta), path("*.junction.bed")                , emit: junctionannotation_bed     , optional: true
     tuple val(meta), path("*.junction_plot.r")             , emit: junctionannotation_rscript , optional: true
     tuple val(meta), path("*.junction_annotation.txt")     , emit: junctionannotation_log     , optional: true
-    tuple val(meta), path("*.splice_events.png")           , emit: junctionannotation_events  , optional: true
-    tuple val(meta), path("*.splice_junction.png")         , emit: junctionannotation_junctions, optional: true
+    tuple val(meta), path("*.splice_events.png")           , emit: junctionannotation_events_png    , optional: true
+    tuple val(meta), path("*.splice_events.svg")           , emit: junctionannotation_events_svg    , optional: true
+    tuple val(meta), path("*.splice_junction.png")         , emit: junctionannotation_junctions_png , optional: true
+    tuple val(meta), path("*.splice_junction.svg")         , emit: junctionannotation_junctions_svg , optional: true
     // RSeQC: junction_saturation
     tuple val(meta), path("*.junctionSaturation_plot.r")   , emit: junctionsaturation_rscript , optional: true
-    tuple val(meta), path("*.junctionSaturation_plot.png") , emit: junctionsaturation_plot    , optional: true
+    tuple val(meta), path("*.junctionSaturation_plot.png") , emit: junctionsaturation_plot_png, optional: true
+    tuple val(meta), path("*.junctionSaturation_plot.svg") , emit: junctionsaturation_plot_svg, optional: true
     tuple val(meta), path("*.junctionSaturation_summary.txt"), emit: junctionsaturation_summary, optional: true
     // RSeQC: inner_distance
     tuple val(meta), path("*.inner_distance_freq.txt")     , emit: innerdistance_freq         , optional: true
     tuple val(meta), path("*.inner_distance.txt")          , emit: innerdistance_txt          , optional: true
-    tuple val(meta), path("*.inner_distance_plot.png")     , emit: innerdistance_plot         , optional: true
+    tuple val(meta), path("*.inner_distance_plot.png")     , emit: innerdistance_plot_png     , optional: true
+    tuple val(meta), path("*.inner_distance_plot.svg")     , emit: innerdistance_plot_svg     , optional: true
     tuple val(meta), path("*.inner_distance_plot.r")       , emit: innerdistance_rscript      , optional: true
     tuple val(meta), path("*.inner_distance_summary.txt")  , emit: innerdistance_summary      , optional: true
     // versions
@@ -74,6 +82,7 @@ process RUSTQC {
         ${paired} \\
         --threads ${task.cpus} \\
         --outdir . \\
+        --flat-output \\
         ${args}
 
     cat <<-END_VERSIONS > versions.yml
@@ -86,8 +95,11 @@ process RUSTQC {
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     touch ${prefix}_duprateExpDens.png
+    touch ${prefix}_duprateExpDens.svg
     touch ${prefix}_duprateExpBoxplot.png
+    touch ${prefix}_duprateExpBoxplot.svg
     touch ${prefix}_expressionHist.png
+    touch ${prefix}_expressionHist.svg
     touch ${prefix}_dupMatrix.txt
     touch ${prefix}_intercept_slope.txt
     touch ${prefix}_dup_intercept_mqc.txt
@@ -101,20 +113,25 @@ process RUSTQC {
     touch ${prefix}.infer_experiment.txt
     touch ${prefix}.pos.DupRate.xls
     touch ${prefix}.seq.DupRate.xls
+    touch ${prefix}.DupRate_plot.png
+    touch ${prefix}.DupRate_plot.svg
     touch ${prefix}.read_distribution.txt
     touch ${prefix}.junction.xls
     touch ${prefix}.junction.bed
     touch ${prefix}.junction_plot.r
     touch ${prefix}.junction_annotation.txt
     touch ${prefix}.splice_events.png
+    touch ${prefix}.splice_events.svg
     touch ${prefix}.splice_junction.png
+    touch ${prefix}.splice_junction.svg
     touch ${prefix}.junctionSaturation_plot.r
     touch ${prefix}.junctionSaturation_plot.png
+    touch ${prefix}.junctionSaturation_plot.svg
     touch ${prefix}.junctionSaturation_summary.txt
-    touch ${prefix}.DupRate_plot.png
     touch ${prefix}.inner_distance.txt
     touch ${prefix}.inner_distance_freq.txt
     touch ${prefix}.inner_distance_plot.png
+    touch ${prefix}.inner_distance_plot.svg
     touch ${prefix}.inner_distance_plot.r
     touch ${prefix}.inner_distance_summary.txt
 

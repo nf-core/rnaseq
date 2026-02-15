@@ -1,0 +1,57 @@
+nextflow_pipeline {
+
+    name "Test --save_reference writes saved_reference.yaml"
+    script "../main.nf"
+    tag "pipeline"
+    tag "save_reference"
+
+    test("Params: --save_reference produces valid saved_reference.yaml") {
+
+        when {
+            params {
+                outdir         = "$outputDir"
+                save_reference = true
+            }
+        }
+
+        then {
+            def yaml_file = new File("$outputDir/genome/saved_reference.yaml")
+
+            assertAll(
+                { assert workflow.success },
+
+                // File exists
+                { assert yaml_file.exists() },
+
+                // Parse the YAML into a map
+                {
+                    def refs = [:]
+                    yaml_file.eachLine { line ->
+                        def parts = line.split(':\\s*', 2)
+                        if (parts.size() == 2) {
+                            refs[parts[0].trim()] = parts[1].trim().replaceAll('"', '')
+                        }
+                    }
+
+                    // Expected keys for the test profile (star_salmon aligner + salmon pseudo_aligner + bbsplit)
+                    assert refs.containsKey("fasta") : "Missing fasta in saved_reference.yaml"
+                    assert refs.containsKey("gtf") : "Missing gtf in saved_reference.yaml"
+                    assert refs.containsKey("gene_bed") : "Missing gene_bed in saved_reference.yaml"
+                    assert refs.containsKey("star_index") : "Missing star_index in saved_reference.yaml"
+                    assert refs.containsKey("salmon_index") : "Missing salmon_index in saved_reference.yaml"
+                    assert refs.containsKey("bbsplit_index") : "Missing bbsplit_index in saved_reference.yaml"
+
+                    // All paths are absolute
+                    refs.each { key, val ->
+                        assert val.startsWith("/") : "Path for ${key} is not absolute: ${val}"
+                    }
+
+                    // All referenced files/directories exist
+                    refs.each { key, val ->
+                        assert new File(val).exists() : "Path for ${key} does not exist: ${val}"
+                    }
+                }
+            )
+        }
+    }
+}

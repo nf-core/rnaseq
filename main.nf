@@ -93,6 +93,75 @@ workflow NFCORE_RNASEQ {
     )
     ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
 
+    //
+    // Write saved reference params file for reuse via -params-file
+    //
+    if (params.save_reference) {
+        def saved_refs = [:]
+        def genome_dir = "${file(params.outdir).toAbsolutePath()}/genome"
+
+        // Flat files -> genome/
+        PREPARE_GENOME.out.fasta.filter { val -> val }.subscribe { val ->
+            saved_refs.fasta = "${genome_dir}/${val.name}"
+        }
+        PREPARE_GENOME.out.gtf.filter { val -> val }.subscribe { val ->
+            saved_refs.gtf = "${genome_dir}/${val.name}"
+        }
+        PREPARE_GENOME.out.gene_bed.filter { val -> val }.subscribe { val ->
+            saved_refs.gene_bed = "${genome_dir}/${val.name}"
+        }
+        PREPARE_GENOME.out.transcript_fasta.filter { val -> val }.subscribe { val ->
+            saved_refs.transcript_fasta = "${genome_dir}/${val.name}"
+        }
+
+        // Indices -> genome/index/
+        PREPARE_GENOME.out.star_index.filter { val -> val }.subscribe { val ->
+            saved_refs.star_index = "${genome_dir}/index/${val.name}"
+        }
+        PREPARE_GENOME.out.rsem_index.filter { val -> val }.subscribe { val ->
+            saved_refs.rsem_index = "${genome_dir}/index/${val.name}"
+        }
+        PREPARE_GENOME.out.salmon_index.filter { val -> val }.subscribe { val ->
+            saved_refs.salmon_index = "${genome_dir}/index/${val.name}"
+        }
+        PREPARE_GENOME.out.hisat2_index.filter { val -> val }.subscribe { val ->
+            saved_refs.hisat2_index = "${genome_dir}/index/${val.name}"
+        }
+        PREPARE_GENOME.out.bowtie2_index.filter { val -> val }.subscribe { val ->
+            saved_refs.bowtie2_index = "${genome_dir}/index/${val.name}"
+        }
+        PREPARE_GENOME.out.bbsplit_index.filter { val -> val }.subscribe { val ->
+            saved_refs.bbsplit_index = "${genome_dir}/index/${val.name}"
+        }
+        PREPARE_GENOME.out.splicesites.filter { val -> val }.subscribe { val ->
+            saved_refs.splicesites = "${genome_dir}/index/${val.name}"
+        }
+
+        // Tuple-shaped outputs [meta, path]
+        PREPARE_GENOME.out.kallisto_index.filter { _meta, path -> path }.subscribe { _meta, path ->
+            saved_refs.kallisto_index = "${genome_dir}/index/${path.name}"
+        }
+        PREPARE_GENOME.out.sortmerna_index.filter { _meta, path -> path }.subscribe { _meta, path ->
+            saved_refs.sortmerna_index = "${genome_dir}/sortmerna"
+        }
+
+        workflow.onComplete {
+            if (saved_refs) {
+                // Filter to only include references that were actually published to genome/.
+                // Subscribe callbacks fire for ALL outputs, including user-provided files that
+                // pass through without processing (e.g. --transcript_fasta, pre-built indices).
+                // Those aren't published by any process, so they won't exist at the expected path.
+                // Note: publishDir completes before onComplete fires (mode: 'copy'), so this is
+                // not a race condition.
+                def published_refs = saved_refs.findAll { _key, path -> file(path).exists() }
+                if (published_refs) {
+                    def yaml_str = published_refs.collect { key, val -> "${key}: \"${val}\"" }.sort().join('\n') + '\n'
+                    file("${genome_dir}/saved_reference.yaml").text = yaml_str
+                }
+            }
+        }
+    }
+
     // Check if contigs in genome fasta file > 512 Mbp
     if (!params.skip_alignment && !params.bam_csi_index) {
         PREPARE_GENOME

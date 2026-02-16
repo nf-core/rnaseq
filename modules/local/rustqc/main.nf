@@ -68,7 +68,7 @@ process RUSTQC {
     tuple val(meta), path("*.idxstats")                    , emit: idxstats                   , optional: true
     tuple val(meta), path("*.stats")                       , emit: stats                      , optional: true
     // qualimap / gene body coverage
-    tuple val(meta), path("*coverage_profile_along_genes_(total).txt"), emit: genebody_coverage, optional: true
+    tuple val(meta), path("*coverage_profile_along_genes_*total*.txt"), emit: genebody_coverage, optional: true
     tuple val(meta), path("*rnaseq_qc_results.txt")        , emit: qualimap_results           , optional: true
     // versions
     path "versions.yml"                                    , emit: versions

@@ -78,7 +78,6 @@ process RUSTQC {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
     def strandedness = 0
     if (meta.strandedness == 'forward') {
         strandedness = 1

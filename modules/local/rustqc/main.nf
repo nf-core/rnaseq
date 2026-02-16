@@ -151,7 +151,7 @@ process RUSTQC {
     touch ${prefix}.flagstat
     touch ${prefix}.idxstats
     touch ${prefix}.stats
-    touch ${prefix}.coverage_profile_along_genes_\(total\).txt
+    touch ${prefix}.coverage_profile_along_genes_total.txt
     touch ${prefix}.rnaseq_qc_results.txt
 
     cat <<-END_VERSIONS > versions.yml

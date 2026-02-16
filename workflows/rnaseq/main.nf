@@ -539,7 +539,7 @@ workflow RNASEQ {
             ch_genome_bam,
             ch_gtf.map { item -> [ [:], item ] },
         )
-        ch_versions = ch_versions.mix(RUSTQC.out.versions.first())
+        ch_versions = ch_versions.mix(RUSTQC.out.versions)
 
         if (!params.skip_qc) {
             // dupRadar-equivalent MultiQC outputs
@@ -668,7 +668,7 @@ workflow RNASEQ {
                 ch_gtf.map { item -> [ [:], item ] }
             )
             ch_multiqc_files = ch_multiqc_files.mix(DUPRADAR.out.multiqc.collect{ _meta, multiqc -> multiqc })
-            ch_versions = ch_versions.mix(DUPRADAR.out.versions.first())
+            ch_versions = ch_versions.mix(DUPRADAR.out.versions)
         }
 
         // BAM_RSEQC (skipped entirely when RustQC is enabled, as it now handles all modules including TIN)

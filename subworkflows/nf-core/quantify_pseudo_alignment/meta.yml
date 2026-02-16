@@ -7,11 +7,9 @@ keywords:
   - kallisto
   - salmon
 components:
-  - custom/tx2gene
   - kallisto/quant
+  - quant_tximport_summarizedexperiment
   - salmon/quant
-  - summarizedexperiment/summarizedexperiment
-  - tximeta/tximport
 input:
   - meta:
       type: map
@@ -132,33 +130,17 @@ output:
         Transcript-level matrix of length values for modelling in downstream
         analysis.
       pattern: "transcript_lengths.tsv"
-  - merged_gene_rds:
+  - merged_gene_rds_unified:
       type: file
       description: |
-        Serialised SummarizedExperiment object containing gene level TPM
-        abundance values and counts generated from tximport with
-        `countsFromAbundance = 'no'`.
+        Serialised SummarizedExperiment object containing gene level
+        abundance, count, and length matrices generated from tximport.
       pattern: "*.rds"
-  - merged_gene_rds_length_scaled:
+  - merged_transcript_rds_unified:
       type: file
       description: |
-        Serialised SummarizedExperiment object containing gene level TPM
-        abundance values and counts generated from tximport with
-        `countsFromAbundance='lengthScaledTPM'`.
-      pattern: "*.rds"
-  - merged_gene_rds_scaled:
-      type: file
-      description: |
-        Serialised SummarizedExperiment object containing gene level TPM
-        abundance values and counts generated from tximport with
-        `countsFromAbundance='scaledTPM'`.
-      pattern: "*.rds"
-  - merged_transcript_rds:
-      type: file
-      description: |
-        Serialised SummarizedExperiment object containing transcript level TPM
-        abundance values and counts generated from tximport with
-        `countsFromAbundance = 'no'`.
+        Serialised SummarizedExperiment object containing transcript level
+        abundance, count, and length matrices generated from tximport.
       pattern: "*.rds"
   - versions:
       type: file

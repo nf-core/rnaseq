@@ -1,0 +1,179 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "quantify_rsem"
+description: Perform quantification with RSEM to produce count tables, legacy merge matrices, and SummarizedExperiment objects
+keywords:
+  - rnaseq
+  - quantification
+  - rsem
+  - tximport
+components:
+  - rsem/calculateexpression
+  - sentieon/rsemcalculateexpression
+  - custom/rsemmergecounts
+  - quant_tximport_summarizedexperiment
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing study-level sample sheet information. e.g. [
+          id:'SRP1234' ].
+  - samplesheet:
+      type: file
+      description: |
+        Sample sheet, to be baked into the `colData` of summarizedexperiment
+        objects.
+      pattern: "*.{csv,tsv}"
+  - reads:
+      type: file
+      description: |
+        Channel with input FastQ files of size 1 and 2 for single-end and
+        paired-end data, respectively. OR a transcriptome-level BAM file if
+        running RSEM in alignment mode.
+  - index:
+      type: path
+      description: |
+        Path to RSEM index directory.
+  - gtf:
+      type: file
+      description: |
+        Channel with features in GTF format. Used to generate transcript/gene
+        mappings.
+  - gtf_id_attribute:
+      type: string
+      description: |
+        Attribute in GTF file corresponding to the gene identifier.
+  - gtf_extra_attribute:
+      type: string
+      description: GTF alternative gene attribute (e.g. gene_name)
+  - use_sentieon_star:
+      type: boolean
+      description: |
+        Use Sentieon-accelerated STAR for alignment within RSEM. Only
+        meaningful in FASTQ input mode; set to `false` for BAM-mode consumers.
+
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information. e.g. [ id:'test' ].
+  - raw_counts_gene:
+      type: file
+      description: |
+        Per-sample RSEM gene-level results files.
+      pattern: "*.genes.results"
+  - raw_counts_transcript:
+      type: file
+      description: |
+        Per-sample RSEM transcript-level results files.
+      pattern: "*.isoforms.results"
+  - stat:
+      type: file
+      description: |
+        Per-sample RSEM statistics files.
+      pattern: "*.stat"
+  - logs:
+      type: file
+      description: |
+        Per-sample RSEM log files (optional, FASTQ mode only).
+      pattern: "*.log"
+  - merged_counts_gene:
+      type: file
+      description: |
+        Wide-format gene-level count matrix from RSEM merge.
+      pattern: "*.gene_counts.tsv"
+  - merged_tpm_gene:
+      type: file
+      description: |
+        Wide-format gene-level TPM matrix from RSEM merge.
+      pattern: "*.gene_tpm.tsv"
+  - merged_counts_transcript:
+      type: file
+      description: |
+        Wide-format transcript-level count matrix from RSEM merge.
+      pattern: "*.transcript_counts.tsv"
+  - merged_tpm_transcript:
+      type: file
+      description: |
+        Wide-format transcript-level TPM matrix from RSEM merge.
+      pattern: "*.transcript_tpm.tsv"
+  - merged_genes_long:
+      type: file
+      description: |
+        Long-format gene-level results from RSEM merge.
+      pattern: "*.genes_long.tsv"
+  - merged_isoforms_long:
+      type: file
+      description: |
+        Long-format isoform-level results from RSEM merge.
+      pattern: "*.isoforms_long.tsv"
+  - tpm_gene:
+      type: file
+      description: |
+        Gene-level matrix of abundance values in TPM from tximport.
+      pattern: "*.gene_tpm.tsv"
+  - counts_gene:
+      type: file
+      description: |
+        Gene-level matrix of unadjusted estimated counts from tximport
+        (`countsFromAbundance = 'no'`).
+      pattern: "*.gene_counts.tsv"
+  - counts_gene_length_scaled:
+      type: file
+      description: |
+        Gene-level matrix of estimated counts from tximport using
+        `countsFromAbundance = 'lengthScaledTPM'`.
+      pattern: "*.gene_counts_length_scaled.tsv"
+  - counts_gene_scaled:
+      type: file
+      description: |
+        Gene-level matrix of estimated counts from tximport using
+        `countsFromAbundance = 'scaledTPM'`.
+      pattern: "*.gene_counts_scaled.tsv"
+  - lengths_gene:
+      type: file
+      description: |
+        Gene-level matrix of length values from tximport.
+      pattern: "*.gene_lengths.tsv"
+  - tpm_transcript:
+      type: file
+      description: |
+        Transcript-level matrix of abundance values in TPM from tximport.
+      pattern: "*.transcript_tpm.tsv"
+  - counts_transcript:
+      type: file
+      description: |
+        Transcript-level matrix of unadjusted estimated counts from tximport
+        (`countsFromAbundance = 'no'`).
+      pattern: "*.transcript_counts.tsv"
+  - lengths_transcript:
+      type: file
+      description: |
+        Transcript-level matrix of length values from tximport.
+      pattern: "*.transcript_lengths.tsv"
+  - merged_gene_rds_unified:
+      type: file
+      description: |
+        Serialised SummarizedExperiment object containing gene level
+        abundance, count, and length matrices generated from tximport.
+      pattern: "*.rds"
+  - merged_transcript_rds_unified:
+      type: file
+      description: |
+        Serialised SummarizedExperiment object containing transcript level
+        abundance, count, and length matrices generated from tximport.
+      pattern: "*.rds"
+  - tx2gene:
+      type: file
+      description: |
+        Transcript to gene mapping table.
+      pattern: "*.tx2gene.tsv"
+  - versions:
+      type: file
+      description: |
+        File containing software versions
+        Structure: [ path(versions.yml) ]
+      pattern: "versions.yml"
+authors:
+  - "@pinin4fjords"
+maintainers:
+  - "@pinin4fjords"

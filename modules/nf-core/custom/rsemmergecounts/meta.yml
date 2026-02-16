@@ -1,0 +1,140 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: "custom_rsemmergecounts"
+description: Merge per-sample RSEM results into wide and long format TSV matrices
+keywords:
+  - rsem
+  - merge
+  - counts
+  - gene expression
+tools:
+  - "custom":
+      description: |
+        Custom module to merge RSEM gene and isoform count results across
+        samples into count/TPM matrices and long-format tables.
+      tool_dev_url: "https://github.com/nf-core/modules/blob/master/modules/nf-core/custom/rsemmergecounts/main.nf"
+      licence: ["MIT"]
+      identifier: ""
+
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information. e.g. [ id:'all_samples' ].
+    - "genes/*":
+        type: file
+        description: |
+          Collected RSEM gene-level results files across all samples.
+        pattern: "*.genes.results"
+        ontologies: []
+  - "isoforms/*":
+      type: file
+      description: |
+        Collected RSEM isoform-level results files across all samples.
+      pattern: "*.isoforms.results"
+      ontologies: []
+
+output:
+  counts_gene:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information. e.g. [ id:'all_samples' ].
+      - "${prefix}.gene_counts.tsv":
+          type: file
+          description: |
+            Wide-format gene-level count matrix (expected_count column from
+            RSEM) with samples as columns.
+          pattern: "*.gene_counts.tsv"
+          ontologies:
+            - edam: http://edamontology.org/format_3475
+  tpm_gene:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information. e.g. [ id:'all_samples' ].
+      - "${prefix}.gene_tpm.tsv":
+          type: file
+          description: |
+            Wide-format gene-level TPM matrix with samples as columns.
+          pattern: "*.gene_tpm.tsv"
+          ontologies:
+            - edam: http://edamontology.org/format_3475
+  counts_transcript:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information. e.g. [ id:'all_samples' ].
+      - "${prefix}.transcript_counts.tsv":
+          type: file
+          description: |
+            Wide-format transcript-level count matrix (expected_count column
+            from RSEM) with samples as columns.
+          pattern: "*.transcript_counts.tsv"
+          ontologies:
+            - edam: http://edamontology.org/format_3475
+  tpm_transcript:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information. e.g. [ id:'all_samples' ].
+      - "${prefix}.transcript_tpm.tsv":
+          type: file
+          description: |
+            Wide-format transcript-level TPM matrix with samples as columns.
+          pattern: "*.transcript_tpm.tsv"
+          ontologies:
+            - edam: http://edamontology.org/format_3475
+  genes_long:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information. e.g. [ id:'all_samples' ].
+      - "${prefix}.genes_long.tsv":
+          type: file
+          description: |
+            Long-format gene-level results with all RSEM fields and a
+            sample_name column.
+          pattern: "*.genes_long.tsv"
+          ontologies:
+            - edam: http://edamontology.org/format_3475
+  isoforms_long:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information. e.g. [ id:'all_samples' ].
+      - "${prefix}.isoforms_long.tsv":
+          type: file
+          description: |
+            Long-format isoform-level results with all RSEM fields and a
+            sample_name column.
+          pattern: "*.isoforms_long.tsv"
+          ontologies:
+            - edam: http://edamontology.org/format_3475
+
+  versions_sed:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - sed:
+          type: string
+          description: The name of the tool
+      - "sed --version 2>&1 | sed '1!d;s/^.*) //'":
+          type: eval
+          description: The expression to obtain the version of the tool
+
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - sed:
+          type: string
+          description: The name of the tool
+      - "sed --version 2>&1 | sed '1!d;s/^.*) //'":
+          type: eval
+          description: The expression to obtain the version of the tool
+
+authors:
+  - "@pinin4fjords"
+maintainers:
+  - "@pinin4fjords"

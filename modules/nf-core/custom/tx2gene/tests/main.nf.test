@@ -88,6 +88,51 @@ nextflow_process {
         }
     }
 
+    test("saccharomyces_cerevisiae - rsem - gtf") {
+
+        setup {
+            run("UNTAR") {
+                script "../../../untar/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id:'test'], // meta map
+                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/rsem_results.tar.gz', checkIfExists: true)
+                    ])
+                    """
+                }
+            }
+        }
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test'], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
+                ])
+                input[1] = UNTAR.out.untar.map { meta, dir ->
+                    def results = []
+                    dir.eachFileRecurse { f ->
+                        if (f.name.endsWith('.isoforms.results')) results << f
+                    }
+                    [ meta, results ]
+                }
+                input[2] = 'rsem'
+                input[3] = 'gene_id'
+                input[4] = 'gene_name'
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
     test("saccharomyces_cerevisiae - gtf - stub") {
 
         options "-stub"

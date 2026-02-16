@@ -37,14 +37,6 @@
         },
         "timestamp": "2024-03-06T14:33:04.677913"
     },
-    "Test Function rsemUmiError": {
-        "content": null,
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
-        },
-        "timestamp": "2024-03-06T14:33:26.903306"
-    },
     "Test Function checkSamplesAfterGrouping invalid strandedness": {
         "content": null,
         "meta": {

@@ -327,9 +327,6 @@ def validateInputParameters() {
 
     // Checks when running --aligner star_rsem
     if (!params.skip_alignment && params.aligner == 'star_rsem') {
-        if (params.with_umi) {
-            rsemUmiError()
-        }
         if (params.rsem_index && params.star_index) {
             rsemStarIndexWarn()
         }
@@ -557,19 +554,6 @@ def skipAlignmentWarn() {
         "  '--skip_alignment' parameter has been provided.\n" +
         "  Skipping alignment, genome-based quantification and all downstream QC processes.\n" +
         "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-}
-
-//
-// Print a warning if using '--aligner star_rsem' and '--with_umi'
-//
-def rsemUmiError() {
-    def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
-        "  When using '--aligner star_rsem', STAR is run by RSEM itself and so it is\n" +
-        "  not possible to remove UMIs before the quantification.\n\n" +
-        "  If you would like to remove UMI barcodes using the '--with_umi' option\n" +
-        "  please use either '--aligner star_salmon' or '--aligner hisat2'.\n" +
-        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-    error(error_string)
 }
 
 //

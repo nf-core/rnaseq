@@ -771,6 +771,7 @@
                 },
                 "use_rustqc": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Use RustQC instead of dupRadar, featureCounts biotype QC, RSeQC, Preseq, Qualimap, and samtools stats. RustQC replaces all of these tools with equivalent outputs in a single, faster pass. When enabled, the individual tools it replaces are automatically skipped.",
                     "fa_icon": "fas fa-rocket"
                 },

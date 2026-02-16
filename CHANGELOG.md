@@ -39,6 +39,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1697](https://github.com/nf-core/rnaseq/pull/1697) - Add tximport processing for RSEM outputs: gene/transcript length matrices, length-scaled counts, SummarizedExperiment objects, and DESeq2 QC using length-scaled counts ([#1320](https://github.com/nf-core/rnaseq/issues/1320)). **Note for `--aligner star_rsem` users:** the merged count and TPM files at the output root (e.g. `rsem.merged.gene_counts.tsv`) are now produced by tximport, matching the Salmon/Kallisto pathway. The previous RSEM merge script outputs are preserved in the `rsem_merge_counts/` subdirectory.
 - [PR #1700](https://github.com/nf-core/rnaseq/pull/1700) - Add FastQC step after BBSplit/rRNA filtering to provide QC metrics on reads used for alignment ([#1276](https://github.com/nf-core/rnaseq/issues/1276))
 - [PR #1704](https://github.com/nf-core/rnaseq/pull/1704) - Include single-library samples in merged fastq output when `--save_merged_fastq` is set ([#748](https://github.com/nf-core/rnaseq/issues/748))
+- [PR #1707](https://github.com/nf-core/rnaseq/pull/1707) - Enable UMI deduplication with `--aligner star_rsem` ([#829](https://github.com/nf-core/rnaseq/issues/829))
 
 ### Parameters
 

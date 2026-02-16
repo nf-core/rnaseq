@@ -58,6 +58,18 @@ process RUSTQC {
     tuple val(meta), path("*.inner_distance_plot.svg")     , emit: innerdistance_plot_svg     , optional: true
     tuple val(meta), path("*.inner_distance_plot.r")       , emit: innerdistance_rscript      , optional: true
     tuple val(meta), path("*.inner_distance_summary.txt")  , emit: innerdistance_summary      , optional: true
+    // RSeQC: TIN
+    tuple val(meta), path("*.tin.xls")                     , emit: tin_xls                    , optional: true
+    tuple val(meta), path("*.tin_summary.txt")             , emit: tin_summary                , optional: true
+    // preseq
+    tuple val(meta), path("*.lc_extrap.txt")               , emit: lc_extrap                  , optional: true
+    // samtools
+    tuple val(meta), path("*.flagstat")                    , emit: flagstat                   , optional: true
+    tuple val(meta), path("*.idxstats")                    , emit: idxstats                   , optional: true
+    tuple val(meta), path("*.stats")                       , emit: stats                      , optional: true
+    // qualimap / gene body coverage
+    tuple val(meta), path("*coverage_profile_along_genes_(total).txt"), emit: genebody_coverage, optional: true
+    tuple val(meta), path("*rnaseq_qc_results.txt")        , emit: qualimap_results           , optional: true
     // versions
     path "versions.yml"                                    , emit: versions
 
@@ -134,6 +146,14 @@ process RUSTQC {
     touch ${prefix}.inner_distance_plot.svg
     touch ${prefix}.inner_distance_plot.r
     touch ${prefix}.inner_distance_summary.txt
+    touch ${prefix}.tin.xls
+    touch ${prefix}.tin_summary.txt
+    touch ${prefix}.lc_extrap.txt
+    touch ${prefix}.flagstat
+    touch ${prefix}.idxstats
+    touch ${prefix}.stats
+    touch ${prefix}.coverage_profile_along_genes_\(total\).txt
+    touch ${prefix}.rnaseq_qc_results.txt
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

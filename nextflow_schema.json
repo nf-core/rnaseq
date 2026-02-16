@@ -769,11 +769,10 @@
                     "fa_icon": "fas fa-fast-forward",
                     "default": true
                 },
-                "skip_rustqc": {
+                "use_rustqc": {
                     "type": "boolean",
-                    "default": true,
-                    "description": "Skip RustQC. When enabled (set to false), RustQC replaces dupRadar and featureCounts biotype QC with equivalent outputs in a single, faster pass.",
-                    "fa_icon": "fas fa-fast-forward"
+                    "description": "Use RustQC instead of dupRadar, featureCounts biotype QC, RSeQC, Preseq, Qualimap, and samtools stats. RustQC replaces all of these tools with equivalent outputs in a single, faster pass. When enabled, the individual tools it replaces are automatically skipped.",
+                    "fa_icon": "fas fa-rocket"
                 },
                 "skip_dupradar": {
                     "type": "boolean",

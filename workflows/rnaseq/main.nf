@@ -475,9 +475,9 @@ workflow RNASEQ {
     ch_genome_bam_index = map_filtered_genome_bam_bai.index
 
     //
-    // MODULE: Run Preseq
+    // MODULE: Run Preseq (skipped when RustQC is enabled, as it provides equivalent output)
     //
-    if (!params.skip_qc && !params.skip_preseq) {
+    if (!params.skip_qc && !params.skip_preseq && !params.use_rustqc) {
         PRESEQ_LCEXTRAP (
             ch_genome_bam
         )
@@ -515,7 +515,10 @@ workflow RNASEQ {
     }
 
     //
-    // MODULE: RustQC - fast duplicate rate analysis, biotype QC, and RSeQC reimplementations
+    // MODULE: RustQC - single-pass replacement for dupRadar, featureCounts biotype QC,
+    // RSeQC, preseq, Qualimap gene body coverage, and samtools stats/flagstat/idxstats
+    //
+    // When use_rustqc is enabled, it automatically replaces all of these tools.
     //
 
     // Get RSeqC modules to run (used by both RustQC and BAM_RSEQC)
@@ -531,27 +534,23 @@ workflow RNASEQ {
     // Channel to collect infer_experiment output from whichever tool produces it
     ch_inferexperiment_txt = channel.empty()
 
-    if (!params.skip_rustqc) {
+    if (params.use_rustqc) {
         RUSTQC (
             ch_genome_bam,
             ch_gtf.map { item -> [ [:], item ] },
         )
         ch_versions = ch_versions.mix(RUSTQC.out.versions.first())
 
-        // dupRadar-equivalent MultiQC outputs (unless dupRadar QC is skipped entirely)
-        if (!params.skip_qc && !params.skip_dupradar) {
+        if (!params.skip_qc) {
+            // dupRadar-equivalent MultiQC outputs
             ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.multiqc_intercept.collect{ tuple -> tuple[1] })
             ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.multiqc_curve.collect{ tuple -> tuple[1] })
-        }
 
-        // Biotype QC MultiQC outputs (unless biotype QC is skipped)
-        if (!params.skip_qc && !params.skip_biotype_qc) {
+            // Biotype QC MultiQC outputs
             ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.biotype_counts.collect{ tuple -> tuple[1] })
             ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.biotype_rrna.collect{ tuple -> tuple[1] })
-        }
 
-        // RSeQC MultiQC outputs
-        if (!params.skip_qc && !params.skip_rseqc) {
+            // RSeQC MultiQC outputs
             ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.bamstat_txt.collect{ tuple -> tuple[1] })
             ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.inferexperiment_txt.collect{ tuple -> tuple[1] })
             ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.innerdistance_freq.collect{ tuple -> tuple[1] })
@@ -559,15 +558,30 @@ workflow RNASEQ {
             ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.junctionsaturation_rscript.collect{ tuple -> tuple[1] })
             ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.readdistribution_txt.collect{ tuple -> tuple[1] })
             ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.readduplication_pos_xls.collect{ tuple -> tuple[1] })
-            ch_inferexperiment_txt = RUSTQC.out.inferexperiment_txt
+
+            // TIN MultiQC output
+            ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.tin_xls.collect{ tuple -> tuple[1] })
+
+            // preseq MultiQC output
+            ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.lc_extrap.collect{ tuple -> tuple[1] })
+
+            // samtools-compatible MultiQC outputs
+            ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.flagstat.collect{ tuple -> tuple[1] })
+            ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.idxstats.collect{ tuple -> tuple[1] })
+            ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.stats.collect{ tuple -> tuple[1] })
+
+            // Qualimap-compatible MultiQC output
+            ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.qualimap_results.collect{ tuple -> tuple[1] })
         }
+
+        ch_inferexperiment_txt = RUSTQC.out.inferexperiment_txt
     }
 
     //
-    // MODULE: Feature biotype QC using featureCounts
+    // MODULE: Feature biotype QC using featureCounts (skipped when RustQC is enabled)
     //
     def biotype = params.gencode ? "gene_type" : params.featurecounts_group_type
-    if (!params.skip_qc && !params.skip_biotype_qc && biotype && params.skip_rustqc) {
+    if (!params.skip_qc && !params.skip_biotype_qc && biotype && !params.use_rustqc) {
 
         ch_gtf
             .map { gtf -> biotypeInGtf(gtf, biotype) }
@@ -631,7 +645,8 @@ workflow RNASEQ {
     // MODULE: Downstream QC steps
     //
     if (!params.skip_qc) {
-        if (!params.skip_qualimap) {
+        // Qualimap (skipped when RustQC is enabled, as it provides gene body coverage)
+        if (!params.skip_qualimap && !params.use_rustqc) {
             // Sort BAM by name for qualimap (performance optimization)
             SAMTOOLS_SORT_QUALIMAP (
                 ch_genome_bam,
@@ -646,7 +661,8 @@ workflow RNASEQ {
             ch_multiqc_files = ch_multiqc_files.mix(QUALIMAP_RNASEQ.out.results.collect{ _meta, results -> results })
         }
 
-        if (!params.skip_dupradar && params.skip_rustqc) {
+        // dupRadar (skipped when RustQC is enabled)
+        if (!params.skip_dupradar && !params.use_rustqc) {
             DUPRADAR (
                 ch_genome_bam,
                 ch_gtf.map { item -> [ [:], item ] }
@@ -655,30 +671,21 @@ workflow RNASEQ {
             ch_versions = ch_versions.mix(DUPRADAR.out.versions.first())
         }
 
-        // Run BAM_RSEQC only when RustQC is not handling RSeQC modules
-        // When RustQC is enabled, it handles all RSeQC modules except 'tin'
-        // If 'tin' is requested, we still need to run BAM_RSEQC for tin only
-        def bam_rseqc_modules = !params.skip_rustqc ? rseqc_modules.findAll { it == 'tin' } : rseqc_modules
-        if (!params.skip_rseqc && bam_rseqc_modules.size() > 0) {
+        // BAM_RSEQC (skipped entirely when RustQC is enabled, as it now handles all modules including TIN)
+        if (!params.skip_rseqc && !params.use_rustqc && rseqc_modules.size() > 0) {
             BAM_RSEQC (
                 ch_genome_bam.join(ch_genome_bam_index, by: [0]).map { meta, bam, bai -> [ meta, [ bam, bai ] ] },
                 ch_gene_bed,
-                bam_rseqc_modules
+                rseqc_modules
             )
-            if (params.skip_rustqc) {
-                ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.bamstat_txt.collect{ _meta, txt -> txt })
-                ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.inferexperiment_txt.collect{ _meta, txt -> txt })
-                ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.innerdistance_freq.collect{ _meta, freq -> freq })
-                ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.junctionannotation_log.collect{ _meta, log -> log })
-                ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.junctionsaturation_rscript.collect{ _meta, rscript -> rscript })
-                ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.readdistribution_txt.collect{ _meta, txt -> txt })
-                ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.readduplication_pos_xls.collect{ _meta, xls -> xls })
-            }
+            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.bamstat_txt.collect{ _meta, txt -> txt })
+            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.inferexperiment_txt.collect{ _meta, txt -> txt })
+            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.innerdistance_freq.collect{ _meta, freq -> freq })
+            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.junctionannotation_log.collect{ _meta, log -> log })
+            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.junctionsaturation_rscript.collect{ _meta, rscript -> rscript })
+            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.readdistribution_txt.collect{ _meta, txt -> txt })
+            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.readduplication_pos_xls.collect{ _meta, xls -> xls })
             ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.tin_txt.collect{ _meta, txt -> txt })
-        }
-
-        // Collect infer_experiment output from BAM_RSEQC when RustQC is not handling it
-        if (params.skip_rustqc && bam_rseqc_modules.size() > 0) {
             ch_inferexperiment_txt = BAM_RSEQC.out.inferexperiment_txt
         }
 

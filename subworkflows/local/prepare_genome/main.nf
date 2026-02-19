@@ -120,7 +120,7 @@ workflow PREPARE_GENOME {
         (!skip_alignment && aligner) ||
         (!skip_pseudo_alignment && pseudo_aligner) ||
         (!transcript_fasta)
-    ) && !skip_gtf_filter && fasta_provided
+    ) && !skip_gtf_filter
 
     if (filter_gtf_needed) {
         GTF_FILTER(ch_fasta, ch_gtf)

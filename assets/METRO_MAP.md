@@ -13,7 +13,7 @@ nf-metro render assets/metro_map.mmd \
 
 python -c "import cairosvg; cairosvg.svg2png(
     url='docs/images/nf-core-rnaseq_metro_map_grey.svg',
-    write_to='docs/images/nf-core-rnaseq_metro_map_grey.png', scale=2)"
+    write_to='docs/images/nf-core-rnaseq_metro_map_grey.png', output_width=2265)"
 
 # Animated SVG (used in README)
 nf-metro render assets/metro_map.mmd \

@@ -105,34 +105,6 @@ Please use the following naming schemes, to make it easy to understand what is g
 
 If you are using a new feature from core Nextflow, you may bump the minimum required version of nextflow in the pipeline with: `nf-core pipelines bump-version --nextflow . [min-nf-version]`
 
-### Updating the metro map
-
-The pipeline overview metro map is generated from `assets/metro_map.mmd` using [nf-metro](https://github.com/pinin4fjords/nf-metro). If you add or rename pipeline steps, update the `.mmd` source and regenerate the images:
-
-```bash
-pip install nf-metro cairosvg
-
-# Static SVG + PNG
-nf-metro render assets/metro_map.mmd \
-  -o docs/images/nf-core-rnaseq_metro_map_grey.svg \
-  --theme light --x-spacing 60 --y-spacing 40 \
-  --logo docs/images/nf-core-rnaseq_logo_light.png
-
-python -c "import cairosvg; cairosvg.svg2png(
-    url='docs/images/nf-core-rnaseq_metro_map_grey.svg',
-    write_to='docs/images/nf-core-rnaseq_metro_map_grey.png', scale=2)"
-
-# Animated SVG (used in README)
-nf-metro render assets/metro_map.mmd \
-  -o docs/images/nf-core-rnaseq_metro_map_grey_animated.svg \
-  --theme light --x-spacing 60 --y-spacing 40 --animate \
-  --logo docs/images/nf-core-rnaseq_logo_light.png
-
-# Copy static PNG to docs subdir
-cp docs/images/nf-core-rnaseq_metro_map_grey.png \
-  docs/usage/differential_expression_analysis/img/
-```
-
 ### Images and figures
 
 For overview images and other documents we follow the nf-core [style guidelines and examples](https://nf-co.re/developers/design_guidelines).

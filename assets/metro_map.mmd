@@ -66,10 +66,10 @@ graph LR
         _h2[hidden]
         _h3[hidden]
 
-        star -->|star_rsem| rsem
-        star -->|star_salmon| umi_tools_dedup
+        star -->|star_rsem,star_salmon| umi_tools_dedup
         hisat2_align -->|hisat2| umi_tools_dedup
         bowtie2_align -->|bowtie2_salmon| umi_tools_dedup
+        umi_tools_dedup -->|star_rsem| rsem
         umi_tools_dedup -->|star_salmon| salmon_quant
         umi_tools_dedup -->|hisat2| _h1
         _h1 -->|hisat2| _h2

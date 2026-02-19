@@ -28,7 +28,6 @@ Special thanks to the following for their contributions to the release:
 - [PR #1667](https://github.com/nf-core/rnaseq/pull/1667) - Enhance RSEM output exports and remove unnecessary star_rsem check
 - [PR #1669](https://github.com/nf-core/rnaseq/pull/1669) - Enable SeqKit stats MultiQC module for RiboDetector rRNA removal
 - [PR #1672](https://github.com/nf-core/rnaseq/pull/1672) - Document star_rsem STAR aligner settings and customization
-- [PR #1709](https://github.com/nf-core/rnaseq/pull/1709) - Update metro map renders with nf-metro v0.4.4; add source `.mmd` file and regeneration instructions to CONTRIBUTING.md
 - [PR #1677](https://github.com/nf-core/rnaseq/pull/1677) - Apply Nextflow 25 strict syntax fixes
 - [PR #1685](https://github.com/nf-core/rnaseq/pull/1685) - Add GPU-accelerated STAR alignment and mark duplicates using NVIDIA Parabricks rna_fq2bam (`--use_parabricks_star`)
 - [PR #1686](https://github.com/nf-core/rnaseq/pull/1686) - Add support for uncompressed FASTQ input files ([#1343](https://github.com/nf-core/rnaseq/issues/1343))
@@ -41,6 +40,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1700](https://github.com/nf-core/rnaseq/pull/1700) - Add FastQC step after BBSplit/rRNA filtering to provide QC metrics on reads used for alignment ([#1276](https://github.com/nf-core/rnaseq/issues/1276))
 - [PR #1704](https://github.com/nf-core/rnaseq/pull/1704) - Include single-library samples in merged fastq output when `--save_merged_fastq` is set ([#748](https://github.com/nf-core/rnaseq/issues/748))
 - [PR #1707](https://github.com/nf-core/rnaseq/pull/1707) - Enable UMI deduplication with `--aligner star_rsem` ([#829](https://github.com/nf-core/rnaseq/issues/829))
+- [PR #1709](https://github.com/nf-core/rnaseq/pull/1709) - Update metro map renders with nf-metro v0.4.4; add source `.mmd` file and regeneration instructions to CONTRIBUTING.md
 - [PR #1708](https://github.com/nf-core/rnaseq/pull/1708) - Allow `--skip_alignment` with a pre-built `--salmon_index` or `--kallisto_index` without requiring `--fasta` ([#1706](https://github.com/nf-core/rnaseq/issues/1706))
 
 ### Parameters

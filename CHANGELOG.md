@@ -28,6 +28,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1667](https://github.com/nf-core/rnaseq/pull/1667) - Enhance RSEM output exports and remove unnecessary star_rsem check
 - [PR #1669](https://github.com/nf-core/rnaseq/pull/1669) - Enable SeqKit stats MultiQC module for RiboDetector rRNA removal
 - [PR #1672](https://github.com/nf-core/rnaseq/pull/1672) - Document star_rsem STAR aligner settings and customization
+- [PR #1709](https://github.com/nf-core/rnaseq/pull/1709) - Update metro map renders with nf-metro v0.4.2; add source `.mmd` file and regeneration instructions to CONTRIBUTING.md
 - [PR #1677](https://github.com/nf-core/rnaseq/pull/1677) - Apply Nextflow 25 strict syntax fixes
 - [PR #1685](https://github.com/nf-core/rnaseq/pull/1685) - Add GPU-accelerated STAR alignment and mark duplicates using NVIDIA Parabricks rna_fq2bam (`--use_parabricks_star`)
 - [PR #1686](https://github.com/nf-core/rnaseq/pull/1686) - Add support for uncompressed FASTQ input files ([#1343](https://github.com/nf-core/rnaseq/issues/1343))

@@ -41,7 +41,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1704](https://github.com/nf-core/rnaseq/pull/1704) - Include single-library samples in merged fastq output when `--save_merged_fastq` is set ([#748](https://github.com/nf-core/rnaseq/issues/748))
 - [PR #1707](https://github.com/nf-core/rnaseq/pull/1707) - Enable UMI deduplication with `--aligner star_rsem` ([#829](https://github.com/nf-core/rnaseq/issues/829))
 - [PR #1708](https://github.com/nf-core/rnaseq/pull/1708) - Allow `--skip_alignment` with a pre-built `--salmon_index` or `--kallisto_index` without requiring `--fasta` ([#1706](https://github.com/nf-core/rnaseq/issues/1706))
-- [PR #1711](https://github.com/nf-core/rnaseq/pull/1711) - Scope GPU container flags (`--gpus all`, `--nv`) to `process_gpu` tasks only, fixing failures on CPU-only nodes in mixed clusters ([#1710](https://github.com/nf-core/rnaseq/issues/1710))
+- [PR #1711](https://github.com/nf-core/rnaseq/pull/1711) - Apply GPU container flags (`--gpus all`, `--nv`) automatically to `process_gpu` tasks only, removing the need for a separate `gpu` profile and fixing failures on CPU-only nodes in mixed clusters ([#1710](https://github.com/nf-core/rnaseq/issues/1710))
 
 ### Parameters
 

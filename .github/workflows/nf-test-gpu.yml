@@ -95,7 +95,7 @@ jobs:
       - name: Run nf-test Action
         uses: ./.github/actions/nf-test
         with:
-          profile: test_gpu,${{ matrix.profile }},gpu
+          profile: test_gpu,${{ matrix.profile }}
           shard: ${{ matrix.shard }}
           total_shards: ${{ needs.get-shards.outputs.total_shards }}
           filters: ${{ matrix.filters }}

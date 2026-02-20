@@ -3,23 +3,23 @@
      width="1836" height="619" viewBox="0 0 1836 619">
 <defs>
 </defs>
-<rect x="22.0" y="85.0" width="808.5" height="174.4660675955349" rx="8" ry="8" fill="rgba(0, 0, 0, 0.07)" stroke="rgba(0, 0, 0, 0.1)" stroke-width="1.0" />
+<rect x="22.0" y="85.0" width="808.5" height="174.4660675955349" rx="8" ry="8" fill="#ededed" stroke="#e6e6e6" stroke-width="1.0" />
 <circle cx="31.0" cy="72.0" r="9" fill="#333333" />
 <text x="31.0" y="72.0" font-size="9" fill="#ffffff" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central">1</text>
 <text x="45.0" y="72.0" font-size="17.0" fill="#666666" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" dominant-baseline="central">Pre-processing</text>
-<rect x="888.5" y="85.0" width="623.5" height="190.0" rx="8" ry="8" fill="rgba(0, 0, 0, 0.07)" stroke="rgba(0, 0, 0, 0.1)" stroke-width="1.0" />
+<rect x="888.5" y="85.0" width="623.5" height="190.0" rx="8" ry="8" fill="#ededed" stroke="#e6e6e6" stroke-width="1.0" />
 <circle cx="897.5" cy="72.0" r="9" fill="#333333" />
 <text x="897.5" y="72.0" font-size="9" fill="#ffffff" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central">2</text>
 <text x="911.5" y="72.0" font-size="17.0" fill="#666666" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" dominant-baseline="central">Genome alignment &amp; quantification</text>
-<rect x="888.5" y="315.0" width="420.0" height="110.0" rx="8" ry="8" fill="rgba(0, 0, 0, 0.07)" stroke="rgba(0, 0, 0, 0.1)" stroke-width="1.0" />
+<rect x="888.5" y="315.0" width="420.0" height="110.0" rx="8" ry="8" fill="#ededed" stroke="#e6e6e6" stroke-width="1.0" />
 <circle cx="897.5" cy="302.0" r="9" fill="#333333" />
 <text x="897.5" y="302.0" font-size="9" fill="#ffffff" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central">3</text>
 <text x="911.5" y="302.0" font-size="17.0" fill="#666666" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" dominant-baseline="central">Pseudo-alignment &amp; quantification</text>
-<rect x="1562.0" y="85.0" width="214.0" height="340.0" rx="8" ry="8" fill="rgba(0, 0, 0, 0.07)" stroke="rgba(0, 0, 0, 0.1)" stroke-width="1.0" />
+<rect x="1562.0" y="85.0" width="214.0" height="340.0" rx="8" ry="8" fill="#ededed" stroke="#e6e6e6" stroke-width="1.0" />
 <circle cx="1571.0" cy="72.0" r="9" fill="#333333" />
 <text x="1571.0" y="72.0" font-size="9" fill="#ffffff" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central">4</text>
 <text x="1585.0" y="72.0" font-size="17.0" fill="#666666" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" dominant-baseline="central">Post-processing</text>
-<rect x="880.5" y="465.0" width="887.5" height="130.0" rx="8" ry="8" fill="rgba(0, 0, 0, 0.07)" stroke="rgba(0, 0, 0, 0.1)" stroke-width="1.0" />
+<rect x="880.5" y="465.0" width="887.5" height="130.0" rx="8" ry="8" fill="#ededed" stroke="#e6e6e6" stroke-width="1.0" />
 <circle cx="889.5" cy="452.0" r="9" fill="#333333" />
 <text x="889.5" y="452.0" font-size="9" fill="#ffffff" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central">5</text>
 <text x="903.5" y="452.0" font-size="17.0" fill="#666666" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" dominant-baseline="central">Quality control &amp; reporting</text>
@@ -281,7 +281,7 @@
 <text x="974.5" y="225.0" font-size="14.0" fill="#333333" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="hanging">Bowtie2</text>
 <text x="974.5" y="346.0" font-size="14.0" fill="#333333" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="auto">Salmon</text>
 <text x="974.5" y="389.0" font-size="14.0" fill="#333333" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="auto">Kallisto</text>
-<text x="140.0" y="156.23303379776746" font-size="14.0" fill="#333333" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="auto">Cat FASTQ</text>
+<text x="140.0" y="156.23303379776746" font-size="14.0" fill="#333333" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="auto">cat FASTQ</text>
 <text x="1102.0" y="104.0" font-size="14.0" fill="#333333" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="auto">UMI-tools Dedup</text>
 <text x="1712.0" y="200.0" font-size="14.0" fill="#333333" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-weight="bold" text-anchor="end" dominant-baseline="central">Picard</text>
 <text x="1439.5" y="523.0" font-size="14.0" fill="#333333" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="auto">Preseq</text>
@@ -327,6 +327,6 @@
 <text x="397.6923076923076" y="547.0" font-size="19.0" fill="#333333" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" dominant-baseline="central">Pseudo-aligner: Salmon, Quantification: Salmon</text>
 <path d="M361.6923076923076,571.0 L385.6923076923076,571.0" stroke="#7b2d3b" stroke-width="4.0" stroke-linecap="round" />
 <text x="397.6923076923076" y="571.0" font-size="19.0" fill="#333333" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" dominant-baseline="central">Pseudo-aligner: Kallisto, Quantification: Kallisto</text>
-<text x="1806.0" y="611.0" font-size="8" fill="rgba(150, 150, 150, 0.6)" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="end">created with nf-metro v0.4.6</text>
+<text x="1806.0" y="611.0" font-size="8" fill="rgba(150, 150, 150, 0.6)" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="end">created with nf-metro v0.4.7</text>
 </svg>
 

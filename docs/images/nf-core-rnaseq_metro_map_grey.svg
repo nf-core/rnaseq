@@ -329,4 +329,3 @@
 <text x="397.6923076923076" y="571.0" font-size="19.0" fill="#333333" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" dominant-baseline="central">Pseudo-aligner: Kallisto, Quantification: Kallisto</text>
 <text x="1806.0" y="611.0" font-size="8" fill="rgba(150, 150, 150, 0.6)" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="end">created with nf-metro v0.4.7</text>
 </svg>
-

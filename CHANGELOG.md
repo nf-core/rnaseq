@@ -14,6 +14,7 @@ Special thanks to the following for their contributions to the release:
 - [Elad Herz](https://github.com/EladH1)
 - [Ezra Greenberg](https://github.com/egreenberg7)
 - [Gary Burnett](https://github.com/gburnett-nvidia)
+- [Isaac Virshup](https://github.com/ivirshup)
 - [Juliana Assis](https://github.com/Juassis)
 - [Marine Cambon](https://github.com/marccamb)
 - [Matthias Zepper](https://github.com/MatthiasZepper)

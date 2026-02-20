@@ -436,7 +436,7 @@
                     "description": "Optionally accelerate STAR and MarkDuplicates with Parabricks",
                     "fa_icon": "fas fa-running"
                 },
-                "gpu": {
+                "use_gpu": {
                     "type": "boolean",
                     "description": "Enable GPU container passthrough flags for GPU tasks.",
                     "fa_icon": "fas fa-microchip"
@@ -444,7 +444,7 @@
                 "gpu_container_options": {
                     "type": "string",
                     "default": "--gpus all",
-                    "description": "Docker GPU flags passed to GPU tasks when --gpu is enabled.",
+                    "description": "Docker GPU flags passed to GPU tasks when --use_gpu is enabled.",
                     "fa_icon": "fas fa-microchip",
                     "hidden": true
                 },

@@ -302,11 +302,11 @@ nextflow run nf-core/rnaseq \
     --fasta genome.fa \
     --gtf annotation.gtf \
     --use_parabricks_star \
-    --gpu \
+    --use_gpu \
     -profile docker
 ```
 
-The `--gpu` parameter enables GPU passthrough for container runtimes (`--gpus all` for Docker, `--nv` for Singularity/Apptainer). These flags are scoped to GPU tasks only, so non-GPU steps will run normally on CPU-only nodes in mixed clusters. Cloud executors (e.g. AWS Batch) that handle GPU provisioning via their own APIs do not need `--gpu`.
+The `--use_gpu` parameter enables GPU passthrough for container runtimes (`--gpus all` for Docker, `--nv` for Singularity/Apptainer). These flags are scoped to GPU tasks only, so non-GPU steps will run normally on CPU-only nodes in mixed clusters. Cloud executors (e.g. AWS Batch) that handle GPU provisioning via their own APIs do not need `--use_gpu`.
 
 The Docker GPU flags default to `--gpus all` but can be customised via the `--gpu_container_options` parameter (e.g. `--gpu_container_options '--gpus 1'`).
 
@@ -314,7 +314,7 @@ The Docker GPU flags default to `--gpus all` but can be customised via the `--gp
 
 - One or more NVIDIA GPUs (with appropriate drivers installed)
 - Docker or Singularity (Conda/Mamba is **not** supported for this module)
-- The `--gpu` parameter when running locally or on HPC. Not needed for cloud executors like AWS Batch.
+- The `--use_gpu` parameter when running locally or on HPC. Not needed for cloud executors like AWS Batch.
 - The Parabricks container (`nvcr.io/nvidia/clara/clara-parabricks:4.6.0-1`) will be pulled automatically
 
 #### Behaviour differences

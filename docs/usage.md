@@ -306,7 +306,7 @@ nextflow run nf-core/rnaseq \
     -profile docker
 ```
 
-The `--use_gpu` parameter enables GPU passthrough for container runtimes (`--gpus all` for Docker, `--nv` for Singularity/Apptainer). These flags are scoped to GPU tasks only, so non-GPU steps will run normally on CPU-only nodes in mixed clusters. Cloud executors (e.g. AWS Batch) that handle GPU provisioning via their own APIs do not need `--use_gpu`.
+The `--use_gpu` parameter enables GPU passthrough for container runtimes (`--gpus all` for Docker enhanced with the Nvidia Container Toolkit, `--nv` for Singularity/Apptainer). These flags are scoped to GPU tasks only, so non-GPU steps will run normally on CPU-only nodes in mixed clusters.
 
 The Docker GPU flags default to `--gpus all` but can be customised via the `--gpu_container_options` parameter (e.g. `--gpu_container_options '--gpus 1'`).
 

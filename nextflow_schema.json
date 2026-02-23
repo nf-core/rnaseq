@@ -443,8 +443,8 @@
                 },
                 "gpu_container_options": {
                     "type": "string",
-                    "default": "--gpus all",
-                    "description": "Docker GPU flags passed to GPU tasks when --use_gpu is enabled.",
+                    "default": "",
+                    "description": "Override container GPU flags for GPU tasks. Auto-detects if empty (--gpus all for Docker, --nv for Singularity/Apptainer).",
                     "fa_icon": "fas fa-microchip",
                     "hidden": true
                 },

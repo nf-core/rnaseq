@@ -14,6 +14,7 @@ Special thanks to the following for their contributions to the release:
 - [Elad Herz](https://github.com/EladH1)
 - [Ezra Greenberg](https://github.com/egreenberg7)
 - [Gary Burnett](https://github.com/gburnett-nvidia)
+- [Isaac Virshup](https://github.com/ivirshup)
 - [Juliana Assis](https://github.com/Juassis)
 - [Marine Cambon](https://github.com/marccamb)
 - [Matthias Zepper](https://github.com/MatthiasZepper)
@@ -42,6 +43,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1707](https://github.com/nf-core/rnaseq/pull/1707) - Enable UMI deduplication with `--aligner star_rsem` ([#829](https://github.com/nf-core/rnaseq/issues/829))
 - [PR #1708](https://github.com/nf-core/rnaseq/pull/1708) - Allow `--skip_alignment` with a pre-built `--salmon_index` or `--kallisto_index` without requiring `--fasta` ([#1706](https://github.com/nf-core/rnaseq/issues/1706))
 - [PR #1709](https://github.com/nf-core/rnaseq/pull/1709) - Update metro map renders with nf-metro v0.4.7; add source `.mmd` file and regeneration instructions to CONTRIBUTING.md
+- [PR #1711](https://github.com/nf-core/rnaseq/pull/1711) - Scope GPU container flags (`--gpus all`, `--nv`) to `process_gpu` tasks only via per-process `containerOptions`, fixing failures on CPU-only nodes in mixed clusters ([#1710](https://github.com/nf-core/rnaseq/issues/1710))
 
 ### Parameters
 

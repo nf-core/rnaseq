@@ -436,6 +436,12 @@
                     "description": "Optionally accelerate STAR and MarkDuplicates with Parabricks",
                     "fa_icon": "fas fa-running"
                 },
+                "gpu_container_options": {
+                    "type": "string",
+                    "description": "Override container GPU flags for GPU tasks. Auto-detects if not set (--gpus all for Docker, --nv for Singularity/Apptainer).",
+                    "fa_icon": "fas fa-microchip",
+                    "hidden": true
+                },
                 "pseudo_aligner": {
                     "type": "string",
                     "description": "Specifies the pseudo aligner to use - available options are 'salmon'. Runs in addition to '--aligner'.",

@@ -10,7 +10,7 @@ Please provide pipeline parameters via the CLI or Nextflow `-params-file` option
 
 ## Samplesheet input
 
-You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with the 4 required columns: `sample`, `fastq_1`, `fastq_2`, and `strandedness`. If you want to add the sequencing platform to the read group (RG) you can add it as an optional column (`seq_platform`). Please refer to the example below.
+You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with the 4 required columns: `sample`, `fastq_1`, `fastq_2`, and `strandedness`. If you want to add the sequencing platform or sequencing center to the read group (RG) you can add them as optional columns (`seq_platform`, `seq_center`). Please refer to the example below.
 
 ```bash
 --input '[path to samplesheet file]'
@@ -99,6 +99,7 @@ TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,,reverse,ILLUMINA
 | `fastq_2`           | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                                                                                           |
 | `strandedness`      | Sample strand-specificity. Must be one of `unstranded`, `forward`, `reverse` or `auto`.                                                                                                                                                              |
 | `seq_platform`      | **Optional**. Sequencing platform to add to BAM read group tags (e.g., `ILLUMINA`). Leave blank to omit.                                                                                                                                             |
+| `seq_center`        | **Optional**. Sequencing center to add to BAM read group tags. Overrides `--seq_center` for this sample. Leave blank to use the global value or omit.                                                                                                |
 | `genome_bam`        | **Optional**. Full path to genome-aligned BAM file. Typically from previous pipeline runs (see [output documentation](https://nf-co.re/rnaseq/output#star-salmon-and-kallisto) or [STAR/RSEM](https://nf-co.re/rnaseq/output#star-via-rsem)).        |
 | `transcriptome_bam` | **Optional**. Full path to transcriptome-aligned BAM file. Typically from previous pipeline runs (see [output documentation](https://nf-co.re/rnaseq/output#star-salmon-and-kallisto) or [STAR/RSEM](https://nf-co.re/rnaseq/output#star-via-rsem)). |
 | `percent_mapped`    | **Optional**. Percentage of reads that mapped during alignment (0-100). Useful for quality assessment and filtering.                                                                                                                                 |
@@ -144,9 +145,9 @@ The `--skip_alignment` flag tells the pipeline to skip alignment, and in this si
 The `samplesheet_with_bams.csv` will look like:
 
 ```csv
-sample,fastq_1,fastq_2,strandedness,seq_platform,genome_bam,percent_mapped,transcriptome_bam
-SAMPLE1,/path/sample1_R1.fastq.gz,/path/sample1_R2.fastq.gz,forward,ILLUMINA,results/star_salmon/SAMPLE1.markdup.sorted.bam,85.2,results/star_salmon/SAMPLE1.Aligned.toTranscriptome.out.bam
-SAMPLE2,/path/sample2_R1.fastq.gz,,reverse,ILLUMINA,results/star_salmon/SAMPLE2.sorted.bam,92.1,results/star_salmon/SAMPLE2.Aligned.toTranscriptome.out.bam
+sample,fastq_1,fastq_2,strandedness,seq_platform,seq_center,genome_bam,percent_mapped,transcriptome_bam
+SAMPLE1,/path/sample1_R1.fastq.gz,/path/sample1_R2.fastq.gz,forward,ILLUMINA,,results/star_salmon/SAMPLE1.markdup.sorted.bam,85.2,results/star_salmon/SAMPLE1.Aligned.toTranscriptome.out.bam
+SAMPLE2,/path/sample2_R1.fastq.gz,,reverse,ILLUMINA,,results/star_salmon/SAMPLE2.sorted.bam,92.1,results/star_salmon/SAMPLE2.Aligned.toTranscriptome.out.bam
 ```
 
 #### Important limitations

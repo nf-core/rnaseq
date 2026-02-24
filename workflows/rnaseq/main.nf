@@ -874,14 +874,15 @@ workflow RNASEQ {
                 def mapped = percent_mapped != null ? percent_mapped : ''
 
                 def seq_platform = meta.seq_platform ?: ''
+                def seq_center = meta.seq_center ?: ''
 
-                return "${meta.id},${fastq_1},${fastq_2},${meta.strandedness},${seq_platform},${genome_bam_published},${mapped},${transcriptome_bam_published}"
+                return "${meta.id},${fastq_1},${fastq_2},${meta.strandedness},${seq_platform},${seq_center},${genome_bam_published},${mapped},${transcriptome_bam_published}"
             }
             .collectFile(
                 name: 'samplesheet_with_bams.csv',
                 storeDir: "${params.outdir}/samplesheets",
                 newLine: true,
-                seed: 'sample,fastq_1,fastq_2,strandedness,seq_platform,genome_bam,percent_mapped,transcriptome_bam'
+                seed: 'sample,fastq_1,fastq_2,strandedness,seq_platform,seq_center,genome_bam,percent_mapped,transcriptome_bam'
             )
     }
 

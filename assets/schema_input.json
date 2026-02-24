@@ -37,6 +37,10 @@
                 "type": "string",
                 "meta": ["seq_platform"]
             },
+            "seq_center": {
+                "type": "string",
+                "meta": ["seq_center"]
+            },
             "genome_bam": {
                 "type": "string",
                 "format": "file-path",

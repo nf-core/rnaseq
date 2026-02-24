@@ -1,4 +1,5 @@
 include { BBMAP_BBSPLIT                         } from '../../../modules/nf-core/bbmap/bbsplit'
+include { FASTQC as FASTQC_FILTERED             } from '../../../modules/nf-core/fastqc'
 include { CAT_FASTQ                             } from '../../../modules/nf-core/cat/fastq/main'
 include { FQ_LINT                               } from '../../../modules/nf-core/fq/lint/main'
 include { FQ_LINT as FQ_LINT_AFTER_TRIMMING     } from '../../../modules/nf-core/fq/lint/main'
@@ -120,6 +121,9 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     with_umi             // boolean: true/false: Enable UMI-based read deduplication.
     umi_discard_read     // integer: 0, 1 or 2
 
+    // Merging options
+    save_merged_fastq    // boolean: true/false: Save merged FastQ files even for single-library samples
+
     // Strandedness thresholds
     stranded_threshold   // float: The fraction of stranded reads that must be assigned to a strandedness for confident assignment. Must be at least 0.5
     unstranded_threshold // float: The difference in fraction of stranded reads assigned to 'forward' and 'reverse' below which a sample is classified as 'unstranded'
@@ -154,10 +158,12 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     ch_bowtie2_index      = channel.empty()
     ch_seqkit_prefixed    = channel.empty()
     ch_seqkit_converted   = channel.empty()
+    ch_fastqc_filtered_html = channel.empty()
+    ch_fastqc_filtered_zip  = channel.empty()
 
     ch_reads
         .branch { meta, fastqs ->
-            single: fastqs.size() == 1 && fastqs.flatten()[0].name.endsWith('.gz')
+            single: fastqs.size() == 1 && fastqs.flatten()[0].name.endsWith('.gz') && !save_merged_fastq
             return [meta, fastqs.flatten()]
             multiple: true
             return [meta, fastqs.flatten()]
@@ -344,6 +350,18 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         }
     }
 
+    //
+    // MODULE: Run FastQC on filtered reads (after BBSplit and/or rRNA removal)
+    //
+    if (!skip_fastqc && (!skip_bbsplit || remove_ribo_rna)) {
+        FASTQC_FILTERED(
+            ch_filtered_reads
+        )
+        ch_fastqc_filtered_html = FASTQC_FILTERED.out.html
+        ch_fastqc_filtered_zip  = FASTQC_FILTERED.out.zip
+        ch_multiqc_files = ch_multiqc_files.mix(FASTQC_FILTERED.out.zip)
+    }
+
     // Branch FastQ channels if 'auto' specified to infer strandedness
     ch_filtered_reads
         .branch { meta, fastq ->
@@ -414,6 +432,8 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     seqkit_stats     = ch_seqkit_stats
     bowtie2_log      = ch_bowtie2_log
     bowtie2_index    = ch_bowtie2_index
+    fastqc_filtered_html = ch_fastqc_filtered_html
+    fastqc_filtered_zip  = ch_fastqc_filtered_zip
     seqkit_prefixed  = ch_seqkit_prefixed
     seqkit_converted = ch_seqkit_converted
 }

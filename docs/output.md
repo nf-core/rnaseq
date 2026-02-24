@@ -30,6 +30,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [fastp](#fastp)
     - [BBSplit](#bbsplit)
     - [rRNA removal](#rrna-removal)
+    - [FastQC (filtered)](#fastqc-filtered)
   - [Alignment and quantification](#alignment-and-quantification)
     - [STAR, Salmon and Kallisto](#star-salmon-and-kallisto)
     - [STAR via RSEM](#star-via-rsem)
@@ -259,6 +260,19 @@ When `--ribo_removal_tool bowtie2` is specified, the pipeline uses [Bowtie2](htt
 
 When `--ribo_removal_tool ribodetector` is specified, the pipeline uses [RiboDetector](https://github.com/hzi-bifo/RiboDetector), a machine learning-based tool that identifies rRNA reads without requiring a reference database.
 
+### FastQC (filtered)
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `fastqc/filtered/`
+  - `*_fastqc.html`: FastQC report containing quality metrics for read 1 (_and read2 if paired-end_) **after** contaminant removal (BBSplit) and/or ribosomal RNA removal.
+  - `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images.
+
+</details>
+
+When BBSplit and/or rRNA removal is enabled, an additional [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) step runs on the filtered reads. This provides QC metrics on the reads that will actually be used for alignment and quantification, allowing you to verify that filtering steps worked as expected. This section will only appear in the results when at least one filtering step (BBSplit or rRNA removal) is active and FastQC is not skipped.
+
 ## Alignment and quantification
 
 ### STAR, Salmon and Kallisto
@@ -323,13 +337,26 @@ The STAR section of the MultiQC report shows a bar plot with alignment rates: go
 <details markdown="1">
 <summary>Output files</summary>
 
-- `star_rsem/`
-  - `rsem.merged.gene_counts.tsv`: Matrix of gene-level raw counts across all samples.
+- `star_rsem/` - tximport-processed outputs (matching the Salmon/Kallisto format):
+  - `rsem.merged.gene_counts.tsv`: Matrix of gene-level estimated counts across all samples.
+  - `rsem.merged.gene_counts_length_scaled.tsv`: Matrix of gene-level length-scaled counts (used for DESeq2 QC).
+  - `rsem.merged.gene_counts_scaled.tsv`: Matrix of gene-level scaled counts.
+  - `rsem.merged.gene_lengths.tsv`: Matrix of gene-level effective lengths across all samples.
   - `rsem.merged.gene_tpm.tsv`: Matrix of gene-level TPM values across all samples.
-  - `rsem.merged.transcript_counts.tsv`: Matrix of isoform-level raw counts across all samples.
-  - `rsem.merged.transcript_tpm.tsv`: Matrix of isoform-level TPM values across all samples.
-  - `rsem.merged.genes_long.tsv`: long format contains length, expected_count, TPM, and FPKM across all samples.
-  - `rsem.merged.isoforms_long.tsv`: long format contains length, expected_count, TPM, FPKM, and IsoPct across all samples.
+  - `rsem.merged.transcript_counts.tsv`: Matrix of transcript-level estimated counts across all samples.
+  - `rsem.merged.transcript_lengths.tsv`: Matrix of transcript-level effective lengths across all samples.
+  - `rsem.merged.transcript_tpm.tsv`: Matrix of transcript-level TPM values across all samples.
+  - `rsem.merged.tx2gene.tsv`: Transcript-to-gene mapping file generated from the GTF.
+  - `rsem.merged.gene.SummarizedExperiment.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the abundance TPM (`tpm`), estimated counts (`counts`) and gene length (`lengths`), estimated library size-scaled counts (`counts_scaled`), estimated length-scaled counts (`counts_length_scaled`) in the assays slot for genes.
+  - `rsem.merged.transcript.SummarizedExperiment.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the abundance TPM (`tpm`), estimated isoform-level raw counts (`counts`) and transcript length (`lengths`) in the assays slot for transcripts.
+- `star_rsem/rsem_merge_counts/` - legacy RSEM merge script outputs:
+  - `*.gene_counts.tsv`: Matrix of gene-level raw counts (RSEM expected_count) across all samples.
+  - `*.gene_tpm.tsv`: Matrix of gene-level TPM values across all samples.
+  - `*.transcript_counts.tsv`: Matrix of isoform-level raw counts across all samples.
+  - `*.transcript_tpm.tsv`: Matrix of isoform-level TPM values across all samples.
+  - `*.genes_long.tsv`: Long format containing length, expected_count, TPM, and FPKM across all samples.
+  - `*.isoforms_long.tsv`: Long format containing length, expected_count, TPM, FPKM, and IsoPct across all samples.
+- `star_rsem/` - per-sample outputs:
   - `*.genes.results`: RSEM gene-level quantification results for each sample.
   - `*.isoforms.results`: RSEM isoform-level quantification results for each sample.
   - `*.STAR.genome.bam`: If `--save_align_intermeds` is specified the BAM file from STAR alignment containing read alignments to the reference genome will be placed in this directory. These files can be reused as `genome_bam` input in future pipeline runs.
@@ -344,6 +371,8 @@ The STAR section of the MultiQC report shows a bar plot with alignment rates: go
 </details>
 
 [RSEM](https://github.com/deweylab/RSEM) is a software package for estimating gene and isoform expression levels from RNA-seq data. It has been widely touted as one of the most accurate quantification tools for RNA-seq analysis. When using `--aligner star_rsem`, the pipeline first runs STAR alignment with RSEM-compatible parameters to generate genome and transcriptome BAM files, then RSEM quantifies expression using these pre-aligned BAMs via the `--alignments` mode. This approach ensures optimal compatibility while maintaining RSEM's ability to effectively use ambiguously-mapping reads.
+
+RSEM results are additionally processed through [tximport](https://bioconductor.org/packages/tximport/) to produce length-scaled counts, effective length matrices, and SummarizedExperiment R objects, matching the output parity of the Salmon and Kallisto pseudoalignment paths. These outputs are directly compatible with downstream tools like [nf-core/differentialabundance](https://nf-co.re/differentialabundance).
 
 You can choose to align and quantify your data with RSEM by providing the `--aligner star_rsem` parameter.
 

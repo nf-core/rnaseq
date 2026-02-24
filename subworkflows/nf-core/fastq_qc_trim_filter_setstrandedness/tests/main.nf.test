@@ -86,9 +86,12 @@ nextflow_workflow {
                 input[23] = false          // with_umi
                 input[24] = 0              // umi_discard_read
 
+                // Merging options
+                input[25] = false          // save_merged_fastq
+
                 // Strandedness thresholds
-                input[25] = 0.8            // stranded_threshold
-                input[26] = 0.1            // unstranded_threshold
+                input[26] = 0.8            // stranded_threshold
+                input[27] = 0.1            // unstranded_threshold
                 """
             }
         }
@@ -122,7 +125,11 @@ nextflow_workflow {
                 { assert snapshot(
                     pelines1.join('\n').md5(),
                     pelines2.join('\n').md5(),
-                    processed_ribo_removal_lint_report
+                    processed_ribo_removal_lint_report,
+                    file(workflow.out.fastqc_filtered_html[0][1][0]).name,
+                    file(workflow.out.fastqc_filtered_html[0][1][1]).name,
+                    file(workflow.out.fastqc_filtered_zip[0][1][0]).name,
+                    file(workflow.out.fastqc_filtered_zip[0][1][1]).name,
                 ).match() }
             )
         }
@@ -170,9 +177,12 @@ nextflow_workflow {
                 input[23] = false          // with_umi
                 input[24] = 0              // umi_discard_read
 
+                // Merging options
+                input[25] = false          // save_merged_fastq
+
                 // Strandedness thresholds
-                input[25] = 0.8            // stranded_threshold
-                input[26] = 0.1            // unstranded_threshold
+                input[26] = 0.8            // stranded_threshold
+                input[27] = 0.1            // unstranded_threshold
                 """
             }
         }
@@ -208,7 +218,11 @@ nextflow_workflow {
                 { assert snapshot(
                     pelines1.join('\n').md5(),
                     pelines2.join('\n').md5(),
-                    processed_ribo_removal_lint_report.md5()
+                    processed_ribo_removal_lint_report.md5(),
+                    file(workflow.out.fastqc_filtered_html[0][1][0]).name,
+                    file(workflow.out.fastqc_filtered_html[0][1][1]).name,
+                    file(workflow.out.fastqc_filtered_zip[0][1][0]).name,
+                    file(workflow.out.fastqc_filtered_zip[0][1][1]).name,
                 ).match() }
             )
         }
@@ -256,9 +270,12 @@ nextflow_workflow {
                 input[23] = false          // with_umi
                 input[24] = 0              // umi_discard_read
 
+                // Merging options
+                input[25] = false          // save_merged_fastq
+
                 // Strandedness thresholds
-                input[25] = 0.8            // stranded_threshold
-                input[26] = 0.1            // unstranded_threshold
+                input[26] = 0.8            // stranded_threshold
+                input[27] = 0.1            // unstranded_threshold
                 """
             }
         }
@@ -292,7 +309,11 @@ nextflow_workflow {
                 { assert snapshot(
                     pelines1.join('\n').md5(),
                     pelines2.join('\n').md5(),
-                    processed_ribo_removal_lint_report.md5()
+                    processed_ribo_removal_lint_report.md5(),
+                    file(workflow.out.fastqc_filtered_html[0][1][0]).name,
+                    file(workflow.out.fastqc_filtered_html[0][1][1]).name,
+                    file(workflow.out.fastqc_filtered_zip[0][1][0]).name,
+                    file(workflow.out.fastqc_filtered_zip[0][1][1]).name,
                 ).match() }
             )
         }
@@ -340,9 +361,12 @@ nextflow_workflow {
                 input[23] = false          // with_umi
                 input[24] = 0              // umi_discard_read
 
+                // Merging options
+                input[25] = false          // save_merged_fastq
+
                 // Strandedness thresholds
-                input[25] = 0.8            // stranded_threshold
-                input[26] = 0.1            // unstranded_threshold
+                input[26] = 0.8            // stranded_threshold
+                input[27] = 0.1            // unstranded_threshold
                 """
             }
         }
@@ -382,7 +406,11 @@ nextflow_workflow {
                 { assert snapshot(
                     pelines1.join('\n').md5(),
                     pelines2.join('\n').md5(),
-                    processed_ribo_removal_lint_report.md5()
+                    processed_ribo_removal_lint_report.md5(),
+                    file(workflow.out.fastqc_filtered_html[0][1][0]).name,
+                    file(workflow.out.fastqc_filtered_html[0][1][1]).name,
+                    file(workflow.out.fastqc_filtered_zip[0][1][0]).name,
+                    file(workflow.out.fastqc_filtered_zip[0][1][1]).name,
                 ).match() }
             )
         }
@@ -448,9 +476,12 @@ nextflow_workflow {
                 input[23] = false          // with_umi
                 input[24] = 0              // umi_discard_read
 
+                // Merging options
+                input[25] = false          // save_merged_fastq
+
                 // Strandedness thresholds
-                input[25] = 0.8            // stranded_threshold
-                input[26] = 0.1            // unstranded_threshold
+                input[26] = 0.8            // stranded_threshold
+                input[27] = 0.1            // unstranded_threshold
                 """
             }
         }
@@ -486,7 +517,9 @@ nextflow_workflow {
                 { assert bowtie2RrnaCount == 10 },   // 10 reads aligned to rRNA reference
                 { assert snapshot(
                     selines.join('\n').md5(),
-                    processed_ribo_removal_lint_report.md5()
+                    processed_ribo_removal_lint_report.md5(),
+                    file(workflow.out.fastqc_filtered_html[0][1]).name,
+                    file(workflow.out.fastqc_filtered_zip[0][1]).name,
                 ).match() }
             )
         }

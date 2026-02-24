@@ -40,10 +40,15 @@
                         "git_sha": "96c57dfd98a0641886a67bd449fe33ee2ec0e374",
                         "installed_by": ["modules"]
                     },
+                    "custom/rsemmergecounts": {
+                        "branch": "master",
+                        "git_sha": "1d67856e83d01712c604ac2955d0e5d4b018bf68",
+                        "installed_by": ["modules", "quantify_rsem"]
+                    },
                     "custom/tx2gene": {
                         "branch": "master",
-                        "git_sha": "f607fcda30173529b9bf047512056c0df68c6681",
-                        "installed_by": ["modules", "quantify_pseudo_alignment"]
+                        "git_sha": "0de77432a7fb128e2fdeb3d4bd5a74c2ec02d6c6",
+                        "installed_by": ["quant_tximport_summarizedexperiment", "quantify_pseudo_alignment"]
                     },
                     "dupradar": {
                         "branch": "master",
@@ -58,7 +63,11 @@
                     "fastqc": {
                         "branch": "master",
                         "git_sha": "3009f27c4e4b6e99da4eeebe82799e13924a4a1f",
-                        "installed_by": ["fastq_fastqc_umitools_fastp", "fastq_fastqc_umitools_trimgalore"]
+                        "installed_by": [
+                            "fastq_fastqc_umitools_fastp",
+                            "fastq_fastqc_umitools_trimgalore",
+                            "fastq_qc_trim_filter_setstrandedness"
+                        ]
                     },
                     "fq/lint": {
                         "branch": "master",
@@ -104,7 +113,7 @@
                     "kallisto/quant": {
                         "branch": "master",
                         "git_sha": "77b38f082c32cf86d870802c5dc96b51062c926e",
-                        "installed_by": ["modules", "quantify_pseudo_alignment"]
+                        "installed_by": ["quantify_pseudo_alignment"]
                     },
                     "kraken2/kraken2": {
                         "branch": "master",
@@ -144,7 +153,7 @@
                     "rsem/calculateexpression": {
                         "branch": "master",
                         "git_sha": "2fc7570f0dcf6d23083eff475fd798a1c9354aca",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules", "quantify_rsem"]
                     },
                     "rsem/preparereference": {
                         "branch": "master",
@@ -199,7 +208,7 @@
                     "salmon/quant": {
                         "branch": "master",
                         "git_sha": "9ebc300e05af07c770b86ff089581a2d41346c8b",
-                        "installed_by": ["fastq_subsample_fq_salmon", "modules", "quantify_pseudo_alignment"]
+                        "installed_by": ["fastq_subsample_fq_salmon", "quantify_pseudo_alignment"]
                     },
                     "samtools/faidx": {
                         "branch": "master",
@@ -249,7 +258,7 @@
                     "sentieon/rsemcalculateexpression": {
                         "branch": "master",
                         "git_sha": "d9c84ed4564744313bb586928885ebf05f40ad98",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules", "quantify_rsem"]
                     },
                     "sentieon/rsempreparereference": {
                         "branch": "master",
@@ -299,7 +308,7 @@
                     "summarizedexperiment/summarizedexperiment": {
                         "branch": "master",
                         "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
-                        "installed_by": ["modules", "quantify_pseudo_alignment"]
+                        "installed_by": ["quant_tximport_summarizedexperiment", "quantify_pseudo_alignment"]
                     },
                     "sylph/profile": {
                         "branch": "master",
@@ -318,8 +327,8 @@
                     },
                     "tximeta/tximport": {
                         "branch": "master",
-                        "git_sha": "9ef7553c32b02bc33ecb962b5f07a8cb16b2117c",
-                        "installed_by": ["modules", "quantify_pseudo_alignment"]
+                        "git_sha": "0de77432a7fb128e2fdeb3d4bd5a74c2ec02d6c6",
+                        "installed_by": ["quant_tximport_summarizedexperiment", "quantify_pseudo_alignment"]
                     },
                     "ucsc/bedclip": {
                         "branch": "master",
@@ -425,7 +434,7 @@
                     },
                     "fastq_qc_trim_filter_setstrandedness": {
                         "branch": "master",
-                        "git_sha": "2b6b3126fa6703aec8f2279becc0c627f54f03d1",
+                        "git_sha": "bf027dddda1c7f1456187755de2d32a5d03b29d2",
                         "installed_by": ["subworkflows"]
                     },
                     "fastq_remove_rrna": {
@@ -438,9 +447,19 @@
                         "git_sha": "b1d01480e4306e33851d936d065b70b469dad352",
                         "installed_by": ["fastq_qc_trim_filter_setstrandedness", "subworkflows"]
                     },
+                    "quant_tximport_summarizedexperiment": {
+                        "branch": "master",
+                        "git_sha": "bf0ea0eb763f9d692093ef4b40cb2a46ac762194",
+                        "installed_by": ["quantify_pseudo_alignment", "quantify_rsem"]
+                    },
                     "quantify_pseudo_alignment": {
                         "branch": "master",
-                        "git_sha": "77b38f082c32cf86d870802c5dc96b51062c926e",
+                        "git_sha": "bf0ea0eb763f9d692093ef4b40cb2a46ac762194",
+                        "installed_by": ["subworkflows"]
+                    },
+                    "quantify_rsem": {
+                        "branch": "master",
+                        "git_sha": "bf0ea0eb763f9d692093ef4b40cb2a46ac762194",
                         "installed_by": ["subworkflows"]
                     },
                     "utils_nextflow_pipeline": {

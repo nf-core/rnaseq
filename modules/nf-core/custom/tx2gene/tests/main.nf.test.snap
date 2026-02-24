@@ -65,6 +65,39 @@
         },
         "timestamp": "2025-11-25T19:28:57.610922"
     },
+    "saccharomyces_cerevisiae - rsem - gtf": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,e504b95d76ef4cf65ba0b38cddce2840"
+                ],
+                "tx2gene": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,e504b95d76ef4cf65ba0b38cddce2840"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-11T11:00:31.806696767"
+    },
     "saccharomyces_cerevisiae - gtf - stub": {
         "content": [
             {

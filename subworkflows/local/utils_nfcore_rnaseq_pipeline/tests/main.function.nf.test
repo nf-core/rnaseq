@@ -281,21 +281,6 @@ nextflow_function {
 
 
 
-    test("Test Function rsemUmiError") {
-
-        function "rsemUmiError"
-
-        then {
-            assertAll(
-                { assert function.failed },
-                { assert snapshot(function.result).match() }
-            )
-        }
-
-    }
-
-
-
     test("Test Function rsemStarIndexWarn") {
 
         function "rsemStarIndexWarn"

@@ -306,6 +306,10 @@ nextflow run nf-core/rnaseq \
     -profile docker
 ```
 
+Container GPU flags (`--gpus all` for Docker, `--nv` for Singularity/Apptainer) are automatically applied to GPU tasks based on the container engine. These flags are scoped to GPU tasks only, so non-GPU steps will run normally on CPU-only nodes in mixed clusters.
+
+The container GPU flags can be overridden via `--gpu_container_options` (e.g. `--gpu_container_options '--gpus 1'`).
+
 #### Requirements
 
 - One or more NVIDIA GPUs (with appropriate drivers installed)

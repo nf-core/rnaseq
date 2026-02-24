@@ -245,14 +245,19 @@ def validateInputParameters() {
 
     genomeExistsError()
 
+    def pseudo_index_provided = (
+        (params.pseudo_aligner == 'salmon' && params.salmon_index) ||
+        (params.pseudo_aligner == 'kallisto' && params.kallisto_index)
+    )
+
     if (
         !params.fasta &&
         (
             ! params.skip_alignment ||  // Alignment needs fasta
-            ! params.transcript_fasta // Dynamically making a transcript fasta needs the fasta
+            (! params.transcript_fasta && !pseudo_index_provided) // Dynamically making a transcript fasta needs the fasta (unless a pre-built index is provided)
         )
     ) {
-        error("Genome fasta file not specified with e.g. '--fasta genome.fa' or via a detectable config file. You must supply a genome FASTA file or use --skip_alignment and provide your own transcript fasta using --transcript_fasta for use in quantification.")
+        error("Genome fasta file not specified with e.g. '--fasta genome.fa' or via a detectable config file. You must supply a genome FASTA file, use --skip_alignment with --transcript_fasta, or use --skip_alignment with a pre-built pseudo-aligner index (--salmon_index / --kallisto_index).")
     }
 
     if (!params.gtf && !params.gff) {
@@ -334,9 +339,6 @@ def validateInputParameters() {
 
     // Checks when running --aligner star_rsem
     if (!params.skip_alignment && params.aligner == 'star_rsem') {
-        if (params.with_umi) {
-            rsemUmiError()
-        }
         if (params.rsem_index && params.star_index) {
             rsemStarIndexWarn()
         }
@@ -564,19 +566,6 @@ def skipAlignmentWarn() {
         "  '--skip_alignment' parameter has been provided.\n" +
         "  Skipping alignment, genome-based quantification and all downstream QC processes.\n" +
         "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-}
-
-//
-// Print a warning if using '--aligner star_rsem' and '--with_umi'
-//
-def rsemUmiError() {
-    def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
-        "  When using '--aligner star_rsem', STAR is run by RSEM itself and so it is\n" +
-        "  not possible to remove UMIs before the quantification.\n\n" +
-        "  If you would like to remove UMI barcodes using the '--with_umi' option\n" +
-        "  please use either '--aligner star_salmon' or '--aligner hisat2'.\n" +
-        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-    error(error_string)
 }
 
 //

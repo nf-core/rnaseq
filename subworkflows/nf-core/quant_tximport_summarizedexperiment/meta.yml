@@ -1,0 +1,124 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "quant_tximport_summarizedexperiment"
+description: Post-process transcript-level quantification results using tximport to produce count matrices and SummarizedExperiment objects
+keywords:
+  - rnaseq
+  - quantification
+  - tximport
+  - summarizedexperiment
+  - salmon
+  - kallisto
+  - rsem
+components:
+  - custom/tx2gene
+  - tximeta/tximport
+  - summarizedexperiment/summarizedexperiment
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing study-level sample sheet information. e.g. [
+          id:'SRP1234' ].
+  - samplesheet:
+      type: file
+      description: |
+        Sample sheet, to be baked into the `colData` of SummarizedExperiment
+        objects.
+      pattern: "*.{csv,tsv}"
+  - quant_results:
+      type: file
+      description: |
+        Per-sample quantification results. For Salmon these are result
+        directories containing quant.sf, for Kallisto directories containing
+        abundance.tsv, and for RSEM the .isoforms.results files.
+  - gtf:
+      type: file
+      description: |
+        Channel with features in GTF format, used to generate transcript/gene
+        mappings via tx2gene.
+  - gtf_id_attribute:
+      type: string
+      description: |
+        Attribute in GTF file corresponding to the gene identifier.
+  - gtf_extra_attribute:
+      type: string
+      description: GTF alternative gene attribute (e.g. gene_name)
+  - quant_type:
+      type: string
+      description: |
+        Quantification tool type. One of 'salmon', 'kallisto', or 'rsem'.
+output:
+  - tx2gene:
+      type: file
+      description: |
+        Transcript-to-gene mapping file generated from the GTF.
+      pattern: "*.tx2gene.tsv"
+  - tpm_gene:
+      type: file
+      description: |
+        Gene-level matrix of abundance values in TPM.
+      pattern: "*.gene_tpm.tsv"
+  - counts_gene:
+      type: file
+      description: |
+        Gene-level matrix of unadjusted estimated counts from tximport
+        (`countsFromAbundance = 'no'`).
+      pattern: "*.gene_counts.tsv"
+  - lengths_gene:
+      type: file
+      description: |
+        Gene-level matrix of effective length values.
+      pattern: "*.gene_lengths.tsv"
+  - counts_gene_length_scaled:
+      type: file
+      description: |
+        Gene-level matrix of estimated counts, generated from abundance (TPM)
+        values by scaling to library size, additionally scaled using the
+        average transcript length, using tximport
+        `countsFromAbundance = 'lengthScaledTPM'`.
+      pattern: "*.gene_counts_length_scaled.tsv"
+  - counts_gene_scaled:
+      type: file
+      description: |
+        Gene-level matrix of estimated counts, generated from abundance (TPM)
+        values by scaling to library size with tximport
+        `countsFromAbundance = 'scaledTPM'`.
+      pattern: "*.gene_counts_scaled.tsv"
+  - tpm_transcript:
+      type: file
+      description: |
+        Transcript-level matrix of abundance values in TPM.
+      pattern: "*.transcript_tpm.tsv"
+  - counts_transcript:
+      type: file
+      description: |
+        Transcript-level matrix of unadjusted estimated counts from tximport
+        (`countsFromAbundance = 'no'`).
+      pattern: "*.transcript_counts.tsv"
+  - lengths_transcript:
+      type: file
+      description: |
+        Transcript-level matrix of effective length values.
+      pattern: "*.transcript_lengths.tsv"
+  - merged_gene_rds:
+      type: file
+      description: |
+        Serialised SummarizedExperiment object containing gene-level assays
+        (counts, length-scaled counts, scaled counts, lengths, TPM).
+      pattern: "*.rds"
+  - merged_transcript_rds:
+      type: file
+      description: |
+        Serialised SummarizedExperiment object containing transcript-level
+        assays (counts, lengths, TPM).
+      pattern: "*.rds"
+  - versions:
+      type: file
+      description: |
+        File containing software versions
+        Structure: [ path(versions.yml) ]
+      pattern: "versions.yml"
+authors:
+  - "@pinin4fjords"
+maintainers:
+  - "@pinin4fjords"

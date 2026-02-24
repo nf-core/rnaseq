@@ -3,59 +3,77 @@
         "content": [
             "427d190cd40caeff5e2bd1967a21facb",
             "5d74b788577eb11cf8c858ca94e2f787",
-            "\u001b[32m INFO\u001b[0m \u001b[2mfq::commands::lint\u001b[0m\u001b[2m:\u001b[0m fq-lint start\n\u001b[32m INFO\u001b[0m \u001b[2mfq::commands::lint\u001b[0m\u001b[2m:\u001b[0m validating paired end reads\n\u001b[32m INFO\u001b[0m \u001b[2mfq::validators\u001b[0m\u001b[2m:\u001b[0m disabled validators: []\n\u001b[32m INFO\u001b[0m \u001b[2mfq::validators\u001b[0m\u001b[2m:\u001b[0m enabled single read validators: [\"[S003] NameValidator\", \"[S004] CompleteValidator\", \"[S002] AlphabetValidator\", \"[S001] PlusLineValidator\", \"[S005] ConsistentSeqQualValidator\", \"[S006] QualityStringValidator\"]\n\u001b[32m INFO\u001b[0m \u001b[2mfq::validators\u001b[0m\u001b[2m:\u001b[0m enabled paired read validators: [\"[P001] NamesValidator\"]\n\u001b[32m INFO\u001b[0m \u001b[2mfq::commands::lint\u001b[0m\u001b[2m:\u001b[0m enabled special validators: [\"[S007] DuplicateNameValidator\"]\n\u001b[32m INFO\u001b[0m \u001b[2mfq::commands::lint\u001b[0m\u001b[2m:\u001b[0m starting validation (pass 1)\n\u001b[32m INFO\u001b[0m \u001b[2mfq::commands::lint\u001b[0m\u001b[2m:\u001b[0m read 1127 * 2 records\n\u001b[32m INFO\u001b[0m \u001b[2mfq::commands::lint\u001b[0m\u001b[2m:\u001b[0m starting validation (pass 2)\n\u001b[32m INFO\u001b[0m \u001b[2mfq::commands::lint\u001b[0m\u001b[2m:\u001b[0m read 1127 records\n\u001b[32m INFO\u001b[0m \u001b[2mfq::commands::lint\u001b[0m\u001b[2m:\u001b[0m fq-lint end"
+            "\u001b[32m INFO\u001b[0m \u001b[2mfq::commands::lint\u001b[0m\u001b[2m:\u001b[0m fq-lint start\n\u001b[32m INFO\u001b[0m \u001b[2mfq::commands::lint\u001b[0m\u001b[2m:\u001b[0m validating paired end reads\n\u001b[32m INFO\u001b[0m \u001b[2mfq::validators\u001b[0m\u001b[2m:\u001b[0m disabled validators: []\n\u001b[32m INFO\u001b[0m \u001b[2mfq::validators\u001b[0m\u001b[2m:\u001b[0m enabled single read validators: [\"[S003] NameValidator\", \"[S004] CompleteValidator\", \"[S002] AlphabetValidator\", \"[S001] PlusLineValidator\", \"[S005] ConsistentSeqQualValidator\", \"[S006] QualityStringValidator\"]\n\u001b[32m INFO\u001b[0m \u001b[2mfq::validators\u001b[0m\u001b[2m:\u001b[0m enabled paired read validators: [\"[P001] NamesValidator\"]\n\u001b[32m INFO\u001b[0m \u001b[2mfq::commands::lint\u001b[0m\u001b[2m:\u001b[0m enabled special validators: [\"[S007] DuplicateNameValidator\"]\n\u001b[32m INFO\u001b[0m \u001b[2mfq::commands::lint\u001b[0m\u001b[2m:\u001b[0m starting validation (pass 1)\n\u001b[32m INFO\u001b[0m \u001b[2mfq::commands::lint\u001b[0m\u001b[2m:\u001b[0m read 1127 * 2 records\n\u001b[32m INFO\u001b[0m \u001b[2mfq::commands::lint\u001b[0m\u001b[2m:\u001b[0m starting validation (pass 2)\n\u001b[32m INFO\u001b[0m \u001b[2mfq::commands::lint\u001b[0m\u001b[2m:\u001b[0m read 1127 records\n\u001b[32m INFO\u001b[0m \u001b[2mfq::commands::lint\u001b[0m\u001b[2m:\u001b[0m fq-lint end",
+            "test_1_fastqc.html",
+            "test_2_fastqc.html",
+            "test_1_fastqc.zip",
+            "test_2_fastqc.zip"
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-02-02T16:10:42.098580341"
+        "timestamp": "2026-02-12T09:05:53.923664771"
     },
     "homo_sapiens paired-end [fastq] fastp ribodetector": {
         "content": [
             "5f14496c2cc20412609a0005ac6d10c4",
             "888d06ce2b2c67c8b8fc94eae65870ed",
-            "13bd489c0acd9f79cfa291e982c6ba21"
+            "13bd489c0acd9f79cfa291e982c6ba21",
+            "test_1_fastqc.html",
+            "test_2_fastqc.html",
+            "test_1_fastqc.zip",
+            "test_2_fastqc.zip"
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-02-02T16:11:03.282707505"
+        "timestamp": "2026-02-12T09:06:16.903127796"
     },
     "homo_sapiens paired-end [fastq] trimgalore sortmerna": {
         "content": [
             "d4b38548c21fb1a703204a38df4f6577",
             "546d6903d24642870c2ef7bdbc435758",
-            "42c4b902767edb12752797e908f66d6c"
+            "42c4b902767edb12752797e908f66d6c",
+            "test_1_fastqc.html",
+            "test_2_fastqc.html",
+            "test_1_fastqc.zip",
+            "test_2_fastqc.zip"
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-02-02T16:11:18.683024035"
+        "timestamp": "2026-02-12T09:06:33.867211398"
     },
     "homo_sapiens paired-end [fastq] fastp bowtie2": {
         "content": [
             "e4b3f501156cf176093c712e7a1bc0e1",
             "f79feea1f5d509b4bcfd0a637b5d8558",
-            "0a6ee69d1a42f5e38ad2d4dfe9faf5a6"
+            "0a6ee69d1a42f5e38ad2d4dfe9faf5a6",
+            "test_1_fastqc.html",
+            "test_2_fastqc.html",
+            "test_1_fastqc.zip",
+            "test_2_fastqc.zip"
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-02-02T16:11:35.027601363"
+        "timestamp": "2026-02-12T09:06:51.756578633"
     },
     "homo_sapiens single-end [fastq] fastp bowtie2": {
         "content": [
             "b423f619ae31c22b2bf99bdcb89bf852",
-            "5c1e74518dd70e4f1506b4f64da7b5f3"
+            "5c1e74518dd70e4f1506b4f64da7b5f3",
+            "test_se_fastqc.html",
+            "test_se_fastqc.zip"
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-02-03T16:50:57.709895332"
+        "timestamp": "2026-02-12T09:07:08.160495752"
     }
 }

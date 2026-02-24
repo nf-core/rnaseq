@@ -1,0 +1,288 @@
+nextflow_workflow {
+
+    name "Test Workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT"
+    script "../main.nf"
+    config "./nextflow.config"
+    workflow "QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT"
+
+    tag "subworkflows"
+    tag "subworkflows_nfcore"
+    tag "subworkflows/quant_tximport_summarizedexperiment"
+
+    tag "custom/tx2gene"
+    tag "tximeta/tximport"
+    tag "summarizedexperiment/summarizedexperiment"
+    tag "untar"
+
+    test("salmon") {
+
+        setup {
+            run("UNTAR") {
+                script "../../../../modules/nf-core/untar/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id: 'salmon_results' ],
+                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/salmon_results.tar.gz', checkIfExists: true)
+                    ])
+                    """
+                }
+            }
+        }
+
+        when {
+            workflow {
+                """
+                input[0] = [
+                    [ id: 'samplesheet' ],
+                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true)
+                ]
+                input[1] = UNTAR.out.untar.flatMap { meta, dir ->
+                    def entries = []
+                    dir.toFile().eachDir { d ->
+                        entries << [[ id: d.name ], d.toPath()]
+                    }
+                    entries
+                }
+                input[2] = Channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
+                input[3] = 'gene_id'
+                input[4] = 'gene_name'
+                input[5] = 'salmon'
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                        file(workflow.out.merged_gene_rds[0][1]).name,
+                        file(workflow.out.merged_transcript_rds[0][1]).name,
+                        workflow.out.counts_gene,
+                        workflow.out.counts_gene_length_scaled,
+                        workflow.out.counts_gene_scaled,
+                        workflow.out.lengths_gene,
+                        workflow.out.lengths_transcript,
+                        workflow.out.tpm_gene,
+                        workflow.out.tpm_transcript,
+                        workflow.out.counts_transcript,
+                        workflow.out.tx2gene,
+                        workflow.out.versions
+                    ).match()
+                }
+            )
+        }
+    }
+
+    test("kallisto") {
+
+        setup {
+            run("UNTAR") {
+                script "../../../../modules/nf-core/untar/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id: 'kallisto_results' ],
+                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/kallisto_results.tar.gz', checkIfExists: true)
+                    ])
+                    """
+                }
+            }
+        }
+
+        when {
+            workflow {
+                """
+                input[0] = [
+                    [ id: 'samplesheet' ],
+                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true)
+                ]
+                input[1] = UNTAR.out.untar.flatMap { meta, dir ->
+                    def entries = []
+                    dir.toFile().eachDir { d ->
+                        entries << [[ id: d.name ], d.toPath()]
+                    }
+                    entries
+                }
+                input[2] = Channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
+                input[3] = 'gene_id'
+                input[4] = 'gene_name'
+                input[5] = 'kallisto'
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                        file(workflow.out.merged_gene_rds[0][1]).name,
+                        file(workflow.out.merged_transcript_rds[0][1]).name,
+                        workflow.out.counts_gene,
+                        workflow.out.counts_gene_length_scaled,
+                        workflow.out.counts_gene_scaled,
+                        workflow.out.lengths_gene,
+                        workflow.out.lengths_transcript,
+                        workflow.out.tpm_gene,
+                        workflow.out.tpm_transcript,
+                        workflow.out.counts_transcript,
+                        workflow.out.tx2gene,
+                        workflow.out.versions
+                    ).match()
+                }
+            )
+        }
+    }
+
+    test("rsem") {
+
+        setup {
+            run("UNTAR") {
+                script "../../../../modules/nf-core/untar/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id: 'rsem_results' ],
+                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/rsem_results.tar.gz', checkIfExists: true)
+                    ])
+                    """
+                }
+            }
+        }
+
+        when {
+            workflow {
+                """
+                input[0] = [
+                    [ id: 'samplesheet' ],
+                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true)
+                ]
+                input[1] = UNTAR.out.untar.flatMap { meta, dir ->
+                    def entries = []
+                    dir.toFile().eachFileRecurse { f ->
+                        if (f.name.endsWith('.isoforms.results')) {
+                            entries << [[ id: f.parentFile.name ], f.toPath()]
+                        }
+                    }
+                    entries
+                }
+                input[2] = Channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
+                input[3] = 'gene_id'
+                input[4] = 'gene_name'
+                input[5] = 'rsem'
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                        file(workflow.out.merged_gene_rds[0][1]).name,
+                        file(workflow.out.merged_transcript_rds[0][1]).name,
+                        workflow.out.counts_gene,
+                        workflow.out.counts_gene_length_scaled,
+                        workflow.out.counts_gene_scaled,
+                        workflow.out.lengths_gene,
+                        workflow.out.lengths_transcript,
+                        workflow.out.tpm_gene,
+                        workflow.out.tpm_transcript,
+                        workflow.out.counts_transcript,
+                        workflow.out.tx2gene,
+                        workflow.out.versions
+                    ).match()
+                }
+            )
+        }
+    }
+
+    test("salmon - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                input[0] = [
+                    [ id: 'samplesheet' ],
+                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true)
+                ]
+                input[1] = Channel.of(
+                    [[ id: 'sample1' ], file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)]
+                )
+                input[2] = Channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
+                input[3] = 'gene_id'
+                input[4] = 'gene_name'
+                input[5] = 'salmon'
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(workflow.out).match() }
+            )
+        }
+    }
+
+    test("kallisto - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                input[0] = [
+                    [ id: 'samplesheet' ],
+                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true)
+                ]
+                input[1] = Channel.of(
+                    [[ id: 'sample1' ], file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)]
+                )
+                input[2] = Channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
+                input[3] = 'gene_id'
+                input[4] = 'gene_name'
+                input[5] = 'kallisto'
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(workflow.out).match() }
+            )
+        }
+    }
+
+    test("rsem - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                input[0] = [
+                    [ id: 'samplesheet' ],
+                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true)
+                ]
+                input[1] = Channel.of(
+                    [[ id: 'sample1' ], file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)]
+                )
+                input[2] = Channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
+                input[3] = 'gene_id'
+                input[4] = 'gene_name'
+                input[5] = 'rsem'
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(workflow.out).match() }
+            )
+        }
+    }
+}

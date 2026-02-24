@@ -8,7 +8,7 @@ workflow FASTQ_ALIGN_HISAT2 {
     index          // channel: /path/to/hisat2/index
     splicesites    // channel: /path/to/genome.splicesites.txt
     ch_fasta       // channel: [ fasta ]
-    save_unaligned // boolean: save unaligned reads
+    save_unaligned // val: boolean
 
     main:
     //

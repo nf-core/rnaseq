@@ -436,11 +436,6 @@
                     "description": "Optionally accelerate STAR and MarkDuplicates with Parabricks",
                     "fa_icon": "fas fa-running"
                 },
-                "use_gpu": {
-                    "type": "boolean",
-                    "description": "Enable GPU container passthrough flags for GPU tasks.",
-                    "fa_icon": "fas fa-microchip"
-                },
                 "gpu_container_options": {
                     "type": "string",
                     "default": "",

@@ -267,7 +267,7 @@
                     },
                     "sentieon/staralign": {
                         "branch": "master",
-                        "git_sha": "d9c84ed4564744313bb586928885ebf05f40ad98",
+                        "git_sha": "cebe21bbd158c15c8fab172e37cfe97a239f4b77",
                         "installed_by": ["modules"]
                     },
                     "seqkit/replace": {

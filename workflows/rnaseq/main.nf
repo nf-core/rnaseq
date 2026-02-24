@@ -248,8 +248,6 @@ workflow RNASEQ {
             ch_star_index.map { item -> [ [:], item ] },
             ch_gtf.map { item -> [ [:], item ] },
             params.star_ignore_sjdbgtf,
-            ch_strand_inferred_filtered_fastq.map { meta, _reads -> meta.seq_platform },
-            params.seq_center ?: '',
             is_aws_igenome,
             ch_fasta.map { item -> [ [:], item ] },
             params.use_sentieon_star,
@@ -319,7 +317,8 @@ workflow RNASEQ {
             ch_strand_inferred_filtered_fastq,
             ch_hisat2_index.map { item -> [ [:], item ] },
             ch_splicesites.map { item -> [ [:], item ] },
-            ch_fasta.map { item -> [ [:], item ] }
+            ch_fasta.map { item -> [ [:], item ] },
+            params.save_unaligned || params.contaminant_screening
         )
         ch_genome_bam          = ch_genome_bam.mix(FASTQ_ALIGN_HISAT2.out.bam)
         ch_genome_bam_index    = ch_genome_bam_index.mix(params.bam_csi_index ? FASTQ_ALIGN_HISAT2.out.csi : FASTQ_ALIGN_HISAT2.out.bai)

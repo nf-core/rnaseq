@@ -30,8 +30,6 @@ workflow ALIGN_STAR {
     index                // channel: [ val(meta), [ index ] ]
     gtf                  // channel: [ val(meta), [ gtf ] ]
     star_ignore_sjdbgtf  // boolean: when using pre-built STAR indices do not re-extract and use splice junctions from the GTF file
-    seq_platform         // string : sequencing platform
-    seq_center           // string : sequencing center
     is_aws_igenome       // boolean: whether the genome files are from AWS iGenomes
     fasta                // channel: /path/to/fasta
     use_sentieon_star    // boolean: whether star alignment is accelerated with Sentieon
@@ -46,7 +44,7 @@ workflow ALIGN_STAR {
     ch_star_out = null
     if (use_sentieon_star) {
 
-        SENTIEON_STAR_ALIGN(reads, index, gtf, star_ignore_sjdbgtf, seq_platform, seq_center)
+        SENTIEON_STAR_ALIGN(reads, index, gtf, star_ignore_sjdbgtf)
         ch_star_out = SENTIEON_STAR_ALIGN
         // SENTIEON_STAR_ALIGN uses topic-based version reporting
 
@@ -57,12 +55,12 @@ workflow ALIGN_STAR {
 
     } else if (is_aws_igenome) {
 
-        STAR_ALIGN_IGENOMES(reads, index, gtf, star_ignore_sjdbgtf, seq_platform, seq_center)
+        STAR_ALIGN_IGENOMES(reads, index, gtf, star_ignore_sjdbgtf)
         ch_star_out = STAR_ALIGN_IGENOMES
 
     } else {
 
-        STAR_ALIGN(reads, index, gtf, star_ignore_sjdbgtf, seq_platform, seq_center)
+        STAR_ALIGN(reads, index, gtf, star_ignore_sjdbgtf)
         ch_star_out = STAR_ALIGN
 
     }

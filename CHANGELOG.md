@@ -11,6 +11,7 @@ Special thanks to the following for their contributions to the release:
 
 - [Albert Palleja](https://github.com/apalleja)
 - [Chase Mateusiak](https://github.com/cmatKhan)
+- [Christian Mertes](https://github.com/c-mertes)
 - [Elad Herz](https://github.com/EladH1)
 - [Ezra Greenberg](https://github.com/egreenberg7)
 - [Gary Burnett](https://github.com/gburnett-nvidia)
@@ -37,6 +38,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1689](https://github.com/nf-core/rnaseq/pull/1689) - Migrate to topic-based version reporting for nf-core modules/subworkflows and local modules
 - [PR #1694](https://github.com/nf-core/rnaseq/pull/1694) - Replace local iGenomes STAR modules with nf-core module aliases and config-based container overrides
 - [PR #1696](https://github.com/nf-core/rnaseq/pull/1696) - Fix offline mode by skipping `igenomes_base` validation when `NXF_OFFLINE=true` ([#1690](https://github.com/nf-core/rnaseq/issues/1690))
+- [PR #1713](https://github.com/nf-core/rnaseq/pull/1713) - Add optional `seq_platform` and `seq_center` samplesheet columns for per-sample BAM read group tags (`PL`, `CN`). Read group assembly is handled via ext.args config closures rather than module inputs. Per-sample `seq_center` overrides the global `--seq_center` parameter. Based on [PR #1701](https://github.com/nf-core/rnaseq/pull/1701) by [@c-mertes](https://github.com/c-mertes).
 - [PR #1697](https://github.com/nf-core/rnaseq/pull/1697) - Add tximport processing for RSEM outputs: gene/transcript length matrices, length-scaled counts, SummarizedExperiment objects, and DESeq2 QC using length-scaled counts ([#1320](https://github.com/nf-core/rnaseq/issues/1320)). **Note for `--aligner star_rsem` users:** the merged count and TPM files at the output root (e.g. `rsem.merged.gene_counts.tsv`) are now produced by tximport, matching the Salmon/Kallisto pathway. The previous RSEM merge script outputs are preserved in the `rsem_merge_counts/` subdirectory.
 - [PR #1700](https://github.com/nf-core/rnaseq/pull/1700) - Add FastQC step after BBSplit/rRNA filtering to provide QC metrics on reads used for alignment ([#1276](https://github.com/nf-core/rnaseq/issues/1276))
 - [PR #1704](https://github.com/nf-core/rnaseq/pull/1704) - Include single-library samples in merged fastq output when `--save_merged_fastq` is set ([#748](https://github.com/nf-core/rnaseq/issues/748))

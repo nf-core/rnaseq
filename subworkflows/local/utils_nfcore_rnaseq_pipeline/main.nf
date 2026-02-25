@@ -199,6 +199,11 @@ def checkSamplesAfterGrouping(input) {
         error("Please check input samplesheet -> Multiple runs of a sample must have the same seq_platform!: ${metas[0].id}")
     }
 
+    // Check that multiple runs of the same sample have the same sequencing center
+    def seq_center_ok = metas.collect { meta -> meta.seq_center ?: '' }.unique().size == 1
+    if (!seq_center_ok) {
+        error("Please check input samplesheet -> Multiple runs of a sample must have the same seq_center!: ${metas[0].id}")
+    }
 
     // Check that multiple runs of the same sample are of the same datatype i.e. single-end / paired-end
     def endedness_ok = metas.collect{ meta -> meta.single_end }.unique().size == 1

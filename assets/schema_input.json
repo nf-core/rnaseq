@@ -35,11 +35,15 @@
             },
             "seq_platform": {
                 "type": "string",
-                "meta": ["seq_platform"]
+                "pattern": "^\\S+$",
+                "meta": ["seq_platform"],
+                "errorMessage": "Sequencing platform must not contain spaces (e.g. 'ILLUMINA', 'ONT', 'PACBIO')"
             },
             "seq_center": {
                 "type": "string",
-                "meta": ["seq_center"]
+                "pattern": "^\\S+$",
+                "meta": ["seq_center"],
+                "errorMessage": "Sequencing center must not contain spaces. Use underscores instead (e.g. 'My_Center')"
             },
             "genome_bam": {
                 "type": "string",

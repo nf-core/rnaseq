@@ -17,7 +17,7 @@
                     },
                     "bowtie2/align": {
                         "branch": "master",
-                        "git_sha": "ab146e7909edbf6dcc6459de57eef29dceb61d42",
+                        "git_sha": "92b8df948fd8cdb223e051f5f5e414818a073ee0",
                         "installed_by": ["fastq_remove_rrna"]
                     },
                     "bowtie2/build": {
@@ -92,8 +92,7 @@
                     "hisat2/align": {
                         "branch": "master",
                         "git_sha": "cebe21bbd158c15c8fab172e37cfe97a239f4b77",
-                        "installed_by": ["fastq_align_hisat2"],
-                        "patch": "modules/nf-core/hisat2/align/hisat2-align.diff"
+                        "installed_by": ["fastq_align_hisat2"]
                     },
                     "hisat2/build": {
                         "branch": "master",

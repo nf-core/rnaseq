@@ -11,6 +11,7 @@ Special thanks to the following for their contributions to the release:
 
 - [Albert Palleja](https://github.com/apalleja)
 - [Chase Mateusiak](https://github.com/cmatKhan)
+- [Christian Mertes](https://github.com/c-mertes)
 - [Elad Herz](https://github.com/EladH1)
 - [Ezra Greenberg](https://github.com/egreenberg7)
 - [Gary Burnett](https://github.com/gburnett-nvidia)
@@ -44,6 +45,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1708](https://github.com/nf-core/rnaseq/pull/1708) - Allow `--skip_alignment` with a pre-built `--salmon_index` or `--kallisto_index` without requiring `--fasta` ([#1706](https://github.com/nf-core/rnaseq/issues/1706))
 - [PR #1709](https://github.com/nf-core/rnaseq/pull/1709) - Update metro map renders with nf-metro v0.4.7; add source `.mmd` file and regeneration instructions to CONTRIBUTING.md
 - [PR #1711](https://github.com/nf-core/rnaseq/pull/1711) - Scope GPU container flags (`--gpus all`, `--nv`) to `process_gpu` tasks only via per-process `containerOptions`, fixing failures on CPU-only nodes in mixed clusters ([#1710](https://github.com/nf-core/rnaseq/issues/1710))
+- [PR #1713](https://github.com/nf-core/rnaseq/pull/1713) - Add optional `seq_platform` and `seq_center` samplesheet columns for per-sample BAM read group tags (`PL`, `CN`). Read group assembly is handled via ext.args config closures rather than module inputs. Per-sample `seq_center` overrides the global `--seq_center` parameter. Based on [PR #1701](https://github.com/nf-core/rnaseq/pull/1701) by [@c-mertes](https://github.com/c-mertes).
 - [PR #1714](https://github.com/nf-core/rnaseq/pull/1714) - Re-render metro map with nf-metro v0.5.2: improved label spacing, smaller file icon font, and section alignment fix
 
 ### Parameters

@@ -11,6 +11,7 @@ process HISAT2_ALIGN {
     tuple val(meta), path(reads)
     tuple val(meta2), path(index)
     tuple val(meta3), path(splicesites)
+    val save_unaligned
 
     output:
     tuple val(meta), path("*.bam")                   , emit: bam
@@ -33,9 +34,9 @@ process HISAT2_ALIGN {
         strandedness = meta.single_end ? '--rna-strandness R' : '--rna-strandness RF'
     }
     ss = "$splicesites" ? "--known-splicesite-infile $splicesites" : ''
-    def seq_center = params.seq_center ? "--rg-id ${prefix} --rg SM:$prefix --rg CN:${params.seq_center.replaceAll('\\s','_')}" : "--rg-id ${prefix} --rg SM:$prefix"
+    def rg = args.contains("--rg-id") ? "" : "--rg-id ${prefix} --rg SM:${prefix}"
     if (meta.single_end) {
-        def unaligned = params.save_unaligned || params.contaminant_screening ? "--un-gz ${prefix}.unmapped.fastq.gz" : ''
+        def unaligned = save_unaligned ? "--un-gz ${prefix}.unmapped.fastq.gz" : ''
         """
         INDEX=`find -L ./ -name "*.1.ht2*" | sed 's/\\.1.ht2.*\$//'`
         hisat2 \\
@@ -45,13 +46,13 @@ process HISAT2_ALIGN {
             $ss \\
             --summary-file ${prefix}.hisat2.summary.log \\
             --threads $task.cpus \\
-            $seq_center \\
+            $rg \\
             $unaligned \\
             $args \\
             | samtools view -bS -F 4 -F 256 - > ${prefix}.bam
         """
     } else {
-        def unaligned = params.save_unaligned || params.contaminant_screening ? "--un-conc-gz ${prefix}.unmapped.fastq.gz" : ''
+        def unaligned = save_unaligned ? "--un-conc-gz ${prefix}.unmapped.fastq.gz" : ''
         """
         INDEX=`find -L ./ -name "*.1.ht2*" | sed 's/\\.1.ht2.*\$//'`
         hisat2 \\
@@ -62,7 +63,7 @@ process HISAT2_ALIGN {
             $ss \\
             --summary-file ${prefix}.hisat2.summary.log \\
             --threads $task.cpus \\
-            $seq_center \\
+            $rg \\
             $unaligned \\
             --no-mixed \\
             --no-discordant \\
@@ -80,7 +81,7 @@ process HISAT2_ALIGN {
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def unaligned = params.save_unaligned || params.contaminant_screening ? "echo '' | gzip >  ${prefix}.unmapped_1.fastq.gz \n echo '' | gzip >  ${prefix}.unmapped_2.fastq.gz" : ''
+    def unaligned = save_unaligned ? "echo '' | gzip >  ${prefix}.unmapped_1.fastq.gz \n echo '' | gzip >  ${prefix}.unmapped_2.fastq.gz" : ''
     """
     ${unaligned}
 

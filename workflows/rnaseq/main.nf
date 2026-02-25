@@ -248,8 +248,6 @@ workflow RNASEQ {
             ch_star_index.map { item -> [ [:], item ] },
             ch_gtf.map { item -> [ [:], item ] },
             params.star_ignore_sjdbgtf,
-            '',
-            params.seq_center ?: '',
             is_aws_igenome,
             ch_fasta.map { item -> [ [:], item ] },
             params.use_sentieon_star,
@@ -319,7 +317,8 @@ workflow RNASEQ {
             ch_strand_inferred_filtered_fastq,
             ch_hisat2_index.map { item -> [ [:], item ] },
             ch_splicesites.map { item -> [ [:], item ] },
-            ch_fasta.map { item -> [ [:], item ] }
+            ch_fasta.map { item -> [ [:], item ] },
+            params.save_unaligned || params.contaminant_screening
         )
         ch_genome_bam          = ch_genome_bam.mix(FASTQ_ALIGN_HISAT2.out.bam)
         ch_genome_bam_index    = ch_genome_bam_index.mix(params.bam_csi_index ? FASTQ_ALIGN_HISAT2.out.csi : FASTQ_ALIGN_HISAT2.out.bai)
@@ -874,13 +873,16 @@ workflow RNASEQ {
                 def fastq_2 = reads.size() > 1 ? reads[1].toUriString() : ''
                 def mapped = percent_mapped != null ? percent_mapped : ''
 
-                return "${meta.id},${fastq_1},${fastq_2},${meta.strandedness},${genome_bam_published},${mapped},${transcriptome_bam_published}"
+                def seq_platform = meta.seq_platform ?: ''
+                def seq_center = meta.seq_center ?: ''
+
+                return "${meta.id},${fastq_1},${fastq_2},${meta.strandedness},${seq_platform},${seq_center},${genome_bam_published},${mapped},${transcriptome_bam_published}"
             }
             .collectFile(
                 name: 'samplesheet_with_bams.csv',
                 storeDir: "${params.outdir}/samplesheets",
                 newLine: true,
-                seed: 'sample,fastq_1,fastq_2,strandedness,genome_bam,percent_mapped,transcriptome_bam'
+                seed: 'sample,fastq_1,fastq_2,strandedness,seq_platform,seq_center,genome_bam,percent_mapped,transcriptome_bam'
             )
     }
 

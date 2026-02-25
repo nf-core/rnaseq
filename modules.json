@@ -433,7 +433,7 @@
                     },
                     "fastq_qc_trim_filter_setstrandedness": {
                         "branch": "master",
-                        "git_sha": "bf027dddda1c7f1456187755de2d32a5d03b29d2",
+                        "git_sha": "4cf9e693de047af3be0d817ee3b41a68962d5c3c",
                         "installed_by": ["subworkflows"]
                     },
                     "fastq_remove_rrna": {

@@ -48,12 +48,6 @@ input:
   - star_ignore_sjdbgtf:
       type: boolean
       description: Ignore annotation GTF file
-  - seq_platform:
-      type: string
-      description: Sequencing platform
-  - seq_center:
-      type: string
-      description: Sequencing center
 output:
   log_final:
     - - meta:

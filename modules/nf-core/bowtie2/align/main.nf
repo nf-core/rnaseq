@@ -33,6 +33,7 @@ process BOWTIE2_ALIGN {
     def args = task.ext.args ?: ""
     def args2 = task.ext.args2 ?: ""
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def rg = args.contains("--rg-id") ? "" : "--rg-id ${prefix} --rg SM:${prefix}"
 
     def unaligned = ""
     def reads_args = ""
@@ -61,6 +62,7 @@ process BOWTIE2_ALIGN {
         $reads_args \\
         --threads $task.cpus \\
         $unaligned \\
+        $rg \\
         $args \\
         2>| >(tee ${prefix}.bowtie2.log >&2) \\
         | samtools $samtools_command $args2 --threads $task.cpus ${reference} -o ${prefix}.${extension} -

@@ -47,6 +47,9 @@ input:
         description: Splices sites in gtf file
         pattern: "*.{txt}"
         ontologies: []
+  - save_unaligned:
+      type: boolean
+      description: Save unaligned reads to FastQ files
 output:
   bam:
     - - meta:

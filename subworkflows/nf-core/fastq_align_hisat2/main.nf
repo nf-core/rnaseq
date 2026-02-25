@@ -4,16 +4,17 @@ include { BAM_SORT_STATS_SAMTOOLS } from '../bam_sort_stats_samtools/main'
 workflow FASTQ_ALIGN_HISAT2 {
 
     take:
-    reads       // channel: [ val(meta), [ reads ] ]
-    index       // channel: /path/to/hisat2/index
-    splicesites // channel: /path/to/genome.splicesites.txt
-    ch_fasta    // channel: [ fasta ]
+    reads          // channel: [ val(meta), [ reads ] ]
+    index          // channel: /path/to/hisat2/index
+    splicesites    // channel: /path/to/genome.splicesites.txt
+    ch_fasta       // channel: [ fasta ]
+    save_unaligned // val: boolean
 
     main:
     //
     // Map reads with HISAT2
     //
-    HISAT2_ALIGN ( reads, index, splicesites )
+    HISAT2_ALIGN ( reads, index, splicesites, save_unaligned )
 
     //
     // Sort, index BAM file and run samtools stats, flagstat and idxstats

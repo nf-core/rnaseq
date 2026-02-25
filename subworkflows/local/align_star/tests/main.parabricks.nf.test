@@ -29,8 +29,6 @@ nextflow_workflow {
             workflow {
                 """
                 star_ignore_sjdbgtf = false
-                seq_platform        = 'illumina'
-                seq_center          = false
                 is_aws_igenome      = false
                 use_sentieon_star   = false
                 use_parabricks_star = true
@@ -49,16 +47,14 @@ nextflow_workflow {
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
                 ])
                 input[3] = star_ignore_sjdbgtf
-                input[4] = seq_platform
-                input[5] = seq_center
-                input[6] = is_aws_igenome
-                input[7] = Channel.of([
+                input[4] = is_aws_igenome
+                input[5] = Channel.of([
                     [ id:'test_fasta' ],
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
                 ])
-                input[8] = use_sentieon_star
-                input[9] = use_parabricks_star
-                input[10] = skip_markduplicates
+                input[6] = use_sentieon_star
+                input[7] = use_parabricks_star
+                input[8] = skip_markduplicates
                 """
             }
         }
@@ -91,8 +87,6 @@ nextflow_workflow {
             workflow {
                 """
                 star_ignore_sjdbgtf = false
-                seq_platform        = 'illumina'
-                seq_center          = false
                 is_aws_igenome      = false
                 use_sentieon_star   = false
                 use_parabricks_star = true
@@ -111,16 +105,14 @@ nextflow_workflow {
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
                 ])
                 input[3] = star_ignore_sjdbgtf
-                input[4] = seq_platform
-                input[5] = seq_center
-                input[6] = is_aws_igenome
-                input[7] = Channel.of([
+                input[4] = is_aws_igenome
+                input[5] = Channel.of([
                     [ id:'test_fasta' ],
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
                 ])
-                input[8] = use_sentieon_star
-                input[9] = use_parabricks_star
-                input[10] = skip_markduplicates
+                input[6] = use_sentieon_star
+                input[7] = use_parabricks_star
+                input[8] = skip_markduplicates
                 """
             }
         }

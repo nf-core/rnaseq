@@ -48,7 +48,7 @@ jobs:
           # Skip parabricks/GPU tests on CPU runners
           SKIP_PARABRICKS: "true"
         with:
-          max_shards: 14
+          max_shards: 20
 
       - name: debug
         run: |

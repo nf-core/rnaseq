@@ -49,6 +49,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1715](https://github.com/nf-core/rnaseq/pull/1715) - Bump version to 3.23.0 ahead of release
 - [PR #1716](https://github.com/nf-core/rnaseq/pull/1716) - Add informative error when Salmon fails to produce strandedness output for auto-strandedness samples
 - [PR #1718](https://github.com/nf-core/rnaseq/pull/1718) - Add `--seq_platform` parameter for global sequencing platform BAM read group tag, by analogy with `--seq_center`
+- [PR #1719](https://github.com/nf-core/rnaseq/pull/1719) - Docs and changelog cleanup: move descriptions above `<details>` blocks in output.md, add missing software dependencies, sort arm.config alphabetically
 - [PR #1725](https://github.com/nf-core/rnaseq/pull/1725) - Refine .nftignore patterns to reinstate tx2gene MD5 checking, remove redundant UNTAR version collection
 
 ### Parameters
@@ -74,6 +75,8 @@ Special thanks to the following for their contributions to the release:
 
 | Dependency  | Old version | New version |
 | ----------- | ----------- | ----------- |
+| `bowtie2`   |             | 2.5.4       |
+| `seqkit`    |             | 2.9.0       |
 | `sylph`     |             | 0.7.0       |
 | `sylph-tax` |             | 1.2.0       |
 

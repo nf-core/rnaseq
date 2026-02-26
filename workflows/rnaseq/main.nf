@@ -873,8 +873,8 @@ workflow RNASEQ {
                 def fastq_2 = reads.size() > 1 ? reads[1].toUriString() : ''
                 def mapped = percent_mapped != null ? percent_mapped : ''
 
-                def seq_platform = meta.seq_platform ?: ''
-                def seq_center = meta.seq_center ?: ''
+                def seq_platform = meta.seq_platform ?: params.seq_platform ?: ''
+                def seq_center = meta.seq_center ?: params.seq_center ?: ''
 
                 return "${meta.id},${fastq_1},${fastq_2},${meta.strandedness},${seq_platform},${seq_center},${genome_bam_published},${mapped},${transcriptome_bam_published}"
             }

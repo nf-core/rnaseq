@@ -502,6 +502,12 @@
                     "description": "Sequencing center information to be added to read group of BAM files.",
                     "fa_icon": "fas fa-synagogue"
                 },
+                "seq_platform": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Sequencing platform information to be added to read group of BAM files.",
+                    "fa_icon": "fas fa-microscope"
+                },
                 "stringtie_ignore_gtf": {
                     "type": "boolean",
                     "description": "Perform reference-guided de novo assembly of transcripts using StringTie i.e. dont restrict to those in GTF file.",

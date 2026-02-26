@@ -457,6 +457,7 @@
                 "cmd_info.json:md5,bc01c390eb88fee1a6fa19dfc7c0f6b7",
                 "SALM_REP1.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "SALM_REP2.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "salmon.merged.tx2gene.tsv:md5,02c8aa14dbbbd6c4e45cf0a1b916b1ab",
                 "e2t.ctab:md5,18eaeb363605980a232768e91e2e67bc",
                 "e_data.ctab:md5,d184b862d9c9e07683edd01c56f6400c",
                 "i2t.ctab:md5,8df3306abca08ac33f4473c7ed0446dd",
@@ -471,7 +472,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-13T15:24:17.986037488"
+        "timestamp": "2026-02-26T14:16:24.358893576"
     },
     "Params: --aligner bowtie2_salmon --gffread_transcript_fasta": {
         "content": [
@@ -869,6 +870,7 @@
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "cmd_info.json:md5,a864d77f7a6becef8f2a3f4cc1c2c84b",
+                "salmon.merged.tx2gene.tsv:md5,02c8aa14dbbbd6c4e45cf0a1b916b1ab",
                 "e2t.ctab:md5,18eaeb363605980a232768e91e2e67bc",
                 "e_data.ctab:md5,e49d57ddf8348d23291aa7aea7b3e81f",
                 "i2t.ctab:md5,8df3306abca08ac33f4473c7ed0446dd",
@@ -914,7 +916,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-13T15:26:10.729919547"
+        "timestamp": "2026-02-26T14:18:17.797305278"
     },
     "Params: --aligner bowtie2_salmon --gffread_transcript_fasta - stub": {
         "content": [
@@ -1049,14 +1051,15 @@
                 "all_samples.gene_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "all_samples.transcript_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "all_samples.transcript_lengths.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "all_samples.transcript_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                "all_samples.transcript_tpm.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "salmon.merged.tx2gene.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-13T15:25:06.746144029"
+        "timestamp": "2026-02-26T14:17:12.0540619"
     },
     "Params: --aligner star_salmon --prokaryotic - stub": {
         "content": [
@@ -1209,13 +1212,14 @@
                 "SALM_REP1.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "SALM_REP2.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "SALM_REP2.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "SALM_REP2.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                "SALM_REP2.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "salmon.merged.tx2gene.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-13T15:23:13.370797515"
+        "timestamp": "2026-02-26T14:15:17.265018922"
     }
 }

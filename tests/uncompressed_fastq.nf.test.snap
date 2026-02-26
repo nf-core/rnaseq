@@ -1327,6 +1327,7 @@
                 "WT_REP1.infer_experiment.txt:md5,067c11ae252bacb70d79ae027c8be97e",
                 "WT_REP1b.infer_experiment.txt:md5,b60f8445f1216b0045805332ab1b3062",
                 "WT_REP2.infer_experiment.txt:md5,172b4693066f1fdfff07d9b053e1e387",
+                "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
                 "e_data.ctab:md5,98a2b6a7555e58c7f21b45a1f48e5cbf",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
@@ -1357,6 +1358,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-13T16:05:32.887668533"
+        "timestamp": "2026-02-26T14:59:30.732479598"
     }
 }

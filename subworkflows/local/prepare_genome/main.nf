@@ -385,7 +385,6 @@ workflow PREPARE_GENOME {
         if (bowtie2_index) {
             if (bowtie2_index.endsWith('.tar.gz')) {
                 ch_bowtie2_index = UNTAR_BOWTIE2_INDEX ([ [:], file(bowtie2_index, checkIfExists: true) ]).untar.map { meta, index -> index }
-                ch_versions      = ch_versions.mix(UNTAR_BOWTIE2_INDEX.out.versions)
             } else {
                 ch_bowtie2_index = channel.value(file(bowtie2_index, checkIfExists: true))
             }

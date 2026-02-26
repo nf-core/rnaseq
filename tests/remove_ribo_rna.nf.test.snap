@@ -773,6 +773,7 @@
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "cmd_info.json:md5,fa7b659f1ba90e16b0d0a375ff318b01",
                 "lib_format_counts.json:md5,e6e3d7746e9abee6a0e097ae0ee1781a",
+                "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "ambig_info.tsv:md5,6cd02367152bb2dd59a6f1f70df2d7f8",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
@@ -802,14 +803,15 @@
                 "RAP1_UNINDUCED_REP1.SJ.out.tab:md5,e548d13942535dc0821f3ec6d9743ec8",
                 "RAP1_UNINDUCED_REP2.SJ.out.tab:md5,1f294365343a1a5e95682792fdb77033",
                 "WT_REP1.SJ.out.tab:md5,1350c2fa6a675bf107386c6cd3fc5204",
-                "WT_REP2.SJ.out.tab:md5,f6cc03643a5e3c1025a5b4754eb1be23"
+                "WT_REP2.SJ.out.tab:md5,f6cc03643a5e3c1025a5b4754eb1be23",
+                "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-13T15:33:10.972983956"
+        "timestamp": "2026-02-26T14:25:30.875620761"
     },
     "Params: --remove_ribo_rna - stub": {
         "content": [
@@ -1588,6 +1590,7 @@
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "cmd_info.json:md5,994cf13defc7a9d70bd4baf5477bfe31",
                 "lib_format_counts.json:md5,309cc18331216e02a46db112c69f16d2",
+                "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "rfam-5.8s-database-id98_dna_converted.fasta:md5,990436ac4aa6cacf24cd5d1c1365f28a",
                 "rfam-5.8s-database-id98_prefixed.fasta:md5,3d4c00fbea3b50aa6d0769410e38cd2f",
                 "rfam-5s-database-id98_dna_converted.fasta:md5,b9a47a2f8ce51b41927ce2a417d86019",
@@ -1633,13 +1636,14 @@
                 "RAP1_UNINDUCED_REP1.SJ.out.tab:md5,e548d13942535dc0821f3ec6d9743ec8",
                 "RAP1_UNINDUCED_REP2.SJ.out.tab:md5,1f294365343a1a5e95682792fdb77033",
                 "WT_REP1.SJ.out.tab:md5,1350c2fa6a675bf107386c6cd3fc5204",
-                "WT_REP2.SJ.out.tab:md5,f6cc03643a5e3c1025a5b4754eb1be23"
+                "WT_REP2.SJ.out.tab:md5,f6cc03643a5e3c1025a5b4754eb1be23",
+                "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-13T15:39:04.710077389"
+        "timestamp": "2026-02-26T14:31:20.582012634"
     }
 }

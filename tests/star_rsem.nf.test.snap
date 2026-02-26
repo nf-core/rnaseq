@@ -1360,6 +1360,7 @@
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "cmd_info.json:md5,fe66c9d876645b9260d8c2488157d4d4",
                 "lib_format_counts.json:md5,088fd51db07022ffde47033bbd029400",
+                "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "RAP1_IAA_30M_REP1.biotype_counts_mqc.tsv:md5,5a7a4291e8ff6cc25a4eb72dfdf06b51",
                 "RAP1_IAA_30M_REP1.biotype_counts_rrna_mqc.tsv:md5,dde2de0cb90e10d0195c726f768e9941",
                 "RAP1_IAA_30M_REP1.featureCounts.tsv:md5,9cf6f9377ea65e3bdb16b55992028d66",
@@ -1441,7 +1442,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-13T15:55:49.418838249"
+        "timestamp": "2026-02-26T14:46:25.363528218"
     },
     "Params: --aligner star_rsem - stub": {
         "content": [

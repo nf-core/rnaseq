@@ -50,6 +50,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1716](https://github.com/nf-core/rnaseq/pull/1716) - Add informative error when Salmon fails to produce strandedness output for auto-strandedness samples
 - [PR #1718](https://github.com/nf-core/rnaseq/pull/1718) - Add `--seq_platform` parameter for global sequencing platform BAM read group tag, by analogy with `--seq_center`
 - [PR #1719](https://github.com/nf-core/rnaseq/pull/1719) - Docs and changelog cleanup: move descriptions above `<details>` blocks in output.md, add missing software dependencies, sort arm.config alphabetically
+- [PR #1724](https://github.com/nf-core/rnaseq/pull/1724) - Update umitools modules: remove patches, add conda channel prefixes, update Wave containers
 - [PR #1725](https://github.com/nf-core/rnaseq/pull/1725) - Refine .nftignore patterns to reinstate tx2gene MD5 checking, remove redundant UNTAR version collection
 
 ### Parameters

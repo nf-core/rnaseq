@@ -393,8 +393,13 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     )
 
     FASTQ_SUBSAMPLE_FQ_SALMON.out.lib_format_counts
-        .join(ch_strand_fastq.auto_strand)
+        .join(ch_strand_fastq.auto_strand, remainder: true)
         .map { meta, json, reads ->
+            if (json == null) {
+                error("Salmon failed to produce lib_format_counts for sample '${meta.id}' " +
+                    "which was set to 'auto' strandedness. Check that the Salmon " +
+                    "index matches your input reads, or set strandedness explicitly in the samplesheet.")
+            }
             def salmon_strand_analysis = getSalmonInferredStrandedness(json, stranded_threshold, unstranded_threshold)
             def strandedness = salmon_strand_analysis.inferred_strandedness
             if (strandedness == 'undetermined') {

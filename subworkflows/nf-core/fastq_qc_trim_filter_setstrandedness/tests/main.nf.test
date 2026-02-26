@@ -416,6 +416,74 @@ nextflow_workflow {
         }
     }
 
+    test("auto strandedness - should fail when salmon produces no lib_format_counts") {
+
+        config "./nextflow_salmon_fail.config"
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false, strandedness:'auto' ],
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true),
+                    ]
+                ])
+                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
+                input[2] = Channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))
+                input[3] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
+                input[4] = []              // ch_salmon_index
+                input[5] = []              // ch_sortmerna_index
+                input[6] = []              // ch_bowtie2_index
+                input[7] = []              // ch_bbsplit_index
+                input[8] = []              // ch_rrna_fastas
+
+                // Skip options
+                input[9] = true            // skip_bbsplit
+                input[10] = true           // skip_fastqc
+                input[11] = true           // skip_trimming
+                input[12] = true           // skip_umi_extract
+                input[13] = true           // skip_linting
+
+                // Index generation
+                input[14] = true           // make_salmon_index
+                input[15] = false          // make_sortmerna_index
+                input[16] = false          // make_bowtie2_index
+
+                // Trimming options
+                input[17] = 'fastp'        // trimmer
+                input[18] = 10             // min_trimmed_reads
+                input[19] = false          // save_trimmed
+                input[20] = false          // fastp_merge
+
+                // rRNA removal options
+                input[21] = false          // remove_ribo_rna
+                input[22] = 'sortmerna'    // ribo_removal_tool
+
+                // UMI options
+                input[23] = false          // with_umi
+                input[24] = 0              // umi_discard_read
+
+                // Merging options
+                input[25] = false          // save_merged_fastq
+
+                // Strandedness thresholds
+                input[26] = 0.8            // stranded_threshold
+                input[27] = 0.1            // unstranded_threshold
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.failed },
+                { assert workflow.errorMessage.contains("Salmon failed to produce lib_format_counts for sample 'test'") },
+                { assert workflow.errorMessage.contains("set strandedness explicitly in the samplesheet") }
+            )
+        }
+    }
+
     test("homo_sapiens single-end [fastq] fastp bowtie2") {
 
         setup {

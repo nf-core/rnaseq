@@ -48,6 +48,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1713](https://github.com/nf-core/rnaseq/pull/1713) - Add optional `seq_platform` and `seq_center` samplesheet columns for per-sample BAM read group tags (`PL`, `CN`). Read group assembly is handled via ext.args config closures rather than module inputs. Per-sample `seq_center` overrides the global `--seq_center` parameter. Based on [PR #1701](https://github.com/nf-core/rnaseq/pull/1701) by [@c-mertes](https://github.com/c-mertes).
 - [PR #1715](https://github.com/nf-core/rnaseq/pull/1715) - Bump version to 3.23.0 ahead of release
 - [PR #1716](https://github.com/nf-core/rnaseq/pull/1716) - Add informative error when Salmon fails to produce strandedness output for auto-strandedness samples
+- [PR #xxxx](https://github.com/nf-core/rnaseq/pull/xxxx) - Add `--seq_platform` parameter for global sequencing platform BAM read group tag, by analogy with `--seq_center`
 
 ### Parameters
 

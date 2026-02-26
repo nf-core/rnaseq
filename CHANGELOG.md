@@ -49,6 +49,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1715](https://github.com/nf-core/rnaseq/pull/1715) - Bump version to 3.23.0 ahead of release
 - [PR #1716](https://github.com/nf-core/rnaseq/pull/1716) - Add informative error when Salmon fails to produce strandedness output for auto-strandedness samples
 - [PR #1718](https://github.com/nf-core/rnaseq/pull/1718) - Add `--seq_platform` parameter for global sequencing platform BAM read group tag, by analogy with `--seq_center`
+- [PR #1720](https://github.com/nf-core/rnaseq/pull/1720) - Remove redundant UNTAR version collection, use `sanitizeOutput` in Parabricks tests, fix .nftignore to reinstate tx2gene MD5 checking
 
 ### Parameters
 

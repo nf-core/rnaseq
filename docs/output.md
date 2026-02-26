@@ -231,6 +231,10 @@ When `--ribo_removal_tool sortmerna` is specified (or by default), the pipeline 
 
 #### Bowtie2
 
+When `--ribo_removal_tool bowtie2` is specified, the pipeline uses [Bowtie2](https://github.com/BenLangmead/bowtie2) for alignment-based rRNA removal. Reads are aligned against rRNA reference sequences specified via `--ribo_database_manifest`, and reads that align to rRNA are filtered out. The unaligned reads (non-rRNA) are kept for downstream analysis.
+
+**Note**: Bowtie2 is recommended for users with SILVA licensing concerns, as it can be used with custom rRNA databases that do not include SILVA sequences.
+
 <details markdown="1">
 <summary>Output files</summary>
 
@@ -239,10 +243,6 @@ When `--ribo_removal_tool sortmerna` is specified (or by default), the pipeline 
   - `*.fastq.gz`: If `--save_non_ribo_reads` is specified, FastQ files containing non-rRNA reads will be placed in this directory.
 
 </details>
-
-When `--ribo_removal_tool bowtie2` is specified, the pipeline uses [Bowtie2](https://github.com/BenLangmead/bowtie2) for alignment-based rRNA removal. Reads are aligned against rRNA reference sequences specified via `--ribo_database_manifest`, and reads that align to rRNA are filtered out. The unaligned reads (non-rRNA) are kept for downstream analysis.
-
-**Note**: Bowtie2 is recommended for users with SILVA licensing concerns, as it can be used with custom rRNA databases that do not include SILVA sequences.
 
 #### RiboDetector
 
@@ -382,6 +382,11 @@ You can choose to align and quantify your data with RSEM by providing the `--ali
 
 ### Bowtie2 and Salmon (Prokaryotic)
 
+[Bowtie2](https://github.com/BenLangmead/bowtie2) is a fast and memory-efficient tool for aligning unspliced reads to reference sequences. When using `--aligner bowtie2_salmon`, reads are aligned directly to the transcriptome and quantified with Salmon. This aligner is the default when using `-profile prokaryotic` for bacterial and archaeal RNA-seq analysis.
+
+> [!NOTE]
+> For prokaryotic data, the transcript-level and gene-level output files will typically contain identical values since prokaryotic annotations usually have a 1:1 mapping between CDS features and genes (no alternative splicing). The transcript-level files are included for consistency with Salmon's standard output format, but users should focus on the gene-level results.
+
 <details markdown="1">
 <summary>Output files</summary>
 
@@ -406,15 +411,6 @@ You can choose to align and quantify your data with RSEM by providing the `--ali
   - `*.bowtie2.log`: Bowtie2 alignment report containing mapping statistics.
 
 </details>
-
-[Bowtie2](https://github.com/BenLangmead/bowtie2) is a fast and memory-efficient tool for aligning unspliced reads to reference sequences. When using `--aligner bowtie2_salmon`, reads are aligned directly to the transcriptome and quantified with Salmon.
-
-This aligner is the default when using `-profile prokaryotic` for bacterial and archaeal RNA-seq analysis.
-
-> [!NOTE]
-> For prokaryotic data, the transcript-level and gene-level output files will typically contain identical values since prokaryotic annotations usually have a 1:1 mapping between CDS features and genes (no alternative splicing). The transcript-level files are included for consistency with Salmon's standard output format, but users should focus on the gene-level results.
-
-You can use this aligner by providing the `--aligner bowtie2_salmon` parameter or by using `-profile prokaryotic`.
 
 ### HISAT2
 
@@ -870,6 +866,10 @@ The plot on the left hand side shows the standard PC plot - notice the variable 
 
 ### Sylph
 
+[Sylph](https://sylph-docs.github.io/) is a metagenomic profiler that determines the species present in reads by statistically estimating containment ANI. Its companion script, [sylph-tax](https://sylph-docs.github.io/sylph-tax/), converts these ANI estimates into estimated taxonomic abundances in the sample. These algorithms are run on unaligned sequences to detect potential contamination of samples. MultiQC shows the Top 10 strains in the Sylph-tax abundance estimates, with toggles available for higher taxonomic levels.
+
+![MultiQC - Sylphtax top species plot](images/sylphtax-top-n-plot.png)
+
 <details markdown="1">
 <summary>Output files</summary>
 
@@ -878,10 +878,6 @@ The plot on the left hand side shows the standard PC plot - notice the variable 
   - `*.sylphmpa` Taxonomic report of unaligned reads from `sylph-tax`. See the [Sylph documentation](https://sylph-docs.github.io/sylph-tax-output-format/) for full details on the output format.
 
 </details>
-
-[Sylph](https://sylph-docs.github.io/) is a metagenomic profiler that determines the species present in reads by statistically estimating containment ANI. Its companion script, [sylph-tax](https://sylph-docs.github.io/sylph-tax/), converts these ANI estimates into estimated taxonomic abundances in the sample. These algorithms are run on unaligned sequences to detect potential contamination of samples. MultiQC shows the Top 10 strains in the Sylph-tax abundance estimates, with toggles available for higher taxonomic levels.
-
-![MultiQC - Sylphtax top species plot](images/sylphtax-top-n-plot.png)
 
 ### MultiQC
 

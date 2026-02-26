@@ -73,6 +73,8 @@ Special thanks to the following for their contributions to the release:
 
 | Dependency  | Old version | New version |
 | ----------- | ----------- | ----------- |
+| `bowtie2`   |             | 2.5.4       |
+| `seqkit`    |             | 2.9.0       |
 | `sylph`     |             | 0.7.0       |
 | `sylph-tax` |             | 1.2.0       |
 

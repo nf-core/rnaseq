@@ -880,8 +880,7 @@
             ],
             [
                 "genome_transcriptome.fasta:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "genome_transcriptome.gtf:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "salmon.merged.tx2gene.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                "genome_transcriptome.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
         "meta": {
@@ -981,8 +980,7 @@
             ],
             [
                 "genome_transcriptome.fasta:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "genome_transcriptome.gtf:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "salmon.merged.tx2gene.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                "genome_transcriptome.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
         "meta": {

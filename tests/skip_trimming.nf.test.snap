@@ -1264,6 +1264,7 @@
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "cmd_info.json:md5,fe66c9d876645b9260d8c2488157d4d4",
                 "lib_format_counts.json:md5,4bf135c93c37f90c493f761f2709a28b",
+                "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "ambig_info.tsv:md5,d1d3bd2a5617220b29a9063cb29f0578",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
@@ -1329,6 +1330,7 @@
                 "RAP1_UNINDUCED_REP2.infer_experiment.txt:md5,be4b322faffa736ab6ac39ff39c7aa9d",
                 "WT_REP1.infer_experiment.txt:md5,7e8c79fa27780693523ad7acd8f109c4",
                 "WT_REP2.infer_experiment.txt:md5,c895dbd41b5a075ad4032e2732145b6a",
+                "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
                 "e_data.ctab:md5,9225250f729f9688c50718ad82989f4c",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
@@ -1355,6 +1357,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-13T15:52:11.141236735"
+        "timestamp": "2026-02-26T14:42:47.379535303"
     }
 }

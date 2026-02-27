@@ -930,6 +930,7 @@
                 "RAP1_UNINDUCED_REP2.infer_experiment.txt:md5,688cf8ef4b0069d8c426420e9a27b732",
                 "WT_REP1.infer_experiment.txt:md5,bf0c137f5fca06e7c40e1984a1acb06d",
                 "WT_REP2.infer_experiment.txt:md5,82e23b329ee60709f343bc2d17d43b14",
+                "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
                 "e_data.ctab:md5,98a2b6a7555e58c7f21b45a1f48e5cbf",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
@@ -956,7 +957,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-13T14:57:00.020900797"
+        "timestamp": "2026-02-26T13:51:27.63099365"
     },
     "BAM input for RSEM": {
         "content": [

@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [[3.23.0](https://github.com/nf-core/rnaseq/releases/tag/3.23.0)] - 2026-02-25
+## [[3.23.0](https://github.com/nf-core/rnaseq/releases/tag/3.23.0)] - 2026-02-27
 
 ### Credits
 
@@ -53,6 +53,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1719](https://github.com/nf-core/rnaseq/pull/1719) - Docs and changelog cleanup: move descriptions above `<details>` blocks in output.md, add missing software dependencies, sort arm.config alphabetically
 - [PR #1724](https://github.com/nf-core/rnaseq/pull/1724) - Update umitools modules: remove patches, add conda channel prefixes, update Wave containers
 - [PR #1725](https://github.com/nf-core/rnaseq/pull/1725) - Refine .nftignore patterns to reinstate tx2gene MD5 checking, remove redundant UNTAR version collection
+- [PR #1728](https://github.com/nf-core/rnaseq/pull/1728) - Re-render metro map with nf-metro v0.5.4: bolder section labels and number badges for improved visual hierarchy, increased vertical spacing between stacked sections, synchronized animation timing
 - [PR #1730](https://github.com/nf-core/rnaseq/pull/1730) - Bump Nextflow from 25.04.0 to 25.04.3 in CI to fix `conda create --mkdir` failure ([nextflow-io/nextflow#5947](https://github.com/nextflow-io/nextflow/issues/5947))
 
 ### Parameters

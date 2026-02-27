@@ -26,7 +26,7 @@ env:
   NXF_SINGULARITY_CACHEDIR: ${{ github.workspace }}/.singularity
   NXF_SINGULARITY_LIBRARYDIR: ${{ github.workspace }}/.singularity
   # renovate: datasource=github-releases depName=nextflow-io/nextflow versioning=semver
-  NXF_VER: "25.04.0"
+  NXF_VER: "25.04.3"
 
 jobs:
   get-shards:
@@ -79,7 +79,7 @@ jobs:
         profile: [docker, singularity]
         shard: ${{ fromJson(needs.get-shards.outputs.shard) }}
         NXF_VER:
-          - "25.04.0"
+          - "25.04.3"
         filters: [pipeline]
 
     steps:

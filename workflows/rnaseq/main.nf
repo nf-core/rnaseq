@@ -103,7 +103,7 @@ workflow RNASEQ {
     def sample_status_header_multiqc = file("$projectDir/workflows/rnaseq/assets/multiqc/sample_status_header.txt", checkIfExists: true)
     def ch_clustering_header_multiqc = file("$projectDir/workflows/rnaseq/assets/multiqc/deseq2_clustering_header.txt", checkIfExists: true)
     def ch_biotypes_header_multiqc   = file("$projectDir/workflows/rnaseq/assets/multiqc/biotypes_header.txt", checkIfExists: true)
-    def ch_dummy_file                = ch_pca_header_multiqc
+    def ch_transcript_fasta_placeholder = ch_pca_header_multiqc
 
     ch_multiqc_files = channel.empty()
     ch_trim_status = channel.empty()
@@ -262,7 +262,7 @@ workflow RNASEQ {
         ch_unprocessed_bams              = ch_genome_bam.join(ch_transcriptome_bam)
         ch_star_log                      = ALIGN_STAR.out.log_final
         ch_unaligned_sequences           = ALIGN_STAR.out.fastq
-        ch_multiqc_files                 = ch_multiqc_files.mix(ch_star_log.collect{ tuple -> tuple[1] })
+        ch_multiqc_files                 = ch_multiqc_files.mix(ch_star_log.collect{ _meta, log -> log })
 
         if (!params.with_umi && (params.skip_markduplicates || params.use_parabricks_star)) {
             // The deduplicated stats should take priority for MultiQC, but use
@@ -273,9 +273,9 @@ workflow RNASEQ {
             // skipped, so we also need to add alignment stats here.
 
             ch_multiqc_files = ch_multiqc_files
-                .mix(ALIGN_STAR.out.stats.collect{ tuple -> tuple[1] })
-                .mix(ALIGN_STAR.out.flagstat.collect{ tuple -> tuple[1] })
-                .mix(ALIGN_STAR.out.idxstats.collect{ tuple -> tuple[1] })
+                .mix(ALIGN_STAR.out.stats.collect{ _meta, stats -> stats })
+                .mix(ALIGN_STAR.out.flagstat.collect{ _meta, flagstat -> flagstat })
+                .mix(ALIGN_STAR.out.idxstats.collect{ _meta, idxstats -> idxstats })
         }
     }
 
@@ -299,13 +299,13 @@ workflow RNASEQ {
         ch_percent_mapped                = ch_percent_mapped.mix(ALIGN_BOWTIE2.out.percent_mapped)
         ch_unprocessed_bams              = ch_genome_bam.map { meta, bam -> [ meta, bam, '' ] }
         ch_bowtie2_log                   = ALIGN_BOWTIE2.out.log_final
-        ch_multiqc_files                 = ch_multiqc_files.mix(ch_bowtie2_log.collect{ tuple -> tuple[1] })
+        ch_multiqc_files                 = ch_multiqc_files.mix(ch_bowtie2_log.collect{ _meta, log -> log })
 
         if (!params.with_umi && params.skip_markduplicates) {
             ch_multiqc_files = ch_multiqc_files
-                .mix(ALIGN_BOWTIE2.out.stats.collect{ tuple -> tuple[1] })
-                .mix(ALIGN_BOWTIE2.out.flagstat.collect{ tuple -> tuple[1] })
-                .mix(ALIGN_BOWTIE2.out.idxstats.collect{ tuple -> tuple[1] })
+                .mix(ALIGN_BOWTIE2.out.stats.collect{ _meta, stats -> stats })
+                .mix(ALIGN_BOWTIE2.out.flagstat.collect{ _meta, flagstat -> flagstat })
+                .mix(ALIGN_BOWTIE2.out.idxstats.collect{ _meta, idxstats -> idxstats })
         }
     }
 
@@ -324,7 +324,7 @@ workflow RNASEQ {
         ch_genome_bam_index    = ch_genome_bam_index.mix(params.bam_csi_index ? FASTQ_ALIGN_HISAT2.out.csi : FASTQ_ALIGN_HISAT2.out.bai)
         ch_unprocessed_bams    = ch_genome_bam.map { meta, bam -> [ meta, bam, '' ] }
         ch_unaligned_sequences = FASTQ_ALIGN_HISAT2.out.fastq
-        ch_multiqc_files = ch_multiqc_files.mix(FASTQ_ALIGN_HISAT2.out.summary.collect{ tuple -> tuple[1] })
+        ch_multiqc_files = ch_multiqc_files.mix(FASTQ_ALIGN_HISAT2.out.summary.collect{ _meta, summary -> summary })
 
         if (!params.with_umi && params.skip_markduplicates) {
             // The deduplicated stats should take priority for MultiQC, but use
@@ -332,9 +332,9 @@ workflow RNASEQ {
             // will run, those stats will be added later instead to avoid
             // duplicate flagstat files in MultiQC.
             ch_multiqc_files = ch_multiqc_files
-                .mix(FASTQ_ALIGN_HISAT2.out.stats.collect{ tuple -> tuple[1] })
-                .mix(FASTQ_ALIGN_HISAT2.out.flagstat.collect{ tuple -> tuple[1] })
-                .mix(FASTQ_ALIGN_HISAT2.out.idxstats.collect{ tuple -> tuple[1] })
+                .mix(FASTQ_ALIGN_HISAT2.out.stats.collect{ _meta, stats -> stats })
+                .mix(FASTQ_ALIGN_HISAT2.out.flagstat.collect{ _meta, flagstat -> flagstat })
+                .mix(FASTQ_ALIGN_HISAT2.out.idxstats.collect{ _meta, idxstats -> idxstats })
         }
     }
 
@@ -375,12 +375,12 @@ workflow RNASEQ {
             params.gtf_extra_attributes,
             params.use_sentieon_star
         )
-        ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_RSEM.out.stat.collect{ tuple -> tuple[1] })
+        ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_RSEM.out.stat.collect{ _meta, stat -> stat })
         ch_versions = ch_versions.mix(QUANTIFY_RSEM.out.versions)
 
         if (!params.skip_qc & !params.skip_deseq2_qc) {
             DESEQ2_QC_RSEM (
-                QUANTIFY_RSEM.out.counts_gene_length_scaled.map { tuple -> tuple[1] },
+                QUANTIFY_RSEM.out.counts_gene_length_scaled.map { _meta, counts -> counts },
                 ch_pca_header_multiqc,
                 ch_clustering_header_multiqc
             )
@@ -397,7 +397,7 @@ workflow RNASEQ {
         QUANTIFY_BAM_SALMON (
             ch_samplesheet.map { item -> [ [:], item ] },
             ch_transcriptome_bam,
-            ch_dummy_file,
+            ch_transcript_fasta_placeholder,
             ch_transcript_fasta,
             ch_gtf,
             params.gtf_group_features,
@@ -412,7 +412,7 @@ workflow RNASEQ {
 
         if (!params.skip_qc & !params.skip_deseq2_qc) {
             DESEQ2_QC_BAM_SALMON (
-                QUANTIFY_BAM_SALMON.out.counts_gene_length_scaled.map { tuple -> tuple[1] },
+                QUANTIFY_BAM_SALMON.out.counts_gene_length_scaled.map { _meta, counts -> counts },
                 ch_pca_header_multiqc,
                 ch_clustering_header_multiqc
             )
@@ -480,7 +480,7 @@ workflow RNASEQ {
         PRESEQ_LCEXTRAP (
             ch_genome_bam
         )
-        ch_multiqc_files = ch_multiqc_files.mix(PRESEQ_LCEXTRAP.out.lc_extrap.collect{ tuple -> tuple[1] })
+        ch_multiqc_files = ch_multiqc_files.mix(PRESEQ_LCEXTRAP.out.lc_extrap.collect{ _meta, lc_extrap -> lc_extrap })
     }
 
     //
@@ -497,10 +497,10 @@ workflow RNASEQ {
         )
         ch_genome_bam       = BAM_MARKDUPLICATES_PICARD.out.bam
         ch_genome_bam_index = params.bam_csi_index ? BAM_MARKDUPLICATES_PICARD.out.csi : BAM_MARKDUPLICATES_PICARD.out.bai
-        ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.stats.collect{ tuple -> tuple[1] })
-        ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.flagstat.collect{ tuple -> tuple[1] })
-        ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.idxstats.collect{ tuple -> tuple[1] })
-        ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.metrics.collect{ tuple -> tuple[1] })
+        ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.stats.collect{ _meta, stats -> stats })
+        ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.flagstat.collect{ _meta, flagstat -> flagstat })
+        ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.idxstats.collect{ _meta, idxstats -> idxstats })
+        ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.metrics.collect{ _meta, metrics -> metrics })
     }
 
     //
@@ -527,8 +527,8 @@ workflow RNASEQ {
         ch_genome_bam
             .combine(ch_gtf)
             .combine(biotype_in_gtf)
-            .filter { tuple -> tuple[-1] }
-            .map { tuple -> tuple[0..<tuple.size()-1] }
+            .filter { meta, bam, gtf, biotype_ok -> biotype_ok }
+            .map { meta, bam, gtf, _biotype_ok -> [ meta, bam, gtf ] }
             .set { ch_featurecounts }
 
         SUBREAD_FEATURECOUNTS (
@@ -539,7 +539,7 @@ workflow RNASEQ {
             SUBREAD_FEATURECOUNTS.out.counts,
             ch_biotypes_header_multiqc
         )
-        ch_multiqc_files = ch_multiqc_files.mix(MULTIQC_CUSTOM_BIOTYPE.out.tsv.collect{ tuple -> tuple[1] })
+        ch_multiqc_files = ch_multiqc_files.mix(MULTIQC_CUSTOM_BIOTYPE.out.tsv.collect{ _meta, tsv -> tsv })
     }
 
     //
@@ -593,7 +593,7 @@ workflow RNASEQ {
                 SAMTOOLS_SORT_QUALIMAP.out.bam,
                 ch_gtf.map { item -> [ [:], item ] }
             )
-            ch_multiqc_files = ch_multiqc_files.mix(QUALIMAP_RNASEQ.out.results.collect{ tuple -> tuple[1] })
+            ch_multiqc_files = ch_multiqc_files.mix(QUALIMAP_RNASEQ.out.results.collect{ _meta, results -> results })
         }
 
         if (!params.skip_dupradar) {
@@ -601,7 +601,7 @@ workflow RNASEQ {
                 ch_genome_bam,
                 ch_gtf.map { item -> [ [:], item ] }
             )
-            ch_multiqc_files = ch_multiqc_files.mix(DUPRADAR.out.multiqc.collect{ tuple -> tuple[1] })
+            ch_multiqc_files = ch_multiqc_files.mix(DUPRADAR.out.multiqc.collect{ _meta, multiqc -> multiqc })
             ch_versions = ch_versions.mix(DUPRADAR.out.versions.first())
         }
 
@@ -620,14 +620,14 @@ workflow RNASEQ {
                 ch_gene_bed,
                 rseqc_modules
             )
-            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.bamstat_txt.collect{ tuple -> tuple[1] })
-            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.inferexperiment_txt.collect{ tuple -> tuple[1] })
-            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.innerdistance_freq.collect{ tuple -> tuple[1] })
-            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.junctionannotation_log.collect{ tuple -> tuple[1] })
-            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.junctionsaturation_rscript.collect{ tuple -> tuple[1] })
-            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.readdistribution_txt.collect{ tuple -> tuple[1] })
-            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.readduplication_pos_xls.collect{ tuple -> tuple[1] })
-            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.tin_txt.collect{ tuple -> tuple[1] })
+            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.bamstat_txt.collect{ _meta, txt -> txt })
+            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.inferexperiment_txt.collect{ _meta, txt -> txt })
+            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.innerdistance_freq.collect{ _meta, freq -> freq })
+            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.junctionannotation_log.collect{ _meta, log -> log })
+            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.junctionsaturation_rscript.collect{ _meta, rscript -> rscript })
+            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.readdistribution_txt.collect{ _meta, txt -> txt })
+            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.readduplication_pos_xls.collect{ _meta, xls -> xls })
+            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.tin_txt.collect{ _meta, txt -> txt })
 
             // Compare predicted supplied or Salmon-predicted strand with what we get from RSeQC
             ch_strand_comparison = BAM_RSEQC.out.inferexperiment_txt
@@ -699,13 +699,13 @@ workflow RNASEQ {
             ch_kraken_reports = KRAKEN2.out.report
 
             if (params.contaminant_screening == 'kraken2') {
-                ch_multiqc_files = ch_multiqc_files.mix(KRAKEN2.out.report.collect{ tuple -> tuple[1] })
+                ch_multiqc_files = ch_multiqc_files.mix(KRAKEN2.out.report.collect{ _meta, report -> report })
             } else if (params.contaminant_screening == 'kraken2_bracken') {
                 BRACKEN (
                     ch_kraken_reports,
                     params.kraken_db
                 )
-                ch_multiqc_files = ch_multiqc_files.mix(BRACKEN.out.txt.collect{ tuple -> tuple[1] })
+                ch_multiqc_files = ch_multiqc_files.mix(BRACKEN.out.txt.collect{ _meta, txt -> txt })
             }
         } else if (params.contaminant_screening == 'sylph') {
             def sylph_databases = params.sylph_db ? params.sylph_db.split(',').collect{ path -> file(path.trim()) } : []
@@ -722,7 +722,7 @@ workflow RNASEQ {
                 ch_sylph_profile,
                 ch_sylph_taxonomies
             )
-            ch_multiqc_files = ch_multiqc_files.mix(SYLPHTAX_TAXPROF.out.taxprof_output.collect{ tuple -> tuple[1] })
+            ch_multiqc_files = ch_multiqc_files.mix(SYLPHTAX_TAXPROF.out.taxprof_output.collect{ _meta, output -> output })
         }
     }
 
@@ -741,7 +741,7 @@ workflow RNASEQ {
             ch_samplesheet.map { item -> [ [:], item ] },
             ch_strand_inferred_filtered_fastq,
             ch_pseudo_index,
-            ch_dummy_file,
+            ch_transcript_fasta_placeholder,
             ch_gtf,
             params.gtf_group_features,
             params.gtf_extra_attributes,
@@ -752,12 +752,12 @@ workflow RNASEQ {
             params.kallisto_quant_fraglen_sd
         )
         ch_counts_gene_length_scaled = QUANTIFY_PSEUDO_ALIGNMENT.out.counts_gene_length_scaled
-        ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_PSEUDO_ALIGNMENT.out.multiqc.collect{ tuple -> tuple[1] })
+        ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_PSEUDO_ALIGNMENT.out.multiqc.collect{ _meta, multiqc -> multiqc })
         ch_versions = ch_versions.mix(QUANTIFY_PSEUDO_ALIGNMENT.out.versions)
 
         if (!params.skip_qc & !params.skip_deseq2_qc) {
             DESEQ2_QC_PSEUDO (
-                ch_counts_gene_length_scaled.map { tuple -> tuple[1] },
+                ch_counts_gene_length_scaled.map { _meta, counts -> counts },
                 ch_pca_header_multiqc,
                 ch_clustering_header_multiqc
             )

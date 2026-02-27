@@ -103,7 +103,7 @@ workflow RNASEQ {
     def sample_status_header_multiqc = file("$projectDir/workflows/rnaseq/assets/multiqc/sample_status_header.txt", checkIfExists: true)
     def ch_clustering_header_multiqc = file("$projectDir/workflows/rnaseq/assets/multiqc/deseq2_clustering_header.txt", checkIfExists: true)
     def ch_biotypes_header_multiqc   = file("$projectDir/workflows/rnaseq/assets/multiqc/biotypes_header.txt", checkIfExists: true)
-    def ch_transcript_fasta_placeholder                = ch_pca_header_multiqc
+    def ch_transcript_fasta_placeholder = ch_pca_header_multiqc
 
     ch_multiqc_files = channel.empty()
     ch_trim_status = channel.empty()

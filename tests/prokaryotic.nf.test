@@ -2,6 +2,7 @@ nextflow_pipeline {
 
     name "Test pipeline with prokaryotic settings"
     script "../main.nf"
+    config "../conf/prokaryotic.config"
     tag "pipeline"
     tag "prokaryotic"
 
@@ -21,23 +22,15 @@ nextflow_pipeline {
                 transcript_fasta = null
                 additional_fasta = null
 
-                // Prokaryotic-specific settings
-                prokaryotic = true
-                gffread_transcript_fasta = true
+                // Override aligner (prokaryotic profile defaults to bowtie2_salmon)
                 aligner = 'star_salmon'
-                featurecounts_feature_type = 'CDS'
 
-                // Skip eukaryote-specific QC tools
-                skip_rseqc = true
-                skip_dupradar = true
-                skip_qualimap = true
+                // Skip steps not needed for minimal testing
+                skip_bbsplit    = true
+                skip_preseq     = true
                 skip_biotype_qc = true
-                skip_deseq2_qc = true
-
-                // Skip unnecessary steps for faster testing
-                skip_bbsplit = true
-                skip_preseq = true
-                pseudo_aligner = null
+                skip_deseq2_qc  = true
+                pseudo_aligner  = null
                 min_trimmed_reads = 0
             }
         }
@@ -77,23 +70,15 @@ nextflow_pipeline {
                 transcript_fasta = null
                 additional_fasta = null
 
-                // Prokaryotic-specific settings
-                prokaryotic = true
-                gffread_transcript_fasta = true
+                // Override aligner (prokaryotic profile defaults to bowtie2_salmon)
                 aligner = 'star_salmon'
-                featurecounts_feature_type = 'CDS'
 
-                // Skip eukaryote-specific QC tools
-                skip_rseqc = true
-                skip_dupradar = true
-                skip_qualimap = true
+                // Skip steps not needed for minimal testing
+                skip_bbsplit    = true
+                skip_preseq     = true
                 skip_biotype_qc = true
-                skip_deseq2_qc = true
-
-                // Skip unnecessary steps for faster testing
-                skip_bbsplit = true
-                skip_preseq = true
-                pseudo_aligner = null
+                skip_deseq2_qc  = true
+                pseudo_aligner  = null
                 min_trimmed_reads = 0
             }
         }
@@ -135,23 +120,12 @@ nextflow_pipeline {
                 transcript_fasta = null
                 additional_fasta = null
 
-                // Prokaryotic-specific settings
-                gffread_transcript_fasta = true
-                aligner = 'bowtie2_salmon'
-                skip_bigwig = true
-                featurecounts_feature_type = 'CDS'
-
-                // Skip eukaryote-specific QC tools
-                skip_rseqc = true
-                skip_dupradar = true
-                skip_qualimap = true
+                // Skip steps not needed for minimal testing
+                skip_bbsplit    = true
+                skip_preseq     = true
                 skip_biotype_qc = true
-                skip_deseq2_qc = true
-
-                // Skip unnecessary steps for faster testing
-                skip_bbsplit = true
-                skip_preseq = true
-                pseudo_aligner = null
+                skip_deseq2_qc  = true
+                pseudo_aligner  = null
                 min_trimmed_reads = 0
             }
         }
@@ -191,23 +165,12 @@ nextflow_pipeline {
                 transcript_fasta = null
                 additional_fasta = null
 
-                // Prokaryotic-specific settings
-                gffread_transcript_fasta = true
-                aligner = 'bowtie2_salmon'
-                skip_bigwig = true
-                featurecounts_feature_type = 'CDS'
-
-                // Skip eukaryote-specific QC tools
-                skip_rseqc = true
-                skip_dupradar = true
-                skip_qualimap = true
+                // Skip steps not needed for minimal testing
+                skip_bbsplit    = true
+                skip_preseq     = true
                 skip_biotype_qc = true
-                skip_deseq2_qc = true
-
-                // Skip unnecessary steps for faster testing
-                skip_bbsplit = true
-                skip_preseq = true
-                pseudo_aligner = null
+                skip_deseq2_qc  = true
+                pseudo_aligner  = null
                 min_trimmed_reads = 0
             }
         }

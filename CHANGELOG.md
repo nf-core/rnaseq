@@ -57,6 +57,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1730](https://github.com/nf-core/rnaseq/pull/1730) - Bump Nextflow from 25.04.0 to 25.04.3 in CI to fix `conda create --mkdir` failure ([nextflow-io/nextflow#5947](https://github.com/nextflow-io/nextflow/issues/5947))
 - [PR #1734](https://github.com/nf-core/rnaseq/pull/1734) - Compose `test_prokaryotic` profile on `prokaryotic` to remove duplicated settings
 - [PR #1735](https://github.com/nf-core/rnaseq/pull/1735) - Code quality improvements: replace opaque tuple indexing with named destructuring, rename `ch_dummy_file`, move metro map docs, align GPU CI workflow with other workflows
+- [PR #1736](https://github.com/nf-core/rnaseq/pull/1736) - Load prokaryotic config in nf-test instead of duplicating params in each test
 - [PR #1738](https://github.com/nf-core/rnaseq/pull/1738) - Fix iGenomes STAR conda: use `bioconda` channel for x86_64, reserve `seqera` channel for ARM only
 
 ### Parameters

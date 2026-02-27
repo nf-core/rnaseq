@@ -1,14 +1,8 @@
 {
     "Params: --aligner star_salmon --prokaryotic": {
         "content": [
-            58,
+            46,
             {
-                "BEDTOOLS_GENOMECOV_FW": {
-                    "bedtools": "2.31.1"
-                },
-                "BEDTOOLS_GENOMECOV_REV": {
-                    "bedtools": "2.31.1"
-                },
                 "CUSTOM_TX2GENE": {
                     "python": "3.10.4"
                 },
@@ -81,12 +75,6 @@
                 },
                 "TXIMETA_TXIMPORT": {
                     "bioconductor-tximeta": "1.20.1"
-                },
-                "UCSC_BEDCLIP": {
-                    "ucsc": 377
-                },
-                "UCSC_BEDGRAPHTOBIGWIG": {
-                    "ucsc": 469
                 },
                 "UNTAR_SALMON_INDEX": {
                     "untar": 1.34
@@ -347,11 +335,6 @@
                 "star_salmon/SALM_REP2/logs/salmon_quant.log",
                 "star_salmon/SALM_REP2/quant.genes.sf",
                 "star_salmon/SALM_REP2/quant.sf",
-                "star_salmon/bigwig",
-                "star_salmon/bigwig/SALM_REP1.forward.bigWig",
-                "star_salmon/bigwig/SALM_REP1.reverse.bigWig",
-                "star_salmon/bigwig/SALM_REP2.forward.bigWig",
-                "star_salmon/bigwig/SALM_REP2.reverse.bigWig",
                 "star_salmon/log",
                 "star_salmon/log/SALM_REP1.Log.final.out",
                 "star_salmon/log/SALM_REP1.Log.out",

@@ -14,7 +14,11 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,575b3b4c8a8a6e508c8ceeca41331b6b"
+                    [
+                        "MULTIQC_CUSTOM_BIOTYPE",
+                        "python",
+                        "3.9.5"
+                    ]
                 ],
                 "tsv": [
                     [
@@ -26,17 +30,14 @@
                             "test.biotype_counts_rrna_mqc.tsv:md5,31c68d05ffe90d1e3eb2cb2ef9a7b4d9"
                         ]
                     ]
-                ],
-                "versions": [
-                    "versions.yml:md5,575b3b4c8a8a6e508c8ceeca41331b6b"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-07-02T16:48:24.844934"
+        "timestamp": "2026-02-04T14:38:01.977126983"
     },
     "test sarscov2 count data - stub": {
         "content": [
@@ -53,7 +54,11 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,575b3b4c8a8a6e508c8ceeca41331b6b"
+                    [
+                        "MULTIQC_CUSTOM_BIOTYPE",
+                        "python",
+                        "3.9.5"
+                    ]
                 ],
                 "tsv": [
                     [
@@ -65,16 +70,13 @@
                             "test.biotype_counts_rrna_mqc.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                         ]
                     ]
-                ],
-                "versions": [
-                    "versions.yml:md5,575b3b4c8a8a6e508c8ceeca41331b6b"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-06-21T11:50:15.104113"
+        "timestamp": "2026-02-04T14:38:12.720793008"
     }
 }

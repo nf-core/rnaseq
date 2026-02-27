@@ -29,10 +29,10 @@ nextflow_workflow {
             workflow {
                 """
                 star_ignore_sjdbgtf = false
-                seq_platform        = 'illumina'
-                seq_center          = false
                 is_aws_igenome      = false
-                use_sentieon_star   = false
+                use_sentieon_star    = false
+                use_parabricks_star  = false
+                skip_markduplicates  = false
 
                 input[0] = Channel.of([
                     [ id:'test', single_end:false ], // meta map
@@ -47,14 +47,14 @@ nextflow_workflow {
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
                 ])
                 input[3] = star_ignore_sjdbgtf
-                input[4] = seq_platform
-                input[5] = seq_center
-                input[6] = is_aws_igenome
-                input[7] = Channel.of([
+                input[4] = is_aws_igenome
+                input[5] = Channel.of([
                     [ id:'test_fasta' ],
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
                 ])
-                input[8] = use_sentieon_star
+                input[6] = use_sentieon_star
+                input[7] = use_parabricks_star
+                input[8] = skip_markduplicates
                 """
             }
         }
@@ -74,21 +74,28 @@ nextflow_workflow {
                     workflow.out.idxstats,
                     bam(workflow.out.orig_bam[0][1]).getReadsMD5(),
                     workflow.out.stats,
-                    workflow.out.tab,
-                    workflow.out.versions).match()}
+                    workflow.out.tab).match()}
             )
         }
     }
 
     test("star - with igenomes") {
 
+        config "./nextflow.igenomes.config"
+
         setup {
-            run("STAR_GENOMEGENERATE_IGENOMES") {
-                script "../../../../modules/local/star_genomegenerate_igenomes/main.nf"
+            run("STAR_GENOMEGENERATE") {
+                script "../../../../modules/nf-core/star/genomegenerate/main.nf"
                 process {
                     """
-                    input[0] = Channel.of([file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)])
-                    input[1] = Channel.of([file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)])
+                    input[0] = Channel.of([
+                        [ id:'test_fasta' ],
+                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                    ])
+                    input[1] = Channel.of([
+                        [ id:'test_gtf' ],
+                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                    ])
                     """
                 }
             }
@@ -98,10 +105,10 @@ nextflow_workflow {
             workflow {
                 """
                 star_ignore_sjdbgtf = false
-                seq_platform        = 'illumina'
-                seq_center          = false
                 is_aws_igenome      = true
-                use_sentieon_star   = false
+                use_sentieon_star    = false
+                use_parabricks_star  = false
+                skip_markduplicates  = false
 
                 input[0] = Channel.of([
                     [ id:'test', single_end:false ], // meta map
@@ -110,20 +117,20 @@ nextflow_workflow {
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
                 ])
-                input[1] = STAR_GENOMEGENERATE_IGENOMES.out.index.map{ [ [id:'star'], it ] }
+                input[1] = STAR_GENOMEGENERATE.out.index
                 input[2] = Channel.of([
                     [ id:'test_gtf' ],
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
                 ])
                 input[3] = star_ignore_sjdbgtf
-                input[4] = seq_platform
-                input[5] = seq_center
-                input[6] = is_aws_igenome
-                input[7] = Channel.of([
+                input[4] = is_aws_igenome
+                input[5] = Channel.of([
                     [ id:'test_fasta' ],
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
                 ])
-                input[8] = use_sentieon_star
+                input[6] = use_sentieon_star
+                input[7] = use_parabricks_star
+                input[8] = skip_markduplicates
                 """
             }
         }
@@ -143,8 +150,7 @@ nextflow_workflow {
                     workflow.out.idxstats,
                     bam(workflow.out.orig_bam[0][1]).getReadsMD5(),
                     workflow.out.stats,
-                    workflow.out.tab,
-                    workflow.out.versions).match()}
+                    workflow.out.tab).match()}
             )
         }
     }
@@ -175,10 +181,10 @@ nextflow_workflow {
             workflow {
                 """
                 star_ignore_sjdbgtf = false
-                seq_platform        = 'illumina'
-                seq_center          = false
                 is_aws_igenome      = false
-                use_sentieon_star   = false
+                use_sentieon_star    = false
+                use_parabricks_star  = false
+                skip_markduplicates  = false
 
                 input[0] = Channel.of([
                     [ id:'test', single_end:false ], // meta map
@@ -193,14 +199,14 @@ nextflow_workflow {
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
                 ])
                 input[3] = star_ignore_sjdbgtf
-                input[4] = seq_platform
-                input[5] = seq_center
-                input[6] = is_aws_igenome
-                input[7] = Channel.of([
+                input[4] = is_aws_igenome
+                input[5] = Channel.of([
                     [ id:'test_fasta' ],
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
                 ])
-                input[8] = use_sentieon_star
+                input[6] = use_sentieon_star
+                input[7] = use_parabricks_star
+                input[8] = skip_markduplicates
                 """
             }
         }
@@ -221,23 +227,29 @@ nextflow_workflow {
                     workflow.out.log_progress,
                     workflow.out.orig_bam,
                     workflow.out.stats,
-                    workflow.out.tab,
-                    workflow.out.versions).match()}
+                    workflow.out.tab).match()}
             )
         }
     }
 
     test("star - with igenomes - stub") {
 
+        config "./nextflow.igenomes.config"
         options "-stub"
 
         setup {
-            run("STAR_GENOMEGENERATE_IGENOMES") {
-                script "../../../../modules/local/star_genomegenerate_igenomes/main.nf"
+            run("STAR_GENOMEGENERATE") {
+                script "../../../../modules/nf-core/star/genomegenerate/main.nf"
                 process {
                     """
-                    input[0] = Channel.of([file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)])
-                    input[1] = Channel.of([file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)])
+                    input[0] = Channel.of([
+                        [ id:'test_fasta' ],
+                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                    ])
+                    input[1] = Channel.of([
+                        [ id:'test_gtf' ],
+                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                    ])
                     """
                 }
             }
@@ -247,10 +259,10 @@ nextflow_workflow {
             workflow {
                 """
                 star_ignore_sjdbgtf = false
-                seq_platform        = 'illumina'
-                seq_center          = false
                 is_aws_igenome      = true
-                use_sentieon_star   = false
+                use_sentieon_star    = false
+                use_parabricks_star  = false
+                skip_markduplicates  = false
 
                 input[0] = Channel.of([
                     [ id:'test', single_end:false ], // meta map
@@ -259,20 +271,20 @@ nextflow_workflow {
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
                 ])
-                input[1] = STAR_GENOMEGENERATE_IGENOMES.out.index.map{ [ [id:'star'], it ] }
+                input[1] = STAR_GENOMEGENERATE.out.index
                 input[2] = Channel.of([
                     [ id:'test_gtf' ],
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
                 ])
                 input[3] = star_ignore_sjdbgtf
-                input[4] = seq_platform
-                input[5] = seq_center
-                input[6] = is_aws_igenome
-                input[7] = Channel.of([
+                input[4] = is_aws_igenome
+                input[5] = Channel.of([
                     [ id:'test_fasta' ],
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
                 ])
-                input[8] = use_sentieon_star
+                input[6] = use_sentieon_star
+                input[7] = use_parabricks_star
+                input[8] = skip_markduplicates
                 """
             }
         }
@@ -293,8 +305,7 @@ nextflow_workflow {
                     workflow.out.log_progress,
                     workflow.out.orig_bam,
                     workflow.out.stats,
-                    workflow.out.tab,
-                    workflow.out.versions).match()}
+                    workflow.out.tab).match()}
             )
         }
     }

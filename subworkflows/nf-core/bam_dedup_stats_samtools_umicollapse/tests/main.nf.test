@@ -5,6 +5,20 @@ nextflow_workflow {
     script "../main.nf"
     workflow "BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE"
 
+    tag "subworkflows"
+    tag "subworkflows_nfcore"
+    tag "subworkflows/bam_dedup_stats_samtools_umicollapse"
+    tag "subworkflows/bam_stats_samtools"
+    tag "bam_stats_samtools"
+    tag "bwa/index"
+    tag "bwa/mem"
+    tag "samtools"
+    tag "samtools/index"
+    tag "samtools/stats"
+    tag "samtools/idxstats"
+    tag "samtools/flagstat"
+    tag "umicollapse"
+    tag "umitools/extract"
 
     test("sarscov2_bam_bai") {
 
@@ -28,7 +42,6 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(bam(workflow.out.bam[0][1]).getSamLinesMD5()).match("test_bam_dedup_stats_samtools_umicollapse_bam")},  // separate, because of linting error otherwise
-                { assert snapshot(workflow.out.versions).match("test_bam_dedup_stats_samtools_umicollapse_versions") },
                 { assert workflow.out.bam.get(0).get(1) ==~ ".*.bam"},
                 { assert workflow.out.bai.get(0).get(1) ==~ ".*.bai"},
                 { assert workflow.out.dedup_stats.get(0).get(1) ==~ ".*_UMICollapse.log"},
@@ -40,4 +53,3 @@ nextflow_workflow {
 
 }
 }
-

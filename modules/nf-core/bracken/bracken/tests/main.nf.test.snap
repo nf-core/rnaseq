@@ -21,7 +21,11 @@
                     ]
                 ],
                 "2": [
-                    "versions.yml:md5,e3d2c4366550ad48484aa3cae6e67ad4"
+                    [
+                        "BRACKEN_BRACKEN",
+                        "bracken",
+                        "3.0.1"
+                    ]
                 ],
                 "reports": [
                     [
@@ -41,16 +45,20 @@
                         "test.kraken2.report_bracken.txt:md5,ca0fbeedc4353b5fdd081688823a33df"
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,e3d2c4366550ad48484aa3cae6e67ad4"
+                "versions_bracken": [
+                    [
+                        "BRACKEN_BRACKEN",
+                        "bracken",
+                        "3.0.1"
+                    ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "24.10.2"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-06-02T13:17:09.050813"
+        "timestamp": "2026-01-19T14:03:31.299124251"
     },
     "sarscov2 - paired-end - fastq - genus config": {
         "content": [
@@ -74,7 +82,11 @@
                     ]
                 ],
                 "2": [
-                    "versions.yml:md5,e3d2c4366550ad48484aa3cae6e67ad4"
+                    [
+                        "BRACKEN_BRACKEN",
+                        "bracken",
+                        "3.0.1"
+                    ]
                 ],
                 "reports": [
                     [
@@ -94,16 +106,20 @@
                         "test.kraken2.report_bracken.txt:md5,2ce58814420a3690da1f08e10e8d3a30"
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,e3d2c4366550ad48484aa3cae6e67ad4"
+                "versions_bracken": [
+                    [
+                        "BRACKEN_BRACKEN",
+                        "bracken",
+                        "3.0.1"
+                    ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "24.10.2"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-06-02T13:17:22.479694"
+        "timestamp": "2026-01-19T14:03:38.094543816"
     },
     "sarscov2 - paired-end - fastq": {
         "content": [
@@ -127,7 +143,11 @@
                     ]
                 ],
                 "2": [
-                    "versions.yml:md5,e3d2c4366550ad48484aa3cae6e67ad4"
+                    [
+                        "BRACKEN_BRACKEN",
+                        "bracken",
+                        "3.0.1"
+                    ]
                 ],
                 "reports": [
                     [
@@ -147,16 +167,20 @@
                         "test.kraken2.report_bracken.txt:md5,ca0fbeedc4353b5fdd081688823a33df"
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,e3d2c4366550ad48484aa3cae6e67ad4"
+                "versions_bracken": [
+                    [
+                        "BRACKEN_BRACKEN",
+                        "bracken",
+                        "3.0.1"
+                    ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "24.10.2"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-06-02T13:17:35.489383"
+        "timestamp": "2026-01-19T14:03:44.706209228"
     },
     "sarscov2 - stub - fastq": {
         "content": [
@@ -178,7 +202,11 @@
                     ]
                 ],
                 "2": [
-                    "versions.yml:md5,e3d2c4366550ad48484aa3cae6e67ad4"
+                    [
+                        "BRACKEN_BRACKEN",
+                        "bracken",
+                        "3.0.1"
+                    ]
                 ],
                 "reports": [
                     [
@@ -196,15 +224,19 @@
                         "test.kraken2.report_bracken.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,e3d2c4366550ad48484aa3cae6e67ad4"
+                "versions_bracken": [
+                    [
+                        "BRACKEN_BRACKEN",
+                        "bracken",
+                        "3.0.1"
+                    ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "24.10.2"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-06-02T13:17:47.183592"
+        "timestamp": "2026-01-19T14:03:50.763300237"
     }
 }

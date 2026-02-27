@@ -3,7 +3,7 @@ nextflow_workflow {
     name "Test Subworkflow ALIGN_STAR - Sentieon"
     script "../main.nf"
     workflow "ALIGN_STAR"
-    config "./nextflow.config"
+    config "./sentieon.config"
 
     test("sentieon star - no igenomes") {
         tag "sentieon"
@@ -29,10 +29,10 @@ nextflow_workflow {
             workflow {
                 """
                 star_ignore_sjdbgtf = false
-                seq_platform        = 'illumina'
-                seq_center          = false
                 is_aws_igenome      = false
-                use_sentieon_star   = true
+                use_sentieon_star    = true
+                use_parabricks_star  = false
+                skip_markduplicates  = false
 
                 input[0] = Channel.of([
                     [ id:'test', single_end:false ], // meta map
@@ -47,14 +47,14 @@ nextflow_workflow {
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
                 ])
                 input[3] = star_ignore_sjdbgtf
-                input[4] = seq_platform
-                input[5] = seq_center
-                input[6] = is_aws_igenome
-                input[7] = Channel.of([
+                input[4] = is_aws_igenome
+                input[5] = Channel.of([
                     [ id:'test_fasta' ],
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
                 ])
-                input[8] = use_sentieon_star
+                input[6] = use_sentieon_star
+                input[7] = use_parabricks_star
+                input[8] = skip_markduplicates
                 """
             }
         }
@@ -74,8 +74,7 @@ nextflow_workflow {
                     workflow.out.idxstats,
                     bam(workflow.out.orig_bam[0][1]).getReadsMD5(),
                     workflow.out.stats,
-                    workflow.out.tab,
-                    workflow.out.versions).match()}
+                    workflow.out.tab).match()}
             )
         }
     }
@@ -106,10 +105,10 @@ nextflow_workflow {
             workflow {
                 """
                 star_ignore_sjdbgtf = false
-                seq_platform        = 'illumina'
-                seq_center          = false
                 is_aws_igenome      = false
-                use_sentieon_star   = true
+                use_sentieon_star    = true
+                use_parabricks_star  = false
+                skip_markduplicates  = false
 
                 input[0] = Channel.of([
                     [ id:'test', single_end:false ], // meta map
@@ -124,14 +123,14 @@ nextflow_workflow {
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
                 ])
                 input[3] = star_ignore_sjdbgtf
-                input[4] = seq_platform
-                input[5] = seq_center
-                input[6] = is_aws_igenome
-                input[7] = Channel.of([
+                input[4] = is_aws_igenome
+                input[5] = Channel.of([
                     [ id:'test_fasta' ],
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
                 ])
-                input[8] = use_sentieon_star
+                input[6] = use_sentieon_star
+                input[7] = use_parabricks_star
+                input[8] = skip_markduplicates
                 """
             }
         }
@@ -152,8 +151,7 @@ nextflow_workflow {
                     workflow.out.log_progress,
                     workflow.out.orig_bam,
                     workflow.out.stats,
-                    workflow.out.tab,
-                    workflow.out.versions).match()}
+                    workflow.out.tab).match()}
             )
         }
     }

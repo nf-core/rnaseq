@@ -2,7 +2,7 @@ nextflow_function {
 
     name "Test Functions"
     script "../main.nf"
-    
+
     //
     // Test function for deriving strandedness from Salmon numbers
     //

@@ -1,0 +1,69 @@
+name: bowtie2_build
+description: Builds bowtie index for reference genome
+keywords:
+  - build
+  - index
+  - fasta
+  - genome
+  - reference
+tools:
+  - bowtie2:
+      description: |
+        Bowtie 2 is an ultrafast and memory-efficient tool for aligning
+        sequencing reads to long reference sequences.
+      homepage: http://bowtie-bio.sourceforge.net/bowtie2/index.shtml
+      documentation: http://bowtie-bio.sourceforge.net/bowtie2/manual.shtml
+      doi: 10.1038/nmeth.1923
+      licence: ["GPL-3.0-or-later"]
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'test', single_end:false ]
+    - fasta:
+        type: file
+        description: Input genome fasta file
+        ontologies: []
+output:
+  index:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing reference information
+            e.g. [ id:'test', single_end:false ]
+      - bowtie2:
+          type: directory
+          description: Bowtie2 genome index files
+          pattern: "*.bt2"
+          ontologies: []
+  versions_bowtie2:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - bowtie2:
+          type: string
+          description: The name of the tool
+      - 'bowtie2 --version 2>&1 | head -1 | sed "s/^.*bowtie2-align-s version //; s/ .*//"':
+          type: eval
+          description: The expression to obtain the version of the tool
+
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - bowtie2:
+          type: string
+          description: The name of the tool
+      - 'bowtie2 --version 2>&1 | head -1 | sed "s/^.*bowtie2-align-s version //; s/ .*//"':
+          type: eval
+          description: The expression to obtain the version of the tool
+
+authors:
+  - "@joseespinosa"
+  - "@drpatelh"
+maintainers:
+  - "@joseespinosa"
+  - "@drpatelh"

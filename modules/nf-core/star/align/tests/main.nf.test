@@ -3,6 +3,11 @@ nextflow_process {
     name "Test Process STAR_ALIGN"
     script "../main.nf"
     process "STAR_ALIGN"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "star"
+    tag "star/align"
+    tag "star/genomegenerate"
 
     test("homo_sapiens - single_end") {
         config "./nextflow.config"
@@ -38,8 +43,6 @@ nextflow_process {
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
                 ])
                 input[3] = false
-                input[4] = 'illumina'
-                input[5] = false
                 """
             }
         }
@@ -60,7 +63,7 @@ nextflow_process {
                     process.out.spl_junc_tab,
                     process.out.tab,
                     process.out.wig,
-                    process.out.versions
+                    process.out.findAll { key, val -> key.startsWith('versions') }
                 ).match() }
             )
         }
@@ -103,8 +106,6 @@ nextflow_process {
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
                 ])
                 input[3] = false
-                input[4] = 'illumina'
-                input[5] = false
                 """
             }
         }
@@ -125,7 +126,7 @@ nextflow_process {
                     process.out.spl_junc_tab,
                     process.out.tab,
                     process.out.wig,
-                    process.out.versions
+                    process.out.findAll { key, val -> key.startsWith('versions') }
                 ).match() }
             )
         }
@@ -168,8 +169,6 @@ nextflow_process {
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
                 ])
                 input[3] = false
-                input[4] = 'illumina'
-                input[5] = false
                 """
             }
         }
@@ -189,7 +188,7 @@ nextflow_process {
                     process.out.spl_junc_tab,
                     process.out.tab,
                     process.out.wig,
-                    process.out.versions
+                    process.out.findAll { key, val -> key.startsWith('versions') }
                 ).match() }
             )
         }
@@ -232,8 +231,6 @@ nextflow_process {
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
                 ])
                 input[3] = false
-                input[4] = 'illumina'
-                input[5] = false
                 """
             }
         }
@@ -254,7 +251,7 @@ nextflow_process {
                     process.out.spl_junc_tab,
                     process.out.tab,
                     process.out.wig,
-                    process.out.versions
+                    process.out.findAll { key, val -> key.startsWith('versions') }
                 ).match() }
             )
         }
@@ -299,8 +296,6 @@ nextflow_process {
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
                 ])
                 input[3] = false
-                input[4] = 'illumina'
-                input[5] = false
                 """
             }
         }
@@ -321,7 +316,7 @@ nextflow_process {
                     process.out.spl_junc_tab,
                     process.out.tab,
                     process.out.wig,
-                    process.out.versions
+                    process.out.findAll { key, val -> key.startsWith('versions') }
                 ).match() }
             )
         }
@@ -362,8 +357,6 @@ nextflow_process {
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
                 ])
                 input[3] = false
-                input[4] = 'illumina'
-                input[5] = false
                 """
             }
         }
@@ -414,8 +407,6 @@ nextflow_process {
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
                 ])
                 input[3] = false
-                input[4] = 'illumina'
-                input[5] = false
                 """
             }
         }
@@ -466,8 +457,6 @@ nextflow_process {
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
                 ])
                 input[3] = false
-                input[4] = 'illumina'
-                input[5] = false
                 """
             }
         }
@@ -518,8 +507,6 @@ nextflow_process {
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
                 ])
                 input[3] = false
-                input[4] = 'illumina'
-                input[5] = false
                 """
             }
         }
@@ -572,8 +559,6 @@ nextflow_process {
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
                 ])
                 input[3] = false
-                input[4] = 'illumina'
-                input[5] = false
                 """
             }
         }

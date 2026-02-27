@@ -10,13 +10,10 @@
                     "cat": 9.5
                 },
                 "CUSTOM_CATADDITIONALFASTA": {
-                    "python": null
-                },
-                "CUSTOM_GETCHROMSIZES": {
-                    "getchromsizes": 1.21
+                    "python": "3.12.2"
                 },
                 "FQ_LINT": {
-                    "fq": "0.12.0 (2024-07-08)"
+                    "fq": "0.12.0"
                 },
                 "GTF2BED": {
                     "perl": "5.26.2"
@@ -30,14 +27,15 @@
                 "GUNZIP_GTF": {
                     "gunzip": 1.13
                 },
+                "SAMTOOLS_FAIDX": {
+                    "samtools": "1.22.1"
+                },
                 "STAR_GENOMEGENERATE": {
                     "gawk": "5.1.0",
                     "samtools": 1.21,
                     "star": "2.7.11b"
                 },
                 "TRIMGALORE": {
-                    "cutadapt": 4.9,
-                    "pigz": 2.8,
                     "trimgalore": "0.6.10"
                 },
                 "UNTAR_SALMON_INDEX": {
@@ -85,7 +83,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-04T15:39:08.789608161"
+        "timestamp": "2026-02-04T16:59:46.520896834"
     },
     "Params: --featurecounts_group_type false": {
         "content": [
@@ -100,17 +98,20 @@
                 "CUSTOM_CATADDITIONALFASTA": {
                     "python": "3.12.2"
                 },
-                "CUSTOM_GETCHROMSIZES": {
-                    "getchromsizes": 1.21
-                },
                 "CUSTOM_TX2GENE": {
                     "python": "3.10.4"
                 },
                 "FQ_LINT": {
-                    "fq": "0.12.0 (2024-07-08)"
+                    "fq": "0.12.0"
+                },
+                "FQ_LINT_AFTER_BBSPLIT": {
+                    "fq": "0.12.0"
+                },
+                "FQ_LINT_AFTER_TRIMMING": {
+                    "fq": "0.12.0"
                 },
                 "FQ_SUBSAMPLE": {
-                    "fq": "0.12.0 (2024-07-08)"
+                    "fq": "0.12.0"
                 },
                 "GTF2BED": {
                     "perl": "5.26.2"
@@ -125,25 +126,28 @@
                     "gunzip": 1.13
                 },
                 "PICARD_MARKDUPLICATES": {
-                    "picard": "3.1.1"
+                    "picard": "3.4.0"
                 },
                 "SALMON_QUANT": {
                     "salmon": "1.10.3"
                 },
+                "SAMTOOLS_FAIDX": {
+                    "samtools": "1.22.1"
+                },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": 1.21
+                    "samtools": "1.22.1"
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": 1.21
+                    "samtools": "1.22.1"
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": 1.21
+                    "samtools": "1.22.1"
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": 1.21
+                    "samtools": "1.22.1"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.22.1"
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -162,8 +166,6 @@
                     "star": "2.7.11b"
                 },
                 "TRIMGALORE": {
-                    "cutadapt": 4.9,
-                    "pigz": 2.8,
                     "trimgalore": "0.6.10"
                 },
                 "TXIMETA_TXIMPORT": {
@@ -203,18 +205,18 @@
                 "fastqc/trim/WT_REP2_trimmed_2_val_2_fastqc.html",
                 "fastqc/trim/WT_REP2_trimmed_2_val_2_fastqc.zip",
                 "fq_lint",
+                "fq_lint/bbsplit",
+                "fq_lint/bbsplit/RAP1_IAA_30M_REP1.fq_lint.txt",
+                "fq_lint/bbsplit/RAP1_UNINDUCED_REP1.fq_lint.txt",
+                "fq_lint/bbsplit/RAP1_UNINDUCED_REP2.fq_lint.txt",
+                "fq_lint/bbsplit/WT_REP1.fq_lint.txt",
+                "fq_lint/bbsplit/WT_REP2.fq_lint.txt",
                 "fq_lint/raw",
                 "fq_lint/raw/RAP1_IAA_30M_REP1.fq_lint.txt",
                 "fq_lint/raw/RAP1_UNINDUCED_REP1.fq_lint.txt",
                 "fq_lint/raw/RAP1_UNINDUCED_REP2.fq_lint.txt",
                 "fq_lint/raw/WT_REP1.fq_lint.txt",
                 "fq_lint/raw/WT_REP2.fq_lint.txt",
-                "fq_lint/sortmerna",
-                "fq_lint/sortmerna/RAP1_IAA_30M_REP1.fq_lint.txt",
-                "fq_lint/sortmerna/RAP1_UNINDUCED_REP1.fq_lint.txt",
-                "fq_lint/sortmerna/RAP1_UNINDUCED_REP2.fq_lint.txt",
-                "fq_lint/sortmerna/WT_REP1.fq_lint.txt",
-                "fq_lint/sortmerna/WT_REP2.fq_lint.txt",
                 "fq_lint/trimmed",
                 "fq_lint/trimmed/RAP1_IAA_30M_REP1.fq_lint.txt",
                 "fq_lint/trimmed/RAP1_UNINDUCED_REP1.fq_lint.txt",
@@ -225,6 +227,9 @@
                 "multiqc/star_salmon",
                 "multiqc/star_salmon/multiqc_report.html",
                 "multiqc/star_salmon/multiqc_report_data",
+                "multiqc/star_salmon/multiqc_report_data/bbmap-bbsplit_plot.txt",
+                "multiqc/star_salmon/multiqc_report_data/bbmap.txt",
+                "multiqc/star_salmon/multiqc_report_data/bbsplit_stats_table.txt",
                 "multiqc/star_salmon/multiqc_report_data/cutadapt_filtered_reads_plot.txt",
                 "multiqc/star_salmon/multiqc_report_data/cutadapt_trimmed_sequences_plot_3_Counts.txt",
                 "multiqc/star_salmon/multiqc_report_data/cutadapt_trimmed_sequences_plot_3_Obs_Exp.txt",
@@ -272,6 +277,9 @@
                 "multiqc/star_salmon/multiqc_report_data/star_summary_table.txt",
                 "multiqc/star_salmon/multiqc_report_plots",
                 "multiqc/star_salmon/multiqc_report_plots/pdf",
+                "multiqc/star_salmon/multiqc_report_plots/pdf/bbmap-bbsplit_plot-cnt.pdf",
+                "multiqc/star_salmon/multiqc_report_plots/pdf/bbmap-bbsplit_plot-pct.pdf",
+                "multiqc/star_salmon/multiqc_report_plots/pdf/bbsplit_stats_table.pdf",
                 "multiqc/star_salmon/multiqc_report_plots/pdf/cutadapt_filtered_reads_plot-cnt.pdf",
                 "multiqc/star_salmon/multiqc_report_plots/pdf/cutadapt_filtered_reads_plot-pct.pdf",
                 "multiqc/star_salmon/multiqc_report_plots/pdf/cutadapt_trimmed_sequences_plot_3_Counts.pdf",
@@ -306,6 +314,9 @@
                 "multiqc/star_salmon/multiqc_report_plots/pdf/star_alignment_plot-pct.pdf",
                 "multiqc/star_salmon/multiqc_report_plots/pdf/star_summary_table.pdf",
                 "multiqc/star_salmon/multiqc_report_plots/png",
+                "multiqc/star_salmon/multiqc_report_plots/png/bbmap-bbsplit_plot-cnt.png",
+                "multiqc/star_salmon/multiqc_report_plots/png/bbmap-bbsplit_plot-pct.png",
+                "multiqc/star_salmon/multiqc_report_plots/png/bbsplit_stats_table.png",
                 "multiqc/star_salmon/multiqc_report_plots/png/cutadapt_filtered_reads_plot-cnt.png",
                 "multiqc/star_salmon/multiqc_report_plots/png/cutadapt_filtered_reads_plot-pct.png",
                 "multiqc/star_salmon/multiqc_report_plots/png/cutadapt_trimmed_sequences_plot_3_Counts.png",
@@ -340,6 +351,9 @@
                 "multiqc/star_salmon/multiqc_report_plots/png/star_alignment_plot-pct.png",
                 "multiqc/star_salmon/multiqc_report_plots/png/star_summary_table.png",
                 "multiqc/star_salmon/multiqc_report_plots/svg",
+                "multiqc/star_salmon/multiqc_report_plots/svg/bbmap-bbsplit_plot-cnt.svg",
+                "multiqc/star_salmon/multiqc_report_plots/svg/bbmap-bbsplit_plot-pct.svg",
+                "multiqc/star_salmon/multiqc_report_plots/svg/bbsplit_stats_table.svg",
                 "multiqc/star_salmon/multiqc_report_plots/svg/cutadapt_filtered_reads_plot-cnt.svg",
                 "multiqc/star_salmon/multiqc_report_plots/svg/cutadapt_filtered_reads_plot-pct.svg",
                 "multiqc/star_salmon/multiqc_report_plots/svg/cutadapt_trimmed_sequences_plot_3_Counts.svg",
@@ -466,7 +480,7 @@
                 "salmon/salmon.merged.transcript_counts.tsv",
                 "salmon/salmon.merged.transcript_lengths.tsv",
                 "salmon/salmon.merged.transcript_tpm.tsv",
-                "salmon/tx2gene.tsv",
+                "salmon/salmon.merged.tx2gene.tsv",
                 "star_salmon",
                 "star_salmon/RAP1_IAA_30M_REP1",
                 "star_salmon/RAP1_IAA_30M_REP1.markdup.sorted.bam",
@@ -590,6 +604,7 @@
                 "star_salmon/salmon.merged.transcript_counts.tsv",
                 "star_salmon/salmon.merged.transcript_lengths.tsv",
                 "star_salmon/salmon.merged.transcript_tpm.tsv",
+                "star_salmon/salmon.merged.tx2gene.tsv",
                 "star_salmon/samtools_stats",
                 "star_salmon/samtools_stats/RAP1_IAA_30M_REP1.markdup.sorted.bam.flagstat",
                 "star_salmon/samtools_stats/RAP1_IAA_30M_REP1.markdup.sorted.bam.idxstats",
@@ -621,7 +636,6 @@
                 "star_salmon/samtools_stats/WT_REP2.sorted.bam.flagstat",
                 "star_salmon/samtools_stats/WT_REP2.sorted.bam.idxstats",
                 "star_salmon/samtools_stats/WT_REP2.sorted.bam.stats",
-                "star_salmon/tx2gene.tsv",
                 "trimgalore",
                 "trimgalore/RAP1_IAA_30M_REP1_trimmed_1.fastq.gz_trimming_report.txt",
                 "trimgalore/RAP1_IAA_30M_REP1_trimmed_2.fastq.gz_trimming_report.txt",
@@ -638,7 +652,6 @@
                 "cutadapt_filtered_reads_plot.txt:md5,6fa381627f7c1f664f3d4b2cb79cce90",
                 "cutadapt_trimmed_sequences_plot_3_Counts.txt:md5,13dfa866fd91dbb072689efe9aa83b1f",
                 "cutadapt_trimmed_sequences_plot_3_Obs_Exp.txt:md5,07145dd8dd3db654859b18eb0389046c",
-                "fastqc_sequence_length_distribution_plot.txt:md5,6fe2c985606abad947bcca99b015ae33",
                 "fastqc_trimmed-status-check-heatmap.txt:md5,22a03548736b88b23be6bc0c9ef1b4a6",
                 "fastqc_trimmed_overrepresented_sequences_plot.txt:md5,c755e9d044ea1a82b2c8edde867b4878",
                 "fastqc_trimmed_per_base_n_content_plot.txt:md5,418610c1ce119cb786ad434db75d366e",
@@ -649,7 +662,6 @@
                 "fastqc_trimmed_sequence_counts_plot.txt:md5,9fd642bdd1da354f296bb8092205608f",
                 "fastqc_trimmed_sequence_duplication_levels_plot.txt:md5,0758257b497283b1ef28171e694db6db",
                 "multiqc_citations.txt:md5,ef51c78faebdd32bad296ba14406b41e",
-                "multiqc_cutadapt.txt:md5,583b7b9ba76b26162bb9610ed746454b",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,54743154d0e8858980acffeb5b6f6a97",
                 "multiqc_samtools_idxstats.txt:md5,8b8f6cb092004918c18319a8cd64eb4c",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -688,7 +700,7 @@
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "cmd_info.json:md5,fe66c9d876645b9260d8c2488157d4d4",
                 "lib_format_counts.json:md5,088fd51db07022ffde47033bbd029400",
-                "tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
+                "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "ambig_info.tsv:md5,f9a605d54a0a103566f7a9b8e0867a73",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
@@ -719,13 +731,13 @@
                 "RAP1_UNINDUCED_REP2.SJ.out.tab:md5,1f294365343a1a5e95682792fdb77033",
                 "WT_REP1.SJ.out.tab:md5,1350c2fa6a675bf107386c6cd3fc5204",
                 "WT_REP2.SJ.out.tab:md5,f6cc03643a5e3c1025a5b4754eb1be23",
-                "tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
+                "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-04T15:38:38.907598452"
+        "timestamp": "2026-02-26T13:59:39.142726629"
     }
 }

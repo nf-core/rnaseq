@@ -36,47 +36,45 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
     min_trimmed_reads // integer: > 0
 
     main:
-    ch_versions = Channel.empty()
-    fastqc_html = Channel.empty()
-    fastqc_zip = Channel.empty()
+    fastqc_html = channel.empty()
+    fastqc_zip = channel.empty()
     if (!skip_fastqc) {
         FASTQC(reads)
         fastqc_html = FASTQC.out.html
         fastqc_zip = FASTQC.out.zip
-        ch_versions = ch_versions.mix(FASTQC.out.versions.first())
     }
 
-    umi_reads = reads
-    umi_log = Channel.empty()
+    trimmer_reads = reads
+    umi_log = channel.empty()
+    umi_reads = channel.empty()
     if (with_umi && !skip_umi_extract) {
         UMITOOLS_EXTRACT(reads)
+        trimmer_reads = UMITOOLS_EXTRACT.out.reads
         umi_reads = UMITOOLS_EXTRACT.out.reads
         umi_log = UMITOOLS_EXTRACT.out.log
-        ch_versions = ch_versions.mix(UMITOOLS_EXTRACT.out.versions.first())
 
         // Discard R1 / R2 if required
         if (umi_discard_read in [1, 2]) {
             UMITOOLS_EXTRACT.out.reads
-                .map { meta, reads ->
-                    meta.single_end ? [meta, reads] : [meta + ['single_end': true], reads[umi_discard_read % 2]]
+                .map { meta, reads_ ->
+                    meta.single_end ? [meta, reads_] : [meta + ['single_end': true], reads_[umi_discard_read % 2]]
                 }
-                .set { umi_reads }
+                .set { trimmer_reads }
         }
     }
 
-    trim_reads = umi_reads
-    trim_unpaired = Channel.empty()
-    trim_html = Channel.empty()
-    trim_zip = Channel.empty()
-    trim_log = Channel.empty()
-    trim_read_count = Channel.empty()
+    trim_reads = trimmer_reads
+    trim_unpaired = channel.empty()
+    trim_html = channel.empty()
+    trim_zip = channel.empty()
+    trim_log = channel.empty()
+    trim_read_count = channel.empty()
     if (!skip_trimming) {
-        TRIMGALORE(umi_reads)
+        TRIMGALORE(trimmer_reads)
         trim_unpaired = TRIMGALORE.out.unpaired
         trim_html = TRIMGALORE.out.html
         trim_zip = TRIMGALORE.out.zip
         trim_log = TRIMGALORE.out.log
-        ch_versions = ch_versions.mix(TRIMGALORE.out.versions.first())
 
         //
         // Filter FastQ files based on minimum trimmed read count after adapter trimming
@@ -109,10 +107,10 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
     fastqc_html     // channel: [ val(meta), [ html ] ]
     fastqc_zip      // channel: [ val(meta), [ zip ] ]
     umi_log         // channel: [ val(meta), [ log ] ]
+    umi_reads       // channel: [ val(meta), [ reads ] ]
     trim_unpaired   // channel: [ val(meta), [ reads ] ]
     trim_html       // channel: [ val(meta), [ html ] ]
     trim_zip        // channel: [ val(meta), [ zip ] ]
     trim_log        // channel: [ val(meta), [ txt ] ]
     trim_read_count // channel: [ val(meta), val(count) ]
-    versions        = ch_versions // channel: [ versions.yml ]
 }

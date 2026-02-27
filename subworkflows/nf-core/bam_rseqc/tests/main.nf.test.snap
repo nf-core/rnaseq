@@ -92,25 +92,15 @@
                     {
                         "id": "test"
                     },
-                    "test.paired_end.sorted.summary.txt:md5,9d98447e178b89a89f6f5aba7a772fe6"
+                    "test.summary.txt:md5,9d98447e178b89a89f6f5aba7a772fe6"
                 ]
-            ],
-            [
-                "versions.yml:md5,60dc1afce7fecb7270e998a00ee393e2",
-                "versions.yml:md5,9bc3caee6aeb54f23f5296b499546515",
-                "versions.yml:md5,a25161998ca60d5ce4e9a86abbf1bcb8",
-                "versions.yml:md5,c175b92f50b5be38a8808cbf7ac7452e",
-                "versions.yml:md5,ca7e95cf7ff7cff5d052b890729f7ead",
-                "versions.yml:md5,d03beea3c68934c3f3623a005c1424d2",
-                "versions.yml:md5,f2f3ecd549045f7595245f904f5d9414",
-                "versions.yml:md5,fd16f1098b9c285f3ea7bd3daf4e8f10"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-07-03T12:07:54.452949"
+        "timestamp": "2025-12-16T10:27:40.098579318"
     },
     "sarscov2 paired-end [bam] - stub": {
         "content": [
@@ -312,18 +302,8 @@
                         {
                             "id": "test"
                         },
-                        "test.paired_end.sorted.bam.summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
-                ],
-                "26": [
-                    "versions.yml:md5,60dc1afce7fecb7270e998a00ee393e2",
-                    "versions.yml:md5,9bc3caee6aeb54f23f5296b499546515",
-                    "versions.yml:md5,a25161998ca60d5ce4e9a86abbf1bcb8",
-                    "versions.yml:md5,c175b92f50b5be38a8808cbf7ac7452e",
-                    "versions.yml:md5,ca7e95cf7ff7cff5d052b890729f7ead",
-                    "versions.yml:md5,d03beea3c68934c3f3623a005c1424d2",
-                    "versions.yml:md5,f2f3ecd549045f7595245f904f5d9414",
-                    "versions.yml:md5,fd16f1098b9c285f3ea7bd3daf4e8f10"
                 ],
                 "3": [
                     [
@@ -706,26 +686,16 @@
                         {
                             "id": "test"
                         },
-                        "test.paired_end.sorted.bam.summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
-                ],
-                "versions": [
-                    "versions.yml:md5,60dc1afce7fecb7270e998a00ee393e2",
-                    "versions.yml:md5,9bc3caee6aeb54f23f5296b499546515",
-                    "versions.yml:md5,a25161998ca60d5ce4e9a86abbf1bcb8",
-                    "versions.yml:md5,c175b92f50b5be38a8808cbf7ac7452e",
-                    "versions.yml:md5,ca7e95cf7ff7cff5d052b890729f7ead",
-                    "versions.yml:md5,d03beea3c68934c3f3623a005c1424d2",
-                    "versions.yml:md5,f2f3ecd549045f7595245f904f5d9414",
-                    "versions.yml:md5,fd16f1098b9c285f3ea7bd3daf4e8f10"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-07-03T12:08:17.304769"
+        "timestamp": "2025-12-16T10:03:03.811447426"
     },
     "sarscov2 paired-end [bam] no modules - stub": {
         "content": [
@@ -785,9 +755,6 @@
                     
                 ],
                 "25": [
-                    
-                ],
-                "26": [
                     
                 ],
                 "3": [
@@ -888,16 +855,13 @@
                 ],
                 "tin_txt": [
                     
-                ],
-                "versions": [
-                    
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-07-03T12:08:24.443731"
+        "timestamp": "2025-12-16T10:03:08.860494145"
     }
 }

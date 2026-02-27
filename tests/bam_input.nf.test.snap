@@ -9,21 +9,21 @@
                 "BEDTOOLS_GENOMECOV_FW": {
                     "bedtools": "2.31.1"
                 },
+                "BEDTOOLS_GENOMECOV_REV": {
+                    "bedtools": "2.31.1"
+                },
                 "CUSTOM_CATADDITIONALFASTA": {
                     "python": "3.12.2"
-                },
-                "CUSTOM_GETCHROMSIZES": {
-                    "getchromsizes": 1.21
                 },
                 "CUSTOM_TX2GENE": {
                     "python": "3.10.4"
                 },
-                "DESEQ2_QC_STAR_SALMON": {
+                "DESEQ2_QC_BAM_SALMON": {
                     "bioconductor-deseq2": "1.46.0",
                     "r-base": "4.4.2"
                 },
                 "DUPRADAR": {
-                    "bioconductor-dupradar": "1.32.0"
+                    "bioconductor-dupradar": "1.38.0"
                 },
                 "GTF2BED": {
                     "perl": "5.26.2"
@@ -41,49 +41,52 @@
                     "python": "3.9.5"
                 },
                 "PICARD_MARKDUPLICATES": {
-                    "picard": "3.1.1"
+                    "picard": "3.4.0"
                 },
                 "QUALIMAP_RNASEQ": {
                     "qualimap": 2.3
                 },
                 "RSEQC_BAMSTAT": {
-                    "rseqc": "5.0.2"
+                    "rseqc": "5.0.4"
                 },
                 "RSEQC_INFEREXPERIMENT": {
-                    "rseqc": "5.0.2"
+                    "rseqc": "5.0.4"
                 },
                 "RSEQC_INNERDISTANCE": {
-                    "rseqc": "5.0.2"
+                    "rseqc": "5.0.4"
                 },
                 "RSEQC_JUNCTIONANNOTATION": {
-                    "rseqc": "5.0.2"
+                    "rseqc": "5.0.4"
                 },
                 "RSEQC_JUNCTIONSATURATION": {
-                    "rseqc": "5.0.2"
+                    "rseqc": "5.0.4"
                 },
                 "RSEQC_READDISTRIBUTION": {
-                    "rseqc": "5.0.2"
+                    "rseqc": "5.0.4"
                 },
                 "RSEQC_READDUPLICATION": {
-                    "rseqc": "5.0.2"
+                    "rseqc": "5.0.4"
                 },
                 "SALMON_QUANT": {
                     "salmon": "1.10.3"
                 },
+                "SAMTOOLS_FAIDX": {
+                    "samtools": "1.22.1"
+                },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": 1.21
+                    "samtools": "1.22.1"
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": 1.21
+                    "samtools": "1.22.1"
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": 1.21
+                    "samtools": "1.22.1"
                 },
                 "SAMTOOLS_SORT_QUALIMAP": {
-                    "samtools": 1.21
+                    "samtools": "1.22.1"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.22.1"
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -680,6 +683,8 @@
                 "star_salmon/rseqc/inner_distance/txt/RAP1_IAA_30M_REP1.inner_distance.txt",
                 "star_salmon/rseqc/inner_distance/txt/RAP1_IAA_30M_REP1.inner_distance_freq.txt",
                 "star_salmon/rseqc/inner_distance/txt/RAP1_IAA_30M_REP1.inner_distance_mean.txt",
+                "star_salmon/rseqc/inner_distance/txt/RAP1_UNINDUCED_REP1.inner_distance.txt",
+                "star_salmon/rseqc/inner_distance/txt/RAP1_UNINDUCED_REP2.inner_distance.txt",
                 "star_salmon/rseqc/inner_distance/txt/WT_REP1.inner_distance.txt",
                 "star_salmon/rseqc/inner_distance/txt/WT_REP1.inner_distance_freq.txt",
                 "star_salmon/rseqc/inner_distance/txt/WT_REP1.inner_distance_mean.txt",
@@ -780,6 +785,7 @@
                 "star_salmon/salmon.merged.transcript_counts.tsv",
                 "star_salmon/salmon.merged.transcript_lengths.tsv",
                 "star_salmon/salmon.merged.transcript_tpm.tsv",
+                "star_salmon/salmon.merged.tx2gene.tsv",
                 "star_salmon/samtools_stats",
                 "star_salmon/samtools_stats/RAP1_IAA_30M_REP1.markdup.sorted.bam.flagstat",
                 "star_salmon/samtools_stats/RAP1_IAA_30M_REP1.markdup.sorted.bam.idxstats",
@@ -841,8 +847,7 @@
                 "star_salmon/stringtie/WT_REP2.ballgown/t_data.ctab",
                 "star_salmon/stringtie/WT_REP2.coverage.gtf",
                 "star_salmon/stringtie/WT_REP2.gene.abundance.txt",
-                "star_salmon/stringtie/WT_REP2.transcripts.gtf",
-                "star_salmon/tx2gene.tsv"
+                "star_salmon/stringtie/WT_REP2.transcripts.gtf"
             ],
             [
                 "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055",
@@ -925,6 +930,7 @@
                 "RAP1_UNINDUCED_REP2.infer_experiment.txt:md5,688cf8ef4b0069d8c426420e9a27b732",
                 "WT_REP1.infer_experiment.txt:md5,bf0c137f5fca06e7c40e1984a1acb06d",
                 "WT_REP2.infer_experiment.txt:md5,82e23b329ee60709f343bc2d17d43b14",
+                "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
                 "e_data.ctab:md5,98a2b6a7555e58c7f21b45a1f48e5cbf",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
@@ -944,19 +950,18 @@
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
                 "e_data.ctab:md5,b03f3118d1aa58fceadcb3311028e856",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
-                "i_data.ctab:md5,041edee3193df311f621c09f4991892b",
-                "tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
+                "i_data.ctab:md5,041edee3193df311f621c09f4991892b"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.3"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-15T20:12:59.270445702"
+        "timestamp": "2026-02-26T13:51:27.63099365"
     },
     "BAM input for RSEM": {
         "content": [
-            143,
+            147,
             {
                 "BBMAP_BBSPLIT": {
                     "bbmap": 39.18
@@ -964,18 +969,24 @@
                 "BEDTOOLS_GENOMECOV_FW": {
                     "bedtools": "2.31.1"
                 },
+                "BEDTOOLS_GENOMECOV_REV": {
+                    "bedtools": "2.31.1"
+                },
                 "CUSTOM_CATADDITIONALFASTA": {
                     "python": "3.12.2"
                 },
-                "CUSTOM_GETCHROMSIZES": {
-                    "getchromsizes": 1.21
+                "CUSTOM_RSEMMERGECOUNTS": {
+                    "sed": 4.7
+                },
+                "CUSTOM_TX2GENE": {
+                    "python": "3.10.4"
                 },
                 "DESEQ2_QC_RSEM": {
                     "bioconductor-deseq2": "1.46.0",
                     "r-base": "4.4.2"
                 },
                 "DUPRADAR": {
-                    "bioconductor-dupradar": "1.32.0"
+                    "bioconductor-dupradar": "1.38.0"
                 },
                 "GTF2BED": {
                     "perl": "5.26.2"
@@ -993,7 +1004,7 @@
                     "python": "3.9.5"
                 },
                 "PICARD_MARKDUPLICATES": {
-                    "picard": "3.1.1"
+                    "picard": "3.4.0"
                 },
                 "QUALIMAP_RNASEQ": {
                     "qualimap": 2.3
@@ -1002,48 +1013,54 @@
                     "rsem": "1.3.1",
                     "star": "2.7.10a"
                 },
-                "RSEM_MERGE_COUNTS": {
-                    "sed": 4.7
-                },
                 "RSEM_PREPAREREFERENCE_GENOME": {
                     "rsem": "1.3.1",
                     "star": "2.7.10a"
                 },
                 "RSEQC_BAMSTAT": {
-                    "rseqc": "5.0.2"
+                    "rseqc": "5.0.4"
                 },
                 "RSEQC_INFEREXPERIMENT": {
-                    "rseqc": "5.0.2"
+                    "rseqc": "5.0.4"
                 },
                 "RSEQC_INNERDISTANCE": {
-                    "rseqc": "5.0.2"
+                    "rseqc": "5.0.4"
                 },
                 "RSEQC_JUNCTIONANNOTATION": {
-                    "rseqc": "5.0.2"
+                    "rseqc": "5.0.4"
                 },
                 "RSEQC_JUNCTIONSATURATION": {
-                    "rseqc": "5.0.2"
+                    "rseqc": "5.0.4"
                 },
                 "RSEQC_READDISTRIBUTION": {
-                    "rseqc": "5.0.2"
+                    "rseqc": "5.0.4"
                 },
                 "RSEQC_READDUPLICATION": {
-                    "rseqc": "5.0.2"
+                    "rseqc": "5.0.4"
+                },
+                "SAMTOOLS_FAIDX": {
+                    "samtools": "1.22.1"
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": 1.21
+                    "samtools": "1.22.1"
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": 1.21
+                    "samtools": "1.22.1"
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": 1.21
+                    "samtools": "1.22.1"
                 },
                 "SAMTOOLS_SORT_QUALIMAP": {
-                    "samtools": 1.21
+                    "samtools": "1.22.1"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.22.1"
+                },
+                "SE_GENE_UNIFIED": {
+                    "bioconductor-summarizedexperiment": "1.32.0"
+                },
+                "SE_TRANSCRIPT_UNIFIED": {
+                    "bioconductor-summarizedexperiment": "1.32.0"
                 },
                 "STAR_GENOMEGENERATE": {
                     "gawk": "5.1.0",
@@ -1055,6 +1072,9 @@
                 },
                 "SUBREAD_FEATURECOUNTS": {
                     "subread": "2.0.6"
+                },
+                "TXIMETA_TXIMPORT": {
+                    "bioconductor-tximeta": "1.20.1"
                 },
                 "UCSC_BEDCLIP": {
                     "ucsc": 377
@@ -1257,48 +1277,6 @@
                 "multiqc/multiqc_report_plots/svg/star_rsem_deseq2_pca.svg",
                 "pipeline_info",
                 "pipeline_info/nf_core_rnaseq_software_mqc_versions.yml",
-                "rsem",
-                "rsem/RAP1_IAA_30M_REP1.genes.results",
-                "rsem/RAP1_IAA_30M_REP1.isoforms.results",
-                "rsem/RAP1_IAA_30M_REP1.stat",
-                "rsem/RAP1_IAA_30M_REP1.stat/RAP1_IAA_30M_REP1.cnt",
-                "rsem/RAP1_IAA_30M_REP1.stat/RAP1_IAA_30M_REP1.model",
-                "rsem/RAP1_IAA_30M_REP1.stat/RAP1_IAA_30M_REP1.theta",
-                "rsem/RAP1_IAA_30M_REP1.transcript.bam",
-                "rsem/RAP1_UNINDUCED_REP1.genes.results",
-                "rsem/RAP1_UNINDUCED_REP1.isoforms.results",
-                "rsem/RAP1_UNINDUCED_REP1.stat",
-                "rsem/RAP1_UNINDUCED_REP1.stat/RAP1_UNINDUCED_REP1.cnt",
-                "rsem/RAP1_UNINDUCED_REP1.stat/RAP1_UNINDUCED_REP1.model",
-                "rsem/RAP1_UNINDUCED_REP1.stat/RAP1_UNINDUCED_REP1.theta",
-                "rsem/RAP1_UNINDUCED_REP1.transcript.bam",
-                "rsem/RAP1_UNINDUCED_REP2.genes.results",
-                "rsem/RAP1_UNINDUCED_REP2.isoforms.results",
-                "rsem/RAP1_UNINDUCED_REP2.stat",
-                "rsem/RAP1_UNINDUCED_REP2.stat/RAP1_UNINDUCED_REP2.cnt",
-                "rsem/RAP1_UNINDUCED_REP2.stat/RAP1_UNINDUCED_REP2.model",
-                "rsem/RAP1_UNINDUCED_REP2.stat/RAP1_UNINDUCED_REP2.theta",
-                "rsem/RAP1_UNINDUCED_REP2.transcript.bam",
-                "rsem/WT_REP1.genes.results",
-                "rsem/WT_REP1.isoforms.results",
-                "rsem/WT_REP1.stat",
-                "rsem/WT_REP1.stat/WT_REP1.cnt",
-                "rsem/WT_REP1.stat/WT_REP1.model",
-                "rsem/WT_REP1.stat/WT_REP1.theta",
-                "rsem/WT_REP1.transcript.bam",
-                "rsem/WT_REP2.genes.results",
-                "rsem/WT_REP2.isoforms.results",
-                "rsem/WT_REP2.stat",
-                "rsem/WT_REP2.stat/WT_REP2.cnt",
-                "rsem/WT_REP2.stat/WT_REP2.model",
-                "rsem/WT_REP2.stat/WT_REP2.theta",
-                "rsem/WT_REP2.transcript.bam",
-                "rsem/rsem.merged.gene_counts.tsv",
-                "rsem/rsem.merged.gene_tpm.tsv",
-                "rsem/rsem.merged.genes_long.tsv",
-                "rsem/rsem.merged.isoforms_long.tsv",
-                "rsem/rsem.merged.transcript_counts.tsv",
-                "rsem/rsem.merged.transcript_tpm.tsv",
                 "samtools",
                 "samtools/RAP1_IAA_30M_REP1.sorted.bam.bai",
                 "samtools/RAP1_UNINDUCED_REP1.sorted.bam.bai",
@@ -1306,16 +1284,46 @@
                 "samtools/WT_REP1.sorted.bam.bai",
                 "samtools/WT_REP2.sorted.bam.bai",
                 "star_rsem",
+                "star_rsem/RAP1_IAA_30M_REP1.genes.results",
+                "star_rsem/RAP1_IAA_30M_REP1.isoforms.results",
                 "star_rsem/RAP1_IAA_30M_REP1.markdup.sorted.bam",
                 "star_rsem/RAP1_IAA_30M_REP1.markdup.sorted.bam.bai",
+                "star_rsem/RAP1_IAA_30M_REP1.stat",
+                "star_rsem/RAP1_IAA_30M_REP1.stat/RAP1_IAA_30M_REP1.cnt",
+                "star_rsem/RAP1_IAA_30M_REP1.stat/RAP1_IAA_30M_REP1.model",
+                "star_rsem/RAP1_IAA_30M_REP1.stat/RAP1_IAA_30M_REP1.theta",
+                "star_rsem/RAP1_UNINDUCED_REP1.genes.results",
+                "star_rsem/RAP1_UNINDUCED_REP1.isoforms.results",
                 "star_rsem/RAP1_UNINDUCED_REP1.markdup.sorted.bam",
                 "star_rsem/RAP1_UNINDUCED_REP1.markdup.sorted.bam.bai",
+                "star_rsem/RAP1_UNINDUCED_REP1.stat",
+                "star_rsem/RAP1_UNINDUCED_REP1.stat/RAP1_UNINDUCED_REP1.cnt",
+                "star_rsem/RAP1_UNINDUCED_REP1.stat/RAP1_UNINDUCED_REP1.model",
+                "star_rsem/RAP1_UNINDUCED_REP1.stat/RAP1_UNINDUCED_REP1.theta",
+                "star_rsem/RAP1_UNINDUCED_REP2.genes.results",
+                "star_rsem/RAP1_UNINDUCED_REP2.isoforms.results",
                 "star_rsem/RAP1_UNINDUCED_REP2.markdup.sorted.bam",
                 "star_rsem/RAP1_UNINDUCED_REP2.markdup.sorted.bam.bai",
+                "star_rsem/RAP1_UNINDUCED_REP2.stat",
+                "star_rsem/RAP1_UNINDUCED_REP2.stat/RAP1_UNINDUCED_REP2.cnt",
+                "star_rsem/RAP1_UNINDUCED_REP2.stat/RAP1_UNINDUCED_REP2.model",
+                "star_rsem/RAP1_UNINDUCED_REP2.stat/RAP1_UNINDUCED_REP2.theta",
+                "star_rsem/WT_REP1.genes.results",
+                "star_rsem/WT_REP1.isoforms.results",
                 "star_rsem/WT_REP1.markdup.sorted.bam",
                 "star_rsem/WT_REP1.markdup.sorted.bam.bai",
+                "star_rsem/WT_REP1.stat",
+                "star_rsem/WT_REP1.stat/WT_REP1.cnt",
+                "star_rsem/WT_REP1.stat/WT_REP1.model",
+                "star_rsem/WT_REP1.stat/WT_REP1.theta",
+                "star_rsem/WT_REP2.genes.results",
+                "star_rsem/WT_REP2.isoforms.results",
                 "star_rsem/WT_REP2.markdup.sorted.bam",
                 "star_rsem/WT_REP2.markdup.sorted.bam.bai",
+                "star_rsem/WT_REP2.stat",
+                "star_rsem/WT_REP2.stat/WT_REP2.cnt",
+                "star_rsem/WT_REP2.stat/WT_REP2.model",
+                "star_rsem/WT_REP2.stat/WT_REP2.theta",
                 "star_rsem/bigwig",
                 "star_rsem/bigwig/RAP1_IAA_30M_REP1.forward.bigWig",
                 "star_rsem/bigwig/RAP1_IAA_30M_REP1.reverse.bigWig",
@@ -1392,6 +1400,7 @@
                 "star_rsem/featurecounts/WT_REP2.biotype_counts_rrna_mqc.tsv",
                 "star_rsem/featurecounts/WT_REP2.featureCounts.tsv",
                 "star_rsem/featurecounts/WT_REP2.featureCounts.tsv.summary",
+                "star_rsem/log",
                 "star_rsem/picard_metrics",
                 "star_rsem/picard_metrics/RAP1_IAA_30M_REP1.markdup.sorted.MarkDuplicates.metrics.txt",
                 "star_rsem/picard_metrics/RAP1_UNINDUCED_REP1.markdup.sorted.MarkDuplicates.metrics.txt",
@@ -1589,6 +1598,24 @@
                 "star_rsem/qualimap/WT_REP2/raw_data_qualimapReport/coverage_profile_along_genes_(low).txt",
                 "star_rsem/qualimap/WT_REP2/raw_data_qualimapReport/coverage_profile_along_genes_(total).txt",
                 "star_rsem/qualimap/WT_REP2/rnaseq_qc_results.txt",
+                "star_rsem/rsem.merged.gene.SummarizedExperiment.rds",
+                "star_rsem/rsem.merged.gene_counts.tsv",
+                "star_rsem/rsem.merged.gene_counts_length_scaled.tsv",
+                "star_rsem/rsem.merged.gene_counts_scaled.tsv",
+                "star_rsem/rsem.merged.gene_lengths.tsv",
+                "star_rsem/rsem.merged.gene_tpm.tsv",
+                "star_rsem/rsem.merged.transcript.SummarizedExperiment.rds",
+                "star_rsem/rsem.merged.transcript_counts.tsv",
+                "star_rsem/rsem.merged.transcript_lengths.tsv",
+                "star_rsem/rsem.merged.transcript_tpm.tsv",
+                "star_rsem/rsem.merged.tx2gene.tsv",
+                "star_rsem/rsem_merge_counts",
+                "star_rsem/rsem_merge_counts/rsem.merged.gene_counts.tsv",
+                "star_rsem/rsem_merge_counts/rsem.merged.gene_tpm.tsv",
+                "star_rsem/rsem_merge_counts/rsem.merged.genes_long.tsv",
+                "star_rsem/rsem_merge_counts/rsem.merged.isoforms_long.tsv",
+                "star_rsem/rsem_merge_counts/rsem.merged.transcript_counts.tsv",
+                "star_rsem/rsem_merge_counts/rsem.merged.transcript_tpm.tsv",
                 "star_rsem/rseqc",
                 "star_rsem/rseqc/bam_stat",
                 "star_rsem/rseqc/bam_stat/RAP1_IAA_30M_REP1.bam_stat.txt",
@@ -1615,6 +1642,8 @@
                 "star_rsem/rseqc/inner_distance/txt/RAP1_IAA_30M_REP1.inner_distance.txt",
                 "star_rsem/rseqc/inner_distance/txt/RAP1_IAA_30M_REP1.inner_distance_freq.txt",
                 "star_rsem/rseqc/inner_distance/txt/RAP1_IAA_30M_REP1.inner_distance_mean.txt",
+                "star_rsem/rseqc/inner_distance/txt/RAP1_UNINDUCED_REP1.inner_distance.txt",
+                "star_rsem/rseqc/inner_distance/txt/RAP1_UNINDUCED_REP2.inner_distance.txt",
                 "star_rsem/rseqc/inner_distance/txt/WT_REP1.inner_distance.txt",
                 "star_rsem/rseqc/inner_distance/txt/WT_REP1.inner_distance_freq.txt",
                 "star_rsem/rseqc/inner_distance/txt/WT_REP1.inner_distance_mean.txt",
@@ -1784,42 +1813,6 @@
                 "samtools-idxstats-mapped-reads-plot_Normalised_Counts.txt:md5,75acd04232d1804b5f960ee4c5db4722",
                 "samtools-idxstats-mapped-reads-plot_Observed_over_Expected_Counts.txt:md5,ae45731d8d4595f77e6b271004f3a070",
                 "samtools-idxstats-mapped-reads-plot_Raw_Counts.txt:md5,f84395a5a5aaeafac758a65f69e1fd8f",
-                "RAP1_IAA_30M_REP1.genes.results:md5,b46d4654bbd0d5305a75d9016675a285",
-                "RAP1_IAA_30M_REP1.isoforms.results:md5,a5515b36cc21248d758d4ed6986baed7",
-                "RAP1_IAA_30M_REP1.cnt:md5,34ba9a3404b025d94c89c78282c41c24",
-                "RAP1_IAA_30M_REP1.model:md5,53efb6613526edea16b1ca771f08268c",
-                "RAP1_IAA_30M_REP1.theta:md5,135a34f68fd1f9084658bb683b3442d2",
-                "RAP1_IAA_30M_REP1.transcript.bam:md5,84d1b1c0a611f0870d68508efe7fc0c9",
-                "RAP1_UNINDUCED_REP1.genes.results:md5,b48a19e3e7156d900b2c89da344f080f",
-                "RAP1_UNINDUCED_REP1.isoforms.results:md5,4578b1e83097e08f7f9fd6c05aae15f2",
-                "RAP1_UNINDUCED_REP1.cnt:md5,20b871f8f5bfd2394672dffe68f64628",
-                "RAP1_UNINDUCED_REP1.model:md5,ce88ff398f4737760a5eb423e034ed7f",
-                "RAP1_UNINDUCED_REP1.theta:md5,3803fd0acd3c328c76bbbb72b57639ef",
-                "RAP1_UNINDUCED_REP1.transcript.bam:md5,d51a63724c393072c5a73850601ef727",
-                "RAP1_UNINDUCED_REP2.genes.results:md5,b7527ddb0be1fea09125a13727a1e725",
-                "RAP1_UNINDUCED_REP2.isoforms.results:md5,a818e6b510912edee1fd97320f61405f",
-                "RAP1_UNINDUCED_REP2.cnt:md5,c14af602b0077d47fab45efe0c2aed91",
-                "RAP1_UNINDUCED_REP2.model:md5,0774306712bb4e1c95dc0489cbfa9017",
-                "RAP1_UNINDUCED_REP2.theta:md5,268e1d8ee9208c3812de22906794350b",
-                "RAP1_UNINDUCED_REP2.transcript.bam:md5,f891a2cc2862fea358a1707ae230fae4",
-                "WT_REP1.genes.results:md5,c3aaa802abfb3ac7168d911b232bd8a5",
-                "WT_REP1.isoforms.results:md5,9f3423606100c7661981416de4060a84",
-                "WT_REP1.cnt:md5,12a159048405c34a1ec2dc469707350f",
-                "WT_REP1.model:md5,342497fe7473520080a75dbf50e3f3ed",
-                "WT_REP1.theta:md5,44dbdecbeccfb0d8ece9e4f08849f176",
-                "WT_REP1.transcript.bam:md5,f010eef21c129a90be9f3fc6188cf6be",
-                "WT_REP2.genes.results:md5,fcea4e1e1a34bca6f845c66a852c2039",
-                "WT_REP2.isoforms.results:md5,b9e21a8e6e68aed11e75f31a1feda672",
-                "WT_REP2.cnt:md5,45ddb6ee6d468a0aafa9f6e0e26f2973",
-                "WT_REP2.model:md5,2f4eec1b6a7010b056532c55acf10a46",
-                "WT_REP2.theta:md5,f6668ded53d0741134058dd9e64571d0",
-                "WT_REP2.transcript.bam:md5,a5f965731a3fd6e523f4960d7d462f97",
-                "rsem.merged.gene_counts.tsv:md5,47a75de167a1b72d3a20789df389a3f7",
-                "rsem.merged.gene_tpm.tsv:md5,18a6dd460737434f6da1c17c1dc8aafa",
-                "rsem.merged.genes_long.tsv:md5,24767425e5d9d914ed0b1eca431182ac",
-                "rsem.merged.isoforms_long.tsv:md5,1363e166497e4574793a9f4704841767",
-                "rsem.merged.transcript_counts.tsv:md5,d3a4fa1f3bde89ee9d30114af2db3b48",
-                "rsem.merged.transcript_tpm.tsv:md5,efa563d0402cae35b96380592d147a72",
                 "RAP1_IAA_30M_REP1.sorted.bam.bai:md5,4460948fc194ba7c7fe7ad92e68132a0",
                 "RAP1_UNINDUCED_REP1.sorted.bam.bai:md5,ec51d038a5836721edc9f44d27c06542",
                 "RAP1_UNINDUCED_REP2.sorted.bam.bai:md5,21a49b49cd6afb56c387fb645d50c3e4",
@@ -1855,6 +1848,21 @@
                 "coverage_profile_along_genes_(high).txt:md5,a73462b9ecbd1d2c45d7ca84b5f7925b",
                 "coverage_profile_along_genes_(low).txt:md5,7adc228bc15e344abb7938ea4d35a846",
                 "coverage_profile_along_genes_(total).txt:md5,7adc228bc15e344abb7938ea4d35a846",
+                "rsem.merged.gene_counts.tsv:md5,060949cead024e393378bec58c82c976",
+                "rsem.merged.gene_counts_length_scaled.tsv:md5,8ceb1a2f0662630ad658d565db50c852",
+                "rsem.merged.gene_counts_scaled.tsv:md5,fdc2bb1618019953151b053107293543",
+                "rsem.merged.gene_lengths.tsv:md5,5b43d4327096c8714351fa3b147ace4b",
+                "rsem.merged.gene_tpm.tsv:md5,b4b1a0f093a5be3f43e2a5f583138709",
+                "rsem.merged.transcript_counts.tsv:md5,058a1780f4e0622c0cffb38ff7dcb66a",
+                "rsem.merged.transcript_lengths.tsv:md5,abcbf186029d6accc817a5b84a71e650",
+                "rsem.merged.transcript_tpm.tsv:md5,2368b7b8e5561ff2d5a0672bb2f0301b",
+                "rsem.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
+                "rsem.merged.gene_counts.tsv:md5,e1094c70c24d144681828840da3d968d",
+                "rsem.merged.gene_tpm.tsv:md5,7f78363b53c3d46bbab8976fb65c24ba",
+                "rsem.merged.genes_long.tsv:md5,e276f036e78bb06241f8f252b0aa57cb",
+                "rsem.merged.isoforms_long.tsv:md5,36da5d2b5cc6c1b89166f78a3b15a209",
+                "rsem.merged.transcript_counts.tsv:md5,7824ce210648c77a99dd49c4b26eb127",
+                "rsem.merged.transcript_tpm.tsv:md5,dd6879b53eb021ec5df3d351aced8ace",
                 "RAP1_IAA_30M_REP1.infer_experiment.txt:md5,1f31ddae1f98e779e30d846cde3834de",
                 "RAP1_UNINDUCED_REP1.infer_experiment.txt:md5,a2a8e31dbd0ebd0c12f3f968ffd5391b",
                 "RAP1_UNINDUCED_REP2.infer_experiment.txt:md5,9ec058d3a4162fd1b4c6175e2106eef4",
@@ -1883,9 +1891,9 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.3"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-15T20:20:27.355744216"
+        "timestamp": "2026-02-13T14:58:30.502549129"
     }
 }

@@ -4,13 +4,14 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::umi_tools=1.1.5
-  - python=3.9.18
-  - matplotlib=3.8.2
-  - scipy=1.12.0
-  - regex=2023.12.25
-  - numpy=1.26.4
-  - pandas=2.2.0
-  - pysam=0.22.0
-  - future=0.18.3
-  - pybktree=1.1
+  # renovate: datasource=conda depName=bioconda/umi_tools
+  - bioconda::umi_tools=1.1.6
+  - conda-forge::future=0.18.3
+  - conda-forge::matplotlib=3.8.2
+  - conda-forge::numpy=1.26.4
+  - conda-forge::pandas=2.2.0
+  - conda-forge::python=3.9.18
+  - conda-forge::regex=2023.12.25
+  - conda-forge::scipy=1.12.0
+  - conda-forge::pybktree=1.1
+  - bioconda::pysam=0.22.0

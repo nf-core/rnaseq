@@ -1,0 +1,137 @@
+nextflow_workflow {
+
+    name "Test Subworkflow ALIGN_STAR - Read Groups"
+    script "../main.nf"
+    workflow "ALIGN_STAR"
+    config "./nextflow.rg.config"
+
+    test("star - read group from params only") {
+
+        setup {
+            run("STAR_GENOMEGENERATE") {
+                script "../../../../modules/nf-core/star/genomegenerate/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id:'test_fasta' ],
+                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                    ])
+                    input[1] = Channel.of([
+                        [ id:'test_gtf' ],
+                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                    ])
+                    """
+                }
+            }
+        }
+
+        when {
+            workflow {
+                """
+                star_ignore_sjdbgtf = false
+                is_aws_igenome      = false
+                use_sentieon_star    = false
+                use_parabricks_star  = false
+                skip_markduplicates  = false
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false, seq_platform:'ILLUMINA' ],
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = STAR_GENOMEGENERATE.out.index
+                input[2] = Channel.of([
+                    [ id:'test_gtf' ],
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                ])
+                input[3] = star_ignore_sjdbgtf
+                input[4] = is_aws_igenome
+                input[5] = Channel.of([
+                    [ id:'test_fasta' ],
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                ])
+                input[6] = use_sentieon_star
+                input[7] = use_parabricks_star
+                input[8] = skip_markduplicates
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                // params.seq_center = 'GLOBAL_CENTER' (from nextflow.rg.config), no meta.seq_center
+                { assert bam(workflow.out.bam[0][1]).getHeader().any { line -> line.contains('CN:GLOBAL_CENTER') } },
+                { assert bam(workflow.out.bam[0][1]).getHeader().any { line -> line.contains('PL:ILLUMINA') } },
+                { assert bam(workflow.out.bam[0][1]).getHeader().any { line -> line.contains('SM:test') } }
+            )
+        }
+    }
+
+    test("star - read group meta overrides params") {
+
+        setup {
+            run("STAR_GENOMEGENERATE") {
+                script "../../../../modules/nf-core/star/genomegenerate/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id:'test_fasta' ],
+                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                    ])
+                    input[1] = Channel.of([
+                        [ id:'test_gtf' ],
+                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                    ])
+                    """
+                }
+            }
+        }
+
+        when {
+            workflow {
+                """
+                star_ignore_sjdbgtf = false
+                is_aws_igenome      = false
+                use_sentieon_star    = false
+                use_parabricks_star  = false
+                skip_markduplicates  = false
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false, seq_platform:'ILLUMINA', seq_center:'SAMPLE_CENTER' ],
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = STAR_GENOMEGENERATE.out.index
+                input[2] = Channel.of([
+                    [ id:'test_gtf' ],
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                ])
+                input[3] = star_ignore_sjdbgtf
+                input[4] = is_aws_igenome
+                input[5] = Channel.of([
+                    [ id:'test_fasta' ],
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                ])
+                input[6] = use_sentieon_star
+                input[7] = use_parabricks_star
+                input[8] = skip_markduplicates
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                // meta.seq_center = 'SAMPLE_CENTER' should override params.seq_center = 'GLOBAL_CENTER'
+                { assert bam(workflow.out.bam[0][1]).getHeader().any { line -> line.contains('CN:SAMPLE_CENTER') } },
+                { assert !bam(workflow.out.bam[0][1]).getHeader().any { line -> line.contains('CN:GLOBAL_CENTER') } },
+                { assert bam(workflow.out.bam[0][1]).getHeader().any { line -> line.contains('PL:ILLUMINA') } }
+            )
+        }
+    }
+}

@@ -20,12 +20,14 @@ input:
         type: file
         description: bedGraph file
         pattern: "*.{bedgraph}"
-  - - sizes:
-        type: file
-        description: Chromosome sizes file
+        ontologies: []
+  - sizes:
+      type: file
+      description: Chromosome sizes file
+      ontologies: []
 output:
-  - bedgraph:
-      - meta:
+  bedgraph:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -34,11 +36,30 @@ output:
           type: file
           description: bedGraph file
           pattern: "*.{bedgraph}"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions_ucsc:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - ucsc:
+          type: string
+          description: The tool name
+      - echo $VERSION:
+          type: eval
+          description: The expression to obtain the version of the tool
+
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - ucsc:
+          type: string
+          description: The tool name
+      - echo $VERSION:
+          type: eval
+          description: The expression to obtain the version of the tool
+
 authors:
   - "@drpatelh"
 maintainers:

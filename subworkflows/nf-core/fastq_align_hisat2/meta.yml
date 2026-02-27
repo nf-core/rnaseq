@@ -39,6 +39,9 @@ input:
       type: file
       description: Reference genome fasta file
       pattern: "*.{fasta,fa}"
+  - save_unaligned:
+      type: boolean
+      description: Save unaligned reads to FastQ files
 output:
   - meta:
       type: map

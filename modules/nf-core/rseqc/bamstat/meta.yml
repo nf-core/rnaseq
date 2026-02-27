@@ -24,24 +24,50 @@ input:
         type: file
         description: the bam file to calculate statistics of
         pattern: "*.{bam}"
+        ontologies: []
+    - bai:
+        type: file
+        description: BAM index file
+        pattern: "*.{bai}"
+        ontologies: []
 output:
-  - txt:
-      - meta:
+  txt:
+    - - meta:
           type: file
           description: bam statistics report
           pattern: "*.bam_stat.txt"
+          ontologies: []
       - "*.bam_stat.txt":
           type: file
           description: bam statistics report
           pattern: "*.bam_stat.txt"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions_rseqc:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - rseqc:
+          type: string
+          description: The tool name
+      - bam_stat.py --version | sed "s/bam_stat.py //":
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - rseqc:
+          type: string
+          description: The tool name
+      - bam_stat.py --version | sed "s/bam_stat.py //":
+          type: eval
+          description: The expression to obtain the version of the tool
 authors:
   - "@drpatelh"
   - "@kevinmenden"
+  - "@rhassaine"
 maintainers:
   - "@drpatelh"
   - "@kevinmenden"
+  - "@rhassaine"

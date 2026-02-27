@@ -2,15 +2,16 @@
 // Alignment with STAR
 //
 include { SENTIEON_STARALIGN as SENTIEON_STAR_ALIGN } from '../../../modules/nf-core/sentieon/staralign/main'
+include { PARABRICKS_RNAFQ2BAM as PARABRICKS_RNA_FQ2BAM } from '../../../modules/nf-core/parabricks/rnafq2bam/main'
 include { STAR_ALIGN                                } from '../../../modules/nf-core/star/align'
-include { STAR_ALIGN_IGENOMES                       } from '../../../modules/local/star_align_igenomes'
+include { STAR_ALIGN as STAR_ALIGN_IGENOMES          } from '../../../modules/nf-core/star/align'
 include { BAM_SORT_STATS_SAMTOOLS                   } from '../../nf-core/bam_sort_stats_samtools'
 
 
 //
 // Function that parses and returns the alignment rate from the STAR log output
 //
-def getStarPercentMapped(params, align_log) {
+def getStarPercentMapped(_params, align_log) {
     def percent_aligned = 0
     def pattern = /Uniquely mapped reads %\s*\|\s*([\d\.]+)%/
     align_log.eachLine { line ->
@@ -25,19 +26,17 @@ def getStarPercentMapped(params, align_log) {
 
 workflow ALIGN_STAR {
     take:
-    reads               // channel: [ val(meta), [ reads ] ]
-    index               // channel: [ val(meta), [ index ] ]
-    gtf                 // channel: [ val(meta), [ gtf ] ]
-    star_ignore_sjdbgtf // boolean: when using pre-built STAR indices do not re-extract and use splice junctions from the GTF file
-    seq_platform        // string : sequencing platform
-    seq_center          // string : sequencing center
-    is_aws_igenome      // boolean: whether the genome files are from AWS iGenomes
-    fasta               // channel: /path/to/fasta
-    use_sentieon_star   // boolean: whether star alignment is accelerated with Sentieon
+    reads                // channel: [ val(meta), [ reads ] ]
+    index                // channel: [ val(meta), [ index ] ]
+    gtf                  // channel: [ val(meta), [ gtf ] ]
+    star_ignore_sjdbgtf  // boolean: when using pre-built STAR indices do not re-extract and use splice junctions from the GTF file
+    is_aws_igenome       // boolean: whether the genome files are from AWS iGenomes
+    fasta                // channel: /path/to/fasta
+    use_sentieon_star    // boolean: whether star alignment is accelerated with Sentieon
+    use_parabricks_star  // boolean: whether star alignment (and mark duplicates) is accelerated with Parabricks
+    skip_markduplicates  // boolean: whether to skip marking duplicates
 
     main:
-
-    ch_versions = Channel.empty()
 
     //
     // Map reads with STAR
@@ -45,17 +44,23 @@ workflow ALIGN_STAR {
     ch_star_out = null
     if (use_sentieon_star) {
 
-        SENTIEON_STAR_ALIGN(reads, index, gtf, star_ignore_sjdbgtf, seq_platform, seq_center)
+        SENTIEON_STAR_ALIGN(reads, index, gtf, star_ignore_sjdbgtf)
         ch_star_out = SENTIEON_STAR_ALIGN
+        // SENTIEON_STAR_ALIGN uses topic-based version reporting
+
+    } else if (use_parabricks_star) {
+
+        PARABRICKS_RNA_FQ2BAM(reads, fasta, index, true, !skip_markduplicates)
+        ch_star_out = PARABRICKS_RNA_FQ2BAM
 
     } else if (is_aws_igenome) {
 
-        STAR_ALIGN_IGENOMES(reads, index, gtf, star_ignore_sjdbgtf, seq_platform, seq_center)
+        STAR_ALIGN_IGENOMES(reads, index, gtf, star_ignore_sjdbgtf)
         ch_star_out = STAR_ALIGN_IGENOMES
 
     } else {
 
-        STAR_ALIGN(reads, index, gtf, star_ignore_sjdbgtf, seq_platform, seq_center)
+        STAR_ALIGN(reads, index, gtf, star_ignore_sjdbgtf)
         ch_star_out = STAR_ALIGN
 
     }
@@ -68,14 +73,12 @@ workflow ALIGN_STAR {
     ch_bam_transcript = ch_star_out.out.bam_transcript
     ch_fastq = ch_star_out.out.fastq
     ch_tab = ch_star_out.out.tab
-    ch_versions = ch_versions.mix(ch_star_out.out.versions.first())
     ch_percent_mapped = ch_log_final.map { meta, log -> [ meta, getStarPercentMapped(params, log) ] }
 
     //
     // Sort, index BAM file and run samtools stats, flagstat and idxstats
     //
     BAM_SORT_STATS_SAMTOOLS(ch_orig_bam, fasta)
-    ch_versions = ch_versions.mix(BAM_SORT_STATS_SAMTOOLS.out.versions)
 
     emit:
     orig_bam = ch_orig_bam                          // channel: [ val(meta), bam            ]
@@ -93,5 +96,4 @@ workflow ALIGN_STAR {
     flagstat = BAM_SORT_STATS_SAMTOOLS.out.flagstat // channel: [ val(meta), [ flagstat ] ]
     idxstats = BAM_SORT_STATS_SAMTOOLS.out.idxstats // channel: [ val(meta), [ idxstats ] ]
     percent_mapped = ch_percent_mapped              // channel: [ val(meta), percent_mapped ]
-    versions = ch_versions                          // channel: [ versions.yml ]
 }

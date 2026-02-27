@@ -3,6 +3,97 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [[3.23.0](https://github.com/nf-core/rnaseq/releases/tag/3.23.0)] - 2026-02-27
+
+### Credits
+
+Special thanks to the following for their contributions to the release:
+
+- [Albert Palleja](https://github.com/apalleja)
+- [Chase Mateusiak](https://github.com/cmatKhan)
+- [Christian Mertes](https://github.com/c-mertes)
+- [Elad Herz](https://github.com/EladH1)
+- [Ezra Greenberg](https://github.com/egreenberg7)
+- [Gary Burnett](https://github.com/gburnett-nvidia)
+- [Isaac Virshup](https://github.com/ivirshup)
+- [Juliana Assis](https://github.com/Juassis)
+- [Marine Cambon](https://github.com/marccamb)
+- [Matthias Zepper](https://github.com/MatthiasZepper)
+- [Sebastian Schulz](https://github.com/sebschulz1)
+
+### Enhancements and fixes
+
+- [PR #1616](https://github.com/nf-core/rnaseq/pull/1616) - Add Sylph for contamination detection.
+- [PR #1663](https://github.com/nf-core/rnaseq/pull/1663) - Bump version after release 3.22.2
+- [PR #1664](https://github.com/nf-core/rnaseq/pull/1664) - Add support for multiple rRNA removal tools (`--ribo_removal_tool`): SortMeRNA (default), Bowtie2, and RiboDetector; enable BBSplit MultiQC reporting; add paired-end read grouping in MultiQC
+- [PR #1665](https://github.com/nf-core/rnaseq/pull/1665) - Bulk update modules/subworkflows; replace CUSTOM_GETCHROMSIZES with SAMTOOLS_FAIDX; update RSEQC modules with Wave containers for ARM compatibility; update ARM containers for RSEQC and UMITOOLS
+- [PR #1667](https://github.com/nf-core/rnaseq/pull/1667) - Enhance RSEM output exports and remove unnecessary star_rsem check
+- [PR #1669](https://github.com/nf-core/rnaseq/pull/1669) - Enable SeqKit stats MultiQC module for RiboDetector rRNA removal
+- [PR #1672](https://github.com/nf-core/rnaseq/pull/1672) - Document star_rsem STAR aligner settings and customization
+- [PR #1677](https://github.com/nf-core/rnaseq/pull/1677) - Apply Nextflow 25 strict syntax fixes
+- [PR #1685](https://github.com/nf-core/rnaseq/pull/1685) - Add GPU-accelerated STAR alignment and mark duplicates using NVIDIA Parabricks rna_fq2bam (`--use_parabricks_star`)
+- [PR #1686](https://github.com/nf-core/rnaseq/pull/1686) - Add support for uncompressed FASTQ input files ([#1343](https://github.com/nf-core/rnaseq/issues/1343))
+- [PR #1687](https://github.com/nf-core/rnaseq/pull/1687) - Fix PREPARE_GENOME tests: use single aligner values, correct aligner assignments for index-specific tests, add Kallisto test, remove ineffective Sentieon tests, use file-names-only snapshots for all non-deterministic indices (STAR, Salmon, Kallisto, RSEM, HISAT2)
+- [PR #1688](https://github.com/nf-core/rnaseq/pull/1688) - Significantly improved prokaryotic RNA-seq support: new `-profile prokaryotic` for bacterial/archaeal data with Bowtie2+Salmon alignment, GFFREAD transcript extraction for CDS-only annotations, and automatic STAR CDS configuration. We would like to thank [Juliana Assis](https://github.com/Juassis), [Sebastian Schulz](https://github.com/sebschulz1), [Albert Palleja](https://github.com/apalleja) and [Marine Cambon](https://github.com/marccamb) for their [recommendations and extensive testing](https://github.com/nf-core/rnaseq/issues/1512).
+- [PR #1689](https://github.com/nf-core/rnaseq/pull/1689) - Migrate to topic-based version reporting for nf-core modules/subworkflows and local modules
+- [PR #1694](https://github.com/nf-core/rnaseq/pull/1694) - Replace local iGenomes STAR modules with nf-core module aliases and config-based container overrides
+- [PR #1696](https://github.com/nf-core/rnaseq/pull/1696) - Fix offline mode by skipping `igenomes_base` validation when `NXF_OFFLINE=true` ([#1690](https://github.com/nf-core/rnaseq/issues/1690))
+- [PR #1697](https://github.com/nf-core/rnaseq/pull/1697) - Add tximport processing for RSEM outputs: gene/transcript length matrices, length-scaled counts, SummarizedExperiment objects, and DESeq2 QC using length-scaled counts ([#1320](https://github.com/nf-core/rnaseq/issues/1320)). **Note for `--aligner star_rsem` users:** the merged count and TPM files at the output root (e.g. `rsem.merged.gene_counts.tsv`) are now produced by tximport, matching the Salmon/Kallisto pathway. The previous RSEM merge script outputs are preserved in the `rsem_merge_counts/` subdirectory.
+- [PR #1700](https://github.com/nf-core/rnaseq/pull/1700) - Add FastQC step after BBSplit/rRNA filtering to provide QC metrics on reads used for alignment ([#1276](https://github.com/nf-core/rnaseq/issues/1276))
+- [PR #1704](https://github.com/nf-core/rnaseq/pull/1704) - Include single-library samples in merged fastq output when `--save_merged_fastq` is set ([#748](https://github.com/nf-core/rnaseq/issues/748))
+- [PR #1707](https://github.com/nf-core/rnaseq/pull/1707) - Enable UMI deduplication with `--aligner star_rsem` ([#829](https://github.com/nf-core/rnaseq/issues/829))
+- [PR #1708](https://github.com/nf-core/rnaseq/pull/1708) - Allow `--skip_alignment` with a pre-built `--salmon_index` or `--kallisto_index` without requiring `--fasta` ([#1706](https://github.com/nf-core/rnaseq/issues/1706))
+- [PR #1709](https://github.com/nf-core/rnaseq/pull/1709) - Update metro map renders with nf-metro v0.4.7; add source `.mmd` file and regeneration instructions to CONTRIBUTING.md
+- [PR #1711](https://github.com/nf-core/rnaseq/pull/1711) - Scope GPU container flags (`--gpus all`, `--nv`) to `process_gpu` tasks only via per-process `containerOptions`, fixing failures on CPU-only nodes in mixed clusters ([#1710](https://github.com/nf-core/rnaseq/issues/1710))
+- [PR #1713](https://github.com/nf-core/rnaseq/pull/1713) - Add optional `seq_platform` and `seq_center` samplesheet columns for per-sample BAM read group tags (`PL`, `CN`). Read group assembly is handled via ext.args config closures rather than module inputs. Per-sample `seq_center` overrides the global `--seq_center` parameter. Based on [PR #1701](https://github.com/nf-core/rnaseq/pull/1701) by [@c-mertes](https://github.com/c-mertes).
+- [PR #1714](https://github.com/nf-core/rnaseq/pull/1714) - Re-render metro map with nf-metro v0.5.2: improved label spacing, smaller file icon font, and section alignment fix
+- [PR #1715](https://github.com/nf-core/rnaseq/pull/1715) - Bump version to 3.23.0 ahead of release
+- [PR #1716](https://github.com/nf-core/rnaseq/pull/1716) - Add informative error when Salmon fails to produce strandedness output for auto-strandedness samples
+- [PR #1718](https://github.com/nf-core/rnaseq/pull/1718) - Add `--seq_platform` parameter for global sequencing platform BAM read group tag, by analogy with `--seq_center`
+- [PR #1719](https://github.com/nf-core/rnaseq/pull/1719) - Docs and changelog cleanup: move descriptions above `<details>` blocks in output.md, add missing software dependencies, sort arm.config alphabetically
+- [PR #1724](https://github.com/nf-core/rnaseq/pull/1724) - Update umitools modules: remove patches, add conda channel prefixes, update Wave containers
+- [PR #1725](https://github.com/nf-core/rnaseq/pull/1725) - Refine .nftignore patterns to reinstate tx2gene MD5 checking, remove redundant UNTAR version collection
+- [PR #1728](https://github.com/nf-core/rnaseq/pull/1728) - Re-render metro map with nf-metro v0.5.4: bolder section labels and number badges for improved visual hierarchy, increased vertical spacing between stacked sections, synchronized animation timing
+- [PR #1730](https://github.com/nf-core/rnaseq/pull/1730) - Bump Nextflow from 25.04.0 to 25.04.3 in CI to fix `conda create --mkdir` failure ([nextflow-io/nextflow#5947](https://github.com/nextflow-io/nextflow/issues/5947))
+- [PR #1734](https://github.com/nf-core/rnaseq/pull/1734) - Compose `test_prokaryotic` profile on `prokaryotic` to remove duplicated settings
+- [PR #1735](https://github.com/nf-core/rnaseq/pull/1735) - Code quality improvements: replace opaque tuple indexing with named destructuring, rename `ch_dummy_file`, move metro map docs, align GPU CI workflow with other workflows
+- [PR #1736](https://github.com/nf-core/rnaseq/pull/1736) - Load prokaryotic config in nf-test instead of duplicating params in each test
+- [PR #1738](https://github.com/nf-core/rnaseq/pull/1738) - Fix iGenomes STAR conda: use `bioconda` channel for x86_64, reserve `seqera` channel for ARM only
+
+### Parameters
+
+| Old parameter | New parameter                |
+| ------------- | ---------------------------- |
+|               | `--ribo_removal_tool`        |
+|               | `--sylph_db`                 |
+|               | `--sylph_taxonomy`           |
+|               | `--gffread_transcript_fasta` |
+|               | `--extra_bowtie2_align_args` |
+|               | `--use_parabricks_star`      |
+
+> **NB:** Parameter has been **added** if just the new parameter information is present.
+
+### Profiles
+
+| Profile       | Description                                            |
+| ------------- | ------------------------------------------------------ |
+| `prokaryotic` | Settings optimized for bacterial/archaeal RNA-seq data |
+
+### Software dependencies
+
+| Dependency  | Old version | New version |
+| ----------- | ----------- | ----------- |
+| `bowtie2`   |             | 2.5.4       |
+| `seqkit`    |             | 2.9.0       |
+| `sylph`     |             | 0.7.0       |
+| `sylph-tax` |             | 1.2.0       |
+
+> **NB:** Dependency has been **updated** if both old and new version information is present.
+>
+> **NB:** Dependency has been **added** if just the new version information is present.
+>
+> **NB:** Dependency has been **removed** if new version information isn't present.
+
 ## [[3.22.2](https://github.com/nf-core/rnaseq/releases/tag/3.22.2)] - 2025-12-11
 
 ### Credits

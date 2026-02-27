@@ -1,0 +1,146 @@
+nextflow_workflow {
+
+    name "Test Subworkflow PREPARE_GENOME - Parabricks"
+    script "../main.nf"
+    workflow "PREPARE_GENOME"
+    config "./nextflow.config"
+    tag "gpu"
+
+    test("use_parabricks_star = true") {
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                gffread_transcript_fasta = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = null
+                skip_gtf_filter          = false
+                skip_bbsplit             = true
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = true
+                use_sentieon_star        = false
+                use_parabricks_star      = true
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = null  // gff
+                input[3]  = null  // additional_fasta
+                input[4]  = null  // transcript_fasta
+                input[5]  = null  // gene_bed
+                input[6]  = null  // splicesites
+                input[7]  = null  // bbsplit_fasta_list
+                input[8]  = null  // sortmerna_fasta_list
+                input[9]  = null  // star_index
+                input[10] = null  // rsem_index
+                input[11] = null  // salmon_index
+                input[12] = null  // kallisto_index
+                input[13] = null  // hisat2_index
+                input[14] = null  // bowtie2_index
+                input[15] = null  // bbsplit_index
+                input[16] = null  // sortmerna_index
+                input[17] = gencode
+                input[18] = gffread_transcript_fasta
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
+                input[28] = use_parabricks_star
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out.transcript_fasta,
+                    workflow.out.fasta,
+                    workflow.out.gtf,
+                    workflow.out.fai,
+                    workflow.out.gene_bed,
+                    workflow.out.chrom_sizes,
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("use_parabricks_star = true - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                gffread_transcript_fasta = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = null
+                skip_gtf_filter          = false
+                skip_bbsplit             = true
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = true
+                use_sentieon_star        = false
+                use_parabricks_star      = true
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = null  // gff
+                input[3]  = null  // additional_fasta
+                input[4]  = null  // transcript_fasta
+                input[5]  = null  // gene_bed
+                input[6]  = null  // splicesites
+                input[7]  = null  // bbsplit_fasta_list
+                input[8]  = null  // sortmerna_fasta_list
+                input[9]  = null  // star_index
+                input[10] = null  // rsem_index
+                input[11] = null  // salmon_index
+                input[12] = null  // kallisto_index
+                input[13] = null  // hisat2_index
+                input[14] = null  // bowtie2_index
+                input[15] = null  // bbsplit_index
+                input[16] = null  // sortmerna_index
+                input[17] = gencode
+                input[18] = gffread_transcript_fasta
+                input[19] = featurecounts_group_type
+                input[20] = aligner
+                input[21] = pseudo_aligner
+                input[22] = skip_gtf_filter
+                input[23] = skip_bbsplit
+                input[24] = ribo_removal_tool
+                input[25] = skip_alignment
+                input[26] = skip_pseudo_alignment
+                input[27] = use_sentieon_star
+                input[28] = use_parabricks_star
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out.chrom_sizes,
+                    workflow.out.fai,
+                    workflow.out.fasta,
+                    workflow.out.gene_bed,
+                    workflow.out.gtf,
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.transcript_fasta,
+                    workflow.out.versions
+                ).match() }
+            )
+        }
+    }
+}

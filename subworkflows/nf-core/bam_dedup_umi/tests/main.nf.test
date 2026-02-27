@@ -5,6 +5,15 @@ nextflow_workflow {
     workflow "BAM_DEDUP_UMI"
     config "./nextflow.config"
 
+    tag "subworkflows"
+    tag "subworkflows_nfcore"
+    tag "subworkflows/bam_dedup_umi"
+    tag "subworkflows/bam_dedup_stats_samtools_umicollapse"
+    tag "subworkflows/bam_dedup_stats_samtools_umitools"
+    tag "subworkflows/bam_sort_stats_samtools"
+    tag "umitools/prepareforrsem"
+    tag "samtools/sort"
+
     test("sarscov2_bam_bai - umitools - with transcriptome bams") {
 
         when {
@@ -41,8 +50,7 @@ nextflow_workflow {
                     bam(workflow.out.transcriptome_bam[0][1]).getReadsMD5(),
                     workflow.out.stats,
                     workflow.out.flagstat,
-                    workflow.out.idxstats,
-                    workflow.out.versions
+                    workflow.out.idxstats
                 ).match() },
                 { assert path(workflow.out.bai.get(0).get(1)).exists() }
             )
@@ -80,8 +88,7 @@ nextflow_workflow {
                     bam(workflow.out.bam[0][1]).getReadsMD5(),
                     workflow.out.stats,
                     workflow.out.flagstat,
-                    workflow.out.idxstats,
-                    workflow.out.versions
+                    workflow.out.idxstats
                 ).match() },
                 { assert path(workflow.out.bai.get(0).get(1)).exists() }
             )

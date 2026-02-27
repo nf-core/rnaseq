@@ -4,11 +4,11 @@ process RSEQC_INNERDISTANCE {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/rseqc:5.0.3--py39hf95cd2a_0' :
-        'biocontainers/rseqc:5.0.3--py39hf95cd2a_0' }"
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/6f/6f44b7933e2c2b1a340dc9485869974eb032d34e81af83716eb381964ee3e5e7/data' :
+        'community.wave.seqera.io/library/rseqc_r-base:2e29d2dfda9cef15' }"
 
     input:
-    tuple val(meta), path(bam)
+    tuple val(meta), path(bam), path(bai)
     path  bed
 
     output:
@@ -17,7 +17,7 @@ process RSEQC_INNERDISTANCE {
     tuple val(meta), path("*mean.txt")    , optional:true, emit: mean
     tuple val(meta), path("*.pdf")        , optional:true, emit: pdf
     tuple val(meta), path("*.r")          , optional:true, emit: rscript
-    path  "versions.yml"                  , emit: versions
+    tuple val("${task.process}"), val('rseqc'), eval('inner_distance.py --version | sed "s/inner_distance.py //"'), emit: versions_rseqc, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -34,18 +34,10 @@ process RSEQC_INNERDISTANCE {
             $args \\
             > stdout.txt
         head -n 2 stdout.txt > ${prefix}.inner_distance_mean.txt
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            rseqc: \$(inner_distance.py --version | sed -e "s/inner_distance.py //g")
-        END_VERSIONS
         """
     } else {
         """
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            rseqc: \$(inner_distance.py --version | sed -e "s/inner_distance.py //g")
-        END_VERSIONS
+        echo "inner_distance.py doesn't support single-end data" > ${prefix}.inner_distance.txt
         """
     }
 
@@ -57,10 +49,5 @@ process RSEQC_INNERDISTANCE {
     touch ${prefix}.inner_distance_mean.txt
     touch ${prefix}.inner_distance_plot.pdf
     touch ${prefix}.inner_distance_plot.r
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        rseqc: \$(inner_distance.py --version | sed -e "s/inner_distance.py //g")
-    END_VERSIONS
     """
 }

@@ -3,6 +3,10 @@ nextflow_process {
     name "Test Process QUALIMAP_RNASEQ"
     script "../main.nf"
     process "QUALIMAP_RNASEQ"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "qualimap"
+    tag "qualimap/rnaseq"
 
     test("homo_sapiens [bam]") {
         when {
@@ -26,7 +30,7 @@ nextflow_process {
                 { assert snapshot(
                     file("${process.out.results[0][1]}/qualimapReport.html").name,
                     path("${process.out.results[0][1]}/rnaseq_qc_results.txt"),
-                    process.out.versions
+                    process.out.findAll { key, val -> key.startsWith('versions') }
                 ).match() }
             )
         }

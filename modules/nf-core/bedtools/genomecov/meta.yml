@@ -24,26 +24,28 @@ input:
         type: file
         description: BAM/BED/GFF/VCF
         pattern: "*.{bam|bed|gff|vcf}"
+        ontologies: []
     - scale:
         type: integer
         description: Number containing the scale factor for the output. Set to 1 to
           disable. Setting to a value other than 1 will also get the -bg bedgraph output
           format as this is required for this command switch
-  - - sizes:
-        type: file
-        description: Tab-delimited table of chromosome names in the first column and
-          chromosome sizes in the second column
-  - - extension:
-        type: string
-        description: Extension of the output file (e. g., ".bg", ".bedgraph", ".txt",
-          ".tab", etc.) It is set arbitrarily by the user and corresponds to the file
-          format which depends on arguments.
-  - - sort:
-        type: boolean
-        description: Sort the output
+  - sizes:
+      type: file
+      description: Tab-delimited table of chromosome names in the first column and chromosome
+        sizes in the second column
+      ontologies: []
+  - extension:
+      type: string
+      description: Extension of the output file (e. g., ".bg", ".bedgraph", ".txt",
+        ".tab", etc.) It is set arbitrarily by the user and corresponds to the file
+        format which depends on arguments.
+  - sort:
+      type: boolean
+      description: Sort the output
 output:
-  - genomecov:
-      - meta:
+  genomecov:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -52,11 +54,28 @@ output:
           type: file
           description: Computed genome coverage file
           pattern: "*.${extension}"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions_bedtools:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - bedtools:
+          type: string
+          description: The name of the tool
+      - "bedtools --version | sed -e 's/bedtools v//g'":
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - bedtools:
+          type: string
+          description: The name of the tool
+      - "bedtools --version | sed -e 's/bedtools v//g'":
+          type: eval
+          description: The expression to obtain the version of the tool
 authors:
   - "@edmundmiller"
   - "@sruthipsuresh"

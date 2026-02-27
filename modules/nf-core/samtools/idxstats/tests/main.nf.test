@@ -3,6 +3,10 @@ nextflow_process {
     name "Test Process SAMTOOLS_IDXSTATS"
     script "../main.nf"
     process "SAMTOOLS_IDXSTATS"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "samtools"
+    tag "samtools/idxstats"
 
     test("bam") {
 
@@ -21,7 +25,10 @@ nextflow_process {
         then {
             assertAll (
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(
+                    process.out.idxstats,
+                    process.out.findAll { key, val -> key.startsWith('versions') }
+                ).match() }
             )
         }
     }
@@ -43,7 +50,10 @@ nextflow_process {
         then {
             assertAll (
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(
+                    process.out.idxstats,
+                    process.out.findAll { key, val -> key.startsWith('versions') }
+                ).match() }
             )
         }
     }}

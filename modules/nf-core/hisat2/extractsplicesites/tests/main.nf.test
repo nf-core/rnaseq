@@ -3,6 +3,10 @@ nextflow_process {
     name "Test Process HISAT2_EXTRACTSPLICESITES"
     script "../main.nf"
     process "HISAT2_EXTRACTSPLICESITES"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "hisat2"
+    tag "hisat2/extractsplicesites"
 
     test("Should run without failures") {
 
@@ -24,7 +28,7 @@ nextflow_process {
             assertAll(
                 { assert process.success },
                 { assert path("${process.out.txt[0][1]}").exists() },
-                { assert snapshot(process.out.versions).match() }
+                { assert snapshot(process.out.findAll { key, val -> key.startsWith("versions") }).match() }
             )
         }
     }

@@ -14,16 +14,11 @@ workflow BAM_MARKDUPLICATES_PICARD {
     ch_fai   // channel: [ val(meta), path(fai) ]
 
     main:
-
-    ch_versions = Channel.empty()
-
     PICARD_MARKDUPLICATES ( ch_reads, ch_fasta, ch_fai )
-    ch_versions = ch_versions.mix(PICARD_MARKDUPLICATES.out.versions.first())
 
     ch_markdup = PICARD_MARKDUPLICATES.out.bam.mix(PICARD_MARKDUPLICATES.out.cram)
 
     SAMTOOLS_INDEX ( ch_markdup )
-    ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
 
     ch_reads_index = ch_markdup
         .join(SAMTOOLS_INDEX.out.bai,  by: [0], remainder: true)
@@ -36,7 +31,6 @@ workflow BAM_MARKDUPLICATES_PICARD {
         }
 
     BAM_STATS_SAMTOOLS ( ch_reads_index, ch_fasta )
-    ch_versions = ch_versions.mix(BAM_STATS_SAMTOOLS.out.versions)
 
     emit:
     bam      = PICARD_MARKDUPLICATES.out.bam     // channel: [ val(meta), path(bam) ]
@@ -49,6 +43,4 @@ workflow BAM_MARKDUPLICATES_PICARD {
     stats    = BAM_STATS_SAMTOOLS.out.stats      // channel: [ val(meta), path(stats) ]
     flagstat = BAM_STATS_SAMTOOLS.out.flagstat   // channel: [ val(meta), path(flagstat) ]
     idxstats = BAM_STATS_SAMTOOLS.out.idxstats   // channel: [ val(meta), path(idxstats) ]
-
-    versions = ch_versions                       // channel: [ versions.yml ]
 }

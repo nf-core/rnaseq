@@ -3,15 +3,20 @@ nextflow_process {
     name "Test Process RSEQC_READDUPLICATION"
     script "../main.nf"
     process "RSEQC_READDUPLICATION"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "rseqc"
+    tag "rseqc/readduplication"
 
     test("sarscov2 paired-end [bam]") {
 
         when {
             process {
                 """
-                input[0] = Channel.of([
+                input[0] = channel.of([
                     [ id:'test', single_end: false ], // meta map
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true)
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true),
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam.bai", checkIfExists: true)
                 ])
                 """
             }
@@ -20,11 +25,13 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(file(process.out.pdf[0][1]).name).match("pdf") },
-                { assert snapshot(process.out.pos_xls).match("pos_xls") },
-                { assert snapshot(process.out.rscript).match("rscript") },
-                { assert snapshot(process.out.seq_xls).match("seq_xls") },
-                { assert snapshot(process.out.versions).match("versions") }
+                { assert snapshot(
+                    file(process.out.pdf[0][1]).name,
+                    process.out.pos_xls,
+                    process.out.rscript,
+                    process.out.seq_xls,
+                    process.out.versions_rseqc
+                ).match() }
             )
         }
     }
@@ -36,9 +43,10 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
+                input[0] = channel.of([
                     [ id:'test', single_end: false ], // meta map
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true)
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true),
+                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam.bai", checkIfExists: true)
                 ])
                 """
             }

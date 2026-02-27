@@ -9,12 +9,10 @@ keywords:
   - strandedness
 components:
   - bbmap/bbsplit
-  - samtools/sort
-  - samtools/index
-  - cat
   - cat/fastq
+  - fastqc
   - fq/lint
-  - sortmerna
+  - fastq_remove_rrna
   - fastq_subsample_fq_salmon
   - fastq_fastqc_umitools_trimgalore
   - fastq_fastqc_umitools_fastp
@@ -77,6 +75,15 @@ input:
         - index:
             type: directory
             description: SortMeRNA index directory
+  - ch_bowtie2_index:
+      description: Directory containing bowtie2 index for rRNA removal
+      structure:
+        - meta:
+            type: map
+            description: Metadata for the Bowtie2 index
+        - index:
+            type: directory
+            description: Bowtie2 index directory
   - ch_bbsplit_index:
       description: Path to directory or tar.gz archive for pre-built BBSplit index
       structure:
@@ -88,7 +95,7 @@ input:
             description: BBSplit index directory or tar.gz archive
             pattern: "{*,*.tar.gz}"
   - ch_rrna_fastas:
-      description: Channel containing one or more FASTA files containing rRNA sequences for use with SortMeRNA
+      description: Channel containing one or more FASTA files containing rRNA sequences for use with SortMeRNA or Bowtie2
       structure:
         - meta:
             type: map
@@ -109,24 +116,39 @@ input:
   - skip_umi_extract:
       type: boolean
       description: Skip the UMI extraction from the read in case the UMIs have been moved to the headers in advance of the pipeline run
+  - skip_linting:
+      type: boolean
+      description: Whether to skip linting of FastQ files
   - make_salmon_index:
       type: boolean
       description: Whether to create salmon index before running salmon quant
   - make_sortmerna_index:
       type: boolean
       description: Whether to create sortmerna index before running sortmerna
+  - make_bowtie2_index:
+      type: boolean
+      description: Whether to create bowtie2 index before running bowtie2 for rRNA removal
   - trimmer:
       type: string
-      description: Specifies the trimming tool to use - available options are 'trimgalore' and 'fastp'
+      description: Specifies the trimming tool to use
+      enum: ["trimgalore", "fastp"]
   - min_trimmed_reads:
       type: integer
       description: Minimum number of trimmed reads below which samples are removed from further processing
   - save_trimmed:
       type: boolean
       description: Save the trimmed FastQ files in the results directory?
+  - fastp_merge:
+      type: boolean
+      description: |
+        For FASTP, save merged fastqs stitching together read1 and read2 for paired end reads
   - remove_ribo_rna:
       type: boolean
-      description: Enable the removal of reads derived from ribosomal RNA using SortMeRNA?
+      description: Enable the removal of reads derived from ribosomal RNA
+  - ribo_removal_tool:
+      type: string
+      description: Specifies the rRNA removal tool to use
+      enum: ["sortmerna", "ribodetector", "bowtie2"]
   - with_umi:
       type: boolean
       description: Enable UMI-based read deduplication
@@ -140,13 +162,6 @@ input:
   - unstranded_threshold:
       type: float
       description: The difference in fraction of stranded reads assigned to 'forward' and 'reverse' below which a sample is classified as 'unstranded'.
-  - skip_linting:
-      type: boolean
-      description: Whether to skip linting of FastQ files
-  - fastp_merge:
-      type: boolean
-      description: |
-        For FASTP, save merged fastqs stitching together read1 and read2 for paired end reads
 
 output:
   - reads:
@@ -178,13 +193,6 @@ output:
         - count:
             type: integer
             description: Number of reads after trimming
-  - versions:
-      description: File containing software versions
-      structure:
-        - versions:
-            type: file
-            description: File containing software versions
-            pattern: "versions.yml"
   - lint_log:
       description: Log files from FastQ linting
       structure:
@@ -195,6 +203,26 @@ output:
             type: file
             description: FastQ lint log file
             pattern: "*.log"
+  - fastqc_filtered_html:
+      description: FastQC report HTML files for filtered reads (after BBSplit and/or rRNA removal)
+      structure:
+        - meta:
+            type: map
+            description: Groovy Map containing sample information
+        - html:
+            type: file
+            description: FastQC report HTML file
+            pattern: "*.html"
+  - fastqc_filtered_zip:
+      description: FastQC report ZIP files for filtered reads (after BBSplit and/or rRNA removal)
+      structure:
+        - meta:
+            type: map
+            description: Groovy Map containing sample information
+        - zip:
+            type: file
+            description: FastQC report ZIP file
+            pattern: "*.zip"
 
 authors:
   - "@pinin4fjords"

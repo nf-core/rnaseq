@@ -45,8 +45,10 @@ jobs:
           NFT_VER: ${{ env.NFT_VER }}
           # Skip sentieon tests on fork PRs where secrets are not available
           SKIP_SENTIEON: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != 'nf-core/rnaseq' }}
+          # Skip parabricks/GPU tests on CPU runners
+          SKIP_PARABRICKS: "true"
         with:
-          max_shards: 14
+          max_shards: 20
 
       - name: debug
         run: |
@@ -74,7 +76,7 @@ jobs:
           - isMain: false
             profile: "singularity"
         NXF_VER:
-          - "25.04.0"
+          - "25.04.3"
           - "latest-everything"
     env:
       NXF_ANSI_LOG: false
@@ -98,8 +100,10 @@ jobs:
           NXF_VERSION: ${{ matrix.NXF_VER }}
           # Skip sentieon tests on fork PRs where secrets are not available
           SKIP_SENTIEON: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != 'nf-core/rnaseq' }}
+          # Skip parabricks/GPU tests on CPU runners
+          SKIP_PARABRICKS: "true"
         with:
-          profile: ${{ matrix.profile }}
+          profile: test,${{ matrix.profile }}
           shard: ${{ matrix.shard }}
           total_shards: ${{ env.TOTAL_SHARDS }}
 

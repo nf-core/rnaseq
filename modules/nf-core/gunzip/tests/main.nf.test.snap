@@ -11,7 +11,11 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,d327e4a19a6d5c5e974136cef8999d8c"
+                    [
+                        "GUNZIP",
+                        "gunzip",
+                        "1.13"
+                    ]
                 ],
                 "gunzip": [
                     [
@@ -21,16 +25,20 @@
                         "test.xyz.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,d327e4a19a6d5c5e974136cef8999d8c"
+                "versions_gunzip": [
+                    [
+                        "GUNZIP",
+                        "gunzip",
+                        "1.13"
+                    ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "24.10.2"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-12-13T11:48:22.080222697"
+        "timestamp": "2026-01-19T17:21:56.633550769"
     },
     "Should run without failures - stub": {
         "content": [
@@ -44,7 +52,11 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,d327e4a19a6d5c5e974136cef8999d8c"
+                    [
+                        "GUNZIP",
+                        "gunzip",
+                        "1.13"
+                    ]
                 ],
                 "gunzip": [
                     [
@@ -54,16 +66,20 @@
                         "test_1.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,d327e4a19a6d5c5e974136cef8999d8c"
+                "versions_gunzip": [
+                    [
+                        "GUNZIP",
+                        "gunzip",
+                        "1.13"
+                    ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "24.10.2"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-12-13T11:48:14.593020264"
+        "timestamp": "2026-01-19T17:21:51.435621199"
     },
     "Should run without failures": {
         "content": [
@@ -77,7 +93,11 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,d327e4a19a6d5c5e974136cef8999d8c"
+                    [
+                        "GUNZIP",
+                        "gunzip",
+                        "1.13"
+                    ]
                 ],
                 "gunzip": [
                     [
@@ -87,16 +107,20 @@
                         "test_1.fastq:md5,4161df271f9bfcd25d5845a1e220dbec"
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,d327e4a19a6d5c5e974136cef8999d8c"
+                "versions_gunzip": [
+                    [
+                        "GUNZIP",
+                        "gunzip",
+                        "1.13"
+                    ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "24.10.2"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-12-13T11:48:01.295397925"
+        "timestamp": "2026-01-19T17:21:40.613975821"
     },
     "Should run without failures - prefix": {
         "content": [
@@ -110,7 +134,11 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,d327e4a19a6d5c5e974136cef8999d8c"
+                    [
+                        "GUNZIP",
+                        "gunzip",
+                        "1.13"
+                    ]
                 ],
                 "gunzip": [
                     [
@@ -120,15 +148,19 @@
                         "test.xyz.fastq:md5,4161df271f9bfcd25d5845a1e220dbec"
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,d327e4a19a6d5c5e974136cef8999d8c"
+                "versions_gunzip": [
+                    [
+                        "GUNZIP",
+                        "gunzip",
+                        "1.13"
+                    ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "24.10.2"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-12-13T11:48:07.414271387"
+        "timestamp": "2026-01-19T17:21:46.086880414"
     }
 }

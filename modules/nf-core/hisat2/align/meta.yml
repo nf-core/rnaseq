@@ -47,6 +47,9 @@ input:
         description: Splices sites in gtf file
         pattern: "*.{txt}"
         ontologies: []
+  - save_unaligned:
+      type: boolean
+      description: Save unaligned reads to FastQ files
 output:
   bam:
     - - meta:
@@ -82,13 +85,48 @@ output:
           pattern: "*fastq.gz"
           ontologies:
             - edam: http://edamontology.org/format_3989 # GZIP format
+  versions_hisat2:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - hisat2:
+          type: string
+          description: The name of the tool
+      - "hisat2 --version | sed -n '1s/.*version //p'":
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_samtools:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - samtools:
+          type: string
+          description: The name of the tool
+      - "samtools --version | sed -n '1s/samtools //p'":
+          type: eval
+          description: The expression to obtain the version of the tool
+
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - hisat2:
+          type: string
+          description: The name of the tool
+      - "hisat2 --version | sed -n '1s/.*version //p'":
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - samtools:
+          type: string
+          description: The name of the tool
+      - "samtools --version | sed -n '1s/samtools //p'":
+          type: eval
+          description: The expression to obtain the version of the tool
+
 authors:
   - "@ntoda03"
   - "@ramprasadn"

@@ -21,7 +21,7 @@ process BBMAP_BBSPLIT {
     tuple val(meta), path('*fastq.gz')        , optional:true, emit: all_fastq
     tuple val(meta), path('*txt')             , optional:true, emit: stats
     tuple val(meta), path('*.log')            , optional:true, emit: log
-    path "versions.yml"                       , emit: versions
+    tuple val("${task.process}"), val('bbmap'), eval('bbversion.sh | grep -v "Duplicate cpuset"'), topic: versions, emit: versions_bbmap
 
     when:
     task.ext.when == null || task.ext.when
@@ -38,8 +38,8 @@ process BBMAP_BBSPLIT {
     }
 
     def other_refs = []
-    other_ref_names.eachWithIndex { name, index ->
-        other_refs << "ref_${name}=${other_ref_paths[index]}"
+    other_ref_names.eachWithIndex { name, idx ->
+        other_refs << "ref_${name}=${other_ref_paths[idx]}"
     }
 
     def fastq_in=''
@@ -79,7 +79,7 @@ process BBMAP_BBSPLIT {
         done
         find index_writable/ref/genome -name summary.txt | while read -r summary_file; do
             src=\$(grep '^source' "\$summary_file" | cut -f2- -d\$'\\t' | sed 's|.*/ref/|index_writable/ref/|')
-            mod=\$(echo "System.out.println(java.nio.file.Files.getLastModifiedTime(java.nio.file.Paths.get(\\"\$src\\")).toMillis());" | jshell -J-Djdk.lang.Process.launchMechanism=vfork -)
+            mod=\$(echo "System.out.println(java.nio.file.Files.getLastModifiedTime(java.nio.file.Paths.get(\\"\$src\\")).toMillis());" | jshell -J-Djdk.lang.Process.launchMechanism=vfork - 2>/dev/null | grep -oE '^[0-9]{12,14}\$')
             sed -e 's|bbsplit_index/ref|index_writable/ref|' -e "s|^last modified.*|last modified\\t\$mod|" "\$summary_file" > \${summary_file}.tmp && mv \${summary_file}.tmp \${summary_file}
         done
     fi
@@ -103,17 +103,12 @@ process BBMAP_BBSPLIT {
         done
         mv bbsplit_build bbsplit_index
     fi
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        bbmap: \$(bbversion.sh | grep -v "Duplicate cpuset")
-    END_VERSIONS
     """
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     def other_refs = ''
-    other_ref_names.eachWithIndex { name, index ->
+    other_ref_names.eachWithIndex { name, _idx ->
         other_refs += "echo '' | gzip > ${prefix}_${name}.fastq.gz"
     }
     def will_build_index = only_build_index || (!index && primary_ref && other_ref_names && other_ref_paths)
@@ -131,10 +126,5 @@ process BBMAP_BBSPLIT {
     fi
 
     touch ${prefix}.log
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        bbmap: \$(bbversion.sh | grep -v "Duplicate cpuset")
-    END_VERSIONS
     """
 }

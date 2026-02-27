@@ -26,6 +26,7 @@ input:
         type: file
         description: BAM/CRAM/SAM file(s)
         pattern: "*.{bam,cram,sam}"
+        ontologies: []
   - - meta2:
         type: map
         description: |
@@ -36,52 +37,101 @@ input:
         description: Reference genome FASTA file
         pattern: "*.{fa,fasta,fna}"
         optional: true
+        ontologies: []
+  - index_format:
+      type: string
+      description: Index format to use (optional)
+      pattern: "bai|csi|crai"
 output:
-  - bam:
-      - meta:
+  bam:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - "*.bam":
+      - "${prefix}.bam":
           type: file
           description: Sorted BAM file
           pattern: "*.{bam}"
-  - cram:
-      - meta:
+          ontologies: []
+  cram:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - "*.cram":
+      - "${prefix}.cram":
           type: file
           description: Sorted CRAM file
           pattern: "*.{cram}"
-  - crai:
-      - meta:
+          ontologies: []
+  sam:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - "*.crai":
+      - "${prefix}.sam":
+          type: file
+          description: Sorted SAM file
+          pattern: "*.{sam}"
+          ontologies: []
+  crai:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "${prefix}.${extension}.crai":
           type: file
           description: CRAM index file (optional)
           pattern: "*.crai"
-  - csi:
-      - meta:
+          ontologies: []
+  csi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - "*.csi":
+      - "${prefix}.${extension}.csi":
           type: file
           description: BAM index file (optional)
           pattern: "*.csi"
-  - versions:
-      - versions.yml:
+          ontologies: []
+  bai:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "${prefix}.${extension}.bai":
           type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          description: BAM index file (optional)
+          pattern: "*.bai"
+          ontologies: []
+  versions_samtools:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - samtools:
+          type: string
+          description: The tool name
+      - "samtools version | sed '1!d;s/.* //'":
+          type: string
+          description: The command used to generate the version of the tool
+
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - samtools:
+          type: string
+          description: The tool name
+      - "samtools version | sed '1!d;s/.* //'":
+          type: string
+          description: The command used to generate the version of the tool
+
 authors:
   - "@drpatelh"
   - "@ewels"

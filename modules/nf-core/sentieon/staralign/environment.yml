@@ -4,4 +4,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::sentieon=202503.01
+  - bioconda::sentieon=202503.02

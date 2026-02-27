@@ -48,12 +48,6 @@ input:
   - star_ignore_sjdbgtf:
       type: boolean
       description: Ignore annotation GTF file
-  - seq_platform:
-      type: string
-      description: Sequencing platform
-  - seq_center:
-      type: string
-      description: Sequencing center
 output:
   log_final:
     - - meta:
@@ -88,13 +82,26 @@ output:
           description: STAR log progress file
           pattern: "*Log.progress.out"
           ontologies: []
-  versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+  versions_star:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - star:
+          type: string
+          description: The tool name
+      - 'sentieon STAR --version | sed -e "s/STAR_//g"':
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_sentieon:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - sentieon:
+          type: string
+          description: The tool name
+      - 'sentieon driver --version 2>&1 | sed -e "s/sentieon-genomics-//g"':
+          type: eval
+          description: The expression to obtain the version of the tool
   bam:
     - - meta:
           type: map
@@ -242,6 +249,28 @@ output:
           description: STAR output bedGraph format file(s) (optional)
           pattern: "*.bg"
           ontologies: []
+
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - star:
+          type: string
+          description: The tool name
+      - 'sentieon STAR --version | sed -e "s/STAR_//g"':
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - sentieon:
+          type: string
+          description: The tool name
+      - 'sentieon driver --version 2>&1 | sed -e "s/sentieon-genomics-//g"':
+          type: eval
+          description: The expression to obtain the version of the tool
+
 authors:
   - "@FriederikeHanssen"
 maintainers:

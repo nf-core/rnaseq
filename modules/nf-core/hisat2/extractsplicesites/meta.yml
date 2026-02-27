@@ -25,9 +25,10 @@ input:
         type: file
         description: Reference gtf annotation file
         pattern: "*.{gtf}"
+        ontologies: []
 output:
-  - txt:
-      - meta:
+  txt:
+    - - meta:
           type: map
           description: |
             Groovy Map containing reference information
@@ -36,11 +37,30 @@ output:
           type: file
           description: Splice sites in txt file
           pattern: "*.txt"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions_hisat2:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - hisat2:
+          type: string
+          description: The tool name
+      - hisat2 --version | grep -o "version [^ ]*" | cut -d " " -f 2:
+          type: eval
+          description: The expression to obtain the version of the tool
+
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - hisat2:
+          type: string
+          description: The tool name
+      - hisat2 --version | grep -o "version [^ ]*" | cut -d " " -f 2:
+          type: eval
+          description: The expression to obtain the version of the tool
+
 authors:
   - "@ntoda03"
   - "@ramprasadn"

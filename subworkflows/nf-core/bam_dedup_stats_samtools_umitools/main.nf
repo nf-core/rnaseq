@@ -12,20 +12,15 @@ workflow BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS {
     val_get_dedup_stats // boolean: true/false
 
     main:
-
-    ch_versions = Channel.empty()
-
     //
     // UMI-tools dedup
     //
     UMITOOLS_DEDUP ( ch_bam_bai, val_get_dedup_stats )
-    ch_versions = ch_versions.mix(UMITOOLS_DEDUP.out.versions.first())
 
     //
     // Index BAM file and run samtools stats, flagstat and idxstats
     //
     SAMTOOLS_INDEX ( UMITOOLS_DEDUP.out.bam )
-    ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
 
     ch_bam_bai_dedup = UMITOOLS_DEDUP.out.bam
         .join(SAMTOOLS_INDEX.out.bai, by: [0], remainder: true)
@@ -40,17 +35,17 @@ workflow BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS {
         }
 
     BAM_STATS_SAMTOOLS ( ch_bam_bai_dedup, [ [:], [] ] )
-    ch_versions = ch_versions.mix(BAM_STATS_SAMTOOLS.out.versions)
 
     emit:
-    bam      = UMITOOLS_DEDUP.out.bam          // channel: [ val(meta), path(bam) ]
-    deduplog = UMITOOLS_DEDUP.out.log          // channel: [ val(meta), path(log) ]
+    bam                  = UMITOOLS_DEDUP.out.bam                  // channel: [ val(meta), path(bam) ]
+    deduplog             = UMITOOLS_DEDUP.out.log                  // channel: [ val(meta), path(log) ]
+    tsv_edit_distance    = UMITOOLS_DEDUP.out.tsv_edit_distance    // channel: [ val(meta), path(tsv) ]
+    tsv_per_umi          = UMITOOLS_DEDUP.out.tsv_per_umi          // channel: [ val(meta), path(tsv) ]
+    tsv_umi_per_position = UMITOOLS_DEDUP.out.tsv_umi_per_position // channel: [ val(meta), path(tsv) ]
 
-    bai      = SAMTOOLS_INDEX.out.bai          // channel: [ val(meta), path(bai) ]
-    csi      = SAMTOOLS_INDEX.out.csi          // channel: [ val(meta), path(csi) ]
-    stats    = BAM_STATS_SAMTOOLS.out.stats    // channel: [ val(meta), path(stats) ]
-    flagstat = BAM_STATS_SAMTOOLS.out.flagstat // channel: [ val(meta), path(flagstat) ]
-    idxstats = BAM_STATS_SAMTOOLS.out.idxstats // channel: [ val(meta), path(idxstats) ]
-
-    versions = ch_versions                     // channel: [ path(versions.yml) ]
+    bai                  = SAMTOOLS_INDEX.out.bai                  // channel: [ val(meta), path(bai) ]
+    csi                  = SAMTOOLS_INDEX.out.csi                  // channel: [ val(meta), path(csi) ]
+    stats                = BAM_STATS_SAMTOOLS.out.stats            // channel: [ val(meta), path(stats) ]
+    flagstat             = BAM_STATS_SAMTOOLS.out.flagstat         // channel: [ val(meta), path(flagstat) ]
+    idxstats             = BAM_STATS_SAMTOOLS.out.idxstats         // channel: [ val(meta), path(idxstats) ]
 }

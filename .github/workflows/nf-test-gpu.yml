@@ -25,8 +25,6 @@ env:
   NXF_ANSI_LOG: false
   NXF_SINGULARITY_CACHEDIR: ${{ github.workspace }}/.singularity
   NXF_SINGULARITY_LIBRARYDIR: ${{ github.workspace }}/.singularity
-  # renovate: datasource=github-releases depName=nextflow-io/nextflow versioning=semver
-  NXF_VER: "25.04.0"
 
 jobs:
   get-shards:
@@ -80,6 +78,7 @@ jobs:
         shard: ${{ fromJson(needs.get-shards.outputs.shard) }}
         NXF_VER:
           - "25.04.0"
+          - "latest-everything"
         filters: [pipeline]
 
     steps:
@@ -93,13 +92,29 @@ jobs:
           nvidia-smi -L
 
       - name: Run nf-test Action
+        id: run_nf_test
         uses: ./.github/actions/nf-test
+        continue-on-error: ${{ matrix.NXF_VER == 'latest-everything' }}
         with:
           profile: test_gpu,${{ matrix.profile }}
           shard: ${{ matrix.shard }}
           total_shards: ${{ needs.get-shards.outputs.total_shards }}
           filters: ${{ matrix.filters }}
           tags: "gpu"
+
+      - name: Report test status
+        if: ${{ always() }}
+        run: |
+          if [[ "${{ steps.run_nf_test.outcome }}" == "failure" ]]; then
+            echo "::error::Test with ${{ matrix.NXF_VER }} failed"
+            echo "## Test failed: ${{ matrix.profile }} | ${{ matrix.NXF_VER }} | Shard ${{ matrix.shard }}" >> $GITHUB_STEP_SUMMARY
+            if [[ "${{ matrix.NXF_VER }}" == "latest-everything" ]]; then
+              echo "::warning::Test with latest-everything failed but will not cause workflow failure. Please check if the error is expected or if it needs fixing."
+            fi
+            if [[ "${{ matrix.NXF_VER }}" != "latest-everything" ]]; then
+              exit 1
+            fi
+          fi
 
   confirm-pass-gpu:
     runs-on:

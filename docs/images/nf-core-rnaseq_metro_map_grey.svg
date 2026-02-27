@@ -333,5 +333,5 @@
 <text x="397.6923076923076" y="559.2330337977675" font-size="16.0" fill="#333333" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" dy="0.3em">Pseudo-aligner: Salmon, Quantification: Salmon</text>
 <path d="M361.6923076923076,583.2330337977675 L385.6923076923076,583.2330337977675" stroke="#7b2d3b" stroke-width="4.0" stroke-linecap="round" />
 <text x="397.6923076923076" y="583.2330337977675" font-size="16.0" fill="#333333" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" dy="0.3em">Pseudo-aligner: Kallisto, Quantification: Kallisto</text>
-<text x="1765.0" y="623.0" font-size="8" fill="rgba(150, 150, 150, 0.6)" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="end">created with nf-metro v0.5.3</text>
+<text x="1765.0" y="623.0" font-size="8" fill="rgba(150, 150, 150, 0.6)" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="end">created with nf-metro v0.5.4</text>
 </svg>

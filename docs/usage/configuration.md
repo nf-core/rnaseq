@@ -34,7 +34,7 @@ nextflow run \
 This is not usually recommended with Salmon unless you also supply a previously generated decoy-aware Salmon transcriptome index.
 
 :::note
-Loading iGenomes configuration remains the default for reasons of consistency with other workflows, but disable it when not using iGenomes, applying the recommended usage above.
+The pipeline loads the iGenomes configuration by default for consistency with other nf-core pipelines. If you supply your own `--fasta` and `--gtf` (the recommended approach), add `--igenomes_ignore` to skip loading iGenomes references.
 :::
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
@@ -69,7 +69,8 @@ with:
 ```yaml
 input: <SAMPLESHEET>
 outdir: <OUTDIR>
-genome: 'GRCh37'
+fasta: '/path/to/genome.fa'
+gtf: '/path/to/genes.gtf'
 <...>
 ```
 
@@ -111,7 +112,7 @@ First, go to the [nf-core/rnaseq releases page](https://github.com/nf-core/rnase
 
 This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future. For example, at the bottom of the MultiQC reports.
 
-To further assist in reproducibility, you can use share and reuse [parameter files](#using-a-params-file) to repeat pipeline runs with the same settings without having to write out a command with every single parameter.
+To further assist in reproducibility, you can use share and reuse [parameter files](#use-a-params-file) to repeat pipeline runs with the same settings without having to write out a command with every single parameter.
 
 :::tip
 If you wish to share such profile (such as upload as supplementary material for academic publications), make sure to NOT include cluster specific paths to files, nor institutional specific profiles.
@@ -163,7 +164,7 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
 - `conda`
   - A generic configuration profile to be used with [Conda](https://conda.io/docs/). Only use Conda as a last resort, that is, when it is not possible to run the pipeline with Docker, Singularity, Podman, Shifter, Charliecloud, or Apptainer.
 - `arm64`
-  - A configuration profile that applies overrides supplying ARM-compatible containers and Conda environments. See [Running on Linux ARM architectures](#running-on-linux-arm-architectures).
+  - A configuration profile that applies overrides supplying ARM-compatible containers and Conda environments. See [Linux ARM architectures](#linux-arm-architectures).
 - `prokaryotic`
   - A configuration profile optimised for bacterial and archaeal RNA-seq data. Uses Bowtie2 for alignment and configures the pipeline to handle CDS-based annotations. See [Advanced features — Prokaryotic RNA-seq](advanced-features.md#prokaryotic-rna-seq).
 

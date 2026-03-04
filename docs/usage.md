@@ -6,33 +6,49 @@
 
 ## Quick start
 
-Create a samplesheet describing your samples:
+### 1. Create a samplesheet
+
+Describe your FASTQ files in a CSV. Each row is one library. Use `auto` for strandedness and the pipeline will detect it:
 
 ```csv title="samplesheet.csv"
 sample,fastq_1,fastq_2,strandedness
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz,auto
-CONTROL_REP2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz,auto
-CONTROL_REP3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz,auto
-TREATMENT_REP1,AEG588A4_S4_L003_R1_001.fastq.gz,,auto
-TREATMENT_REP2,AEG588A5_S5_L003_R1_001.fastq.gz,,auto
-TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,,auto
+CONTROL_REP1,data/control_rep1_R1.fastq.gz,data/control_rep1_R2.fastq.gz,auto
+CONTROL_REP2,data/control_rep2_R1.fastq.gz,data/control_rep2_R2.fastq.gz,auto
+CONTROL_REP3,data/control_rep3_R1.fastq.gz,data/control_rep3_R2.fastq.gz,auto
+TREATMENT_REP1,data/treatment_rep1_R1.fastq.gz,data/treatment_rep1_R2.fastq.gz,auto
+TREATMENT_REP2,data/treatment_rep2_R1.fastq.gz,data/treatment_rep2_R2.fastq.gz,auto
+TREATMENT_REP3,data/treatment_rep3_R1.fastq.gz,data/treatment_rep3_R2.fastq.gz,auto
 ```
 
-Run the pipeline:
+See the [samplesheet documentation](usage/samplesheet.md) for the full format, single-end data, and advanced options.
+
+### 2. Run the pipeline
+
+You need a reference genome FASTA and gene annotation GTF. Download these from [Ensembl](https://www.ensembl.org/info/data/ftp/index.html) or another provider (see [reference genomes](usage/reference-genomes.md) for guidance):
 
 ```bash
 nextflow run nf-core/rnaseq \
     --input samplesheet.csv \
     --outdir results \
-    --fasta genome.fa \
-    --gtf genes.gtf \
+    --fasta /path/to/genome.fa \
+    --gtf /path/to/genes.gtf \
     -profile docker
 ```
 
-This runs the default workflow: adapter trimming with Trim Galore, STAR alignment, Salmon quantification, and comprehensive QC. Results are written to `results/`, including a MultiQC report summarising all quality metrics. See the [output documentation](output.md) for a full description of results.
+This trims adapters, aligns reads with STAR, quantifies with Salmon, and runs comprehensive QC. Results are written to `results/`.
+
+### 3. Check results
+
+Open `results/multiqc/star_salmon/multiqc_report.html` for an overview of all quality metrics across your samples. Key things to look for:
+
+- **Alignment rate**: most reads as "Uniquely mapped" in the STAR section
+- **Strandedness**: check the "Strandedness Checks" table for mismatches
+- **PCA plot**: samples cluster by condition, not by batch
+
+Count matrices for downstream analysis are in `results/star_salmon/` — see the [output documentation](output.md) for details.
 
 :::tip
-Set strandedness to `auto` and the pipeline will infer it for you. If you already know the strandedness of your libraries, specify `forward`, `reverse`, or `unstranded` instead.
+If you already know the strandedness of your libraries, specify `forward`, `reverse`, or `unstranded` instead of `auto`.
 :::
 
 ## Pipeline parameters

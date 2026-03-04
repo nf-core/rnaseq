@@ -51,17 +51,17 @@ TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,,reverse,ILLUMINA
 
 ### Column descriptions
 
-| Column              | Description                                                                                                                                                                                                                                                                       |
-| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `sample`            | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`).                                                                                            |
-| `fastq_1`           | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                                                                                                                        |
-| `fastq_2`           | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                                                                                                                        |
-| `strandedness`      | Sample strand-specificity. Must be one of `unstranded`, `forward`, `reverse` or `auto`.                                                                                                                                                                                           |
-| `seq_platform`      | **Optional**. Sequencing platform for BAM read group `PL` tag (e.g., `ILLUMINA`). Use this column when samples were sequenced on different platforms. For a single platform across all samples, prefer `--seq_platform` instead. Per-sample values override the global parameter. |
-| `seq_center`        | **Optional**. Sequencing center for BAM read group `CN` tag. Use this column when samples come from different centers. For a single center across all samples, prefer `--seq_center` instead. Per-sample values override the global parameter.                                    |
-| `genome_bam`        | **Optional**. Full path to genome-aligned BAM file. Typically from previous pipeline runs (see [output documentation](../output.md)). Used for [BAM reprocessing](#bam-input-for-reprocessing-workflow).                                                                          |
-| `transcriptome_bam` | **Optional**. Full path to transcriptome-aligned BAM file. Typically from previous pipeline runs (see [output documentation](../output.md)). Used for [BAM reprocessing](#bam-input-for-reprocessing-workflow).                                                                   |
-| `percent_mapped`    | **Optional**. Percentage of reads that mapped during alignment (0-100). Useful for quality assessment and filtering.                                                                                                                                                              |
+| Column              | Description                                                                                                                                                                                                                                                                         |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `sample`            | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`).                                                                                              |
+| `fastq_1`           | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                                                                                                                          |
+| `fastq_2`           | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                                                                                                                          |
+| `strandedness`      | Sample strand-specificity. Must be one of `unstranded`, `forward`, `reverse` or `auto`.                                                                                                                                                                                             |
+| `seq_platform`      | **Optional**. Sequencing platform for BAM read group `PL` tag (such as `ILLUMINA`). Use this column when samples were sequenced on different platforms. For a single platform across all samples, prefer `--seq_platform` instead. Per-sample values override the global parameter. |
+| `seq_center`        | **Optional**. Sequencing center for BAM read group `CN` tag. Use this column when samples come from different centers. For a single center across all samples, prefer `--seq_center` instead. Per-sample values override the global parameter.                                      |
+| `genome_bam`        | **Optional**. Full path to genome-aligned BAM file. Typically from previous pipeline runs (see [output documentation](../output.md)). Used for [BAM reprocessing](#bam-input-for-reprocessing-workflow).                                                                            |
+| `transcriptome_bam` | **Optional**. Full path to transcriptome-aligned BAM file. Typically from previous pipeline runs (see [output documentation](../output.md)). Used for [BAM reprocessing](#bam-input-for-reprocessing-workflow).                                                                     |
+| `percent_mapped`    | **Optional**. Percentage of reads that mapped during alignment (0-100). Useful for quality assessment and filtering.                                                                                                                                                                |
 
 > **NB:** The `group` and `replicate` columns were replaced with a single `sample` column as of v3.1 of the pipeline. The `sample` column is essentially a concatenation of the `group` and `replicate` columns, however it now also offers more flexibility when replicate information is not required, for example when sequencing clinical samples. If all values of `sample` have the same number of underscores, fields defined by these underscore-separated names may be used in the PCA plots produced by the pipeline, to regain the ability to represent different groupings.
 
@@ -78,7 +78,7 @@ CONTROL_REP1,AEG588A1_S1_L004_R1_001.fastq.gz,AEG588A1_S1_L004_R2_001.fastq.gz,a
 
 ## Strandedness prediction
 
-If you set the strandedness value to `auto`, the pipeline will sub-sample the input FastQ files to 1 million reads, use Salmon Quant to automatically infer the strandedness, and then propagate this information through the rest of the pipeline. This behavior is controlled by the `--stranded_threshold` and `--unstranded_threshold` parameters, which are set to 0.8 and 0.1 by default, respectively. This means:
+If you set the strandedness value to `auto`, the pipeline will sub-sample the input FastQ files to 1 million reads, use Salmon Quant to automatically infer the strandedness, and then propagate this information through the rest of the pipeline. This behaviour is controlled by the `--stranded_threshold` and `--unstranded_threshold` parameters, which are set to 0.8 and 0.1 by default, respectively. This means:
 
 - **Forward stranded:** At least 80% of the fragments are in the 'forward' orientation.
 - **Unstranded:** The forward and reverse fractions differ by less than 10%.
@@ -110,7 +110,7 @@ These thresholds apply to both the strandedness inferred from Salmon outputs for
    - Reverse fraction: 0.4
    - **Classification:** Undetermined
 
-You can control the stringency of this behavior with `--stranded_threshold` and `--unstranded_threshold`.
+You can control the stringency of this behaviour with `--stranded_threshold` and `--unstranded_threshold`.
 
 ### Errors and reporting
 

@@ -78,8 +78,8 @@ Verify that sample names match between the `colData` and `countData`:
 ```r
 #### Check sample name consistency ####
 
-all(colnames(dds$counts) %in% rownames(metadata))  # Must be TRUE
-all(colnames(dds$counts) == rownames(metadata))     # Must be TRUE
+all(colnames(counts(dds)) %in% rownames(metadata))  # Must be TRUE
+all(colnames(counts(dds)) == rownames(metadata))     # Must be TRUE
 ```
 
 Create a new DESeq2 object with the corrected metadata and design:
@@ -360,11 +360,11 @@ library(org.Hs.eg.db)
 
 # Prepare gene list
 gene_list <- res$log2FoldChange
-names(gene_list) <- res$gene
+names(gene_list) <- rownames(res)
 gene_list <- sort(gene_list, decreasing = TRUE)
 
 # Extract significant genes
-res_genes <- resSig$gene
+res_genes <- rownames(resSig)
 
 # Run GO enrichment
 go_enrich <- enrichGO(

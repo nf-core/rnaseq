@@ -110,6 +110,7 @@ workflow RNASEQ {
     ch_map_status = channel.empty()
     ch_strand_status = channel.empty()
     ch_percent_mapped = channel.empty()
+    ch_unaligned_sequences = channel.empty()
 
     //
     // Collect versions from topic channel (for modules that emit versions via topics)
@@ -220,6 +221,7 @@ workflow RNASEQ {
 
     ch_multiqc_files                  = ch_multiqc_files.mix(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.multiqc_files)
     ch_strand_inferred_filtered_fastq = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.reads
+    ch_unaligned_sequences            = ch_unaligned_sequences.mix(ch_strand_inferred_filtered_fastq.map { meta, fastq -> [ meta + [id: meta.id + '_trimmed'], fastq ] })
     ch_trim_read_count                = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.trim_read_count
 
     ch_trim_status = ch_trim_read_count
@@ -232,7 +234,6 @@ workflow RNASEQ {
     // SUBWORKFLOW: Alignment with STAR and gene/transcript quantification with Salmon
     //
     ch_star_log            = channel.empty()
-    ch_unaligned_sequences = channel.empty()
 
     if (!params.skip_alignment && (params.aligner == 'star_salmon' || params.aligner == 'star_rsem')) {
         // Check if an AWS iGenome has been provided to use the appropriate version of STAR
@@ -261,7 +262,7 @@ workflow RNASEQ {
         ch_percent_mapped                = ch_percent_mapped.mix(ALIGN_STAR.out.percent_mapped)
         ch_unprocessed_bams              = ch_genome_bam.join(ch_transcriptome_bam)
         ch_star_log                      = ALIGN_STAR.out.log_final
-        ch_unaligned_sequences           = ALIGN_STAR.out.fastq
+        ch_unaligned_sequences           = ch_unaligned_sequences.mix(ALIGN_STAR.out.fastq.map { meta, fastq -> [ meta + [id: meta.id + '_STAR'], fastq ] })
         ch_multiqc_files                 = ch_multiqc_files.mix(ch_star_log.collect{ _meta, log -> log })
 
         if (!params.with_umi && (params.skip_markduplicates || params.use_parabricks_star)) {
@@ -323,7 +324,7 @@ workflow RNASEQ {
         ch_genome_bam          = ch_genome_bam.mix(FASTQ_ALIGN_HISAT2.out.bam)
         ch_genome_bam_index    = ch_genome_bam_index.mix(params.bam_csi_index ? FASTQ_ALIGN_HISAT2.out.csi : FASTQ_ALIGN_HISAT2.out.bai)
         ch_unprocessed_bams    = ch_genome_bam.map { meta, bam -> [ meta, bam, '' ] }
-        ch_unaligned_sequences = FASTQ_ALIGN_HISAT2.out.fastq
+        ch_unaligned_sequences = ch_unaligned_sequences.mix(FASTQ_ALIGN_HISAT2.out.fastq.map { meta, fastq -> [ meta + [id: meta.id + '_HISAT2'], fastq ] })
         ch_multiqc_files = ch_multiqc_files.mix(FASTQ_ALIGN_HISAT2.out.summary.collect{ _meta, summary -> summary })
 
         if (!params.with_umi && params.skip_markduplicates) {

@@ -63,7 +63,9 @@ TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,,reverse,ILLUMINA
 | `transcriptome_bam` | **Optional**. Full path to transcriptome-aligned BAM file. Typically from previous pipeline runs (see [output documentation](../output.md)). Used for [BAM reprocessing](#bam-input-for-reprocessing-workflow).                                                                     |
 | `percent_mapped`    | **Optional**. Percentage of reads that mapped during alignment (0-100). Useful for quality assessment and filtering.                                                                                                                                                                |
 
-> **NB:** The `group` and `replicate` columns were replaced with a single `sample` column as of v3.1 of the pipeline. The `sample` column is essentially a concatenation of the `group` and `replicate` columns, however it now also offers more flexibility when replicate information is not required, for example when sequencing clinical samples. If all values of `sample` have the same number of underscores, fields defined by these underscore-separated names may be used in the PCA plots produced by the pipeline, to regain the ability to represent different groupings.
+:::note
+The `group` and `replicate` columns were replaced with a single `sample` column as of v3.1 of the pipeline. The `sample` column is essentially a concatenation of the `group` and `replicate` columns, however it now also offers more flexibility when replicate information is not required, for example when sequencing clinical samples. If all values of `sample` have the same number of underscores, fields defined by these underscore-separated names can be used in the PCA plots produced by the pipeline, to regain the ability to represent different groupings.
+:::
 
 ## Multiple runs of the same sample
 
@@ -162,7 +164,7 @@ The `--skip_alignment` flag tells the pipeline to skip alignment, and in this si
 
 The `samplesheet_with_bams.csv` will look like:
 
-```csv
+```csv title="samplesheet_with_bams.csv"
 sample,fastq_1,fastq_2,strandedness,seq_platform,seq_center,genome_bam,percent_mapped,transcriptome_bam
 SAMPLE1,/path/sample1_R1.fastq.gz,/path/sample1_R2.fastq.gz,forward,ILLUMINA,,results/star_salmon/SAMPLE1.markdup.sorted.bam,85.2,results/star_salmon/SAMPLE1.Aligned.toTranscriptome.out.bam
 SAMPLE2,/path/sample2_R1.fastq.gz,,reverse,ILLUMINA,,results/star_salmon/SAMPLE2.sorted.bam,92.1,results/star_salmon/SAMPLE2.Aligned.toTranscriptome.out.bam

@@ -194,7 +194,7 @@ head(counts(dds_final))  # compare with raw counts
 normalised_counts <- as_tibble(counts(dds_final, normalized = TRUE))
 normalised_counts$gene <- rownames(counts(dds_final))
 normalised_counts <- normalised_counts %>%
-  relocate(gene, .before = control_rep1)
+  relocate(gene, .before = 1)  # Move gene column to first position
 
 write.csv(normalised_counts, file = "de_results/normalised_counts.csv")
 ```

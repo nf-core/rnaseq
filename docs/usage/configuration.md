@@ -115,7 +115,7 @@ This version number will be logged in reports when you run the pipeline, so that
 To further assist in reproducibility, you can use share and reuse [parameter files](#use-a-params-file) to repeat pipeline runs with the same settings without having to write out a command with every single parameter.
 
 :::tip
-If you wish to share such profile (such as upload as supplementary material for academic publications), make sure to NOT include cluster specific paths to files, nor institutional specific profiles.
+If you wish to share such profile (such as upload as supplementary material for academic publications), do not include cluster-specific paths to files, nor institutional-specific profiles.
 :::
 
 ## Core Nextflow arguments
@@ -160,7 +160,7 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
 - `apptainer`
   - A generic configuration profile to be used with [Apptainer](https://apptainer.org/)
 - `wave`
-  - A generic configuration profile to enable [Wave](https://seqera.io/wave/) containers. Use together with one of the above (requires Nextflow ` 24.03.0-edge` or later).
+  - A generic configuration profile to enable [Wave](https://seqera.io/wave/) containers. Use together with one of the above (requires Nextflow `24.03.0-edge` or later).
 - `conda`
   - A generic configuration profile to be used with [Conda](https://conda.io/docs/). Only use Conda as a last resort, that is, when it is not possible to run the pipeline with Docker, Singularity, Podman, Shifter, Charliecloud, or Apptainer.
 - `arm64`

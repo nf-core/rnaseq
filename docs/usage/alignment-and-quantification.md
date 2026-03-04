@@ -53,7 +53,7 @@ Selecting `star_rsem` automatically applies the same STAR settings as [rsem-calc
 
 </details>
 
-**NOTE**: The pipeline parameter [`--extra_star_align_args`](#custom-star-parameters) cannot be used with aligner option `star_rsem`. It is possible to set, via [custom tool arguments](configuration.md#custom-tool-arguments), custom settings to the process `STAR_ALIGN` via `ext.args`. However, we discourage this and consider adjusting the STAR aligner while using RSEM to be an unsupported option in this pipeline. If you need to pass in custom star alignment options, we recommend using the aligner option `star_salmon`. After this warning, if you still wish to set custom STAR settings and use RSEM for quantification, then reference [this configuration file](https://github.com/nf-core/rnaseq/blob/master/subworkflows/local/align_star/nextflow.config).
+The pipeline parameter [`--extra_star_align_args`](advanced-features.md#custom-star-parameters) cannot be used with aligner option `star_rsem`. It is possible to set, via [custom tool arguments](configuration.md#custom-tool-arguments), custom settings to the process `STAR_ALIGN` via `ext.args`. However, we discourage this and consider adjusting the STAR aligner while using RSEM to be an unsupported option in this pipeline. If you need to pass in custom star alignment options, we recommend using the aligner option `star_salmon`. After this warning, if you still wish to set custom STAR settings and use RSEM for quantification, then reference [this configuration file](https://github.com/nf-core/rnaseq/blob/master/subworkflows/local/align_star/nextflow.config).
 :::
 
 ## HISAT2

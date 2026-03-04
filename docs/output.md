@@ -10,177 +10,43 @@ nextflow run nf-core/rnaseq -profile test_full,<docker/singularity/institute>
 
 The directories listed below will be created in the results directory after the pipeline has finished. All paths are relative to the top-level results directory.
 
-:::tip
-Many of the BAM files produced by this pipeline can be reused as input for future runs with `--skip_alignment`. This is particularly useful for reprocessing data or running downstream analysis steps without repeating computationally expensive alignment. See the [usage documentation](https://nf-co.re/rnaseq/usage#bam-input-for-reprocessing-workflow) for details on using BAM files as input.
-:::
-
----
-
-## 📊 Results at a Glance
-
-After running the pipeline, your results directory will contain the following key outputs:
-
-### 🎯 Start Here
-
-| File/Directory                    | Description                                               | What to Check                                                 |
-| --------------------------------- | --------------------------------------------------------- | ------------------------------------------------------------- |
-| **`multiqc/multiqc_report.html`** | 📈 **Interactive QC report** - Open this first!           | Overall quality metrics, alignment rates, strandedness checks |
-| **`star_salmon/*.counts.tsv`**    | 📊 **Gene count matrices** - Main quantification output   | Ready for differential expression analysis                    |
-| **`star_salmon/*.bam`**           | 🧬 **Aligned reads** - For visualization and reprocessing | Can be viewed in IGV or reused with `--skip_alignment`        |
-
-### 📁 Key Output Directories
-
-| Directory                 | Contents                                                     | When Available                    |
-| ------------------------- | ------------------------------------------------------------ | --------------------------------- |
-| `multiqc/`                | Comprehensive quality control report combining all tools     | Always                            |
-| `fastqc/`                 | Per-sample quality metrics for raw reads                     | Always                            |
-| `trimgalore/` or `fastp/` | Adapter-trimmed reads and trimming statistics                | Always (unless `--skip_trimming`) |
-| `star_salmon/`            | Aligned BAM files and gene/transcript counts                 | Default workflow                  |
-| `salmon/` or `kallisto/`  | Pseudoalignment quantification (if using `--pseudo_aligner`) | With `--pseudo_aligner`           |
-| `rsem/`                   | RSEM quantification results                                  | With `--aligner star_rsem`        |
-| `deseq2_qc/`              | PCA plots, sample clustering, normalized counts              | With `--deseq2_vst`               |
-| `stringtie/`              | Transcript assembly and abundance                            | With `--stringtie_ignore_gtf`     |
-| `rseqc/`                  | Read distribution, strandedness, junction analysis           | Unless `--skip_rseqc`             |
-| `qualimap/`               | Alignment QC and coverage analysis                           | Unless `--skip_qualimap`          |
-| `dupradar/`               | Duplication rate analysis                                    | Unless `--skip_dupradar`          |
-| `preseq/`                 | Library complexity estimates                                 | Unless `--skip_preseq`            |
-| `kraken2/`                | Taxonomic classification (contamination screening)           | With `--kraken2_db`               |
-| `sylph/`                  | Fast metagenomic profiling                                   | With `--sylph_db`                 |
-
-### 🔍 Quick Quality Checks
-
-**Open `multiqc/multiqc_report.html` and check:**
-
-1. **General Statistics Table**
-   - ✅ Alignment rates should be >70% for most RNA-seq experiments
-   - ✅ M Seqs (millions of sequences) should be similar across samples
-   - ⚠️ Check for outliers or failed samples
-
-2. **Strandedness Checks** (if using `strandedness,auto`)
-   - ✅ Green = Strandedness matches between input and RSeQC output
-   - ❌ Red = Mismatch indicates potential library prep issues
-
-3. **FastQC Sequence Quality**
-   - ✅ Quality scores should be mostly in the green zone (>28)
-   - ⚠️ Yellow/red at read ends is normal for Illumina data
-
-4. **RSeQC Read Distribution**
-   - ✅ Most reads should map to CDS/UTR regions
-   - ⚠️ High intergenic or intronic percentages may indicate genomic DNA contamination
-
-5. **DESeq2 PCA Plot** (if generated)
-   - ✅ Biological replicates should cluster together
-   - ⚠️ Batch effects may appear as unexpected separation
-
-### 📋 File Naming Conventions
-
-```
-results/
-├── star_salmon/
-│   ├── SAMPLE_NAME.Aligned.sortedByCoord.out.bam       # Genome-aligned reads
-│   ├── SAMPLE_NAME.Aligned.toTranscriptome.out.bam     # Transcriptome-aligned reads
-│   ├── SAMPLE_NAME.markdup.sorted.bam                   # After duplicate marking
-│   ├── salmon.merged.gene_counts.tsv                    # Gene-level counts matrix
-│   ├── salmon.merged.gene_tpm.tsv                       # Gene-level TPM matrix
-│   └── salmon.merged.transcript_counts.tsv              # Transcript-level counts
-```
-
-### 🎓 Understanding Your Results
-
-- **Counts (`*.counts.tsv`)**: Raw read counts per gene - use for DESeq2, edgeR, limma
-- **TPM (`*.tpm.tsv`)**: Transcripts Per Million - normalized for gene length and sequencing depth
-- **BAM files (`*.bam`)**: Aligned reads - use for genome browsers, peak calling, reprocessing
-- **MultiQC report**: Aggregated QC metrics - use for quality assessment and troubleshooting
-
-### 🔄 Reusing Results
-
-**To reprocess data without realignment:**
-
-1. Locate the auto-generated samplesheet: `results/samplesheets/samplesheet_with_bams.csv`
-2. Run with: `--input samplesheet_with_bams.csv --skip_alignment`
-3. See [BAM reprocessing guide](usage.md#bam-input-for-reprocessing-workflow) for details
-
----
-
-## 📑 Quick Navigation
-
-### Output by Analysis Stage
-
-- [Preprocessing](#preprocessing) - Quality control, trimming, filtering
-- [Alignment & Quantification](#alignment-and-quantification) - STAR, Salmon, Kallisto, HISAT2, RSEM
-- [Alignment Post-processing](#alignment-post-processing) - Deduplication, sorting, indexing
-- [Quality Control](#quality-control) - RSeQC, Qualimap, dupRadar, DESeq2
-- [Contamination Screening](#contamination-screening) - Kraken2, Sylph (optional)
-- [Pseudoalignment](#pseudoalignment-and-quantification) - Lightweight quantification
-- [Reference Files](#reference-genome-files) - Generated indices and references
-- [Pipeline Info](#pipeline-information) - Execution reports and provenance
-
-### Output by Tool
-
-**Preprocessing:** [cat](#cat) | [fq lint](#fq-lint) | [FastQC](#fastqc) | [UMI-tools](#umi-tools-extract) | [TrimGalore](#trimgalore) | [fastp](#fastp) | [BBSplit](#bbsplit) | [rRNA removal](#rrna-removal)
-
-**Alignment:** [STAR+Salmon](#star-salmon-and-kallisto) | [STAR+RSEM](#star-via-rsem) | [HISAT2](#hisat2) | [Bowtie2 (prokaryotic)](#bowtie2-and-salmon-prokaryotic)
-
-**Quantification:** [Salmon](#star-salmon-and-kallisto) | [Kallisto](#star-salmon-and-kallisto) | [RSEM](#star-via-rsem) | [featureCounts](#featurecounts)
-
-**QC Tools:** [RSeQC](#rseqc) | [Qualimap](#qualimap) | [dupRadar](#dupradar) | [Preseq](#preseq) | [DESeq2](#deseq2) | [MultiQC](#multiqc)
-
-**Other:** [StringTie](#stringtie) | [BEDTools](#bedtools-and-bedgraphtobigwig) | [SAMtools](#samtools) | [Picard](#picard-markduplicates)
-
----
-
 ## Pipeline overview
 
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
-- [nf-core/rnaseq: Output](#nf-corernaseq-output)
-  - [Introduction](#introduction)
-  - [Pipeline overview](#pipeline-overview)
-  - [Preprocessing](#preprocessing)
-    - [cat](#cat)
-      [fq lint](#fq-lint)
-    - [FastQC](#fastqc)
-    - [UMI-tools extract](#umi-tools-extract)
-    - [TrimGalore](#trimgalore)
-    - [fastp](#fastp)
-    - [BBSplit](#bbsplit)
-    - [rRNA removal](#rrna-removal)
-    - [FastQC (filtered)](#fastqc-filtered)
-  - [Alignment and quantification](#alignment-and-quantification)
-    - [STAR, Salmon and Kallisto](#star-salmon-and-kallisto)
-    - [STAR via RSEM](#star-via-rsem)
-    - [Bowtie2 and Salmon (Prokaryotic)](#bowtie2-and-salmon-prokaryotic)
-    - [HISAT2](#hisat2)
-  - [Alignment post-processing](#alignment-post-processing)
-    - [SAMtools](#samtools)
-    - [UMI-tools dedup](#umi-tools-dedup)
-    - [picard MarkDuplicates](#picard-markduplicates)
-  - [Other steps](#other-steps)
-    - [StringTie](#stringtie)
-    - [BEDTools and bedGraphToBigWig](#bedtools-and-bedgraphtobigwig)
-  - [Quality control](#quality-control)
-    - [RSeQC](#rseqc)
-      - [Infer experiment](#infer-experiment)
-      - [Read distribution](#read-distribution)
-      - [Junction annotation](#junction-annotation)
-      - [Inner distance](#inner-distance)
-      - [Junction saturation](#junction-saturation)
-      - [Read duplication](#read-duplication)
-      - [BAM stat](#bam-stat)
-      - [TIN](#tin)
-    - [Qualimap](#qualimap)
-    - [dupRadar](#dupradar)
-    - [Preseq](#preseq)
-    - [featureCounts](#featurecounts)
-    - [DESeq2](#deseq2)
-    - [Kraken2/Bracken](#kraken2bracken)
-    - [Sylph](#sylph)
-    - [MultiQC](#multiqc)
-  - [Pseudoalignment and quantification](#pseudoalignment-and-quantification)
-    - [Pseudoalignment](#pseudoalignment)
-  - [Workflow reporting and genomes](#workflow-reporting-and-genomes)
-    - [Reference genome files](#reference-genome-files)
-    - [Pipeline information](#pipeline-information)
+- [Preprocessing](#preprocessing)
+  - [cat](#cat) - Merge re-sequenced FastQ files
+  - [FastQC](#fastqc) - Raw read QC
+  - [UMI-tools extract](#umi-tools-extract) - UMI barcode extraction
+  - [TrimGalore](#trimgalore) - Adapter and quality trimming
+  - [fastp](#fastp) - Adapter and quality trimming
+  - [BBSplit](#bbsplit) - Removal of genome contaminants
+  - [SortMeRNA](#sortmerna) - Removal of ribosomal RNA
+- [Alignment and quantification](#alignment-and-quantification)
+  - [STAR and Salmon](#star-and-salmon) - Fast spliced aware genome alignment and transcriptome quantification
+  - [STAR via RSEM](#star-via-rsem) - Alignment and quantification of expression levels
+  - [HISAT2](#hisat2) - Memory efficient splice aware alignment to a reference
+- [Alignment post-processing](#alignment-post-processing)
+  - [SAMtools](#samtools) - Sort and index alignments
+  - [UMI-tools dedup](#umi-tools-dedup) - UMI-based deduplication
+  - [picard MarkDuplicates](#picard-markduplicates) - Duplicate read marking
+- [Other steps](#other-steps)
+  - [StringTie](#stringtie) - Transcript assembly and quantification
+  - [BEDTools and bedGraphToBigWig](#bedtools-and-bedgraphtobigwig) - Create bigWig coverage files
+- [Quality control](#quality-control)
+  - [RSeQC](#rseqc) - Various RNA-seq QC metrics
+  - [Qualimap](#qualimap) - Various RNA-seq QC metrics
+  - [dupRadar](#dupradar) - Assessment of technical / biological read duplication
+  - [Preseq](#preseq) - Estimation of library complexity
+  - [featureCounts](#featurecounts) - Read counting relative to gene biotype
+  - [DESeq2](#deseq2) - PCA plot and sample pairwise distance heatmap and dendrogram
+  - [MultiQC](#multiqc) - Present QC for raw reads, alignment, read counting and sample similiarity
+- [Pseudoalignment and quantification](#pseudoalignment-and-quantification)
+  - [Salmon](#pseudoalignment) - Wicked fast gene and isoform quantification relative to the transcriptome
+  - [Kallisto](#pseudoalignment) - Near-optimal probabilistic RNA-seq quantification
+- [Workflow reporting and genomes](#workflow-reporting-and-genomes)
+  - [Reference genome files](#reference-genome-files) - Saving reference genome indices/files
+  - [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
 
 ## Preprocessing
 
@@ -195,20 +61,6 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 </details>
 
 If multiple libraries/runs have been provided for the same sample in the input samplesheet (e.g. to increase sequencing depth) then these will be merged at the very beginning of the pipeline in order to have consistent sample naming throughout the pipeline. Please refer to the [usage documentation](https://nf-co.re/rnaseq/usage#samplesheet-input) to see how to specify these samples in the input samplesheet.
-
-### fq lint
-
-<details markdown="1">
-<summary>Output files</summary>
-
-- `fq_lint/*`
-  - `*.fq_lint.txt`: Linting report per library from `fq lint`.
-
-> **NB:** You will see subdirectories here based on the stage of preprocessing for the files that have been linted, for example `raw`, `trimmed`.
-
-</details>
-
-[fq lint](https://github.com/stjude-rust-labs/fq) runs several checks on input FASTQ files. It will fail with a non-zero error code when issues are found, which will terminate the workflow execution. In the absence of this, the successful linting produces the logs you will find here.
 
 ### FastQC
 
@@ -242,7 +94,7 @@ If multiple libraries/runs have been provided for the same sample in the input s
 
 </details>
 
-[UMI-tools](https://github.com/CGATOxford/UMI-tools) and [UMICollapse](https://github.com/Daniel-Liu-c0deb0t/UMICollapse) deduplicate reads based on unique molecular identifiers (UMIs) to address PCR-bias. Firstly, the UMI-tools `extract` command removes the UMI barcode information from the read sequence and adds it to the read name. Secondly, reads are deduplicated based on UMI identifier after mapping as highlighted in the [UMI dedup](#umi-dedup) section.
+[UMI-tools](https://github.com/CGATOxford/UMI-tools) deduplicates reads based on unique molecular identifiers (UMIs) to address PCR-bias. Firstly, the UMI-tools `extract` command removes the UMI barcode information from the read sequence and adds it to the read name. Secondly, reads are deduplicated based on UMI identifier after mapping as highlighted in the [UMI-tools dedup](#umi-tools-dedup) section.
 
 To facilitate processing of input data which has the UMI barcode already embedded in the read name from the start, `--skip_umi_extract` can be specified in conjunction with `--with_umi`.
 
@@ -312,81 +164,20 @@ sarscov2,/path/to/sarscov2.fa
 
 You can save the index by using the [`--save_reference`](https://nf-co.re/rnaseq/parameters#save_reference) parameter and then provide it via [`--bbsplit_index`](https://nf-co.re/rnaseq/parameters#bbsplit_index) for future runs. As described in the `Output files` dropdown box above the FastQ files relative to the main reference genome will always be called `*primary*.fastq.gz`.
 
-### rRNA removal
-
-When `--remove_ribo_rna` is specified, the pipeline removes ribosomal RNA reads using one of three tools, selected via the `--ribo_removal_tool` parameter.
-
-#### SILVA Database Licensing Considerations
-
-> [!IMPORTANT]
-> **For SortMeRNA and Bowtie2 users**: The default rRNA databases include sequences from the SILVA database. Commercial and non-academic entities require [licensing for SILVA](https://www.arb-silva.de/silva-license-information) to use these databases.
->
-> **Licensing-compliant alternatives**:
->
-> - **SILVA 138+**: Available under CC-BY 4.0 license (permissive for most uses)
-> - **Bowtie2**: Can be used with custom, license-free rRNA databases via `--ribo_database_manifest`
-> - **RiboDetector**: Machine learning-based; does not require reference databases (but see warning below)
->
-> Users in commercial or clinical settings should verify database licensing requirements before processing data.
-
-#### SortMeRNA (default)
+### SortMeRNA
 
 <details markdown="1">
 <summary>Output files</summary>
 
 - `sortmerna/`
-  - `*.sortmerna.log`: Log file generated by SortMeRNA with information regarding reads that matched the reference database(s).
   - `*.fastq.gz`: If `--save_non_ribo_reads` is specified, FastQ files containing non-rRNA reads will be placed in this directory.
+  - `*.log`: Log file generated by SortMeRNA with information regarding reads that matched the reference database(s).
 
 </details>
 
-When `--ribo_removal_tool sortmerna` is specified (or by default), the pipeline uses [SortMeRNA](https://github.com/biocore/sortmerna) for the removal of ribosomal RNA. By default, [rRNA databases](https://github.com/biocore/sortmerna/tree/master/data/rRNA_databases) defined in the SortMeRNA GitHub repo are used. You can see an example in the pipeline GitHub repository in `assets/rrna-db-defaults.txt` which is used by default via the `--ribo_database_manifest` parameter.
+When `--remove_ribo_rna` is specified, the pipeline uses [SortMeRNA](https://github.com/biocore/sortmerna) for the removal of ribosomal RNA. By default, [rRNA databases](https://github.com/biocore/sortmerna/tree/master/data/rRNA_databases) defined in the SortMeRNA GitHub repo are used. You can see an example in the pipeline Github repository in `assets/rrna-default-dbs.txt` which is used by default via the `--ribo_database_manifest` parameter. Please note that commercial/non-academic entities require [`licensing for SILVA`](https://www.arb-silva.de/silva-license-information) for these default databases.
 
 ![MultiQC - SortMeRNA hit count plot](images/mqc_sortmerna.png)
-
-#### Bowtie2
-
-When `--ribo_removal_tool bowtie2` is specified, the pipeline uses [Bowtie2](https://github.com/BenLangmead/bowtie2) for alignment-based rRNA removal. Reads are aligned against rRNA reference sequences specified via `--ribo_database_manifest`, and reads that align to rRNA are filtered out. The unaligned reads (non-rRNA) are kept for downstream analysis.
-
-**Note**: Bowtie2 is recommended for users with SILVA licensing concerns, as it can be used with custom rRNA databases that do not include SILVA sequences.
-
-<details markdown="1">
-<summary>Output files</summary>
-
-- `bowtie2_rrna/`
-  - `*.bowtie2.log`: Log file generated by Bowtie2 with alignment statistics.
-  - `*.fastq.gz`: If `--save_non_ribo_reads` is specified, FastQ files containing non-rRNA reads will be placed in this directory.
-
-</details>
-
-#### RiboDetector
-
-> [!WARNING]
-> RiboDetector has known issues with ONNX multiprocessing that can cause hangs in containerized environments. We recommend using SortMeRNA or Bowtie2 instead. See [hzi-bifo/RiboDetector#61](https://github.com/hzi-bifo/RiboDetector/pull/61) for details.
-
-<details markdown="1">
-<summary>Output files</summary>
-
-- `ribodetector/`
-  - `*.log`: Log file generated by RiboDetector.
-  - `*.fastq.gz`: If `--save_non_ribo_reads` is specified, FastQ files containing non-rRNA reads will be placed in this directory.
-
-</details>
-
-When `--ribo_removal_tool ribodetector` is specified, the pipeline uses [RiboDetector](https://github.com/hzi-bifo/RiboDetector), a machine learning-based tool that identifies rRNA reads without requiring a reference database.
-
-### FastQC (filtered)
-
-<details markdown="1">
-<summary>Output files</summary>
-
-- `fastqc/filtered/`
-  - `*_fastqc.html`: FastQC report containing quality metrics for read 1 (_and read2 if paired-end_) **after** contaminant removal (BBSplit) and/or ribosomal RNA removal.
-  - `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images.
-
-</details>
-
-When BBSplit and/or rRNA removal is enabled, an additional [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) step runs on the filtered reads. This provides QC metrics on the reads that will actually be used for alignment and quantification, allowing you to verify that filtering steps worked as expected. This section will only appear in the results when at least one filtering step (BBSplit or rRNA removal) is active and FastQC is not skipped.
 
 ## Alignment and quantification
 
@@ -396,23 +187,8 @@ When BBSplit and/or rRNA removal is enabled, an additional [FastQC](http://www.b
 <summary>Output files</summary>
 
 - `star_salmon/`
-  - `*.Aligned.out.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the reference genome will be placed in this directory. These files can be reused as `genome_bam` input in future pipeline runs.
-  - `*.Aligned.toTranscriptome.out.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the transcriptome will be placed in this directory. These files can be reused as `transcriptome_bam` input in future pipeline runs.
-  - `salmon.merged.gene_counts.tsv`: Matrix of gene-level raw counts across all samples.
-  - `salmon.merged.gene_tpm.tsv`: Matrix of gene-level TPM values across all samples.
-  - `salmon.merged.gene.SummarizedExperiment.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the abundance TPM (`tpm`), estimated counts (`counts`) and gene length (`length`), estimated library size-scaled counts (`counts_scaled`), estimated length-scaled counts (`counts_length_scaled`) in the assays slot for genes.
-  - `salmon.merged.gene_lengths.tsv`: Matrix of average within-sample transcript lengths for each gene across all samples.
-  - `salmon.merged.gene_counts_scaled.tsv`: Matrix of gene-level library size-scaled estimated counts across all samples.
-  - `salmon.merged.gene_counts_length_scaled.tsv`: Matrix of gene-level length-scaled estimated counts across all samples.
-  - `salmon.merged.transcript_counts.tsv`: Matrix of isoform-level raw counts across all samples.
-  - `salmon.merged.transcript_tpm.tsv`: Matrix of isoform-level TPM values across all samples.
-  - `tx2gene.tsv`: Tab-delimited file containing gene to transcripts ids mappings.
-  - `salmon.merged.transcript.SummarizedExperiment.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the abundance TPM (`tpm`), estimated isoform-level raw counts (`counts`) and transcript length (`length`) in the assays slot for transcripts.
-- `star_salmon/<SAMPLE>/`
-  - `quant.sf`: Salmon transcript-level quantification results.
-  - `quant.genes.sf`: Salmon gene-level quantification results.
-- `star_salmon/<SAMPLE>/logs/`
-  - `salmon_quant.log`: Salmon quantification log file.
+  - `*.Aligned.out.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the reference genome will be placed in this directory.
+  - `*.Aligned.toTranscriptome.out.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the transcriptome will be placed in this directory.
 - `star_salmon/log/`
   - `*.SJ.out.tab`: File containing filtered splice junctions detected after mapping the reads.
   - `*.Log.final.out`: STAR alignment report containing the mapping results summary.
@@ -421,23 +197,6 @@ When BBSplit and/or rRNA removal is enabled, an additional [FastQC](http://www.b
   - `*.fastq.gz`: If `--save_unaligned` is specified, FastQ files containing unmapped reads will be placed in this directory.
 
 </details>
-
-:::tip
-You can access specific assay matrices from the `SummarizedExperiment` RDS object with the following R code:
-:::
-
-```r
-  library(SummarizedExperiment)
-
-  # Load the RDS object
-  se <- readRDS("salmon.merged.gene.SummarizedExperiment.rds")
-
-  # View available assays
-  assayNames(se)
-
-  # Access a specific assay, e.g., length-scaled counts
-  assay(se, "counts_length_scaled")
-```
 
 [STAR](https://github.com/alexdobin/STAR) is a read aligner designed for splice aware mapping typical of RNA sequencing data. STAR stands for *S*pliced *T*ranscripts *A*lignment to a *R*eference, and has been shown to have high accuracy and outperforms other aligners by more than a factor of 50 in mapping speed, but it is memory intensive. Using `--aligner star_salmon` is the default alignment and quantification option.
 
@@ -452,42 +211,23 @@ The STAR section of the MultiQC report shows a bar plot with alignment rates: go
 <details markdown="1">
 <summary>Output files</summary>
 
-- `star_rsem/` - tximport-processed outputs (matching the Salmon/Kallisto format):
-  - `rsem.merged.gene_counts.tsv`: Matrix of gene-level estimated counts across all samples.
-  - `rsem.merged.gene_counts_length_scaled.tsv`: Matrix of gene-level length-scaled counts (used for DESeq2 QC).
-  - `rsem.merged.gene_counts_scaled.tsv`: Matrix of gene-level scaled counts.
-  - `rsem.merged.gene_lengths.tsv`: Matrix of gene-level effective lengths across all samples.
+- `star_rsem/`
+  - `rsem.merged.gene_counts.tsv`: Matrix of gene-level raw counts across all samples.
   - `rsem.merged.gene_tpm.tsv`: Matrix of gene-level TPM values across all samples.
-  - `rsem.merged.transcript_counts.tsv`: Matrix of transcript-level estimated counts across all samples.
-  - `rsem.merged.transcript_lengths.tsv`: Matrix of transcript-level effective lengths across all samples.
-  - `rsem.merged.transcript_tpm.tsv`: Matrix of transcript-level TPM values across all samples.
-  - `rsem.merged.tx2gene.tsv`: Transcript-to-gene mapping file generated from the GTF.
-  - `rsem.merged.gene.SummarizedExperiment.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the abundance TPM (`tpm`), estimated counts (`counts`) and gene length (`lengths`), estimated library size-scaled counts (`counts_scaled`), estimated length-scaled counts (`counts_length_scaled`) in the assays slot for genes.
-  - `rsem.merged.transcript.SummarizedExperiment.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the abundance TPM (`tpm`), estimated isoform-level raw counts (`counts`) and transcript length (`lengths`) in the assays slot for transcripts.
-- `star_rsem/rsem_merge_counts/` - legacy RSEM merge script outputs:
-  - `*.gene_counts.tsv`: Matrix of gene-level raw counts (RSEM expected_count) across all samples.
-  - `*.gene_tpm.tsv`: Matrix of gene-level TPM values across all samples.
-  - `*.transcript_counts.tsv`: Matrix of isoform-level raw counts across all samples.
-  - `*.transcript_tpm.tsv`: Matrix of isoform-level TPM values across all samples.
-  - `*.genes_long.tsv`: Long format containing length, expected_count, TPM, and FPKM across all samples.
-  - `*.isoforms_long.tsv`: Long format containing length, expected_count, TPM, FPKM, and IsoPct across all samples.
-- `star_rsem/` - per-sample outputs:
+  - `rsem.merged.transcript_counts.tsv`: Matrix of isoform-level raw counts across all samples.
+  - `rsem.merged.transcript_tpm.tsv`: Matrix of isoform-level TPM values across all samples.
   - `*.genes.results`: RSEM gene-level quantification results for each sample.
   - `*.isoforms.results`: RSEM isoform-level quantification results for each sample.
-  - `*.STAR.genome.bam`: If `--save_align_intermeds` is specified the BAM file from STAR alignment containing read alignments to the reference genome will be placed in this directory. These files can be reused as `genome_bam` input in future pipeline runs.
-  - `*.transcript.bam`: If `--save_align_intermeds` is specified the BAM file from STAR alignment containing read alignments to the transcriptome will be placed in this directory. These files can be reused as `transcriptome_bam` input in future pipeline runs.
+  - `*.STAR.genome.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the reference genome will be placed in this directory.
+  - `*.transcript.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the transcriptome will be placed in this directory.
 - `star_rsem/<SAMPLE>.stat/`
   - `*.cnt`, `*.model`, `*.theta`: RSEM counts and statistics for each sample.
-- `star_rsem/log/`
-  - `*.SJ.out.tab`: File containing filtered splice junctions detected after mapping the reads.
-  - `*.Log.final.out`: STAR alignment report containing the mapping results summary.
-  - `*.Log.out` and `*.Log.progress.out`: STAR log files containing detailed information about the run. Typically only useful for debugging purposes.
+  - `star_rsem/log/`
+  - `*.log`: STAR alignment report containing the mapping results summary.
 
 </details>
 
-[RSEM](https://github.com/deweylab/RSEM) is a software package for estimating gene and isoform expression levels from RNA-seq data. It has been widely touted as one of the most accurate quantification tools for RNA-seq analysis. When using `--aligner star_rsem`, the pipeline first runs STAR alignment with RSEM-compatible parameters to generate genome and transcriptome BAM files, then RSEM quantifies expression using these pre-aligned BAMs via the `--alignments` mode. This approach ensures optimal compatibility while maintaining RSEM's ability to effectively use ambiguously-mapping reads.
-
-RSEM results are additionally processed through [tximport](https://bioconductor.org/packages/tximport/) to produce length-scaled counts, effective length matrices, and SummarizedExperiment R objects, matching the output parity of the Salmon and Kallisto pseudoalignment paths. These outputs are directly compatible with downstream tools like [nf-core/differentialabundance](https://nf-co.re/differentialabundance).
+[RSEM](https://github.com/deweylab/RSEM) is a software package for estimating gene and isoform expression levels from RNA-seq data. It has been widely touted as one of the most accurate quantification tools for RNA-seq analysis. RSEM wraps other popular tools to map the reads to the genome (i.e. STAR, Bowtie2, HISAT2; STAR is used in this pipeline) which are then subsequently filtered relative to a transcriptome before quantifying at the gene- and isoform-level. Other advantages of using RSEM are that it performs both the alignment and quantification in a single package and its ability to effectively use ambiguously-mapping reads.
 
 You can choose to align and quantify your data with RSEM by providing the `--aligner star_rsem` parameter.
 
@@ -495,45 +235,13 @@ You can choose to align and quantify your data with RSEM by providing the `--ali
 
 ![MultiQC - RSEM uniquely mapped plot](images/mqc_rsem_multimapped.png)
 
-### Bowtie2 and Salmon (Prokaryotic)
-
-[Bowtie2](https://github.com/BenLangmead/bowtie2) is a fast and memory-efficient tool for aligning unspliced reads to reference sequences. When using `--aligner bowtie2_salmon`, reads are aligned directly to the transcriptome and quantified with Salmon. This aligner is the default when using `-profile prokaryotic` for bacterial and archaeal RNA-seq analysis.
-
-> [!NOTE]
-> For prokaryotic data, the transcript-level and gene-level output files will typically contain identical values since prokaryotic annotations usually have a 1:1 mapping between CDS features and genes (no alternative splicing). The transcript-level files are included for consistency with Salmon's standard output format, but users should focus on the gene-level results.
-
-<details markdown="1">
-<summary>Output files</summary>
-
-- `bowtie2_salmon/`
-  - `*.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the transcriptome will be placed in this directory.
-  - `salmon.merged.gene_counts.tsv`: Matrix of gene-level raw counts across all samples.
-  - `salmon.merged.gene_tpm.tsv`: Matrix of gene-level TPM values across all samples.
-  - `salmon.merged.gene.SummarizedExperiment.rds`: RDS object containing a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) with gene-level abundance data.
-  - `salmon.merged.gene_lengths.tsv`: Matrix of average within-sample transcript lengths for each gene across all samples.
-  - `salmon.merged.gene_counts_scaled.tsv`: Matrix of gene-level library size-scaled estimated counts across all samples.
-  - `salmon.merged.gene_counts_length_scaled.tsv`: Matrix of gene-level length-scaled estimated counts across all samples.
-  - `salmon.merged.transcript_counts.tsv`: Matrix of isoform-level raw counts across all samples.
-  - `salmon.merged.transcript_tpm.tsv`: Matrix of isoform-level TPM values across all samples.
-  - `salmon.merged.transcript.SummarizedExperiment.rds`: RDS object containing a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) with transcript-level abundance data.
-  - `tx2gene.tsv`: Tab-delimited file containing gene to transcript ID mappings.
-- `bowtie2_salmon/<SAMPLE>/`
-  - `quant.sf`: Salmon transcript-level quantification results.
-  - `quant.genes.sf`: Salmon gene-level quantification results.
-- `bowtie2_salmon/<SAMPLE>/logs/`
-  - `salmon_quant.log`: Salmon quantification log file.
-- `bowtie2_salmon/log/`
-  - `*.bowtie2.log`: Bowtie2 alignment report containing mapping statistics.
-
-</details>
-
 ### HISAT2
 
 <details markdown="1">
 <summary>Output files</summary>
 
 - `hisat2/`
-  - `<SAMPLE>.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the reference genome will be placed in this directory. These files can be reused as `genome_bam` input in future pipeline runs.
+  - `<SAMPLE>.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the reference genome will be placed in this directory.
 - `hisat2/log/`
   - `*.log`: HISAT2 alignment report containing the mapping results summary.
 - `hisat2/unmapped/`
@@ -557,7 +265,7 @@ The pipeline has been written in a way where all the files generated downstream 
 <summary>Output files</summary>
 
 - `<ALIGNER>/`
-  - `<SAMPLE>.sorted.bam`: If `--save_align_intermeds` is specified the original coordinate sorted BAM file containing read alignments will be placed in this directory. These files can be reused as `genome_bam` input in future pipeline runs.
+  - `<SAMPLE>.sorted.bam`: If `--save_align_intermeds` is specified the original coordinate sorted BAM file containing read alignments will be placed in this directory.
   - `<SAMPLE>.sorted.bam.bai`: If `--save_align_intermeds` is specified the BAI index file for the original coordinate sorted BAM file will be placed in this directory.
   - `<SAMPLE>.sorted.bam.csi`: If `--save_align_intermeds --bam_csi_index` is specified the CSI index file for the original coordinate sorted BAM file will be placed in this directory.
 - `<ALIGNER>/samtools_stats/`
@@ -571,7 +279,7 @@ The original BAM files generated by the selected alignment algorithm are further
 
 ![MultiQC - SAMtools mapped reads per contig plot](images/mqc_samtools_idxstats.png)
 
-### UMI dedup
+### UMI-tools dedup
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -580,7 +288,7 @@ The original BAM files generated by the selected alignment algorithm are further
   - `<SAMPLE>.umi_dedup.sorted.bam`: If `--save_umi_intermeds` is specified the UMI deduplicated, coordinate sorted BAM file containing read alignments will be placed in this directory.
   - `<SAMPLE>.umi_dedup.sorted.bam.bai`: If `--save_umi_intermeds` is specified the BAI index file for the UMI deduplicated, coordinate sorted BAM file will be placed in this directory.
   - `<SAMPLE>.umi_dedup.sorted.bam.csi`: If `--save_umi_intermeds --bam_csi_index` is specified the CSI index file for the UMI deduplicated, coordinate sorted BAM file will be placed in this directory.
-- `<ALIGNER>/umitools/` (UMI-tools only)
+- `<ALIGNER>/umitools/`
   - `*_edit_distance.tsv`: Reports the (binned) average edit distance between the UMIs at each position.
   - `*_per_umi.tsv`: UMI-level summary statistics.
   - `*_per_umi_per_position.tsv`: Tabulates the counts for unique combinations of UMI and position.
@@ -589,7 +297,7 @@ The content of the files above is explained in more detail in the [UMI-tools doc
 
 </details>
 
-After extracting the UMI information from the read sequence (see [UMI-tools extract](#umi-tools-extract)), the second step in the removal of UMI barcodes involves deduplicating the reads based on both mapping and UMI barcode information. UMI deduplication can be carried out either with [UMI-tools](https://github.com/CGATOxford/UMI-tools) or [UMICollapse](https://github.com/Daniel-Liu-c0deb0t/UMICollapse), set via the `umi_dedup_tool` parameter. The output BAM files are the same, though UMI-tools has some additional outputs, as described above. Either method will generate a filtered BAM file after the removal of PCR duplicates.
+After extracting the UMI information from the read sequence (see [UMI-tools extract](#umi-tools-extract)), the second step in the removal of UMI barcodes involves deduplicating the reads based on both mapping and UMI barcode information using the UMI-tools `dedup` command. This will generate a filtered BAM file after the removal of PCR duplicates.
 
 ### picard MarkDuplicates
 
@@ -626,7 +334,7 @@ Unless you are using [UMIs](https://emea.illumina.com/science/sequencing-method-
 
 </details>
 
-[StringTie](https://ccb.jhu.edu/software/stringtie/) is a fast and highly efficient assembler of RNA-seq alignments into potential transcripts. It uses a novel network flow algorithm as well as an optional de novo assembly step to assemble and quantitate full-length transcripts representing multiple splice variants for each gene locus. In order to identify differentially expressed genes between experiments, StringTie's output can be processed by specialized software like [Ballgown](https://github.com/alyssafrazee/ballgown), [Cuffdiff](http://cole-trapnell-lab.github.io/cufflinks/cuffdiff/index.html) or other programs ([DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html), [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html), etc.).
+[StringTie](https://ccb.jhu.edu/software/stringtie/) is a fast and highly efficient assembler of RNA-Seq alignments into potential transcripts. It uses a novel network flow algorithm as well as an optional de novo assembly step to assemble and quantitate full-length transcripts representing multiple splice variants for each gene locus. In order to identify differentially expressed genes between experiments, StringTie's output can be processed by specialized software like [Ballgown](https://github.com/alyssafrazee/ballgown), [Cuffdiff](http://cole-trapnell-lab.github.io/cufflinks/cuffdiff/index.html) or other programs ([DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html), [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html), etc.).
 
 ### BEDTools and bedGraphToBigWig
 
@@ -659,7 +367,7 @@ The majority of RSeQC scripts generate output files which can be plotted and sum
 
 </details>
 
-This script predicts the "strandedness" of the protocol (i.e. unstranded, sense or antisense) that was used to prepare the sample for sequencing by assessing the orientation in which aligned reads overlay gene features in the reference genome. The strandedness of each sample has to be provided to the pipeline in the input samplesheet (see [usage docs](https://nf-co.re/rnaseq/usage#samplesheet-input)). However, this information is not always available, especially for public datasets. As a result, additional features have been incorporated into this pipeline to auto-detect whether you have provided the correct information in the samplesheet, and if this is not the case then the affected libraries will be flagged in the table under 'Strandedness Checks' elsewhere in the report. If required, this will allow you to correct the input samplesheet and rerun the pipeline with the accurate strand information. Note, it is important to get this information right because it can affect the final results.
+This script predicts the "strandedness" of the protocol (i.e. unstranded, sense or antisense) that was used to prepare the sample for sequencing by assessing the orientation in which aligned reads overlay gene features in the reference genome. The strandedness of each sample has to be provided to the pipeline in the input samplesheet (see [usage docs](https://nf-co.re/rnaseq/usage#samplesheet-input)). However, this information is not always available, especially for public datasets. As a result, additional features have been incorporated into this pipeline to auto-detect whether you have provided the correct information in the samplesheet, and if this is not the case then a warning table will be placed at the top of the MultiQC report highlighting the offending samples (see image below). If required, this will allow you to correct the input samplesheet and rerun the pipeline with the accurate strand information. Note, it is important to get this information right because it can affect the final results.
 
 RSeQC documentation: [infer_experiment.py](http://rseqc.sourceforge.net/#infer-experiment-py)
 
@@ -844,18 +552,6 @@ RSeQC documentation: [tin.py](http://rseqc.sourceforge.net/#tin-py)
 
 The [Qualimap RNA-seq QC module](http://qualimap.bioinfo.cipf.es/doc_html/analysis.html#rna-seq-qc) is used within this pipeline to assess the overall mapping and coverage relative to gene features.
 
-:::warning
-**Known limitation**: Qualimap has a known bug ([#1273](https://github.com/nf-core/rnaseq/issues/1273), [Qualimap issue #81](https://bitbucket.org/kokonech/qualimap/issues/81)) where it may report more reads assigned to genomic features (exons, introns, intergenic regions) than the total number of reads in the BAM file. This can lead to inflated read counts and incorrect genomic origin statistics.
-
-If accurate read distribution metrics are critical for your analysis, we recommend:
-
-- Cross-referencing Qualimap results with RSeQC output (particularly `read_distribution.txt`)
-- Using `--skip_qualimap` to disable Qualimap and rely on RSeQC for genomic feature distribution
-- Validating suspicious results with alternative tools or custom scripts
-
-This is an upstream tool issue that cannot be fixed at the pipeline level.
-:::
-
 ![MultiQC - Qualimap gene coverage plot](images/mqc_qualimap_coverage.png)
 
 ![MultiQC - Qualimap genomic origin plot](images/mqc_qualimap_features.png)
@@ -946,8 +642,6 @@ The script included in the pipeline uses DESeq2 to normalise read counts across 
 
 By default, the pipeline uses the `vst` transformation which is more suited to larger experiments. You can set the parameter `--deseq2_vst false` if you wish to use the DESeq2 native `rlog` option. See [DESeq2 docs](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#data-transformations-and-visualization) for a more detailed explanation.
 
-Both types of transformation are performed blind, i.e. using across-all-samples variability, without using any prior information on experimental groups (equivalent to using an intercept-only design), as recommended by the [DESeq2 docs](https://www.bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#blind-dispersion-estimation).
-
 The PCA plots are generated based alternately on the top five hundred most variable genes, or all genes. The former is the conventional approach that is more likely to pick up strong effects (ie the biological signal) and the latter, when different, is picking up a weaker but consistent effect that is synchronised across many transcripts. We project both of these onto the first two PCs (shown in the top row of the figure below), which is the best two dimensional representation of the variation between samples.
 
 We also explore higher components in terms of experimental factors inferred from sample names. If your sample naming convention follows a strict policy of using underscores to delimit values of experimental factors (for example `WT_UNTREATED_REP1`) and all names have the same number of underscores (so excluding `WT_TREATED_10ml_REP1` from being compatible with the previous label), then any of these factors that are informative (ie label some but not all samples the same) then we individually plot upto the first five PCs, per experimental level, for each of the experimental factors.
@@ -959,40 +653,6 @@ The plot on the left hand side shows the standard PC plot - notice the variable 
 ![MultiQC - DESeq2 PCA plot](images/mqc_deseq2_pca.png)
 
 <p align="center"><img src="images/mqc_deseq2_clustering.png" alt="MultiQC - DESeq2 sample similarity plot" width="600"></p>
-
-### Kraken2/Bracken
-
-<details markdown="1">
-<summary>Output files</summary>
-
-- `<ALIGNER>/contaminants/kraken2/kraken_reports`
-  - `*.kraken2.report.txt`: Classification of unaligned reads in the Kraken report format. See the [kraken2 manual](https://github.com/DerrickWood/kraken2/wiki/Manual#output-formats) for more details
-  - `*.classified*.fastq.gz` If `--save_kraken_alignments`, outputs fastq file for each sample with each classified read annotated with taxonomic identification from Kraken2.
-  - `*.unclassified*.fastq.gz` If `save_kraken_unassigned`, outputs fastq file with all reads that were not classified by Kraken2.
-- `<ALIGNER>/contaminants/bracken/`
-  - `*.kraken2.report_bracken.txt`: Kraken-style reports of the Bracken abundance estimate results. See the [kraken2 manual](https://github.com/DerrickWood/kraken2/wiki/Manual#output-formats) for more details.
-  - `*.tsv` Summary of estimated reads for each taxon member at the given classification level and what corrections were made from Kraken2.
-
-</details>
-
-[Kraken2](https://ccb.jhu.edu/software/kraken2/) is a taxonomic classification tool that uses k-mer matches paired with a lowest common ancestory (LCA) algorithm to classify species reads. [Bracken](https://ccb.jhu.edu/software/bracken/) is a statistical method to generate abundance estimates based off of the Kraken2 output. These algorithms are run on unaligned sequences to detect potential contamination of samples. MultiQC reports the top 5 taxon members detected at the level of classification used for Bracken, with toggles available for higher taxonomic levels. Because MultiQC no longer has a separate Bracken module, results for Bracken will appear under the Kraken heading in the MultiQC report. If Bracken is skipped, MultiQC will report the top 5 species detected by Kraken2.
-
-![MultiQC - Bracken top species plot](images/bracken-top-n-plot.png)
-
-### Sylph
-
-[Sylph](https://sylph-docs.github.io/) is a metagenomic profiler that determines the species present in reads by statistically estimating containment ANI. Its companion script, [sylph-tax](https://sylph-docs.github.io/sylph-tax/), converts these ANI estimates into estimated taxonomic abundances in the sample. These algorithms are run on unaligned sequences to detect potential contamination of samples. MultiQC shows the Top 10 strains in the Sylph-tax abundance estimates, with toggles available for higher taxonomic levels.
-
-![MultiQC - Sylphtax top species plot](images/sylphtax-top-n-plot.png)
-
-<details markdown="1">
-<summary>Output files</summary>
-
-- `<ALIGNER>/contaminants/sylph`
-  - `*.tsv` Summary of containment ANI and abundances of detected species in the sample. See the [Sylph documentation](https://sylph-docs.github.io/Output-format/) for full details on the output format.
-  - `*.sylphmpa` Taxonomic report of unaligned reads from `sylph-tax`. See the [Sylph documentation](https://sylph-docs.github.io/sylph-tax-output-format/) for full details on the output format.
-
-</details>
 
 ### MultiQC
 
@@ -1013,7 +673,7 @@ Results generated by MultiQC collate pipeline QC from supported tools i.e. FastQ
 
 ### Pseudoalignment
 
-The principal output files are the same between Salmon and Kallisto:
+The principal output files are the same between Salmon and Kallsto:
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -1021,35 +681,15 @@ The principal output files are the same between Salmon and Kallisto:
 - `<pseudo_aligner>/`
   - `<pseudo_aligner>.merged.gene_counts.tsv`: Matrix of gene-level raw counts across all samples.
   - `<pseudo_aligner>.gene_tpm.tsv`: Matrix of gene-level TPM values across all samples.
-  - `<pseudo_aligner>.merged.gene.SummarizedExperiment.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the abundance TPM (`tpm`), estimated counts (`counts`) and gene length (`length`), estimated library size-scaled counts (`counts_scaled`), estimated length-scaled counts (`counts_length_scaled`) in the assays slot for genes.
-  - `<pseudo_aligner>.merged.gene_lengths.tsv`: Matrix of average within-sample transcript lengths for each gene across all samples.
-  - `<pseudo_aligner>.merged.gene_counts_scaled.tsv`: Matrix of gene-level library size-scaled estimated counts across all samples.
-  - `<pseudo_aligner>.merged.gene_counts_length_scaled.tsv`: Matrix of gene-level length-scaled estimated counts across all samples.
+  - `<pseudo_aligner>.gene_counts.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the TPM (`abundance`), estimated counts (`counts`) and transcript length (`length`) in the assays slot for genes.
+  - `<pseudo_aligner>.merged.gene_counts_scaled.tsv`: Matrix of gene-level library size-scaled counts across all samples.
+  - `<pseudo_aligner>.merged.gene_counts_scaled.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the TPM (`abundance`), estimated library size-scaled counts (`counts`) and transcript length (`length`) in the assays slot for genes.
+  - `<pseudo_aligner>.merged.gene_counts_length_scaled.tsv`: Matrix of gene-level length-scaled counts across all samples.
+  - `<pseudo_aligner>.merged.gene_counts_length_scaled.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the TPM (`abundance`), estimated length-scaled counts (`counts`) and transcript length (`length`) in the assays slot for genes.
   - `<pseudo_aligner>.merged.transcript_counts.tsv`: Matrix of isoform-level raw counts across all samples.
   - `<pseudo_aligner>.merged.transcript_tpm.tsv`: Matrix of isoform-level TPM values across all samples.
+  - `<pseudo_aligner>.merged.transcript_counts.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the TPM (`abundance`), estimated isoform-level raw counts (`counts`) and transcript length (`length`) in the assays slot for transcripts.
   - `tx2gene.tsv`: Tab-delimited file containing gene to transcripts ids mappings.
-  - `<pseudo_aligner>.merged.transcript.SummarizedExperiment.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the abundance TPM (`tpm`), estimated isoform-level raw counts (`counts`) and transcript length (`length`) in the assays slot for transcripts.
-
-:::tip
-You can access specific assay matrices from the `SummarizedExperiment` RDS object with the following R code:
-:::
-
-```r
-  library(SummarizedExperiment)
-
-  # Load the RDS object
-  se <- readRDS("salmon.merged.gene.SummarizedExperiment.rds")  # or kallisto.merged.gene.SummarizedExperiment.rds
-
-  # View available assays
-  assayNames(se)
-
-  # Access a specific assay, e.g., length-scaled counts
-  counts_length_scaled <- assay(se, "counts_length_scaled")
-
-  # Print the matrix
-  print(counts_length_scaled)
-```
-
   </details>
 
 An additional subset of files are distinct to each tool, for Salmon:
@@ -1085,11 +725,11 @@ Transcripts with large inferential uncertainty won't be assigned the exact numbe
 
 The [tximport](https://bioconductor.org/packages/release/bioc/html/tximport.html) package is used in this pipeline to summarise the results generated by Salmon or Kallisto into matrices for use with downstream differential analysis packages. We use tximport with different options to summarize count and TPM quantifications at the gene- and transcript-level. Please see [#499](https://github.com/nf-core/rnaseq/issues/499) for discussion and links regarding which counts are suitable for different types of analysis.
 
-According to the [`txtimport` documentation](https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html#Downstream_DGE_in_Bioconductor) you can do one of the following:
+According to the `txtimport` documentation you can do one of the following:
 
-- Use the original (bias-uncorrected) counts _with an offset_: import all the salmon `quant.sf` files with `tximport` and then use `DESeq2` with `dds <- DESeqDataSetFromTximport(txi, sampleTable, ~condition)` to automatically construct an object with gene-level offsets in-built, which can be used by DESeq2 to automatically account for effective gene length effects across conditions. It's also possible to combine the `.merged.gene_counts.tsv` and `.gene_lengths.tsv` matrices output by this workflow to make your own object the same way - which is what [the nf-core differentialabundance workflow does](https://nf-co.re/differentialabundance/1.5.0/docs/usage#outputs-from-nf-corernaseq-and-other-tximport-processed-results). See the [DESeq2 module](https://github.com/nf-core/modules/blob/c8f7f481bf2ccd8f9c7f2d499d94e74d4b9e23ab/modules/nf-core/deseq2/differential/templates/deseq_de.R#L323) for the implementation details.
-- Use bias-corrected counts _without an offset_: load and use `salmon.merged.gene_counts_length_scaled.tsv` or `salmon.merged.gene_counts_scaled.tsv` directly as you would with a regular gene-level counts matrix. These files were created using the `tximport` argument `countsFromAbundance="scaledTPM"` or `"lengthScaledTPM"` to scale counts to library size or to library size and average transcript length respectively.
-- Use the original (bias-uncorrected) counts _without an offset_: load and use the `txi$counts` matrix (or `salmon.merged.gene_counts.tsv`) with `DESeq2`. This is generally **not** recommended, since it does not correct for potential differential isoform usage (the offset). However, if you have 3’ tagged RNA-seq data, then this _is_ the most suitable method, because the counts do not exhibit any length bias.
+- Use bias corrected counts with an offset: import all the salmon files with `tximport` and then use `DESeq2` with `dds <- DESeqDataSetFromTximport(txi, sampleTable, ~condition)` to correct for changes to the average transcript length across samples.
+- Use bias corrected counts without an offset: load and use `salmon.merged.gene_counts_length_scaled.tsv` or `salmon.merged.gene_counts_scaled.tsv` directly as you would with a regular counts matrix.
+- Use bias uncorrected counts: load and use the `txi$counts` matrix (or `salmon.merged.gene_counts.tsv`) with `DESeq2`. This does not correct for potential differential isoform usage. Alternatively, if you have 3’ tagged RNA-seq data this is the most suitable method.
 
 > **NB:** The default Salmon parameters and a k-mer size of 31 are used to create the index. As [documented here](https://salmon.readthedocs.io/en/latest/salmon.html#preparing-transcriptome-indices-mapping-based-mode) and [discussed here](https://github.com/COMBINE-lab/salmon/issues/482#issuecomment-583799668), a k-mer size off 31 works well with reads that are 75bp or longer.
 
@@ -1125,8 +765,6 @@ A number of genome-specific files are generated by the pipeline because they are
   - Reports generated by the pipeline: `pipeline_report.html`, `pipeline_report.txt` and `software_versions.yml`. The `pipeline_report*` files will only be present if the `--email` / `--email_on_fail` parameter's are used when running the pipeline.
   - Reformatted samplesheet files used as input to the pipeline: `samplesheet.valid.csv`.
   - Parameters used by the pipeline run: `params.json`.
-- `samplesheets/`
-  - `samplesheet_with_bams.csv`: **Auto-generated samplesheet for BAM reprocessing** (only created when using `--save_align_intermeds`) containing all samples with BAM file paths. For samples processed from FASTQ, includes paths to newly generated BAMs; for samples that were BAM input, preserves the original input paths. This samplesheet can be used directly for future pipeline runs with `--skip_alignment`, enabling efficient reprocessing without re-alignment.
 
 </details>
 

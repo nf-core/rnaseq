@@ -7,7 +7,6 @@ lint:
     - assets/email_template.html
     - assets/email_template.txt
     - .gitignore
-    - docs/README.md
   modules_config: false
   multiqc_config: false
   nextflow_config:

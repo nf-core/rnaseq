@@ -14,6 +14,121 @@ The directories listed below will be created in the results directory after the 
 Many of the BAM files produced by this pipeline can be reused as input for future runs with `--skip_alignment`. This is particularly useful for reprocessing data or running downstream analysis steps without repeating computationally expensive alignment. See the [usage documentation](https://nf-co.re/rnaseq/usage#bam-input-for-reprocessing-workflow) for details on using BAM files as input.
 :::
 
+---
+
+## 📊 Results at a Glance
+
+After running the pipeline, your results directory will contain the following key outputs:
+
+### 🎯 Start Here
+
+| File/Directory                    | Description                                               | What to Check                                                 |
+| --------------------------------- | --------------------------------------------------------- | ------------------------------------------------------------- |
+| **`multiqc/multiqc_report.html`** | 📈 **Interactive QC report** - Open this first!           | Overall quality metrics, alignment rates, strandedness checks |
+| **`star_salmon/*.counts.tsv`**    | 📊 **Gene count matrices** - Main quantification output   | Ready for differential expression analysis                    |
+| **`star_salmon/*.bam`**           | 🧬 **Aligned reads** - For visualization and reprocessing | Can be viewed in IGV or reused with `--skip_alignment`        |
+
+### 📁 Key Output Directories
+
+| Directory                 | Contents                                                     | When Available                    |
+| ------------------------- | ------------------------------------------------------------ | --------------------------------- |
+| `multiqc/`                | Comprehensive quality control report combining all tools     | Always                            |
+| `fastqc/`                 | Per-sample quality metrics for raw reads                     | Always                            |
+| `trimgalore/` or `fastp/` | Adapter-trimmed reads and trimming statistics                | Always (unless `--skip_trimming`) |
+| `star_salmon/`            | Aligned BAM files and gene/transcript counts                 | Default workflow                  |
+| `salmon/` or `kallisto/`  | Pseudoalignment quantification (if using `--pseudo_aligner`) | With `--pseudo_aligner`           |
+| `rsem/`                   | RSEM quantification results                                  | With `--aligner star_rsem`        |
+| `deseq2_qc/`              | PCA plots, sample clustering, normalized counts              | With `--deseq2_vst`               |
+| `stringtie/`              | Transcript assembly and abundance                            | With `--stringtie_ignore_gtf`     |
+| `rseqc/`                  | Read distribution, strandedness, junction analysis           | Unless `--skip_rseqc`             |
+| `qualimap/`               | Alignment QC and coverage analysis                           | Unless `--skip_qualimap`          |
+| `dupradar/`               | Duplication rate analysis                                    | Unless `--skip_dupradar`          |
+| `preseq/`                 | Library complexity estimates                                 | Unless `--skip_preseq`            |
+| `kraken2/`                | Taxonomic classification (contamination screening)           | With `--kraken2_db`               |
+| `sylph/`                  | Fast metagenomic profiling                                   | With `--sylph_db`                 |
+
+### 🔍 Quick Quality Checks
+
+**Open `multiqc/multiqc_report.html` and check:**
+
+1. **General Statistics Table**
+   - ✅ Alignment rates should be >70% for most RNA-seq experiments
+   - ✅ M Seqs (millions of sequences) should be similar across samples
+   - ⚠️ Check for outliers or failed samples
+
+2. **Strandedness Checks** (if using `strandedness,auto`)
+   - ✅ Green = Strandedness matches between input and RSeQC output
+   - ❌ Red = Mismatch indicates potential library prep issues
+
+3. **FastQC Sequence Quality**
+   - ✅ Quality scores should be mostly in the green zone (>28)
+   - ⚠️ Yellow/red at read ends is normal for Illumina data
+
+4. **RSeQC Read Distribution**
+   - ✅ Most reads should map to CDS/UTR regions
+   - ⚠️ High intergenic or intronic percentages may indicate genomic DNA contamination
+
+5. **DESeq2 PCA Plot** (if generated)
+   - ✅ Biological replicates should cluster together
+   - ⚠️ Batch effects may appear as unexpected separation
+
+### 📋 File Naming Conventions
+
+```
+results/
+├── star_salmon/
+│   ├── SAMPLE_NAME.Aligned.sortedByCoord.out.bam       # Genome-aligned reads
+│   ├── SAMPLE_NAME.Aligned.toTranscriptome.out.bam     # Transcriptome-aligned reads
+│   ├── SAMPLE_NAME.markdup.sorted.bam                   # After duplicate marking
+│   ├── salmon.merged.gene_counts.tsv                    # Gene-level counts matrix
+│   ├── salmon.merged.gene_tpm.tsv                       # Gene-level TPM matrix
+│   └── salmon.merged.transcript_counts.tsv              # Transcript-level counts
+```
+
+### 🎓 Understanding Your Results
+
+- **Counts (`*.counts.tsv`)**: Raw read counts per gene - use for DESeq2, edgeR, limma
+- **TPM (`*.tpm.tsv`)**: Transcripts Per Million - normalized for gene length and sequencing depth
+- **BAM files (`*.bam`)**: Aligned reads - use for genome browsers, peak calling, reprocessing
+- **MultiQC report**: Aggregated QC metrics - use for quality assessment and troubleshooting
+
+### 🔄 Reusing Results
+
+**To reprocess data without realignment:**
+
+1. Locate the auto-generated samplesheet: `results/samplesheets/samplesheet_with_bams.csv`
+2. Run with: `--input samplesheet_with_bams.csv --skip_alignment`
+3. See [BAM reprocessing guide](usage.md#bam-input-for-reprocessing-workflow) for details
+
+---
+
+## 📑 Quick Navigation
+
+### Output by Analysis Stage
+
+- [Preprocessing](#preprocessing) - Quality control, trimming, filtering
+- [Alignment & Quantification](#alignment-and-quantification) - STAR, Salmon, Kallisto, HISAT2, RSEM
+- [Alignment Post-processing](#alignment-post-processing) - Deduplication, sorting, indexing
+- [Quality Control](#quality-control) - RSeQC, Qualimap, dupRadar, DESeq2
+- [Contamination Screening](#contamination-screening) - Kraken2, Sylph (optional)
+- [Pseudoalignment](#pseudoalignment-and-quantification) - Lightweight quantification
+- [Reference Files](#reference-genome-files) - Generated indices and references
+- [Pipeline Info](#pipeline-information) - Execution reports and provenance
+
+### Output by Tool
+
+**Preprocessing:** [cat](#cat) | [fq lint](#fq-lint) | [FastQC](#fastqc) | [UMI-tools](#umi-tools-extract) | [TrimGalore](#trimgalore) | [fastp](#fastp) | [BBSplit](#bbsplit) | [rRNA removal](#rrna-removal)
+
+**Alignment:** [STAR+Salmon](#star-salmon-and-kallisto) | [STAR+RSEM](#star-via-rsem) | [HISAT2](#hisat2) | [Bowtie2 (prokaryotic)](#bowtie2-and-salmon-prokaryotic)
+
+**Quantification:** [Salmon](#star-salmon-and-kallisto) | [Kallisto](#star-salmon-and-kallisto) | [RSEM](#star-via-rsem) | [featureCounts](#featurecounts)
+
+**QC Tools:** [RSeQC](#rseqc) | [Qualimap](#qualimap) | [dupRadar](#dupradar) | [Preseq](#preseq) | [DESeq2](#deseq2) | [MultiQC](#multiqc)
+
+**Other:** [StringTie](#stringtie) | [BEDTools](#bedtools-and-bedgraphtobigwig) | [SAMtools](#samtools) | [Picard](#picard-markduplicates)
+
+---
+
 ## Pipeline overview
 
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
@@ -511,7 +626,7 @@ Unless you are using [UMIs](https://emea.illumina.com/science/sequencing-method-
 
 </details>
 
-[StringTie](https://ccb.jhu.edu/software/stringtie/) is a fast and highly efficient assembler of RNA-Seq alignments into potential transcripts. It uses a novel network flow algorithm as well as an optional de novo assembly step to assemble and quantitate full-length transcripts representing multiple splice variants for each gene locus. In order to identify differentially expressed genes between experiments, StringTie's output can be processed by specialized software like [Ballgown](https://github.com/alyssafrazee/ballgown), [Cuffdiff](http://cole-trapnell-lab.github.io/cufflinks/cuffdiff/index.html) or other programs ([DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html), [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html), etc.).
+[StringTie](https://ccb.jhu.edu/software/stringtie/) is a fast and highly efficient assembler of RNA-seq alignments into potential transcripts. It uses a novel network flow algorithm as well as an optional de novo assembly step to assemble and quantitate full-length transcripts representing multiple splice variants for each gene locus. In order to identify differentially expressed genes between experiments, StringTie's output can be processed by specialized software like [Ballgown](https://github.com/alyssafrazee/ballgown), [Cuffdiff](http://cole-trapnell-lab.github.io/cufflinks/cuffdiff/index.html) or other programs ([DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html), [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html), etc.).
 
 ### BEDTools and bedGraphToBigWig
 

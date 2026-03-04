@@ -4,6 +4,91 @@
 
 > _Documentation of pipeline parameters is generated automatically from the pipeline schema and can no longer be found in markdown files._
 
+---
+
+## 📑 Quick Navigation
+
+### 🚀 Getting Started
+
+- [Quick Start Example](#quick-start-example) - Minimal command to run the pipeline
+- [Samplesheet Input](#samplesheet-input) - How to prepare your input data
+- [Running the Pipeline](#running-the-pipeline) - Detailed execution instructions
+
+### 📋 Input Preparation
+
+- [Samplesheet Format](#samplesheet-input) - Required columns and structure
+- [Multiple Runs](#multiple-runs-of-the-same-sample) - Merging technical replicates
+- [Strandedness](#strandedness-prediction) - Auto-detection vs manual specification
+- [FASTQ Linting](#linting) - Quality validation with fq lint
+- [BAM Input](#bam-input-for-reprocessing-workflow) - Reprocessing existing alignments
+- [FASTQ Sampling](#fastq-sampling) - Subsample reads for testing
+
+### ⚙️ Processing & Analysis Options
+
+- [Adapter Trimming](#adapter-trimming-options) - TrimGalore (default) vs fastp
+- [rRNA Removal](#rrna-removal-options) - SortMeRNA, Bowtie2, or RiboDetector
+- [Alignment Tools](#alignment-options) - STAR, HISAT2, STAR+RSEM
+- [Quantification](#quantification-options) - Salmon, featureCounts, RSEM, Kallisto
+- [Reference Genomes](#reference-genome-options) - Using iGenomes or custom references
+- [Contamination Screening](#contamination-screening-options) - Kraken2/Bracken or Sylph
+
+### 🔬 Specialized Workflows
+
+- [UMI-based Protocols](#unique-molecular-identifiers-umi) - UMI extraction and deduplication
+- [3' Digital Gene Expression](#3-digital-gene-expression-assays) - 3' end counting assays
+- [Prokaryotic RNA-seq](#bowtie2-and-salmon-prokaryotic) - Bacterial/archaeal analysis
+
+### 🚀 Performance & Acceleration
+
+- [Sentieon STAR](#sentieon-acceleration-for-star) - Commercial acceleration
+- [Parabricks GPU](#parabricks-gpu-acceleration-for-star) - NVIDIA GPU acceleration
+- [ARM Architecture](#running-on-linux-arm-architectures) - Apple Silicon and ARM support
+
+### 💻 Configuration & Execution
+
+- [Resource Requests](#resource-requests) - Memory and CPU allocation
+- [Custom Containers](#custom-containers) - Using custom Docker/Singularity images
+- [Tool Arguments](#custom-tool-arguments) - Per-tool parameter customization
+- [Running in Background](#running-in-the-background) - Long-running jobs
+- [Reproducibility](#reproducibility) - Ensuring consistent results
+
+### 📚 Core Nextflow Concepts
+
+- [Profiles](#-profile) - Docker, Singularity, Conda, institute configs
+- [Resume](#-resume) - Restart failed runs
+- [Custom Config](#-c) - Advanced configuration
+
+---
+
+## Quick Start Example
+
+**Minimal command to run the pipeline:**
+
+```bash
+nextflow run nf-core/rnaseq \
+  --input samplesheet.csv \
+  --outdir results \
+  --genome GRCh38 \
+  -profile docker
+```
+
+**What this does:**
+
+- Reads sample information from `samplesheet.csv`
+- Uses the GRCh38 human reference genome from AWS iGenomes
+- Runs with default parameters (STAR + Salmon quantification)
+- Uses Docker containers for reproducibility
+- Saves all results to `results/` directory
+
+**Next steps:**
+
+1. Check the [MultiQC report](../output.md#multiqc) at `results/multiqc/multiqc_report.html`
+2. Review [strandedness detection](../output.md#multiqc) results if you used `strandedness,auto`
+3. Examine [quantification results](../output.md#star-salmon-and-kallisto) in `results/star_salmon/`
+4. See [Output Documentation](../output.md) for complete results description
+
+---
+
 ## Pipeline parameters
 
 Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration except for parameters; see [docs](https://nf-co.re/usage/configuration#custom-configuration-files).
@@ -42,6 +127,30 @@ If you set the strandedness value to `auto`, the pipeline will sub-sample the in
 - **Undetermined:** Samples that do not meet either criterion, possibly indicating issues such as genomic DNA contamination.
 
 **Note:** These thresholds apply to both the strandedness inferred from Salmon outputs for input to the pipeline and how strandedness is inferred from RSeQC results using pipeline outputs.
+
+#### When to Use Auto-Detection vs. Manual Specification
+
+**✅ Use `strandedness,auto` when:**
+
+- Library preparation method is unknown or uncertain
+- Working with data from external sources (public repositories, collaborators)
+- Testing different protocols or validating library prep
+- You want the pipeline to verify expected strandedness
+
+**⚠️ Manually specify strandedness when:**
+
+- Library prep protocol is well-documented (e.g., TruSeq Stranded, QuantSeq)
+- Reprocessing previously analyzed data where strandedness is known
+- Maximum performance is needed (skips auto-detection step)
+- Working with challenging samples where auto-detection may be unreliable
+
+**Common library types:**
+
+- `reverse` - TruSeq Stranded mRNA, TruSeq Stranded Total RNA, Illumina Stranded mRNA Prep, dUTP methods
+- `forward` - Ligation-based methods, some Smart-seq protocols
+- `unstranded` - Standard RNA-seq (no strand selection), QuantSeq FWD REV with UMI
+
+For more troubleshooting, see [Strandedness detection fails](#strandedness-detection-fails-or-gives-undetermined).
 
 #### Usage Examples
 
@@ -111,6 +220,20 @@ An [example samplesheet](../assets/samplesheet.csv) has been provided with the p
 ### BAM input for reprocessing workflow
 
 The pipeline supports a **two-step workflow** for efficient reprocessing without expensive alignment steps. This feature is designed specifically for re-running with BAM files generated by previous runs of this same pipeline.
+
+#### Why use BAM reprocessing?
+
+**Time savings**: Skipping alignment typically saves 50-70% of total runtime.
+
+**Use cases:**
+
+- Try different quantification methods (Salmon vs. RSEM vs. featureCounts)
+- Adjust downstream parameters (DESeq2, StringTie, RSeQC settings)
+- Rerun quality control with updated tools or parameters
+- Test different filtering or normalization approaches
+
+**What you can change**: Quantification, QC tools, filtering, downstream analysis
+**What you cannot change**: Alignment parameters, reference genome, read trimming (already performed)
 
 #### Step 1: Initial run with BAM generation
 
@@ -253,7 +376,7 @@ Selecting `star_rsem` automatically applies the same STAR settings as [rsem-calc
 
 You also have the option to pseudoalign and quantify your data directly with [Salmon](https://salmon.readthedocs.io/en/latest/salmon.html) or [Kallisto](https://pachterlab.github.io/kallisto/) by specifying `salmon` or `kallisto` to the `--pseudo_aligner` parameter. The selected pseudoaligner will then be run in addition to the standard alignment workflow defined by `--aligner`, mainly because it allows you to obtain QC metrics with respect to the genomic alignments. However, you can provide the `--skip_alignment` parameter if you would like to run Salmon or Kallisto in isolation. By default, the pipeline will use the genome fasta and gtf file to generate the transcripts fasta file, and then to build the Salmon index. You can override these parameters using the `--transcript_fasta` and `--salmon_index` parameters, respectively.
 
-The library preparation protocol (library type) used by Salmon quantification is inferred by the pipeline based on the information provided in the samplesheet, however, you can override it using the `--salmon_quant_libtype` parameter. You can find the available options in the [Salmon documentation](https://salmon.readthedocs.io/en/latest/library_type.html). Similarly, strandedness is taken from the sample sheet or calculated automatically, and passed to Kallisto on a per-library basis, but you can apply a global override by setting the Kallisto strandedness parameters in `--extra_kallisto_quant_args` like `--extra_kallisto_quant_args '--fr-stranded'` see the [Kallisto documentation](https://pachterlab.github.io/kallisto/manual).
+The library preparation protocol (library type) used by Salmon quantification is inferred by the pipeline based on the information provided in the samplesheet, however, you can override it using the `--salmon_quant_libtype` parameter. You can find the available options in the [Salmon documentation](https://salmon.readthedocs.io/en/latest/library_type.html). Similarly, strandedness is taken from the samplesheet or calculated automatically, and passed to Kallisto on a per-library basis, but you can apply a global override by setting the Kallisto strandedness parameters in `--extra_kallisto_quant_args` like `--extra_kallisto_quant_args '--fr-stranded'` see the [Kallisto documentation](https://pachterlab.github.io/kallisto/manual).
 
 When running Salmon in mapping-based mode via `--pseudo_aligner salmon`, supplying a genome fasta via `--fasta` and not supplying a Salmon index, the entire genome of the organism is used by default for the decoy-aware transcriptome when creating the indices, as is recommended (see second bulleted option in [Salmon documentation](https://salmon.readthedocs.io/en/latest/salmon.html#preparing-transcriptome-indices-mapping-based-mode)). If you do not supply a FASTA file or an index, Salmon will index without those decoys, using only transcript sequences in the index. This second option is not usually recommended, but may be useful in limited circumstances. Note that Kallisto does not index with genomic sequences.
 
@@ -829,3 +952,455 @@ We recommend adding the following line to your environment to limit this (typica
 ```bash
 NXF_OPTS='-Xms1g -Xmx4g'
 ```
+
+---
+
+## 🔧 Troubleshooting
+
+This section covers common issues and their solutions. For additional help, please visit the [nf-core Slack #rnaseq channel](https://nfcore.slack.com/channels/rnaseq).
+
+**See also:**
+
+- [Quick Quality Checks](output.md#quick-quality-checks) - Interpreting MultiQC metrics
+- [Results at a Glance](output.md#results-at-a-glance) - Understanding your output files
+- [Getting Help](#getting-help) - Additional support resources
+
+### Common Pipeline Failures
+
+<details>
+<summary><b>Pipeline fails during alignment (STAR/HISAT2)</b></summary>
+
+**Symptoms:**
+
+- Error messages about memory allocation
+- Process killed or exits with error code 137
+- "Cannot allocate memory" messages
+
+**Possible Causes:**
+
+- Insufficient memory for genome indexing or alignment
+- STAR index requires significant RAM (typically 30-40GB for human genome)
+- Multiple samples running simultaneously exceeding available memory
+
+**Solutions:**
+
+1. **Increase memory allocation:**
+
+   ```bash
+   nextflow run nf-core/rnaseq \
+     --input samplesheet.csv \
+     --max_memory '64.GB' \
+     -profile docker
+   ```
+
+2. **Use pre-built indices:**
+
+   ```bash
+   # Instead of auto-generating, provide pre-built indices
+   nextflow run nf-core/rnaseq \
+     --input samplesheet.csv \
+     --star_index /path/to/star_index \
+     --fasta /path/to/genome.fa \
+     --gtf /path/to/genes.gtf \
+     -profile docker
+   ```
+
+3. **Limit concurrent jobs:**
+   Add to custom config file:
+
+   ```groovy
+   process {
+     withName: 'NFCORE_RNASEQ:RNASEQ:ALIGN_STAR:STAR_ALIGN' {
+       maxForks = 1
+     }
+   }
+   ```
+
+4. **Consider pseudoalignment:**
+   ```bash
+   # Use faster, less memory-intensive Salmon or Kallisto
+   nextflow run nf-core/rnaseq \
+     --input samplesheet.csv \
+     --pseudo_aligner salmon \
+     --skip_alignment \
+     -profile docker
+   ```
+
+</details>
+
+<details>
+<summary><b>Strandedness detection fails or gives "undetermined"</b></summary>
+
+**Symptoms:**
+
+- Strandedness reported as "undetermined" in MultiQC
+- Warning messages about strandedness inference
+- Mismatches between Salmon and RSeQC strandedness
+
+**Possible Causes:**
+
+- Low-quality or degraded RNA
+- Genomic DNA contamination
+- Incorrect library preparation
+- Thresholds too stringent for dataset
+
+**Solutions:**
+
+1. **Manually specify strandedness:**
+
+   ```csv
+   sample,fastq_1,fastq_2,strandedness
+   SAMPLE1,reads_R1.fq.gz,reads_R2.fq.gz,reverse
+   ```
+
+   Common values:
+   - `unstranded` - Standard RNA-seq, QuantSeq FWD REV (UMI)
+   - `forward` - Ligation-based methods, some dUTP methods
+   - `reverse` - TruSeq Stranded, dUTP methods, SMARTer
+
+2. **Adjust strandedness thresholds:**
+
+   ```bash
+   nextflow run nf-core/rnaseq \
+     --input samplesheet.csv \
+     --stranded_threshold 0.7 \
+     --unstranded_threshold 0.2 \
+     -profile docker
+   ```
+
+3. **Check RSeQC infer_experiment results:**
+   - Review `results/rseqc/infer_experiment/` for detailed per-sample stats
+   - Compare with Salmon strandedness in MultiQC
+
+4. **Verify library prep protocol:**
+   - Consult your sequencing center or library prep kit documentation
+   - Common protocols: TruSeq Stranded (reverse), NEBNext (varies), QuantSeq (forward or reverse)
+
+</details>
+
+<details>
+<summary><b>Low alignment rates (<50%)</b></summary>
+
+**Symptoms:**
+
+- MultiQC shows low % aligned in general statistics
+- Many unmapped reads in STAR/HISAT2 logs
+
+**Possible Causes:**
+
+- Wrong reference genome
+- Poor read quality
+- Adapter contamination
+- Sample mix-up or contamination
+- Prokaryotic/viral contamination in eukaryotic sample
+
+**Solutions:**
+
+1. **Verify correct genome:**
+
+   ```bash
+   # Double-check organism and genome version
+   --genome GRCh38  # Human
+   --genome GRCm39  # Mouse
+   --genome TAIR10  # Arabidopsis
+   ```
+
+2. **Check FastQC reports:**
+   - Review adapter contamination plots
+   - Check sequence quality scores
+   - Look for overrepresented sequences
+
+3. **Enable contamination screening:**
+
+   ```bash
+   nextflow run nf-core/rnaseq \
+     --input samplesheet.csv \
+     --kraken2_db /path/to/kraken2_db \
+     -profile docker
+   ```
+
+4. **Review trimming:**
+   - Check if adapters are being removed properly
+   - Try different trimmer: `--trimmer fastp`
+   - Adjust quality threshold: `--min_trimmed_reads 10000`
+
+5. **For prokaryotic samples:**
+   ```bash
+   # Use prokaryotic-optimized workflow
+   nextflow run nf-core/rnaseq \
+     --input samplesheet.csv \
+     --genome 'R64-1-1' \
+     --fasta genome.fa \
+     --gtf annotation.gtf \
+     --aligner bowtie2_salmon \
+     --skip_gtf_filter \
+     -profile docker
+   ```
+
+</details>
+
+<details>
+<summary><b>rRNA contamination detected</b></summary>
+
+**Symptoms:**
+
+- High percentage of reads mapping to rRNA genes in RSeQC
+- Low percentage of reads in CDS regions
+- Poor library complexity
+
+**Solutions:**
+
+1. **Enable rRNA removal:**
+
+   ```bash
+   nextflow run nf-core/rnaseq \
+     --input samplesheet.csv \
+     --remove_ribo_rna \
+     --ribo_database_manifest /path/to/rrna.fasta \
+     -profile docker
+   ```
+
+2. **Choose removal tool:**
+
+   ```bash
+   # SortMeRNA (default, most comprehensive)
+   --remove_ribo_rna --ribo_removal_tool sortmerna
+
+   # Bowtie2 (faster)
+   --remove_ribo_rna --ribo_removal_tool bowtie2
+
+   # RiboDetector (machine learning-based)
+   --remove_ribo_rna --ribo_removal_tool ribodetector
+   ```
+
+3. **Review library prep:**
+   - Consider rRNA depletion kits for future experiments
+   - Check if poly-A selection was performed properly
+
+</details>
+
+<details>
+<summary><b>Sample clustering doesn't match experimental design</b></summary>
+
+**Symptoms:**
+
+- PCA plot shows unexpected clustering in DESeq2 QC
+- Replicates don't cluster together
+- Unwanted variation dominates PC1/PC2
+
+**Possible Causes:**
+
+- Batch effects (different sequencing runs, dates, operators)
+- Sample mix-up or mislabeling
+- Technical variation (extraction method, library prep)
+- Biological variation greater than treatment effect
+
+**Solutions:**
+
+1. **Check sample labels:**
+   - Verify samplesheet matches experimental design
+   - Review sample metadata for errors
+
+2. **Review QC metrics:**
+   - Check if outlier samples have quality issues
+   - Compare % aligned, % rRNA, duplication rates
+
+3. **Investigate batch effects:**
+   - Color PCA by sequencing run, date, or other technical factors
+   - Consider batch correction in downstream analysis (ComBat, limma removeBatchEffect)
+
+4. **Generate VST/rlog transformed counts:**
+
+   ```bash
+   nextflow run nf-core/rnaseq \
+     --input samplesheet.csv \
+     --deseq2_vst \
+     -profile docker
+   ```
+
+5. **Use more samples for better clustering:**
+   - Ensure adequate replicates (minimum 3 per group recommended)
+   - Include more biological replicates if possible
+
+</details>
+
+<details>
+<summary><b>Pipeline fails with "Container not found" or similar</b></summary>
+
+**Symptoms:**
+
+- Errors about Docker/Singularity containers
+- "Image not found" messages
+- Container pull failures
+
+**Solutions:**
+
+1. **Check your profile:**
+
+   ```bash
+   # Ensure profile matches your container system
+   -profile docker     # For Docker
+   -profile singularity # For Singularity
+   -profile conda      # For Conda (less reproducible)
+   ```
+
+2. **Test container access:**
+
+   ```bash
+   # Docker
+   docker pull nfcore/rnaseq:3.14.0
+
+   # Singularity
+   singularity pull docker://nfcore/rnaseq:3.14.0
+   ```
+
+3. **Use offline containers:**
+
+   ```bash
+   # For Singularity on HPC without internet
+   NXF_SINGULARITY_CACHEDIR=/path/to/cache nextflow run nf-core/rnaseq ...
+   ```
+
+4. **Check internet connectivity:**
+   - Ensure firewall allows container pulls
+   - Try from a different network if corporate firewall blocks
+
+</details>
+
+<details>
+<summary><b>Out of disk space errors</b></summary>
+
+**Symptoms:**
+
+- "No space left on device" errors
+- Pipeline stops unexpectedly
+- Cannot write files
+
+**Solutions:**
+
+1. **Check work directory size:**
+
+   ```bash
+   du -sh work/
+   ```
+
+2. **Clean up after successful run:**
+
+   ```bash
+   # Remove work directory after confirming results
+   rm -rf work/
+
+   # Or use Nextflow clean
+   nextflow clean -f
+   ```
+
+3. **Use different work directory:**
+
+   ```bash
+   nextflow run nf-core/rnaseq \
+     --input samplesheet.csv \
+     -work-dir /path/to/large/volume/work \
+     -profile docker
+   ```
+
+4. **Disable intermediate file saving:**
+
+   ```bash
+   # Don't save trimmed reads or intermediate BAMs
+   --save_trimmed false \
+   --save_align_intermeds false
+   ```
+
+5. **Enable auto-cleanup:**
+   Add to nextflow.config:
+   ```groovy
+   cleanup = true
+   ```
+
+</details>
+
+<details>
+<summary><b>Resume (-resume) doesn't work as expected</b></summary>
+
+**Symptoms:**
+
+- Pipeline restarts from beginning despite -resume flag
+- Cached results not being used
+- Work directory exists but not reused
+
+**Possible Causes:**
+
+- Work directory was moved or deleted
+- Input files changed
+- Pipeline parameters changed
+- Different Nextflow version
+
+**Solutions:**
+
+1. **Verify work directory exists:**
+
+   ```bash
+   ls -la work/
+   ```
+
+2. **Use correct resume syntax:**
+
+   ```bash
+   # Resume with single hyphen
+   nextflow run nf-core/rnaseq \
+     --input samplesheet.csv \
+     -resume \
+     -profile docker
+   ```
+
+3. **Don't change input files:**
+   - Ensure samplesheet and FASTQ files haven't been modified
+   - File timestamps changing will invalidate cache
+
+4. **Check parameter consistency:**
+   - Use same parameters as original run
+   - Store parameters in file: `-params-file params.json`
+
+5. **Force cache cleanup and restart:**
+   ```bash
+   nextflow clean -f
+   # Then run without -resume
+   ```
+
+</details>
+
+### Getting Help
+
+If your issue isn't covered here:
+
+1. **Check the error log:**
+
+   ```bash
+   # Look for detailed error in .nextflow.log
+   cat .nextflow.log | grep -i error
+
+   # Or check specific task logs
+   cat work/XX/XXXXXX.../.command.err
+   ```
+
+2. **Run with debug mode:**
+
+   ```bash
+   nextflow run nf-core/rnaseq \
+     --input samplesheet.csv \
+     -profile docker \
+     -dump-hashes \
+     -with-dag flowchart.html
+   ```
+
+3. **Search existing issues:**
+   - [nf-core/rnaseq GitHub Issues](https://github.com/nf-core/rnaseq/issues)
+   - [nf-core website](https://nf-co.re/rnaseq)
+
+4. **Ask the community:**
+   - [nf-core Slack #rnaseq channel](https://nfcore.slack.com/channels/rnaseq)
+   - Include: Nextflow version, pipeline version, command used, error message
+
+5. **Report a bug:**
+   - [Create a new GitHub issue](https://github.com/nf-core/rnaseq/issues/new/choose)
+   - Include: environment details, minimal reproducible example, log files

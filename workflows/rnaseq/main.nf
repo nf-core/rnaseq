@@ -373,12 +373,13 @@ workflow RNASEQ {
             ch_gtf,
             params.gtf_group_features,
             params.gtf_extra_attributes,
-            params.use_sentieon_star
+            params.use_sentieon_star,
+            params.skip_quantification_merge
         )
         ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_RSEM.out.stat.collect{ _meta, stat -> stat })
         ch_versions = ch_versions.mix(QUANTIFY_RSEM.out.versions)
 
-        if (!params.skip_qc & !params.skip_deseq2_qc) {
+        if (!params.skip_qc & !params.skip_deseq2_qc & !params.skip_quantification_merge) {
             DESEQ2_QC_RSEM (
                 QUANTIFY_RSEM.out.counts_gene_length_scaled.map { _meta, counts -> counts },
                 ch_pca_header_multiqc,
@@ -406,11 +407,12 @@ workflow RNASEQ {
             true,
             params.salmon_quant_libtype ?: '',
             params.kallisto_quant_fraglen,
-            params.kallisto_quant_fraglen_sd
+            params.kallisto_quant_fraglen_sd,
+            params.skip_quantification_merge
         )
         ch_versions = ch_versions.mix(QUANTIFY_BAM_SALMON.out.versions)
 
-        if (!params.skip_qc & !params.skip_deseq2_qc) {
+        if (!params.skip_qc & !params.skip_deseq2_qc & !params.skip_quantification_merge) {
             DESEQ2_QC_BAM_SALMON (
                 QUANTIFY_BAM_SALMON.out.counts_gene_length_scaled.map { _meta, counts -> counts },
                 ch_pca_header_multiqc,
@@ -749,13 +751,14 @@ workflow RNASEQ {
             false,
             params.salmon_quant_libtype ?: '',
             params.kallisto_quant_fraglen,
-            params.kallisto_quant_fraglen_sd
+            params.kallisto_quant_fraglen_sd,
+            params.skip_quantification_merge
         )
         ch_counts_gene_length_scaled = QUANTIFY_PSEUDO_ALIGNMENT.out.counts_gene_length_scaled
         ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_PSEUDO_ALIGNMENT.out.multiqc.collect{ _meta, multiqc -> multiqc })
         ch_versions = ch_versions.mix(QUANTIFY_PSEUDO_ALIGNMENT.out.versions)
 
-        if (!params.skip_qc & !params.skip_deseq2_qc) {
+        if (!params.skip_qc & !params.skip_deseq2_qc & !params.skip_quantification_merge) {
             DESEQ2_QC_PSEUDO (
                 ch_counts_gene_length_scaled.map { _meta, counts -> counts },
                 ch_pca_header_multiqc,

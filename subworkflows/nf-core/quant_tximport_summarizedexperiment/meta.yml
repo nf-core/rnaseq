@@ -47,6 +47,12 @@ input:
       type: string
       description: |
         Quantification tool type. One of 'salmon', 'kallisto', or 'rsem'.
+  - skip_merge:
+      type: boolean
+      description: |
+        Skip cross-sample merging. When true, runs tximport per-sample
+        instead of collecting all samples, and skips SummarizedExperiment
+        creation. Useful for very large cohorts.
 output:
   - tx2gene:
       type: file

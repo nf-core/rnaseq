@@ -17,6 +17,7 @@ workflow QUANTIFY_RSEM {
     gtf_id_attribute      //     val: GTF gene ID attribute
     gtf_extra_attribute   //     val: GTF alternative gene attribute (e.g. gene_name)
     use_sentieon_star     // boolean: use Sentieon-accelerated STAR (FASTQ mode only)
+    skip_merge            //    bool: skip cross-sample merging, run tximport per-sample
 
     main:
 
@@ -40,12 +41,27 @@ workflow QUANTIFY_RSEM {
     ch_logs              = ch_rsem_out.out.logs
 
     //
-    // Merge counts across samples
+    // Merge counts across samples (only when not skipping merge)
     //
-    CUSTOM_RSEMMERGECOUNTS (
-        ch_counts_gene.collect{ it[1] }.map { results -> [ ['id': 'all_samples'], results ] },
-        ch_counts_transcript.collect{ it[1] }
-    )
+    ch_merged_counts_gene       = channel.empty()
+    ch_merged_tpm_gene          = channel.empty()
+    ch_merged_counts_transcript = channel.empty()
+    ch_merged_tpm_transcript    = channel.empty()
+    ch_merged_genes_long        = channel.empty()
+    ch_merged_isoforms_long     = channel.empty()
+
+    if (!skip_merge) {
+        CUSTOM_RSEMMERGECOUNTS (
+            ch_counts_gene.collect{ it[1] }.map { results -> [ ['id': 'all_samples'], results ] },
+            ch_counts_transcript.collect{ it[1] }
+        )
+        ch_merged_counts_gene       = CUSTOM_RSEMMERGECOUNTS.out.counts_gene
+        ch_merged_tpm_gene          = CUSTOM_RSEMMERGECOUNTS.out.tpm_gene
+        ch_merged_counts_transcript = CUSTOM_RSEMMERGECOUNTS.out.counts_transcript
+        ch_merged_tpm_transcript    = CUSTOM_RSEMMERGECOUNTS.out.tpm_transcript
+        ch_merged_genes_long        = CUSTOM_RSEMMERGECOUNTS.out.genes_long
+        ch_merged_isoforms_long     = CUSTOM_RSEMMERGECOUNTS.out.isoforms_long
+    }
 
     //
     // Post-process quantifications with tximport and SummarizedExperiment
@@ -56,7 +72,8 @@ workflow QUANTIFY_RSEM {
         gtf,
         gtf_id_attribute,
         gtf_extra_attribute,
-        'rsem'
+        'rsem',
+        skip_merge
     )
     ch_versions = ch_versions.mix(QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT.out.versions)
 
@@ -68,12 +85,12 @@ workflow QUANTIFY_RSEM {
     logs                     = ch_logs                                                               // channel: [ val(meta), logs ]
 
     // RSEM merge outputs
-    merged_counts_gene       = CUSTOM_RSEMMERGECOUNTS.out.counts_gene                                // channel: [ val(meta), counts ]
-    merged_tpm_gene          = CUSTOM_RSEMMERGECOUNTS.out.tpm_gene                                   // channel: [ val(meta), tpm ]
-    merged_counts_transcript = CUSTOM_RSEMMERGECOUNTS.out.counts_transcript                          // channel: [ val(meta), counts ]
-    merged_tpm_transcript    = CUSTOM_RSEMMERGECOUNTS.out.tpm_transcript                             // channel: [ val(meta), tpm ]
-    merged_genes_long        = CUSTOM_RSEMMERGECOUNTS.out.genes_long                                 // channel: [ val(meta), genes_long ]
-    merged_isoforms_long     = CUSTOM_RSEMMERGECOUNTS.out.isoforms_long                              // channel: [ val(meta), isoforms_long ]
+    merged_counts_gene       = ch_merged_counts_gene                                                 // channel: [ val(meta), counts ]
+    merged_tpm_gene          = ch_merged_tpm_gene                                                    // channel: [ val(meta), tpm ]
+    merged_counts_transcript = ch_merged_counts_transcript                                           // channel: [ val(meta), counts ]
+    merged_tpm_transcript    = ch_merged_tpm_transcript                                              // channel: [ val(meta), tpm ]
+    merged_genes_long        = ch_merged_genes_long                                                  // channel: [ val(meta), genes_long ]
+    merged_isoforms_long     = ch_merged_isoforms_long                                               // channel: [ val(meta), isoforms_long ]
 
     // tximport outputs
     tpm_gene                  = QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT.out.tpm_gene                     //    path: *gene_tpm.tsv

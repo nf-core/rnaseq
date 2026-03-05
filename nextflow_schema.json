@@ -744,6 +744,11 @@
                     "fa_icon": "fas fa-fast-forward",
                     "description": "Skip all of the pseudoalignment-based processes within the pipeline."
                 },
+                "skip_quantification_merge": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-fast-forward",
+                    "description": "Skip cross-sample count merging. Runs tximport per-sample instead of merged, producing individual gene/transcript-level TSVs per sample. Skips SummarizedExperiment and RSEM merge counts. Useful for very large cohorts."
+                },
                 "skip_markduplicates": {
                     "type": "boolean",
                     "fa_icon": "fas fa-fast-forward",

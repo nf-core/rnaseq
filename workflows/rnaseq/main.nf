@@ -534,7 +534,7 @@ workflow RNASEQ {
     // Channel to collect infer_experiment output from whichever tool produces it
     ch_inferexperiment_txt = channel.empty()
 
-    if (params.use_rustqc) {
+    if (params.use_rustqc || params.add_rustqc) {
         RUSTQC (
             ch_genome_bam.join(ch_genome_bam_index, by: [0]),
             ch_gtf,

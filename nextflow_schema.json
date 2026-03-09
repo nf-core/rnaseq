@@ -778,7 +778,7 @@
                 "add_rustqc": {
                     "type": "boolean",
                     "default": false,
-                    "description": "Run RustQC in addition to the standard upstream QC tools. Both sets of results will appear in the MultiQC report, labelled as 'RustQC' and 'upstream' respectively.",
+                    "description": "Run RustQC in addition to the standard upstream QC tools. Both sets of results will appear in the MultiQC report, with RustQC results labelled accordingly.",
                     "fa_icon": "fas fa-rocket"
                 },
                 "skip_dupradar": {

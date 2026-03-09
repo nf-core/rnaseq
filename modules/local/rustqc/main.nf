@@ -1,77 +1,17 @@
 process RUSTQC {
     tag "$meta.id"
-    label 'process_medium'
+    label 'process_high'
 
-    container "ghcr.io/ewels/rustqc:dev"
+    container "ghcr.io/seqeralabs/rustqc:dev"
 
     input:
-    tuple val(meta), path(bam)
-    tuple val(meta2), path(gtf)
+    tuple val(meta), path(bam), path(bai)
+    path gtf
 
     output:
-    // dupRadar outputs
-    tuple val(meta), path("*_duprateExpDens.png")          , emit: scatter2d_png     , optional: true
-    tuple val(meta), path("*_duprateExpDens.svg")          , emit: scatter2d_svg     , optional: true
-    tuple val(meta), path("*_duprateExpBoxplot.png")       , emit: boxplot_png       , optional: true
-    tuple val(meta), path("*_duprateExpBoxplot.svg")       , emit: boxplot_svg       , optional: true
-    tuple val(meta), path("*_expressionHist.png")          , emit: hist_png          , optional: true
-    tuple val(meta), path("*_expressionHist.svg")          , emit: hist_svg          , optional: true
-    tuple val(meta), path("*_dupMatrix.txt")               , emit: dupmatrix         , optional: true
-    tuple val(meta), path("*_intercept_slope.txt")         , emit: intercept_slope   , optional: true
-    tuple val(meta), path("*_dup_intercept_mqc.txt")       , emit: multiqc_intercept , optional: true
-    tuple val(meta), path("*_duprateExpDensCurve_mqc.txt") , emit: multiqc_curve     , optional: true
-    // featureCounts / biotype outputs
-    tuple val(meta), path("*.featureCounts.tsv")           , emit: featurecounts         , optional: true
-    tuple val(meta), path("*.featureCounts.tsv.summary")   , emit: featurecounts_summary , optional: true
-    tuple val(meta), path("*.biotype_counts.tsv")          , emit: biotype_counts_raw    , optional: true
-    tuple val(meta), path("*.biotype_counts_mqc.tsv")      , emit: biotype_counts        , optional: true
-    tuple val(meta), path("*.biotype_counts_rrna_mqc.tsv") , emit: biotype_rrna          , optional: true
-    // RSeQC: bam_stat
-    tuple val(meta), path("*.bam_stat.txt")                , emit: bamstat_txt                , optional: true
-    // RSeQC: infer_experiment
-    tuple val(meta), path("*.infer_experiment.txt")        , emit: inferexperiment_txt        , optional: true
-    // RSeQC: read_duplication
-    tuple val(meta), path("*.pos.DupRate.xls")             , emit: readduplication_pos_xls    , optional: true
-    tuple val(meta), path("*.seq.DupRate.xls")             , emit: readduplication_seq_xls    , optional: true
-    tuple val(meta), path("*.DupRate_plot.png")            , emit: readduplication_plot_png   , optional: true
-    tuple val(meta), path("*.DupRate_plot.svg")            , emit: readduplication_plot_svg   , optional: true
-    // RSeQC: read_distribution
-    tuple val(meta), path("*.read_distribution.txt")       , emit: readdistribution_txt       , optional: true
-    // RSeQC: junction_annotation
-    tuple val(meta), path("*.junction.xls")                , emit: junctionannotation_xls     , optional: true
-    tuple val(meta), path("*.junction.bed")                , emit: junctionannotation_bed     , optional: true
-    tuple val(meta), path("*.junction_plot.r")             , emit: junctionannotation_rscript , optional: true
-    tuple val(meta), path("*.junction_annotation.txt")     , emit: junctionannotation_log     , optional: true
-    tuple val(meta), path("*.splice_events.png")           , emit: junctionannotation_events_png    , optional: true
-    tuple val(meta), path("*.splice_events.svg")           , emit: junctionannotation_events_svg    , optional: true
-    tuple val(meta), path("*.splice_junction.png")         , emit: junctionannotation_junctions_png , optional: true
-    tuple val(meta), path("*.splice_junction.svg")         , emit: junctionannotation_junctions_svg , optional: true
-    // RSeQC: junction_saturation
-    tuple val(meta), path("*.junctionSaturation_plot.r")   , emit: junctionsaturation_rscript , optional: true
-    tuple val(meta), path("*.junctionSaturation_plot.png") , emit: junctionsaturation_plot_png, optional: true
-    tuple val(meta), path("*.junctionSaturation_plot.svg") , emit: junctionsaturation_plot_svg, optional: true
-    tuple val(meta), path("*.junctionSaturation_summary.txt"), emit: junctionsaturation_summary, optional: true
-    // RSeQC: inner_distance
-    tuple val(meta), path("*.inner_distance_freq.txt")     , emit: innerdistance_freq         , optional: true
-    tuple val(meta), path("*.inner_distance.txt")          , emit: innerdistance_txt          , optional: true
-    tuple val(meta), path("*.inner_distance_plot.png")     , emit: innerdistance_plot_png     , optional: true
-    tuple val(meta), path("*.inner_distance_plot.svg")     , emit: innerdistance_plot_svg     , optional: true
-    tuple val(meta), path("*.inner_distance_plot.r")       , emit: innerdistance_rscript      , optional: true
-    tuple val(meta), path("*.inner_distance_summary.txt")  , emit: innerdistance_summary      , optional: true
-    // RSeQC: TIN
-    tuple val(meta), path("*.tin.xls")                     , emit: tin_xls                    , optional: true
-    tuple val(meta), path("*.tin_summary.txt")             , emit: tin_summary                , optional: true
-    // preseq
-    tuple val(meta), path("*.lc_extrap.txt")               , emit: lc_extrap                  , optional: true
-    // samtools
-    tuple val(meta), path("*.flagstat")                    , emit: flagstat                   , optional: true
-    tuple val(meta), path("*.idxstats")                    , emit: idxstats                   , optional: true
-    tuple val(meta), path("*.stats")                       , emit: stats                      , optional: true
-    // qualimap / gene body coverage
-    tuple val(meta), path("*coverage_profile_along_genes_*total*.txt"), emit: genebody_coverage, optional: true
-    tuple val(meta), path("*rnaseq_qc_results.txt")        , emit: qualimap_results           , optional: true
-    // versions
-    path "versions.yml"                                    , emit: versions
+    tuple val(meta), path("rustqc")                                                , emit: results
+    tuple val(meta), path("rustqc/rseqc/infer_experiment/*.infer_experiment.txt")  , emit: inferexperiment_txt, optional: true
+    path "versions.yml"                                                            , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -84,7 +24,8 @@ process RUSTQC {
     } else if (meta.strandedness == 'reverse') {
         strandedness = 2
     }
-    def paired = meta.single_end ? '' : '--paired'
+    def paired       = meta.single_end ? '' : '--paired'
+    def biotype_attr = params.gencode ? "--biotype-attribute gene_type" : ''
     """
     rustqc rna \\
         ${bam} \\
@@ -92,71 +33,84 @@ process RUSTQC {
         --stranded ${strandedness} \\
         ${paired} \\
         --threads ${task.cpus} \\
-        --outdir . \\
-        --flat-output \\
+        --outdir rustqc \\
+        ${biotype_attr} \\
         ${args}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        rustqc: \$(rustqc --version 2>&1 | sed 's/rustqc //')
+        rustqc: \$(rustqc --version | sed 's/rustqc //')
     END_VERSIONS
     """
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    touch ${prefix}_duprateExpDens.png
-    touch ${prefix}_duprateExpDens.svg
-    touch ${prefix}_duprateExpBoxplot.png
-    touch ${prefix}_duprateExpBoxplot.svg
-    touch ${prefix}_expressionHist.png
-    touch ${prefix}_expressionHist.svg
-    touch ${prefix}_dupMatrix.txt
-    touch ${prefix}_intercept_slope.txt
-    touch ${prefix}_dup_intercept_mqc.txt
-    touch ${prefix}_duprateExpDensCurve_mqc.txt
-    touch ${prefix}.featureCounts.tsv
-    touch ${prefix}.featureCounts.tsv.summary
-    touch ${prefix}.biotype_counts.tsv
-    touch ${prefix}.biotype_counts_mqc.tsv
-    touch ${prefix}.biotype_counts_rrna_mqc.tsv
-    touch ${prefix}.bam_stat.txt
-    touch ${prefix}.infer_experiment.txt
-    touch ${prefix}.pos.DupRate.xls
-    touch ${prefix}.seq.DupRate.xls
-    touch ${prefix}.DupRate_plot.png
-    touch ${prefix}.DupRate_plot.svg
-    touch ${prefix}.read_distribution.txt
-    touch ${prefix}.junction.xls
-    touch ${prefix}.junction.bed
-    touch ${prefix}.junction_plot.r
-    touch ${prefix}.junction_annotation.txt
-    touch ${prefix}.splice_events.png
-    touch ${prefix}.splice_events.svg
-    touch ${prefix}.splice_junction.png
-    touch ${prefix}.splice_junction.svg
-    touch ${prefix}.junctionSaturation_plot.r
-    touch ${prefix}.junctionSaturation_plot.png
-    touch ${prefix}.junctionSaturation_plot.svg
-    touch ${prefix}.junctionSaturation_summary.txt
-    touch ${prefix}.inner_distance.txt
-    touch ${prefix}.inner_distance_freq.txt
-    touch ${prefix}.inner_distance_plot.png
-    touch ${prefix}.inner_distance_plot.svg
-    touch ${prefix}.inner_distance_plot.r
-    touch ${prefix}.inner_distance_summary.txt
-    touch ${prefix}.tin.xls
-    touch ${prefix}.tin_summary.txt
-    touch ${prefix}.lc_extrap.txt
-    touch ${prefix}.flagstat
-    touch ${prefix}.idxstats
-    touch ${prefix}.stats
-    touch ${prefix}.coverage_profile_along_genes_total.txt
-    touch ${prefix}.rnaseq_qc_results.txt
+    mkdir -p rustqc/dupradar
+    mkdir -p rustqc/featurecounts
+    mkdir -p rustqc/rseqc/bam_stat
+    mkdir -p rustqc/rseqc/infer_experiment
+    mkdir -p rustqc/rseqc/read_duplication
+    mkdir -p rustqc/rseqc/read_distribution
+    mkdir -p rustqc/rseqc/junction_annotation
+    mkdir -p rustqc/rseqc/junction_saturation
+    mkdir -p rustqc/rseqc/inner_distance
+    mkdir -p rustqc/rseqc/tin
+    mkdir -p rustqc/preseq
+    mkdir -p rustqc/samtools
+    mkdir -p rustqc/qualimap/raw_data_qualimapReport
+    mkdir -p rustqc/qualimap/images_qualimapReport
+
+    touch rustqc/dupradar/${prefix}_duprateExpDens.png
+    touch rustqc/dupradar/${prefix}_duprateExpBoxplot.png
+    touch rustqc/dupradar/${prefix}_expressionHist.png
+    touch rustqc/dupradar/${prefix}_dupMatrix.txt
+    touch rustqc/dupradar/${prefix}_intercept_slope.txt
+    touch rustqc/dupradar/${prefix}_dup_intercept_mqc.txt
+    touch rustqc/dupradar/${prefix}_duprateExpDensCurve_mqc.txt
+
+    touch rustqc/featurecounts/${prefix}.featureCounts.tsv
+    touch rustqc/featurecounts/${prefix}.featureCounts.tsv.summary
+    touch rustqc/featurecounts/${prefix}.biotype_counts.tsv
+    touch rustqc/featurecounts/${prefix}.biotype_counts_mqc.tsv
+    touch rustqc/featurecounts/${prefix}.biotype_counts_rrna_mqc.tsv
+
+    touch rustqc/rseqc/bam_stat/${prefix}.bam_stat.txt
+    touch rustqc/rseqc/infer_experiment/${prefix}.infer_experiment.txt
+    touch rustqc/rseqc/read_duplication/${prefix}.pos.DupRate.xls
+    touch rustqc/rseqc/read_duplication/${prefix}.seq.DupRate.xls
+    touch rustqc/rseqc/read_duplication/${prefix}.DupRate_plot.r
+    touch rustqc/rseqc/read_duplication/${prefix}.DupRate_plot.png
+    touch rustqc/rseqc/read_distribution/${prefix}.read_distribution.txt
+    touch rustqc/rseqc/junction_annotation/${prefix}.junction.xls
+    touch rustqc/rseqc/junction_annotation/${prefix}.junction.bed
+    touch rustqc/rseqc/junction_annotation/${prefix}.junction_plot.r
+    touch rustqc/rseqc/junction_annotation/${prefix}.junction_annotation.txt
+    touch rustqc/rseqc/junction_annotation/${prefix}.splice_events.png
+    touch rustqc/rseqc/junction_annotation/${prefix}.splice_junction.png
+    touch rustqc/rseqc/junction_saturation/${prefix}.junctionSaturation_plot.r
+    touch rustqc/rseqc/junction_saturation/${prefix}.junctionSaturation_plot.png
+    touch rustqc/rseqc/junction_saturation/${prefix}.junctionSaturation_summary.txt
+    touch rustqc/rseqc/inner_distance/${prefix}.inner_distance.txt
+    touch rustqc/rseqc/inner_distance/${prefix}.inner_distance_freq.txt
+    touch rustqc/rseqc/inner_distance/${prefix}.inner_distance_plot.r
+    touch rustqc/rseqc/inner_distance/${prefix}.inner_distance_plot.png
+    touch rustqc/rseqc/inner_distance/${prefix}.inner_distance_summary.txt
+    touch rustqc/rseqc/inner_distance/${prefix}.inner_distance_mean.txt
+    touch rustqc/rseqc/tin/${prefix}.tin.xls
+    touch rustqc/rseqc/tin/${prefix}.summary.txt
+
+    touch rustqc/preseq/${prefix}.lc_extrap.txt
+    touch rustqc/samtools/${prefix}.flagstat
+    touch rustqc/samtools/${prefix}.idxstats
+    touch rustqc/samtools/${prefix}.stats
+
+    touch rustqc/qualimap/rnaseq_qc_results.txt
+    touch "rustqc/qualimap/raw_data_qualimapReport/coverage_profile_along_genes_(total).txt"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        rustqc: \$(rustqc --version 2>&1 | sed 's/rustqc //')
+        rustqc: \$(rustqc --version | sed 's/rustqc //')
     END_VERSIONS
     """
 }

@@ -536,42 +536,15 @@ workflow RNASEQ {
 
     if (params.use_rustqc) {
         RUSTQC (
-            ch_genome_bam,
-            ch_gtf.map { item -> [ [:], item ] },
+            ch_genome_bam.join(ch_genome_bam_index, by: [0]),
+            ch_gtf,
         )
         ch_versions = ch_versions.mix(RUSTQC.out.versions)
 
         if (!params.skip_qc) {
-            // dupRadar-equivalent MultiQC outputs
-            ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.multiqc_intercept.collect{ tuple -> tuple[1] })
-            ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.multiqc_curve.collect{ tuple -> tuple[1] })
-
-            // Biotype QC MultiQC outputs
-            ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.biotype_counts.collect{ tuple -> tuple[1] })
-            ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.biotype_rrna.collect{ tuple -> tuple[1] })
-
-            // RSeQC MultiQC outputs
-            ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.bamstat_txt.collect{ tuple -> tuple[1] })
-            ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.inferexperiment_txt.collect{ tuple -> tuple[1] })
-            ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.innerdistance_freq.collect{ tuple -> tuple[1] })
-            ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.junctionannotation_log.collect{ tuple -> tuple[1] })
-            ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.junctionsaturation_rscript.collect{ tuple -> tuple[1] })
-            ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.readdistribution_txt.collect{ tuple -> tuple[1] })
-            ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.readduplication_pos_xls.collect{ tuple -> tuple[1] })
-
-            // TIN MultiQC output
-            ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.tin_xls.collect{ tuple -> tuple[1] })
-
-            // preseq MultiQC output
-            ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.lc_extrap.collect{ tuple -> tuple[1] })
-
-            // samtools-compatible MultiQC outputs
-            ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.flagstat.collect{ tuple -> tuple[1] })
-            ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.idxstats.collect{ tuple -> tuple[1] })
-            ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.stats.collect{ tuple -> tuple[1] })
-
-            // Qualimap-compatible MultiQC output
-            ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.qualimap_results.collect{ tuple -> tuple[1] })
+            // Pass entire RustQC output directory to MultiQC
+            // MultiQC will find all compatible files recursively by filename patterns
+            ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.results.collect{ meta, dir -> dir })
         }
 
         ch_inferexperiment_txt = RUSTQC.out.inferexperiment_txt

@@ -25,7 +25,7 @@ process RUSTQC {
         strandedness = 2
     }
     def paired       = meta.single_end ? '' : '--paired'
-    def biotype_attr = params.gencode ? "--biotype-attribute gene_type" : ''
+    def biotype_attr = params.gencode ? "--biotype-attribute gene_type" : (params.featurecounts_group_type ? "--biotype-attribute ${params.featurecounts_group_type}" : '')
     """
     rustqc rna \\
         ${bam} \\

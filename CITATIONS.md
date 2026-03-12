@@ -68,6 +68,9 @@
 
   > Okonechnikov K, Conesa A, García-Alcalde F. Qualimap 2: advanced multi-sample quality control for high-throughput sequencing data Bioinformatics. 2016 Jan 15;32(2):292-4. doi: 10.1093/bioinformatics/btv566. Epub 2015 Oct 1. PubMed PMID: 26428292; PubMed Central PMCID: PMC4708105.
 
+- [RiboDetector](https://academic.oup.com/nar/article/50/10/e60/6533611)
+  > Deng ZL, Münch PC, Mreches R, McHardy AC. Rapid and accurate identification of ribosomal RNA sequences via deep learning. Nucleic Acids Res. 2022 Jun 10;50(10):e60. doi: 10.1093/nar/gkac112. PMID: 35188571; PMCID: PMC9177968.
+
 - [RSEM](https://pubmed.ncbi.nlm.nih.gov/21816040/)
 
   > Li B, Dewey CN. RSEM: accurate transcript quantification from RNA-Seq data with or without a reference genome BMC Bioinformatics. 2011 Aug 4;12:323. doi: 10.1186/1471-2105-12-323. PubMed PMID: 21816040; PubMed Central PMCID: PMC3163565.

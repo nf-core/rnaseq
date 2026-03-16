@@ -130,7 +130,7 @@ output:
       - bowtie2:
           type: string
           description: The name of the tool
-      - "bowtie2 --version 2>&1 | sed -n '1s/.*bowtie2-align-s version //p'":
+      - "bowtie2 --version 2>&1 | sed -n 's/.*bowtie2-align-s version //p'":
           type: eval
           description: The expression to obtain the version of bowtie2
   versions_samtools:
@@ -162,7 +162,7 @@ topics:
       - bowtie2:
           type: string
           description: The name of the tool
-      - "bowtie2 --version 2>&1 | sed -n '1s/.*bowtie2-align-s version //p'":
+      - "bowtie2 --version 2>&1 | sed -n 's/.*bowtie2-align-s version //p'":
           type: eval
           description: The expression to obtain the version of bowtie2
     - - ${task.process}:

@@ -1524,6 +1524,7 @@
                 "multiqc/star_rsem/multiqc_data",
                 "multiqc/star_rsem/multiqc_data/.stub",
                 "multiqc/star_rsem/multiqc_plots",
+                "multiqc/star_rsem/multiqc_plots/.stub",
                 "multiqc/star_rsem/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_rnaseq_software_mqc_versions.yml",

@@ -709,6 +709,7 @@
                 "multiqc/star_salmon/multiqc_data",
                 "multiqc/star_salmon/multiqc_data/.stub",
                 "multiqc/star_salmon/multiqc_plots",
+                "multiqc/star_salmon/multiqc_plots/.stub",
                 "multiqc/star_salmon/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_rnaseq_software_mqc_versions.yml",

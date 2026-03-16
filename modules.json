@@ -121,7 +121,7 @@
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "80cba9452fb1e9bb79884976fa1ca0e671949aa2",
+                        "git_sha": "2c73cc8fa92cf48de3da0b643fdf357a8a290b36",
                         "installed_by": ["modules"]
                     },
                     "parabricks/rnafq2bam": {

@@ -122,7 +122,6 @@ workflow BAM_DEDUP_UMI {
         .mix(UMI_DEDUP_GENOME.out.flagstat)
         .mix(UMI_DEDUP_GENOME.out.idxstats)
         .transpose()
-        .map{ item -> item[1] }
 
     emit:
     bam                        = UMI_DEDUP_GENOME.out.bam                                                // channel: [ val(meta), path(bam) ]

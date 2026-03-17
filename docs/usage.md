@@ -321,6 +321,8 @@ The container GPU flags can be overridden via `--gpu_container_options` (e.g. `-
 
 When using Parabricks, the pipeline automatically handles mark duplicates during the alignment step (via `pbrun rna_fq2bam`), so the separate Picard MarkDuplicates step is skipped.
 
+When using `--use_parabricks_star`, pre-built STAR indices are not used. This includes `--star_index` and iGenomes-provided STAR indices via `--genome`. The pipeline always rebuilds a Parabricks-compatible STAR index from the provided genome FASTA and annotation.
+
 #### Known differences from native STAR
 
 Parabricks `rna_fq2bam` is based on STAR 2.7.2a. The following native STAR flags have no pbrun equivalent and are therefore not applied:

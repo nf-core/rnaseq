@@ -318,6 +318,10 @@ def validateInputParameters() {
         error("Cannot use both --use_parabricks_star and --use_sentieon_star. Please choose one accelerator.")
     }
 
+    if (params.use_parabricks_star && params.star_index) {
+        parabricksStarIndexWarn()
+    }
+
     if (params.use_parabricks_star && (params.prokaryotic ?: false)) {
         error("Parabricks rna_fq2bam does not support --sjdbGTFfeatureExon CDS, which is required for prokaryotic alignment. Please use standard STAR instead.")
     }
@@ -597,6 +601,17 @@ def rsemStarExtraArgumentsWarn() {
         "  to STAR will be ignored. Alternatively, choose the STAR+Salmon route.\n\n" +
         "  This warning has been generated because you have provided both\n" +
         "  '--aligner star_rsem' and '--extra_star_align_args'.\n\n" +
+        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+}
+
+//
+// Print a warning if using '--use_parabricks_star' with '--star_index'
+//
+def parabricksStarIndexWarn() {
+    log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
+        "  '--use_parabricks_star' was provided with '--star_index'.\n" +
+        "  Pre-built STAR indices are ignored in Parabricks mode.\n" +
+        "  The pipeline will rebuild a compatible STAR index from FASTA + GTF/GFF.\n" +
         "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 }
 

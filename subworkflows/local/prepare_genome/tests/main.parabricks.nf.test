@@ -128,7 +128,17 @@ nextflow_workflow {
 
         then {
             assertAll(
-                { assert workflow.failed }, // BUG: should succeed once use_parabricks_star overrides star_index
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out.transcript_fasta,
+                    workflow.out.fasta,
+                    workflow.out.gtf,
+                    workflow.out.fai,
+                    workflow.out.gene_bed,
+                    workflow.out.chrom_sizes,
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.versions
+                ).match() }
             )
         }
     }
@@ -158,7 +168,7 @@ nextflow_workflow {
                 input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes.gtf', checkIfExists: true)
                 input[2]  = null  // gff
                 input[3]  = null  // additional_fasta
-                input[4]  = null  // transcript_fasta
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)  // transcript_fasta
                 input[5]  = null  // gene_bed
                 input[6]  = null  // splicesites
                 input[7]  = null  // bbsplit_fasta_list
@@ -189,7 +199,17 @@ nextflow_workflow {
 
         then {
             assertAll(
-                { assert workflow.failed }, // BUG: should succeed once use_parabricks_star bypasses igenomes branch
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out.transcript_fasta,
+                    workflow.out.fasta,
+                    workflow.out.gtf,
+                    workflow.out.fai,
+                    workflow.out.gene_bed,
+                    workflow.out.chrom_sizes,
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.versions
+                ).match() }
             )
         }
     }

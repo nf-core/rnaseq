@@ -291,7 +291,12 @@ workflow PREPARE_GENOME {
     //----------------------------------------------------
     ch_star_index = channel.empty()
     if (prepare_tool_indices.intersect(['star_salmon', 'star_rsem'])) {
-        if (star_index) {
+        if (use_parabricks_star && fasta_provided) {
+            ch_star_index = PARABRICKS_STARGENOMEGENERATE(
+                ch_fasta.map { item -> [ [:], item ] },
+                ch_gtf.map   { item -> [ [:], item ] }
+            ).index.map { tuple -> tuple[1] }
+        } else if (star_index) {
             if (star_index.endsWith('.tar.gz')) {
                 ch_star_index = UNTAR_STAR_INDEX ([ [:], file(star_index, checkIfExists: true) ]).untar.map { tuple -> tuple[1] }
             } else {
@@ -307,11 +312,6 @@ workflow PREPARE_GENOME {
             }
             if (is_aws_igenome) {
                 ch_star_index = STAR_GENOMEGENERATE_IGENOMES(
-                    ch_fasta.map { item -> [ [:], item ] },
-                    ch_gtf.map   { item -> [ [:], item ] }
-                ).index.map { tuple -> tuple[1] }
-            } else if (use_parabricks_star) {
-                ch_star_index = PARABRICKS_STARGENOMEGENERATE(
                     ch_fasta.map { item -> [ [:], item ] },
                     ch_gtf.map   { item -> [ [:], item ] }
                 ).index.map { tuple -> tuple[1] }

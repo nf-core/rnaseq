@@ -138,7 +138,7 @@
                     "exists": true,
                     "fa_icon": "fas fa-bezier-curve",
                     "description": "Path to directory or tar.gz archive for pre-built STAR index.",
-                    "help_text": "Ignored when `--use_parabricks_star` is enabled. In Parabricks mode, nf-core/rnaseq always rebuilds a compatible STAR index from `--fasta` + `--gtf/--gff`."
+                    "help_text": "Ignored when `--use_parabricks_star` is enabled. In Parabricks mode, nf-core/rnaseq automatically rebuilds a compatible STAR index from the genome FASTA and annotation selected for the run."
                 },
                 "hisat2_index": {
                     "type": "string",

@@ -611,7 +611,7 @@ def parabricksStarIndexWarn() {
     log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
         "  '--use_parabricks_star' was provided with '--star_index'.\n" +
         "  Pre-built STAR indices are ignored in Parabricks mode.\n" +
-        "  The pipeline will rebuild a compatible STAR index from FASTA + GTF/GFF.\n" +
+        "  The pipeline will rebuild a compatible STAR index automatically.\n" +
         "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 }
 

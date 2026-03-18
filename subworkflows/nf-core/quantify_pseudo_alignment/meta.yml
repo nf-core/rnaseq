@@ -148,12 +148,6 @@ output:
         Serialised SummarizedExperiment object containing transcript level
         abundance, count, and length matrices generated from tximport.
       pattern: "*.rds"
-  - versions:
-      type: file
-      description: |
-        File containing software versions
-        Structure: [ path(versions.yml) ]
-      pattern: "versions.yml"
 authors:
   - "@pinin4fjords"
   - "@adamrtalbot"

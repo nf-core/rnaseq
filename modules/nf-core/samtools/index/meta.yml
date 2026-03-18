@@ -28,38 +28,16 @@ input:
         description: input file
         ontologies: []
 output:
-  bai:
+  index:
     - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - "*.bai":
+      - "*.{bai,csi,crai}":
           type: file
           description: BAM/CRAM/SAM index file
-          pattern: "*.{bai,crai,sai}"
-          ontologies: []
-  csi:
-    - - meta:
-          type: map
-          description: |
-            Groovy Map containing sample information
-            e.g. [ id:'test', single_end:false ]
-      - "*.csi":
-          type: file
-          description: CSI index file
-          pattern: "*.{csi}"
-          ontologies: []
-  crai:
-    - - meta:
-          type: map
-          description: |
-            Groovy Map containing sample information
-            e.g. [ id:'test', single_end:false ]
-      - "*.crai":
-          type: file
-          description: BAM/CRAM/SAM index file
-          pattern: "*.{bai,crai,sai}"
+          pattern: "*.{bai,csi,crai}"
           ontologies: []
   versions_samtools:
     - - ${task.process}:
@@ -87,6 +65,6 @@ authors:
   - "@ewels"
   - "@maxulysse"
 maintainers:
-  - "@drpatelh"
   - "@ewels"
   - "@maxulysse"
+  - "@matthdsm"

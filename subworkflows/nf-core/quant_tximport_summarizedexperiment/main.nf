@@ -19,15 +19,18 @@ workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT {
     skip_merge            //    bool: skip cross-sample merging, run tximport per-sample
 
     main:
-    ch_versions = channel.empty()
 
     //
-    // Create tx2gene mapping from GTF + quantification files
-    // In per-sample mode, only one sample is needed to discover transcript IDs
+    // Create tx2gene mapping from GTF + a single sample's quantification files.
+    // tx2gene only uses quant files to discover which GTF attribute corresponds
+    // to transcript IDs, so a single sample suffices. This assumes all samples
+    // were quantified against the same transcriptome, avoiding the need to run
+    // tx2gene independently per sample. If a use case arises requiring mixed
+    // transcriptomes, this will need to be revisited.
     //
-    def ch_tx2gene_quants = skip_merge
-        ? quant_results.first().map { meta, results -> [ [:], results ] }
-        : quant_results.collect{ meta_results -> meta_results[1] }.map { results -> [ [:], results ] }
+    ch_tx2gene_quants = quant_results
+        .first()
+        .map { meta, results -> [ [:], results ] }
 
     CUSTOM_TX2GENE (
         gtf.map { gtf_file -> [ [:], gtf_file ] },
@@ -36,13 +39,12 @@ workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT {
         gtf_id_attribute,
         gtf_extra_attribute
     )
-    ch_versions = ch_versions.mix(CUSTOM_TX2GENE.out.versions)
 
     //
     // Import and summarize quantifications with tximport
     // In per-sample mode, run once per sample instead of collecting all
     //
-    def ch_tximport_input = skip_merge
+    ch_tximport_input = skip_merge
         ? quant_results
         : quant_results.collect{ meta_results -> meta_results[1] }.map { results -> [ ['id': 'all_samples'], results ] }
 
@@ -51,7 +53,6 @@ workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT {
         CUSTOM_TX2GENE.out.tx2gene,
         quant_type
     )
-    ch_versions = ch_versions.mix(TXIMETA_TXIMPORT.out.versions)
 
     //
     // Build SummarizedExperiment objects (only when merging)
@@ -75,7 +76,6 @@ workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT {
             CUSTOM_TX2GENE.out.tx2gene,
             samplesheet
         )
-        ch_versions = ch_versions.mix(SE_GENE_UNIFIED.out.versions)
 
         //
         // Build transcript-level SummarizedExperiment
@@ -90,7 +90,6 @@ workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT {
             CUSTOM_TX2GENE.out.tx2gene,
             samplesheet
         )
-        ch_versions = ch_versions.mix(SE_TRANSCRIPT_UNIFIED.out.versions)
 
         ch_merged_gene_rds       = SE_GENE_UNIFIED.out.rds
         ch_merged_transcript_rds = SE_TRANSCRIPT_UNIFIED.out.rds
@@ -110,6 +109,4 @@ workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT {
 
     merged_gene_rds           = ch_merged_gene_rds                             //    path: *.rds
     merged_transcript_rds     = ch_merged_transcript_rds                       //    path: *.rds
-
-    versions                  = ch_versions                                    // channel: [ versions.yml ]
 }

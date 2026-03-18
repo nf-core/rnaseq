@@ -3,6 +3,7 @@ nextflow_workflow {
     name "Test Workflow BAM_MARKDUPLICATES_PICARD"
     script "../main.nf"
     workflow "BAM_MARKDUPLICATES_PICARD"
+    config "./nextflow.config"
 
     tag "picard"
     tag "picard/markduplicates"
@@ -29,10 +30,7 @@ nextflow_workflow {
                 ])
                 input[1] = Channel.of([
                     [ id:'genome' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
-                ])
-                input[2] = Channel.of([
-                    [ id:'genome' ],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)
                 ])
                 """
@@ -45,7 +43,7 @@ nextflow_workflow {
                 { assert path(workflow.out.metrics.get(0).get(1)).getText().contains("97") },
                 { assert snapshot(
                     path(workflow.out.bam[0][1]),
-                    path(workflow.out.bai[0][1]),
+                    path(workflow.out.index[0][1]),
                     path(workflow.out.flagstat[0][1]),
                     path(workflow.out.idxstats[0][1]),
                     path(workflow.out.stats[0][1])
@@ -65,10 +63,7 @@ nextflow_workflow {
                 ])
                 input[1] = Channel.of([
                     [ id:'genome' ],
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
-                ])
-                input[2] = Channel.of([
-                    [ id:'genome' ],
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true),
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
                 ])
                 """
@@ -81,7 +76,7 @@ nextflow_workflow {
                 { assert path(workflow.out.metrics.get(0).get(1)).getText().contains("0.999986") },
                 { assert snapshot(
                     file(workflow.out.cram[0][1]).name,
-                    path(workflow.out.crai[0][1]),
+                    path(workflow.out.index[0][1]),
                     path(workflow.out.flagstat[0][1]),
                     path(workflow.out.idxstats[0][1]),
                     path(workflow.out.stats[0][1])
@@ -103,10 +98,7 @@ nextflow_workflow {
                 ])
                 input[1] = Channel.of([
                     [ id:'genome' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
-                ])
-                input[2] = Channel.of([
-                    [ id:'genome' ],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)
                 ])
                 """
@@ -134,10 +126,7 @@ nextflow_workflow {
                 ])
                 input[1] = Channel.of([
                     [ id:'genome' ],
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
-                ])
-                input[2] = Channel.of([
-                    [ id:'genome' ],
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true),
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
                 ])
                 """

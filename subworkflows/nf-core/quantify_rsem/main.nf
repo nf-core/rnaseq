@@ -21,8 +21,6 @@ workflow QUANTIFY_RSEM {
 
     main:
 
-    ch_versions = channel.empty()
-
     //
     // Quantify reads with RSEM
     //
@@ -52,8 +50,11 @@ workflow QUANTIFY_RSEM {
 
     if (!skip_merge) {
         CUSTOM_RSEMMERGECOUNTS (
-            ch_counts_gene.collect{ it[1] }.map { results -> [ ['id': 'all_samples'], results ] },
-            ch_counts_transcript.collect{ it[1] }
+            ch_counts_gene
+                .collect{ _meta, genes_count -> genes_count }
+                .map { genes_count -> [ ['id': 'all_samples'], genes_count ] },
+            ch_counts_transcript
+                .collect{ _meta, transcripts_count -> transcripts_count }
         )
         ch_merged_counts_gene       = CUSTOM_RSEMMERGECOUNTS.out.counts_gene
         ch_merged_tpm_gene          = CUSTOM_RSEMMERGECOUNTS.out.tpm_gene
@@ -75,7 +76,6 @@ workflow QUANTIFY_RSEM {
         'rsem',
         skip_merge
     )
-    ch_versions = ch_versions.mix(QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT.out.versions)
 
     emit:
     // Per-sample outputs
@@ -108,6 +108,4 @@ workflow QUANTIFY_RSEM {
 
     // tx2gene
     tx2gene                   = QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT.out.tx2gene                      //    path: *tx2gene.tsv
-
-    versions                  = ch_versions                                                          // channel: [ versions.yml ]
 }

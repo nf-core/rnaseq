@@ -173,12 +173,6 @@ output:
       description: |
         Transcript to gene mapping table.
       pattern: "*.tx2gene.tsv"
-  - versions:
-      type: file
-      description: |
-        File containing software versions
-        Structure: [ path(versions.yml) ]
-      pattern: "versions.yml"
 authors:
   - "@pinin4fjords"
 maintainers:

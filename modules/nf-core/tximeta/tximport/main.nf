@@ -21,7 +21,7 @@ process TXIMETA_TXIMPORT {
     tuple val(meta), path("*transcript_tpm.tsv")           , emit: tpm_transcript
     tuple val(meta), path("*transcript_counts.tsv")        , emit: counts_transcript
     tuple val(meta), path("*transcript_lengths.tsv")       , emit: lengths_transcript
-    path "versions.yml"                                    , emit: versions
+    path "versions.yml"                                    , emit: versions, topic: versions
 
     when:
     task.ext.when == null || task.ext.when

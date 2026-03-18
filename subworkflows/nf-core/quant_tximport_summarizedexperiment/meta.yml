@@ -30,7 +30,11 @@ input:
       description: |
         Per-sample quantification results. For Salmon these are result
         directories containing quant.sf, for Kallisto directories containing
-        abundance.tsv, and for RSEM the .isoforms.results files.
+        abundance.tsv, and for RSEM the .isoforms.results files. All samples
+        must have been quantified against the same transcriptome, as only a
+        single sample is used for transcript-to-gene mapping discovery. If
+        support for mixed transcriptomes is needed in future, tx2gene would
+        need to run independently per sample.
   - gtf:
       type: file
       description: |
@@ -118,12 +122,6 @@ output:
         Serialised SummarizedExperiment object containing transcript-level
         assays (counts, lengths, TPM).
       pattern: "*.rds"
-  - versions:
-      type: file
-      description: |
-        File containing software versions
-        Structure: [ path(versions.yml) ]
-      pattern: "versions.yml"
 authors:
   - "@pinin4fjords"
 maintainers:

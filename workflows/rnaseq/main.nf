@@ -105,6 +105,11 @@ workflow RNASEQ {
     def ch_biotypes_header_multiqc   = file("$projectDir/workflows/rnaseq/assets/multiqc/biotypes_header.txt", checkIfExists: true)
     def ch_transcript_fasta_placeholder = ch_pca_header_multiqc
 
+    // Pre-build fasta_fai value channels for subworkflows that need [meta, fasta, fai]
+    // Using .flatten().collect().map to guarantee a value channel
+    ch_fasta_fai            = ch_fasta.combine(ch_fai).flatten().collect().map { items -> [ [:], items[0], items[1] ] }
+    ch_transcript_fasta_fai = ch_transcript_fasta.map { fasta -> [[:], fasta, []] }
+
     ch_multiqc_files = channel.empty()
     ch_trim_status = channel.empty()
     ch_map_status = channel.empty()
@@ -173,7 +178,7 @@ workflow RNASEQ {
     SAMTOOLS_INDEX (
         ch_genome_bam
     )
-    ch_genome_bam_index = params.bam_csi_index ? SAMTOOLS_INDEX.out.csi : SAMTOOLS_INDEX.out.bai
+    ch_genome_bam_index = SAMTOOLS_INDEX.out.index
 
     //
     // Run RNA-seq FASTQ preprocessing subworkflow
@@ -249,14 +254,14 @@ workflow RNASEQ {
             ch_gtf.map { item -> [ [:], item ] },
             params.star_ignore_sjdbgtf,
             is_aws_igenome,
-            ch_fasta.map { item -> [ [:], item ] },
+            ch_fasta_fai,
             params.use_sentieon_star,
             params.use_parabricks_star,
             params.skip_markduplicates
         )
 
         ch_genome_bam                    = ch_genome_bam.mix(ALIGN_STAR.out.bam)
-        ch_genome_bam_index              = ch_genome_bam_index.mix(params.bam_csi_index ? ALIGN_STAR.out.csi : ALIGN_STAR.out.bai)
+        ch_genome_bam_index              = ch_genome_bam_index.mix(ALIGN_STAR.out.index)
         ch_transcriptome_bam             = ch_transcriptome_bam.mix(ALIGN_STAR.out.bam_transcript)
         ch_percent_mapped                = ch_percent_mapped.mix(ALIGN_STAR.out.percent_mapped)
         ch_unprocessed_bams              = ch_genome_bam.join(ch_transcriptome_bam)
@@ -288,13 +293,13 @@ workflow RNASEQ {
         ALIGN_BOWTIE2 (
             ch_strand_inferred_filtered_fastq,
             ch_bowtie2_index,
-            ch_fasta.map { item -> [ [:], item ] }
+            ch_fasta_fai
         )
 
         // For Bowtie2+Salmon, the BAM is aligned to transcriptome so it's the "transcriptome_bam"
         // Use orig_bam (query-grouped) for Salmon - coordinate-sorted BAM breaks paired-end quantification
         ch_genome_bam                    = ch_genome_bam.mix(ALIGN_BOWTIE2.out.bam)
-        ch_genome_bam_index              = ch_genome_bam_index.mix(params.bam_csi_index ? ALIGN_BOWTIE2.out.csi : ALIGN_BOWTIE2.out.bai)
+        ch_genome_bam_index              = ch_genome_bam_index.mix(ALIGN_BOWTIE2.out.index)
         ch_transcriptome_bam             = ch_transcriptome_bam.mix(ALIGN_BOWTIE2.out.orig_bam)
         ch_percent_mapped                = ch_percent_mapped.mix(ALIGN_BOWTIE2.out.percent_mapped)
         ch_unprocessed_bams              = ch_genome_bam.map { meta, bam -> [ meta, bam, '' ] }
@@ -317,11 +322,11 @@ workflow RNASEQ {
             ch_strand_inferred_filtered_fastq,
             ch_hisat2_index.map { item -> [ [:], item ] },
             ch_splicesites.map { item -> [ [:], item ] },
-            ch_fasta.map { item -> [ [:], item ] },
+            ch_fasta_fai,
             params.save_unaligned || params.contaminant_screening
         )
         ch_genome_bam          = ch_genome_bam.mix(FASTQ_ALIGN_HISAT2.out.bam)
-        ch_genome_bam_index    = ch_genome_bam_index.mix(params.bam_csi_index ? FASTQ_ALIGN_HISAT2.out.csi : FASTQ_ALIGN_HISAT2.out.bai)
+        ch_genome_bam_index    = ch_genome_bam_index.mix(FASTQ_ALIGN_HISAT2.out.index)
         ch_unprocessed_bams    = ch_genome_bam.map { meta, bam -> [ meta, bam, '' ] }
         ch_unaligned_sequences = FASTQ_ALIGN_HISAT2.out.fastq
         ch_multiqc_files = ch_multiqc_files.mix(FASTQ_ALIGN_HISAT2.out.summary)
@@ -345,17 +350,17 @@ workflow RNASEQ {
 
         BAM_DEDUP_UMI(
             ch_genome_bam.join(ch_genome_bam_index, by: [0]),
-            ch_fasta.map { item -> [ [:], item ] },
+            ch_fasta_fai,
             params.umi_dedup_tool,
             params.umitools_dedup_stats,
-            params.bam_csi_index,
             ch_transcriptome_bam,
-            ch_transcript_fasta.map { item -> [ [:], item ] }
+            ch_transcript_fasta_fai,
+            params.umitools_dedup_primary_only
         )
 
         ch_genome_bam        = BAM_DEDUP_UMI.out.bam
         ch_transcriptome_bam = BAM_DEDUP_UMI.out.transcriptome_bam
-        ch_genome_bam_index  = BAM_DEDUP_UMI.out.bai
+        ch_genome_bam_index  = BAM_DEDUP_UMI.out.index
 
         ch_multiqc_files = ch_multiqc_files
             .mix(BAM_DEDUP_UMI.out.multiqc_files)
@@ -377,7 +382,6 @@ workflow RNASEQ {
             params.skip_quantification_merge
         )
         ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_RSEM.out.stat)
-        ch_versions = ch_versions.mix(QUANTIFY_RSEM.out.versions)
 
         if (!params.skip_qc & !params.skip_deseq2_qc & !params.skip_quantification_merge) {
             DESEQ2_QC_RSEM (
@@ -410,8 +414,6 @@ workflow RNASEQ {
             params.kallisto_quant_fraglen_sd,
             params.skip_quantification_merge
         )
-        ch_versions = ch_versions.mix(QUANTIFY_BAM_SALMON.out.versions)
-
         if (!params.skip_qc & !params.skip_deseq2_qc & !params.skip_quantification_merge) {
             DESEQ2_QC_BAM_SALMON (
                 QUANTIFY_BAM_SALMON.out.counts_gene_length_scaled.map { _meta, counts -> counts },
@@ -494,11 +496,10 @@ workflow RNASEQ {
     if (!params.skip_markduplicates && !params.with_umi && !markdups_done) {
         BAM_MARKDUPLICATES_PICARD (
             ch_genome_bam,
-            ch_fasta.map { item -> [ [:], item ] },
-            ch_fai.map { item -> [ [:], item ] }
+            ch_fasta_fai
         )
         ch_genome_bam       = BAM_MARKDUPLICATES_PICARD.out.bam
-        ch_genome_bam_index = params.bam_csi_index ? BAM_MARKDUPLICATES_PICARD.out.csi : BAM_MARKDUPLICATES_PICARD.out.bai
+        ch_genome_bam_index = BAM_MARKDUPLICATES_PICARD.out.index
         ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.stats)
         ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.flagstat)
         ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.idxstats)
@@ -587,7 +588,7 @@ workflow RNASEQ {
             // Sort BAM by name for qualimap (performance optimization)
             SAMTOOLS_SORT_QUALIMAP (
                 ch_genome_bam,
-                ch_fasta.map { item -> [ [:], item ] },
+                ch_fasta_fai,
                 ''
             )
 
@@ -756,7 +757,6 @@ workflow RNASEQ {
         )
         ch_counts_gene_length_scaled = QUANTIFY_PSEUDO_ALIGNMENT.out.counts_gene_length_scaled
         ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_PSEUDO_ALIGNMENT.out.multiqc)
-        ch_versions = ch_versions.mix(QUANTIFY_PSEUDO_ALIGNMENT.out.versions)
 
         if (!params.skip_qc & !params.skip_deseq2_qc & !params.skip_quantification_merge) {
             DESEQ2_QC_PSEUDO (
@@ -849,7 +849,7 @@ workflow RNASEQ {
             //
             ch_multiqc_branched = ch_multiqc_files
                 .branch { meta, _file ->
-                    per_sample: meta.id
+                    per_sample: meta.id != null
                     global: true
                 }
 
@@ -867,7 +867,7 @@ workflow RNASEQ {
                         sample_files + (global_files ?: []),
                         mqc_config_files,
                         mqc_logo,
-                        [],  // no replace_names needed per-sample
+                        [],  // replace_names not needed: each per-sample report contains only one sample's files, so there is no filename ambiguity to resolve
                         [],  // no sample_names
                     ]
                 }
@@ -878,19 +878,21 @@ workflow RNASEQ {
             // modules/nf-core/multiqc/nextflow.config to select the merged
             // output path and prefix
             //
-            ch_multiqc_input = ch_multiqc_files
+            ch_all_mqc_files = ch_multiqc_files
                 .map { _meta, file -> file }
                 .collect()
-                .combine(ch_name_replacements.toList())
-                .map { args ->
-                    def replace_names = args[-1]
-                    def files = args[0..-2]
+
+            ch_multiqc_input = ch_all_mqc_files
+                .combine(ch_name_replacements.ifEmpty([]).toList())
+                .map { items ->
+                    def files = items[0..-2]
+                    def replace_names = items[-1] instanceof List ? [] : items[-1]
                     [
                         [id: 'multiqc_report'],
                         files,
                         mqc_config_files,
                         mqc_logo,
-                        replace_names instanceof List ? [] : replace_names,
+                        replace_names,
                         [],
                     ]
                 }

@@ -407,6 +407,12 @@
                     "fa_icon": "fas fa-barcode",
                     "help_text": "Generating these output statistics can be time-consuming. See [issue #827](https://github.com/nf-core/rnaseq/issues/827) for more information.",
                     "description": "Generate output stats when running \"umi_tools dedup\"."
+                },
+                "umitools_dedup_primary_only": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-filter",
+                    "description": "Filter to primary alignments before UMI-tools dedup.",
+                    "help_text": "When enabled, secondary and supplementary alignments (SAM flag 0x900) are removed before running UMI-tools dedup. This ensures dedup statistics reflect only primary alignments and are consistent with the rest of the QC flow (raw reads > trimmed > non-rRNA > aligned > deduplicated)."
                 }
             },
             "fa_icon": "fas fa-barcode"

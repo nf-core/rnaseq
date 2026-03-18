@@ -34,7 +34,7 @@
                     "hisat2": "2.2.1"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "TRIMGALORE": {
                     "trimgalore": "0.6.10"
@@ -195,25 +195,25 @@
                     "salmon": "1.10.3"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "SAMTOOLS_SORT_QUALIMAP": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -392,11 +392,11 @@
                 "hisat2/log/WT_REP1.hisat2.summary.log",
                 "hisat2/log/WT_REP2.hisat2.summary.log",
                 "hisat2/picard_metrics",
-                "hisat2/picard_metrics/RAP1_IAA_30M_REP1.markdup.sorted.MarkDuplicates.metrics.txt",
-                "hisat2/picard_metrics/RAP1_UNINDUCED_REP1.markdup.sorted.MarkDuplicates.metrics.txt",
-                "hisat2/picard_metrics/RAP1_UNINDUCED_REP2.markdup.sorted.MarkDuplicates.metrics.txt",
-                "hisat2/picard_metrics/WT_REP1.markdup.sorted.MarkDuplicates.metrics.txt",
-                "hisat2/picard_metrics/WT_REP2.markdup.sorted.MarkDuplicates.metrics.txt",
+                "hisat2/picard_metrics/RAP1_IAA_30M_REP1.markdup.sorted.metrics.txt",
+                "hisat2/picard_metrics/RAP1_UNINDUCED_REP1.markdup.sorted.metrics.txt",
+                "hisat2/picard_metrics/RAP1_UNINDUCED_REP2.markdup.sorted.metrics.txt",
+                "hisat2/picard_metrics/WT_REP1.markdup.sorted.metrics.txt",
+                "hisat2/picard_metrics/WT_REP2.markdup.sorted.metrics.txt",
                 "hisat2/qualimap",
                 "hisat2/qualimap/RAP1_IAA_30M_REP1",
                 "hisat2/qualimap/RAP1_IAA_30M_REP1/css",

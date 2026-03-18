@@ -46,22 +46,22 @@
                     "salmon": "1.10.3"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -503,9 +503,9 @@
                 "star_salmon/log/WT_REP2.Log.progress.out",
                 "star_salmon/log/WT_REP2.SJ.out.tab",
                 "star_salmon/picard_metrics",
-                "star_salmon/picard_metrics/RAP1_IAA_30M_REP1.markdup.sorted.MarkDuplicates.metrics.txt",
-                "star_salmon/picard_metrics/RAP1_UNINDUCED_REP1.markdup.sorted.MarkDuplicates.metrics.txt",
-                "star_salmon/picard_metrics/RAP1_UNINDUCED_REP2.markdup.sorted.MarkDuplicates.metrics.txt",
+                "star_salmon/picard_metrics/RAP1_IAA_30M_REP1.markdup.sorted.metrics.txt",
+                "star_salmon/picard_metrics/RAP1_UNINDUCED_REP1.markdup.sorted.metrics.txt",
+                "star_salmon/picard_metrics/RAP1_UNINDUCED_REP2.markdup.sorted.metrics.txt",
                 "star_salmon/salmon.merged.gene.SummarizedExperiment.rds",
                 "star_salmon/salmon.merged.gene_counts.tsv",
                 "star_salmon/salmon.merged.gene_counts_length_scaled.tsv",
@@ -676,7 +676,7 @@
                     "gunzip": 1.13
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "STAR_GENOMEGENERATE": {
                     "gawk": "5.1.0",

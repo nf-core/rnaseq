@@ -50,7 +50,8 @@ nextflow_workflow {
                 input[4] = is_aws_igenome
                 input[5] = Channel.of([
                     [ id:'test_fasta' ],
-                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
                 ])
                 input[6] = use_sentieon_star
                 input[7] = use_parabricks_star
@@ -65,9 +66,8 @@ nextflow_workflow {
                 { assert snapshot(
                     file(workflow.out.log_final[0][1]).name,
                     file(workflow.out.log_out[0][1]).name,
-                    file(workflow.out.bai[0][1]).name,
+                    file(workflow.out.index[0][1]).name,
                     bam(workflow.out.bam[0][1]).getReadsMD5(),
-                    workflow.out.csi,
                     workflow.out.log_progress,
                     workflow.out.fastq,
                     workflow.out.flagstat,
@@ -126,7 +126,8 @@ nextflow_workflow {
                 input[4] = is_aws_igenome
                 input[5] = Channel.of([
                     [ id:'test_fasta' ],
-                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
                 ])
                 input[6] = use_sentieon_star
                 input[7] = use_parabricks_star
@@ -141,9 +142,8 @@ nextflow_workflow {
                 { assert snapshot(
                     file(workflow.out.log_final[0][1]).name,
                     file(workflow.out.log_out[0][1]).name,
-                    file(workflow.out.bai[0][1]).name,
+                    file(workflow.out.index[0][1]).name,
                     bam(workflow.out.bam[0][1]).getReadsMD5(),
-                    workflow.out.csi,
                     workflow.out.log_progress,
                     workflow.out.fastq,
                     workflow.out.flagstat,
@@ -202,7 +202,8 @@ nextflow_workflow {
                 input[4] = is_aws_igenome
                 input[5] = Channel.of([
                     [ id:'test_fasta' ],
-                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
                 ])
                 input[6] = use_sentieon_star
                 input[7] = use_parabricks_star
@@ -215,11 +216,10 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
-                    workflow.out.bai,
+                    workflow.out.index,
                     workflow.out.bam,
                     workflow.out.bam_sorted,
                     workflow.out.bam_transcript,
-                    workflow.out.csi,
                     workflow.out.flagstat,
                     workflow.out.idxstats,
                     workflow.out.log_final,
@@ -280,7 +280,8 @@ nextflow_workflow {
                 input[4] = is_aws_igenome
                 input[5] = Channel.of([
                     [ id:'test_fasta' ],
-                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
                 ])
                 input[6] = use_sentieon_star
                 input[7] = use_parabricks_star
@@ -293,11 +294,10 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
-                    workflow.out.bai,
+                    workflow.out.index,
                     workflow.out.bam,
                     workflow.out.bam_sorted,
                     workflow.out.bam_transcript,
-                    workflow.out.csi,
                     workflow.out.flagstat,
                     workflow.out.idxstats,
                     workflow.out.log_final,

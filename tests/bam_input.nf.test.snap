@@ -71,22 +71,22 @@
                     "salmon": "1.10.3"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "SAMTOOLS_SORT_QUALIMAP": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -461,11 +461,11 @@
                 "star_salmon/featurecounts/WT_REP2.featureCounts.tsv",
                 "star_salmon/featurecounts/WT_REP2.featureCounts.tsv.summary",
                 "star_salmon/picard_metrics",
-                "star_salmon/picard_metrics/RAP1_IAA_30M_REP1.markdup.sorted.MarkDuplicates.metrics.txt",
-                "star_salmon/picard_metrics/RAP1_UNINDUCED_REP1.markdup.sorted.MarkDuplicates.metrics.txt",
-                "star_salmon/picard_metrics/RAP1_UNINDUCED_REP2.markdup.sorted.MarkDuplicates.metrics.txt",
-                "star_salmon/picard_metrics/WT_REP1.markdup.sorted.MarkDuplicates.metrics.txt",
-                "star_salmon/picard_metrics/WT_REP2.markdup.sorted.MarkDuplicates.metrics.txt",
+                "star_salmon/picard_metrics/RAP1_IAA_30M_REP1.markdup.sorted.metrics.txt",
+                "star_salmon/picard_metrics/RAP1_UNINDUCED_REP1.markdup.sorted.metrics.txt",
+                "star_salmon/picard_metrics/RAP1_UNINDUCED_REP2.markdup.sorted.metrics.txt",
+                "star_salmon/picard_metrics/WT_REP1.markdup.sorted.metrics.txt",
+                "star_salmon/picard_metrics/WT_REP2.markdup.sorted.metrics.txt",
                 "star_salmon/qualimap",
                 "star_salmon/qualimap/RAP1_IAA_30M_REP1",
                 "star_salmon/qualimap/RAP1_IAA_30M_REP1/css",
@@ -1039,22 +1039,22 @@
                     "rseqc": "5.0.4"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "SAMTOOLS_SORT_QUALIMAP": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -1402,11 +1402,11 @@
                 "star_rsem/featurecounts/WT_REP2.featureCounts.tsv.summary",
                 "star_rsem/log",
                 "star_rsem/picard_metrics",
-                "star_rsem/picard_metrics/RAP1_IAA_30M_REP1.markdup.sorted.MarkDuplicates.metrics.txt",
-                "star_rsem/picard_metrics/RAP1_UNINDUCED_REP1.markdup.sorted.MarkDuplicates.metrics.txt",
-                "star_rsem/picard_metrics/RAP1_UNINDUCED_REP2.markdup.sorted.MarkDuplicates.metrics.txt",
-                "star_rsem/picard_metrics/WT_REP1.markdup.sorted.MarkDuplicates.metrics.txt",
-                "star_rsem/picard_metrics/WT_REP2.markdup.sorted.MarkDuplicates.metrics.txt",
+                "star_rsem/picard_metrics/RAP1_IAA_30M_REP1.markdup.sorted.metrics.txt",
+                "star_rsem/picard_metrics/RAP1_UNINDUCED_REP1.markdup.sorted.metrics.txt",
+                "star_rsem/picard_metrics/RAP1_UNINDUCED_REP2.markdup.sorted.metrics.txt",
+                "star_rsem/picard_metrics/WT_REP1.markdup.sorted.metrics.txt",
+                "star_rsem/picard_metrics/WT_REP2.markdup.sorted.metrics.txt",
                 "star_rsem/qualimap",
                 "star_rsem/qualimap/RAP1_IAA_30M_REP1",
                 "star_rsem/qualimap/RAP1_IAA_30M_REP1/css",

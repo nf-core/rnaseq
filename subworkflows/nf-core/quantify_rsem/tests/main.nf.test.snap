@@ -89,7 +89,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds"
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "19": [
@@ -97,7 +97,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds"
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "2": [
@@ -111,17 +111,9 @@
                 ],
                 "20": [
                     [
-                        {
-                            
-                        },
+                        {},
                         "rsem.merged.tx2gene.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
-                ],
-                "21": [
-                    "versions.yml:md5,06462f0acfe182a5b229d6921255e503",
-                    "versions.yml:md5,48f5d583d45f72f1affcfa7148f8713a",
-                    "versions.yml:md5,e91394edec7b4a9d000e7d5918c73b6a",
-                    "versions.yml:md5,eea9eb3ab29ffe5ab879224a1fc2024d"
                 ],
                 "3": [
                     [
@@ -258,7 +250,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds"
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "merged_genes_long": [
@@ -298,7 +290,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds"
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "raw_counts_gene": [
@@ -346,17 +338,9 @@
                 ],
                 "tx2gene": [
                     [
-                        {
-                            
-                        },
+                        {},
                         "rsem.merged.tx2gene.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
-                ],
-                "versions": [
-                    "versions.yml:md5,06462f0acfe182a5b229d6921255e503",
-                    "versions.yml:md5,48f5d583d45f72f1affcfa7148f8713a",
-                    "versions.yml:md5,e91394edec7b4a9d000e7d5918c73b6a",
-                    "versions.yml:md5,eea9eb3ab29ffe5ab879224a1fc2024d"
                 ]
             }
         ],
@@ -465,12 +449,6 @@
                     },
                     "rsem.merged.transcript_tpm.tsv:md5,d38f22667e3b8012f1d783b8d5159ccc"
                 ]
-            ],
-            [
-                "versions.yml:md5,06462f0acfe182a5b229d6921255e503",
-                "versions.yml:md5,48f5d583d45f72f1affcfa7148f8713a",
-                "versions.yml:md5,8220852da982162f4ce0899b9361b095",
-                "versions.yml:md5,eea9eb3ab29ffe5ab879224a1fc2024d"
             ]
         ],
         "meta": {
@@ -578,12 +556,6 @@
                     },
                     "rsem.merged.transcript_tpm.tsv:md5,d38f22667e3b8012f1d783b8d5159ccc"
                 ]
-            ],
-            [
-                "versions.yml:md5,06462f0acfe182a5b229d6921255e503",
-                "versions.yml:md5,48f5d583d45f72f1affcfa7148f8713a",
-                "versions.yml:md5,8220852da982162f4ce0899b9361b095",
-                "versions.yml:md5,eea9eb3ab29ffe5ab879224a1fc2024d"
             ]
         ],
         "meta": {
@@ -682,7 +654,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds"
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "19": [
@@ -690,7 +662,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds"
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "2": [
@@ -704,17 +676,9 @@
                 ],
                 "20": [
                     [
-                        {
-                            
-                        },
+                        {},
                         "rsem.merged.tx2gene.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
-                ],
-                "21": [
-                    "versions.yml:md5,06462f0acfe182a5b229d6921255e503",
-                    "versions.yml:md5,48f5d583d45f72f1affcfa7148f8713a",
-                    "versions.yml:md5,e91394edec7b4a9d000e7d5918c73b6a",
-                    "versions.yml:md5,eea9eb3ab29ffe5ab879224a1fc2024d"
                 ],
                 "3": [
                     [
@@ -851,7 +815,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds"
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "merged_genes_long": [
@@ -891,7 +855,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds"
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "raw_counts_gene": [
@@ -939,17 +903,9 @@
                 ],
                 "tx2gene": [
                     [
-                        {
-                            
-                        },
+                        {},
                         "rsem.merged.tx2gene.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
-                ],
-                "versions": [
-                    "versions.yml:md5,06462f0acfe182a5b229d6921255e503",
-                    "versions.yml:md5,48f5d583d45f72f1affcfa7148f8713a",
-                    "versions.yml:md5,e91394edec7b4a9d000e7d5918c73b6a",
-                    "versions.yml:md5,eea9eb3ab29ffe5ab879224a1fc2024d"
                 ]
             }
         ],

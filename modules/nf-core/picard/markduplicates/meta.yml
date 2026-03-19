@@ -37,11 +37,6 @@ input:
         description: Reference genome fasta file, required for CRAM input
         pattern: "*.{fasta,fa}"
         ontologies: []
-  - - meta3:
-        type: map
-        description: |
-          Groovy Map containing reference information
-          e.g. [ id:'genome' ]
     - fai:
         type: file
         description: Reference genome fasta index
@@ -100,10 +95,9 @@ output:
       - picard:
           type: string
           description: The tool name
-      - "picard MarkDuplicates --version 2>&1 | sed -n 's/^Version:*//p'":
+      - "picard MarkDuplicates --version 2>&1 | sed -n 's/.*Version://p'":
           type: string
           description: The command used to generate the version of the tool
-
 topics:
   versions:
     - - ${task.process}:
@@ -112,10 +106,9 @@ topics:
       - picard:
           type: string
           description: The tool name
-      - "picard MarkDuplicates --version 2>&1 | sed -n 's/^Version:*//p'":
+      - "picard MarkDuplicates --version 2>&1 | sed -n 's/.*Version://p'":
           type: string
           description: The command used to generate the version of the tool
-
 authors:
   - "@drpatelh"
   - "@projectoriented"

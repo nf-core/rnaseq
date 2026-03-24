@@ -495,7 +495,7 @@ To take advantage of all the quality control modules implemented in the pipeline
 :::note
 **GTF vs GFF**
 
-GFF (General Feature Format) is a tab-separated text file format for representing genomic annotations, while GTF (General Transfer Format) is a specific implementation of this format corresponding to GFF version 2. The pipeline can accept both GFF and GTF but any GFF files will be converted to GTF so if a GTF is available for your annotation of choice it is better to provide that directly.
+GFF (General Feature Format) is a tab-separated text file format for representing genomic annotations, while GTF (General Transfer Format) is a specific implementation of this format corresponding to GFF version 2. The pipeline accepts both formats, but they must be provided via the correct parameter: use `--gtf` for GTF files (`.gtf`, `.gtf.gz`) and `--gff` for GFF3 files (`.gff`, `.gff3`, `.gff.gz`, `.gff3.gz`). GFF files provided via `--gff` will be automatically converted to GTF internally, so if a GTF is available for your annotation of choice it is better to provide that directly via `--gtf`.
 
 More information and links to further resources are [available from Ensembl](https://www.ensembl.org/info/website/upload/gff.html).
 :::
@@ -553,7 +553,7 @@ nextflow run nf-core/rnaseq \
 
 **Key points:**
 
-- **Use GFF3 format**: Prokaryotic annotations are typically distributed as GFF3 (not GTF). The pipeline accepts both via `--gff` or `--gtf`.
+- **Use GFF3 format**: Prokaryotic annotations are typically distributed as GFF3 (not GTF). Provide GFF3 files via `--gff` and GTF files via `--gtf`.
 - **CDS features required**: The annotation must contain CDS (coding sequence) features. The pipeline extracts transcripts from these.
 - **Matching contig names**: Chromosome/contig names in your FASTA must exactly match those in your GFF/GTF (e.g., if your FASTA has `>NC_003197.2`, your GFF must use `NC_003197.2` in column 1).
 - **No transcript FASTA needed**: The pipeline generates the transcript FASTA automatically using GFFREAD.

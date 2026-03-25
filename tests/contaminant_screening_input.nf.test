@@ -62,47 +62,97 @@ nextflow_pipeline {
         }
     }
 
-    test("Params: BBSplit with contaminant_screening_input trimmed and kraken2") {
+    test("Params: contaminant_screening_input=trimmed screens pre-alignment reads") {
 
-        // Verify that when contaminant_screening_input='trimmed', Kraken2 receives
-        // the BBSplit-filtered reads rather than post-alignment unmapped reads.
-
-        setup {
-            run("UNTAR") {
-                script "modules/nf-core/untar/main.nf"
-                process {
-                    """
-                    input[0] = Channel.of([
-                        [],
-                        file(params.modules_testdata_base_path + "genomics/sarscov2/genome/db/kraken2.tar.gz",
-                             checkIfExists: true)
-                    ])
-                    """
-                }
-            }
-        }
+        // Verify Kraken2 screens trimmed/BBSplit-filtered reads (pre-alignment).
+        // With contaminant_screening_input='trimmed', Kraken2 receives ALL trimmed
+        // reads before any alignment step. The Kraken2 database is downloaded via
+        // HTTPS from the public nf-core test-datasets bucket.
 
         when {
             params {
-                outdir        = "$outputDir"
+                def dbDir = new java.io.File(
+                    new java.io.File(outputDir.toString()).parentFile, "kraken2_db"
+                )
+                if (!dbDir.exists()) {
+                    dbDir.mkdirs()
+                    def httpsUrl = "https://ngi-igenomes.s3.amazonaws.com/testdata/nf-core/modules/genomics/sarscov2/genome/db/kraken2.tar.gz"
+                    def proc = ['bash', '-c',
+                        "curl -fsSL '${httpsUrl}' | tar -xz --strip-components 1 -C '${dbDir}'"
+                    ].execute()
+                    proc.waitFor()
+                }
+
+                outdir                      = "$outputDir"
                 contaminant_screening       = 'kraken2'
                 contaminant_screening_input = 'trimmed'
-                kraken_db     = UNTAR.out.untar[0][1].toString()
-                skip_alignment  = true
-                skip_bigwig     = true
-                skip_stringtie  = true
+                kraken_db                   = dbDir.absolutePath
+                skip_bigwig                 = true
+                skip_stringtie              = true
             }
         }
 
         then {
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // Store a Kraken2 report hash so the unmapped contrast test can assert the results differ
+            def krakenReport = path("$outputDir/star_salmon/contaminants/kraken2/kraken_reports/WT_REP1.kraken2.report.txt")
+            new File("/tmp/nf_test_trimmed_kraken_md5.txt").text = krakenReport.md5
             assertAll(
                 { assert workflow.success },
-                // BBSplit must have run (confirming skip_bbsplit=false from test.config)
                 { assert workflow.trace.succeeded().findAll { it.name.contains('BBMAP_BBSPLIT') }.size() > 0 },
-                // Kraken2 must have run on the trimmed/BBSplit-filtered reads
                 { assert workflow.trace.succeeded().findAll { it.name.contains('KRAKEN2') }.size() > 0 },
+                { assert snapshot(
+                    workflow.trace.succeeded().size(),
+                    removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow"),
+                    stable_name,
+                    stable_path
+                ).match() }
+            )
+        }
+    }
+
+    test("Params: contaminant_screening_input=unmapped (default) screens post-alignment reads") {
+
+        // Contrast test: with the default 'unmapped' input, Kraken2 screens only
+        // post-alignment unmapped reads. With the SARSCoV2 test data most reads
+        // align, so Kraken2 receives far fewer reads than in the 'trimmed' test.
+        // This demonstrates the two code paths produce different screening results.
+
+        when {
+            params {
+                def dbDir = new java.io.File(
+                    new java.io.File(outputDir.toString()).parentFile, "kraken2_db"
+                )
+                if (!dbDir.exists()) {
+                    dbDir.mkdirs()
+                    def httpsUrl = "https://ngi-igenomes.s3.amazonaws.com/testdata/nf-core/modules/genomics/sarscov2/genome/db/kraken2.tar.gz"
+                    def proc = ['bash', '-c',
+                        "curl -fsSL '${httpsUrl}' | tar -xz --strip-components 1 -C '${dbDir}'"
+                    ].execute()
+                    proc.waitFor()
+                }
+
+                outdir                = "$outputDir"
+                contaminant_screening = 'kraken2'
+                // contaminant_screening_input left at default ('unmapped')
+                kraken_db             = dbDir.absolutePath
+                skip_bigwig           = true
+                skip_stringtie        = true
+            }
+        }
+
+        then {
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            def krakenReport = path("$outputDir/star_salmon/contaminants/kraken2/kraken_reports/WT_REP1.kraken2.report.txt")
+            def trimmedMd5   = new File("/tmp/nf_test_trimmed_kraken_md5.txt").text.trim()
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.trace.succeeded().findAll { it.name.contains('STAR_ALIGN') }.size() > 0 },
+                { assert workflow.trace.succeeded().findAll { it.name.contains('KRAKEN2') }.size() > 0 },
+                // Kraken2 screened different reads: unmapped report must differ from trimmed report
+                { assert krakenReport.md5 != trimmedMd5 : "Kraken2 reports are identical — trimmed and unmapped code paths must differ" },
                 { assert snapshot(
                     workflow.trace.succeeded().size(),
                     removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow"),

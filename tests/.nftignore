@@ -99,6 +99,8 @@ umitools/*.umi_extract.log
 {multiqc,multiqc/**}/multiqc_report_data/multiqc_sortmerna.txt
 {multiqc,multiqc/**}/multiqc_report_data/multiqc_sources.txt
 {multiqc,multiqc/**}/multiqc_report_data/multiqc_star.txt
+{multiqc,multiqc/**}/multiqc_report_data/multiqc_kraken.txt
+{multiqc,multiqc/**}/multiqc_report_data/kraken-top-n-plot.txt
 {multiqc,multiqc/**}/multiqc_report_data/bbmap-bbsplit_plot.txt
 {multiqc,multiqc/**}/multiqc_report_data/bbmap.txt
 {multiqc,multiqc/**}/multiqc_report_data/bbsplit_stats_table.txt

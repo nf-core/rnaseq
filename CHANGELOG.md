@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [PR #1740](https://github.com/nf-core/rnaseq/pull/1740) - Bump version to 3.24.0dev after release 3.23.0; always set ID/SM read group tags for STAR and HISAT2 even when `seq_center`/`seq_platform` are not provided
 - [PR #1745](https://github.com/nf-core/rnaseq/pull/1745) - Always skip validation of `igenomes_base` and remove `format: directory-path` from schema to prevent S3 access errors
-- [PR #xxxx](https://github.com/nf-core/rnaseq/pull/xxxx) - Add `--contaminant_screening_input` to choose contaminant screening on trimmed/filter-passed reads or aligner-unmapped reads, keep `unmapped` as the default, and preserve stable sample IDs throughout the workflow
+- [PR #1746](https://github.com/nf-core/rnaseq/pull/1746) - Add `--contaminant_screening_input` to choose contaminant screening on trimmed/filter-passed reads or aligner-unmapped reads, keep `unmapped` as the default, and preserve stable sample IDs throughout the workflow
 
 ## [[3.23.0](https://github.com/nf-core/rnaseq/releases/tag/3.23.0)] - 2026-02-27
 

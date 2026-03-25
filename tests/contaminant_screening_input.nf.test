@@ -14,7 +14,7 @@ nextflow_pipeline {
                 aligner = 'hisat2'
                 skip_bigwig = true
                 contaminant_screening = 'kraken2'
-                kraken_db = "$projectDir/tests/fixtures/kraken_db"
+                kraken_db = "${params.modules_testdata_base_path}genomics/sarscov2/genome/db/kraken2.tar.gz"
             }
         }
 
@@ -43,7 +43,7 @@ nextflow_pipeline {
                 skip_alignment = true
                 contaminant_screening = 'kraken2'
                 contaminant_screening_input = 'trimmed'
-                kraken_db = "$projectDir/tests/fixtures/kraken_db"
+                kraken_db = "${params.modules_testdata_base_path}genomics/sarscov2/genome/db/kraken2.tar.gz"
             }
         }
 
@@ -52,6 +52,57 @@ nextflow_pipeline {
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
             assertAll(
                 { assert workflow.success },
+                { assert snapshot(
+                    workflow.trace.succeeded().size(),
+                    removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow"),
+                    stable_name,
+                    stable_path
+                ).match() }
+            )
+        }
+    }
+
+    test("Params: BBSplit with contaminant_screening_input trimmed and kraken2") {
+
+        // Verify that when contaminant_screening_input='trimmed', Kraken2 receives
+        // the BBSplit-filtered reads rather than post-alignment unmapped reads.
+
+        setup {
+            run("UNTAR") {
+                script "modules/nf-core/untar/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [],
+                        file(params.modules_testdata_base_path + "genomics/sarscov2/genome/db/kraken2.tar.gz",
+                             checkIfExists: true)
+                    ])
+                    """
+                }
+            }
+        }
+
+        when {
+            params {
+                outdir        = "$outputDir"
+                contaminant_screening       = 'kraken2'
+                contaminant_screening_input = 'trimmed'
+                kraken_db     = UNTAR.out.untar[0][1].toString()
+                skip_alignment  = true
+                skip_bigwig     = true
+                skip_stringtie  = true
+            }
+        }
+
+        then {
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            assertAll(
+                { assert workflow.success },
+                // BBSplit must have run (confirming skip_bbsplit=false from test.config)
+                { assert workflow.trace.succeeded().findAll { it.name.contains('BBMAP_BBSPLIT') }.size() > 0 },
+                // Kraken2 must have run on the trimmed/BBSplit-filtered reads
+                { assert workflow.trace.succeeded().findAll { it.name.contains('KRAKEN2') }.size() > 0 },
                 { assert snapshot(
                     workflow.trace.succeeded().size(),
                     removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow"),

@@ -34,7 +34,7 @@
                     "hisat2": "2.2.1"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "TRIMGALORE": {
                     "trimgalore": "0.6.10"
@@ -76,6 +76,7 @@
                 "multiqc/hisat2/multiqc_data",
                 "multiqc/hisat2/multiqc_data/.stub",
                 "multiqc/hisat2/multiqc_plots",
+                "multiqc/hisat2/multiqc_plots/.stub",
                 "multiqc/hisat2/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_rnaseq_software_mqc_versions.yml",
@@ -98,7 +99,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-03-25T09:47:00.586566284"
+        "timestamp": "2026-03-25T13:55:01.604803873"
     },
     "Params: contaminant screening trimmed input with skip_alignment - stub": {
         "content": [
@@ -132,7 +133,7 @@
                     "gunzip": 1.13
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "TRIMGALORE": {
                     "trimgalore": "0.6.10"
@@ -170,6 +171,7 @@
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/.stub",
                 "multiqc/multiqc_plots",
+                "multiqc/multiqc_plots/.stub",
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_rnaseq_software_mqc_versions.yml",
@@ -192,6 +194,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-03-25T09:47:28.250098788"
+        "timestamp": "2026-03-25T13:55:28.923517347"
     }
 }

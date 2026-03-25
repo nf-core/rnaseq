@@ -322,7 +322,7 @@ workflow RNASEQ {
             ch_strand_inferred_filtered_fastq,
             ch_hisat2_index.map { item -> [ [:], item ] },
             ch_splicesites.map { item -> [ [:], item ] },
-            ch_fasta.map { item -> [ [:], item ] },
+            ch_fasta_fai,
             params.save_unaligned || (params.contaminant_screening && params.contaminant_screening_input == 'unmapped')
         )
         ch_genome_bam          = ch_genome_bam.mix(FASTQ_ALIGN_HISAT2.out.bam)

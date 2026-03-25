@@ -38,6 +38,12 @@ input:
         pattern: "*.{fa,fasta,fna}"
         optional: true
         ontologies: []
+    - fai:
+        type: file
+        description: Reference genome FASTA index file
+        pattern: "*.{fai}"
+        optional: true
+        ontologies: []
   - index_format:
       type: string
       description: Index format to use (optional)
@@ -76,38 +82,16 @@ output:
           description: Sorted SAM file
           pattern: "*.{sam}"
           ontologies: []
-  crai:
+  index:
     - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - "${prefix}.${extension}.crai":
+      - "${prefix}.${extension}.{crai,csi,bai}":
           type: file
           description: CRAM index file (optional)
-          pattern: "*.crai"
-          ontologies: []
-  csi:
-    - - meta:
-          type: map
-          description: |
-            Groovy Map containing sample information
-            e.g. [ id:'test', single_end:false ]
-      - "${prefix}.${extension}.csi":
-          type: file
-          description: BAM index file (optional)
-          pattern: "*.csi"
-          ontologies: []
-  bai:
-    - - meta:
-          type: map
-          description: |
-            Groovy Map containing sample information
-            e.g. [ id:'test', single_end:false ]
-      - "${prefix}.${extension}.bai":
-          type: file
-          description: BAM index file (optional)
-          pattern: "*.bai"
+          pattern: "*.{crai,csi,bai}"
           ontologies: []
   versions_samtools:
     - - ${task.process}:

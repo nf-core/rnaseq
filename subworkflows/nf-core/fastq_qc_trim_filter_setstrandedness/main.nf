@@ -413,7 +413,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     emit:
     reads            = ch_strand_inferred_fastq
     trim_read_count  = ch_trim_read_count
-    multiqc_files    = ch_multiqc_files.transpose().map { _meta, file -> file }
+    multiqc_files    = ch_multiqc_files.transpose()
 
     // Individual outputs for workflow outputs
     lint_log_raw     = ch_lint_log_raw

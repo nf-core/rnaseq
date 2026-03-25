@@ -69,17 +69,9 @@
             ],
             [
                 [
-                    {
-                        
-                    },
+                    {},
                     "kallisto.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
                 ]
-            ],
-            [
-                "versions.yml:md5,2c734f0be55dbd9c1b5d893cbc5d29a0",
-                "versions.yml:md5,3926cde3d17a8b77579d430e7d21a7dd",
-                "versions.yml:md5,928c1a88044f1b300485c2d53c915921",
-                "versions.yml:md5,e993f80a1812e9571beb47a5a0fbacf6"
             ]
         ],
         "meta": {
@@ -93,9 +85,7 @@
             {
                 "0": [
                     [
-                        {
-                            
-                        },
+                        {},
                         "salmon.merged.tx2gene.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
@@ -112,14 +102,8 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds"
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
-                ],
-                "11": [
-                    "versions.yml:md5,2c734f0be55dbd9c1b5d893cbc5d29a0",
-                    "versions.yml:md5,3926cde3d17a8b77579d430e7d21a7dd",
-                    "versions.yml:md5,dbc2adfb72a3242fb84dee5e78a6c39b",
-                    "versions.yml:md5,e993f80a1812e9571beb47a5a0fbacf6"
                 ],
                 "2": [
                     [
@@ -182,7 +166,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds"
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "counts_gene": [
@@ -238,7 +222,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds"
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "merged_transcript_rds": [
@@ -246,7 +230,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds"
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "tpm_gene": [
@@ -267,17 +251,9 @@
                 ],
                 "tx2gene": [
                     [
-                        {
-                            
-                        },
+                        {},
                         "salmon.merged.tx2gene.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
-                ],
-                "versions": [
-                    "versions.yml:md5,2c734f0be55dbd9c1b5d893cbc5d29a0",
-                    "versions.yml:md5,3926cde3d17a8b77579d430e7d21a7dd",
-                    "versions.yml:md5,dbc2adfb72a3242fb84dee5e78a6c39b",
-                    "versions.yml:md5,e993f80a1812e9571beb47a5a0fbacf6"
                 ]
             }
         ],
@@ -292,9 +268,7 @@
             {
                 "0": [
                     [
-                        {
-                            
-                        },
+                        {},
                         "kallisto.merged.tx2gene.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
@@ -311,14 +285,8 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds"
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
-                ],
-                "11": [
-                    "versions.yml:md5,2c734f0be55dbd9c1b5d893cbc5d29a0",
-                    "versions.yml:md5,3926cde3d17a8b77579d430e7d21a7dd",
-                    "versions.yml:md5,dbc2adfb72a3242fb84dee5e78a6c39b",
-                    "versions.yml:md5,e993f80a1812e9571beb47a5a0fbacf6"
                 ],
                 "2": [
                     [
@@ -381,7 +349,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds"
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "counts_gene": [
@@ -437,7 +405,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds"
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "merged_transcript_rds": [
@@ -445,7 +413,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds"
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "tpm_gene": [
@@ -466,17 +434,9 @@
                 ],
                 "tx2gene": [
                     [
-                        {
-                            
-                        },
+                        {},
                         "kallisto.merged.tx2gene.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
-                ],
-                "versions": [
-                    "versions.yml:md5,2c734f0be55dbd9c1b5d893cbc5d29a0",
-                    "versions.yml:md5,3926cde3d17a8b77579d430e7d21a7dd",
-                    "versions.yml:md5,dbc2adfb72a3242fb84dee5e78a6c39b",
-                    "versions.yml:md5,e993f80a1812e9571beb47a5a0fbacf6"
                 ]
             }
         ],
@@ -491,9 +451,7 @@
             {
                 "0": [
                     [
-                        {
-                            
-                        },
+                        {},
                         "rsem.merged.tx2gene.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
@@ -510,14 +468,8 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds"
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
-                ],
-                "11": [
-                    "versions.yml:md5,2c734f0be55dbd9c1b5d893cbc5d29a0",
-                    "versions.yml:md5,3926cde3d17a8b77579d430e7d21a7dd",
-                    "versions.yml:md5,dbc2adfb72a3242fb84dee5e78a6c39b",
-                    "versions.yml:md5,e993f80a1812e9571beb47a5a0fbacf6"
                 ],
                 "2": [
                     [
@@ -580,7 +532,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds"
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "counts_gene": [
@@ -636,7 +588,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds"
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "merged_transcript_rds": [
@@ -644,7 +596,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds"
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "tpm_gene": [
@@ -665,17 +617,9 @@
                 ],
                 "tx2gene": [
                     [
-                        {
-                            
-                        },
+                        {},
                         "rsem.merged.tx2gene.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
-                ],
-                "versions": [
-                    "versions.yml:md5,2c734f0be55dbd9c1b5d893cbc5d29a0",
-                    "versions.yml:md5,3926cde3d17a8b77579d430e7d21a7dd",
-                    "versions.yml:md5,dbc2adfb72a3242fb84dee5e78a6c39b",
-                    "versions.yml:md5,e993f80a1812e9571beb47a5a0fbacf6"
                 ]
             }
         ],
@@ -755,17 +699,9 @@
             ],
             [
                 [
-                    {
-                        
-                    },
+                    {},
                     "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
                 ]
-            ],
-            [
-                "versions.yml:md5,2c734f0be55dbd9c1b5d893cbc5d29a0",
-                "versions.yml:md5,3926cde3d17a8b77579d430e7d21a7dd",
-                "versions.yml:md5,928c1a88044f1b300485c2d53c915921",
-                "versions.yml:md5,e993f80a1812e9571beb47a5a0fbacf6"
             ]
         ],
         "meta": {
@@ -844,17 +780,9 @@
             ],
             [
                 [
-                    {
-                        
-                    },
+                    {},
                     "rsem.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
                 ]
-            ],
-            [
-                "versions.yml:md5,2c734f0be55dbd9c1b5d893cbc5d29a0",
-                "versions.yml:md5,3926cde3d17a8b77579d430e7d21a7dd",
-                "versions.yml:md5,928c1a88044f1b300485c2d53c915921",
-                "versions.yml:md5,e993f80a1812e9571beb47a5a0fbacf6"
             ]
         ],
         "meta": {

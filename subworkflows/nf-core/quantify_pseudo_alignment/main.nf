@@ -21,9 +21,9 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
     lib_type                  //     val: String to override Salmon library type
     kallisto_quant_fraglen    //     val: Estimated fragment length required by Kallisto in single-end mode
     kallisto_quant_fraglen_sd //     val: Estimated standard error for fragment length required by Kallisto in single-end mode
+    skip_merge                //    bool: skip cross-sample merging, run tximport per-sample
 
     main:
-    ch_versions = channel.empty()
 
     //
     // Quantify and merge counts across samples
@@ -62,9 +62,9 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
         gtf,
         gtf_id_attribute,
         gtf_extra_attribute,
-        pseudo_aligner
+        pseudo_aligner,
+        skip_merge
     )
-    ch_versions = ch_versions.mix(QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT.out.versions)
 
     emit:
     results                       = ch_pseudo_results                                              // channel: [ val(meta), results_dir ]
@@ -82,6 +82,4 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
 
     merged_gene_rds_unified       = QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT.out.merged_gene_rds       //    path: *.rds
     merged_transcript_rds_unified = QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT.out.merged_transcript_rds //    path: *.rds
-
-    versions                      = ch_versions                                                    // channel: [ versions.yml ]
 }

@@ -40,7 +40,7 @@
                     [
                         "SAMTOOLS_VIEW",
                         "samtools",
-                        "1.22.1"
+                        "1.23"
                     ]
                 ]
             }
@@ -92,7 +92,7 @@
                     [
                         "SAMTOOLS_VIEW",
                         "samtools",
-                        "1.22.1"
+                        "1.23"
                     ]
                 ],
                 "bai": [
@@ -133,7 +133,7 @@
                     [
                         "SAMTOOLS_VIEW",
                         "samtools",
-                        "1.22.1"
+                        "1.23"
                     ]
                 ]
             }
@@ -185,7 +185,7 @@
                     [
                         "SAMTOOLS_VIEW",
                         "samtools",
-                        "1.22.1"
+                        "1.23"
                     ]
                 ]
             }
@@ -221,7 +221,7 @@
                         {
                             "id": "test"
                         },
-                        "test.bam.csi:md5,15d725bced7ececd45b4312b2af99a6b"
+                        "test.bam.csi:md5,9e42ca315563f048b85ebd14ffa2a807"
                     ]
                 ],
                 "sam": [
@@ -247,16 +247,16 @@
                     [
                         "SAMTOOLS_VIEW",
                         "samtools",
-                        "1.22.1"
+                        "1.23"
                     ]
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-03T16:49:20.747636525"
+        "timestamp": "2026-03-12T14:51:01.408213"
     },
     "bam_bai_index_unselected": {
         "content": [
@@ -309,7 +309,7 @@
                     [
                         "SAMTOOLS_VIEW",
                         "samtools",
-                        "1.22.1"
+                        "1.23"
                     ]
                 ]
             }
@@ -371,7 +371,7 @@
                     [
                         "SAMTOOLS_VIEW",
                         "samtools",
-                        "1.22.1"
+                        "1.23"
                     ]
                 ],
                 "bai": [
@@ -422,7 +422,7 @@
                     [
                         "SAMTOOLS_VIEW",
                         "samtools",
-                        "1.22.1"
+                        "1.23"
                     ]
                 ]
             }
@@ -469,7 +469,7 @@
                     [
                         "SAMTOOLS_VIEW",
                         "samtools",
-                        "1.22.1"
+                        "1.23"
                     ]
                 ]
             }
@@ -521,7 +521,7 @@
                     [
                         "SAMTOOLS_VIEW",
                         "samtools",
-                        "1.22.1"
+                        "1.23"
                     ]
                 ]
             }
@@ -568,7 +568,7 @@
                     [
                         "SAMTOOLS_VIEW",
                         "samtools",
-                        "1.22.1"
+                        "1.23"
                     ]
                 ]
             }
@@ -620,7 +620,7 @@
                     [
                         "SAMTOOLS_VIEW",
                         "samtools",
-                        "1.22.1"
+                        "1.23"
                     ]
                 ],
                 "bai": [
@@ -661,7 +661,7 @@
                     [
                         "SAMTOOLS_VIEW",
                         "samtools",
-                        "1.22.1"
+                        "1.23"
                     ]
                 ]
             }
@@ -708,7 +708,7 @@
                     [
                         "SAMTOOLS_VIEW",
                         "samtools",
-                        "1.22.1"
+                        "1.23"
                     ]
                 ]
             }
@@ -770,7 +770,7 @@
                     [
                         "SAMTOOLS_VIEW",
                         "samtools",
-                        "1.22.1"
+                        "1.23"
                     ]
                 ],
                 "bai": [
@@ -821,7 +821,7 @@
                     [
                         "SAMTOOLS_VIEW",
                         "samtools",
-                        "1.22.1"
+                        "1.23"
                     ]
                 ]
             }
@@ -854,7 +854,7 @@
                         {
                             "id": "test"
                         },
-                        "test.cram:md5,9b6eeca8f6b4b744297ae7cc87c031a4"
+                        "test.cram:md5,24cce9e8ff83a3c3010c7319b3627d07"
                     ]
                 ],
                 "csi": [
@@ -883,16 +883,16 @@
                     [
                         "SAMTOOLS_VIEW",
                         "samtools",
-                        "1.22.1"
+                        "1.23"
                     ]
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-03T16:49:03.431621547"
+        "timestamp": "2026-03-12T14:50:35.160451"
     },
     "bam_stub": {
         "content": [
@@ -935,7 +935,7 @@
                     [
                         "SAMTOOLS_VIEW",
                         "samtools",
-                        "1.22.1"
+                        "1.23"
                     ]
                 ]
             }

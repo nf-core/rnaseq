@@ -1,6 +1,9 @@
 {
-    "sarscov2 single-end [fastqc]": {
+    "sarscov2 single-end [fastqc] [multiple configs]": {
         "content": [
+            "multiqc_report.html",
+            "multiqc_data",
+            "multiqc_plots",
             {
                 "versions": [
                     [
@@ -13,35 +16,81 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2025-12-09T10:10:43.020315838"
+        "timestamp": "2026-02-26T20:21:35.851707"
+    },
+    "sarscov2 single-end [fastqc]": {
+        "content": [
+            "multiqc_report.html",
+            "multiqc_data",
+            {
+                "versions": [
+                    [
+                        "MULTIQC",
+                        "multiqc",
+                        "1.33"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.4",
+            "nextflow": "25.10.4"
+        },
+        "timestamp": "2026-02-26T15:10:36.019680076"
     },
     "sarscov2 single-end [fastqc] - stub": {
         "content": [
-            [
-                "multiqc_report.html",
-                "multiqc_data",
-                "multiqc_plots",
-                {
-                    "versions": [
+            {
+                "data": [
+                    [
+                        {
+                            "id": "FASTQC"
+                        },
                         [
-                            "MULTIQC",
-                            "multiqc",
-                            "1.33"
+                            ".stub:md5,d41d8cd98f00b204e9800998ecf8427e"
                         ]
                     ]
-                }
-            ]
+                ],
+                "plots": [
+                    [
+                        {
+                            "id": "FASTQC"
+                        },
+                        [
+                            ".stub:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "report": [
+                    [
+                        {
+                            "id": "FASTQC"
+                        },
+                        "multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    [
+                        "MULTIQC",
+                        "multiqc",
+                        "1.33"
+                    ]
+                ]
+            }
         ],
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nf-test": "0.9.4",
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2025-12-09T10:11:14.131950776"
+        "timestamp": "2026-02-26T15:14:39.789193051"
     },
     "sarscov2 single-end [fastqc] [config]": {
         "content": [
+            "multiqc_report.html",
+            "multiqc_data",
+            "multiqc_plots",
             {
                 "versions": [
                     [
@@ -53,9 +102,29 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nf-test": "0.9.4",
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2025-12-09T10:11:07.15692209"
+        "timestamp": "2026-02-26T15:21:29.116129274"
+    },
+    "sarscov2 single-end [fastqc] - custom prefix": {
+        "content": [
+            "custom_prefix.html",
+            "custom_prefix_data",
+            {
+                "versions": [
+                    [
+                        "MULTIQC",
+                        "multiqc",
+                        "1.33"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.4",
+            "nextflow": "25.10.4"
+        },
+        "timestamp": "2026-02-26T15:10:43.419877592"
     }
 }

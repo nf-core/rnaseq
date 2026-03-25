@@ -1,0 +1,64 @@
+nextflow_pipeline {
+
+    name "Test contaminant screening input selection"
+    script "../main.nf"
+    tag "pipeline"
+
+    test("Params: contaminant screening unmapped input - stub") {
+
+        options "-stub"
+
+        when {
+            params {
+                outdir = "$outputDir"
+                aligner = 'hisat2'
+                skip_bigwig = true
+                contaminant_screening = 'kraken2'
+                kraken_db = "$projectDir/tests/fixtures/kraken_db"
+            }
+        }
+
+        then {
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.trace.succeeded().size(),
+                    removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow"),
+                    stable_name,
+                    stable_path
+                ).match() }
+            )
+        }
+    }
+
+    test("Params: contaminant screening trimmed input with skip_alignment - stub") {
+
+        options "-stub"
+
+        when {
+            params {
+                outdir = "$outputDir"
+                skip_alignment = true
+                contaminant_screening = 'kraken2'
+                contaminant_screening_input = 'trimmed'
+                kraken_db = "$projectDir/tests/fixtures/kraken_db"
+            }
+        }
+
+        then {
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.trace.succeeded().size(),
+                    removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow"),
+                    stable_name,
+                    stable_path
+                ).match() }
+            )
+        }
+    }
+}

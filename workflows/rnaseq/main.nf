@@ -221,7 +221,6 @@ workflow RNASEQ {
 
     ch_multiqc_files                  = ch_multiqc_files.mix(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.multiqc_files)
     ch_strand_inferred_filtered_fastq = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.reads
-    ch_unaligned_sequences            = ch_unaligned_sequences.mix(ch_strand_inferred_filtered_fastq.map { meta, fastq -> [ meta + [id: meta.id + '_trimmed'], fastq ] })
     ch_trim_read_count                = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.trim_read_count
 
     ch_trim_status = ch_trim_read_count
@@ -262,7 +261,7 @@ workflow RNASEQ {
         ch_percent_mapped                = ch_percent_mapped.mix(ALIGN_STAR.out.percent_mapped)
         ch_unprocessed_bams              = ch_genome_bam.join(ch_transcriptome_bam)
         ch_star_log                      = ALIGN_STAR.out.log_final
-        ch_unaligned_sequences           = ch_unaligned_sequences.mix(ALIGN_STAR.out.fastq.map { meta, fastq -> [ meta + [id: meta.id + '_STAR'], fastq ] })
+        ch_unaligned_sequences           = ch_unaligned_sequences.mix(ALIGN_STAR.out.fastq)
         ch_multiqc_files                 = ch_multiqc_files.mix(ch_star_log.collect{ _meta, log -> log })
 
         if (!params.with_umi && (params.skip_markduplicates || params.use_parabricks_star)) {
@@ -319,12 +318,12 @@ workflow RNASEQ {
             ch_hisat2_index.map { item -> [ [:], item ] },
             ch_splicesites.map { item -> [ [:], item ] },
             ch_fasta.map { item -> [ [:], item ] },
-            params.save_unaligned || params.contaminant_screening
+            params.save_unaligned || (params.contaminant_screening && params.contaminant_screening_input == 'unmapped')
         )
         ch_genome_bam          = ch_genome_bam.mix(FASTQ_ALIGN_HISAT2.out.bam)
         ch_genome_bam_index    = ch_genome_bam_index.mix(params.bam_csi_index ? FASTQ_ALIGN_HISAT2.out.csi : FASTQ_ALIGN_HISAT2.out.bai)
         ch_unprocessed_bams    = ch_genome_bam.map { meta, bam -> [ meta, bam, '' ] }
-        ch_unaligned_sequences = ch_unaligned_sequences.mix(FASTQ_ALIGN_HISAT2.out.fastq.map { meta, fastq -> [ meta + [id: meta.id + '_HISAT2'], fastq ] })
+        ch_unaligned_sequences = ch_unaligned_sequences.mix(FASTQ_ALIGN_HISAT2.out.fastq)
         ch_multiqc_files = ch_multiqc_files.mix(FASTQ_ALIGN_HISAT2.out.summary.collect{ _meta, summary -> summary })
 
         if (!params.with_umi && params.skip_markduplicates) {
@@ -690,9 +689,13 @@ workflow RNASEQ {
             ch_multiqc_files = ch_multiqc_files.mix(ch_fail_strand_multiqc.collectFile(name: 'fail_strand_check_mqc.tsv'))
         }
 
+        def ch_contaminant_sequences = params.contaminant_screening_input == 'trimmed'
+            ? ch_strand_inferred_filtered_fastq
+            : ch_unaligned_sequences
+
         if (params.contaminant_screening in ['kraken2', 'kraken2_bracken'] ) {
             KRAKEN2 (
-                ch_unaligned_sequences,
+                ch_contaminant_sequences,
                 params.kraken_db,
                 params.save_kraken_assignments,
                 params.save_kraken_unassigned
@@ -712,7 +715,7 @@ workflow RNASEQ {
             def sylph_databases = params.sylph_db ? params.sylph_db.split(',').collect{ path -> file(path.trim()) } : []
             ch_sylph_databases = channel.value(sylph_databases)
             SYLPH_PROFILE (
-                ch_unaligned_sequences,
+                ch_contaminant_sequences,
                 ch_sylph_databases
             )
             ch_sylph_profile = SYLPH_PROFILE.out.profile_out.filter{ tuple -> !tuple[1].isEmpty() }

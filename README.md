@@ -49,7 +49,7 @@
     3. [`dupRadar`](https://bioconductor.org/packages/release/bioc/html/dupRadar.html)
     4. [`Preseq`](http://smithlabresearch.org/software/preseq/)
     5. [`DESeq2`](https://bioconductor.org/packages/release/bioc/html/DESeq2.html)
-    6. Contamination detection on unaligned sequences; _optional_
+    6. Contamination detection on selected screening reads (unaligned by default); _optional_
        1. [`Kraken2`](https://ccb.jhu.edu/software/kraken2/) -> [`Bracken`](https://ccb.jhu.edu/software/bracken/)
        2. [`Sylph`](https://sylph-docs.github.io/)
 15. Pseudoalignment and quantification ([`Salmon`](https://combine-lab.github.io/salmon/) or ['Kallisto'](https://pachterlab.github.io/kallisto/); _optional_)

@@ -521,6 +521,8 @@ workflow RNASEQ {
                 ch_gtf,
             )
             ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.results.collect{ _meta, dir -> dir })
+            // In 'add' mode, upstream RSeQC infer_experiment overwrites this below
+            // (preferred for strandedness validation as it's the established tool)
             ch_inferexperiment_txt = RUSTQC.out.inferexperiment_txt
         }
 

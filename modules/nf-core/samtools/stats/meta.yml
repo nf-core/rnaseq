@@ -41,7 +41,12 @@ input:
     - fasta:
         type: file
         description: Reference file the CRAM was created with (optional)
-        pattern: "*.{fasta,fa}"
+        pattern: "*.{fasta,fa,fna}"
+        ontologies: []
+    - fai:
+        type: file
+        description: FASTA ref index file
+        pattern: "*.{fasta,fa,fna}.fai"
         ontologies: []
 output:
   stats:
@@ -86,3 +91,4 @@ maintainers:
   - "@drpatelh"
   - "@FriederikeHanssen"
   - "@ramprasadn"
+  - "@matthdsm"

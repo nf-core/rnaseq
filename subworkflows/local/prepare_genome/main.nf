@@ -205,7 +205,7 @@ workflow PREPARE_GENOME {
     ch_fai         = channel.empty()
     ch_chrom_sizes = channel.empty()
     if (fasta_provided) {
-        SAMTOOLS_FAIDX(ch_fasta.map { item -> [ [:], item ] }, [ [:], [] ], true)
+        SAMTOOLS_FAIDX(ch_fasta.map { item -> [ [:], item, [] ] }, true)
         ch_fai         = SAMTOOLS_FAIDX.out.fai.map { tuple -> tuple[1] }
         ch_chrom_sizes = SAMTOOLS_FAIDX.out.sizes.map { tuple -> tuple[1] }
     }

@@ -29,7 +29,7 @@ workflow ALIGN_BOWTIE2 {
     take:
     reads         // channel: [ val(meta), [ reads ] ]
     index         // channel: /path/to/bowtie2/index/
-    fasta         // channel: /path/to/fasta
+    fasta_fai     // channel: [ val(meta), path(fasta), path(fai) ]
 
     main:
 
@@ -53,14 +53,13 @@ workflow ALIGN_BOWTIE2 {
     //
     // Sort, index BAM file and run samtools stats, flagstat and idxstats
     //
-    BAM_SORT_STATS_SAMTOOLS(ch_orig_bam, fasta)
+    BAM_SORT_STATS_SAMTOOLS(ch_orig_bam, fasta_fai)
 
     emit:
     orig_bam       = ch_orig_bam                          // channel: [ val(meta), bam ]
     log_final      = ch_log                               // channel: [ val(meta), log ]
     bam            = BAM_SORT_STATS_SAMTOOLS.out.bam      // channel: [ val(meta), [ bam ] ]
-    bai            = BAM_SORT_STATS_SAMTOOLS.out.bai      // channel: [ val(meta), [ bai ] ]
-    csi            = BAM_SORT_STATS_SAMTOOLS.out.csi      // channel: [ val(meta), [ csi ] ]
+    index          = BAM_SORT_STATS_SAMTOOLS.out.index    // channel: [ val(meta), [ index ] ]
     stats          = BAM_SORT_STATS_SAMTOOLS.out.stats    // channel: [ val(meta), [ stats ] ]
     flagstat       = BAM_SORT_STATS_SAMTOOLS.out.flagstat // channel: [ val(meta), [ flagstat ] ]
     idxstats       = BAM_SORT_STATS_SAMTOOLS.out.idxstats // channel: [ val(meta), [ idxstats ] ]

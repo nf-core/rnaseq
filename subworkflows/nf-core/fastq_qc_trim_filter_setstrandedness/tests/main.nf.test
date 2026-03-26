@@ -108,7 +108,7 @@ nextflow_workflow {
                 .join('\n') // Join the processed lines back into a single text block
 
             // Parse sortmerna log for rRNA detection stats
-            def sortmernaLog = path(workflow.out.multiqc_files.find { it.toString().endsWith('.sortmerna.log') })
+            def sortmernaLog = path(workflow.out.multiqc_files.find { _meta, file -> file.toString().endsWith('.sortmerna.log') }[1])
                 .getText()
             def sortmernaRrnaMatch = (sortmernaLog =~ /Total reads passing E-value threshold = (\d+)/)
             def sortmernaRrnaCount = sortmernaRrnaMatch ? sortmernaRrnaMatch[0][1].toInteger() : -1
@@ -200,7 +200,7 @@ nextflow_workflow {
 
             // Parse ribodetector log for rRNA detection stats
             // Note: ribodetector log contains ANSI color codes that must be stripped before regex matching
-            def ribodetectorLog = path(workflow.out.multiqc_files.find { it.toString().endsWith('.ribodetector.log') })
+            def ribodetectorLog = path(workflow.out.multiqc_files.find { _meta, file -> file.toString().endsWith('.ribodetector.log') }[1])
                 .getText()
                 .replaceAll(/\u001b\[[0-9;]*m/, '')  // Strip ANSI escape codes
             def ribodetectorRrnaMatch = (ribodetectorLog =~ /Detected (\d+) rRNA sequences/)
@@ -292,7 +292,7 @@ nextflow_workflow {
                 .join('\n') // Join the processed lines back into a single text block
 
             // Parse sortmerna log for rRNA detection stats
-            def sortmernaLog = path(workflow.out.multiqc_files.find { it.toString().endsWith('.sortmerna.log') })
+            def sortmernaLog = path(workflow.out.multiqc_files.find { _meta, file -> file.toString().endsWith('.sortmerna.log') }[1])
                 .getText()
             def sortmernaRrnaMatch = (sortmernaLog =~ /Total reads passing E-value threshold = (\d+)/)
             def sortmernaRrnaCount = sortmernaRrnaMatch ? sortmernaRrnaMatch[0][1].toInteger() : -1
@@ -383,7 +383,7 @@ nextflow_workflow {
                 .join('\n') // Join the processed lines back into a single text block
 
             // Parse bowtie2 log for alignment stats - count mates that aligned to rRNA
-            def bowtie2Log = path(workflow.out.multiqc_files.find { it.toString().endsWith('.bowtie2.log') })
+            def bowtie2Log = path(workflow.out.multiqc_files.find { _meta, file -> file.toString().endsWith('.bowtie2.log') }[1])
                 .getText()
             def exactMatch = (bowtie2Log =~ /(\d+) \(\d+\.\d+%\) aligned exactly 1 time/)
             def multiMatch = (bowtie2Log =~ /(\d+) \(\d+\.\d+%\) aligned >1 times/)
@@ -566,7 +566,7 @@ nextflow_workflow {
                 .join('\n')
 
             // Parse bowtie2 log for alignment stats
-            def bowtie2Log = path(workflow.out.multiqc_files.find { it.toString().endsWith('.bowtie2.log') })
+            def bowtie2Log = path(workflow.out.multiqc_files.find { _meta, file -> file.toString().endsWith('.bowtie2.log') }[1])
                 .getText()
             def exactMatch = (bowtie2Log =~ /(\d+) \(\d+\.\d+%\) aligned exactly 1 time/)
             def multiMatch = (bowtie2Log =~ /(\d+) \(\d+\.\d+%\) aligned >1 times/)

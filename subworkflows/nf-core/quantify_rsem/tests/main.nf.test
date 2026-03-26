@@ -49,6 +49,7 @@ nextflow_workflow {
                 input[4] = 'gene_id'
                 input[5] = 'gene_name'
                 input[6] = false
+                input[7] = false
                 """
             }
         }
@@ -70,8 +71,7 @@ nextflow_workflow {
                     workflow.out.merged_counts_gene,
                     workflow.out.merged_tpm_gene,
                     workflow.out.merged_counts_transcript,
-                    workflow.out.merged_tpm_transcript,
-                    workflow.out.versions
+                    workflow.out.merged_tpm_transcript
                 ).match() }
             )
         }
@@ -112,6 +112,7 @@ nextflow_workflow {
                 input[4] = 'gene_id'
                 input[5] = 'gene_name'
                 input[6] = false
+                input[7] = false
                 """
             }
         }
@@ -133,8 +134,7 @@ nextflow_workflow {
                     workflow.out.merged_counts_gene,
                     workflow.out.merged_tpm_gene,
                     workflow.out.merged_counts_transcript,
-                    workflow.out.merged_tpm_transcript,
-                    workflow.out.versions
+                    workflow.out.merged_tpm_transcript
                 ).match() }
             )
         }
@@ -173,6 +173,7 @@ nextflow_workflow {
                 input[4] = 'gene_id'
                 input[5] = 'gene_name'
                 input[6] = false
+                input[7] = false
                 """
             }
         }
@@ -221,6 +222,7 @@ nextflow_workflow {
                 input[4] = 'gene_id'
                 input[5] = 'gene_name'
                 input[6] = false
+                input[7] = false
                 """
             }
         }

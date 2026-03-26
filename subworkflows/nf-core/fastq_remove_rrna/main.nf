@@ -187,7 +187,7 @@ workflow FASTQ_REMOVE_RRNA {
         // This removes any pair where at least one mate aligned to rRNA
         SAMTOOLS_VIEW_BOWTIE2(
             BOWTIE2_ALIGN_PE.out.bam.map { meta, bam_file -> [meta, bam_file, []] },
-            [[], []],  // No reference fasta
+            [[], [], []],  // No reference fasta
             [],        // No qname file
             []         // No index format
         )

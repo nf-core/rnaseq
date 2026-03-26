@@ -340,6 +340,59 @@ Since v3.0 of the pipeline, featureCounts is no longer used to perform gene/tran
 
 For similar reasons, quantification will not be performed if using `--aligner hisat2` due to the lack of an appropriate option to calculate accurate expression estimates from HISAT2 derived genomic alignments - this may change in future releases (see [#822](https://github.com/nf-core/rnaseq/issues/822)). HISAT2 has been made available for those who have a preference for the alignment, QC and other types of downstream analysis compatible with it's output.
 
+### Per-sample quantification (`--skip_quantification_merge`)
+
+By default, the pipeline merges quantification results across all samples, producing cross-sample count matrices, SummarizedExperiment objects, and a single merged MultiQC report. This works well for typical experiments, but can become a bottleneck for very large cohorts (hundreds to thousands of samples) where:
+
+- **Memory**: aggregation steps (tximport `.collect()`, SummarizedExperiment, RSEM merge counts, merged MultiQC) load all samples into a single process, which can exceed available memory
+- **Organization**: run-centric output directories (`fastqc/`, `salmon/`, `multiqc/`) mix files from all samples, making it harder to locate, deliver, or archive results per sample
+
+The `--skip_quantification_merge` parameter switches the pipeline to sample-centric operation. Each sample is processed independently and all its outputs are organized under `<outdir>/<sample_id>/`:
+
+```
+results/
+  SAMPLE_A/
+    fastqc/
+    trimgalore/
+    salmon/              # per-sample quant + tximport TSVs
+    multiqc/star_salmon/ # per-sample MultiQC report
+  SAMPLE_B/
+    ...
+  genome/                # shared reference files
+  pipeline_info/         # run metadata
+```
+
+When enabled:
+
+- **tximport** runs per-sample, producing individual gene-level and transcript-level count/TPM TSVs for each sample
+- **SummarizedExperiment** and **RSEM merge counts** are skipped entirely
+- **DESeq2 QC** is skipped (requires multiple samples)
+- **MultiQC** generates one report per sample rather than one merged report
+
+This mode works with any aligner or pseudo-aligner. For the fastest possible per-sample quantification, combine it with pseudo-alignment only:
+
+```bash
+nextflow run nf-core/rnaseq \
+    --input samplesheet.csv \
+    --pseudo_aligner salmon \
+    --skip_alignment \
+    --skip_quantification_merge \
+    --outdir results
+```
+
+A convenience profile `rapid_quant` bundles these options together with additional skips for alignment-dependent QC steps:
+
+```bash
+nextflow run nf-core/rnaseq \
+    --input samplesheet.csv \
+    -profile rapid_quant,docker \
+    --outdir results
+```
+
+:::tip
+Per-sample tximport TSVs can be combined downstream using standard R or Python tooling if cross-sample matrices are needed later. This gives you flexibility to run the pipeline incrementally as new samples arrive without reprocessing the entire cohort.
+:::
+
 ### Unique Molecular Identifiers (UMI)
 
 The pipeline supports Unique Molecular Identifiers to increase the accuracy of the quantification. UMIs are short sequences used to uniquely tag each molecule in a sample library and facilitate the accurate identification of read duplicates. They must be added during library preparation and prior to sequencing, therefore require appropriate arrangements with your sequencing provider.
@@ -442,7 +495,7 @@ To take advantage of all the quality control modules implemented in the pipeline
 :::note
 **GTF vs GFF**
 
-GFF (General Feature Format) is a tab-separated text file format for representing genomic annotations, while GTF (General Transfer Format) is a specific implementation of this format corresponding to GFF version 2. The pipeline can accept both GFF and GTF but any GFF files will be converted to GTF so if a GTF is available for your annotation of choice it is better to provide that directly.
+GFF (General Feature Format) is a tab-separated text file format for representing genomic annotations, while GTF (General Transfer Format) is a specific implementation of this format corresponding to GFF version 2. The pipeline accepts both formats, but they must be provided via the correct parameter: use `--gtf` for GTF files (`.gtf`, `.gtf.gz`) and `--gff` for GFF3 files (`.gff`, `.gff3`, `.gff.gz`, `.gff3.gz`). GFF files provided via `--gff` will be automatically converted to GTF internally, so if a GTF is available for your annotation of choice it is better to provide that directly via `--gtf`.
 
 More information and links to further resources are [available from Ensembl](https://www.ensembl.org/info/website/upload/gff.html).
 :::
@@ -500,7 +553,7 @@ nextflow run nf-core/rnaseq \
 
 **Key points:**
 
-- **Use GFF3 format**: Prokaryotic annotations are typically distributed as GFF3 (not GTF). The pipeline accepts both via `--gff` or `--gtf`.
+- **Use GFF3 format**: Prokaryotic annotations are typically distributed as GFF3 (not GTF). Provide GFF3 files via `--gff` and GTF files via `--gtf`.
 - **CDS features required**: The annotation must contain CDS (coding sequence) features. The pipeline extracts transcripts from these.
 - **Matching contig names**: Chromosome/contig names in your FASTA must exactly match those in your GFF/GTF (e.g., if your FASTA has `>NC_003197.2`, your GFF must use `NC_003197.2` in column 1).
 - **No transcript FASTA needed**: The pipeline generates the transcript FASTA automatically using GFFREAD.

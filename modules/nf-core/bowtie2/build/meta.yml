@@ -45,7 +45,7 @@ output:
       - bowtie2:
           type: string
           description: The name of the tool
-      - 'bowtie2 --version 2>&1 | head -1 | sed "s/^.*bowtie2-align-s version //; s/ .*//"':
+      - "bowtie2 --version 2>&1 | sed -n 's/.*bowtie2-align-s version //p'":
           type: eval
           description: The expression to obtain the version of the tool
 
@@ -57,7 +57,7 @@ topics:
       - bowtie2:
           type: string
           description: The name of the tool
-      - 'bowtie2 --version 2>&1 | head -1 | sed "s/^.*bowtie2-align-s version //; s/ .*//"':
+      - "bowtie2 --version 2>&1 | sed -n 's/.*bowtie2-align-s version //p'":
           type: eval
           description: The expression to obtain the version of the tool
 

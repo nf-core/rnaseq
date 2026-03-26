@@ -25,15 +25,16 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.stats:md5,1101fe711c4a389fdb5c4a1532107d1f"
+                    "test.stats:md5,9985fd42809639f8977c65ee8e22ed72"
                 ]
             ]
         ],
+        "timestamp": "2026-02-03T11:33:01.647190952",
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-03T11:33:01.647190952"
+        "timestamp": "2026-03-12T15:00:37.536202"
     },
     "test_bam_sort_stats_samtools_paired_end": {
         "content": [
@@ -61,15 +62,16 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.stats:md5,f26c554c244ee86c89d62ebed509fd95"
+                    "test.stats:md5,52665d6ba3ce83b5a1c6aa5b87b32164"
                 ]
             ]
         ],
+        "timestamp": "2026-02-03T11:33:08.706742267",
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-03T11:33:08.706742267"
+        "timestamp": "2026-03-12T15:00:47.194616"
     },
     "test_bam_sort_stats_samtools_single_end - stub": {
         "content": [
@@ -93,9 +95,6 @@
                     ]
                 ],
                 "2": [
-                    
-                ],
-                "3": [
                     [
                         {
                             "id": "test",
@@ -104,7 +103,7 @@
                         "test.stats:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "4": [
+                "3": [
                     [
                         {
                             "id": "test",
@@ -113,22 +112,13 @@
                         "test.flagstat:md5,67394650dbae96d1a4fcc70484822159"
                     ]
                 ],
-                "5": [
+                "4": [
                     [
                         {
                             "id": "test",
                             "single_end": false
                         },
                         "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "bai": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "bam": [
@@ -139,9 +129,6 @@
                         },
                         "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
-                ],
-                "csi": [
-                    
                 ],
                 "flagstat": [
                     [
@@ -161,6 +148,15 @@
                         "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
+                "index": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
                 "stats": [
                     [
                         {
@@ -172,11 +168,12 @@
                 ]
             }
         ],
+        "timestamp": "2026-03-12T15:01:52.588841239",
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-03T11:11:02.1412136"
+        "timestamp": "2026-03-12T15:01:02.797853"
     },
     "test_bam_sort_stats_samtools_paired_end - stub": {
         "content": [
@@ -200,9 +197,6 @@
                     ]
                 ],
                 "2": [
-                    
-                ],
-                "3": [
                     [
                         {
                             "id": "test",
@@ -211,7 +205,7 @@
                         "test.stats:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "4": [
+                "3": [
                     [
                         {
                             "id": "test",
@@ -220,22 +214,13 @@
                         "test.flagstat:md5,67394650dbae96d1a4fcc70484822159"
                     ]
                 ],
-                "5": [
+                "4": [
                     [
                         {
                             "id": "test",
                             "single_end": false
                         },
                         "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "bai": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "bam": [
@@ -246,9 +231,6 @@
                         },
                         "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
-                ],
-                "csi": [
-                    
                 ],
                 "flagstat": [
                     [
@@ -268,6 +250,15 @@
                         "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
+                "index": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
                 "stats": [
                     [
                         {
@@ -279,10 +270,11 @@
                 ]
             }
         ],
+        "timestamp": "2026-03-12T15:02:02.812288127",
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-03T11:11:09.165267895"
+        "timestamp": "2026-03-12T15:01:13.722701"
     }
 }

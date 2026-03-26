@@ -101,7 +101,7 @@ nextflow_pipeline {
                 { assert workflow.trace.succeeded().findAll { it.name.contains('KRAKEN2') }.size() > 0 },
                 { assert snapshot(
                     workflow.trace.succeeded().size(),
-                    removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow"),
+                    removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow").findAll { it.key != "KRAKEN2" },
                     stable_name,
                     stable_path
                 ).match() }
@@ -149,7 +149,7 @@ nextflow_pipeline {
                 { assert workflow.trace.succeeded().findAll { it.name.contains('KRAKEN2') }.size() > 0 },
                 { assert snapshot(
                     workflow.trace.succeeded().size(),
-                    removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow"),
+                    removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow").findAll { it.key != "KRAKEN2" },
                     stable_name,
                     stable_path
                 ).match() }

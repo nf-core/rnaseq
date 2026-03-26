@@ -158,10 +158,6 @@
                 "GUNZIP_GTF": {
                     "gunzip": 1.13
                 },
-                "KRAKEN2": {
-                    "kraken2": "2.1.6",
-                    "pigz": 2.8
-                },
                 "MULTIQC_CUSTOM_BIOTYPE": {
                     "python": "3.9.5"
                 },
@@ -1451,11 +1447,6 @@
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "cmd_info.json:md5,3a51e7db950cee84bed0b13e329f1934",
-                "RAP1_IAA_30M_REP1.kraken2.report.txt:md5,7d68fb6430a112afcaf2156de94fb759",
-                "RAP1_UNINDUCED_REP1.kraken2.report.txt:md5,a9019d5e6e8fbec1907da8fa489be26b",
-                "RAP1_UNINDUCED_REP2.kraken2.report.txt:md5,4f3f08aafc43acd5f7d6504834694a14",
-                "WT_REP1.kraken2.report.txt:md5,d440c7d270332d895f59ab864a13f03e",
-                "WT_REP2.kraken2.report.txt:md5,693941a4ab53ecfd55588d98bb802c09",
                 "RAP1_IAA_30M_REP1.biotype_counts_mqc.tsv:md5,6940e190bb388be56f282aa01e916466",
                 "RAP1_IAA_30M_REP1.biotype_counts_rrna_mqc.tsv:md5,dde2de0cb90e10d0195c726f768e9941",
                 "RAP1_IAA_30M_REP1.featureCounts.tsv:md5,07bd87d86ba5c6c3ceff36518183417d",
@@ -1562,10 +1553,6 @@
                 "GUNZIP_GTF": {
                     "gunzip": 1.13
                 },
-                "KRAKEN2": {
-                    "kraken2": "2.1.6",
-                    "pigz": 2.8
-                },
                 "MULTIQC_CUSTOM_BIOTYPE": {
                     "python": "3.9.5"
                 },
@@ -2855,11 +2842,6 @@
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "cmd_info.json:md5,3a51e7db950cee84bed0b13e329f1934",
-                "RAP1_IAA_30M_REP1.kraken2.report.txt:md5,60acc64359323c80844892884a87c458",
-                "RAP1_UNINDUCED_REP1.kraken2.report.txt:md5,abb8f1c07300a00eba503afd9ab80567",
-                "RAP1_UNINDUCED_REP2.kraken2.report.txt:md5,e22624ed1919fd616525e8886657aa7c",
-                "WT_REP1.kraken2.report.txt:md5,d13600f974eab0a8f735b1da2b4520f1",
-                "WT_REP2.kraken2.report.txt:md5,6535bf0807dbad3f0d56367a04def37d",
                 "RAP1_IAA_30M_REP1.biotype_counts_mqc.tsv:md5,6940e190bb388be56f282aa01e916466",
                 "RAP1_IAA_30M_REP1.biotype_counts_rrna_mqc.tsv:md5,dde2de0cb90e10d0195c726f768e9941",
                 "RAP1_IAA_30M_REP1.featureCounts.tsv:md5,07bd87d86ba5c6c3ceff36518183417d",

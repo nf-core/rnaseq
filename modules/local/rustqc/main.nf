@@ -2,6 +2,8 @@ process RUSTQC {
     tag "$meta.id"
     label 'process_high'
 
+    conda "${moduleDir}/environment.yml"
+    // TODO: pin to a release tag before merge
     container "ghcr.io/seqeralabs/rustqc:dev"
 
     input:
@@ -25,7 +27,6 @@ process RUSTQC {
         strandedness = 2
     }
     def paired       = meta.single_end ? '' : '--paired'
-    def biotype_attr = params.gencode ? "--biotype-attribute gene_type" : (params.featurecounts_group_type ? "--biotype-attribute ${params.featurecounts_group_type}" : '')
     """
     rustqc rna \\
         ${bam} \\
@@ -34,7 +35,6 @@ process RUSTQC {
         ${paired} \\
         --threads ${task.cpus} \\
         --outdir rustqc \\
-        ${biotype_attr} \\
         ${args}
 
     cat <<-END_VERSIONS > versions.yml

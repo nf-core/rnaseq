@@ -95,10 +95,33 @@ nextflow_pipeline {
         then {
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // Parse total reads processed per sample from Kraken2 reports.
+            // Integer counts are deterministic even when file content (floating-point
+            // percentages, multi-threaded output ordering) is not.
+            // With trimmed input Kraken2 receives ALL reads, so counts are ~10-50x
+            // higher than in the unmapped test, directly proving the correct code path.
+            def krakenReportDir = file("$outputDir/star_salmon/contaminants/kraken2/kraken_reports")
+            def krakenReadCounts = krakenReportDir.listFiles()
+                .sort { it.name }
+                .collectEntries { report ->
+                    def total = 0L
+                    report.readLines().each { line ->
+                        def parts = line.trim().split('\t')
+                        if (parts.size() >= 4 && parts[3] in ['U', 'R']) { total += parts[1].toLong() }
+                    }
+                    [report.name, total]
+                }
             assertAll(
                 { assert workflow.success },
                 { assert workflow.trace.succeeded().findAll { it.name.contains('BBMAP_BBSPLIT') }.size() > 0 },
                 { assert workflow.trace.succeeded().findAll { it.name.contains('KRAKEN2') }.size() > 0 },
+                { assert krakenReadCounts == [
+                    "RAP1_IAA_30M_REP1.kraken2.report.txt": 49593L,
+                    "RAP1_UNINDUCED_REP1.kraken2.report.txt": 48567L,
+                    "RAP1_UNINDUCED_REP2.kraken2.report.txt": 97654L,
+                    "WT_REP1.kraken2.report.txt": 99225L,
+                    "WT_REP2.kraken2.report.txt": 49550L
+                ] },
                 { assert snapshot(
                     workflow.trace.succeeded().size(),
                     removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow").findAll { it.key != "KRAKEN2" },
@@ -112,10 +135,9 @@ nextflow_pipeline {
     test("Params: contaminant_screening_input=unmapped (default) screens post-alignment reads") {
 
         // Contrast test: with the default 'unmapped' input, Kraken2 screens only
-        // post-alignment unmapped reads. With the SARSCoV2 test data most reads
-        // align, so Kraken2 receives far fewer reads than in the 'trimmed' test.
-        // The snapshots for the two tests capture different Kraken2 report MD5s,
-        // demonstrating that the two code paths produce different screening results.
+        // post-alignment unmapped reads. With the yeast test data most reads align
+        // to the reference, so Kraken2 receives far fewer reads (~850–9k) than in
+        // the trimmed test (~49k–100k), proving the two code paths use different inputs.
 
         when {
             params {
@@ -143,10 +165,32 @@ nextflow_pipeline {
         then {
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // Parse total reads processed per sample from Kraken2 reports.
+            // With unmapped input, Kraken2 only receives the small fraction of reads
+            // that did not align to the reference (~850–9k vs ~49k–100k in the
+            // trimmed test), directly proving the post-alignment code path is taken.
+            def krakenReportDir = file("$outputDir/star_salmon/contaminants/kraken2/kraken_reports")
+            def krakenReadCounts = krakenReportDir.listFiles()
+                .sort { it.name }
+                .collectEntries { report ->
+                    def total = 0L
+                    report.readLines().each { line ->
+                        def parts = line.trim().split('\t')
+                        if (parts.size() >= 4 && parts[3] in ['U', 'R']) { total += parts[1].toLong() }
+                    }
+                    [report.name, total]
+                }
             assertAll(
                 { assert workflow.success },
                 { assert workflow.trace.succeeded().findAll { it.name.contains('STAR_ALIGN') }.size() > 0 },
                 { assert workflow.trace.succeeded().findAll { it.name.contains('KRAKEN2') }.size() > 0 },
+                { assert krakenReadCounts == [
+                    "RAP1_IAA_30M_REP1.kraken2.report.txt": 3826L,
+                    "RAP1_UNINDUCED_REP1.kraken2.report.txt": 854L,
+                    "RAP1_UNINDUCED_REP2.kraken2.report.txt": 1811L,
+                    "WT_REP1.kraken2.report.txt": 8928L,
+                    "WT_REP2.kraken2.report.txt": 4197L
+                ] },
                 { assert snapshot(
                     workflow.trace.succeeded().size(),
                     removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow").findAll { it.key != "KRAKEN2" },

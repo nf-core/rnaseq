@@ -36,66 +36,9 @@ process RUSTQC {
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    mkdir -p rustqc/dupradar
-    mkdir -p rustqc/featurecounts
-    mkdir -p rustqc/rseqc/bam_stat
-    mkdir -p rustqc/rseqc/infer_experiment
-    mkdir -p rustqc/rseqc/read_duplication
-    mkdir -p rustqc/rseqc/read_distribution
-    mkdir -p rustqc/rseqc/junction_annotation
-    mkdir -p rustqc/rseqc/junction_saturation
-    mkdir -p rustqc/rseqc/inner_distance
-    mkdir -p rustqc/rseqc/tin
-    mkdir -p rustqc/preseq
-    mkdir -p rustqc/samtools
-    mkdir -p rustqc/qualimap/raw_data_qualimapReport
-    mkdir -p rustqc/qualimap/images_qualimapReport
-
-    touch rustqc/dupradar/${prefix}_duprateExpDens.png
-    touch rustqc/dupradar/${prefix}_duprateExpBoxplot.png
-    touch rustqc/dupradar/${prefix}_expressionHist.png
-    touch rustqc/dupradar/${prefix}_dupMatrix.txt
-    touch rustqc/dupradar/${prefix}_intercept_slope.txt
-    touch rustqc/dupradar/${prefix}_dup_intercept_mqc.txt
-    touch rustqc/dupradar/${prefix}_duprateExpDensCurve_mqc.txt
-
-    touch rustqc/featurecounts/${prefix}.featureCounts.tsv
-    touch rustqc/featurecounts/${prefix}.featureCounts.tsv.summary
-    touch rustqc/featurecounts/${prefix}.biotype_counts.tsv
-    touch rustqc/featurecounts/${prefix}.biotype_counts_mqc.tsv
-    touch rustqc/featurecounts/${prefix}.biotype_counts_rrna_mqc.tsv
-
-    touch rustqc/rseqc/bam_stat/${prefix}.bam_stat.txt
+    mkdir -p rustqc/{dupradar,featurecounts,preseq,samtools} \
+            rustqc/rseqc/{bam_stat,infer_experiment,read_duplication,read_distribution,junction_annotation,junction_saturation,inner_distance,tin} \
+            rustqc/qualimap/{raw_data_qualimapReport,images_qualimapReport}
     touch rustqc/rseqc/infer_experiment/${prefix}.infer_experiment.txt
-    touch rustqc/rseqc/read_duplication/${prefix}.pos.DupRate.xls
-    touch rustqc/rseqc/read_duplication/${prefix}.seq.DupRate.xls
-    touch rustqc/rseqc/read_duplication/${prefix}.DupRate_plot.r
-    touch rustqc/rseqc/read_duplication/${prefix}.DupRate_plot.png
-    touch rustqc/rseqc/read_distribution/${prefix}.read_distribution.txt
-    touch rustqc/rseqc/junction_annotation/${prefix}.junction.xls
-    touch rustqc/rseqc/junction_annotation/${prefix}.junction.bed
-    touch rustqc/rseqc/junction_annotation/${prefix}.junction_plot.r
-    touch rustqc/rseqc/junction_annotation/${prefix}.junction_annotation.txt
-    touch rustqc/rseqc/junction_annotation/${prefix}.splice_events.png
-    touch rustqc/rseqc/junction_annotation/${prefix}.splice_junction.png
-    touch rustqc/rseqc/junction_saturation/${prefix}.junctionSaturation_plot.r
-    touch rustqc/rseqc/junction_saturation/${prefix}.junctionSaturation_plot.png
-    touch rustqc/rseqc/junction_saturation/${prefix}.junctionSaturation_summary.txt
-    touch rustqc/rseqc/inner_distance/${prefix}.inner_distance.txt
-    touch rustqc/rseqc/inner_distance/${prefix}.inner_distance_freq.txt
-    touch rustqc/rseqc/inner_distance/${prefix}.inner_distance_plot.r
-    touch rustqc/rseqc/inner_distance/${prefix}.inner_distance_plot.png
-    touch rustqc/rseqc/inner_distance/${prefix}.inner_distance_summary.txt
-    touch rustqc/rseqc/inner_distance/${prefix}.inner_distance_mean.txt
-    touch rustqc/rseqc/tin/${prefix}.tin.xls
-    touch rustqc/rseqc/tin/${prefix}.summary.txt
-
-    touch rustqc/preseq/${prefix}.lc_extrap.txt
-    touch rustqc/samtools/${prefix}.flagstat
-    touch rustqc/samtools/${prefix}.idxstats
-    touch rustqc/samtools/${prefix}.stats
-
-    touch rustqc/qualimap/rnaseq_qc_results.txt
-    touch "rustqc/qualimap/raw_data_qualimapReport/coverage_profile_along_genes_(total).txt"
     """
 }

@@ -1,0 +1,59 @@
+nextflow_pipeline {
+
+    name "Test pipeline with RustQC"
+    script "../main.nf"
+    tag "pipeline"
+    tag "rustqc"
+
+    test("Params: rustqc_mode replace - stub") {
+
+        options "-stub"
+
+        when {
+            params {
+                outdir      = "$outputDir"
+                rustqc_mode = 'replace'
+            }
+        }
+
+        then {
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.trace.succeeded().size(),
+                    removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow"),
+                    stable_name,
+                    stable_path
+                ).match() }
+            )
+        }
+    }
+
+    test("Params: rustqc_mode add - stub") {
+
+        options "-stub"
+
+        when {
+            params {
+                outdir      = "$outputDir"
+                rustqc_mode = 'add'
+            }
+        }
+
+        then {
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.trace.succeeded().size(),
+                    removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow"),
+                    stable_name,
+                    stable_path
+                ).match() }
+            )
+        }
+    }
+}

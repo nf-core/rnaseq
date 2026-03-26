@@ -332,6 +332,40 @@ Parabricks `rna_fq2bam` is based on STAR 2.7.2a. The following native STAR flags
 
 These differences are unlikely to materially affect downstream quantification results, but users should be aware of them for reproducibility purposes. All other STAR parameters (multi-mapping limits, intron sizes, mate gap, splice junction overhangs, etc.) have pbrun equivalents and are applied consistently.
 
+### RustQC: accelerated post-alignment QC
+
+[RustQC](https://github.com/seqeralabs/rustqc) is a high-performance tool that replaces multiple post-alignment QC steps with a single pass over the BAM file. It produces output files compatible with the same MultiQC modules, so the report content is equivalent.
+
+RustQC replaces the following tools: dupRadar, featureCounts (biotype QC), RSeQC (bam_stat, infer_experiment, read_distribution, read_duplication, junction_annotation, junction_saturation, inner_distance, TIN), Preseq, Qualimap, and SAMtools stats/flagstat/idxstats.
+
+There are two modes of operation:
+
+**Replace mode** (`--use_rustqc`): RustQC runs instead of the individual tools listed above, which are automatically skipped:
+
+```bash
+nextflow run nf-core/rnaseq \
+    --input samplesheet.csv \
+    --outdir results \
+    --fasta genome.fa \
+    --gtf annotation.gtf \
+    --use_rustqc \
+    -profile docker
+```
+
+**Additive mode** (`--add_rustqc`): RustQC runs alongside the standard tools. Both sets of results appear in the MultiQC report with separate section labels (e.g. "RSeQC (RustQC)" vs "RSeQC"), allowing direct comparison:
+
+```bash
+nextflow run nf-core/rnaseq \
+    --input samplesheet.csv \
+    --outdir results \
+    --fasta genome.fa \
+    --gtf annotation.gtf \
+    --add_rustqc \
+    -profile docker
+```
+
+RustQC outputs are published under `<ALIGNER>/rustqc/` with subdirectories matching the tools they replace (e.g. `rustqc/rseqc/`, `rustqc/qualimap/`). See the [output documentation](#rustqc) for the full list of files.
+
 ## Quantification options
 
 The current options align with STAR and quantify using either Salmon (`--aligner star_salmon`) / RSEM (`--aligner star_rsem`). You also have the option to pseudoalign and quantify your data with Salmon or Kallisto by providing the `--pseudo_aligner salmon` or `--pseudo_aligner kallisto` parameter, respectively.

@@ -13,7 +13,7 @@ process RUSTQC {
     output:
     tuple val(meta), path("rustqc")                                                , emit: results
     tuple val(meta), path("rustqc/rseqc/infer_experiment/*.infer_experiment.txt")  , emit: inferexperiment_txt, optional: true
-    path "versions.yml"                                                            , emit: versions
+    tuple val("${task.process}"), val('rustqc'), eval("rustqc --version | sed 's/rustqc //'"), topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -31,11 +31,6 @@ process RUSTQC {
         --threads ${task.cpus} \\
         --outdir rustqc \\
         ${args}
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        rustqc: \$(rustqc --version | sed 's/rustqc //')
-    END_VERSIONS
     """
 
     stub:
@@ -102,10 +97,5 @@ process RUSTQC {
 
     touch rustqc/qualimap/rnaseq_qc_results.txt
     touch "rustqc/qualimap/raw_data_qualimapReport/coverage_profile_along_genes_(total).txt"
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        rustqc: \$(rustqc --version | sed 's/rustqc //')
-    END_VERSIONS
     """
 }

@@ -519,7 +519,6 @@ workflow RNASEQ {
             )
             ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.results.collect{ _meta, dir -> dir })
             ch_inferexperiment_txt = RUSTQC.out.inferexperiment_txt
-            ch_versions = ch_versions.mix(RUSTQC.out.versions)
         }
 
         //

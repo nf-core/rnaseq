@@ -538,7 +538,7 @@ The [bigWig](https://genome.ucsc.edu/goldenpath/help/bigWig.html) format is an i
 <details markdown="1">
 <summary>Output files</summary>
 
-- `<ALIGNER>/rustqc/dupradar/`
+- `<ALIGNER>/rustqc/<SAMPLE>/dupradar/`
   - `*_duprateExpDens.{png,svg}`: Duplication rate density scatter plots.
   - `*_duprateExpBoxplot.{png,svg}`: Box plots showing duplication rate relative to expression.
   - `*_expressionHist.{png,svg}`: Histogram of reads per kilobase per gene.
@@ -546,43 +546,43 @@ The [bigWig](https://genome.ucsc.edu/goldenpath/help/bigWig.html) format is an i
   - `*_intercept_slope.txt`: Intercept and slope values.
   - `*_dup_intercept_mqc.txt`: MultiQC custom content for dupRadar intercept.
   - `*_duprateExpDensCurve_mqc.txt`: MultiQC custom content for dupRadar density curve.
-- `<ALIGNER>/rustqc/featurecounts/`
+- `<ALIGNER>/rustqc/<SAMPLE>/featurecounts/`
   - `*.featureCounts.tsv`: Biotype-level quantification results.
   - `*.featureCounts.tsv.summary`: Summary statistics.
   - `*.biotype_counts.tsv`: Biotype count data.
   - `*.biotype_counts_mqc.tsv`: MultiQC custom content for biotype counts.
   - `*.biotype_counts_rrna_mqc.tsv`: MultiQC custom content for rRNA biotype proportion.
-- `<ALIGNER>/rustqc/rseqc/bam_stat/`
+- `<ALIGNER>/rustqc/<SAMPLE>/rseqc/bam_stat/`
   - `*.bam_stat.txt`: BAM mapping statistics.
-- `<ALIGNER>/rustqc/rseqc/infer_experiment/`
+- `<ALIGNER>/rustqc/<SAMPLE>/rseqc/infer_experiment/`
   - `*.infer_experiment.txt`: Strandedness inference results.
-- `<ALIGNER>/rustqc/rseqc/read_distribution/`
+- `<ALIGNER>/rustqc/<SAMPLE>/rseqc/read_distribution/`
   - `*.read_distribution.txt`: Genomic feature read distribution.
-- `<ALIGNER>/rustqc/rseqc/read_duplication/`
+- `<ALIGNER>/rustqc/<SAMPLE>/rseqc/read_duplication/`
   - `*.pos.DupRate.xls`, `*.seq.DupRate.xls`: Read duplication rates.
   - `*.DupRate_plot.{png,svg,r}`: Duplication rate plots.
-- `<ALIGNER>/rustqc/rseqc/junction_annotation/`
+- `<ALIGNER>/rustqc/<SAMPLE>/rseqc/junction_annotation/`
   - `*.junction.xls`, `*.junction.bed`, `*.junction.Interact.bed`: Junction data.
   - `*.junction_annotation.txt`: Junction annotation log.
   - `*.junction_plot.r`: R script for junction plots.
   - `*.splice_events.{png,svg}`, `*.splice_junction.{png,svg}`: Splice junction plots.
-- `<ALIGNER>/rustqc/rseqc/junction_saturation/`
+- `<ALIGNER>/rustqc/<SAMPLE>/rseqc/junction_saturation/`
   - `*.junctionSaturation_plot.{png,svg,r}`: Junction saturation plots.
   - `*.junctionSaturation_summary.txt`: Summary statistics.
-- `<ALIGNER>/rustqc/rseqc/inner_distance/`
+- `<ALIGNER>/rustqc/<SAMPLE>/rseqc/inner_distance/`
   - `*.inner_distance.txt`, `*.inner_distance_freq.txt`, `*.inner_distance_mean.txt`: Inner distance data.
   - `*.inner_distance_plot.{png,svg,r}`: Inner distance plots.
   - `*.inner_distance_summary.txt`: Summary statistics.
-- `<ALIGNER>/rustqc/rseqc/tin/`
+- `<ALIGNER>/rustqc/<SAMPLE>/rseqc/tin/`
   - `*.tin.xls`: TIN values per transcript.
   - `*.summary.txt`: TIN summary statistics.
-- `<ALIGNER>/rustqc/preseq/`
+- `<ALIGNER>/rustqc/<SAMPLE>/preseq/`
   - `*.lc_extrap.txt`: Library complexity extrapolation.
-- `<ALIGNER>/rustqc/samtools/`
+- `<ALIGNER>/rustqc/<SAMPLE>/samtools/`
   - `*.flagstat`: SAMtools flagstat output.
   - `*.idxstats`: SAMtools idxstats output.
   - `*.stats`: SAMtools stats output.
-- `<ALIGNER>/rustqc/qualimap/`
+- `<ALIGNER>/rustqc/<SAMPLE>/qualimap/`
   - `qualimapReport.html`: Standalone Qualimap HTML report.
   - `rnaseq_qc_results.txt`: Textual QC results.
   - `images_qualimapReport/`: Coverage profile plots (Total, High, Low) in PNG and SVG, junction analysis, genomic origin, and transcript coverage histogram.

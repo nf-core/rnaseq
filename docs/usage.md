@@ -364,7 +364,7 @@ nextflow run nf-core/rnaseq \
     -profile docker
 ```
 
-RustQC outputs are published under `<ALIGNER>/rustqc/` with subdirectories matching the tools they replace (e.g. `rustqc/rseqc/`, `rustqc/qualimap/`). See the [output documentation](#rustqc) for the full list of files.
+RustQC outputs are published under `<ALIGNER>/rustqc/<SAMPLE>/` with subdirectories matching the tools they replace (e.g. `rustqc/<SAMPLE>/rseqc/`, `rustqc/<SAMPLE>/qualimap/`). See the [output documentation](#rustqc) for the full list of files.
 
 ## Quantification options
 

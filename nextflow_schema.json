@@ -769,16 +769,11 @@
                     "fa_icon": "fas fa-fast-forward",
                     "default": true
                 },
-                "use_rustqc": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "Use RustQC instead of dupRadar, featureCounts biotype QC, RSeQC (bam_stat, infer_experiment, read_duplication, read_distribution, junction_annotation, junction_saturation, inner_distance, TIN), Preseq, Qualimap, and samtools stats/flagstat/idxstats. RustQC replaces all of these tools with equivalent outputs in a single, faster pass. When enabled, the individual tools it replaces are automatically skipped.",
-                    "fa_icon": "fas fa-rocket"
-                },
-                "add_rustqc": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "Run RustQC in addition to the standard upstream QC tools. Both sets of results will appear in the MultiQC report, with RustQC results labelled accordingly.",
+                "rustqc_mode": {
+                    "type": "string",
+                    "default": "off",
+                    "enum": ["off", "replace", "add"],
+                    "description": "Control RustQC usage. 'replace': use RustQC instead of dupRadar, featureCounts biotype QC, RSeQC, Preseq, Qualimap, and samtools stats/flagstat/idxstats. 'add': run RustQC alongside standard QC tools, with both sets of results in the MultiQC report.",
                     "fa_icon": "fas fa-rocket"
                 },
                 "skip_dupradar": {

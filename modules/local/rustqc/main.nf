@@ -59,7 +59,8 @@ process RUSTQC {
 
     touch rustqc/preseq/${prefix}.lc_extrap.txt \
           rustqc/samtools/${prefix}.{flagstat,idxstats,stats} \
-          rustqc/qualimap/rnaseq_qc_results.txt
+          rustqc/qualimap/rnaseq_qc_results.txt \
+          rustqc/qualimap/qualimapReport.html
     touch "rustqc/qualimap/raw_data_qualimapReport/coverage_profile_along_genes_(total).txt"
     """
 }

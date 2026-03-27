@@ -95,6 +95,7 @@ workflow RNASEQ {
     ch_sortmerna_index      // channel: path(sortmerna/index/)
     ch_bowtie2_rrna_index   // channel: path(bowtie2/index/) for rRNA removal
     ch_splicesites          // channel: path(genome.splicesites.txt)
+    ch_kraken_db            // channel: path(kraken2/db/)
 
     main:
 
@@ -699,7 +700,7 @@ workflow RNASEQ {
         if (params.contaminant_screening in ['kraken2', 'kraken2_bracken'] ) {
             KRAKEN2 (
                 ch_contaminant_sequences,
-                params.kraken_db,
+                ch_kraken_db,
                 params.save_kraken_assignments,
                 params.save_kraken_unassigned
             )
@@ -710,7 +711,7 @@ workflow RNASEQ {
             } else if (params.contaminant_screening == 'kraken2_bracken') {
                 BRACKEN (
                     ch_kraken_reports,
-                    params.kraken_db
+                    ch_kraken_db
                 )
                 ch_multiqc_files = ch_multiqc_files.mix(BRACKEN.out.txt)
             }

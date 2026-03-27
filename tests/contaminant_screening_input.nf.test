@@ -71,22 +71,10 @@ nextflow_pipeline {
 
         when {
             params {
-                def dbDir = new java.io.File(
-                    new java.io.File(outputDir.toString()).parentFile, "kraken2_db"
-                )
-                if (!dbDir.exists()) {
-                    dbDir.mkdirs()
-                    def httpsUrl = "https://ngi-igenomes.s3.amazonaws.com/testdata/nf-core/modules/genomics/sarscov2/genome/db/kraken2.tar.gz"
-                    def proc = ['bash', '-c',
-                        "curl -fsSL '${httpsUrl}' | tar -xz --strip-components 1 -C '${dbDir}'"
-                    ].execute()
-                    proc.waitFor()
-                }
-
                 outdir                      = "$outputDir"
                 contaminant_screening       = 'kraken2'
                 contaminant_screening_input = 'trimmed'
-                kraken_db                   = dbDir.absolutePath
+                kraken_db                   = "${params.modules_testdata_base_path}genomics/sarscov2/genome/db/kraken2.tar.gz"
                 skip_bigwig                 = true
                 skip_stringtie              = true
             }
@@ -141,22 +129,10 @@ nextflow_pipeline {
 
         when {
             params {
-                def dbDir = new java.io.File(
-                    new java.io.File(outputDir.toString()).parentFile, "kraken2_db"
-                )
-                if (!dbDir.exists()) {
-                    dbDir.mkdirs()
-                    def httpsUrl = "https://ngi-igenomes.s3.amazonaws.com/testdata/nf-core/modules/genomics/sarscov2/genome/db/kraken2.tar.gz"
-                    def proc = ['bash', '-c',
-                        "curl -fsSL '${httpsUrl}' | tar -xz --strip-components 1 -C '${dbDir}'"
-                    ].execute()
-                    proc.waitFor()
-                }
-
                 outdir                = "$outputDir"
                 contaminant_screening = 'kraken2'
                 // contaminant_screening_input left at default ('unmapped')
-                kraken_db             = dbDir.absolutePath
+                kraken_db             = "${params.modules_testdata_base_path}genomics/sarscov2/genome/db/kraken2.tar.gz"
                 skip_bigwig           = true
                 skip_stringtie        = true
             }

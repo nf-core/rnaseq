@@ -17,6 +17,7 @@ include { UNTAR as UNTAR_HISAT2_INDEX       } from '../../../modules/nf-core/unt
 include { UNTAR as UNTAR_SALMON_INDEX       } from '../../../modules/nf-core/untar'
 include { UNTAR as UNTAR_KALLISTO_INDEX     } from '../../../modules/nf-core/untar'
 include { UNTAR as UNTAR_BOWTIE2_INDEX      } from '../../../modules/nf-core/untar'
+include { UNTAR as UNTAR_KRAKEN_DB          } from '../../../modules/nf-core/untar'
 
 include { CUSTOM_CATADDITIONALFASTA         } from '../../../modules/nf-core/custom/catadditionalfasta'
 include { SAMTOOLS_FAIDX                    } from '../../../modules/nf-core/samtools/faidx'
@@ -73,6 +74,7 @@ workflow PREPARE_GENOME {
     skip_pseudo_alignment    // boolean: Skip all of the pseudoalignment-based processes within the pipeline
     use_sentieon_star        // boolean: whether to use sentieon STAR version
     use_parabricks_star      // boolean: whether to use parabricks STAR version
+    kraken_db                // path: /path/to/kraken2/db/ or .tar.gz archive
 
     main:
     // Versions collector
@@ -437,6 +439,19 @@ workflow PREPARE_GENOME {
     //------------------
     // 17) Emit channels
     //------------------
+
+    //---------------------------------------------------------
+    // 18) Kraken2 database (for contaminant screening)
+    //---------------------------------------------------------
+    ch_kraken_db = channel.empty()
+    if (kraken_db) {
+        if (kraken_db.endsWith('.tar.gz')) {
+            ch_kraken_db = UNTAR_KRAKEN_DB ( [ [:], file(kraken_db, checkIfExists: true) ] ).untar.map { it[1] }
+        } else {
+            ch_kraken_db = channel.value(file(kraken_db, checkIfExists: true))
+        }
+    }
+
     emit:
     fasta            = ch_fasta                  // channel: path(genome.fasta)
     gtf              = ch_gtf                    // channel: path(genome.gtf)
@@ -454,5 +469,6 @@ workflow PREPARE_GENOME {
     bowtie2_index    = ch_bowtie2_index          // channel: path(bowtie2/index/)
     salmon_index     = ch_salmon_index           // channel: path(salmon/index/)
     kallisto_index   = ch_kallisto_index         // channel: [ meta, path(kallisto/index/) ]
+    kraken_db        = ch_kraken_db              // channel: path(kraken2/db/)
     versions         = ch_versions               // channel: [ versions.yml ]
 }

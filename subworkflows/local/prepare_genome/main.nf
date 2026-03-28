@@ -446,7 +446,7 @@ workflow PREPARE_GENOME {
     ch_kraken_db = channel.empty()
     if (kraken_db) {
         if (kraken_db.endsWith('.tar.gz')) {
-            ch_kraken_db = UNTAR_KRAKEN_DB ( [ [:], file(kraken_db, checkIfExists: true) ] ).untar.map { it[1] }
+            ch_kraken_db = UNTAR_KRAKEN_DB ( [ [:], kraken_db ] ).untar.map { it[1] }
         } else {
             ch_kraken_db = channel.value(file(kraken_db, checkIfExists: true))
         }

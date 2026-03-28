@@ -53,6 +53,7 @@ nextflow_workflow {
                 input[26] = skip_pseudo_alignment
                 input[27] = use_sentieon_star
                 input[28] = use_parabricks_star
+                input[29] = null
                 """
             }
         }
@@ -123,6 +124,7 @@ nextflow_workflow {
                 input[26] = skip_pseudo_alignment
                 input[27] = use_sentieon_star
                 input[28] = use_parabricks_star
+                input[29] = null
                 """
             }
         }

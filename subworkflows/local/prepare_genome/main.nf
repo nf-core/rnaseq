@@ -446,7 +446,13 @@ workflow PREPARE_GENOME {
     ch_kraken_db = channel.empty()
     if (kraken_db) {
         if (kraken_db.endsWith('.tar.gz')) {
-            ch_kraken_db = UNTAR_KRAKEN_DB ( [ [:], kraken_db ] ).untar.map { it[1] }
+            if (workflow.stubRun) {
+                // Skip UNTAR in stub mode: running it corrupts NXF ARM64 eval()
+                // state and breaks subsequent stub tests that also call UNTAR.
+                ch_kraken_db = channel.value(kraken_db)
+            } else {
+                ch_kraken_db = UNTAR_KRAKEN_DB ( [ [:], kraken_db ] ).untar.map { it[1] }
+            }
         } else {
             ch_kraken_db = channel.value(file(kraken_db, checkIfExists: true))
         }

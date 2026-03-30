@@ -292,15 +292,10 @@ sp:
 
 fn_ignore_files:
   - "*umi_dedup.transcriptome.sorted.log"
-
-# RustQC's duprateExpDensCurve_mqc.txt includes a TSV header row that crashes
-# MultiQC's custom_content linegraph plotter, taking down all custom content
-# sections. fn_ignore_files doesn't help here because custom_content uses fn_re
-# matching which bypasses the ignore check. fn_ignore_dirs prevents the directory
-# from being walked entirely. This is safe because the default (non-RustQC) path
-# passes dupradar mqc files individually via channels, not inside a dupradar/ dir.
-fn_ignore_dirs:
-  - "dupradar"
+  # RustQC's duprateExpDensCurve_mqc.txt includes a TSV header row that crashes
+  # MultiQC's custom_content linegraph plotter, taking down all custom content
+  # sections. Exclude until fixed upstream in rustqc and/or MultiQC.
+  - "*_duprateExpDensCurve_mqc.txt"
 
 # See https://github.com/ewels/MultiQC_TestData/blob/master/data/custom_content/with_config/table_headerconfig/multiqc_config.yaml
 custom_data:

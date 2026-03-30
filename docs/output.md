@@ -592,12 +592,7 @@ The [bigWig](https://genome.ucsc.edu/goldenpath/help/bigWig.html) format is an i
 
 [RustQC](https://github.com/seqeralabs/rustqc) is a high-performance, single-pass replacement for multiple post-alignment QC tools. It produces output files compatible with the same MultiQC modules as the individual tools it replaces, so the QC report content is equivalent.
 
-RustQC can be enabled in two modes:
-
-- **`--use_rustqc`**: Replaces dupRadar, featureCounts biotype QC, RSeQC (bam_stat, infer_experiment, read_distribution, read_duplication, junction_annotation, junction_saturation, inner_distance, TIN), Preseq, Qualimap, and SAMtools stats/flagstat/idxstats. The individual tools are automatically skipped.
-- **`--add_rustqc`**: Runs RustQC alongside the standard tools. Both sets of results appear in the MultiQC report as separate sections (labelled with "RustQC" and "Upstream" suffixes), allowing direct comparison.
-
-When both RustQC and upstream tools are present, MultiQC uses path-based filtering to separate results into distinct report sections.
+To enable RustQC, use the `--use_rustqc` flag. It replaces dupRadar, featureCounts biotype QC, RSeQC (bam_stat, infer_experiment, read_distribution, read_duplication, junction_annotation, junction_saturation, inner_distance, TIN), Preseq, Qualimap, and SAMtools stats/flagstat/idxstats. The individual tools are automatically skipped.
 
 ### RSeQC
 

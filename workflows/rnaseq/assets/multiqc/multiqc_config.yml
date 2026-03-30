@@ -33,36 +33,20 @@ report_section_order:
     order: 3000
   hisat2:
     order: 3000
-  # Post-alignment QC (RustQC sections ordered before their upstream counterparts)
-  rseqc_rustqc:
-    order: 3010
-  rseqc_upstream:
-    order: 3009
-  samtools_rustqc:
-    order: 3008
-  samtools_upstream:
-    order: 3007
-  preseq_rustqc:
-    order: 3006
-  preseq_upstream:
-    order: 3005
-  qualimap_rustqc:
-    order: 3004
-  qualimap_upstream:
-    order: 3003
-  dupradar_rustqc:
-    order: 3002
-  dupradar_upstream:
-    order: 3001
-  featurecounts_rustqc:
+  # Post-alignment QC
+  samtools:
     order: 3000
-  featurecounts_upstream:
-    order: 2999
   dupradar-module:
     order: 3000
   featurecounts_biotype:
     order: 3000
   picard:
+    order: 3000
+  preseq:
+    order: 3000
+  qualimap:
+    order: 3000
+  rseqc:
     order: 3000
   umitools:
     order: 3000
@@ -136,8 +120,6 @@ run_modules:
   - preseq
   - rseqc
   - qualimap
-  - dupradar
-  - subread_featurecounts
   - kraken
   - sylphtax
 
@@ -173,70 +155,6 @@ module_order:
       info: "This section of the report shows FastQC results after contaminant removal (BBSplit) and/or ribosomal RNA removal."
       path_filters:
         - "*_filtered*fastqc.zip"
-
-  # RustQC sections (only match files under */rustqc/*)
-  - rseqc:
-      name: "RSeQC (RustQC)"
-      anchor: "rseqc_rustqc"
-      path_filters:
-        - "*/rustqc/*"
-  - samtools:
-      name: "Samtools (RustQC)"
-      anchor: "samtools_rustqc"
-      path_filters:
-        - "*/rustqc/*"
-  - preseq:
-      name: "Preseq (RustQC)"
-      anchor: "preseq_rustqc"
-      path_filters:
-        - "*/rustqc/*"
-  - qualimap:
-      name: "QualiMap (RustQC)"
-      anchor: "qualimap_rustqc"
-      path_filters:
-        - "*/rustqc/*"
-  - dupradar:
-      name: "dupRadar (RustQC)"
-      anchor: "dupradar_rustqc"
-      path_filters:
-        - "*/rustqc/*"
-  - subread_featurecounts:
-      name: "featureCounts (RustQC)"
-      anchor: "featurecounts_rustqc"
-      path_filters:
-        - "*/rustqc/*"
-
-  # Upstream sections (exclude anything under */rustqc/*)
-  - rseqc:
-      name: "RSeQC"
-      anchor: "rseqc"
-      path_filters_exclude:
-        - "*/rustqc/*"
-  - samtools:
-      name: "Samtools"
-      anchor: "samtools"
-      path_filters_exclude:
-        - "*/rustqc/*"
-  - preseq:
-      name: "Preseq"
-      anchor: "preseq"
-      path_filters_exclude:
-        - "*/rustqc/*"
-  - qualimap:
-      name: "QualiMap"
-      anchor: "qualimap"
-      path_filters_exclude:
-        - "*/rustqc/*"
-  - dupradar:
-      name: "dupRadar"
-      anchor: "dupradar"
-      path_filters_exclude:
-        - "*/rustqc/*"
-  - subread_featurecounts:
-      name: "featureCounts"
-      anchor: "featurecounts"
-      path_filters_exclude:
-        - "*/rustqc/*"
 
 # Don't show % Dups in the General Stats table (we have this from Picard)
 table_columns_visible:

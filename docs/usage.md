@@ -338,9 +338,7 @@ These differences are unlikely to materially affect downstream quantification re
 
 RustQC replaces the following tools: dupRadar, featureCounts (biotype QC), RSeQC (bam_stat, infer_experiment, read_distribution, read_duplication, junction_annotation, junction_saturation, inner_distance, TIN), Preseq, Qualimap, and SAMtools stats/flagstat/idxstats.
 
-There are two modes of operation:
-
-**Replace mode** (`--use_rustqc`): RustQC runs instead of the individual tools listed above, which are automatically skipped:
+To enable RustQC, use the `--use_rustqc` flag. The individual tools listed above are automatically skipped:
 
 ```bash
 nextflow run nf-core/rnaseq \
@@ -349,18 +347,6 @@ nextflow run nf-core/rnaseq \
     --fasta genome.fa \
     --gtf annotation.gtf \
     --use_rustqc \
-    -profile docker
-```
-
-**Additive mode** (`--add_rustqc`): RustQC runs alongside the standard tools. Both sets of results appear in the MultiQC report with separate section labels (e.g. "RSeQC (RustQC)" vs "RSeQC"), allowing direct comparison:
-
-```bash
-nextflow run nf-core/rnaseq \
-    --input samplesheet.csv \
-    --outdir results \
-    --fasta genome.fa \
-    --gtf annotation.gtf \
-    --add_rustqc \
     -profile docker
 ```
 

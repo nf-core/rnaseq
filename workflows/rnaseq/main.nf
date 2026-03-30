@@ -512,24 +512,20 @@ workflow RNASEQ {
     ch_inferexperiment_txt = Channel.empty()
 
     if (!params.skip_qc) {
-        //
-        // MODULE: RustQC - single-pass replacement for multiple QC tools
-        //
-        if (params.rustqc_mode in ['replace', 'add']) {
+        if (params.use_rustqc) {
+            //
+            // MODULE: RustQC - single-pass replacement for multiple QC tools
+            //
             RUSTQC (
                 ch_genome_bam.join(ch_genome_bam_index, by: [0]),
                 ch_gtf,
             )
             ch_multiqc_files = ch_multiqc_files.mix(RUSTQC.out.results)
-            // In 'add' mode, upstream RSeQC infer_experiment overwrites this below
-            // (preferred for strandedness validation as it's the established tool)
             ch_inferexperiment_txt = RUSTQC.out.inferexperiment_txt
-        }
-
-        //
-        // SUBWORKFLOW: Post-alignment QC (upstream tools)
-        //
-        if (params.rustqc_mode != 'replace') {
+        } else {
+            //
+            // SUBWORKFLOW: Post-alignment QC (upstream tools)
+            //
             BAM_POST_ALIGNMENT_QC (
                 ch_genome_bam,
                 ch_genome_bam_index,

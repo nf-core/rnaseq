@@ -14,7 +14,7 @@ workflow BAM_POST_ALIGNMENT_QC {
     ch_genome_bam_index     // [ meta, bai ]
     ch_gtf                  // path(gtf)
     ch_gene_bed             // path(gene.bed)
-    ch_fasta                // [ meta, fasta ] for samtools sort
+    ch_fasta_fai            // [ meta, fasta, fai ] for samtools sort
     ch_biotypes_header      // path(biotypes_header.txt)
     skip_preseq             // val(bool)
     skip_biotype_qc         // val(bool)
@@ -74,7 +74,7 @@ workflow BAM_POST_ALIGNMENT_QC {
         // Sort BAM by name for qualimap (performance optimization)
         SAMTOOLS_SORT_QUALIMAP (
             ch_genome_bam,
-            ch_fasta,
+            ch_fasta_fai,
             ''
         )
 

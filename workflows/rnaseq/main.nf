@@ -535,7 +535,7 @@ workflow RNASEQ {
                 ch_genome_bam_index,
                 ch_gtf,
                 ch_gene_bed,
-                ch_fasta.map { item -> [ [:], item ] },
+                ch_fasta_fai,
                 ch_biotypes_header_multiqc,
                 params.skip_preseq,
                 params.skip_biotype_qc,

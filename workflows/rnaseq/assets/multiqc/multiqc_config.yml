@@ -292,6 +292,10 @@ sp:
 
 fn_ignore_files:
   - "*umi_dedup.transcriptome.sorted.log"
+  # RustQC's duprateExpDensCurve_mqc.txt includes a TSV header row that crashes
+  # MultiQC's custom_content linegraph plotter, taking down all custom content
+  # sections. Exclude until fixed upstream in rustqc and/or MultiQC.
+  - "*_duprateExpDensCurve_mqc.txt"
 
 # See https://github.com/ewels/MultiQC_TestData/blob/master/data/custom_content/with_config/table_headerconfig/multiqc_config.yaml
 custom_data:

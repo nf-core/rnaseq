@@ -100,8 +100,7 @@ workflow RNASEQ {
     def ch_transcript_fasta_placeholder = ch_pca_header_multiqc
 
     // Pre-build fasta_fai value channels for subworkflows that need [meta, fasta, fai]
-    // Using .flatten().collect().map to guarantee a value channel
-    ch_fasta_fai            = ch_fasta.combine(ch_fai).flatten().collect().map { items -> [ [:], items[0], items[1] ] }
+    ch_fasta_fai            = ch_fasta.combine(ch_fai).map { fasta, fai -> [ [:], fasta, fai ] }
     ch_transcript_fasta_fai = ch_transcript_fasta.map { fasta -> [[:], fasta, []] }
 
     ch_multiqc_files = channel.empty()

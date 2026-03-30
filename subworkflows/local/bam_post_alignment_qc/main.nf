@@ -36,7 +36,7 @@ workflow BAM_POST_ALIGNMENT_QC {
         PRESEQ_LCEXTRAP (
             ch_genome_bam
         )
-        ch_multiqc_files = ch_multiqc_files.mix(PRESEQ_LCEXTRAP.out.lc_extrap.collect{ _meta, lc_extrap -> lc_extrap })
+        ch_multiqc_files = ch_multiqc_files.mix(PRESEQ_LCEXTRAP.out.lc_extrap)
     }
 
     //
@@ -64,7 +64,7 @@ workflow BAM_POST_ALIGNMENT_QC {
             SUBREAD_FEATURECOUNTS.out.counts,
             ch_biotypes_header
         )
-        ch_multiqc_files = ch_multiqc_files.mix(MULTIQC_CUSTOM_BIOTYPE.out.tsv.collect{ _meta, tsv -> tsv })
+        ch_multiqc_files = ch_multiqc_files.mix(MULTIQC_CUSTOM_BIOTYPE.out.tsv)
     }
 
     //
@@ -82,7 +82,7 @@ workflow BAM_POST_ALIGNMENT_QC {
             SAMTOOLS_SORT_QUALIMAP.out.bam,
             ch_gtf.map { item -> [ [:], item ] }
         )
-        ch_multiqc_files = ch_multiqc_files.mix(QUALIMAP_RNASEQ.out.results.collect{ _meta, results -> results })
+        ch_multiqc_files = ch_multiqc_files.mix(QUALIMAP_RNASEQ.out.results)
     }
 
     //
@@ -93,7 +93,7 @@ workflow BAM_POST_ALIGNMENT_QC {
             ch_genome_bam,
             ch_gtf.map { item -> [ [:], item ] }
         )
-        ch_multiqc_files = ch_multiqc_files.mix(DUPRADAR.out.multiqc.collect{ _meta, multiqc -> multiqc })
+        ch_multiqc_files = ch_multiqc_files.mix(DUPRADAR.out.multiqc)
         ch_versions = ch_versions.mix(DUPRADAR.out.versions.first())
     }
 
@@ -106,14 +106,14 @@ workflow BAM_POST_ALIGNMENT_QC {
             ch_gene_bed,
             rseqc_modules
         )
-        ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.bamstat_txt.collect{ _meta, txt -> txt })
-        ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.inferexperiment_txt.collect{ _meta, txt -> txt })
-        ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.innerdistance_freq.collect{ _meta, freq -> freq })
-        ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.junctionannotation_log.collect{ _meta, log -> log })
-        ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.junctionsaturation_rscript.collect{ _meta, rscript -> rscript })
-        ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.readdistribution_txt.collect{ _meta, txt -> txt })
-        ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.readduplication_pos_xls.collect{ _meta, xls -> xls })
-        ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.tin_txt.collect{ _meta, txt -> txt })
+        ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.bamstat_txt)
+        ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.inferexperiment_txt)
+        ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.innerdistance_freq)
+        ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.junctionannotation_log)
+        ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.junctionsaturation_rscript)
+        ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.readdistribution_txt)
+        ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.readduplication_pos_xls)
+        ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.tin_txt)
         ch_inferexperiment_txt = BAM_RSEQC.out.inferexperiment_txt
     }
 

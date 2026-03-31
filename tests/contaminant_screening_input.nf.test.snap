@@ -1,7 +1,7 @@
 {
     "Params: contaminant screening unmapped input - stub": {
         "content": [
-            27,
+            29,
             {
                 "BBMAP_BBSPLIT": {
                     "bbmap": 39.18
@@ -40,6 +40,12 @@
                     "trimgalore": "0.6.10"
                 },
                 "UNTAR_HISAT2_INDEX": {
+                    "untar": 1.34
+                },
+                "UNTAR_KRAKEN_DB": {
+                    "untar": 1.34
+                },
+                "UNTAR_SALMON_INDEX": {
                     "untar": 1.34
                 }
             },
@@ -92,11 +98,11 @@
                 "genome_transcriptome.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
+        "timestamp": "2026-03-31T17:29:28.665283571",
         "meta": {
-            "nf-test": "0.9.3",
+            "nf-test": "0.9.4",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-03-28T23:20:28.571068821"
+        }
     },
     "Params: contaminant_screening_input=trimmed screens pre-alignment reads": {
         "content": [
@@ -1490,11 +1496,11 @@
                 "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
             ]
         ],
+        "timestamp": "2026-03-28T11:16:10.497395581",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-03-28T11:16:10.497395581"
+        }
     },
     "Params: contaminant_screening_input=unmapped (default) screens post-alignment reads": {
         "content": [
@@ -2888,15 +2894,15 @@
                 "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
             ]
         ],
+        "timestamp": "2026-03-28T11:20:09.713081388",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-03-28T11:20:09.713081388"
+        }
     },
     "Params: contaminant screening trimmed input with skip_alignment - stub": {
         "content": [
-            24,
+            27,
             {
                 "BBMAP_BBSPLIT": {
                     "bbmap": 39.18
@@ -2916,6 +2922,9 @@
                 "GTF2BED": {
                     "perl": "5.26.2"
                 },
+                "GTF_FILTER": {
+                    "python": "3.9.5"
+                },
                 "GUNZIP_ADDITIONAL_FASTA": {
                     "gunzip": 1.13
                 },
@@ -2927,6 +2936,12 @@
                 },
                 "TRIMGALORE": {
                     "trimgalore": "0.6.10"
+                },
+                "UNTAR_KRAKEN_DB": {
+                    "untar": 1.34
+                },
+                "UNTAR_SALMON_INDEX": {
+                    "untar": 1.34
                 }
             },
             [
@@ -2977,10 +2992,10 @@
                 "genome_transcriptome.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
+        "timestamp": "2026-03-31T17:30:01.490209123",
         "meta": {
-            "nf-test": "0.9.3",
+            "nf-test": "0.9.4",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-03-28T23:20:55.136150916"
+        }
     }
 }

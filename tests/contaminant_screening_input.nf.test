@@ -14,7 +14,7 @@ nextflow_pipeline {
                 aligner = 'hisat2'
                 skip_bigwig = true
                 contaminant_screening = 'kraken2'
-                kraken_db = params.modules_testdata_base_path + "genomics/sarscov2/genome/db/kraken2.tar.gz"
+
             }
         }
 
@@ -43,7 +43,7 @@ nextflow_pipeline {
                 skip_alignment = true
                 contaminant_screening = 'kraken2'
                 contaminant_screening_input = 'trimmed'
-                kraken_db = params.modules_testdata_base_path + "genomics/sarscov2/genome/db/kraken2.tar.gz"
+
             }
         }
 
@@ -69,7 +69,6 @@ nextflow_pipeline {
                 outdir                      = "$outputDir"
                 contaminant_screening       = 'kraken2'
                 contaminant_screening_input = 'trimmed'
-                kraken_db                   = params.modules_testdata_base_path + "genomics/sarscov2/genome/db/kraken2.tar.gz"
                 skip_bigwig                 = true
                 skip_stringtie              = true
             }
@@ -117,7 +116,6 @@ nextflow_pipeline {
             params {
                 outdir                = "$outputDir"
                 contaminant_screening = 'kraken2'
-                kraken_db             = params.modules_testdata_base_path + "genomics/sarscov2/genome/db/kraken2.tar.gz"
                 skip_bigwig           = true
                 skip_stringtie        = true
             }

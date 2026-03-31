@@ -62,6 +62,7 @@ workflow PREPARE_GENOME {
     bowtie2_index            // directory: /path/to/bowtie2/index/
     bbsplit_index            // directory: /path/to/bbsplit/index/
     sortmerna_index          // directory: /path/to/sortmerna/index/
+    kraken_db                // path: /path/to/kraken2/db/ or .tar.gz archive
     gencode                  // boolean: whether the genome is from GENCODE
     gffread_transcript_fasta // boolean: use gffread instead of RSEM for transcript FASTA extraction
     featurecounts_group_type // string: The attribute type used to group feature types in the GTF file when generating the biotype plot with featureCounts
@@ -74,7 +75,7 @@ workflow PREPARE_GENOME {
     skip_pseudo_alignment    // boolean: Skip all of the pseudoalignment-based processes within the pipeline
     use_sentieon_star        // boolean: whether to use sentieon STAR version
     use_parabricks_star      // boolean: whether to use parabricks STAR version
-    kraken_db                // path: /path/to/kraken2/db/ or .tar.gz archive
+    contaminant_screening    // string: contaminant screening tool ('kraken2', 'kraken2_bracken', 'sylph', or null)
 
     main:
     // Versions collector
@@ -440,7 +441,7 @@ workflow PREPARE_GENOME {
     // Kraken2 database (for contaminant screening)
     //---------------------------------------------------------
     ch_kraken_db = channel.empty()
-    if (kraken_db) {
+    if (contaminant_screening && kraken_db) {
         if (kraken_db.endsWith('.tar.gz')) {
             ch_kraken_db = UNTAR_KRAKEN_DB ( [ [:], file(kraken_db, checkIfExists: true) ] ).untar.map { tuple -> tuple[1] }
         } else {

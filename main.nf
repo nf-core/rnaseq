@@ -78,6 +78,7 @@ workflow NFCORE_RNASEQ {
         params.bowtie2_index,
         params.bbsplit_index,
         params.sortmerna_index,
+        params.kraken_db,
         params.gencode,
         params.gffread_transcript_fasta,
         params.featurecounts_group_type,
@@ -90,7 +91,7 @@ workflow NFCORE_RNASEQ {
         params.skip_pseudo_alignment,
         params.use_sentieon_star,
         params.use_parabricks_star,
-        params.kraken_db
+        params.contaminant_screening
     )
     ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
 

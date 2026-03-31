@@ -82,7 +82,7 @@ nextflow_pipeline {
                 outdir                      = "$outputDir"
                 contaminant_screening       = 'kraken2'
                 contaminant_screening_input = 'trimmed'
-                kraken_db                   = "s3://ngi-igenomes/testdata/nf-core/modules/genomics/sarscov2/genome/db/kraken2.tar.gz"
+                kraken_db                   = params.modules_testdata_base_path + "genomics/sarscov2/genome/db/kraken2.tar.gz" 
                 skip_bigwig                 = true
                 skip_stringtie              = true
             }

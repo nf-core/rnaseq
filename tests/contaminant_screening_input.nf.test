@@ -14,7 +14,6 @@ nextflow_pipeline {
                 aligner = 'hisat2'
                 skip_bigwig = true
                 contaminant_screening = 'kraken2'
-
             }
         }
 
@@ -43,7 +42,6 @@ nextflow_pipeline {
                 skip_alignment = true
                 contaminant_screening = 'kraken2'
                 contaminant_screening_input = 'trimmed'
-
             }
         }
 

@@ -14,11 +14,7 @@ nextflow_pipeline {
                 aligner = 'hisat2'
                 skip_bigwig = true
                 contaminant_screening = 'kraken2'
-                kraken_db = params.modules_testdata_base_path + "genomics/sarscov2/genome/db/kraken2.tar.gz" 
-                // Prevent UNTAR_SALMON_INDEX from running in stub mode to avoid NXF
-                // ARM64 eval() state corruption that breaks subsequent stub tests.
-                salmon_index  = null
-                pseudo_aligner = null
+                kraken_db = params.modules_testdata_base_path + "genomics/sarscov2/genome/db/kraken2.tar.gz"
             }
         }
 
@@ -47,11 +43,7 @@ nextflow_pipeline {
                 skip_alignment = true
                 contaminant_screening = 'kraken2'
                 contaminant_screening_input = 'trimmed'
-                kraken_db = params.modules_testdata_base_path + "genomics/sarscov2/genome/db/kraken2.tar.gz" 
-                // Prevent UNTAR_SALMON_INDEX from running in stub mode to avoid NXF
-                // ARM64 eval() state corruption that breaks subsequent stub tests.
-                salmon_index  = null
-                pseudo_aligner = null
+                kraken_db = params.modules_testdata_base_path + "genomics/sarscov2/genome/db/kraken2.tar.gz"
             }
         }
 
@@ -72,17 +64,12 @@ nextflow_pipeline {
 
     test("Params: contaminant_screening_input=trimmed screens pre-alignment reads") {
 
-        // Verify Kraken2 screens trimmed/BBSplit-filtered reads (pre-alignment).
-        // With contaminant_screening_input='trimmed', Kraken2 receives ALL trimmed
-        // reads before any alignment step. The Kraken2 database is downloaded via
-        // HTTPS from the public nf-core test-datasets bucket.
-
         when {
             params {
                 outdir                      = "$outputDir"
                 contaminant_screening       = 'kraken2'
                 contaminant_screening_input = 'trimmed'
-                kraken_db                   = params.modules_testdata_base_path + "genomics/sarscov2/genome/db/kraken2.tar.gz" 
+                kraken_db                   = params.modules_testdata_base_path + "genomics/sarscov2/genome/db/kraken2.tar.gz"
                 skip_bigwig                 = true
                 skip_stringtie              = true
             }
@@ -91,11 +78,6 @@ nextflow_pipeline {
         then {
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
-            // Parse total reads processed per sample from Kraken2 reports.
-            // Integer counts are deterministic even when file content (floating-point
-            // percentages, multi-threaded output ordering) is not.
-            // With trimmed input Kraken2 receives ALL reads, so counts are ~10-50x
-            // higher than in the unmapped test, directly proving the correct code path.
             def krakenReportDir = file("$outputDir/star_salmon/contaminants/kraken2/kraken_reports")
             def krakenReadCounts = krakenReportDir.listFiles()
                 .sort { it.name }
@@ -107,8 +89,6 @@ nextflow_pipeline {
                     }
                     [report.name, total]
                 }
-            // Expected read counts when Kraken2 screens trimmed (pre-alignment) reads.
-            // Tolerance of ±2 per sample absorbs minor STAR alignment non-determinism.
             def expectedTrimmedCounts = [
                 "RAP1_IAA_30M_REP1.kraken2.report.txt": 49593L,
                 "RAP1_UNINDUCED_REP1.kraken2.report.txt": 48567L,
@@ -133,17 +113,11 @@ nextflow_pipeline {
 
     test("Params: contaminant_screening_input=unmapped (default) screens post-alignment reads") {
 
-        // Contrast test: with the default 'unmapped' input, Kraken2 screens only
-        // post-alignment unmapped reads. With the yeast test data most reads align
-        // to the reference, so Kraken2 receives far fewer reads (~850–9k) than in
-        // the trimmed test (~49k–100k), proving the two code paths use different inputs.
-
         when {
             params {
                 outdir                = "$outputDir"
                 contaminant_screening = 'kraken2'
-                // contaminant_screening_input left at default ('unmapped')
-                kraken_db             = params.modules_testdata_base_path + "genomics/sarscov2/genome/db/kraken2.tar.gz" 
+                kraken_db             = params.modules_testdata_base_path + "genomics/sarscov2/genome/db/kraken2.tar.gz"
                 skip_bigwig           = true
                 skip_stringtie        = true
             }
@@ -152,10 +126,6 @@ nextflow_pipeline {
         then {
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
-            // Parse total reads processed per sample from Kraken2 reports.
-            // With unmapped input, Kraken2 only receives the small fraction of reads
-            // that did not align to the reference (~850–9k vs ~49k–100k in the
-            // trimmed test), directly proving the post-alignment code path is taken.
             def krakenReportDir = file("$outputDir/star_salmon/contaminants/kraken2/kraken_reports")
             def krakenReadCounts = krakenReportDir.listFiles()
                 .sort { it.name }
@@ -167,9 +137,6 @@ nextflow_pipeline {
                     }
                     [report.name, total]
                 }
-            // Expected read counts when Kraken2 screens unmapped (post-alignment) reads.
-            // Much lower than trimmed (~850–9k vs ~49k–100k), proving the post-alignment
-            // code path. Tolerance of ±2 per sample absorbs minor STAR non-determinism.
             def expectedUnmappedCounts = [
                 "RAP1_IAA_30M_REP1.kraken2.report.txt": 3826L,
                 "RAP1_UNINDUCED_REP1.kraken2.report.txt": 854L,

@@ -436,27 +436,21 @@ workflow PREPARE_GENOME {
         }
     }
 
-    //------------------
-    // 17) Emit channels
-    //------------------
-
     //---------------------------------------------------------
-    // 18) Kraken2 database (for contaminant screening)
+    // Kraken2 database (for contaminant screening)
     //---------------------------------------------------------
     ch_kraken_db = channel.empty()
     if (kraken_db) {
         if (kraken_db.endsWith('.tar.gz')) {
-            if (workflow.stubRun) {
-                // Skip UNTAR in stub mode: running it corrupts NXF ARM64 eval()
-                // state and breaks subsequent stub tests that also call UNTAR.
-                ch_kraken_db = channel.value(kraken_db)
-            } else {
-                ch_kraken_db = UNTAR_KRAKEN_DB ( [ [:], file(kraken_db, checkIfExists: true) ] ).untar.map { tuple -> tuple[1] }  
-            }
+            ch_kraken_db = UNTAR_KRAKEN_DB ( [ [:], file(kraken_db, checkIfExists: true) ] ).untar.map { tuple -> tuple[1] }
         } else {
             ch_kraken_db = channel.value(file(kraken_db, checkIfExists: true))
         }
     }
+
+    //------------------
+    // 17) Emit channels
+    //------------------
 
     emit:
     fasta            = ch_fasta                  // channel: path(genome.fasta)

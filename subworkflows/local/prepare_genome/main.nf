@@ -17,6 +17,7 @@ include { UNTAR as UNTAR_HISAT2_INDEX       } from '../../../modules/nf-core/unt
 include { UNTAR as UNTAR_SALMON_INDEX       } from '../../../modules/nf-core/untar'
 include { UNTAR as UNTAR_KALLISTO_INDEX     } from '../../../modules/nf-core/untar'
 include { UNTAR as UNTAR_BOWTIE2_INDEX      } from '../../../modules/nf-core/untar'
+include { UNTAR as UNTAR_KRAKEN_DB          } from '../../../modules/nf-core/untar'
 
 include { CUSTOM_CATADDITIONALFASTA         } from '../../../modules/nf-core/custom/catadditionalfasta'
 include { SAMTOOLS_FAIDX                    } from '../../../modules/nf-core/samtools/faidx'
@@ -61,6 +62,7 @@ workflow PREPARE_GENOME {
     bowtie2_index            // directory: /path/to/bowtie2/index/
     bbsplit_index            // directory: /path/to/bbsplit/index/
     sortmerna_index          // directory: /path/to/sortmerna/index/
+    kraken_db                // path: /path/to/kraken2/db/ or .tar.gz archive
     gencode                  // boolean: whether the genome is from GENCODE
     gffread_transcript_fasta // boolean: use gffread instead of RSEM for transcript FASTA extraction
     featurecounts_group_type // string: The attribute type used to group feature types in the GTF file when generating the biotype plot with featureCounts
@@ -73,6 +75,7 @@ workflow PREPARE_GENOME {
     skip_pseudo_alignment    // boolean: Skip all of the pseudoalignment-based processes within the pipeline
     use_sentieon_star        // boolean: whether to use sentieon STAR version
     use_parabricks_star      // boolean: whether to use parabricks STAR version
+    contaminant_screening    // string: contaminant screening tool ('kraken2', 'kraken2_bracken', 'sylph', or null)
 
     main:
     // Versions collector
@@ -434,9 +437,22 @@ workflow PREPARE_GENOME {
         }
     }
 
+    //---------------------------------------------------------
+    // Kraken2 database (for contaminant screening)
+    //---------------------------------------------------------
+    ch_kraken_db = channel.empty()
+    if (contaminant_screening && kraken_db) {
+        if (kraken_db.endsWith('.tar.gz')) {
+            ch_kraken_db = UNTAR_KRAKEN_DB ( [ [:], file(kraken_db, checkIfExists: true) ] ).untar.map { tuple -> tuple[1] }
+        } else {
+            ch_kraken_db = channel.value(file(kraken_db, checkIfExists: true))
+        }
+    }
+
     //------------------
     // 17) Emit channels
     //------------------
+
     emit:
     fasta            = ch_fasta                  // channel: path(genome.fasta)
     gtf              = ch_gtf                    // channel: path(genome.gtf)
@@ -454,5 +470,6 @@ workflow PREPARE_GENOME {
     bowtie2_index    = ch_bowtie2_index          // channel: path(bowtie2/index/)
     salmon_index     = ch_salmon_index           // channel: path(salmon/index/)
     kallisto_index   = ch_kallisto_index         // channel: [ meta, path(kallisto/index/) ]
+    kraken_db        = ch_kraken_db              // channel: path(kraken2/db/)
     versions         = ch_versions               // channel: [ versions.yml ]
 }

@@ -645,7 +645,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-05T15:09:12.693658325"
+        "timestamp": "2026-03-28T07:52:56.66953058"
     },
     "gfp = false - stub": {
         "content": [
@@ -962,6 +962,9 @@
                     
                 ],
                 "16": [
+                    
+                ],
+                "17": [
                     "versions.yml:md5,d475dace58c4e9b4911e8a60bda85041"
                 ],
                 "2": [
@@ -1015,6 +1018,9 @@
                 "kallisto_index": [
                     
                 ],
+                "kraken_db": [
+                    
+                ],
                 "rrna_fastas": [
                     
                 ],
@@ -1062,7 +1068,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-05T15:18:18.136305391"
+        "timestamp": "2026-03-28T08:13:15.291152602"
     },
     "transcriptome = false": {
         "content": [
@@ -2351,6 +2357,9 @@
                     
                 ],
                 "16": [
+                    
+                ],
+                "17": [
                     "versions.yml:md5,d475dace58c4e9b4911e8a60bda85041"
                 ],
                 "2": [
@@ -2404,6 +2413,9 @@
                 "kallisto_index": [
                     
                 ],
+                "kraken_db": [
+                    
+                ],
                 "rrna_fastas": [
                     
                 ],
@@ -2451,6 +2463,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-05T15:14:28.695815078"
+        "timestamp": "2026-03-28T08:04:47.674564635"
     }
 }

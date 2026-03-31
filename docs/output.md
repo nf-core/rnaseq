@@ -855,7 +855,7 @@ The plot on the left hand side shows the standard PC plot - notice the variable 
 <summary>Output files</summary>
 
 - `<ALIGNER>/contaminants/kraken2/kraken_reports`
-  - `*.kraken2.report.txt`: Classification of unaligned reads in the Kraken report format. See the [kraken2 manual](https://github.com/DerrickWood/kraken2/wiki/Manual#output-formats) for more details
+  - `*.kraken2.report.txt`: Classification of the screened reads in the Kraken report format. By default these are aligner-unmapped reads, but `--contaminant_screening_input trimmed` switches screening to trimmed/filter-passed reads. See the [kraken2 manual](https://github.com/DerrickWood/kraken2/wiki/Manual#output-formats) for more details
   - `*.classified*.fastq.gz` If `--save_kraken_alignments`, outputs fastq file for each sample with each classified read annotated with taxonomic identification from Kraken2.
   - `*.unclassified*.fastq.gz` If `save_kraken_unassigned`, outputs fastq file with all reads that were not classified by Kraken2.
 - `<ALIGNER>/contaminants/bracken/`
@@ -864,13 +864,13 @@ The plot on the left hand side shows the standard PC plot - notice the variable 
 
 </details>
 
-[Kraken2](https://ccb.jhu.edu/software/kraken2/) is a taxonomic classification tool that uses k-mer matches paired with a lowest common ancestory (LCA) algorithm to classify species reads. [Bracken](https://ccb.jhu.edu/software/bracken/) is a statistical method to generate abundance estimates based off of the Kraken2 output. These algorithms are run on unaligned sequences to detect potential contamination of samples. MultiQC reports the top 5 taxon members detected at the level of classification used for Bracken, with toggles available for higher taxonomic levels. Because MultiQC no longer has a separate Bracken module, results for Bracken will appear under the Kraken heading in the MultiQC report. If Bracken is skipped, MultiQC will report the top 5 species detected by Kraken2.
+[Kraken2](https://ccb.jhu.edu/software/kraken2/) is a taxonomic classification tool that uses k-mer matches paired with a lowest common ancestory (LCA) algorithm to classify species reads. [Bracken](https://ccb.jhu.edu/software/bracken/) is a statistical method to generate abundance estimates based off of the Kraken2 output. These algorithms are run on contaminant-screening reads to detect potential contamination of samples: aligner-unmapped reads by default, or trimmed/filter-passed reads when `--contaminant_screening_input trimmed` is set. MultiQC reports the top 5 taxon members detected at the level of classification used for Bracken, with toggles available for higher taxonomic levels. Because MultiQC no longer has a separate Bracken module, results for Bracken will appear under the Kraken heading in the MultiQC report. If Bracken is skipped, MultiQC will report the top 5 species detected by Kraken2.
 
 ![MultiQC - Bracken top species plot](images/bracken-top-n-plot.png)
 
 ### Sylph
 
-[Sylph](https://sylph-docs.github.io/) is a metagenomic profiler that determines the species present in reads by statistically estimating containment ANI. Its companion script, [sylph-tax](https://sylph-docs.github.io/sylph-tax/), converts these ANI estimates into estimated taxonomic abundances in the sample. These algorithms are run on unaligned sequences to detect potential contamination of samples. MultiQC shows the Top 10 strains in the Sylph-tax abundance estimates, with toggles available for higher taxonomic levels.
+[Sylph](https://sylph-docs.github.io/) is a metagenomic profiler that determines the species present in reads by statistically estimating containment ANI. Its companion script, [sylph-tax](https://sylph-docs.github.io/sylph-tax/), converts these ANI estimates into estimated taxonomic abundances in the sample. These algorithms are run on contaminant-screening reads to detect potential contamination of samples: aligner-unmapped reads by default, or trimmed/filter-passed reads when `--contaminant_screening_input trimmed` is set. MultiQC shows the Top 10 strains in the Sylph-tax abundance estimates, with toggles available for higher taxonomic levels.
 
 ![MultiQC - Sylphtax top species plot](images/sylphtax-top-n-plot.png)
 
@@ -879,7 +879,7 @@ The plot on the left hand side shows the standard PC plot - notice the variable 
 
 - `<ALIGNER>/contaminants/sylph`
   - `*.tsv` Summary of containment ANI and abundances of detected species in the sample. See the [Sylph documentation](https://sylph-docs.github.io/Output-format/) for full details on the output format.
-  - `*.sylphmpa` Taxonomic report of unaligned reads from `sylph-tax`. See the [Sylph documentation](https://sylph-docs.github.io/sylph-tax-output-format/) for full details on the output format.
+  - `*.sylphmpa` Taxonomic report of the screened reads from `sylph-tax`. By default these are aligner-unmapped reads, but `--contaminant_screening_input trimmed` switches screening to trimmed/filter-passed reads. See the [Sylph documentation](https://sylph-docs.github.io/sylph-tax-output-format/) for full details on the output format.
 
 </details>
 

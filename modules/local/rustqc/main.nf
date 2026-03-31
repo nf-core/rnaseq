@@ -3,8 +3,7 @@ process RUSTQC {
     label 'process_high'
 
     conda "${moduleDir}/environment.yml"
-    // TODO: pin to a release tag before merge
-    container "ghcr.io/seqeralabs/rustqc:dev"
+    container "ghcr.io/seqeralabs/rustqc:0.1.1"
 
     input:
     tuple val(meta), path(bam), path(bai)

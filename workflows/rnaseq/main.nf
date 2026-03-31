@@ -520,15 +520,10 @@ workflow RNASEQ {
                 ch_genome_bam.join(ch_genome_bam_index, by: [0]),
                 ch_gtf,
             )
-            // Filter out duprateExpDensCurve_mqc.txt which crashes MultiQC's
-            // custom_content linegraph plotter due to a TSV header row that
-            // mixes string and float types. Fix pending in rustqc and/or MultiQC.
             ch_multiqc_files = ch_multiqc_files.mix(
                 RUSTQC.out.results
                     .flatMap { meta, dir ->
-                        files = file("${dir}/**", type: 'file')
-                        files.findAll { !it.name.contains('duprateExpDensCurve_mqc') }
-                             .collect { [meta, it] }
+                        file("${dir}/**", type: 'file').collect { f -> [meta, f] }
                     }
             )
             ch_inferexperiment_txt = RUSTQC.out.inferexperiment_txt

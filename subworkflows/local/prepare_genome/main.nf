@@ -451,7 +451,7 @@ workflow PREPARE_GENOME {
                 // state and breaks subsequent stub tests that also call UNTAR.
                 ch_kraken_db = channel.value(kraken_db)
             } else {
-                ch_kraken_db = UNTAR_KRAKEN_DB ( [ [:], kraken_db ] ).untar.map { it[1] }
+                ch_kraken_db = UNTAR_KRAKEN_DB ( [ [:], file(kraken_db, checkIfExists: true) ] ).untar.map { tuple -> tuple[1] }  
             }
         } else {
             ch_kraken_db = channel.value(file(kraken_db, checkIfExists: true))

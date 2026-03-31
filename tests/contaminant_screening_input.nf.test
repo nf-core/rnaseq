@@ -47,7 +47,7 @@ nextflow_pipeline {
                 skip_alignment = true
                 contaminant_screening = 'kraken2'
                 contaminant_screening_input = 'trimmed'
-                kraken_db = "s3://ngi-igenomes/testdata/nf-core/modules/genomics/sarscov2/genome/db/kraken2.tar.gz"
+                kraken_db = params.modules_testdata_base_path + "genomics/sarscov2/genome/db/kraken2.tar.gz" 
                 // Prevent UNTAR_SALMON_INDEX from running in stub mode to avoid NXF
                 // ARM64 eval() state corruption that breaks subsequent stub tests.
                 salmon_index  = null

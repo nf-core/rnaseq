@@ -89,6 +89,7 @@ workflow RNASEQ {
     ch_sortmerna_index      // channel: path(sortmerna/index/)
     ch_bowtie2_rrna_index   // channel: path(bowtie2/index/) for rRNA removal
     ch_splicesites          // channel: path(genome.splicesites.txt)
+    ch_kraken_db            // channel: path(kraken2/db/)
 
     main:
 
@@ -109,6 +110,7 @@ workflow RNASEQ {
     ch_map_status = channel.empty()
     ch_strand_status = channel.empty()
     ch_percent_mapped = channel.empty()
+    ch_unaligned_sequences = channel.empty()
 
     //
     // Collect versions from topic channel (for modules that emit versions via topics)
@@ -231,7 +233,6 @@ workflow RNASEQ {
     // SUBWORKFLOW: Alignment with STAR and gene/transcript quantification with Salmon
     //
     ch_star_log            = channel.empty()
-    ch_unaligned_sequences = channel.empty()
 
     if (!params.skip_alignment && (params.aligner == 'star_salmon' || params.aligner == 'star_rsem')) {
         // Check if an AWS iGenome has been provided to use the appropriate version of STAR
@@ -317,7 +318,7 @@ workflow RNASEQ {
             ch_hisat2_index.map { item -> [ [:], item ] },
             ch_splicesites.map { item -> [ [:], item ] },
             ch_fasta_fai,
-            params.save_unaligned || params.contaminant_screening
+            params.save_unaligned || (params.contaminant_screening && params.contaminant_screening_input == 'unmapped')
         )
         ch_genome_bam          = ch_genome_bam.mix(FASTQ_ALIGN_HISAT2.out.bam)
         ch_genome_bam_index    = ch_genome_bam_index.mix(FASTQ_ALIGN_HISAT2.out.index)
@@ -653,10 +654,14 @@ workflow RNASEQ {
     }
 
     if (!params.skip_qc) {
+        def ch_contaminant_sequences = params.contaminant_screening_input == 'trimmed'
+            ? ch_strand_inferred_filtered_fastq
+            : ch_unaligned_sequences
+
         if (params.contaminant_screening in ['kraken2', 'kraken2_bracken'] ) {
             KRAKEN2 (
-                ch_unaligned_sequences,
-                params.kraken_db,
+                ch_contaminant_sequences,
+                ch_kraken_db,
                 params.save_kraken_assignments,
                 params.save_kraken_unassigned
             )
@@ -667,7 +672,7 @@ workflow RNASEQ {
             } else if (params.contaminant_screening == 'kraken2_bracken') {
                 BRACKEN (
                     ch_kraken_reports,
-                    params.kraken_db
+                    ch_kraken_db
                 )
                 ch_multiqc_files = ch_multiqc_files.mix(BRACKEN.out.txt)
             }
@@ -675,7 +680,7 @@ workflow RNASEQ {
             def sylph_databases = params.sylph_db ? params.sylph_db.split(',').collect{ path -> file(path.trim()) } : []
             ch_sylph_databases = channel.value(sylph_databases)
             SYLPH_PROFILE (
-                ch_unaligned_sequences,
+                ch_contaminant_sequences,
                 ch_sylph_databases
             )
             ch_sylph_profile = SYLPH_PROFILE.out.profile_out.filter{ tuple -> !tuple[1].isEmpty() }

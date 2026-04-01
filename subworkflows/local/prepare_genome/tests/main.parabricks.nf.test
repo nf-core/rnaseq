@@ -41,18 +41,20 @@ nextflow_workflow {
                 input[14] = null  // bowtie2_index
                 input[15] = null  // bbsplit_index
                 input[16] = null  // sortmerna_index
-                input[17] = gencode
-                input[18] = gffread_transcript_fasta
-                input[19] = featurecounts_group_type
-                input[20] = aligner
-                input[21] = pseudo_aligner
-                input[22] = skip_gtf_filter
-                input[23] = skip_bbsplit
-                input[24] = ribo_removal_tool
-                input[25] = skip_alignment
-                input[26] = skip_pseudo_alignment
-                input[27] = use_sentieon_star
-                input[28] = use_parabricks_star
+                input[17] = null  // kraken_db
+                input[18] = gencode
+                input[19] = gffread_transcript_fasta
+                input[20] = featurecounts_group_type
+                input[21] = aligner
+                input[22] = pseudo_aligner
+                input[23] = skip_gtf_filter
+                input[24] = skip_bbsplit
+                input[25] = ribo_removal_tool
+                input[26] = skip_alignment
+                input[27] = skip_pseudo_alignment
+                input[28] = use_sentieon_star
+                input[29] = use_parabricks_star
+                input[30] = null  // contaminant_screening
                 """
             }
         }
@@ -111,18 +113,20 @@ nextflow_workflow {
                 input[14] = null  // bowtie2_index
                 input[15] = null  // bbsplit_index
                 input[16] = null  // sortmerna_index
-                input[17] = gencode
-                input[18] = gffread_transcript_fasta
-                input[19] = featurecounts_group_type
-                input[20] = aligner
-                input[21] = pseudo_aligner
-                input[22] = skip_gtf_filter
-                input[23] = skip_bbsplit
-                input[24] = ribo_removal_tool
-                input[25] = skip_alignment
-                input[26] = skip_pseudo_alignment
-                input[27] = use_sentieon_star
-                input[28] = use_parabricks_star
+                input[17] = null  // kraken_db
+                input[18] = gencode
+                input[19] = gffread_transcript_fasta
+                input[20] = featurecounts_group_type
+                input[21] = aligner
+                input[22] = pseudo_aligner
+                input[23] = skip_gtf_filter
+                input[24] = skip_bbsplit
+                input[25] = ribo_removal_tool
+                input[26] = skip_alignment
+                input[27] = skip_pseudo_alignment
+                input[28] = use_sentieon_star
+                input[29] = use_parabricks_star
+                input[30] = null  // contaminant_screening
                 """
             }
         }

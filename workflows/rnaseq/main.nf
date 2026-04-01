@@ -522,7 +522,9 @@ workflow RNASEQ {
                 ch_gtf,
             )
             ch_multiqc_files = ch_multiqc_files.mix(
-                RUSTQC.out.results.flatMap { meta, files -> files.collect { f -> [meta, f] } }
+                RUSTQC.out.results
+                    .flatMap { meta, files -> files.collect { f -> [meta, f] } }
+                    .filter { _meta, f -> f.name =~ /(?i)\.(txt|tsv|xls|stats|flagstat|idxstats|html)$/ || f.name.contains('_mqc.') }
             )
             ch_inferexperiment_txt = RUSTQC.out.inferexperiment_txt
         } else {

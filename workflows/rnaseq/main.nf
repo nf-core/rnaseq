@@ -614,41 +614,44 @@ workflow RNASEQ {
             ch_multiqc_files = ch_multiqc_files.mix(ch_fail_strand_multiqc.collectFile(name: 'fail_strand_check_mqc.tsv').map { file -> [[:], file] })
         }
 
+    }
+
+    //
+    // MODULE: Genome-wide coverage with BEDTools
+    // Note: Strand parameters are conditional on library strandedness (see nextflow.config)
+    //
+    if (!params.skip_bigwig) {
+
+        ch_genomecov_input = ch_genome_bam.map { meta, bam -> [ meta, bam, 1 ] }
+
+        BEDTOOLS_GENOMECOV_FW (
+            ch_genomecov_input,
+            [],
+            'bedGraph',
+            true
+        )
+        BEDTOOLS_GENOMECOV_REV (
+            ch_genomecov_input,
+            [],
+            'bedGraph',
+            true
+        )
+
         //
-        // MODULE: Genome-wide coverage with BEDTools
-        // Note: Strand parameters are conditional on library strandedness (see nextflow.config)
+        // SUBWORKFLOW: Convert bedGraph to bigWig
         //
-        if (!params.skip_bigwig) {
+        BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD (
+            BEDTOOLS_GENOMECOV_FW.out.genomecov,
+            ch_chrom_sizes
+        )
 
-            ch_genomecov_input = ch_genome_bam.map { meta, bam -> [ meta, bam, 1 ] }
+        BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE (
+            BEDTOOLS_GENOMECOV_REV.out.genomecov,
+            ch_chrom_sizes
+        )
+    }
 
-            BEDTOOLS_GENOMECOV_FW (
-                ch_genomecov_input,
-                [],
-                'bedGraph',
-                true
-            )
-            BEDTOOLS_GENOMECOV_REV (
-                ch_genomecov_input,
-                [],
-                'bedGraph',
-                true
-            )
-
-            //
-            // SUBWORKFLOW: Convert bedGraph to bigWig
-            //
-            BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD (
-                BEDTOOLS_GENOMECOV_FW.out.genomecov,
-                ch_chrom_sizes
-            )
-
-            BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE (
-                BEDTOOLS_GENOMECOV_REV.out.genomecov,
-                ch_chrom_sizes
-            )
-        }
-
+    if (!params.skip_qc) {
         //
         // Contaminant screening (Kraken2/Bracken/Sylph)
         //

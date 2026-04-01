@@ -78,7 +78,7 @@
 
 - [RustQC](https://github.com/seqeralabs/RustQC)
 
-  > Ewels P. RustQC: high-performance single-pass RNA-seq quality control. Seqera Labs; 2026. Available from: https://github.com/seqeralabs/RustQC
+  > Ewels P. RustQC: high-performance single-pass RNA-seq quality control. Seqera; 2026. Available from: https://github.com/seqeralabs/RustQC
 
 - [RSeQC](https://pubmed.ncbi.nlm.nih.gov/22743226/)
 

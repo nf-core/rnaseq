@@ -783,7 +783,7 @@
                 "use_rustqc": {
                     "type": "boolean",
                     "default": false,
-                    "description": "Use RustQC instead of dupRadar, featureCounts biotype QC, RSeQC, Preseq, Qualimap, and samtools stats/flagstat/idxstats.",
+                    "description": "Experimental. Use RustQC instead of dupRadar, featureCounts biotype QC, RSeQC, Preseq, Qualimap, and samtools stats/flagstat/idxstats. Recommend trialling on pilot data first.",
                     "fa_icon": "fas fa-rocket"
                 },
                 "skip_dupradar": {

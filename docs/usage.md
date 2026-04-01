@@ -332,7 +332,11 @@ Parabricks `rna_fq2bam` is based on STAR 2.7.2a. The following native STAR flags
 
 These differences are unlikely to materially affect downstream quantification results, but users should be aware of them for reproducibility purposes. All other STAR parameters (multi-mapping limits, intron sizes, mate gap, splice junction overhangs, etc.) have pbrun equivalents and are applied consistently.
 
-### RustQC: accelerated post-alignment QC
+### RustQC: accelerated post-alignment QC (experimental)
+
+:::warning
+RustQC support is experimental. We recommend trialling it alongside the default QC path on a pilot subset of your data before switching over for production runs. Results are designed to match the upstream tools, but minor numerical differences exist in some outputs (see below).
+:::
 
 [RustQC](https://github.com/seqeralabs/rustqc) is a high-performance tool that replaces multiple post-alignment QC steps with a single pass over the BAM file. It produces output files compatible with the same MultiQC modules, so the report content is equivalent.
 
@@ -351,6 +355,21 @@ nextflow run nf-core/rnaseq \
 ```
 
 RustQC outputs are published under `<ALIGNER>/rustqc/<SAMPLE>/` with subdirectories matching the tools they replace (e.g. `rustqc/<SAMPLE>/rseqc/`, `rustqc/<SAMPLE>/qualimap/`). See the [output documentation](#rustqc) for the full list of files.
+
+#### Validation status
+
+RustQC has been validated against the default QC tools on the nf-core/rnaseq test dataset (5 yeast samples, mixed PE/SE). The majority of outputs are byte-for-byte identical, including SAMtools flagstat/idxstats, RSeQC bam_stat/infer_experiment/read_distribution/read_duplication/junction_annotation, Qualimap coverage profiles, dupRadar gene matrices, featureCounts summaries, and Preseq library complexity curves.
+
+Known minor differences:
+
+- **SAMtools stats**: header/comment lines differ (tool attribution). Insert size histogram truncation point may differ. Core QC metrics are identical.
+- **Qualimap 5'-3' bias**: may differ by 0.01-0.03 for individual samples due to tie-breaking differences in transcript selection. Gene alignment statistics (exonic/intronic/intergenic) are identical.
+- **RSeQC TIN**: per-gene TIN values for paired-end data use randomized subsampling. The pipeline passes `--tin-seed 1` for reproducibility, but values may differ slightly (~1-2 TIN units) from the Python RSeQC implementation.
+- **dupRadar intercept/slope**: sub-part-per-million differences from GLM curve fitting (Rust vs R). Gene-level duplicate matrices are identical.
+- **featureCounts biotype TSV**: RustQC reports per-gene rows; the default groups by biotype. Summary counts and MultiQC biotype plots are identical.
+- **Preseq**: extrapolated curves may differ by up to ~0.3% due to differences in the Good-Toulmin continued fraction implementation.
+
+None of these differences affect biological interpretation or MultiQC report content.
 
 ## Quantification options
 

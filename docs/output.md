@@ -533,7 +533,7 @@ The [bigWig](https://genome.ucsc.edu/goldenpath/help/bigWig.html) format is an i
 
 ## Quality control
 
-### RustQC
+### RustQC (experimental)
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -590,7 +590,7 @@ The [bigWig](https://genome.ucsc.edu/goldenpath/help/bigWig.html) format is an i
 
 </details>
 
-[RustQC](https://github.com/seqeralabs/rustqc) is a high-performance, single-pass replacement for multiple post-alignment QC tools. It produces output files compatible with the same MultiQC modules as the individual tools it replaces, so the QC report content is equivalent.
+[RustQC](https://github.com/seqeralabs/rustqc) is a high-performance, single-pass replacement for multiple post-alignment QC tools. It produces output files compatible with the same MultiQC modules as the individual tools it replaces, so the QC report content is equivalent. RustQC support is currently experimental - see the [usage documentation](usage.md#rustqc-accelerated-post-alignment-qc-experimental) for validation status and known differences.
 
 To enable RustQC, use the `--use_rustqc` flag. It replaces dupRadar, featureCounts biotype QC, RSeQC (bam_stat, infer_experiment, read_distribution, read_duplication, junction_annotation, junction_saturation, inner_distance, TIN), Preseq, Qualimap, and SAMtools stats/flagstat/idxstats. The individual tools are automatically skipped.
 

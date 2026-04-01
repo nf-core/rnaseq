@@ -20,7 +20,12 @@ process RUSTQC {
     script:
     prefix = task.ext.prefix ?: "${meta.id}"
     def args = task.ext.args ?: ''
-    def strandedness = meta.strandedness ?: 'unstranded'
+    def strandedness = 'unstranded'
+    if (meta.strandedness == 'forward') {
+        strandedness = 'forward'
+    } else if (meta.strandedness == 'reverse') {
+        strandedness = 'reverse'
+    }
     def paired       = meta.single_end ? '' : '--paired'
     """
     rustqc rna \\

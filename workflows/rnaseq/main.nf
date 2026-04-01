@@ -554,7 +554,9 @@ workflow RNASEQ {
         //
         // Strandedness comparison using infer_experiment output
         //
-        if (rseqc_modules.contains('infer_experiment')) {
+        // RustQC always produces infer_experiment output regardless of rseqc_modules
+        def run_infer_experiment = params.use_rustqc || rseqc_modules.contains('infer_experiment')
+        if (run_infer_experiment) {
 
             // Compare predicted supplied or Salmon-predicted strand with what we get from RSeQC
             ch_strand_comparison = ch_inferexperiment_txt

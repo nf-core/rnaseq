@@ -51,6 +51,7 @@ process RUSTQC {
 
     touch ${prefix}/featurecounts/${prefix}.featureCounts.tsv \
           ${prefix}/featurecounts/${prefix}.featureCounts.tsv.summary \
+          ${prefix}/featurecounts/${prefix}.featureCounts.biotype.tsv.summary \
           ${prefix}/featurecounts/${prefix}.{biotype_counts,biotype_counts_mqc,biotype_counts_rrna_mqc}.tsv
 
     touch ${prefix}/rseqc/bam_stat/${prefix}.bam_stat.txt \

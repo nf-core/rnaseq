@@ -524,7 +524,13 @@ workflow RNASEQ {
             ch_multiqc_files = ch_multiqc_files.mix(
                 RUSTQC.out.results
                     .flatMap { meta, files -> files.collect { f -> [meta, f] } }
-                    .filter { _meta, f -> f.name =~ /(?i)\.(txt|tsv|xls|stats|flagstat|idxstats|html)$/ || f.name.contains('_mqc.') }
+                    .filter { _meta, f ->
+                        // Exclude gene-level featureCounts summary so MultiQC only sees the
+                        // biotype-level summary (*.biotype.tsv.summary), matching the default
+                        // pipeline's featureCounts -g gene_biotype output.
+                        if (f.name.endsWith('.featureCounts.tsv.summary')) return false
+                        f.name =~ /(?i)\.(txt|tsv|xls|stats|flagstat|idxstats|html)$/ || f.name.contains('_mqc.')
+                    }
             )
             ch_inferexperiment_txt = RUSTQC.out.inferexperiment_txt
         } else {

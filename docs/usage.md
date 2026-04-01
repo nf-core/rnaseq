@@ -358,18 +358,7 @@ RustQC outputs are published under `<ALIGNER>/rustqc/<SAMPLE>/` with subdirector
 
 #### Validation status
 
-RustQC has been validated against the default QC tools on the nf-core/rnaseq test dataset (5 yeast samples, mixed PE/SE). The majority of outputs are byte-for-byte identical, including SAMtools flagstat/idxstats, RSeQC bam_stat/infer_experiment/read_distribution/read_duplication/junction_annotation, Qualimap coverage profiles, dupRadar gene matrices, featureCounts summaries, and Preseq library complexity curves.
-
-Known minor differences:
-
-- **SAMtools stats**: header/comment lines differ (tool attribution). Insert size histogram truncation point may differ. Core QC metrics are identical.
-- **Qualimap 5'-3' bias**: may differ by 0.01-0.03 for individual samples due to tie-breaking differences in transcript selection. Gene alignment statistics (exonic/intronic/intergenic) are identical.
-- **RSeQC TIN**: per-gene TIN values for paired-end data use randomized subsampling. The pipeline passes `--tin-seed 1` for reproducibility, but values may differ slightly (~1-2 TIN units) from the Python RSeQC implementation.
-- **dupRadar intercept/slope**: sub-part-per-million differences from GLM curve fitting (Rust vs R). Gene-level duplicate matrices are identical.
-- **featureCounts biotype TSV**: RustQC reports per-gene rows; the default groups by biotype. Summary counts and MultiQC biotype plots are identical.
-- **Preseq**: extrapolated curves may differ by up to ~0.3% due to differences in the Good-Toulmin continued fraction implementation.
-
-None of these differences affect biological interpretation or MultiQC report content.
+RustQC has been validated against the default QC tools on the nf-core/rnaseq test dataset (5 yeast samples, mixed PE/SE). The majority of outputs are byte-for-byte identical. Where differences exist (e.g. floating-point precision in curve fitting, randomized subsampling in TIN, and cosmetic formatting), they are minor and do not affect biological interpretation or MultiQC report content.
 
 ## Quantification options
 

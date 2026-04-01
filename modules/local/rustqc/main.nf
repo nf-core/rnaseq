@@ -3,7 +3,7 @@ process RUSTQC {
     label 'process_high'
 
     conda "${moduleDir}/environment.yml"
-    container "ghcr.io/seqeralabs/rustqc:0.1.1"
+    container "ghcr.io/seqeralabs/rustqc:0.1.2"
 
     input:
     tuple val(meta), path(bam), path(bai)

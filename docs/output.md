@@ -539,11 +539,11 @@ The [bigWig](https://genome.ucsc.edu/goldenpath/help/bigWig.html) format is an i
 <summary>Output files</summary>
 
 - `<ALIGNER>/rustqc/dupradar/`
-  - `*_duprateExpDens.{png,svg}`: Duplication rate density scatter plots.
-  - `*_duprateExpBoxplot.{png,svg}`: Box plots showing duplication rate relative to expression.
-  - `*_expressionHist.{png,svg}`: Histogram of reads per kilobase per gene.
-  - `*_dupMatrix.txt`: Duplicate metrics per gene.
-  - `*_intercept_slope.txt`: Intercept and slope values.
+  - `scatter_plot/*_duprateExpDens.{png,svg}`: Duplication rate density scatter plots.
+  - `box_plot/*_duprateExpBoxplot.{png,svg}`: Box plots showing duplication rate relative to expression.
+  - `histogram/*_expressionHist.{png,svg}`: Histogram of reads per kilobase per gene.
+  - `gene_data/*_dupMatrix.txt`: Duplicate metrics per gene.
+  - `intercepts_slope/*_intercept_slope.txt`: Intercept and slope values.
   - `*_dup_intercept_mqc.txt`: MultiQC custom content for dupRadar intercept.
   - `*_duprateExpDensCurve_mqc.txt`: MultiQC custom content for dupRadar density curve.
 - `<ALIGNER>/rustqc/featurecounts/`
@@ -559,20 +559,24 @@ The [bigWig](https://genome.ucsc.edu/goldenpath/help/bigWig.html) format is an i
 - `<ALIGNER>/rustqc/rseqc/read_distribution/`
   - `*.read_distribution.txt`: Genomic feature read distribution.
 - `<ALIGNER>/rustqc/rseqc/read_duplication/`
-  - `*.pos.DupRate.xls`, `*.seq.DupRate.xls`: Read duplication rates.
-  - `*.DupRate_plot.{png,svg,r}`: Duplication rate plots.
+  - `xls/*.pos.DupRate.xls`, `xls/*.seq.DupRate.xls`: Read duplication rates.
+  - `plot/*.DupRate_plot.{png,svg}`: Duplication rate plots.
+  - `rscript/*.DupRate_plot.r`: R script for duplication plots.
 - `<ALIGNER>/rustqc/rseqc/junction_annotation/`
-  - `*.junction.xls`, `*.junction.bed`, `*.junction.Interact.bed`: Junction data.
-  - `*.junction_annotation.txt`: Junction annotation log.
-  - `*.junction_plot.r`: R script for junction plots.
-  - `*.splice_events.{png,svg}`, `*.splice_junction.{png,svg}`: Splice junction plots.
+  - `xls/*.junction.xls`: Junction data in tabular format.
+  - `bed/*.junction.bed`, `bed/*.junction.Interact.bed`: Junction data in BED format.
+  - `log/*.junction_annotation.txt`: Junction annotation log.
+  - `rscript/*.junction_plot.r`: R script for junction plots.
+  - `plot/*.splice_events.{png,svg}`, `plot/*.splice_junction.{png,svg}`: Splice junction plots.
 - `<ALIGNER>/rustqc/rseqc/junction_saturation/`
-  - `*.junctionSaturation_plot.{png,svg,r}`: Junction saturation plots.
-  - `*.junctionSaturation_summary.txt`: Summary statistics.
+  - `plot/*.junctionSaturation_plot.{png,svg}`: Junction saturation plots.
+  - `rscript/*.junctionSaturation_plot.r`: R script for saturation plots.
+  - `txt/*.junctionSaturation_summary.txt`: Summary statistics.
 - `<ALIGNER>/rustqc/rseqc/inner_distance/`
-  - `*.inner_distance.txt`, `*.inner_distance_freq.txt`, `*.inner_distance_mean.txt`: Inner distance data.
-  - `*.inner_distance_plot.{png,svg,r}`: Inner distance plots.
-  - `*.inner_distance_summary.txt`: Summary statistics.
+  - `txt/*.inner_distance.txt`, `txt/*.inner_distance_freq.txt`, `txt/*.inner_distance_mean.txt`: Inner distance data.
+  - `plot/*.inner_distance_plot.{png,svg}`: Inner distance plots.
+  - `rscript/*.inner_distance_plot.r`: R script for inner distance plots.
+  - `txt/*.inner_distance_summary.txt`: Summary statistics.
 - `<ALIGNER>/rustqc/rseqc/tin/`
   - `*.tin.xls`: TIN values per transcript.
   - `*.summary.txt`: TIN summary statistics.
@@ -582,7 +586,7 @@ The [bigWig](https://genome.ucsc.edu/goldenpath/help/bigWig.html) format is an i
   - `*.flagstat`: SAMtools flagstat output.
   - `*.idxstats`: SAMtools idxstats output.
   - `*.stats`: SAMtools stats output.
-- `<ALIGNER>/rustqc/qualimap/`
+- `<ALIGNER>/rustqc/qualimap/<SAMPLE>/`
   - `qualimapReport.html`: Standalone Qualimap HTML report.
   - `rnaseq_qc_results.txt`: Textual QC results.
   - `images_qualimapReport/`: Coverage profile plots (Total, High, Low) in PNG and SVG, junction analysis, genomic origin, and transcript coverage histogram.

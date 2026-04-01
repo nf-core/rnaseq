@@ -120,8 +120,6 @@ run_modules:
   - preseq
   - rseqc
   - qualimap
-  - dupradar
-  - subread_featurecounts
   - kraken
   - sylphtax
 
@@ -157,13 +155,6 @@ module_order:
       info: "This section of the report shows FastQC results after contaminant removal (BBSplit) and/or ribosomal RNA removal."
       path_filters:
         - "*_filtered*fastqc.zip"
-
-  - dupradar:
-      path_filters:
-        - "*/rustqc/*"
-  - subread_featurecounts:
-      path_filters:
-        - "*/rustqc/*"
 
 # Don't show % Dups in the General Stats table (we have this from Picard)
 table_columns_visible:

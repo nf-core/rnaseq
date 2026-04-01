@@ -522,12 +522,7 @@ workflow RNASEQ {
                 ch_gtf,
             )
             ch_multiqc_files = ch_multiqc_files.mix(
-                RUSTQC.out.rseqc.flatMap { meta, files -> files.collect { f -> [meta, f] } },
-                RUSTQC.out.dupradar.flatMap { meta, files -> files.collect { f -> [meta, f] } },
-                RUSTQC.out.featurecounts.flatMap { meta, files -> files.collect { f -> [meta, f] } },
-                RUSTQC.out.preseq.flatMap { meta, files -> files.collect { f -> [meta, f] } },
-                RUSTQC.out.samtools.flatMap { meta, files -> files.collect { f -> [meta, f] } },
-                RUSTQC.out.qualimap.flatMap { meta, files -> files.collect { f -> [meta, f] } }
+                RUSTQC.out.results.flatMap { meta, files -> files.collect { f -> [meta, f] } }
             )
             ch_inferexperiment_txt = RUSTQC.out.inferexperiment_txt
         } else {

@@ -10,12 +10,7 @@ process RUSTQC {
     path gtf
 
     output:
-    tuple val(meta), path("${prefix}/rseqc/**"),         emit: rseqc
-    tuple val(meta), path("${prefix}/dupradar/*"),       emit: dupradar
-    tuple val(meta), path("${prefix}/featurecounts/*"),  emit: featurecounts
-    tuple val(meta), path("${prefix}/preseq/*"),         emit: preseq
-    tuple val(meta), path("${prefix}/samtools/*"),       emit: samtools
-    tuple val(meta), path("${prefix}/qualimap/**"),      emit: qualimap
+    tuple val(meta), path("${prefix}/**"),               emit: results
     tuple val(meta), path("${prefix}/rseqc/infer_experiment/*.infer_experiment.txt"), emit: inferexperiment_txt, optional: true
     tuple val("${task.process}"), val('rustqc'), eval("rustqc --version | sed 's/rustqc //'"), topic: versions
 

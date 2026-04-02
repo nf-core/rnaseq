@@ -16,7 +16,7 @@ nextflow_process {
             process {
                 """
                 input[0] = channel.of([
-                    [ id:'test', single_end:false, strandedness:'forward' ],
+                    [ id:'test', single_end:false ],
                     file(params.modules_testdata_base_path + "genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true),
                     file(params.modules_testdata_base_path + "genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam.bai", checkIfExists: true)
                 ])
@@ -48,6 +48,9 @@ nextflow_process {
                         !it.toString().endsWith("summary.txt")
                     }.collect { file(it).name }.sort()
                 ).match() },
+
+                // versions
+                { assert snapshot(process.out.versions_rustqc).match("versions") },
 
                 // content assertions for non-snapshottable outputs
                 // samtools flagstat - 5644 total reads
@@ -83,7 +86,7 @@ nextflow_process {
             process {
                 """
                 input[0] = channel.of([
-                    [ id:'test', single_end:false, strandedness:'forward' ],
+                    [ id:'test', single_end:false ],
                     file(params.modules_testdata_base_path + "genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true),
                     file(params.modules_testdata_base_path + "genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam.bai", checkIfExists: true)
                 ])

@@ -21,10 +21,10 @@ tools:
         read_duplication, junction_annotation, junction_saturation,
         inner_distance, TIN), Preseq, Qualimap, and SAMtools
         (flagstat, idxstats, stats).
-      homepage: https://github.com/seqeralabs/rustqc
-      documentation: https://github.com/seqeralabs/rustqc
+      homepage: https://seqeralabs.github.io/RustQC/
+      documentation: https://seqeralabs.github.io/RustQC/
       tool_dev_url: https://github.com/seqeralabs/rustqc
-      licence: ["Apache-2.0"]
+      licence: ["GPL-3.0-or-later"]
       identifier: ""
 
 input:
@@ -32,7 +32,7 @@ input:
         type: map
         description: |
           Groovy Map containing sample information
-          e.g. [ id:'test', single_end:false, strandedness:'reverse' ]
+          e.g. [ id:'test', single_end:false ]
     - bam:
         type: file
         description: Sorted BAM file
@@ -121,6 +121,17 @@ output:
           description: Qualimap RNA-seq QC report and raw data
           pattern: "${prefix}/qualimap/**"
           ontologies: []
+  versions_rustqc:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - rustqc:
+          type: string
+          description: The tool name
+      - "rustqc --version | sed 's/rustqc //'":
+          type: eval
+          description: The expression to obtain the version of the tool
+
 topics:
   versions:
     - - ${task.process}:
@@ -139,3 +150,13 @@ authors:
 maintainers:
   - "@ewels"
   - "@pinin4fjords"
+containers:
+  docker:
+    linux/amd64:
+      name: community.wave.seqera.io/library/rustqc:0.1.1--c6684d9942e792a7
+      build_id: bd-c6684d9942e792a7_1
+  singularity:
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/rustqc:0.1.1--bb101515d2b2876b
+      build_id: bd-bb101515d2b2876b_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/58/58923a16e4a0186cb9c4a3b3b9df8a7c791731a634f1294bd0ea74d55c3666f7/data

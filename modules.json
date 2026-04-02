@@ -200,8 +200,8 @@
                         "installed_by": ["bam_rseqc"]
                     },
                     "rustqc": {
-                        "branch": "rustqc",
-                        "git_sha": "dc35ed4bfb5d248c19865768f73aad9bcdbe9b36",
+                        "branch": "master",
+                        "git_sha": "32836839a2b98051aa246522431f6858e7cd55b7",
                         "installed_by": ["modules"]
                     },
                     "salmon/index": {

@@ -1,4 +1,20 @@
 {
+    "versions": {
+        "content": [
+            [
+                [
+                    "RUSTQC",
+                    "rustqc",
+                    "0.1.1"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-04-02T18:06:41.098556"
+    },
     "homo_sapiens paired-end [bam] - stub": {
         "content": [
             {
@@ -6,8 +22,7 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "strandedness": "forward"
+                            "single_end": false
                         },
                         [
                             "test_dupMatrix.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -24,8 +39,7 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "strandedness": "forward"
+                            "single_end": false
                         },
                         [
                             "test.biotype_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -41,8 +55,7 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "strandedness": "forward"
+                            "single_end": false
                         },
                         "test.lc_extrap.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
@@ -51,8 +64,7 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "strandedness": "forward"
+                            "single_end": false
                         },
                         [
                             "test.flagstat:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -65,8 +77,7 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "strandedness": "forward"
+                            "single_end": false
                         },
                         [
                             "test.bam_stat.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -100,8 +111,7 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "strandedness": "forward"
+                            "single_end": false
                         },
                         [
                             "qualimapReport.html:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -121,8 +131,7 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "strandedness": "forward"
+                            "single_end": false
                         },
                         [
                             "test_dupMatrix.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -139,8 +148,7 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "strandedness": "forward"
+                            "single_end": false
                         },
                         [
                             "test.biotype_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -156,8 +164,7 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "strandedness": "forward"
+                            "single_end": false
                         },
                         "test.lc_extrap.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
@@ -166,8 +173,7 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "strandedness": "forward"
+                            "single_end": false
                         },
                         [
                             "qualimapReport.html:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -180,8 +186,7 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "strandedness": "forward"
+                            "single_end": false
                         },
                         [
                             "test.bam_stat.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -215,14 +220,20 @@
                     [
                         {
                             "id": "test",
-                            "single_end": false,
-                            "strandedness": "forward"
+                            "single_end": false
                         },
                         [
                             "test.flagstat:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "test.stats:md5,d41d8cd98f00b204e9800998ecf8427e"
                         ]
+                    ]
+                ],
+                "versions_rustqc": [
+                    [
+                        "RUSTQC",
+                        "rustqc",
+                        "0.1.1"
                     ]
                 ]
             }
@@ -231,7 +242,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-04-02T14:35:32.393814"
+        "timestamp": "2026-04-02T18:06:47.69887"
     },
     "homo_sapiens paired-end [bam]": {
         "content": [
@@ -239,8 +250,7 @@
                 [
                     {
                         "id": "test",
-                        "single_end": false,
-                        "strandedness": "forward"
+                        "single_end": false
                     },
                     [
                         "test.biotype_counts.tsv:md5,68744ae62d861b2f5fbe83b2d1e1ac92",
@@ -256,8 +266,7 @@
                 [
                     {
                         "id": "test",
-                        "single_end": false,
-                        "strandedness": "forward"
+                        "single_end": false
                     },
                     "test.lc_extrap.txt:md5,deefbb79ddd19e5d05f4f757ed2f2f13"
                 ]
@@ -330,6 +339,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-04-02T14:35:26.283641"
+        "timestamp": "2026-04-02T18:06:41.074558"
     }
 }

@@ -3,7 +3,9 @@ process RUSTQC {
     label 'process_high'
 
     conda "${moduleDir}/environment.yml"
-    container "ghcr.io/seqeralabs/rustqc:0.1.1"
+    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/58/58923a16e4a0186cb9c4a3b3b9df8a7c791731a634f1294bd0ea74d55c3666f7/data'
+        : 'community.wave.seqera.io/library/rustqc:0.1.1--c6684d9942e792a7'}"
 
     input:
     tuple val(meta), path(bam), path(bai)
@@ -16,7 +18,7 @@ process RUSTQC {
     tuple val(meta), path("${prefix}/samtools/*"),                                                      emit: samtools
     tuple val(meta), path("${prefix}/rseqc/**"),                                                        emit: rseqc
     tuple val(meta), path("${prefix}/qualimap/**"),                                                     emit: qualimap
-    tuple val("${task.process}"), val('rustqc'), eval("rustqc --version | sed 's/rustqc //'"),          topic: versions
+    tuple val("${task.process}"), val('rustqc'), eval("rustqc --version | sed 's/rustqc //'"),          emit: versions_rustqc, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -24,18 +26,11 @@ process RUSTQC {
     script:
     prefix = task.ext.prefix ?: "${meta.id}"
     def args = task.ext.args ?: ''
-    def strandedness = 'unstranded'
-    if (meta.strandedness == 'forward') {
-        strandedness = 'forward'
-    } else if (meta.strandedness == 'reverse') {
-        strandedness = 'reverse'
-    }
     def paired = meta.single_end ? '' : '--paired'
     """
     rustqc rna \\
         ${bam} \\
         --gtf ${gtf} \\
-        --stranded ${strandedness} \\
         ${paired} \\
         --threads ${task.cpus} \\
         --outdir ${prefix} \\

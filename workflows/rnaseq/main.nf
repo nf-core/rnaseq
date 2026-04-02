@@ -10,19 +10,19 @@
 include { DESEQ2_QC as DESEQ2_QC_BAM_SALMON } from '../../modules/local/deseq2_qc'
 include { DESEQ2_QC as DESEQ2_QC_RSEM        } from '../../modules/local/deseq2_qc'
 include { DESEQ2_QC as DESEQ2_QC_PSEUDO      } from '../../modules/local/deseq2_qc'
-include { MULTIQC_CUSTOM_BIOTYPE             } from '../../modules/local/multiqc_custom_biotype'
+include { RUSTQC                              } from '../../modules/nf-core/rustqc/main'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 include { ALIGN_STAR                            } from '../../subworkflows/local/align_star'
 include { ALIGN_BOWTIE2                         } from '../../subworkflows/local/align_bowtie2'
+include { BAM_POST_ALIGNMENT_QC                 } from '../../subworkflows/local/bam_post_alignment_qc'
 include { QUANTIFY_RSEM                         } from '../../subworkflows/nf-core/quantify_rsem'
 include { BAM_DEDUP_UMI                         } from '../../subworkflows/nf-core/bam_dedup_umi'
 
 include { checkSamplesAfterGrouping      } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { multiqcTsvFromList             } from '../../subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness'
-include { biotypeInGtf                   } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { getInferexperimentStrandedness } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { methodsDescriptionText         } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { mapBamToPublishedPath          } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
@@ -36,11 +36,7 @@ include { mapBamToPublishedPath          } from '../../subworkflows/local/utils_
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { DUPRADAR                   } from '../../modules/nf-core/dupradar'
-include { PRESEQ_LCEXTRAP            } from '../../modules/nf-core/preseq/lcextrap'
-include { QUALIMAP_RNASEQ            } from '../../modules/nf-core/qualimap/rnaseq'
 include { STRINGTIE_STRINGTIE        } from '../../modules/nf-core/stringtie/stringtie'
-include { SUBREAD_FEATURECOUNTS      } from '../../modules/nf-core/subread/featurecounts'
 include { KRAKEN2_KRAKEN2 as KRAKEN2 } from '../../modules/nf-core/kraken2/kraken2/main'
 include { BRACKEN_BRACKEN as BRACKEN } from '../../modules/nf-core/bracken/bracken/main'
 include { SYLPH_PROFILE              } from '../../modules/nf-core/sylph/profile/main'
@@ -49,7 +45,6 @@ include { MULTIQC                    } from '../../modules/nf-core/multiqc'
 include { BEDTOOLS_GENOMECOV as BEDTOOLS_GENOMECOV_FW          } from '../../modules/nf-core/bedtools/genomecov'
 include { BEDTOOLS_GENOMECOV as BEDTOOLS_GENOMECOV_REV         } from '../../modules/nf-core/bedtools/genomecov'
 include { SAMTOOLS_INDEX                                       } from '../../modules/nf-core/samtools/index'
-include { SAMTOOLS_SORT as SAMTOOLS_SORT_QUALIMAP              } from '../../modules/nf-core/samtools/sort'
 
 //
 // SUBWORKFLOW: Consisting entirely of nf-core/modules
@@ -60,7 +55,6 @@ include { paramsSummaryMultiqc             } from '../../subworkflows/nf-core/ut
 include { softwareVersionsToYAML           } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
 include { FASTQ_ALIGN_HISAT2               } from '../../subworkflows/nf-core/fastq_align_hisat2'
 include { BAM_MARKDUPLICATES_PICARD        } from '../../subworkflows/nf-core/bam_markduplicates_picard'
-include { BAM_RSEQC                        } from '../../subworkflows/nf-core/bam_rseqc'
 include { BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG as BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD } from '../../subworkflows/nf-core/bedgraph_bedclip_bedgraphtobigwig'
 include { BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG as BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE } from '../../subworkflows/nf-core/bedgraph_bedclip_bedgraphtobigwig'
 include { QUANTIFY_PSEUDO_ALIGNMENT as QUANTIFY_BAM_SALMON } from '../../subworkflows/nf-core/quantify_pseudo_alignment'
@@ -107,8 +101,8 @@ workflow RNASEQ {
     def ch_transcript_fasta_placeholder = ch_pca_header_multiqc
 
     // Pre-build fasta_fai value channels for subworkflows that need [meta, fasta, fai]
-    // Using .flatten().collect().map to guarantee a value channel
-    ch_fasta_fai            = ch_fasta.combine(ch_fai).flatten().collect().map { items -> [ [:], items[0], items[1] ] }
+    // .first() converts the queue channel to a value channel so it can be consumed multiple times
+    ch_fasta_fai            = ch_fasta.combine(ch_fai).map { fasta, fai -> [ [:], fasta, fai ] }.first()
     ch_transcript_fasta_fai = ch_transcript_fasta.map { fasta -> [[:], fasta, []] }
 
     ch_multiqc_files = channel.empty()
@@ -479,16 +473,6 @@ workflow RNASEQ {
     ch_genome_bam_index = map_filtered_genome_bam_bai.index
 
     //
-    // MODULE: Run Preseq
-    //
-    if (!params.skip_qc && !params.skip_preseq) {
-        PRESEQ_LCEXTRAP (
-            ch_genome_bam
-        )
-        ch_multiqc_files = ch_multiqc_files.mix(PRESEQ_LCEXTRAP.out.lc_extrap)
-    }
-
-    //
     // SUBWORKFLOW: Mark duplicate reads
     //
 
@@ -518,123 +502,84 @@ workflow RNASEQ {
     }
 
     //
-    // MODULE: Feature biotype QC using featureCounts
+    // Pre-compute param-derived values for QC subworkflow
     //
     def biotype = params.gencode ? "gene_type" : params.featurecounts_group_type
-    if (!params.skip_qc && !params.skip_biotype_qc && biotype) {
-
-        ch_gtf
-            .map { gtf -> biotypeInGtf(gtf, biotype) }
-            .set { biotype_in_gtf }
-
-        // Prevent any samples from running if GTF file doesn't have a valid biotype
-        ch_genome_bam
-            .combine(ch_gtf)
-            .combine(biotype_in_gtf)
-            .filter { meta, bam, gtf, biotype_ok -> biotype_ok }
-            .map { meta, bam, gtf, _biotype_ok -> [ meta, bam, gtf ] }
-            .set { ch_featurecounts }
-
-        SUBREAD_FEATURECOUNTS (
-            ch_featurecounts
-        )
-
-        MULTIQC_CUSTOM_BIOTYPE (
-            SUBREAD_FEATURECOUNTS.out.counts,
-            ch_biotypes_header_multiqc
-        )
-        ch_multiqc_files = ch_multiqc_files.mix(MULTIQC_CUSTOM_BIOTYPE.out.tsv)
+    def rseqc_modules = params.rseqc_modules ? params.rseqc_modules.split(',').collect{ module -> module.trim().toLowerCase() } : []
+    if (params.bam_csi_index) {
+        rseqc_modules.removeAll(['read_distribution', 'inner_distance', 'tin'])
     }
 
-    //
-    // MODULE: Genome-wide coverage with BEDTools
-    // Note: Strand parameters are conditional on library strandedness (see nextflow.config)
-    //
-    if (!params.skip_bigwig) {
+    ch_inferexperiment_txt = Channel.empty()
 
-        ch_genomecov_input = ch_genome_bam.map { meta, bam -> [ meta, bam, 1 ] }
-
-        BEDTOOLS_GENOMECOV_FW (
-            ch_genomecov_input,
-            [],
-            'bedGraph',
-            true
-        )
-        BEDTOOLS_GENOMECOV_REV (
-            ch_genomecov_input,
-            [],
-            'bedGraph',
-            true
-        )
-
-        //
-        // SUBWORKFLOW: Convert bedGraph to bigWig
-        //
-        BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD (
-            BEDTOOLS_GENOMECOV_FW.out.genomecov,
-            ch_chrom_sizes
-        )
-
-        BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE (
-            BEDTOOLS_GENOMECOV_REV.out.genomecov,
-            ch_chrom_sizes
-        )
-    }
-
-    //
-    // MODULE: Downstream QC steps
-    //
     if (!params.skip_qc) {
-        if (!params.skip_qualimap) {
-            // Sort BAM by name for qualimap (performance optimization)
-            SAMTOOLS_SORT_QUALIMAP (
-                ch_genome_bam,
-                ch_fasta_fai,
-                ''
+        if (params.use_rustqc) {
+            //
+            // MODULE: RustQC - single-pass replacement for multiple QC tools
+            //
+            RUSTQC (
+                ch_genome_bam.join(ch_genome_bam_index, by: [0]),
+                ch_gtf.map { gtf -> [ [:], gtf ] },
             )
 
-            QUALIMAP_RNASEQ (
-                SAMTOOLS_SORT_QUALIMAP.out.bam,
-                ch_gtf.map { item -> [ [:], item ] }
+            // Collect all per-tool outputs, flatten to individual files, then filter for MultiQC
+            ch_multiqc_files = ch_multiqc_files.mix(
+                RUSTQC.out.dupradar
+                    .mix(RUSTQC.out.featurecounts)
+                    .mix(RUSTQC.out.preseq)
+                    .mix(RUSTQC.out.samtools)
+                    .mix(RUSTQC.out.rseqc)
+                    .mix(RUSTQC.out.qualimap)
+                    .flatMap { meta, files -> (files instanceof List ? files : [files]).collect { f -> [meta, f] } }
+                    .filter { _meta, f ->
+                        // Exclude gene-level featureCounts summary so MultiQC only sees the
+                        // biotype-level summary (*.biotype.tsv.summary), matching the default
+                        // pipeline's featureCounts -g gene_biotype output.
+                        if (f.name.endsWith('.featureCounts.tsv.summary')) return false
+                        f.name =~ /(?i)\.(txt|tsv|xls|stats|flagstat|idxstats|html)$/ || f.name.contains('_mqc.')
+                    }
             )
-            ch_multiqc_files = ch_multiqc_files.mix(QUALIMAP_RNASEQ.out.results)
-        }
 
-        if (!params.skip_dupradar) {
-            DUPRADAR (
-                ch_genome_bam,
-                ch_gtf.map { item -> [ [:], item ] }
-            )
-            ch_multiqc_files = ch_multiqc_files.mix(DUPRADAR.out.multiqc)
-            ch_versions = ch_versions.mix(DUPRADAR.out.versions.first())
-        }
-
-        // Get RSeqC modules to run
-        def rseqc_modules = params.rseqc_modules ? params.rseqc_modules.split(',').collect{ module -> module.trim().toLowerCase() } : []
-        if (params.bam_csi_index) {
-            ['read_distribution', 'inner_distance', 'tin'].each { rseqc_module ->
-                if (rseqc_modules.contains(rseqc_module)) {
-                    rseqc_modules.remove(rseqc_module)
+            // Extract infer_experiment from rseqc channel
+            ch_inferexperiment_txt = RUSTQC.out.rseqc
+                .map { meta, files ->
+                    def ie = (files instanceof List ? files : [files]).find { it.name.endsWith('.infer_experiment.txt') }
+                    ie ? [meta, ie] : null
                 }
-            }
-        }
-        if (!params.skip_rseqc && rseqc_modules.size() > 0) {
-            BAM_RSEQC (
-                ch_genome_bam.join(ch_genome_bam_index, by: [0]).map { meta, bam, bai -> [ meta, [ bam, bai ] ] },
+                .filter { it != null }
+        } else {
+            //
+            // SUBWORKFLOW: Post-alignment QC (upstream tools)
+            //
+            BAM_POST_ALIGNMENT_QC (
+                ch_genome_bam,
+                ch_genome_bam_index,
+                ch_gtf,
                 ch_gene_bed,
+                ch_fasta_fai,
+                ch_biotypes_header_multiqc,
+                params.skip_preseq,
+                params.skip_biotype_qc,
+                params.skip_qualimap,
+                params.skip_dupradar,
+                params.skip_rseqc,
+                biotype,
                 rseqc_modules
             )
-            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.bamstat_txt)
-            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.inferexperiment_txt)
-            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.innerdistance_freq)
-            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.junctionannotation_log)
-            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.junctionsaturation_rscript)
-            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.readdistribution_txt)
-            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.readduplication_pos_xls)
-            ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.tin_txt)
+            ch_multiqc_files = ch_multiqc_files.mix(BAM_POST_ALIGNMENT_QC.out.multiqc_files)
+            ch_inferexperiment_txt = BAM_POST_ALIGNMENT_QC.out.inferexperiment_txt
+            ch_versions = ch_versions.mix(BAM_POST_ALIGNMENT_QC.out.versions)
+        }
+
+        //
+        // Strandedness comparison using infer_experiment output
+        //
+        // RustQC always produces infer_experiment output regardless of rseqc_modules
+        def run_infer_experiment = params.use_rustqc || rseqc_modules.contains('infer_experiment')
+        if (run_infer_experiment) {
 
             // Compare predicted supplied or Salmon-predicted strand with what we get from RSeQC
-            ch_strand_comparison = BAM_RSEQC.out.inferexperiment_txt
+            ch_strand_comparison = ch_inferexperiment_txt
                 .map {
                     meta, strand_log ->
                         def rseqc_inferred_strand = getInferexperimentStrandedness(strand_log, params.stranded_threshold, params.unstranded_threshold)
@@ -693,6 +638,47 @@ workflow RNASEQ {
             ch_multiqc_files = ch_multiqc_files.mix(ch_fail_strand_multiqc.collectFile(name: 'fail_strand_check_mqc.tsv').map { file -> [[:], file] })
         }
 
+    }
+
+    //
+    // MODULE: Genome-wide coverage with BEDTools
+    // Note: Strand parameters are conditional on library strandedness (see nextflow.config)
+    //
+    if (!params.skip_bigwig) {
+
+        ch_genomecov_input = ch_genome_bam.map { meta, bam -> [ meta, bam, 1 ] }
+
+        BEDTOOLS_GENOMECOV_FW (
+            ch_genomecov_input,
+            [],
+            'bedGraph',
+            true
+        )
+        BEDTOOLS_GENOMECOV_REV (
+            ch_genomecov_input,
+            [],
+            'bedGraph',
+            true
+        )
+
+        //
+        // SUBWORKFLOW: Convert bedGraph to bigWig
+        //
+        BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD (
+            BEDTOOLS_GENOMECOV_FW.out.genomecov,
+            ch_chrom_sizes
+        )
+
+        BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE (
+            BEDTOOLS_GENOMECOV_REV.out.genomecov,
+            ch_chrom_sizes
+        )
+    }
+
+    if (!params.skip_qc) {
+        //
+        // Contaminant screening (Kraken2/Bracken/Sylph)
+        //
         def ch_contaminant_sequences = params.contaminant_screening_input == 'trimmed'
             ? ch_strand_inferred_filtered_fastq
             : ch_unaligned_sequences

@@ -50,7 +50,8 @@ nextflow_workflow {
                 input[4] = is_aws_igenome
                 input[5] = Channel.of([
                     [ id:'test_fasta' ],
-                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
                 ])
                 input[6] = use_sentieon_star
                 input[7] = use_parabricks_star
@@ -115,7 +116,8 @@ nextflow_workflow {
                 input[4] = is_aws_igenome
                 input[5] = Channel.of([
                     [ id:'test_fasta' ],
-                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
                 ])
                 input[6] = use_sentieon_star
                 input[7] = use_parabricks_star

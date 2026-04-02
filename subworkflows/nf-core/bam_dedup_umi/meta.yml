@@ -31,8 +31,8 @@ input:
             type: file
             description: BAM index file
             pattern: "*.bai"
-  - ch_fasta:
-      description: Channel with genome FASTA file
+  - ch_fasta_fai:
+      description: Channel with genome FASTA file and index
       structure:
         - meta:
             type: map
@@ -40,7 +40,11 @@ input:
         - fasta:
             type: file
             description: Genome FASTA file
-            pattern: "*.{fa,fasta}"
+            pattern: "*.{fa,fna,fasta}"
+        - fai:
+            type: file
+            description: Genome FASTA index file
+            pattern: "*.fai"
   - umi_dedup_tool:
       description: UMI deduplication tool to use
       structure:
@@ -69,8 +73,8 @@ input:
             type: file
             description: BAM file
             pattern: "*.bam"
-  - ch_transcript_fasta:
-      description: Channel with transcript FASTA file
+  - ch_transcript_fasta_fai:
+      description: Channel with transcript FASTA file and index
       structure:
         - meta:
             type: map
@@ -79,6 +83,19 @@ input:
             type: file
             description: Transcript FASTA file
             pattern: "*.{fa,fasta}"
+        - fai:
+            type: file
+            description: Transcript FASTA index file
+            pattern: "*.fai"
+  - umitools_dedup_primary_only:
+      description: Whether to filter to primary alignments before UMI-tools dedup
+      structure:
+        - value:
+            type: boolean
+            description: |
+              When true, secondary and supplementary alignments (SAM flag 0x900) are
+              removed before running UMI-tools dedup so that dedup statistics reflect
+              only primary alignments.
 
 output:
   - bam:

@@ -6,9 +6,6 @@
             "test.bam.bai",
             "1e02b8e6b4a02ab58bfe4ee795aba815",
             [
-                
-            ],
-            [
                 [
                     {
                         "id": "test",
@@ -45,7 +42,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.stats:md5,31d57594a8d6ca076442a2c868ba241f"
+                    "test.stats:md5,272350cd287f8db01a72b7ded82075ba"
                 ]
             ],
             [
@@ -58,11 +55,11 @@
                 ]
             ]
         ],
+        "timestamp": "2026-03-17T17:12:12.560654836",
         "meta": {
-            "nf-test": "0.9.3",
+            "nf-test": "0.9.4",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-02-04T14:53:02.38163538"
+        }
     },
     "star - no igenomes - stub": {
         "content": [
@@ -103,9 +100,6 @@
                 ]
             ],
             [
-                
-            ],
-            [
                 [
                     {
                         "id": "test",
@@ -186,11 +180,11 @@
                 ]
             ]
         ],
+        "timestamp": "2026-03-17T17:12:27.705599599",
         "meta": {
-            "nf-test": "0.9.3",
+            "nf-test": "0.9.4",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-02-04T14:53:16.837732016"
+        }
     },
     "star - no igenomes": {
         "content": [
@@ -198,9 +192,6 @@
             "test.Log.out",
             "test.bam.bai",
             "1e02b8e6b4a02ab58bfe4ee795aba815",
-            [
-                
-            ],
             [
                 [
                     {
@@ -238,7 +229,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.stats:md5,31d57594a8d6ca076442a2c868ba241f"
+                    "test.stats:md5,272350cd287f8db01a72b7ded82075ba"
                 ]
             ],
             [
@@ -251,11 +242,11 @@
                 ]
             ]
         ],
+        "timestamp": "2026-03-17T17:11:10.821589778",
         "meta": {
-            "nf-test": "0.9.3",
+            "nf-test": "0.9.4",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-02-04T14:52:01.125247093"
+        }
     },
     "star - with igenomes - stub": {
         "content": [
@@ -296,9 +287,6 @@
                 ]
             ],
             [
-
-            ],
-            [
                 [
                     {
                         "id": "test",
@@ -379,10 +367,10 @@
                 ]
             ]
         ],
+        "timestamp": "2026-03-17T17:12:43.029716956",
         "meta": {
-            "nf-test": "0.9.3",
+            "nf-test": "0.9.4",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-02-04T14:53:31.235911361"
+        }
     }
 }

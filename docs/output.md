@@ -14,6 +14,10 @@ The directories listed below will be created in the results directory after the 
 Many of the BAM files produced by this pipeline can be reused as input for future runs with `--skip_alignment`. This is particularly useful for reprocessing data or running downstream analysis steps without repeating computationally expensive alignment. See the [usage documentation](https://nf-co.re/rnaseq/usage#bam-input-for-reprocessing-workflow) for details on using BAM files as input.
 :::
 
+:::note
+When running with `--skip_quantification_merge`, the output directory structure changes from tool-centric (e.g. `results/fastqc/`, `results/salmon/`) to sample-centric (e.g. `results/SAMPLE_A/fastqc/`, `results/SAMPLE_A/salmon/`). Shared outputs like reference genome files and pipeline metadata remain at the top level. See the [usage documentation](https://nf-co.re/rnaseq/usage#per-sample-quantification---skip_quantification_merge) for details.
+:::
+
 ## Pipeline overview
 
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
@@ -44,6 +48,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [StringTie](#stringtie)
     - [BEDTools and bedGraphToBigWig](#bedtools-and-bedgraphtobigwig)
   - [Quality control](#quality-control)
+    - [RustQC](#rustqc)
     - [RSeQC](#rseqc)
       - [Infer experiment](#infer-experiment)
       - [Read distribution](#read-distribution)
@@ -528,6 +533,71 @@ The [bigWig](https://genome.ucsc.edu/goldenpath/help/bigWig.html) format is an i
 
 ## Quality control
 
+### RustQC (experimental)
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `<ALIGNER>/rustqc/dupradar/`
+  - `scatter_plot/*_duprateExpDens.{png,svg}`: Duplication rate density scatter plots.
+  - `box_plot/*_duprateExpBoxplot.{png,svg}`: Box plots showing duplication rate relative to expression.
+  - `histogram/*_expressionHist.{png,svg}`: Histogram of reads per kilobase per gene.
+  - `gene_data/*_dupMatrix.txt`: Duplicate metrics per gene.
+  - `intercepts_slope/*_intercept_slope.txt`: Intercept and slope values.
+  - `*_dup_intercept_mqc.txt`: MultiQC custom content for dupRadar intercept.
+  - `*_duprateExpDensCurve_mqc.txt`: MultiQC custom content for dupRadar density curve.
+- `<ALIGNER>/rustqc/featurecounts/`
+  - `*.featureCounts.tsv`: Per-gene read counts (featureCounts-compatible format).
+  - `*.featureCounts.tsv.summary`: Summary statistics.
+  - `*.biotype_counts.tsv`: Biotype count data.
+  - `*.biotype_counts_mqc.tsv`: MultiQC custom content for biotype counts.
+  - `*.biotype_counts_rrna_mqc.tsv`: MultiQC custom content for rRNA biotype proportion.
+- `<ALIGNER>/rustqc/rseqc/bam_stat/`
+  - `*.bam_stat.txt`: BAM mapping statistics.
+- `<ALIGNER>/rustqc/rseqc/infer_experiment/`
+  - `*.infer_experiment.txt`: Strandedness inference results.
+- `<ALIGNER>/rustqc/rseqc/read_distribution/`
+  - `*.read_distribution.txt`: Genomic feature read distribution.
+- `<ALIGNER>/rustqc/rseqc/read_duplication/`
+  - `xls/*.pos.DupRate.xls`, `xls/*.seq.DupRate.xls`: Read duplication rates.
+  - `plot/*.DupRate_plot.{png,svg}`: Duplication rate plots.
+  - `rscript/*.DupRate_plot.r`: R script for duplication plots.
+- `<ALIGNER>/rustqc/rseqc/junction_annotation/`
+  - `xls/*.junction.xls`: Junction data in tabular format.
+  - `bed/*.junction.bed`, `bed/*.junction.Interact.bed`: Junction data in BED format.
+  - `log/*.junction_annotation.txt`: Junction annotation log.
+  - `rscript/*.junction_plot.r`: R script for junction plots.
+  - `plot/*.splice_events.{png,svg}`, `plot/*.splice_junction.{png,svg}`: Splice junction plots.
+- `<ALIGNER>/rustqc/rseqc/junction_saturation/`
+  - `plot/*.junctionSaturation_plot.{png,svg}`: Junction saturation plots.
+  - `rscript/*.junctionSaturation_plot.r`: R script for saturation plots.
+  - `txt/*.junctionSaturation_summary.txt`: Summary statistics.
+- `<ALIGNER>/rustqc/rseqc/inner_distance/`
+  - `txt/*.inner_distance.txt`, `txt/*.inner_distance_freq.txt`, `txt/*.inner_distance_mean.txt`: Inner distance data.
+  - `plot/*.inner_distance_plot.{png,svg}`: Inner distance plots.
+  - `rscript/*.inner_distance_plot.r`: R script for inner distance plots.
+  - `txt/*.inner_distance_summary.txt`: Summary statistics.
+- `<ALIGNER>/rustqc/rseqc/tin/`
+  - `*.tin.xls`: TIN values per transcript.
+  - `*.summary.txt`: TIN summary statistics.
+- `<ALIGNER>/rustqc/preseq/`
+  - `*.lc_extrap.txt`: Library complexity extrapolation.
+- `<ALIGNER>/rustqc/samtools_stats/`
+  - `*.flagstat`: SAMtools flagstat output.
+  - `*.idxstats`: SAMtools idxstats output.
+  - `*.stats`: SAMtools stats output.
+- `<ALIGNER>/rustqc/qualimap/<SAMPLE>/`
+  - `qualimapReport.html`: Standalone Qualimap HTML report.
+  - `rnaseq_qc_results.txt`: Textual QC results.
+  - `images_qualimapReport/`: Coverage profile plots (Total, High, Low) in PNG and SVG, junction analysis, genomic origin, and transcript coverage histogram.
+  - `raw_data_qualimapReport/`: Raw data files for coverage profiles.
+
+</details>
+
+[RustQC](https://github.com/seqeralabs/rustqc) is a high-performance, single-pass replacement for multiple post-alignment QC tools. It produces output files compatible with the same MultiQC modules as the individual tools it replaces, so the QC report content is equivalent. RustQC support is currently experimental - see the [usage documentation](usage.md#rustqc-accelerated-post-alignment-qc-experimental) for validation status and known differences.
+
+To enable RustQC, use the `--use_rustqc` flag. It replaces dupRadar, featureCounts biotype QC, RSeQC (bam_stat, infer_experiment, read_distribution, read_duplication, junction_annotation, junction_saturation, inner_distance, TIN), Preseq, Qualimap, and SAMtools stats/flagstat/idxstats. The individual tools are automatically skipped.
+
 ### RSeQC
 
 [RSeQC](<(http://rseqc.sourceforge.net/)>) is a package of scripts designed to evaluate the quality of RNA-seq data. This pipeline runs several, but not all RSeQC scripts. You can tweak the supported scripts you would like to run by adjusting the `--rseqc_modules` parameter which by default will run all of the following: `bam_stat.py`, `inner_distance.py`, `infer_experiment.py`, `junction_annotation.py`, `junction_saturation.py`,`read_distribution.py` and `read_duplication.py`.
@@ -851,7 +921,7 @@ The plot on the left hand side shows the standard PC plot - notice the variable 
 <summary>Output files</summary>
 
 - `<ALIGNER>/contaminants/kraken2/kraken_reports`
-  - `*.kraken2.report.txt`: Classification of unaligned reads in the Kraken report format. See the [kraken2 manual](https://github.com/DerrickWood/kraken2/wiki/Manual#output-formats) for more details
+  - `*.kraken2.report.txt`: Classification of the screened reads in the Kraken report format. By default these are aligner-unmapped reads, but `--contaminant_screening_input trimmed` switches screening to trimmed/filter-passed reads. See the [kraken2 manual](https://github.com/DerrickWood/kraken2/wiki/Manual#output-formats) for more details
   - `*.classified*.fastq.gz` If `--save_kraken_alignments`, outputs fastq file for each sample with each classified read annotated with taxonomic identification from Kraken2.
   - `*.unclassified*.fastq.gz` If `save_kraken_unassigned`, outputs fastq file with all reads that were not classified by Kraken2.
 - `<ALIGNER>/contaminants/bracken/`
@@ -860,13 +930,13 @@ The plot on the left hand side shows the standard PC plot - notice the variable 
 
 </details>
 
-[Kraken2](https://ccb.jhu.edu/software/kraken2/) is a taxonomic classification tool that uses k-mer matches paired with a lowest common ancestory (LCA) algorithm to classify species reads. [Bracken](https://ccb.jhu.edu/software/bracken/) is a statistical method to generate abundance estimates based off of the Kraken2 output. These algorithms are run on unaligned sequences to detect potential contamination of samples. MultiQC reports the top 5 taxon members detected at the level of classification used for Bracken, with toggles available for higher taxonomic levels. Because MultiQC no longer has a separate Bracken module, results for Bracken will appear under the Kraken heading in the MultiQC report. If Bracken is skipped, MultiQC will report the top 5 species detected by Kraken2.
+[Kraken2](https://ccb.jhu.edu/software/kraken2/) is a taxonomic classification tool that uses k-mer matches paired with a lowest common ancestory (LCA) algorithm to classify species reads. [Bracken](https://ccb.jhu.edu/software/bracken/) is a statistical method to generate abundance estimates based off of the Kraken2 output. These algorithms are run on contaminant-screening reads to detect potential contamination of samples: aligner-unmapped reads by default, or trimmed/filter-passed reads when `--contaminant_screening_input trimmed` is set. MultiQC reports the top 5 taxon members detected at the level of classification used for Bracken, with toggles available for higher taxonomic levels. Because MultiQC no longer has a separate Bracken module, results for Bracken will appear under the Kraken heading in the MultiQC report. If Bracken is skipped, MultiQC will report the top 5 species detected by Kraken2.
 
 ![MultiQC - Bracken top species plot](images/bracken-top-n-plot.png)
 
 ### Sylph
 
-[Sylph](https://sylph-docs.github.io/) is a metagenomic profiler that determines the species present in reads by statistically estimating containment ANI. Its companion script, [sylph-tax](https://sylph-docs.github.io/sylph-tax/), converts these ANI estimates into estimated taxonomic abundances in the sample. These algorithms are run on unaligned sequences to detect potential contamination of samples. MultiQC shows the Top 10 strains in the Sylph-tax abundance estimates, with toggles available for higher taxonomic levels.
+[Sylph](https://sylph-docs.github.io/) is a metagenomic profiler that determines the species present in reads by statistically estimating containment ANI. Its companion script, [sylph-tax](https://sylph-docs.github.io/sylph-tax/), converts these ANI estimates into estimated taxonomic abundances in the sample. These algorithms are run on contaminant-screening reads to detect potential contamination of samples: aligner-unmapped reads by default, or trimmed/filter-passed reads when `--contaminant_screening_input trimmed` is set. MultiQC shows the Top 10 strains in the Sylph-tax abundance estimates, with toggles available for higher taxonomic levels.
 
 ![MultiQC - Sylphtax top species plot](images/sylphtax-top-n-plot.png)
 
@@ -875,7 +945,7 @@ The plot on the left hand side shows the standard PC plot - notice the variable 
 
 - `<ALIGNER>/contaminants/sylph`
   - `*.tsv` Summary of containment ANI and abundances of detected species in the sample. See the [Sylph documentation](https://sylph-docs.github.io/Output-format/) for full details on the output format.
-  - `*.sylphmpa` Taxonomic report of unaligned reads from `sylph-tax`. See the [Sylph documentation](https://sylph-docs.github.io/sylph-tax-output-format/) for full details on the output format.
+  - `*.sylphmpa` Taxonomic report of the screened reads from `sylph-tax`. By default these are aligner-unmapped reads, but `--contaminant_screening_input trimmed` switches screening to trimmed/filter-passed reads. See the [Sylph documentation](https://sylph-docs.github.io/sylph-tax-output-format/) for full details on the output format.
 
 </details>
 
@@ -887,6 +957,17 @@ The plot on the left hand side shows the standard PC plot - notice the variable 
 - `multiqc/<ALIGNER>/`
   - `multiqc_report.html`: a standalone HTML file that can be viewed in your web browser.
   - `multiqc_data/`: directory containing parsed statistics from the different tools used in the pipeline.
+
+</details>
+
+When `--skip_quantification_merge` is enabled, MultiQC generates one report per sample instead of a single merged report:
+
+<details markdown="1">
+<summary>Output files (per-sample mode)</summary>
+
+- `<SAMPLE>/multiqc/<ALIGNER>/`
+  - `<SAMPLE>_multiqc_report.html`: a standalone HTML report for this sample only.
+  - `<SAMPLE>_multiqc_report_data/`: directory containing parsed statistics for this sample.
 
 </details>
 
@@ -914,6 +995,19 @@ The principal output files are the same between Salmon and Kallisto:
   - `<pseudo_aligner>.merged.transcript_tpm.tsv`: Matrix of isoform-level TPM values across all samples.
   - `tx2gene.tsv`: Tab-delimited file containing gene to transcripts ids mappings.
   - `<pseudo_aligner>.merged.transcript.SummarizedExperiment.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the abundance TPM (`tpm`), estimated isoform-level raw counts (`counts`) and transcript length (`length`) in the assays slot for transcripts.
+
+When `--skip_quantification_merge` is enabled, the merged cross-sample files above are **not** produced. Instead, tximport runs per-sample and outputs are nested under each sample's directory:
+
+- `<SAMPLE>/<pseudo_aligner>/`
+  - `<SAMPLE>.gene_counts.tsv`: Gene-level raw counts for this sample.
+  - `<SAMPLE>.gene_tpm.tsv`: Gene-level TPM values for this sample.
+  - `<SAMPLE>.gene_lengths.tsv`: Average transcript lengths per gene for this sample.
+  - `<SAMPLE>.gene_counts_scaled.tsv`: Library size-scaled gene counts for this sample.
+  - `<SAMPLE>.gene_counts_length_scaled.tsv`: Length-scaled gene counts for this sample.
+  - `<SAMPLE>.transcript_counts.tsv`: Transcript-level raw counts for this sample.
+  - `<SAMPLE>.transcript_tpm.tsv`: Transcript-level TPM values for this sample.
+
+SummarizedExperiment RDS objects and DESeq2 QC outputs are skipped in this mode. See the [usage documentation](https://nf-co.re/rnaseq/usage#per-sample-quantification---skip_quantification_merge) for details.
 
 :::tip
 You can access specific assay matrices from the `SummarizedExperiment` RDS object with the following R code:

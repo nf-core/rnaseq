@@ -22,7 +22,7 @@ nextflow_process {
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true),
                     []
                 ]
-                input[1] = [[],[]]
+                input[1] = [[],[],[]]
                 input[2] = []
                 input[3] = []
                 """
@@ -49,7 +49,7 @@ nextflow_process {
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
                     []
                 ]
-                input[1] = [[],[]]
+                input[1] = [[],[],[]]
                 input[2] = []
                 input[3] = 'csi'
                 """
@@ -76,7 +76,7 @@ nextflow_process {
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
                     []
                 ]
-                input[1] = [[],[]]
+                input[1] = [[],[],[]]
                 input[2] = []
                 input[3] = 'bai'
                 """
@@ -103,7 +103,7 @@ nextflow_process {
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
                     []
                 ]
-                input[1] = [[],[]]
+                input[1] = [[],[],[]]
                 input[2] = Channel.of('testN:1')
                     .collectFile(name: 'selected_reads.txt')
                 input[3] = 'bai'
@@ -131,7 +131,7 @@ nextflow_process {
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
                     []
                 ]
-                input[1] = [[],[]]
+                input[1] = [[],[],[]]
                 input[2] = Channel.of('testN:1')
                     .collectFile(name: 'selected_reads.txt')
                 input[3] = 'crai'
@@ -161,7 +161,8 @@ nextflow_process {
                 ]
                 input[1] = [
                     [ id:'genome' ],
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
                 ]
                 input[2] = []
                 input[3] = []
@@ -191,7 +192,8 @@ nextflow_process {
                 ]
                 input[1] = [
                     [ id:'genome' ],
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
                 ]
                 input[2] = []
                 input[3] = []
@@ -221,7 +223,8 @@ nextflow_process {
                 ]
                 input[1] = [
                     [ id:'genome' ],
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
                 ]
                 input[2] = []
                 input[3] = []
@@ -251,7 +254,8 @@ nextflow_process {
                 ]
                 input[1] = [
                     [ id:'genome' ],
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
                 ]
                 input[2] = Channel.of("testN:2817", "testN:2814")
                     .collectFile(name: "readnames.list", newLine: true)
@@ -283,7 +287,7 @@ nextflow_process {
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true),
                     []
                 ]
-                input[1] = [[],[]]
+                input[1] = [[],[],[]]
                 input[2] = []
                 input[3] = []
                 """
@@ -313,7 +317,7 @@ nextflow_process {
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
                     []
                 ]
-                input[1] = [[],[]]
+                input[1] = [[],[],[]]
                 input[2] = []
                 input[3] = 'csi'
                 """
@@ -343,7 +347,7 @@ nextflow_process {
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
                     []
                 ]
-                input[1] = [[],[]]
+                input[1] = [[],[],[]]
                 input[2] = []
                 input[3] = 'bai'
                 """
@@ -373,7 +377,7 @@ nextflow_process {
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
                     []
                 ]
-                input[1] = [[],[]]
+                input[1] = [[],[],[]]
                 input[2] = Channel.of('testN:1')
                     .collectFile(name: 'selected_reads.txt')
                 input[3] = 'bai'
@@ -404,7 +408,7 @@ nextflow_process {
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
                     []
                 ]
-                input[1] = [[],[]]
+                input[1] = [[],[],[]]
                 input[2] = Channel.of('testN:1')
                     .collectFile(name: 'selected_reads.txt')
                 input[3] = 'crai'

@@ -50,12 +50,6 @@
                     },
                     "kallisto.merged.transcript_tpm.tsv:md5,de458e1c2a579e53bd7671c5176f5d0c"
                 ]
-            ],
-            [
-                "versions.yml:md5,7310ce1ed08d45a1a2730ab3602b863a",
-                "versions.yml:md5,b13d44458ef56ce1bd8b2b18fcc13004",
-                "versions.yml:md5,bf7fa0a1d22a37bd535f7f71060fad26",
-                "versions.yml:md5,f3e61130fc276669694f901feac8287c"
             ]
         ],
         "meta": {
@@ -72,9 +66,7 @@
                         {
                             "id": "test"
                         },
-                        [
-                            
-                        ]
+                        []
                     ]
                 ],
                 "1": [
@@ -82,9 +74,7 @@
                         {
                             "id": "test"
                         },
-                        [
-                            
-                        ]
+                        []
                     ]
                 ],
                 "10": [
@@ -100,7 +90,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds"
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "12": [
@@ -108,20 +98,12 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds"
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
-                ],
-                "13": [
-                    "versions.yml:md5,6a3d19a27db2790f89232d505313894c",
-                    "versions.yml:md5,b13d44458ef56ce1bd8b2b18fcc13004",
-                    "versions.yml:md5,bf7fa0a1d22a37bd535f7f71060fad26",
-                    "versions.yml:md5,f3e61130fc276669694f901feac8287c"
                 ],
                 "2": [
                     [
-                        {
-                            
-                        },
+                        {},
                         "salmon.merged.tx2gene.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
@@ -234,7 +216,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds"
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "merged_transcript_rds_unified": [
@@ -242,7 +224,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds"
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "multiqc": [
@@ -250,9 +232,7 @@
                         {
                             "id": "test"
                         },
-                        [
-                            
-                        ]
+                        []
                     ]
                 ],
                 "results": [
@@ -260,9 +240,7 @@
                         {
                             "id": "test"
                         },
-                        [
-                            
-                        ]
+                        []
                     ]
                 ],
                 "tpm_gene": [
@@ -283,17 +261,9 @@
                 ],
                 "tx2gene": [
                     [
-                        {
-                            
-                        },
+                        {},
                         "salmon.merged.tx2gene.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
-                ],
-                "versions": [
-                    "versions.yml:md5,6a3d19a27db2790f89232d505313894c",
-                    "versions.yml:md5,b13d44458ef56ce1bd8b2b18fcc13004",
-                    "versions.yml:md5,bf7fa0a1d22a37bd535f7f71060fad26",
-                    "versions.yml:md5,f3e61130fc276669694f901feac8287c"
                 ]
             }
         ],
@@ -311,9 +281,7 @@
                         {
                             "id": "test"
                         },
-                        [
-                            
-                        ]
+                        []
                     ]
                 ],
                 "1": [
@@ -337,7 +305,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds"
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "12": [
@@ -345,20 +313,12 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds"
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
-                ],
-                "13": [
-                    "versions.yml:md5,6a3d19a27db2790f89232d505313894c",
-                    "versions.yml:md5,b13d44458ef56ce1bd8b2b18fcc13004",
-                    "versions.yml:md5,bf7fa0a1d22a37bd535f7f71060fad26",
-                    "versions.yml:md5,f3e61130fc276669694f901feac8287c"
                 ],
                 "2": [
                     [
-                        {
-                            
-                        },
+                        {},
                         "kallisto.merged.tx2gene.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
@@ -471,7 +431,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds"
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "merged_transcript_rds_unified": [
@@ -479,7 +439,7 @@
                         {
                             "id": "all_samples"
                         },
-                        "all_samples.SummarizedExperiment.rds"
+                        "all_samples.SummarizedExperiment.rds:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "multiqc": [
@@ -495,9 +455,7 @@
                         {
                             "id": "test"
                         },
-                        [
-                            
-                        ]
+                        []
                     ]
                 ],
                 "tpm_gene": [
@@ -518,17 +476,9 @@
                 ],
                 "tx2gene": [
                     [
-                        {
-                            
-                        },
+                        {},
                         "kallisto.merged.tx2gene.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
-                ],
-                "versions": [
-                    "versions.yml:md5,6a3d19a27db2790f89232d505313894c",
-                    "versions.yml:md5,b13d44458ef56ce1bd8b2b18fcc13004",
-                    "versions.yml:md5,bf7fa0a1d22a37bd535f7f71060fad26",
-                    "versions.yml:md5,f3e61130fc276669694f901feac8287c"
                 ]
             }
         ],
@@ -597,12 +547,6 @@
                     },
                     "salmon.merged.transcript_tpm.tsv:md5,e0c16bf083ebb88bcfaf27cfba12d3e9"
                 ]
-            ],
-            [
-                "versions.yml:md5,7310ce1ed08d45a1a2730ab3602b863a",
-                "versions.yml:md5,b13d44458ef56ce1bd8b2b18fcc13004",
-                "versions.yml:md5,bf7fa0a1d22a37bd535f7f71060fad26",
-                "versions.yml:md5,f3e61130fc276669694f901feac8287c"
             ]
         ],
         "meta": {

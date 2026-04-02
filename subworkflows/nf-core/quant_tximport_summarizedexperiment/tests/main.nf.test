@@ -48,6 +48,7 @@ nextflow_workflow {
                 input[3] = 'gene_id'
                 input[4] = 'gene_name'
                 input[5] = 'salmon'
+                input[6] = false
                 """
             }
         }
@@ -66,8 +67,7 @@ nextflow_workflow {
                         workflow.out.tpm_gene,
                         workflow.out.tpm_transcript,
                         workflow.out.counts_transcript,
-                        workflow.out.tx2gene,
-                        workflow.out.versions
+                        workflow.out.tx2gene
                     ).match()
                 }
             )
@@ -108,6 +108,7 @@ nextflow_workflow {
                 input[3] = 'gene_id'
                 input[4] = 'gene_name'
                 input[5] = 'kallisto'
+                input[6] = false
                 """
             }
         }
@@ -126,8 +127,7 @@ nextflow_workflow {
                         workflow.out.tpm_gene,
                         workflow.out.tpm_transcript,
                         workflow.out.counts_transcript,
-                        workflow.out.tx2gene,
-                        workflow.out.versions
+                        workflow.out.tx2gene
                     ).match()
                 }
             )
@@ -170,6 +170,7 @@ nextflow_workflow {
                 input[3] = 'gene_id'
                 input[4] = 'gene_name'
                 input[5] = 'rsem'
+                input[6] = false
                 """
             }
         }
@@ -188,8 +189,7 @@ nextflow_workflow {
                         workflow.out.tpm_gene,
                         workflow.out.tpm_transcript,
                         workflow.out.counts_transcript,
-                        workflow.out.tx2gene,
-                        workflow.out.versions
+                        workflow.out.tx2gene
                     ).match()
                 }
             )
@@ -214,6 +214,7 @@ nextflow_workflow {
                 input[3] = 'gene_id'
                 input[4] = 'gene_name'
                 input[5] = 'salmon'
+                input[6] = false
                 """
             }
         }
@@ -244,6 +245,7 @@ nextflow_workflow {
                 input[3] = 'gene_id'
                 input[4] = 'gene_name'
                 input[5] = 'kallisto'
+                input[6] = false
                 """
             }
         }
@@ -274,6 +276,7 @@ nextflow_workflow {
                 input[3] = 'gene_id'
                 input[4] = 'gene_name'
                 input[5] = 'rsem'
+                input[6] = false
                 """
             }
         }

@@ -382,6 +382,15 @@ def validateInputParameters() {
         error("Contaminant screening set to kraken2 but no database was provided. Please provide a database with the --kraken_db option.")
     }
 
+    if (params.contaminant_screening && params.contaminant_screening_input == 'unmapped') {
+        if (params.skip_alignment) {
+            error("Contaminant screening with '--contaminant_screening_input unmapped' requires alignment to be enabled. Use '--contaminant_screening_input trimmed' to screen reads before alignment.")
+        }
+        if (!(params.aligner in ['star_salmon', 'star_rsem', 'hisat2'])) {
+            error("Contaminant screening with '--contaminant_screening_input unmapped' is only supported with '--aligner star_salmon', '--aligner star_rsem', or '--aligner hisat2'. Use '--contaminant_screening_input trimmed' for other aligners.")
+        }
+    }
+
     // Check that Sylph database and taxonomy is provided if using Sylph
     if (params.contaminant_screening == 'sylph') {
         if (!params.sylph_db) {

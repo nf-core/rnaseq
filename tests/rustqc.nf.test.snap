@@ -164,7 +164,7 @@
                     "picard": "3.4.0"
                 },
                 "RUSTQC": {
-                    "rustqc": "0.1.0"
+                    "rustqc": "0.1.1"
                 },
                 "SALMON_QUANT": {
                     "salmon": "1.10.3"
@@ -1403,9 +1403,9 @@
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "preseq.txt:md5,32919c7e09e0a08f05f07766ee456dcb",
                 "preseq_complexity_plot_molecules.txt:md5,4e83f26e15bb108289f7a806f79d3910",
-                "qualimap_gene_coverage_profile_Counts.txt:md5,6d37a49c29d6dd0d151b11962eee27dc",
-                "qualimap_gene_coverage_profile_Normalised.txt:md5,2bbfc9d559e213792f92c4c53026666b",
-                "qualimap_rnaseq_cov_hist.txt:md5,e07dec034a4aaf5ae0c2c2d72b27de9f",
+                "qualimap_gene_coverage_profile_Counts.txt:md5,4f1abe257cb75b9896cd753d186b33b0",
+                "qualimap_gene_coverage_profile_Normalised.txt:md5,6b96ea6cf19255d3e2c9df47a608381c",
+                "qualimap_rnaseq_cov_hist.txt:md5,414be2b27b8cbd2f89abd1ba3d8ca3ec",
                 "rseqc_infer_experiment_plot.txt:md5,de5a0bad9cca763928e7c33375eb5218",
                 "samtools-idxstats-mapped-reads-plot_Normalised_Counts.txt:md5,75acd04232d1804b5f960ee4c5db4722",
                 "samtools-idxstats-mapped-reads-plot_Observed_over_Expected_Counts.txt:md5,ae45731d8d4595f77e6b271004f3a070",
@@ -1474,23 +1474,23 @@
                 "RAP1_IAA_30M_REP1.biotype_counts.tsv:md5,4c78f87ffb4197c05fcfa0da4b817b3f",
                 "RAP1_IAA_30M_REP1.biotype_counts_mqc.tsv:md5,35c3e4588ea9313138e7ceb70b706bad",
                 "RAP1_IAA_30M_REP1.biotype_counts_rrna_mqc.tsv:md5,dde2de0cb90e10d0195c726f768e9941",
-                "RAP1_IAA_30M_REP1.featureCounts.tsv:md5,db0222ece47a81d3d911c2f91e56978a",
+                "RAP1_IAA_30M_REP1.featureCounts.tsv:md5,d86f2c181a7934bb7749951df345b540",
                 "RAP1_UNINDUCED_REP1.biotype_counts.tsv:md5,e6b9d9ecd233ae83b03bbc17df268efa",
                 "RAP1_UNINDUCED_REP1.biotype_counts_mqc.tsv:md5,4147790b96dd4c6fd3e61fd7d91255f1",
                 "RAP1_UNINDUCED_REP1.biotype_counts_rrna_mqc.tsv:md5,845ff9059c72bc6722a8de69776e22bb",
-                "RAP1_UNINDUCED_REP1.featureCounts.tsv:md5,f99d19a4b188c64ad9a7bed28b2a5c7f",
+                "RAP1_UNINDUCED_REP1.featureCounts.tsv:md5,713d61d571f3c0e3be5a696437e514e0",
                 "RAP1_UNINDUCED_REP2.biotype_counts.tsv:md5,250c22bb5f3a0966f4b01244c5f62160",
                 "RAP1_UNINDUCED_REP2.biotype_counts_mqc.tsv:md5,cf328846d53d1610ee0e5b8cb329d94f",
                 "RAP1_UNINDUCED_REP2.biotype_counts_rrna_mqc.tsv:md5,6d3fa4c88c7fe61f638e4624ad5e22f0",
-                "RAP1_UNINDUCED_REP2.featureCounts.tsv:md5,5620ec6dbfdb50b76b9bf7204f63a6a5",
+                "RAP1_UNINDUCED_REP2.featureCounts.tsv:md5,10bc430063d893f82a03888a69104f4a",
                 "WT_REP1.biotype_counts.tsv:md5,87f533da26cfeb594c4c1aa1c23337ef",
                 "WT_REP1.biotype_counts_mqc.tsv:md5,683c8e07fff9baeb5fd4b9c4310f7828",
                 "WT_REP1.biotype_counts_rrna_mqc.tsv:md5,8ef76d717492ca23764938aee8ea33a9",
-                "WT_REP1.featureCounts.tsv:md5,9a0a38dcf86c48f130c7e4f142d7aeeb",
+                "WT_REP1.featureCounts.tsv:md5,21c225d4280763ce6ce321480312ffca",
                 "WT_REP2.biotype_counts.tsv:md5,e73f85b95f967dd12e60a615b11d4d18",
                 "WT_REP2.biotype_counts_mqc.tsv:md5,de8117b8091629d4feaa50d0bd494f15",
                 "WT_REP2.biotype_counts_rrna_mqc.tsv:md5,12294618fe44df1e7f39348372dcb481",
-                "WT_REP2.featureCounts.tsv:md5,8ee0dd49b113f29f606b72e958d8c552",
+                "WT_REP2.featureCounts.tsv:md5,7c18ffc9df10ff35f7a89d753de181e4",
                 "RAP1_IAA_30M_REP1.lc_extrap.txt:md5,92b88b26a41a8cc094f04236d0d74a58",
                 "RAP1_UNINDUCED_REP1.lc_extrap.txt:md5,aae29ae01e0dce34bcf3c3f771a4d727",
                 "RAP1_UNINDUCED_REP2.lc_extrap.txt:md5,e1b60b8f738cc7fd42b92e9506bc2aef",
@@ -1549,7 +1549,7 @@
                 "i_data.ctab:md5,041edee3193df311f621c09f4991892b"
             ]
         ],
-        "timestamp": "2026-04-01T14:07:38.375923564",
+        "timestamp": "2026-04-02T14:08:09.610753049",
         "meta": {
             "nf-test": "0.9.4",
             "nextflow": "25.10.2"

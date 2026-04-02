@@ -1,0 +1,17 @@
+Changes in component 'nf-core/rsem/calculateexpression'
+Changes in 'rsem/calculateexpression/environment.yml':
+--- modules/nf-core/rsem/calculateexpression/environment.yml
++++ modules/nf-core/rsem/calculateexpression/environment.yml
+@@ -5,4 +5,3 @@
+   - bioconda
+ dependencies:
+   - bioconda::rsem=1.3.3
+-  - bioconda::star=2.7.10a
+
+'modules/nf-core/rsem/calculateexpression/meta.yml' is unchanged
+'modules/nf-core/rsem/calculateexpression/main.nf' is unchanged
+'modules/nf-core/rsem/calculateexpression/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/rsem/calculateexpression/tests/nextflow.config' is unchanged
+'modules/nf-core/rsem/calculateexpression/tests/main.nf.test' is unchanged
+'modules/nf-core/rsem/calculateexpression/tests/alignment.config' is unchanged
+************************************************************

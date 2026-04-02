@@ -48,6 +48,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [StringTie](#stringtie)
     - [BEDTools and bedGraphToBigWig](#bedtools-and-bedgraphtobigwig)
   - [Quality control](#quality-control)
+    - [RustQC](#rustqc)
     - [RSeQC](#rseqc)
       - [Infer experiment](#infer-experiment)
       - [Read distribution](#read-distribution)
@@ -531,6 +532,71 @@ Unless you are using [UMIs](https://emea.illumina.com/science/sequencing-method-
 The [bigWig](https://genome.ucsc.edu/goldenpath/help/bigWig.html) format is an indexed binary format useful for displaying dense, continuous data in Genome Browsers such as the [UCSC](https://genome.ucsc.edu/cgi-bin/hgTracks) and [IGV](http://software.broadinstitute.org/software/igv/). This mitigates the need to load the much larger BAM files for data visualisation purposes which will be slower and result in memory issues. The bigWig format is also supported by various bioinformatics software for downstream processing such as meta-profile plotting.
 
 ## Quality control
+
+### RustQC (experimental)
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `<ALIGNER>/rustqc/dupradar/`
+  - `scatter_plot/*_duprateExpDens.{png,svg}`: Duplication rate density scatter plots.
+  - `box_plot/*_duprateExpBoxplot.{png,svg}`: Box plots showing duplication rate relative to expression.
+  - `histogram/*_expressionHist.{png,svg}`: Histogram of reads per kilobase per gene.
+  - `gene_data/*_dupMatrix.txt`: Duplicate metrics per gene.
+  - `intercepts_slope/*_intercept_slope.txt`: Intercept and slope values.
+  - `*_dup_intercept_mqc.txt`: MultiQC custom content for dupRadar intercept.
+  - `*_duprateExpDensCurve_mqc.txt`: MultiQC custom content for dupRadar density curve.
+- `<ALIGNER>/rustqc/featurecounts/`
+  - `*.featureCounts.tsv`: Per-gene read counts (featureCounts-compatible format).
+  - `*.featureCounts.tsv.summary`: Summary statistics.
+  - `*.biotype_counts.tsv`: Biotype count data.
+  - `*.biotype_counts_mqc.tsv`: MultiQC custom content for biotype counts.
+  - `*.biotype_counts_rrna_mqc.tsv`: MultiQC custom content for rRNA biotype proportion.
+- `<ALIGNER>/rustqc/rseqc/bam_stat/`
+  - `*.bam_stat.txt`: BAM mapping statistics.
+- `<ALIGNER>/rustqc/rseqc/infer_experiment/`
+  - `*.infer_experiment.txt`: Strandedness inference results.
+- `<ALIGNER>/rustqc/rseqc/read_distribution/`
+  - `*.read_distribution.txt`: Genomic feature read distribution.
+- `<ALIGNER>/rustqc/rseqc/read_duplication/`
+  - `xls/*.pos.DupRate.xls`, `xls/*.seq.DupRate.xls`: Read duplication rates.
+  - `plot/*.DupRate_plot.{png,svg}`: Duplication rate plots.
+  - `rscript/*.DupRate_plot.r`: R script for duplication plots.
+- `<ALIGNER>/rustqc/rseqc/junction_annotation/`
+  - `xls/*.junction.xls`: Junction data in tabular format.
+  - `bed/*.junction.bed`, `bed/*.junction.Interact.bed`: Junction data in BED format.
+  - `log/*.junction_annotation.txt`: Junction annotation log.
+  - `rscript/*.junction_plot.r`: R script for junction plots.
+  - `plot/*.splice_events.{png,svg}`, `plot/*.splice_junction.{png,svg}`: Splice junction plots.
+- `<ALIGNER>/rustqc/rseqc/junction_saturation/`
+  - `plot/*.junctionSaturation_plot.{png,svg}`: Junction saturation plots.
+  - `rscript/*.junctionSaturation_plot.r`: R script for saturation plots.
+  - `txt/*.junctionSaturation_summary.txt`: Summary statistics.
+- `<ALIGNER>/rustqc/rseqc/inner_distance/`
+  - `txt/*.inner_distance.txt`, `txt/*.inner_distance_freq.txt`, `txt/*.inner_distance_mean.txt`: Inner distance data.
+  - `plot/*.inner_distance_plot.{png,svg}`: Inner distance plots.
+  - `rscript/*.inner_distance_plot.r`: R script for inner distance plots.
+  - `txt/*.inner_distance_summary.txt`: Summary statistics.
+- `<ALIGNER>/rustqc/rseqc/tin/`
+  - `*.tin.xls`: TIN values per transcript.
+  - `*.summary.txt`: TIN summary statistics.
+- `<ALIGNER>/rustqc/preseq/`
+  - `*.lc_extrap.txt`: Library complexity extrapolation.
+- `<ALIGNER>/rustqc/samtools_stats/`
+  - `*.flagstat`: SAMtools flagstat output.
+  - `*.idxstats`: SAMtools idxstats output.
+  - `*.stats`: SAMtools stats output.
+- `<ALIGNER>/rustqc/qualimap/<SAMPLE>/`
+  - `qualimapReport.html`: Standalone Qualimap HTML report.
+  - `rnaseq_qc_results.txt`: Textual QC results.
+  - `images_qualimapReport/`: Coverage profile plots (Total, High, Low) in PNG and SVG, junction analysis, genomic origin, and transcript coverage histogram.
+  - `raw_data_qualimapReport/`: Raw data files for coverage profiles.
+
+</details>
+
+[RustQC](https://github.com/seqeralabs/rustqc) is a high-performance, single-pass replacement for multiple post-alignment QC tools. It produces output files compatible with the same MultiQC modules as the individual tools it replaces, so the QC report content is equivalent. RustQC support is currently experimental - see the [usage documentation](usage.md#rustqc-accelerated-post-alignment-qc-experimental) for validation status and known differences.
+
+To enable RustQC, use the `--use_rustqc` flag. It replaces dupRadar, featureCounts biotype QC, RSeQC (bam_stat, infer_experiment, read_distribution, read_duplication, junction_annotation, junction_saturation, inner_distance, TIN), Preseq, Qualimap, and SAMtools stats/flagstat/idxstats. The individual tools are automatically skipped.
 
 ### RSeQC
 

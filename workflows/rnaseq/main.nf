@@ -10,7 +10,7 @@
 include { DESEQ2_QC as DESEQ2_QC_BAM_SALMON } from '../../modules/local/deseq2_qc'
 include { DESEQ2_QC as DESEQ2_QC_RSEM        } from '../../modules/local/deseq2_qc'
 include { DESEQ2_QC as DESEQ2_QC_PSEUDO      } from '../../modules/local/deseq2_qc'
-include { RUSTQC                              } from '../../modules/local/rustqc'
+include { RUSTQC                              } from '../../modules/nf-core/rustqc/main'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
@@ -519,11 +519,18 @@ workflow RNASEQ {
             //
             RUSTQC (
                 ch_genome_bam.join(ch_genome_bam_index, by: [0]),
-                ch_gtf,
+                ch_gtf.map { gtf -> [ [:], gtf ] },
             )
+
+            // Collect all per-tool outputs, flatten to individual files, then filter for MultiQC
             ch_multiqc_files = ch_multiqc_files.mix(
-                RUSTQC.out.results
-                    .flatMap { meta, files -> files.collect { f -> [meta, f] } }
+                RUSTQC.out.dupradar
+                    .mix(RUSTQC.out.featurecounts)
+                    .mix(RUSTQC.out.preseq)
+                    .mix(RUSTQC.out.samtools)
+                    .mix(RUSTQC.out.rseqc)
+                    .mix(RUSTQC.out.qualimap)
+                    .flatMap { meta, files -> (files instanceof List ? files : [files]).collect { f -> [meta, f] } }
                     .filter { _meta, f ->
                         // Exclude gene-level featureCounts summary so MultiQC only sees the
                         // biotype-level summary (*.biotype.tsv.summary), matching the default
@@ -532,7 +539,14 @@ workflow RNASEQ {
                         f.name =~ /(?i)\.(txt|tsv|xls|stats|flagstat|idxstats|html)$/ || f.name.contains('_mqc.')
                     }
             )
-            ch_inferexperiment_txt = RUSTQC.out.inferexperiment_txt
+
+            // Extract infer_experiment from rseqc channel
+            ch_inferexperiment_txt = RUSTQC.out.rseqc
+                .map { meta, files ->
+                    def ie = (files instanceof List ? files : [files]).find { it.name.endsWith('.infer_experiment.txt') }
+                    ie ? [meta, ie] : null
+                }
+                .filter { it != null }
         } else {
             //
             // SUBWORKFLOW: Post-alignment QC (upstream tools)

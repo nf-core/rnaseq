@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1750](https://github.com/nf-core/rnaseq/pull/1750) - Add missing tool citations to CITATIONS.md (Bowtie2, Kallisto, RiboDetector, SeqKit, tximport, UMICollapse)
 - [PR #1751](https://github.com/nf-core/rnaseq/pull/1751) - Clarify in docs that GFF files should be provided via `--gff`, not `--gtf` ([#1584](https://github.com/nf-core/rnaseq/issues/1584))
 - [PR #XXXX](https://github.com/nf-core/rnaseq/pull/XXXX) - Add experimental RustQC support (`--use_rustqc`): high-performance single-pass replacement for dupRadar, featureCounts biotype QC, RSeQC, Preseq, Qualimap, and SAMtools stats/flagstat/idxstats.
+- [seqeralabs/rnaseq#2](https://github.com/seqeralabs/rnaseq/pull/2) - Fix RustQC failing on Parabricks BAMs by skipping duplicate-tool header check (`--skip-dup-check`) when Parabricks markdup is active
 
 ## [[3.23.0](https://github.com/nf-core/rnaseq/releases/tag/3.23.0)] - 2026-02-27
 

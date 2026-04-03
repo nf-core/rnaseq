@@ -510,7 +510,7 @@ workflow RNASEQ {
         rseqc_modules.removeAll(['read_distribution', 'inner_distance', 'tin'])
     }
 
-    ch_inferexperiment_txt = Channel.empty()
+    ch_inferexperiment_txt = channel.empty()
 
     if (!params.skip_qc) {
         if (params.use_rustqc) {

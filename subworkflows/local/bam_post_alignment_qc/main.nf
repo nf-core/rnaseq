@@ -25,9 +25,9 @@ workflow BAM_POST_ALIGNMENT_QC {
     rseqc_modules           // val(list) - pre-parsed list of RSeQC module names
 
     main:
-    ch_multiqc_files       = Channel.empty()
-    ch_inferexperiment_txt = Channel.empty()
-    ch_versions            = Channel.empty()
+    ch_multiqc_files       = channel.empty()
+    ch_inferexperiment_txt = channel.empty()
+    ch_versions            = channel.empty()
 
     //
     // MODULE: Run Preseq

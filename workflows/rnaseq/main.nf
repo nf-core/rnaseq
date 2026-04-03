@@ -517,18 +517,18 @@ workflow RNASEQ {
         // Allow users to do de novo transcritome assembly 
         if (params.stringtie_ignore_gtf) {
 
-            STRINGTIE_MERGE(
+            BAM_STRINGTIE_MERGE(
                 ch_genome_bam,
                 ch_gtf,
             )
             STRINGTIE_STRINGTIE(
                 ch_genome_bam,
-                STRINGTIE_MERGE.out.gtf,
+                BAM_STRINGTIE_MERGE.out.stringtie_gtf,
             )
         }
     }
     else {
-        BAM_STRINGTIE_MERGE(
+        STRINGTIE_STRINGTIE(
             ch_genome_bam,
             ch_gtf,
         )

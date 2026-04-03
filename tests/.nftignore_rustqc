@@ -124,7 +124,9 @@ umitools/*.umi_extract.log
 {multiqc,multiqc/**}/multiqc_report_data/multiqc_star_salmon_deseq2_pca.txt
 {multiqc,multiqc/**}/multiqc_report_data/multiqc_umitools_dedup.txt
 {multiqc,multiqc/**}/multiqc_report_data/picard_deduplication.txt
+{multiqc,multiqc/**}/multiqc_report_data/qualimap_gene_coverage_profile_*.txt
 {multiqc,multiqc/**}/multiqc_report_data/qualimap_genomic_origin.txt
+{multiqc,multiqc/**}/multiqc_report_data/qualimap_rnaseq_cov_hist.txt
 {multiqc,multiqc/**}/multiqc_report_data/qualimap_rnaseq_genome_results.txt
 {multiqc,multiqc/**}/multiqc_report_data/rsem_assignment_plot.txt
 {multiqc,multiqc/**}/multiqc_report_data/rsem_multimapping_rates.txt

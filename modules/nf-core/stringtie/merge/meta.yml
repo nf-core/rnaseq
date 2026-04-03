@@ -1,0 +1,60 @@
+name: stringtie_merge
+description: Merges the annotation gtf file and the stringtie output gtf files
+keywords:
+  - merge
+  - gtf
+  - reference
+tools:
+  - stringtie2:
+      description: |
+        Transcript assembly and quantification for RNA-Seq
+      homepage: https://ccb.jhu.edu/software/stringtie/index.shtml
+      documentation: https://ccb.jhu.edu/software/stringtie/index.shtml?t=manual
+      licence:
+        - "MIT"
+      identifier: biotools:stringtie
+input:
+  - stringtie_gtf:
+      type: file
+      description: |
+        Stringtie transcript gtf output(s).
+      pattern: "*.gtf"
+      ontologies: []
+  - annotation_gtf:
+      type: file
+      description: |
+        Annotation gtf file (optional).
+      pattern: "*.gtf"
+      ontologies: []
+output:
+  gtf:
+    - stringtie.merged.gtf:
+        type: file
+        description: Merged gtf file
+        pattern: "stringtie.merged.gtf"
+        ontologies: []
+  versions_stringtie:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - stringtie:
+          type: string
+          description: The name of the tool
+      - stringtie --version:
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - stringtie:
+          type: string
+          description: The name of the tool
+      - stringtie --version:
+          type: eval
+          description: The expression to obtain the version of the tool
+authors:
+  - "@yuukiiwa"
+maintainers:
+  - "@yuukiiwa"

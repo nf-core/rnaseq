@@ -40,6 +40,7 @@ include { DUPRADAR                   } from '../../modules/nf-core/dupradar'
 include { PRESEQ_LCEXTRAP            } from '../../modules/nf-core/preseq/lcextrap'
 include { QUALIMAP_RNASEQ            } from '../../modules/nf-core/qualimap/rnaseq'
 include { STRINGTIE_STRINGTIE        } from '../../modules/nf-core/stringtie/stringtie'
+include { STRINGTIE_MERGE            } from '../../modules/nf-core/stringtie/merge/main'                                           
 include { SUBREAD_FEATURECOUNTS      } from '../../modules/nf-core/subread/featurecounts'
 include { KRAKEN2_KRAKEN2 as KRAKEN2 } from '../../modules/nf-core/kraken2/kraken2/main'
 include { BRACKEN_BRACKEN as BRACKEN } from '../../modules/nf-core/bracken/bracken/main'
@@ -61,6 +62,7 @@ include { softwareVersionsToYAML           } from '../../subworkflows/nf-core/ut
 include { FASTQ_ALIGN_HISAT2               } from '../../subworkflows/nf-core/fastq_align_hisat2'
 include { BAM_MARKDUPLICATES_PICARD        } from '../../subworkflows/nf-core/bam_markduplicates_picard'
 include { BAM_RSEQC                        } from '../../subworkflows/nf-core/bam_rseqc'
+include { BAM_STRINGTIE_MERGE } from '../../subworkflows/nf-core/bam_stringtie_merge/main'                                                                    
 include { BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG as BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD } from '../../subworkflows/nf-core/bedgraph_bedclip_bedgraphtobigwig'
 include { BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG as BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE } from '../../subworkflows/nf-core/bedgraph_bedclip_bedgraphtobigwig'
 include { QUANTIFY_PSEUDO_ALIGNMENT as QUANTIFY_BAM_SALMON } from '../../subworkflows/nf-core/quantify_pseudo_alignment'
@@ -508,12 +510,27 @@ workflow RNASEQ {
     }
 
     //
-    // MODULE: STRINGTIE
+    // MODULE: StringTie assembly and quantification 
     //
     if (!params.skip_stringtie) {
-        STRINGTIE_STRINGTIE (
+
+        // Allow users to do de novo transcritome assembly 
+        if (params.stringtie_ignore_gtf) {
+
+            STRINGTIE_MERGE(
+                ch_genome_bam,
+                ch_gtf,
+            )
+            STRINGTIE_STRINGTIE(
+                ch_genome_bam,
+                STRINGTIE_MERGE.out.gtf,
+            )
+        }
+    }
+    else {
+        BAM_STRINGTIE_MERGE(
             ch_genome_bam,
-            ch_gtf
+            ch_gtf,
         )
     }
 

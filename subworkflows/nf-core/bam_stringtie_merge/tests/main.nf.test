@@ -1,0 +1,38 @@
+nextflow_workflow {
+
+    name "Test BAM_STRINGTIE_MERGE"
+    script "../main.nf"
+    workflow "BAM_STRINGTIE_MERGE"
+    tag "subworkflows"
+    tag "subworkflows_nfcore"
+    tag "stringtie"
+    tag "stringtie/stringtie"
+    tag "stringtie/merge"
+    tag "subworkflows/bam_stringtie_merge"
+
+    test("Should run stringtie subworkflow") {
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                        [ id:'test', strandedness:'reverse' ], // meta map
+                    file(params.modules_testdata_base_path + "genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true)
+                ])
+                input[1] = Channel.of([
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(workflow.out).match() },
+            )
+        }
+    }
+
+}

@@ -294,10 +294,15 @@
                         "git_sha": "481efe07277c76e23738b4be0724ba7d99653d7e",
                         "installed_by": ["modules"]
                     },
+                    "stringtie/merge": {
+                        "branch": "master",
+                        "git_sha": "3e44e51c24ff88dbe266fd6b49098c27e83f2e1e",
+                        "installed_by": ["bam_stringtie_merge", "modules"]
+                    },
                     "stringtie/stringtie": {
                         "branch": "master",
                         "git_sha": "4cfbd65a8dbdcfd1bb2736c4e8c5c12ac61d3281",
-                        "installed_by": ["modules"]
+                        "installed_by": ["bam_stringtie_merge", "modules"]
                     },
                     "subread/featurecounts": {
                         "branch": "master",
@@ -407,6 +412,11 @@
                             "bam_markduplicates_picard",
                             "bam_sort_stats_samtools"
                         ]
+                    },
+                    "bam_stringtie_merge": {
+                        "branch": "master",
+                        "git_sha": "3e44e51c24ff88dbe266fd6b49098c27e83f2e1e",
+                        "installed_by": ["subworkflows"]
                     },
                     "bedgraph_bedclip_bedgraphtobigwig": {
                         "branch": "master",

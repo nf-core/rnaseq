@@ -17,7 +17,6 @@ process RSEM_CALCULATEEXPRESSION {
     tuple val(meta), path("*.stat")            , emit: stat
     tuple val(meta), path("*.log")             , emit: logs, optional:true
     tuple val("${task.process}"), val('rsem'), eval("rsem-calculate-expression --version | sed 's/Current version: RSEM v//'"), emit: versions_rsem, topic: versions
-    tuple val("${task.process}"), val('star'), eval('STAR --version | sed -e "s/STAR_//g" 2>/dev/null || echo "N/A"'), emit: versions_star, topic: versions
 
     tuple val(meta), path("*.STAR.genome.bam")       , optional:true, emit: bam_star
     tuple val(meta), path("${prefix}.genome.bam")    , optional:true, emit: bam_genome

@@ -12,13 +12,12 @@ Changes in 'rsem/preparereference/environment.yml':
 Changes in 'rsem/preparereference/main.nf':
 --- modules/nf-core/rsem/preparereference/main.nf
 +++ modules/nf-core/rsem/preparereference/main.nf
-@@ -15,7 +15,7 @@
+@@ -15,8 +15,7 @@
      path "rsem"           , emit: index
      path "*transcripts.fa", emit: transcript_fasta
      tuple val("${task.process}"), val('rsem'), eval('rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g"'), topic: versions, emit: versions_rsem
 -    tuple val("${task.process}"), val('star'), eval('STAR --version | sed -e "s/STAR_//g"'), topic: versions, emit: versions_star
-+    tuple val("${task.process}"), val('star'), eval('STAR --version | sed -e "s/STAR_//g" 2>/dev/null || echo "N/A"'), topic: versions, emit: versions_star
- 
+
      when:
      task.ext.when == null || task.ext.when
 

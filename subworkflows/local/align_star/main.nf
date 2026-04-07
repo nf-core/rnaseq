@@ -30,7 +30,7 @@ workflow ALIGN_STAR {
     index                // channel: [ val(meta), [ index ] ]
     gtf                  // channel: [ val(meta), [ gtf ] ]
     star_ignore_sjdbgtf  // boolean: when using pre-built STAR indices do not re-extract and use splice junctions from the GTF file
-    is_aws_igenome       // boolean: whether the genome files are from AWS iGenomes
+    use_igenomes_star    // boolean: whether to use iGenomes-pinned STAR (2.6.1d) for pre-built index compatibility
     fasta_fai            // channel: [ val(meta), path(fasta), path(fai) ]
     use_sentieon_star    // boolean: whether star alignment is accelerated with Sentieon
     use_parabricks_star  // boolean: whether star alignment (and mark duplicates) is accelerated with Parabricks
@@ -53,7 +53,7 @@ workflow ALIGN_STAR {
         PARABRICKS_RNA_FQ2BAM(reads, fasta_fai.map { meta, fasta, _fai -> [ meta, fasta ] }, index, true, !skip_markduplicates)
         ch_star_out = PARABRICKS_RNA_FQ2BAM
 
-    } else if (is_aws_igenome) {
+    } else if (use_igenomes_star) {
 
         STAR_ALIGN_IGENOMES(reads, index, gtf, star_ignore_sjdbgtf)
         ch_star_out = STAR_ALIGN_IGENOMES

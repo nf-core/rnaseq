@@ -31,6 +31,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1754](https://github.com/nf-core/rnaseq/pull/1754) - Add experimental RustQC support (`--use_rustqc`): high-performance single-pass replacement for dupRadar, featureCounts biotype QC, RSeQC, Preseq, Qualimap, and SAMtools stats/flagstat/idxstats.
 - [PR #1761](https://github.com/nf-core/rnaseq/pull/1761) - Fix Bowtie2 alignment logs appearing under "Bowtie2 (rRNA removal)" in MultiQC report when using `--aligner bowtie2_salmon`
 - [PR #1762](https://github.com/nf-core/rnaseq/pull/1762) - Restore `extra_star_align_args` deduplication so user-supplied STAR flags override pipeline defaults instead of causing a fatal duplicate parameter error ([#1757](https://github.com/nf-core/rnaseq/issues/1757))
+- [PR #1763](https://github.com/nf-core/rnaseq/pull/1763) - Bump version to 3.24.0 ahead of release
 - [PR #1764](https://github.com/nf-core/rnaseq/pull/1764) - Update nf-core template to v3.5.2, update ro-crate maintainer
 
 ## [[3.23.0](https://github.com/nf-core/rnaseq/releases/tag/3.23.0)] - 2026-02-27

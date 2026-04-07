@@ -657,7 +657,7 @@
                 "rseqc_modules": {
                     "type": "string",
                     "description": "Comma-separated list of RSeQC modules to run.",
-                    "help_text": "Available modules include: bam_stat, inner_distance, infer_experiment, junction_annotation, junction_saturation, read_distribution, read_duplication.",
+                    "help_text": "Available modules include: bam_stat, inner_distance, infer_experiment, junction_annotation, junction_saturation, read_distribution, read_duplication, tin.",
                     "errorMessage": "The RSeQC modules must be a comma-separated list of valid module names.",
                     "minLength": 1,
                     "default": "bam_stat,inner_distance,infer_experiment,junction_annotation,junction_saturation,read_distribution,read_duplication",

@@ -356,6 +356,17 @@ nextflow run nf-core/rnaseq \
 
 RustQC outputs are published under `<ALIGNER>/rustqc/` with subdirectories matching the tools they replace (e.g. `rustqc/rseqc/bam_stat/`, `rustqc/qualimap/`). See the [output documentation](#rustqc) for the full list of files.
 
+#### Preseq and TIN
+
+The nf-core/rnaseq pipeline does not normally run Preseq and `tin.py` by default, as these QC steps are very slow and error prone. They are included in RustQC by default however, so these results will be produced when using `--use_rustqc`.
+
+The upstream tools can be enabled with the following options:
+
+```bash
+--skip_preseq false \
+--rseqc_modules bam_stat,inner_distance,infer_experiment,junction_annotation,junction_saturation,read_distribution,read_duplication,tin
+```
+
 #### Validation status
 
 RustQC has been validated against the default QC tools on the nf-core/rnaseq test dataset (5 yeast samples, mixed PE/SE). The majority of outputs are byte-for-byte identical. Where differences exist (e.g. floating-point precision in curve fitting, randomized subsampling in TIN, and cosmetic formatting), they are minor and do not affect biological interpretation or MultiQC report content.

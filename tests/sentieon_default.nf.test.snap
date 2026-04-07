@@ -31,7 +31,7 @@
                     "gunzip": 1.13
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "STAR_GENOMEGENERATE": {
                     "gawk": "5.1.0",
@@ -197,25 +197,25 @@
                     "salmon": "1.10.3"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_SORT_QUALIMAP": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SENTIEON_STAR_ALIGN": {
                     "sentieon": 202503.02,

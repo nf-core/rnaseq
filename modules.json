@@ -218,43 +218,44 @@
                     },
                     "samtools/faidx": {
                         "branch": "master",
-                        "git_sha": "4e3e10e502ec6ab6b1c4b4fecd923ff1fa287338",
+                        "git_sha": "156feda0cb6589cd29c04902004fa3b53bc00205",
                         "installed_by": ["modules"]
                     },
                     "samtools/fastq": {
                         "branch": "master",
-                        "git_sha": "4e3e10e502ec6ab6b1c4b4fecd923ff1fa287338",
-                        "installed_by": ["fastq_remove_rrna"]
+                        "git_sha": "156feda0cb6589cd29c04902004fa3b53bc00205",
+                        "installed_by": ["fastq_remove_rrna", "modules"]
                     },
                     "samtools/flagstat": {
                         "branch": "master",
-                        "git_sha": "4e3e10e502ec6ab6b1c4b4fecd923ff1fa287338",
-                        "installed_by": ["bam_stats_samtools"]
+                        "git_sha": "156feda0cb6589cd29c04902004fa3b53bc00205",
+                        "installed_by": ["bam_stats_samtools", "modules"]
                     },
                     "samtools/idxstats": {
                         "branch": "master",
-                        "git_sha": "4e3e10e502ec6ab6b1c4b4fecd923ff1fa287338",
-                        "installed_by": ["bam_stats_samtools"]
+                        "git_sha": "156feda0cb6589cd29c04902004fa3b53bc00205",
+                        "installed_by": ["bam_stats_samtools", "modules"]
                     },
                     "samtools/index": {
                         "branch": "master",
-                        "git_sha": "4e3e10e502ec6ab6b1c4b4fecd923ff1fa287338",
+                        "git_sha": "156feda0cb6589cd29c04902004fa3b53bc00205",
                         "installed_by": [
                             "bam_dedup_stats_samtools_umicollapse",
                             "bam_dedup_stats_samtools_umitools",
                             "bam_markduplicates_picard",
-                            "bam_sort_stats_samtools"
+                            "bam_sort_stats_samtools",
+                            "modules"
                         ]
                     },
                     "samtools/sort": {
                         "branch": "master",
-                        "git_sha": "4e3e10e502ec6ab6b1c4b4fecd923ff1fa287338",
-                        "installed_by": ["bam_dedup_umi", "bam_sort_stats_samtools"]
+                        "git_sha": "156feda0cb6589cd29c04902004fa3b53bc00205",
+                        "installed_by": ["bam_dedup_umi", "bam_sort_stats_samtools", "modules"]
                     },
                     "samtools/stats": {
                         "branch": "master",
-                        "git_sha": "4e3e10e502ec6ab6b1c4b4fecd923ff1fa287338",
-                        "installed_by": ["bam_stats_samtools"]
+                        "git_sha": "156feda0cb6589cd29c04902004fa3b53bc00205",
+                        "installed_by": ["bam_stats_samtools", "modules"]
                     },
                     "samtools/view": {
                         "branch": "master",

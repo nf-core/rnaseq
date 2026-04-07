@@ -31,7 +31,7 @@
                     "gunzip": 1.13
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SEQKIT_REPLACE": {
                     "seqkit": "2.9.0"
@@ -180,22 +180,22 @@
                     "salmon": "1.10.3"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -843,7 +843,7 @@
                     "gunzip": 1.13
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SORTMERNA_INDEX": {
                     "sortmerna": "4.3.7"
@@ -967,28 +967,28 @@
                     "salmon": "1.10.3"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_FASTQ_BOWTIE2": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_VIEW_BOWTIE2": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SEQKIT_REPLACE": {
                     "seqkit": "2.9.0"

@@ -49,7 +49,7 @@
                     "salmon": "1.10.3"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "TRIMGALORE": {
                     "trimgalore": "0.6.10"
@@ -1466,7 +1466,7 @@
                     "gunzip": 1.13
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "TRIMGALORE": {
                     "trimgalore": "0.6.10"

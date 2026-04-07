@@ -1109,7 +1109,7 @@
                 "multiqc/star_salmon/multiqc_report_data/llms-full.txt",
                 "multiqc/star_salmon/multiqc_report_data/multiqc.log",
                 "multiqc/star_salmon/multiqc_report_data/multiqc.parquet",
-                "multiqc/star_salmon/multiqc_report_data/multiqc_bowtie2_bowtie2_rrna.txt",
+                "multiqc/star_salmon/multiqc_report_data/multiqc_bowtie2_bowtie2_alignment.txt",
                 "multiqc/star_salmon/multiqc_report_data/multiqc_citations.txt",
                 "multiqc/star_salmon/multiqc_report_data/multiqc_cutadapt.txt",
                 "multiqc/star_salmon/multiqc_report_data/multiqc_data.json",

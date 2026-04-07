@@ -128,7 +128,7 @@
             ],
             "creator": [
                 {
-                    "@id": "#phil.ewels"
+                    "@id": "#ewels"
                 }
             ],
             "dateCreated": "",
@@ -320,7 +320,7 @@
             "url": "https://nf-co.re/"
         },
         {
-            "@id": "#phil.ewels",
+            "@id": "#ewels",
             "@type": "Person",
             "name": "Phil Ewels"
         },

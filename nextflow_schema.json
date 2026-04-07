@@ -245,7 +245,6 @@
                 },
                 "igenomes_base": {
                     "type": "string",
-                    "format": "directory-path",
                     "description": "The base path to the igenomes reference files",
                     "fa_icon": "fas fa-ban",
                     "hidden": true,
@@ -408,6 +407,12 @@
                     "fa_icon": "fas fa-barcode",
                     "help_text": "Generating these output statistics can be time-consuming. See [issue #827](https://github.com/nf-core/rnaseq/issues/827) for more information.",
                     "description": "Generate output stats when running \"umi_tools dedup\"."
+                },
+                "umitools_dedup_primary_only": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-filter",
+                    "description": "Filter to primary alignments before UMI-tools dedup.",
+                    "help_text": "When enabled, secondary and supplementary alignments (SAM flag 0x900) are removed before running UMI-tools dedup. This ensures dedup statistics reflect only primary alignments and are consistent with the rest of the QC flow (raw reads > trimmed > non-rRNA > aligned > deduplicated)."
                 }
             },
             "fa_icon": "fas fa-barcode"
@@ -652,7 +657,7 @@
                 "rseqc_modules": {
                     "type": "string",
                     "description": "Comma-separated list of RSeQC modules to run.",
-                    "help_text": "Available modules include: bam_stat, inner_distance, infer_experiment, junction_annotation, junction_saturation, read_distribution, read_duplication.",
+                    "help_text": "Available modules include: bam_stat, inner_distance, infer_experiment, junction_annotation, junction_saturation, read_distribution, read_duplication, tin.",
                     "errorMessage": "The RSeQC modules must be a comma-separated list of valid module names.",
                     "minLength": 1,
                     "default": "bam_stat,inner_distance,infer_experiment,junction_annotation,junction_saturation,read_distribution,read_duplication",
@@ -660,13 +665,21 @@
                 },
                 "contaminant_screening": {
                     "type": "string",
-                    "description": "Tool to use for detecting contaminants in unaligned reads - available options are 'sylph', 'kraken2', or 'kraken2_bracken'",
+                    "description": "Tool to use for detecting contaminants in the selected screening reads - available options are 'sylph', 'kraken2', or 'kraken2_bracken'",
                     "fa_icon": "fas fa-virus-slash",
                     "enum": ["kraken2", "kraken2_bracken", "sylph"]
                 },
+                "contaminant_screening_input": {
+                    "type": "string",
+                    "description": "Read set to screen for contaminants: aligner-unmapped reads (default) or trimmed/filter-passed reads before alignment.",
+                    "help_text": "Use `unmapped` to preserve the existing behavior and focus screening on reads rejected by STAR/HISAT2. Use `trimmed` to screen the reads that enter alignment, for example to inspect contaminants removed earlier by BBSplit. `unmapped` requires alignment with `--aligner star_salmon`, `--aligner star_rsem`, or `--aligner hisat2`.",
+                    "default": "unmapped",
+                    "fa_icon": "fas fa-filter",
+                    "enum": ["trimmed", "unmapped"]
+                },
                 "kraken_db": {
                     "type": "string",
-                    "format": "directory-path",
+                    "format": "path",
                     "description": "Database when using Kraken2/Bracken for contaminant screening.",
                     "help_text": "See the usage documentation for more information on setting up and using Kraken2 databases. Requires the --contaminant_screening option to be set to 'kraken2' or 'kraken2_bracken' to have an effect",
                     "fa_icon": "fas fa-fish"
@@ -744,6 +757,11 @@
                     "fa_icon": "fas fa-fast-forward",
                     "description": "Skip all of the pseudoalignment-based processes within the pipeline."
                 },
+                "skip_quantification_merge": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-fast-forward",
+                    "description": "Skip cross-sample count merging. Runs tximport per-sample instead of merged, producing individual gene/transcript-level TSVs per sample. Skips SummarizedExperiment and RSEM merge counts. Useful for very large cohorts."
+                },
                 "skip_markduplicates": {
                     "type": "boolean",
                     "fa_icon": "fas fa-fast-forward",
@@ -763,6 +781,12 @@
                     "type": "boolean",
                     "description": "Skip FastQC.",
                     "fa_icon": "fas fa-fast-forward"
+                },
+                "use_rustqc": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Experimental. Use RustQC instead of dupRadar, featureCounts biotype QC, RSeQC, Preseq, Qualimap, and samtools stats/flagstat/idxstats. Recommend trialling on pilot data first.",
+                    "fa_icon": "fas fa-rocket"
                 },
                 "skip_preseq": {
                     "type": "boolean",

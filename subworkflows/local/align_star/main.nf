@@ -30,8 +30,8 @@ workflow ALIGN_STAR {
     index                // channel: [ val(meta), [ index ] ]
     gtf                  // channel: [ val(meta), [ gtf ] ]
     star_ignore_sjdbgtf  // boolean: when using pre-built STAR indices do not re-extract and use splice junctions from the GTF file
-    is_aws_igenome       // boolean: whether the genome files are from AWS iGenomes
-    fasta                // channel: /path/to/fasta
+    use_igenomes_star    // boolean: whether to use iGenomes-pinned STAR (2.6.1d) for pre-built index compatibility
+    fasta_fai            // channel: [ val(meta), path(fasta), path(fai) ]
     use_sentieon_star    // boolean: whether star alignment is accelerated with Sentieon
     use_parabricks_star  // boolean: whether star alignment (and mark duplicates) is accelerated with Parabricks
     skip_markduplicates  // boolean: whether to skip marking duplicates
@@ -50,10 +50,10 @@ workflow ALIGN_STAR {
 
     } else if (use_parabricks_star) {
 
-        PARABRICKS_RNA_FQ2BAM(reads, fasta, index, true, !skip_markduplicates)
+        PARABRICKS_RNA_FQ2BAM(reads, fasta_fai.map { meta, fasta, _fai -> [ meta, fasta ] }, index, true, !skip_markduplicates)
         ch_star_out = PARABRICKS_RNA_FQ2BAM
 
-    } else if (is_aws_igenome) {
+    } else if (use_igenomes_star) {
 
         STAR_ALIGN_IGENOMES(reads, index, gtf, star_ignore_sjdbgtf)
         ch_star_out = STAR_ALIGN_IGENOMES
@@ -78,7 +78,7 @@ workflow ALIGN_STAR {
     //
     // Sort, index BAM file and run samtools stats, flagstat and idxstats
     //
-    BAM_SORT_STATS_SAMTOOLS(ch_orig_bam, fasta)
+    BAM_SORT_STATS_SAMTOOLS(ch_orig_bam, fasta_fai)
 
     emit:
     orig_bam = ch_orig_bam                          // channel: [ val(meta), bam            ]
@@ -90,8 +90,7 @@ workflow ALIGN_STAR {
     fastq = ch_fastq                                // channel: [ val(meta), fastq          ]
     tab = ch_tab                                    // channel: [ val(meta), tab            ]
     bam = BAM_SORT_STATS_SAMTOOLS.out.bam           // channel: [ val(meta), [ bam ] ]
-    bai = BAM_SORT_STATS_SAMTOOLS.out.bai           // channel: [ val(meta), [ bai ] ]
-    csi = BAM_SORT_STATS_SAMTOOLS.out.csi           // channel: [ val(meta), [ csi ] ]
+    index = BAM_SORT_STATS_SAMTOOLS.out.index       // channel: [ val(meta), [ index ] ]
     stats = BAM_SORT_STATS_SAMTOOLS.out.stats       // channel: [ val(meta), [ stats ] ]
     flagstat = BAM_SORT_STATS_SAMTOOLS.out.flagstat // channel: [ val(meta), [ flagstat ] ]
     idxstats = BAM_SORT_STATS_SAMTOOLS.out.idxstats // channel: [ val(meta), [ idxstats ] ]

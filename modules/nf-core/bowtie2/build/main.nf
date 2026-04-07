@@ -12,7 +12,7 @@ process BOWTIE2_BUILD {
 
     output:
     tuple val(meta), path('bowtie2')    , emit: index
-    tuple val("${task.process}"), val('bowtie2'), eval('bowtie2 --version 2>&1 | head -1 | sed "s/^.*bowtie2-align-s version //; s/ .*//"'), emit: versions_bowtie2, topic: versions
+    tuple val("${task.process}"), val('bowtie2'), eval("bowtie2 --version 2>&1 | sed -n 's/.*bowtie2-align-s version //p'"), emit: versions_bowtie2, topic: versions
 
     when:
     task.ext.when == null || task.ext.when

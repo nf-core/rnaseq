@@ -332,6 +332,45 @@ Parabricks `rna_fq2bam` is based on STAR 2.7.2a. The following native STAR flags
 
 These differences are unlikely to materially affect downstream quantification results, but users should be aware of them for reproducibility purposes. All other STAR parameters (multi-mapping limits, intron sizes, mate gap, splice junction overhangs, etc.) have pbrun equivalents and are applied consistently.
 
+### RustQC: accelerated post-alignment QC (experimental)
+
+:::warning
+RustQC support is experimental. We recommend trialling it alongside the default QC path on a pilot subset of your data before switching over for production runs. Results are designed to match the upstream tools, but minor numerical differences exist in some outputs (see below).
+:::
+
+[RustQC](https://github.com/seqeralabs/rustqc) is a high-performance tool that replaces multiple post-alignment QC steps with a single pass over the BAM file. It produces output files compatible with the same MultiQC modules, so the report content is equivalent.
+
+RustQC replaces the following tools: dupRadar, featureCounts (biotype QC), RSeQC (bam_stat, infer_experiment, read_distribution, read_duplication, junction_annotation, junction_saturation, inner_distance, TIN), Preseq, Qualimap, and SAMtools stats/flagstat/idxstats.
+
+To enable RustQC, use the `--use_rustqc` flag. The individual tools listed above are automatically skipped:
+
+```bash
+nextflow run nf-core/rnaseq \
+    --input samplesheet.csv \
+    --outdir results \
+    --fasta genome.fa \
+    --gtf annotation.gtf \
+    --use_rustqc \
+    -profile docker
+```
+
+RustQC outputs are published under `<ALIGNER>/rustqc/` with subdirectories matching the tools they replace (e.g. `rustqc/rseqc/bam_stat/`, `rustqc/qualimap/`). See the [output documentation](#rustqc) for the full list of files.
+
+#### Preseq and TIN
+
+The nf-core/rnaseq pipeline does not normally run Preseq and `tin.py` by default, as these QC steps are very slow and error prone. They are included in RustQC by default however, so these results will be produced when using `--use_rustqc`.
+
+The upstream tools can be enabled with the following options:
+
+```bash
+--skip_preseq false \
+--rseqc_modules bam_stat,inner_distance,infer_experiment,junction_annotation,junction_saturation,read_distribution,read_duplication,tin
+```
+
+#### Validation status
+
+RustQC has been validated against the default QC tools on the nf-core/rnaseq test dataset (5 yeast samples, mixed PE/SE). The majority of outputs are byte-for-byte identical. Where differences exist (e.g. floating-point precision in curve fitting, randomized subsampling in TIN, and cosmetic formatting), they are minor and do not affect biological interpretation or MultiQC report content.
+
 ## Quantification options
 
 The current options align with STAR and quantify using either Salmon (`--aligner star_salmon`) / RSEM (`--aligner star_rsem`). You also have the option to pseudoalign and quantify your data with Salmon or Kallisto by providing the `--pseudo_aligner salmon` or `--pseudo_aligner kallisto` parameter, respectively.
@@ -339,6 +378,59 @@ The current options align with STAR and quantify using either Salmon (`--aligner
 Since v3.0 of the pipeline, featureCounts is no longer used to perform gene/transcript quantification, however it is still used to generate QC metrics based on [biotype](http://www.ensembl.org/info/genome/genebuild/biotypes.html) information available within GFF/GTF genome annotation files. This decision was made primarily because of the limitations of featureCounts to appropriately quantify gene expression data. Please see [Zhao et al., 2015](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0141910#pone-0141910-t001) and [Soneson et al., 2015](https://f1000research.com/articles/4-1521/v1).
 
 For similar reasons, quantification will not be performed if using `--aligner hisat2` due to the lack of an appropriate option to calculate accurate expression estimates from HISAT2 derived genomic alignments - this may change in future releases (see [#822](https://github.com/nf-core/rnaseq/issues/822)). HISAT2 has been made available for those who have a preference for the alignment, QC and other types of downstream analysis compatible with it's output.
+
+### Per-sample quantification (`--skip_quantification_merge`)
+
+By default, the pipeline merges quantification results across all samples, producing cross-sample count matrices, SummarizedExperiment objects, and a single merged MultiQC report. This works well for typical experiments, but can become a bottleneck for very large cohorts (hundreds to thousands of samples) where:
+
+- **Memory**: aggregation steps (tximport `.collect()`, SummarizedExperiment, RSEM merge counts, merged MultiQC) load all samples into a single process, which can exceed available memory
+- **Organization**: run-centric output directories (`fastqc/`, `salmon/`, `multiqc/`) mix files from all samples, making it harder to locate, deliver, or archive results per sample
+
+The `--skip_quantification_merge` parameter switches the pipeline to sample-centric operation. Each sample is processed independently and all its outputs are organized under `<outdir>/<sample_id>/`:
+
+```
+results/
+  SAMPLE_A/
+    fastqc/
+    trimgalore/
+    salmon/              # per-sample quant + tximport TSVs
+    multiqc/star_salmon/ # per-sample MultiQC report
+  SAMPLE_B/
+    ...
+  genome/                # shared reference files
+  pipeline_info/         # run metadata
+```
+
+When enabled:
+
+- **tximport** runs per-sample, producing individual gene-level and transcript-level count/TPM TSVs for each sample
+- **SummarizedExperiment** and **RSEM merge counts** are skipped entirely
+- **DESeq2 QC** is skipped (requires multiple samples)
+- **MultiQC** generates one report per sample rather than one merged report
+
+This mode works with any aligner or pseudo-aligner. For the fastest possible per-sample quantification, combine it with pseudo-alignment only:
+
+```bash
+nextflow run nf-core/rnaseq \
+    --input samplesheet.csv \
+    --pseudo_aligner salmon \
+    --skip_alignment \
+    --skip_quantification_merge \
+    --outdir results
+```
+
+A convenience profile `rapid_quant` bundles these options together with additional skips for alignment-dependent QC steps:
+
+```bash
+nextflow run nf-core/rnaseq \
+    --input samplesheet.csv \
+    -profile rapid_quant,docker \
+    --outdir results
+```
+
+:::tip
+Per-sample tximport TSVs can be combined downstream using standard R or Python tooling if cross-sample matrices are needed later. This gives you flexibility to run the pipeline incrementally as new samples arrive without reprocessing the entire cohort.
+:::
 
 ### Unique Molecular Identifiers (UMI)
 
@@ -369,8 +461,10 @@ Some bulk RNA-seq library preparation protocols capture only a 3' tag from each 
 Lexogen provides an example analysis workflow [on their website](https://www.lexogen.com/quantseq-data-analysis/), which includes the _ENCODE standard options_ for the [STAR aligner](<[https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf](https://github.com/alexdobin/STAR)>). In addition, Lexogen also decreases the tolerance for mismatches and clips poly(A) tails. To apply these settings, add the following parameters when running the pipeline:
 
 ```
---extra_star_align_args "--alignIntronMax 1000000 --alignIntronMin 20 --alignMatesGapMax 1000000 --alignSJoverhangMin 8 --outFilterMismatchNmax 999 --outFilterMultimapNmax 20 --outFilterType BySJout --outFilterMismatchNoverLmax 0.1 --clip3pAdapterSeq AAAAAAAA"
+--extra_star_align_args "--outFilterMismatchNoverLmax 0.1 --clip3pAdapterSeq AAAAAAAA"
 ```
+
+Note that many of the ENCODE standard STAR options (e.g. `--outFilterMultimapNmax 20`, `--alignIntronMax 1000000`) are already set as pipeline defaults. If you supply a parameter that duplicates a pipeline default, your value will take priority.
 
 #### Custom Salmon arguments
 
@@ -442,7 +536,7 @@ To take advantage of all the quality control modules implemented in the pipeline
 :::note
 **GTF vs GFF**
 
-GFF (General Feature Format) is a tab-separated text file format for representing genomic annotations, while GTF (General Transfer Format) is a specific implementation of this format corresponding to GFF version 2. The pipeline can accept both GFF and GTF but any GFF files will be converted to GTF so if a GTF is available for your annotation of choice it is better to provide that directly.
+GFF (General Feature Format) is a tab-separated text file format for representing genomic annotations, while GTF (General Transfer Format) is a specific implementation of this format corresponding to GFF version 2. The pipeline accepts both formats, but they must be provided via the correct parameter: use `--gtf` for GTF files (`.gtf`, `.gtf.gz`) and `--gff` for GFF3 files (`.gff`, `.gff3`, `.gff.gz`, `.gff3.gz`). GFF files provided via `--gff` will be automatically converted to GTF internally, so if a GTF is available for your annotation of choice it is better to provide that directly via `--gtf`.
 
 More information and links to further resources are [available from Ensembl](https://www.ensembl.org/info/website/upload/gff.html).
 :::
@@ -500,7 +594,7 @@ nextflow run nf-core/rnaseq \
 
 **Key points:**
 
-- **Use GFF3 format**: Prokaryotic annotations are typically distributed as GFF3 (not GTF). The pipeline accepts both via `--gff` or `--gtf`.
+- **Use GFF3 format**: Prokaryotic annotations are typically distributed as GFF3 (not GTF). Provide GFF3 files via `--gff` and GTF files via `--gtf`.
 - **CDS features required**: The annotation must contain CDS (coding sequence) features. The pipeline extracts transcripts from these.
 - **Matching contig names**: Chromosome/contig names in your FASTA must exactly match those in your GFF/GTF (e.g., if your FASTA has `>NC_003197.2`, your GFF must use `NC_003197.2` in column 1).
 - **No transcript FASTA needed**: The pipeline generates the transcript FASTA automatically using GFFREAD.
@@ -605,7 +699,7 @@ By default, the input GTF file will be filtered to ensure that sequence names co
 
 ## Contamination screening options
 
-The pipeline provides the option to scan unaligned reads for contamination from other species using either [Sylph](https://sylph-docs.github.io/) or [Kraken2](https://ccb.jhu.edu/software/kraken2/), with the possibility of applying corrections from [Bracken](https://ccb.jhu.edu/software/bracken/). Since running Bracken is not computationally expensive, we recommend always using it to refine the abundance estimates generated by Kraken2.
+The pipeline provides the option to scan reads for contamination from other species using either [Sylph](https://sylph-docs.github.io/) or [Kraken2](https://ccb.jhu.edu/software/kraken2/), with the possibility of applying corrections from [Bracken](https://ccb.jhu.edu/software/bracken/). By default, contaminant screening runs on aligner-unmapped reads to preserve the existing pipeline behavior and focus on reads rejected by STAR or HISAT2. If you instead want to inspect the reads entering alignment, for example when evaluating the effect of BBSplit filtering, set `--contaminant_screening_input trimmed`. Since running Bracken is not computationally expensive, we recommend always using it to refine the abundance estimates generated by Kraken2.
 
 Sylph is a [faster and much more memory-efficient tool](https://doi.org/10.1038/s41587-024-02412-y) with about equal precision in species detection to Kraken2/Bracken. Sylph also has lower rates of false positives. However, Sylph does not assign specific reads to species; it only provides overall abundance estimates. Sylph abundance estimates also [cannot assign a certain percentage of reads as unclassified](https://github.com/bluenote-1577/sylph/issues/49).
 

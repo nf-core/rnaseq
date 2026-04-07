@@ -15,16 +15,16 @@
                     [
                         "SAMTOOLS_IDXSTATS",
                         "samtools",
-                        "1.22.1"
+                        "1.23"
                     ]
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-02T16:21:46.333090477"
+        "timestamp": "2026-03-12T13:51:54.560818"
     },
     "bam": {
         "content": [
@@ -42,15 +42,15 @@
                     [
                         "SAMTOOLS_IDXSTATS",
                         "samtools",
-                        "1.22.1"
+                        "1.23"
                     ]
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-02T16:21:41.063422521"
+        "timestamp": "2026-03-12T13:51:46.230574"
     }
 }

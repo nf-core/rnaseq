@@ -34,7 +34,7 @@
                     "hisat2": "2.2.1"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "TRIMGALORE": {
                     "trimgalore": "0.6.10"
@@ -76,6 +76,7 @@
                 "multiqc/hisat2/multiqc_data",
                 "multiqc/hisat2/multiqc_data/.stub",
                 "multiqc/hisat2/multiqc_plots",
+                "multiqc/hisat2/multiqc_plots/.stub",
                 "multiqc/hisat2/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_rnaseq_software_mqc_versions.yml",
@@ -194,25 +195,25 @@
                     "salmon": "1.10.3"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "SAMTOOLS_SORT_QUALIMAP": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -391,11 +392,11 @@
                 "hisat2/log/WT_REP1.hisat2.summary.log",
                 "hisat2/log/WT_REP2.hisat2.summary.log",
                 "hisat2/picard_metrics",
-                "hisat2/picard_metrics/RAP1_IAA_30M_REP1.markdup.sorted.MarkDuplicates.metrics.txt",
-                "hisat2/picard_metrics/RAP1_UNINDUCED_REP1.markdup.sorted.MarkDuplicates.metrics.txt",
-                "hisat2/picard_metrics/RAP1_UNINDUCED_REP2.markdup.sorted.MarkDuplicates.metrics.txt",
-                "hisat2/picard_metrics/WT_REP1.markdup.sorted.MarkDuplicates.metrics.txt",
-                "hisat2/picard_metrics/WT_REP2.markdup.sorted.MarkDuplicates.metrics.txt",
+                "hisat2/picard_metrics/RAP1_IAA_30M_REP1.markdup.sorted.metrics.txt",
+                "hisat2/picard_metrics/RAP1_UNINDUCED_REP1.markdup.sorted.metrics.txt",
+                "hisat2/picard_metrics/RAP1_UNINDUCED_REP2.markdup.sorted.metrics.txt",
+                "hisat2/picard_metrics/WT_REP1.markdup.sorted.metrics.txt",
+                "hisat2/picard_metrics/WT_REP2.markdup.sorted.metrics.txt",
                 "hisat2/qualimap",
                 "hisat2/qualimap/RAP1_IAA_30M_REP1",
                 "hisat2/qualimap/RAP1_IAA_30M_REP1/css",
@@ -1278,21 +1279,6 @@
                 "WT_REP2.biotype_counts_mqc.tsv:md5,994f8e87aeaa769479fcc4747ffbe6d9",
                 "WT_REP2.biotype_counts_rrna_mqc.tsv:md5,12294618fe44df1e7f39348372dcb481",
                 "WT_REP2.featureCounts.tsv:md5,947b8b919223a184bf8f8201d90ca8f6",
-                "coverage_profile_along_genes_(high).txt:md5,b56043c3546cac003461c57abad93536",
-                "coverage_profile_along_genes_(low).txt:md5,1b55d86defcc541643137497c4c6bb06",
-                "coverage_profile_along_genes_(total).txt:md5,1b55d86defcc541643137497c4c6bb06",
-                "coverage_profile_along_genes_(high).txt:md5,9ffadadb953cc9ea1b1c01ac92fcdf61",
-                "coverage_profile_along_genes_(low).txt:md5,fb281c857a2c4e093b0d8e1f756abf81",
-                "coverage_profile_along_genes_(total).txt:md5,fb281c857a2c4e093b0d8e1f756abf81",
-                "coverage_profile_along_genes_(high).txt:md5,a31cb4ba804080544072cd57fc1bdf1c",
-                "coverage_profile_along_genes_(low).txt:md5,f744e295c3d034b1a86e1dde8bb18eff",
-                "coverage_profile_along_genes_(total).txt:md5,f744e295c3d034b1a86e1dde8bb18eff",
-                "coverage_profile_along_genes_(high).txt:md5,be72a2c9023f6eb81bd5816af33abb65",
-                "coverage_profile_along_genes_(low).txt:md5,9fce120533ff57f8bc2a2f44f1b6decb",
-                "coverage_profile_along_genes_(total).txt:md5,9fce120533ff57f8bc2a2f44f1b6decb",
-                "coverage_profile_along_genes_(high).txt:md5,83d436e0ddb7435bb343db5e4dfb744a",
-                "coverage_profile_along_genes_(low).txt:md5,58021e91f3595a0d6dc74abc41690638",
-                "coverage_profile_along_genes_(total).txt:md5,58021e91f3595a0d6dc74abc41690638",
                 "RAP1_IAA_30M_REP1.infer_experiment.txt:md5,1d4348685fa61819ff8076213d0873b3",
                 "RAP1_UNINDUCED_REP1.infer_experiment.txt:md5,3ee0f64e82f0b1ac16b5f3e2b30b024c",
                 "RAP1_UNINDUCED_REP2.infer_experiment.txt:md5,3d17628d178e5a3cc9dc03f32614bff7",

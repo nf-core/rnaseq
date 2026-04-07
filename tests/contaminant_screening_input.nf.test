@@ -1,0 +1,185 @@
+nextflow_pipeline {
+
+    name "Test contaminant screening input selection"
+    script "../main.nf"
+    tag "pipeline"
+
+    test("Params: contaminant screening unmapped input - stub") {
+
+        options "-stub"
+
+        when {
+            params {
+                outdir = "$outputDir"
+                aligner = 'hisat2'
+                skip_bigwig = true
+                contaminant_screening = 'kraken2'
+            }
+        }
+
+        then {
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.trace.succeeded().size(),
+                    removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow"),
+                    stable_name,
+                    stable_path
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -f".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("Params: contaminant screening trimmed input with skip_alignment - stub") {
+
+        options "-stub"
+
+        when {
+            params {
+                outdir = "$outputDir"
+                skip_alignment = true
+                contaminant_screening = 'kraken2'
+                contaminant_screening_input = 'trimmed'
+            }
+        }
+
+        then {
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.trace.succeeded().size(),
+                    removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow"),
+                    stable_name,
+                    stable_path
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -f".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("Params: contaminant_screening_input=trimmed screens pre-alignment reads") {
+
+        when {
+            params {
+                outdir                      = "$outputDir"
+                contaminant_screening       = 'kraken2'
+                contaminant_screening_input = 'trimmed'
+                skip_bigwig                 = true
+                skip_stringtie              = true
+            }
+        }
+
+        then {
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            def krakenReportDir = file("$outputDir/star_salmon/contaminants/kraken2/kraken_reports")
+            def krakenReadCounts = krakenReportDir.listFiles()
+                .sort { it.name }
+                .collectEntries { report ->
+                    def total = 0L
+                    report.readLines().each { line ->
+                        def parts = line.trim().split('\t')
+                        if (parts.size() >= 4 && parts[3] in ['U', 'R']) { total += parts[1].toLong() }
+                    }
+                    [report.name, total]
+                }
+            def expectedTrimmedCounts = [
+                "RAP1_IAA_30M_REP1.kraken2.report.txt": 49593L,
+                "RAP1_UNINDUCED_REP1.kraken2.report.txt": 48567L,
+                "RAP1_UNINDUCED_REP2.kraken2.report.txt": 97654L,
+                "WT_REP1.kraken2.report.txt": 99225L,
+                "WT_REP2.kraken2.report.txt": 49551L
+            ]
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.trace.succeeded().findAll { it.name.contains('BBMAP_BBSPLIT') }.size() > 0 },
+                { assert workflow.trace.succeeded().findAll { it.name.contains('KRAKEN2') }.size() > 0 },
+                { assert expectedTrimmedCounts.every { name, expected -> Math.abs(krakenReadCounts[name] - expected) <= 2 } },
+                { assert snapshot(
+                    workflow.trace.succeeded().size(),
+                    removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow").findAll { it.key != "KRAKEN2" },
+                    stable_name,
+                    stable_path
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -f".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("Params: contaminant_screening_input=unmapped (default) screens post-alignment reads") {
+
+        when {
+            params {
+                outdir                = "$outputDir"
+                contaminant_screening = 'kraken2'
+                skip_bigwig           = true
+                skip_stringtie        = true
+            }
+        }
+
+        then {
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            def krakenReportDir = file("$outputDir/star_salmon/contaminants/kraken2/kraken_reports")
+            def krakenReadCounts = krakenReportDir.listFiles()
+                .sort { it.name }
+                .collectEntries { report ->
+                    def total = 0L
+                    report.readLines().each { line ->
+                        def parts = line.trim().split('\t')
+                        if (parts.size() >= 4 && parts[3] in ['U', 'R']) { total += parts[1].toLong() }
+                    }
+                    [report.name, total]
+                }
+            def expectedUnmappedCounts = [
+                "RAP1_IAA_30M_REP1.kraken2.report.txt": 3826L,
+                "RAP1_UNINDUCED_REP1.kraken2.report.txt": 854L,
+                "RAP1_UNINDUCED_REP2.kraken2.report.txt": 1811L,
+                "WT_REP1.kraken2.report.txt": 8928L,
+                "WT_REP2.kraken2.report.txt": 4196L
+            ]
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.trace.succeeded().findAll { it.name.contains('STAR_ALIGN') }.size() > 0 },
+                { assert workflow.trace.succeeded().findAll { it.name.contains('KRAKEN2') }.size() > 0 },
+                { assert expectedUnmappedCounts.every { name, expected -> Math.abs(krakenReadCounts[name] - expected) <= 2 } },
+                { assert snapshot(
+                    workflow.trace.succeeded().size(),
+                    removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow").findAll { it.key != "KRAKEN2" },
+                    stable_name,
+                    stable_path
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -f".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+}

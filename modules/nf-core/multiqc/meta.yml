@@ -1,6 +1,6 @@
 name: multiqc
-description: Aggregate results from bioinformatics analyses across many samples into
-  a single report
+description: Aggregate results from bioinformatics analyses across many samples
+  into a single report
 keywords:
   - QC
   - bioinformatics tools
@@ -12,67 +12,81 @@ tools:
         It's a general use tool, perfect for summarising the output from numerous bioinformatics tools.
       homepage: https://multiqc.info/
       documentation: https://multiqc.info/docs/
-      licence: ["GPL-3.0-or-later"]
+      licence:
+        - "GPL-3.0-or-later"
       identifier: biotools:multiqc
 input:
-  - multiqc_files:
-      type: file
-      description: |
-        List of reports / files recognised by MultiQC, for example the html and zip output of FastQC
-      ontologies: []
-  - multiqc_config:
-      type: file
-      description: Optional config yml for MultiQC
-      pattern: "*.{yml,yaml}"
-      ontologies:
-        - edam: http://edamontology.org/format_3750 # YAML
-  - extra_multiqc_config:
-      type: file
-      description: Second optional config yml for MultiQC. Will override common sections
-        in multiqc_config.
-      pattern: "*.{yml,yaml}"
-      ontologies:
-        - edam: http://edamontology.org/format_3750 # YAML
-  - multiqc_logo:
-      type: file
-      description: Optional logo file for MultiQC
-      pattern: "*.{png}"
-      ontologies: []
-  - replace_names:
-      type: file
-      description: |
-        Optional two-column sample renaming file. First column a set of
-        patterns, second column a set of corresponding replacements. Passed via
-        MultiQC's `--replace-names` option.
-      pattern: "*.{tsv}"
-      ontologies:
-        - edam: http://edamontology.org/format_3475 # TSV
-  - sample_names:
-      type: file
-      description: |
-        Optional TSV file with headers, passed to the MultiQC --sample_names
-        argument.
-      pattern: "*.{tsv}"
-      ontologies:
-        - edam: http://edamontology.org/format_3475 # TSV
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'sample1', single_end:false ]
+    - multiqc_files:
+        type: file
+        description: |
+          List of reports / files recognised by MultiQC, for example the html and zip output of FastQC
+        ontologies: []
+    - multiqc_config:
+        type: file
+        description: Optional config yml for MultiQC
+        pattern: "*.{yml,yaml}"
+        ontologies:
+          - edam: http://edamontology.org/format_3750
+    - multiqc_logo:
+        type: file
+        description: Optional logo file for MultiQC
+        pattern: "*.{png}"
+        ontologies: []
+    - replace_names:
+        type: file
+        description: |
+          Optional two-column sample renaming file. First column a set of
+          patterns, second column a set of corresponding replacements. Passed via
+          MultiQC's `--replace-names` option.
+        pattern: "*.{tsv}"
+        ontologies:
+          - edam: http://edamontology.org/format_3475
+    - sample_names:
+        type: file
+        description: |
+          Optional TSV file with headers, passed to the MultiQC --sample_names
+          argument.
+        pattern: "*.{tsv}"
+        ontologies:
+          - edam: http://edamontology.org/format_3475
 output:
   report:
-    - "*.html":
-        type: file
-        description: MultiQC report file
-        pattern: ".html"
-        ontologies: []
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'sample1', single_end:false ]
+      - "*.html":
+          type: file
+          description: MultiQC report file
+          pattern: ".html"
+          ontologies: []
   data:
-    - "*_data":
-        type: directory
-        description: MultiQC data dir
-        pattern: "multiqc_data"
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'sample1', single_end:false ]
+      - "*_data":
+          type: directory
+          description: MultiQC data dir
+          pattern: "multiqc_data"
   plots:
-    - "*_plots":
-        type: file
-        description: Plots created by MultiQC
-        pattern: "*_data"
-        ontologies: []
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'sample1', single_end:false ]
+      - "*_plots":
+          type: file
+          description: Plots created by MultiQC
+          pattern: "*_plots"
+          ontologies: []
   versions:
     - - ${task.process}:
           type: string

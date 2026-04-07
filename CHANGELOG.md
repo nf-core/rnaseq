@@ -3,6 +3,37 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [[3.24.0](https://github.com/nf-core/rnaseq/releases/tag/3.24.0)] - 2026-04-07
+
+### Credits
+
+Special thanks to the following for their contributions to the release:
+
+- [Adam Talbot](https://github.com/adamrtalbot)
+- [Brian Fulton-Howard](https://github.com/BEFH)
+- [Cindy Wang](https://github.com/cwang-lilly)
+- [Elad Herz](https://github.com/EladH1)
+- [Friederike Hanssen](https://github.com/FriederikeHanssen)
+- [@harpbelle](https://github.com/harpbelle)
+- [Maxime U Garcia](https://github.com/maxulysse)
+- [Phil Ewels](https://github.com/ewels)
+- [@sebinheo](https://github.com/sebinheo)
+
+### Enhancements and fixes
+
+- [PR #1740](https://github.com/nf-core/rnaseq/pull/1740) - Bump version to 3.24.0dev after release 3.23.0; always set ID/SM read group tags for STAR and HISAT2 even when `seq_center`/`seq_platform` are not provided
+- [PR #1745](https://github.com/nf-core/rnaseq/pull/1745) - Always skip validation of `igenomes_base` and remove `format: directory-path` from schema to prevent S3 access errors
+- [PR #1746](https://github.com/nf-core/rnaseq/pull/1746) - Add `--contaminant_screening_input` to choose contaminant screening on trimmed/filter-passed reads or aligner-unmapped reads, keep `unmapped` as the default, and preserve stable sample IDs throughout the workflow
+- [PR #1749](https://github.com/nf-core/rnaseq/pull/1749) - Fix bowtie2 version extraction failing when Perl locale warnings are present (common in WSL/conda setups), which caused MultiQC to crash
+- [PR #1750](https://github.com/nf-core/rnaseq/pull/1750) - Add missing tool citations to CITATIONS.md (Bowtie2, Kallisto, RiboDetector, SeqKit, tximport, UMICollapse)
+- [PR #1751](https://github.com/nf-core/rnaseq/pull/1751) - Clarify in docs that GFF files should be provided via `--gff`, not `--gtf` ([#1584](https://github.com/nf-core/rnaseq/issues/1584))
+- [PR #1752](https://github.com/nf-core/rnaseq/pull/1752) - Remove STAR from RSEM conda environments since STAR alignment runs as a separate process in this workflow, fixing ARM conda compatibility
+- [PR #1754](https://github.com/nf-core/rnaseq/pull/1754) - Add experimental RustQC support (`--use_rustqc`): high-performance single-pass replacement for dupRadar, featureCounts biotype QC, RSeQC, Preseq, Qualimap, and SAMtools stats/flagstat/idxstats.
+- [PR #1761](https://github.com/nf-core/rnaseq/pull/1761) - Fix Bowtie2 alignment logs appearing under "Bowtie2 (rRNA removal)" in MultiQC report when using `--aligner bowtie2_salmon`
+- [PR #1762](https://github.com/nf-core/rnaseq/pull/1762) - Restore `extra_star_align_args` deduplication so user-supplied STAR flags override pipeline defaults instead of causing a fatal duplicate parameter error ([#1757](https://github.com/nf-core/rnaseq/issues/1757))
+- [PR #1763](https://github.com/nf-core/rnaseq/pull/1763) - Bump version to 3.24.0 ahead of release
+- [PR #1764](https://github.com/nf-core/rnaseq/pull/1764) - Update nf-core template to v3.5.2, update ro-crate maintainer
+
 ## [[3.23.0](https://github.com/nf-core/rnaseq/releases/tag/3.23.0)] - 2026-02-27
 
 ### Credits

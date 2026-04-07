@@ -93,25 +93,25 @@
                     "salmon": "1.10.3"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "SAMTOOLS_SORT_QUALIMAP": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": "1.22.1"
+                    "samtools": 1.23
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -804,11 +804,11 @@
                 "star_salmon/log/WT_REP2.Log.progress.out",
                 "star_salmon/log/WT_REP2.SJ.out.tab",
                 "star_salmon/picard_metrics",
-                "star_salmon/picard_metrics/RAP1_IAA_30M_REP1.markdup.sorted.MarkDuplicates.metrics.txt",
-                "star_salmon/picard_metrics/RAP1_UNINDUCED_REP1.markdup.sorted.MarkDuplicates.metrics.txt",
-                "star_salmon/picard_metrics/RAP1_UNINDUCED_REP2.markdup.sorted.MarkDuplicates.metrics.txt",
-                "star_salmon/picard_metrics/WT_REP1.markdup.sorted.MarkDuplicates.metrics.txt",
-                "star_salmon/picard_metrics/WT_REP2.markdup.sorted.MarkDuplicates.metrics.txt",
+                "star_salmon/picard_metrics/RAP1_IAA_30M_REP1.markdup.sorted.metrics.txt",
+                "star_salmon/picard_metrics/RAP1_UNINDUCED_REP1.markdup.sorted.metrics.txt",
+                "star_salmon/picard_metrics/RAP1_UNINDUCED_REP2.markdup.sorted.metrics.txt",
+                "star_salmon/picard_metrics/WT_REP1.markdup.sorted.metrics.txt",
+                "star_salmon/picard_metrics/WT_REP2.markdup.sorted.metrics.txt",
                 "star_salmon/qualimap",
                 "star_salmon/qualimap/RAP1_IAA_30M_REP1",
                 "star_salmon/qualimap/RAP1_IAA_30M_REP1/css",
@@ -1310,21 +1310,6 @@
                 "RAP1_UNINDUCED_REP2.SJ.out.tab:md5,1c0458f66e4af56a56f4409c120434b3",
                 "WT_REP1.SJ.out.tab:md5,299a948b1aaf329152224ba573402a51",
                 "WT_REP2.SJ.out.tab:md5,073498a8fb5fb4da664c9129a6777c42",
-                "coverage_profile_along_genes_(high).txt:md5,59a01cd5d9bc7b6096490d7f3d6d6877",
-                "coverage_profile_along_genes_(low).txt:md5,8a5255e6f9f142bbd22c636296f41d72",
-                "coverage_profile_along_genes_(total).txt:md5,8a5255e6f9f142bbd22c636296f41d72",
-                "coverage_profile_along_genes_(high).txt:md5,61683a2fcf35174fe72a648be63d45ac",
-                "coverage_profile_along_genes_(low).txt:md5,031046ef33de379e0463fddc0b924ecd",
-                "coverage_profile_along_genes_(total).txt:md5,031046ef33de379e0463fddc0b924ecd",
-                "coverage_profile_along_genes_(high).txt:md5,2745780cc56258bbe587f9b6db03e9e4",
-                "coverage_profile_along_genes_(low).txt:md5,85154785601b18118ae2e6a19d0a1c0a",
-                "coverage_profile_along_genes_(total).txt:md5,85154785601b18118ae2e6a19d0a1c0a",
-                "coverage_profile_along_genes_(high).txt:md5,6afb5ffc9ddad52f69c518e32118ac61",
-                "coverage_profile_along_genes_(low).txt:md5,248345fdf0f8de2a8d7d329edd0a5c42",
-                "coverage_profile_along_genes_(total).txt:md5,248345fdf0f8de2a8d7d329edd0a5c42",
-                "coverage_profile_along_genes_(high).txt:md5,f7c11dace9fc4f446fc29e5db7b3ee24",
-                "coverage_profile_along_genes_(low).txt:md5,f53cfe3e30c560e3261818c2e6df3d5d",
-                "coverage_profile_along_genes_(total).txt:md5,f53cfe3e30c560e3261818c2e6df3d5d",
                 "RAP1_IAA_30M_REP1.infer_experiment.txt:md5,e1de3aba230cf3d40f04d682dfe4e803",
                 "RAP1_UNINDUCED_REP1.infer_experiment.txt:md5,0bc268f09da1676522f8adda63509f14",
                 "RAP1_UNINDUCED_REP2.infer_experiment.txt:md5,be4b322faffa736ab6ac39ff39c7aa9d",

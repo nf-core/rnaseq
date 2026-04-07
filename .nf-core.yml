@@ -5,6 +5,8 @@ lint:
   files_unchanged:
     - assets/email_template.html
     - assets/email_template.txt
+    - assets/nf-core-rnaseq_logo_light.png
+    - docs/images/nf-core-rnaseq_logo_dark.png
     - .gitignore
   modules_config: false
   multiqc_config: false

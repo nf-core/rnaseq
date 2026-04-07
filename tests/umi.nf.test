@@ -43,6 +43,13 @@ nextflow_pipeline {
                 ).match() }
             )
         }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -f".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
     }
 
     test("--umi_dedup_tool 'umitools'") {
@@ -81,6 +88,13 @@ nextflow_pipeline {
                     stable_path
                 ).match() }
             )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -f".execute()
+            }
+            new File("${launchDir}").deleteDir()
         }
     }
 
@@ -122,6 +136,13 @@ nextflow_pipeline {
                 ).match() }
             )
         }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -f".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
     }
 
     test("--umi_dedup_tool 'umitools - stub") {
@@ -160,6 +181,13 @@ nextflow_pipeline {
                     stable_path
                 ).match() }
             )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -f".execute()
+            }
+            new File("${launchDir}").deleteDir()
         }
     }
 }

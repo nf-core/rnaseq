@@ -657,7 +657,7 @@
                 "rseqc_modules": {
                     "type": "string",
                     "description": "Comma-separated list of RSeQC modules to run.",
-                    "help_text": "Available modules include: bam_stat, inner_distance, infer_experiment, junction_annotation, junction_saturation, read_distribution, read_duplication.",
+                    "help_text": "Available modules include: bam_stat, inner_distance, infer_experiment, junction_annotation, junction_saturation, read_distribution, read_duplication, tin.",
                     "errorMessage": "The RSeQC modules must be a comma-separated list of valid module names.",
                     "minLength": 1,
                     "default": "bam_stat,inner_distance,infer_experiment,junction_annotation,junction_saturation,read_distribution,read_duplication",
@@ -781,6 +781,12 @@
                     "type": "boolean",
                     "description": "Skip FastQC.",
                     "fa_icon": "fas fa-fast-forward"
+                },
+                "use_rustqc": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Experimental. Use RustQC instead of dupRadar, featureCounts biotype QC, RSeQC, Preseq, Qualimap, and samtools stats/flagstat/idxstats. Recommend trialling on pilot data first.",
+                    "fa_icon": "fas fa-rocket"
                 },
                 "skip_preseq": {
                     "type": "boolean",

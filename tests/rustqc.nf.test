@@ -1,22 +1,16 @@
 nextflow_pipeline {
 
-    name "Test pipeline with Kallisto, skipping both QC and alignment"
+    name "Test pipeline with RustQC"
     script "../main.nf"
     tag "pipeline"
+    tag "rustqc"
 
-    test("Params: --pseudo_aligner kallisto --skip_qc --skip_alignment") {
+    test("Params: use_rustqc") {
 
         when {
             params {
-                outdir = "$outputDir"
-                pseudo_aligner = 'kallisto'
-                skip_qc = true
-                skip_alignment = true
-                // Disable spike-ins since we don't have a kallisto_index with spike-ins.
-                // Must also disable transcript_fasta because the test profile's transcriptome
-                // was generated with spike-ins - we need the pipeline to regenerate it.
-                additional_fasta = null
-                transcript_fasta = null
+                outdir      = "$outputDir"
+                use_rustqc  = true
             }
         }
 
@@ -24,7 +18,7 @@ nextflow_pipeline {
             // stable_name: All files + folders in ${params.outdir}/ with a stable name
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore_rustqc')
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -48,21 +42,14 @@ nextflow_pipeline {
         }
     }
 
-    test("Params: --pseudo_aligner kallisto --skip_qc --skip_alignment - stub") {
+    test("Params: use_rustqc - stub") {
 
         options "-stub"
 
         when {
             params {
-                outdir = "$outputDir"
-                pseudo_aligner = 'kallisto'
-                skip_qc = true
-                skip_alignment = true
-                // Disable spike-ins since we don't have a kallisto_index with spike-ins.
-                // Must also disable transcript_fasta because the test profile's transcriptome
-                // was generated with spike-ins - we need the pipeline to regenerate it.
-                additional_fasta = null
-                transcript_fasta = null
+                outdir      = "$outputDir"
+                use_rustqc  = true
             }
         }
 
@@ -70,7 +57,7 @@ nextflow_pipeline {
             // stable_name: All files + folders in ${params.outdir}/ with a stable name
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore_rustqc')
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(

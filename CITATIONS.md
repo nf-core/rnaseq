@@ -76,6 +76,10 @@
 
   > Li B, Dewey CN. RSEM: accurate transcript quantification from RNA-Seq data with or without a reference genome BMC Bioinformatics. 2011 Aug 4;12:323. doi: 10.1186/1471-2105-12-323. PubMed PMID: 21816040; PubMed Central PMCID: PMC3163565.
 
+- [RustQC](https://github.com/seqeralabs/RustQC)
+
+  > Ewels P. RustQC: high-performance single-pass RNA-seq quality control. Seqera; 2026. Available from: https://github.com/seqeralabs/RustQC
+
 - [RSeQC](https://pubmed.ncbi.nlm.nih.gov/22743226/)
 
   > Wang L, Wang S, Li W. RSeQC: quality control of RNA-seq experiments Bioinformatics. 2012 Aug 15;28(16):2184-5. doi: 10.1093/bioinformatics/bts356. Epub 2012 Jun 27. PubMed PMID: 22743226.

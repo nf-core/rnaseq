@@ -259,7 +259,7 @@
                     },
                     "samtools/view": {
                         "branch": "master",
-                        "git_sha": "4e3e10e502ec6ab6b1c4b4fecd923ff1fa287338",
+                        "git_sha": "2057a0a8dbd67000d08613a556570aa7184a7c89",
                         "installed_by": ["bam_dedup_stats_samtools_umitools", "fastq_remove_rrna"]
                     },
                     "sentieon/rsemcalculateexpression": {
@@ -403,7 +403,7 @@
                     },
                     "bam_sort_stats_samtools": {
                         "branch": "master",
-                        "git_sha": "4e3e10e502ec6ab6b1c4b4fecd923ff1fa287338",
+                        "git_sha": "156feda0cb6589cd29c04902004fa3b53bc00205",
                         "installed_by": ["bam_dedup_umi", "fastq_align_hisat2"]
                     },
                     "bam_stats_samtools": {

@@ -38,5 +38,10 @@ nextflow_pipeline {
                 ).match() }
             )
         }
+
+        cleanup {
+            "docker system prune -f".execute()
+            new File("${launchDir}").deleteDir()
+        }
     }
 }

@@ -30,6 +30,11 @@ nextflow_pipeline {
                 ).match() }
             )
         }
+
+        cleanup {
+            "docker system prune -f".execute()
+            new File("${launchDir}").deleteDir()
+        }
     }
 
     test("Params: contaminant screening trimmed input with skip_alignment - stub") {
@@ -57,6 +62,11 @@ nextflow_pipeline {
                     stable_path
                 ).match() }
             )
+        }
+
+        cleanup {
+            "docker system prune -f".execute()
+            new File("${launchDir}").deleteDir()
         }
     }
 
@@ -106,6 +116,11 @@ nextflow_pipeline {
                 ).match() }
             )
         }
+
+        cleanup {
+            "docker system prune -f".execute()
+            new File("${launchDir}").deleteDir()
+        }
     }
 
     test("Params: contaminant_screening_input=unmapped (default) screens post-alignment reads") {
@@ -152,6 +167,11 @@ nextflow_pipeline {
                     stable_path
                 ).match() }
             )
+        }
+
+        cleanup {
+            "docker system prune -f".execute()
+            new File("${launchDir}").deleteDir()
         }
     }
 }

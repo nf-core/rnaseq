@@ -36,6 +36,11 @@ nextflow_pipeline {
                 ).match() }
             )
         }
+
+        cleanup {
+            "docker system prune -f".execute()
+            new File("${launchDir}").deleteDir()
+        }
     }
 
     test("Params: --featurecounts_group_type false - stub") {
@@ -71,6 +76,11 @@ nextflow_pipeline {
                     stable_path
                 ).match() }
             )
+        }
+
+        cleanup {
+            "docker system prune -f".execute()
+            new File("${launchDir}").deleteDir()
         }
     }
 }

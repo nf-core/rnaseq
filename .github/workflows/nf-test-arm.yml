@@ -54,7 +54,7 @@ jobs:
           # Skip parabricks tests - requires NVIDIA GPU
           SKIP_PARABRICKS: true
         with:
-          max_shards: 14
+          max_shards: 18
 
       - name: debug
         run: |

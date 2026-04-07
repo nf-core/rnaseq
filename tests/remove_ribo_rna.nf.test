@@ -37,6 +37,11 @@ nextflow_pipeline {
                 ).match() }
             )
         }
+
+        cleanup {
+            "docker system prune -f".execute()
+            new File("${launchDir}").deleteDir()
+        }
     }
 
     test("Params: --remove_ribo_rna - stub") {
@@ -73,6 +78,11 @@ nextflow_pipeline {
                 ).match() }
             )
         }
+
+        cleanup {
+            "docker system prune -f".execute()
+            new File("${launchDir}").deleteDir()
+        }
     }
 
     test("Params: --remove_ribo_rna --ribo_removal_tool bowtie2") {
@@ -107,6 +117,11 @@ nextflow_pipeline {
                     stable_path
                 ).match() }
             )
+        }
+
+        cleanup {
+            "docker system prune -f".execute()
+            new File("${launchDir}").deleteDir()
         }
     }
 
@@ -144,6 +159,11 @@ nextflow_pipeline {
                     stable_path
                 ).match() }
             )
+        }
+
+        cleanup {
+            "docker system prune -f".execute()
+            new File("${launchDir}").deleteDir()
         }
     }
 }

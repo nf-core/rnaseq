@@ -34,6 +34,11 @@ nextflow_pipeline {
                 ).match() }
             )
         }
+
+        cleanup {
+            "docker system prune -f".execute()
+            new File("${launchDir}").deleteDir()
+        }
     }
 
     test("Params: --pseudo_aligner salmon --skip_alignment --skip_quantification_merge - stub") {
@@ -67,6 +72,11 @@ nextflow_pipeline {
                     stable_path
                 ).match() }
             )
+        }
+
+        cleanup {
+            "docker system prune -f".execute()
+            new File("${launchDir}").deleteDir()
         }
     }
 }

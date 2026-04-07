@@ -441,12 +441,6 @@
                     "description": "Optionally accelerate STAR and MarkDuplicates with Parabricks",
                     "fa_icon": "fas fa-running"
                 },
-                "use_rustqc": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "Experimental. Use RustQC instead of dupRadar, featureCounts biotype QC, RSeQC, Preseq, Qualimap, and samtools stats/flagstat/idxstats. Recommend trialling on pilot data first.",
-                    "fa_icon": "fas fa-rocket"
-                },
                 "gpu_container_options": {
                     "type": "string",
                     "description": "Override container GPU flags for GPU tasks. Auto-detects if not set (--gpus all for Docker, --nv for Singularity/Apptainer).",
@@ -787,6 +781,12 @@
                     "type": "boolean",
                     "description": "Skip FastQC.",
                     "fa_icon": "fas fa-fast-forward"
+                },
+                "use_rustqc": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Experimental. Use RustQC instead of dupRadar, featureCounts biotype QC, RSeQC, Preseq, Qualimap, and samtools stats/flagstat/idxstats. Recommend trialling on pilot data first.",
+                    "fa_icon": "fas fa-rocket"
                 },
                 "skip_preseq": {
                     "type": "boolean",

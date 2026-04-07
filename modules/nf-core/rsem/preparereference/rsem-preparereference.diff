@@ -1,0 +1,26 @@
+Changes in component 'nf-core/rsem/preparereference'
+Changes in 'rsem/preparereference/environment.yml':
+--- modules/nf-core/rsem/preparereference/environment.yml
++++ modules/nf-core/rsem/preparereference/environment.yml
+@@ -5,4 +5,3 @@
+   - bioconda
+ dependencies:
+   - bioconda::rsem=1.3.3
+-  - bioconda::star=2.7.10a
+
+'modules/nf-core/rsem/preparereference/meta.yml' is unchanged
+Changes in 'rsem/preparereference/main.nf':
+--- modules/nf-core/rsem/preparereference/main.nf
++++ modules/nf-core/rsem/preparereference/main.nf
+@@ -15,8 +15,7 @@
+     path "rsem"           , emit: index
+     path "*transcripts.fa", emit: transcript_fasta
+     tuple val("${task.process}"), val('rsem'), eval('rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g"'), topic: versions, emit: versions_rsem
+-    tuple val("${task.process}"), val('star'), eval('STAR --version | sed -e "s/STAR_//g"'), topic: versions, emit: versions_star
+
+     when:
+     task.ext.when == null || task.ext.when
+
+'modules/nf-core/rsem/preparereference/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/rsem/preparereference/tests/main.nf.test' is unchanged
+************************************************************

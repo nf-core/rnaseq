@@ -51,6 +51,7 @@ umitools/*.umi_extract.log
 {hisat2,star_rsem,star_salmon,bowtie2_salmon}/qualimap/*/css/*
 {hisat2,star_rsem,star_salmon,bowtie2_salmon}/qualimap/*/images_qualimapReport/*
 {hisat2,star_rsem,star_salmon,bowtie2_salmon}/qualimap/*/qualimapReport.html
+{hisat2,star_rsem,star_salmon,bowtie2_salmon}/qualimap/*/raw_data_qualimapReport/*
 {hisat2,star_rsem,star_salmon,bowtie2_salmon}/qualimap/*/rnaseq_qc_results.txt
 {hisat2,star_rsem,star_salmon,bowtie2_salmon}/rseqc/bam_stat/*.bam_stat.txt
 {hisat2,star_rsem,star_salmon,bowtie2_salmon}/rseqc/read_distribution/*.read_distribution.txt
@@ -65,6 +66,7 @@ umitools/*.umi_extract.log
 {hisat2,star_rsem,star_salmon,bowtie2_salmon}/rustqc/featurecounts/*.featureCounts.tsv.summary
 {hisat2,star_rsem,star_salmon,bowtie2_salmon}/rustqc/qualimap/*/images_qualimapReport/*
 {hisat2,star_rsem,star_salmon,bowtie2_salmon}/rustqc/qualimap/*/qualimapReport.html
+{hisat2,star_rsem,star_salmon,bowtie2_salmon}/rustqc/qualimap/*/raw_data_qualimapReport/*
 {hisat2,star_rsem,star_salmon,bowtie2_salmon}/rustqc/qualimap/*/rnaseq_qc_results.txt
 {hisat2,star_rsem,star_salmon,bowtie2_salmon}/rustqc/rseqc/bam_stat/*.bam_stat.txt
 {hisat2,star_rsem,star_salmon,bowtie2_salmon}/rustqc/rseqc/read_distribution/*.read_distribution.txt

@@ -68,7 +68,7 @@ nextflow_workflow {
                     file(workflow.out.log_out[0][1]).name,
                     file(workflow.out.index[0][1]).name,
                     bam(workflow.out.bam[0][1]).getReadsMD5(),
-                    workflow.out.log_progress,
+                    file(workflow.out.log_progress[0][1]).name,
                     workflow.out.fastq,
                     workflow.out.flagstat,
                     workflow.out.idxstats,

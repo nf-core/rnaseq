@@ -5,15 +5,7 @@
             "test.Log.out",
             "test.bam.bai",
             "1c957588cfbe3b1ba280ca03c0493633",
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.Log.progress.out:md5,7a6ede6475ffc8af8769ce54d3a6dec5"
-                ]
-            ],
+            "test.Log.progress.out",
             [
 
             ],

@@ -31,9 +31,9 @@ jobs:
             {
                 "outdir": "${{ secrets.TOWER_BUCKET_AWS }}/rnaseq/results-test-${{ github.sha }}/"
             }
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         with:
-          name: Tower debug log file
+          name: Tower debug log file (aws)
           path: tower_action_*.log
 
   run-small-tests-on-azure:
@@ -53,9 +53,9 @@ jobs:
             {
                 "outdir": "${{ secrets.TOWER_BUCKET_AZURE }}/rnaseq/results-test-${{ github.sha }}/"
             }
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         with:
-          name: Tower debug log file
+          name: Tower debug log file (azure)
           path: tower_action_*.log
 
   run-small-tests-on-gcp:
@@ -75,7 +75,7 @@ jobs:
             {
                 "outdir": "${{ secrets.TOWER_BUCKET_GCP }}/rnaseq/results-test-${{ github.sha }}/"
             }
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         with:
-          name: Tower debug log file
+          name: Tower debug log file (gcp)
           path: tower_action_*.log

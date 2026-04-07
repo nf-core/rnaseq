@@ -39,7 +39,9 @@ nextflow_pipeline {
         }
 
         cleanup {
-            "docker system prune -f".execute()
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -f".execute()
+            }
             new File("${launchDir}").deleteDir()
         }
     }
@@ -80,7 +82,9 @@ nextflow_pipeline {
         }
 
         cleanup {
-            "docker system prune -f".execute()
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -f".execute()
+            }
             new File("${launchDir}").deleteDir()
         }
     }
@@ -120,7 +124,9 @@ nextflow_pipeline {
         }
 
         cleanup {
-            "docker system prune -f".execute()
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -f".execute()
+            }
             new File("${launchDir}").deleteDir()
         }
     }
@@ -162,7 +168,9 @@ nextflow_pipeline {
         }
 
         cleanup {
-            "docker system prune -f".execute()
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -f".execute()
+            }
             new File("${launchDir}").deleteDir()
         }
     }

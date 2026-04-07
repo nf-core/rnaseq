@@ -1,0 +1,81 @@
+nextflow_workflow {
+
+    name "Test Subworkflow ALIGN_STAR - extra_star_align_args"
+    script "../main.nf"
+    workflow "ALIGN_STAR"
+    config "./nextflow.extra_args.config"
+
+    test("star - extra_star_align_args with overlapping defaults") {
+
+        setup {
+            run("STAR_GENOMEGENERATE") {
+                script "../../../../modules/nf-core/star/genomegenerate/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id:'test_fasta' ],
+                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                    ])
+                    input[1] = Channel.of([
+                        [ id:'test_gtf' ],
+                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                    ])
+                    """
+                }
+            }
+        }
+
+        when {
+            workflow {
+                """
+                star_ignore_sjdbgtf = false
+                use_igenomes_star      = false
+                use_sentieon_star    = false
+                use_parabricks_star  = false
+                skip_markduplicates  = false
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = STAR_GENOMEGENERATE.out.index
+                input[2] = Channel.of([
+                    [ id:'test_gtf' ],
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                ])
+                input[3] = star_ignore_sjdbgtf
+                input[4] = use_igenomes_star
+                input[5] = Channel.of([
+                    [ id:'test_fasta' ],
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
+                ])
+                input[6] = use_sentieon_star
+                input[7] = use_parabricks_star
+                input[8] = skip_markduplicates
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    file(workflow.out.log_final[0][1]).name,
+                    file(workflow.out.log_out[0][1]).name,
+                    file(workflow.out.index[0][1]).name,
+                    bam(workflow.out.bam[0][1]).getReadsMD5(),
+                    file(workflow.out.log_progress[0][1]).name,
+                    workflow.out.fastq,
+                    workflow.out.flagstat,
+                    workflow.out.idxstats,
+                    bam(workflow.out.orig_bam[0][1]).getReadsMD5(),
+                    workflow.out.stats,
+                    workflow.out.tab).match()}
+            )
+        }
+    }
+}

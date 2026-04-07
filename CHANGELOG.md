@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1750](https://github.com/nf-core/rnaseq/pull/1750) - Add missing tool citations to CITATIONS.md (Bowtie2, Kallisto, RiboDetector, SeqKit, tximport, UMICollapse)
 - [PR #1751](https://github.com/nf-core/rnaseq/pull/1751) - Clarify in docs that GFF files should be provided via `--gff`, not `--gtf` ([#1584](https://github.com/nf-core/rnaseq/issues/1584))
 - [PR #1752](https://github.com/nf-core/rnaseq/pull/1752) - Remove STAR from RSEM conda environments since STAR alignment runs as a separate process in this workflow, fixing ARM conda compatibility
+- [PR #1762](https://github.com/nf-core/rnaseq/pull/1762) - Restore `extra_star_align_args` deduplication so user-supplied STAR flags override pipeline defaults instead of causing a fatal duplicate parameter error ([#1757](https://github.com/nf-core/rnaseq/issues/1757))
 
 ## [[3.23.0](https://github.com/nf-core/rnaseq/releases/tag/3.23.0)] - 2026-02-27
 

@@ -1,6 +1,5 @@
 lint:
   actions_nf_test: false
-  nf_test_content: false
   files_exist:
     - conf/modules.config
   files_unchanged:
@@ -12,7 +11,8 @@ lint:
   nextflow_config:
     - config_defaults:
         - params.ribo_database_manifest
-nf_core_version: 3.5.1
+  nf_test_content: false
+nf_core_version: 3.5.2
 repository_type: pipeline
 template:
   author: "Harshil Patel, Phil Ewels, Rickard Hammarén"

@@ -128,7 +128,7 @@
             ],
             "creator": [
                 {
-                    "@id": "#phil.ewels@scilifelab.se"
+                    "@id": "#pinin4fjords"
                 }
             ],
             "dateCreated": "",
@@ -142,6 +142,11 @@
             ],
             "license": [
                 "MIT"
+            ],
+            "maintainer": [
+                {
+                    "@id": "#pinin4fjords"
+                }
             ],
             "name": [
                 "nf-core/rnaseq"
@@ -315,10 +320,9 @@
             "url": "https://nf-co.re/"
         },
         {
-            "@id": "#phil.ewels@scilifelab.se",
+            "@id": "#pinin4fjords",
             "@type": "Person",
-            "email": "phil.ewels@scilifelab.se",
-            "name": "Phil Ewels"
+            "name": "Jonathan Manning"
         }
     ]
 }

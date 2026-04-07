@@ -511,7 +511,7 @@ workflow RNASEQ {
 
             BAM_STRINGTIE_MERGE(
                 ch_genome_bam,
-                ch_gtf,
+                ch_gtf.map { gtf -> [[:], gtf] },
             )
             STRINGTIE_STRINGTIE(
                 ch_genome_bam,

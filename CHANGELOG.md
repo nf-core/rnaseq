@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Credits
 
+Special thanks to the following for their contributions to the release:
+
+- [Adam Talbot](https://github.com/adamrtalbot)
+- [Brian Fulton-Howard](https://github.com/BEFH)
+- [Cindy Wang](https://github.com/cwang-lilly)
+- [Elad Herz](https://github.com/EladH1)
+- [Friederike Hanssen](https://github.com/FriederikeHanssen)
+- [@harpbelle](https://github.com/harpbelle)
+- [Maxime U Garcia](https://github.com/maxulysse)
+- [Phil Ewels](https://github.com/ewels)
+- [@sebinheo](https://github.com/sebinheo)
+
 ### Enhancements and fixes
 
 - [PR #1740](https://github.com/nf-core/rnaseq/pull/1740) - Bump version to 3.24.0dev after release 3.23.0; always set ID/SM read group tags for STAR and HISAT2 even when `seq_center`/`seq_platform` are not provided

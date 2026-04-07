@@ -33,6 +33,8 @@ report_section_order:
     order: 3000
   hisat2:
     order: 3000
+  bowtie2_alignment:
+    order: 3000
   # Post-alignment QC
   samtools:
     order: 3000
@@ -149,12 +151,20 @@ module_order:
       anchor: "bowtie2_rrna"
       name: "Bowtie2 (rRNA removal)"
       info: "This section shows Bowtie2 alignment statistics for rRNA removal. Reads were aligned against an rRNA reference to filter out ribosomal RNA contamination."
+      path_filters:
+        - "*.bowtie2_rrna.bowtie2.log"
   - fastqc:
       anchor: "fastqc_filtered"
       name: "FastQC (filtered)"
       info: "This section of the report shows FastQC results after contaminant removal (BBSplit) and/or ribosomal RNA removal."
       path_filters:
         - "*_filtered*fastqc.zip"
+  - bowtie2:
+      anchor: "bowtie2_alignment"
+      name: "Bowtie2 (alignment)"
+      info: "This section shows Bowtie2 alignment statistics when using Bowtie2 as the primary aligner (e.g. for prokaryotic RNA-seq)."
+      path_filters_exclude:
+        - "*.bowtie2_rrna.bowtie2.log"
 
 # Don't show % Dups in the General Stats table (we have this from Picard)
 table_columns_visible:

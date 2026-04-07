@@ -1,4 +1,3 @@
-// trigger CI
 nextflow_workflow {
 
     name "Test Subworkflow ALIGN_STAR"

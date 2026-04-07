@@ -128,7 +128,7 @@
             ],
             "creator": [
                 {
-                    "@id": "#pinin4fjords"
+                    "@id": "#phil.ewels"
                 }
             ],
             "dateCreated": "",
@@ -318,6 +318,11 @@
             "@type": "Organization",
             "name": "nf-core",
             "url": "https://nf-co.re/"
+        },
+        {
+            "@id": "#phil.ewels",
+            "@type": "Person",
+            "name": "Phil Ewels"
         },
         {
             "@id": "#pinin4fjords",

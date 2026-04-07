@@ -34,6 +34,13 @@ nextflow_pipeline {
                 ).match() }
             )
         }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -f".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
     }
 
     test("Params: default --use_sentieon_star - stub") {
@@ -65,6 +72,13 @@ nextflow_pipeline {
                     stable_path
                 ).match() }
             )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -f".execute()
+            }
+            new File("${launchDir}").deleteDir()
         }
     }
 }

@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1749](https://github.com/nf-core/rnaseq/pull/1749) - Fix bowtie2 version extraction failing when Perl locale warnings are present (common in WSL/conda setups), which caused MultiQC to crash
 - [PR #1750](https://github.com/nf-core/rnaseq/pull/1750) - Add missing tool citations to CITATIONS.md (Bowtie2, Kallisto, RiboDetector, SeqKit, tximport, UMICollapse)
 - [PR #1751](https://github.com/nf-core/rnaseq/pull/1751) - Clarify in docs that GFF files should be provided via `--gff`, not `--gtf` ([#1584](https://github.com/nf-core/rnaseq/issues/1584))
+- [PR #1752](https://github.com/nf-core/rnaseq/pull/1752) - Remove STAR from RSEM conda environments since STAR alignment runs as a separate process in this workflow, fixing ARM conda compatibility
 
 ## [[3.23.0](https://github.com/nf-core/rnaseq/releases/tag/3.23.0)] - 2026-02-27
 

@@ -152,12 +152,14 @@
                     "rsem/calculateexpression": {
                         "branch": "master",
                         "git_sha": "2fc7570f0dcf6d23083eff475fd798a1c9354aca",
-                        "installed_by": ["modules", "quantify_rsem"]
+                        "installed_by": ["modules", "quantify_rsem"],
+                        "patch": "modules/nf-core/rsem/calculateexpression/rsem-calculateexpression.diff"
                     },
                     "rsem/preparereference": {
                         "branch": "master",
                         "git_sha": "004e773fc35ebd24063ca4cbef057c94a24208aa",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/rsem/preparereference/rsem-preparereference.diff"
                     },
                     "rseqc/bamstat": {
                         "branch": "master",

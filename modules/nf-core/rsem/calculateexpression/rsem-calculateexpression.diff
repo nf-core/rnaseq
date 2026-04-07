@@ -1,0 +1,28 @@
+Changes in component 'nf-core/rsem/calculateexpression'
+Changes in 'rsem/calculateexpression/environment.yml':
+--- modules/nf-core/rsem/calculateexpression/environment.yml
++++ modules/nf-core/rsem/calculateexpression/environment.yml
+@@ -5,4 +5,3 @@
+   - bioconda
+ dependencies:
+   - bioconda::rsem=1.3.3
+-  - bioconda::star=2.7.10a
+
+'modules/nf-core/rsem/calculateexpression/meta.yml' is unchanged
+Changes in 'rsem/calculateexpression/main.nf':
+--- modules/nf-core/rsem/calculateexpression/main.nf
++++ modules/nf-core/rsem/calculateexpression/main.nf
+@@ -17,8 +17,7 @@
+     tuple val(meta), path("*.stat")            , emit: stat
+     tuple val(meta), path("*.log")             , emit: logs, optional:true
+     tuple val("${task.process}"), val('rsem'), eval("rsem-calculate-expression --version | sed 's/Current version: RSEM v//'"), emit: versions_rsem, topic: versions
+-    tuple val("${task.process}"), val('star'), eval('STAR --version | sed -e "s/STAR_//g"'), emit: versions_star, topic: versions
+
+     tuple val(meta), path("*.STAR.genome.bam")       , optional:true, emit: bam_star
+     tuple val(meta), path("${prefix}.genome.bam")    , optional:true, emit: bam_genome
+
+'modules/nf-core/rsem/calculateexpression/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/rsem/calculateexpression/tests/nextflow.config' is unchanged
+'modules/nf-core/rsem/calculateexpression/tests/main.nf.test' is unchanged
+'modules/nf-core/rsem/calculateexpression/tests/alignment.config' is unchanged
+************************************************************

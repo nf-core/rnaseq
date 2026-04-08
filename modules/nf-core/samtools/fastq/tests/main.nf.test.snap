@@ -67,7 +67,7 @@
                     [
                         "SAMTOOLS_FASTQ",
                         "samtools",
-                        "1.23"
+                        "1.23.1"
                     ]
                 ]
             }
@@ -76,7 +76,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
         },
-        "timestamp": "2026-03-12T11:51:50.137418"
+        "timestamp": "2026-03-19T08:58:51.815096"
     },
     "bam_fastq": {
         "content": [
@@ -148,7 +148,7 @@
                     [
                         "SAMTOOLS_FASTQ",
                         "samtools",
-                        "1.23"
+                        "1.23.1"
                     ]
                 ]
             }
@@ -157,7 +157,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
         },
-        "timestamp": "2026-03-12T11:51:39.506084"
+        "timestamp": "2026-03-19T08:58:41.34399"
     },
     "bam_verinterleave_sions": {
         "content": [
@@ -166,7 +166,7 @@
                     [
                         "SAMTOOLS_FASTQ",
                         "samtools",
-                        "1.23"
+                        "1.23.1"
                     ]
                 ]
             }
@@ -175,7 +175,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
         },
-        "timestamp": "2026-03-12T11:51:44.649546"
+        "timestamp": "2026-03-19T08:58:46.729284"
     },
     "bam_singleton": {
         "content": [
@@ -230,7 +230,7 @@
                     [
                         "SAMTOOLS_FASTQ",
                         "samtools",
-                        "1.23"
+                        "1.23.1"
                     ]
                 ]
             }
@@ -239,6 +239,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
         },
-        "timestamp": "2026-03-12T11:51:55.305359"
+        "timestamp": "2026-03-19T08:58:56.91914"
     }
 }

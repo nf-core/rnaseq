@@ -41,6 +41,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1770](https://github.com/nf-core/rnaseq/pull/1770) - Exclude non-deterministic qualimap MultiQC files from snapshots, fixing x86/ARM cross-platform CI mismatches
 - [PR #1771](https://github.com/nf-core/rnaseq/pull/1771) - Update ribodetector module to 0.3.3 (nf-core/modules#11131)
 - [PR #1772](https://github.com/nf-core/rnaseq/pull/1772) - Update ribodetector ARM64 container to 0.3.3
+- [PR #1775](https://github.com/nf-core/rnaseq/pull/1775) - Add Parabricks resource configuration guide for full-size genomes (GPU count, memory scaling, retry strategy, `--low-memory` flag)
 
 ## [[3.23.0](https://github.com/nf-core/rnaseq/releases/tag/3.23.0)] - 2026-02-27
 

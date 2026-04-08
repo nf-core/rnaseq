@@ -332,6 +332,42 @@ Parabricks `rna_fq2bam` is based on STAR 2.7.2a. The following native STAR flags
 
 These differences are unlikely to materially affect downstream quantification results, but users should be aware of them for reproducibility purposes. All other STAR parameters (multi-mapping limits, intron sizes, mate gap, splice junction overhangs, etc.) have pbrun equivalents and are applied consistently.
 
+#### Resource configuration for full-size genomes
+
+The default resource configuration (`accelerator = 1` via the `process_gpu` label) is sized for small test datasets. Full-size genomes (e.g. GRCh37/GRCh38) require more GPUs, memory, and the `--low-memory` STAR flag to reduce GPU memory pressure.
+
+The following config was tested with the `test_full` dataset (GRCh37, 8 paired-end samples) on AWS g5 instances (NVIDIA A10G, 24GB VRAM per GPU). Adjust for your cloud provider and GPU type:
+
+```groovy
+process {
+    withName: 'PARABRICKS_.*' {
+        accelerator    = { task.attempt > 1 ? 8 : 4 }
+        cpus           = { 48 * task.attempt }
+        memory         = { task.attempt > 1 ? 370.GB : 186.GB }
+        resourceLimits = [cpus: 96, memory: 370.GB]
+        maxRetries     = 3
+        errorStrategy  = { task.exitStatus in [1,2,143,137,104,134,139,255] ? 'retry' : 'finish' }
+    }
+}
+```
+
+And pass the low-memory flag:
+
+```bash
+--extra_star_align_args '--low-memory'
+```
+
+Key considerations when adapting this for your environment:
+
+- **Multiple GPUs are needed** for full-size genomes. 4 GPUs with `--low-memory` was sufficient for GRCh37 on A10G (24GB VRAM). GPUs with more VRAM (e.g. A100 40GB/80GB) may work with fewer GPUs or without `--low-memory`.
+- **Request all GPUs on retry** to prevent multiple Parabricks tasks being co-scheduled on the same node. GPU memory is not managed by the scheduler, so two 4-GPU tasks on an 8-GPU node will contend for VRAM and fail.
+- **Parabricks returns exit code 255 for most failures** including GPU OOM, host OOM, and internal errors. The retry strategy above handles this, but be aware that not all 255 exits are resource-related.
+- **Ensure your compute environment includes GPU instance types large enough for the retry**. For example, on AWS you might include both `g5.12xlarge` (4 GPUs, 192GB RAM) and `g5.48xlarge` (8 GPUs, 768GB RAM).
+
+:::note
+Do not use `--genome` with `--use_parabricks_star`. The pre-built iGenomes STAR indices are incompatible with Parabricks' bundled STAR version. Supply `--fasta` and `--gtf` explicitly instead.
+:::
+
 ### RustQC: accelerated post-alignment QC (experimental)
 
 :::warning

@@ -502,11 +502,11 @@ workflow RNASEQ {
     }
 
     //
-    // MODULE: StringTie assembly and quantification 
+    // MODULE: StringTie assembly and quantification
     //
     if (!params.skip_stringtie) {
 
-        // Allow users to do de novo transcritome assembly 
+        // Allow users to do de novo transcritome assembly
         if (params.stringtie_ignore_gtf) {
 
             BAM_STRINGTIE_MERGE(

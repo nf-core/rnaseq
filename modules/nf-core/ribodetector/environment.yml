@@ -4,4 +4,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - "bioconda::ribodetector=0.3.2"
+  - "bioconda::ribodetector=0.3.3"

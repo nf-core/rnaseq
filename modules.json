@@ -146,7 +146,7 @@
                     },
                     "ribodetector": {
                         "branch": "master",
-                        "git_sha": "5cb9a8694da0a0e550921636bb60bc8c56445fd7",
+                        "git_sha": "278c4ebdaa1c51fa0dc1b09be0da2b53962a87f5",
                         "installed_by": ["fastq_remove_rrna"]
                     },
                     "rsem/calculateexpression": {

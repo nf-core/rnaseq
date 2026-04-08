@@ -36,6 +36,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1766](https://github.com/nf-core/rnaseq/pull/1766) - Update samtools modules to 1.23.1, fixing conda CI snapshot mismatches
 - [PR #1769](https://github.com/nf-core/rnaseq/pull/1769) - Remove `--star` from RSEM preparereference test config, fixing conda CI failure after PR #1752 removed STAR from the RSEM environment
 - [PR #1770](https://github.com/nf-core/rnaseq/pull/1770) - Exclude non-deterministic qualimap MultiQC files from snapshots, fixing x86/ARM cross-platform CI mismatches
+- [PR #1771](https://github.com/nf-core/rnaseq/pull/1771) - Update ribodetector module to 0.3.3 (nf-core/modules#11131)
 
 ## [[3.23.0](https://github.com/nf-core/rnaseq/releases/tag/3.23.0)] - 2026-02-27
 

@@ -9,7 +9,7 @@
                     {
                         "id": "test"
                     },
-                    "test.stats:md5,80e079b067f20eeb8b70f05626531660"
+                    "test.stats:md5,70553e4c07cdfc8499e8256ac9fbb2f1"
                 ]
             ],
             [
@@ -29,11 +29,11 @@
                 ]
             ]
         ],
-        "timestamp": "2026-02-03T11:34:24.268180227",
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        }
+            "nextflow": "25.10.4"
+        },
+        "timestamp": "2026-03-19T10:41:13.746525"
     },
     "sarscov2_bam_bai - primary_only": {
         "content": [
@@ -45,7 +45,7 @@
                     {
                         "id": "test"
                     },
-                    "test.stats:md5,80e079b067f20eeb8b70f05626531660"
+                    "test.stats:md5,70553e4c07cdfc8499e8256ac9fbb2f1"
                 ]
             ],
             [
@@ -65,12 +65,11 @@
                 ]
             ]
         ],
-        "timestamp": "2026-02-23T12:45:39.749653",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
         },
-        "timestamp": "2026-03-12T12:44:04.598492"
+        "timestamp": "2026-03-19T10:41:31.325361"
     },
     "sarscov2_bam_bai - stub": {
         "content": [
@@ -221,10 +220,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-03-12T11:41:08.515040393",
         "meta": {
             "nf-test": "0.9.4",
             "nextflow": "25.10.4"
-        }
+        },
+        "timestamp": "2026-03-12T11:41:08.515040393"
     }
 }

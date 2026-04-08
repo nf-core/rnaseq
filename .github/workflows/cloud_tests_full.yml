@@ -36,9 +36,9 @@ jobs:
                 "aligner": "${{ matrix.aligner }}",
                 "outdir": "${{ secrets.TOWER_BUCKET_AWS }}/rnaseq/results-${{ github.sha }}/aligner_${{ matrix.aligner }}/"
             }
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
         with:
-          name: Tower debug log file
+          name: Tower debug log file (aws-${{ matrix.aligner }})
           path: tower_action_*.log
 
   run-full-tests-on-azure:
@@ -64,9 +64,9 @@ jobs:
                 "outdir": "${{ secrets.TOWER_BUCKET_AZURE }}/rnaseq/results-${{ github.sha }}/aligner_${{ matrix.aligner }}/",
                 "igenomes_base": "${{ secrets.TOWER_IGENOMES_BASE_AZURE }}"
             }
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
         with:
-          name: Tower debug log file
+          name: Tower debug log file (azure-${{ matrix.aligner }})
           path: tower_action_*.log
 
   run-full-tests-on-gcp:
@@ -91,7 +91,7 @@ jobs:
                 "aligner": "${{ matrix.aligner }}",
                 "outdir": "${{ secrets.TOWER_BUCKET_GCP }}/rnaseq/results-${{ github.sha }}/aligner_${{ matrix.aligner }}/"
             }
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
         with:
-          name: Tower debug log file
+          name: Tower debug log file (gcp-${{ matrix.aligner }})
           path: tower_action_*.log

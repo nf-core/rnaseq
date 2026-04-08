@@ -54,6 +54,13 @@ nextflow_pipeline {
                 ).match() }
             )
         }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -f".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
     }
 
     test("Params: --aligner star_salmon --prokaryotic") {
@@ -102,6 +109,13 @@ nextflow_pipeline {
                 ).match() }
             )
         }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -f".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
     }
 
     test("Params: --aligner bowtie2_salmon --gffread_transcript_fasta - stub") {
@@ -149,6 +163,13 @@ nextflow_pipeline {
                 ).match() }
             )
         }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -f".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
     }
 
     test("Params: --aligner bowtie2_salmon --gffread_transcript_fasta") {
@@ -193,6 +214,13 @@ nextflow_pipeline {
                     stable_path
                 ).match() }
             )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -f".execute()
+            }
+            new File("${launchDir}").deleteDir()
         }
     }
 }

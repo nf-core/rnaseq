@@ -188,7 +188,8 @@ workflow FASTQ_REMOVE_RRNA {
         SAMTOOLS_VIEW_BOWTIE2(
             BOWTIE2_ALIGN_PE.out.bam.map { meta, bam_file -> [meta, bam_file, []] },
             [[], [], []],  // No reference fasta
-            [],        // No qname file
+            [[], []],  // No qname file
+            [[], []],  // No bed file
             []         // No index format
         )
         // Note: samtools/view versions collected via topic

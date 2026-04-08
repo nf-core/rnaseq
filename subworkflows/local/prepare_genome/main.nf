@@ -40,7 +40,6 @@ include { SENTIEON_RSEMPREPAREREFERENCE as SENTIEON_MAKE_TRANSCRIPTS_FASTA      
 include { PREPROCESS_TRANSCRIPTS_FASTA_GENCODE } from '../../../modules/local/preprocess_transcripts_fasta_gencode'
 include { GTF2BED                              } from '../../../modules/local/gtf2bed'
 include { GTF_FILTER                           } from '../../../modules/local/gtf_filter'
-include { STAR_GENOMEGENERATE as STAR_GENOMEGENERATE_IGENOMES } from '../../../modules/nf-core/star/genomegenerate'
 
 workflow PREPARE_GENOME {
 
@@ -294,7 +293,13 @@ workflow PREPARE_GENOME {
     //----------------------------------------------------
     ch_star_index = channel.empty()
     if (prepare_tool_indices.intersect(['star_salmon', 'star_rsem'])) {
-        if (star_index) {
+        if (use_parabricks_star && fasta_provided) {
+            // Parabricks needs its own STAR index built with its bundled STAR version
+            ch_star_index = PARABRICKS_STARGENOMEGENERATE(
+                ch_fasta.map { item -> [ [:], item ] },
+                ch_gtf.map   { item -> [ [:], item ] }
+            ).index.map { tuple -> tuple[1] }
+        } else if (star_index) {
             if (star_index.endsWith('.tar.gz')) {
                 ch_star_index = UNTAR_STAR_INDEX ([ [:], file(star_index, checkIfExists: true) ]).untar.map { tuple -> tuple[1] }
             } else {
@@ -302,28 +307,12 @@ workflow PREPARE_GENOME {
             }
         }
         else if (fasta_provided) {
-            // Build new STAR index
-            // Possibly check AWS iGenome conditions
-            def is_aws_igenome = false
-            if (file(fasta, checkIfExists: true).getName() - '.gz' == 'genome.fa' && file(gtf, checkIfExists: true).getName() - '.gz' == 'genes.gtf') {
-                is_aws_igenome = true
-            }
-            if (is_aws_igenome) {
-                ch_star_index = STAR_GENOMEGENERATE_IGENOMES(
-                    ch_fasta.map { item -> [ [:], item ] },
-                    ch_gtf.map   { item -> [ [:], item ] }
-                ).index.map { tuple -> tuple[1] }
-            } else if (use_parabricks_star) {
-                ch_star_index = PARABRICKS_STARGENOMEGENERATE(
-                    ch_fasta.map { item -> [ [:], item ] },
-                    ch_gtf.map   { item -> [ [:], item ] }
-                ).index.map { tuple -> tuple[1] }
-            } else {
-                ch_star_index = STAR_GENOMEGENERATE(
-                    ch_fasta.map { item -> [ [:], item ] },
-                    ch_gtf.map { item -> [ [:], item ] }
-                ).index.map { tuple -> tuple[1] }
-            }
+            // Build new STAR index with current STAR version.
+            // No need for iGenomes STAR 2.6.1d here - that's only for pre-built index compatibility.
+            ch_star_index = STAR_GENOMEGENERATE(
+                ch_fasta.map { item -> [ [:], item ] },
+                ch_gtf.map { item -> [ [:], item ] }
+            ).index.map { tuple -> tuple[1] }
         }
     }
 

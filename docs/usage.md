@@ -332,6 +332,45 @@ Parabricks `rna_fq2bam` is based on STAR 2.7.2a. The following native STAR flags
 
 These differences are unlikely to materially affect downstream quantification results, but users should be aware of them for reproducibility purposes. All other STAR parameters (multi-mapping limits, intron sizes, mate gap, splice junction overhangs, etc.) have pbrun equivalents and are applied consistently.
 
+### RustQC: accelerated post-alignment QC (experimental)
+
+:::warning
+RustQC support is experimental. We recommend trialling it alongside the default QC path on a pilot subset of your data before switching over for production runs. Results are designed to match the upstream tools, but minor numerical differences exist in some outputs (see below).
+:::
+
+[RustQC](https://github.com/seqeralabs/rustqc) is a high-performance tool that replaces multiple post-alignment QC steps with a single pass over the BAM file. It produces output files compatible with the same MultiQC modules, so the report content is equivalent.
+
+RustQC replaces the following tools: dupRadar, featureCounts (biotype QC), RSeQC (bam_stat, infer_experiment, read_distribution, read_duplication, junction_annotation, junction_saturation, inner_distance, TIN), Preseq, Qualimap, and SAMtools stats/flagstat/idxstats.
+
+To enable RustQC, use the `--use_rustqc` flag. The individual tools listed above are automatically skipped:
+
+```bash
+nextflow run nf-core/rnaseq \
+    --input samplesheet.csv \
+    --outdir results \
+    --fasta genome.fa \
+    --gtf annotation.gtf \
+    --use_rustqc \
+    -profile docker
+```
+
+RustQC outputs are published under `<ALIGNER>/rustqc/` with subdirectories matching the tools they replace (e.g. `rustqc/rseqc/bam_stat/`, `rustqc/qualimap/`). See the [output documentation](#rustqc) for the full list of files.
+
+#### Preseq and TIN
+
+The nf-core/rnaseq pipeline does not normally run Preseq and `tin.py` by default, as these QC steps are very slow and error prone. They are included in RustQC by default however, so these results will be produced when using `--use_rustqc`.
+
+The upstream tools can be enabled with the following options:
+
+```bash
+--skip_preseq false \
+--rseqc_modules bam_stat,inner_distance,infer_experiment,junction_annotation,junction_saturation,read_distribution,read_duplication,tin
+```
+
+#### Validation status
+
+RustQC has been validated against the default QC tools on the nf-core/rnaseq test dataset (5 yeast samples, mixed PE/SE). The majority of outputs are byte-for-byte identical. Where differences exist (e.g. floating-point precision in curve fitting, randomized subsampling in TIN, and cosmetic formatting), they are minor and do not affect biological interpretation or MultiQC report content.
+
 ## Quantification options
 
 The current options align with STAR and quantify using either Salmon (`--aligner star_salmon`) / RSEM (`--aligner star_rsem`). You also have the option to pseudoalign and quantify your data with Salmon or Kallisto by providing the `--pseudo_aligner salmon` or `--pseudo_aligner kallisto` parameter, respectively.
@@ -422,8 +461,10 @@ Some bulk RNA-seq library preparation protocols capture only a 3' tag from each 
 Lexogen provides an example analysis workflow [on their website](https://www.lexogen.com/quantseq-data-analysis/), which includes the _ENCODE standard options_ for the [STAR aligner](<[https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf](https://github.com/alexdobin/STAR)>). In addition, Lexogen also decreases the tolerance for mismatches and clips poly(A) tails. To apply these settings, add the following parameters when running the pipeline:
 
 ```
---extra_star_align_args "--alignIntronMax 1000000 --alignIntronMin 20 --alignMatesGapMax 1000000 --alignSJoverhangMin 8 --outFilterMismatchNmax 999 --outFilterMultimapNmax 20 --outFilterType BySJout --outFilterMismatchNoverLmax 0.1 --clip3pAdapterSeq AAAAAAAA"
+--extra_star_align_args "--outFilterMismatchNoverLmax 0.1 --clip3pAdapterSeq AAAAAAAA"
 ```
+
+Note that many of the ENCODE standard STAR options (e.g. `--outFilterMultimapNmax 20`, `--alignIntronMax 1000000`) are already set as pipeline defaults. If you supply a parameter that duplicates a pipeline default, your value will take priority.
 
 #### Custom Salmon arguments
 

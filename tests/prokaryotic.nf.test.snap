@@ -34,22 +34,22 @@
                     "salmon": "1.10.3"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -500,22 +500,22 @@
                     "salmon": "1.10.3"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -679,7 +679,7 @@
                 "multiqc/bowtie2_salmon/multiqc_report_data/llms-full.txt",
                 "multiqc/bowtie2_salmon/multiqc_report_data/multiqc.log",
                 "multiqc/bowtie2_salmon/multiqc_report_data/multiqc.parquet",
-                "multiqc/bowtie2_salmon/multiqc_report_data/multiqc_bowtie2_bowtie2_rrna.txt",
+                "multiqc/bowtie2_salmon/multiqc_report_data/multiqc_bowtie2_bowtie2_alignment.txt",
                 "multiqc/bowtie2_salmon/multiqc_report_data/multiqc_citations.txt",
                 "multiqc/bowtie2_salmon/multiqc_report_data/multiqc_cutadapt.txt",
                 "multiqc/bowtie2_salmon/multiqc_report_data/multiqc_data.json",
@@ -883,7 +883,8 @@
                 "fastqc_trimmed_per_sequence_quality_scores_plot.txt:md5,610d3a1f008bf73125acaacb72bb7dcf",
                 "fastqc_trimmed_sequence_counts_plot.txt:md5,fe8a0c5d299e6e9972c8605e9fc8a022",
                 "fastqc_trimmed_sequence_duplication_levels_plot.txt:md5,5413485383af9f009c86ad014cb1b026",
-                "multiqc_citations.txt:md5,d44ac56604b2733acfe5b5f89664c43b",
+                "multiqc_bowtie2_bowtie2_alignment.txt:md5,d2f10759fadaaa79f7cb4ceb9f6c10de",
+                "multiqc_citations.txt:md5,5c5a27fc11cbb365187e4bf9c56e338b",
                 "multiqc_fastqc_fastqc_raw.txt:md5,42c1cc19c4b9104eb499ce499f335951",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,8be94d69e0c458017cf5064fa1fa86a0",
                 "multiqc_samtools_idxstats.txt:md5,3c5601429d85e11395c354db24a1a8ac",
@@ -941,22 +942,22 @@
                     "salmon": "1.10.3"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -1077,22 +1078,22 @@
                     "salmon": "1.10.3"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.23
+                    "samtools": "1.23.1"
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"

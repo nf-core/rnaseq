@@ -45,8 +45,9 @@ jobs:
           profiles: test_full
 
       - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        if: always()
         with:
-          name: Seqera Platform debug log file
+          name: Seqera Platform debug log file - ${{ matrix.aligner }}
           path: |
             tower_action_*.log
             tower_action_*.json

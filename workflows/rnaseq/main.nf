@@ -60,6 +60,7 @@ include { BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG as BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG
 include { QUANTIFY_PSEUDO_ALIGNMENT as QUANTIFY_BAM_SALMON                               } from '../../subworkflows/nf-core/quantify_pseudo_alignment'
 include { QUANTIFY_PSEUDO_ALIGNMENT                                                      } from '../../subworkflows/nf-core/quantify_pseudo_alignment'
 include { FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS                                           } from '../../subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness'
+include { BAM_STRINGTIE_MERGE                                                               } from '../../subworkflows/nf-core/bam_stringtie_merge'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -586,12 +587,12 @@ workflow RNASEQ {
                     meta, strand_log ->
                         def rseqc_inferred_strand = getInferexperimentStrandedness(strand_log, params.stranded_threshold, params.unstranded_threshold)
                         def rseqc_strandedness = rseqc_inferred_strand.inferred_strandedness
-
+    
                         def status = 'fail'
                         def multiqc_lines = []
                         if (meta.salmon_strand_analysis) {
                             def salmon_strandedness = meta.salmon_strand_analysis.inferred_strandedness
-
+    
                             if (salmon_strandedness == rseqc_strandedness && rseqc_strandedness != 'undetermined') {
                                 status = 'pass'
                             }
@@ -599,16 +600,13 @@ workflow RNASEQ {
                                 "$meta.id \tSalmon\t$status\tauto\t${meta.salmon_strand_analysis.values().join('\t')}",
                                 "$meta.id\tRSeQC\t$status\tauto\t${rseqc_inferred_strand.values().join('\t')}"
                             ]
+                        } else {
+                            if (meta.strandedness == rseqc_strandedness) {
+                                status = 'pass'
+                            }
+                            multiqc_lines = ["${meta.id}\tRSeQC\t${status}\t${meta.strandedness}\t${rseqc_inferred_strand.values().join('\t')}"]
                         }
-                        multiqc_lines = ["${meta.id} \tSalmon\t${status}\tauto\t${meta.salmon_strand_analysis.values().join('\t')}", "${meta.id}\tRSeQC\t${status}\tauto\t${rseqc_inferred_strand.values().join('\t')}"]
-                    }
-                    else {
-                        if (meta.strandedness == rseqc_strandedness) {
-                            status = 'pass'
-                        }
-                        multiqc_lines = ["${meta.id}\tRSeQC\t${status}\t${meta.strandedness}\t${rseqc_inferred_strand.values().join('\t')}"]
-                    }
-                    return [meta, status, multiqc_lines]
+                        return [meta, status, multiqc_lines]
                 }
                 .multiMap { meta, status, multiqc_lines ->
                     status: [meta.id, status == 'pass']

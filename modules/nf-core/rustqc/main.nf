@@ -4,8 +4,8 @@ process RUSTQC {
 
     conda "${moduleDir}/environment.yml"
     container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
-        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/58/58923a16e4a0186cb9c4a3b3b9df8a7c791731a634f1294bd0ea74d55c3666f7/data'
-        : 'community.wave.seqera.io/library/rustqc:0.1.1--c6684d9942e792a7'}"
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/2a/2a8a0514855c54307399fd0f664c2685e76c8cc07631e767c1e37c575b18d59f/data'
+        : 'community.wave.seqera.io/library/rustqc:0.2.1--00df1502b490e005'}"
 
     input:
     tuple val(meta), path(bam), path(bai)
@@ -18,7 +18,7 @@ process RUSTQC {
     tuple val(meta), path("${prefix}/samtools/*"),                                                      emit: samtools
     tuple val(meta), path("${prefix}/rseqc/**"),                                                        emit: rseqc
     tuple val(meta), path("${prefix}/qualimap/**"),                                                     emit: qualimap
-    tuple val("${task.process}"), val('rustqc'), eval("rustqc --version | sed 's/rustqc //'"),          emit: versions_rustqc, topic: versions
+    tuple val("${task.process}"), val('rustqc'), eval("rustqc --version 2>&1 | sed -n '1s/rustqc //; 1s/ .*//p'"),  emit: versions_rustqc, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -58,7 +58,7 @@ process RUSTQC {
           ${prefix}/rseqc/read_duplication/${prefix}.{pos.DupRate,seq.DupRate}.xls \\
           ${prefix}/rseqc/read_duplication/${prefix}.DupRate_plot.{r,png} \\
           ${prefix}/rseqc/read_distribution/${prefix}.read_distribution.txt \\
-          ${prefix}/rseqc/junction_annotation/${prefix}.{junction.xls,junction.bed,junction_plot.r,junction_annotation.txt,splice_events.png,splice_junction.png} \\
+          ${prefix}/rseqc/junction_annotation/${prefix}.{junction.xls,junction.bed,junction_plot.r,junction_annotation.log,splice_events.png,splice_junction.png} \\
           ${prefix}/rseqc/junction_saturation/${prefix}.junctionSaturation_{plot.r,plot.png,summary.txt} \\
           ${prefix}/rseqc/inner_distance/${prefix}.inner_distance{.txt,_freq.txt,_plot.r,_plot.png,_summary.txt,_mean.txt} \\
           ${prefix}/rseqc/tin/${prefix}.{tin.xls,summary.txt}

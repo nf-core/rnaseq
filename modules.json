@@ -203,7 +203,7 @@
                     },
                     "rustqc": {
                         "branch": "master",
-                        "git_sha": "32836839a2b98051aa246522431f6858e7cd55b7",
+                        "git_sha": "f7a55a72f39f07cbd95ce25abb00581b8b019f61",
                         "installed_by": ["modules"]
                     },
                     "salmon/index": {

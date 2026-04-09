@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [[3.24.0](https://github.com/nf-core/rnaseq/releases/tag/3.24.0)] - 2026-04-07
+## [[3.24.0](https://github.com/nf-core/rnaseq/releases/tag/3.24.0)] - 2026-04-09
 
 ### Credits
 
@@ -41,6 +41,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1770](https://github.com/nf-core/rnaseq/pull/1770) - Exclude non-deterministic qualimap MultiQC files from snapshots, fixing x86/ARM cross-platform CI mismatches
 - [PR #1771](https://github.com/nf-core/rnaseq/pull/1771) - Update ribodetector module to 0.3.3 (nf-core/modules#11131)
 - [PR #1772](https://github.com/nf-core/rnaseq/pull/1772) - Update ribodetector ARM64 container to 0.3.3
+- [PR #1779](https://github.com/nf-core/rnaseq/pull/1779) - Update RustQC to 0.2.1: flag-based duplicate detection removes Parabricks `--skip-dup-check` workaround, junction_annotation `.txt` -> `.log` extension fix
 
 ## [[3.23.0](https://github.com/nf-core/rnaseq/releases/tag/3.23.0)] - 2026-02-27
 

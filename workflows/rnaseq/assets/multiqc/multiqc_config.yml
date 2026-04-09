@@ -247,8 +247,7 @@ sp:
   rseqc/gene_body_coverage:
     skip: true
   rseqc/junction_annotation:
-    - fn: "*.junction_annotation.log"
-    - fn: "*.junction_annotation.txt"
+    fn: "*.junction_annotation.log"
   rseqc/read_gc:
     skip: true
   rseqc/read_distribution:

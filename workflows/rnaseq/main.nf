@@ -531,7 +531,7 @@ workflow RNASEQ {
                         // biotype-level summary (*.biotype.tsv.summary), matching the default
                         // pipeline's featureCounts -g gene_biotype output.
                         if (f.name.endsWith('.featureCounts.tsv.summary')) return false
-                        f.name =~ /(?i)\.(txt|tsv|xls|stats|flagstat|idxstats|html)$/ || f.name.contains('_mqc.')
+                        f.name =~ /(?i)\.(txt|tsv|xls|log|stats|flagstat|idxstats|html)$/ || f.name.contains('_mqc.')
                     }
             )
 

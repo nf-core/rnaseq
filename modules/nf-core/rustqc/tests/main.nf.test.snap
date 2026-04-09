@@ -5,7 +5,7 @@
                 [
                     "RUSTQC",
                     "rustqc",
-                    "0.1.1"
+                    "0.2.1"
                 ]
             ]
         ],
@@ -90,7 +90,7 @@
                             "test.inner_distance_summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "test.junction.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "test.junction.xls:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.junction_annotation.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.junction_annotation.log:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "test.junction_plot.r:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "test.splice_events.png:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "test.splice_junction.png:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -124,7 +124,7 @@
                     [
                         "RUSTQC",
                         "rustqc",
-                        "0.1.1"
+                        "0.2.1"
                     ]
                 ],
                 "dupradar": [
@@ -199,7 +199,7 @@
                             "test.inner_distance_summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "test.junction.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "test.junction.xls:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.junction_annotation.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.junction_annotation.log:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "test.junction_plot.r:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "test.splice_events.png:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "test.splice_junction.png:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -233,7 +233,7 @@
                     [
                         "RUSTQC",
                         "rustqc",
-                        "0.1.1"
+                        "0.2.1"
                     ]
                 ]
             }
@@ -257,7 +257,7 @@
                         "test.biotype_counts_mqc.tsv:md5,0bb6b11917b544c9690e0c9104f044d6",
                         "test.biotype_counts_rrna_mqc.tsv:md5,31c68d05ffe90d1e3eb2cb2ef9a7b4d9",
                         "test.featureCounts.biotype.tsv.summary:md5,45ccc3a9a51380ab0607d1e87bbd9db6",
-                        "test.featureCounts.tsv:md5,1b48800f7d20c11ada7b07fd3df40001",
+                        "test.featureCounts.tsv:md5,7613a7c0da252ea99f69ac7c33cd8e7c",
                         "test.featureCounts.tsv.summary:md5,45ccc3a9a51380ab0607d1e87bbd9db6"
                     ]
                 ]
@@ -324,7 +324,7 @@
                 "test.junctionSaturation_plot.png",
                 "test.junctionSaturation_plot.r",
                 "test.junctionSaturation_plot.svg",
-                "test.junction_annotation.txt",
+                "test.junction_annotation.log",
                 "test.junction_plot.r",
                 "test.pos.DupRate.xls",
                 "test.read_distribution.txt",

@@ -3,6 +3,10 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## dev
+
+- [PR #1778](https://github.com/nf-core/rnaseq/pull/1778) - Document that the `test` profile must be specified explicitly when running nf-test locally (required for GPU test profile support)
+
 ## [[3.24.0](https://github.com/nf-core/rnaseq/releases/tag/3.24.0)] - 2026-04-07
 
 ### Credits

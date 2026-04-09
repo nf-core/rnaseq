@@ -146,10 +146,6 @@
                 }
             },
             [
-                "custom",
-                "custom/out",
-                "custom/out/genome_gfp.fasta",
-                "custom/out/genome_gfp.gtf",
                 "fastqc",
                 "fastqc/raw",
                 "fastqc/raw/RAP1_IAA_30M_REP1_raw_1_fastqc.html",
@@ -1160,6 +1156,10 @@
                 "star_rsem/samtools_stats/WT_REP2.umi_dedup.transcriptome.sorted.bam.flagstat",
                 "star_rsem/samtools_stats/WT_REP2.umi_dedup.transcriptome.sorted.bam.idxstats",
                 "star_rsem/samtools_stats/WT_REP2.umi_dedup.transcriptome.sorted.bam.stats",
+                "star_rsem/stringtie",
+                "star_rsem/stringtie/out",
+                "star_rsem/stringtie/out/genome_gfp.fasta",
+                "star_rsem/stringtie/out/genome_gfp.gtf",
                 "star_rsem/umitools",
                 "star_rsem/umitools/RAP1_IAA_30M_REP1.umi_dedup.sorted_edit_distance.tsv",
                 "star_rsem/umitools/RAP1_IAA_30M_REP1.umi_dedup.sorted_per_umi.tsv",
@@ -1232,8 +1232,6 @@
                 "umitools/WT_REP2.umi_extract_2.fastq.gz"
             ],
             [
-                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055",
-                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28",
                 "cutadapt_filtered_reads_plot.txt:md5,3f122969fa288888e5abef061b7963f2",
                 "cutadapt_trimmed_sequences_plot_3_Counts.txt:md5,5e8a821c9a4deb46c11bc65969b8864f",
                 "cutadapt_trimmed_sequences_plot_3_Obs_Exp.txt:md5,bf8abefa7c5f2f1e1140749983279d9d",
@@ -1339,6 +1337,8 @@
                 "RAP1_UNINDUCED_REP2.infer_experiment.txt:md5,cb1cdc77172b49723d2b8909c424dd62",
                 "WT_REP1.infer_experiment.txt:md5,6ac001388c63b054558a67c35d1fa438",
                 "WT_REP2.infer_experiment.txt:md5,7dad79c0a824f569c51751d95913fee6",
+                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055",
+                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28",
                 "RAP1_IAA_30M_REP1.umi_dedup.sorted_edit_distance.tsv:md5,27f57eccf9f6dfc8c3e7ea2e0803706c",
                 "RAP1_IAA_30M_REP1.umi_dedup.sorted_per_umi.tsv:md5,037ae51b6c8d1dae46b24523abe9897f",
                 "RAP1_IAA_30M_REP1.umi_dedup.sorted_per_umi_per_position.tsv:md5,a60ddd63003e48cb365375523f525520",
@@ -1381,9 +1381,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-26T14:55:55.352330593"
+        "timestamp": "2026-04-09T23:12:16.066570695"
     },
     "--umi_dedup_tool 'umitools'": {
         "content": [
@@ -1523,10 +1523,6 @@
                 }
             },
             [
-                "custom",
-                "custom/out",
-                "custom/out/genome_gfp.fasta",
-                "custom/out/genome_gfp.gtf",
                 "fastqc",
                 "fastqc/raw",
                 "fastqc/raw/RAP1_IAA_30M_REP1_raw_1_fastqc.html",
@@ -2563,6 +2559,10 @@
                 "star_salmon/samtools_stats/WT_REP2.umi_dedup.transcriptome.sorted.bam.flagstat",
                 "star_salmon/samtools_stats/WT_REP2.umi_dedup.transcriptome.sorted.bam.idxstats",
                 "star_salmon/samtools_stats/WT_REP2.umi_dedup.transcriptome.sorted.bam.stats",
+                "star_salmon/stringtie",
+                "star_salmon/stringtie/out",
+                "star_salmon/stringtie/out/genome_gfp.fasta",
+                "star_salmon/stringtie/out/genome_gfp.gtf",
                 "star_salmon/umitools",
                 "star_salmon/umitools/RAP1_IAA_30M_REP1.umi_dedup.sorted_edit_distance.tsv",
                 "star_salmon/umitools/RAP1_IAA_30M_REP1.umi_dedup.sorted_per_umi.tsv",
@@ -2635,8 +2635,6 @@
                 "umitools/WT_REP2.umi_extract_2.fastq.gz"
             ],
             [
-                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055",
-                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28",
                 "cutadapt_filtered_reads_plot.txt:md5,3f122969fa288888e5abef061b7963f2",
                 "cutadapt_trimmed_sequences_plot_3_Counts.txt:md5,5e8a821c9a4deb46c11bc65969b8864f",
                 "cutadapt_trimmed_sequences_plot_3_Obs_Exp.txt:md5,bf8abefa7c5f2f1e1140749983279d9d",
@@ -2753,6 +2751,8 @@
                 "WT_REP1.infer_experiment.txt:md5,63c888e13ef0fa915abd6e7c26ffde48",
                 "WT_REP2.infer_experiment.txt:md5,3e6940ec81e6a809f929362ba4ba4a56",
                 "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
+                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055",
+                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28",
                 "RAP1_IAA_30M_REP1.umi_dedup.sorted_edit_distance.tsv:md5,c10c34b83b200187b53d530372ceffad",
                 "RAP1_IAA_30M_REP1.umi_dedup.sorted_per_umi.tsv:md5,c6ce5764c03a128aba62f5ed13148a26",
                 "RAP1_IAA_30M_REP1.umi_dedup.sorted_per_umi_per_position.tsv:md5,f37b7f5a783425506b434c9e5ff90f25",
@@ -2795,9 +2795,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-26T14:52:38.404677653"
+        "timestamp": "2026-04-09T23:00:46.987683367"
     },
     "Params: --aligner hisat2 --umi_dedup_tool 'umicollapse'": {
         "content": [
@@ -2930,10 +2930,6 @@
                 }
             },
             [
-                "custom",
-                "custom/out",
-                "custom/out/genome_gfp.fasta",
-                "custom/out/genome_gfp.gtf",
                 "fastqc",
                 "fastqc/raw",
                 "fastqc/raw/RAP1_IAA_30M_REP1_raw_1_fastqc.html",
@@ -3391,6 +3387,10 @@
                 "hisat2/samtools_stats/WT_REP2.umi_dedup.sorted.bam.flagstat",
                 "hisat2/samtools_stats/WT_REP2.umi_dedup.sorted.bam.idxstats",
                 "hisat2/samtools_stats/WT_REP2.umi_dedup.sorted.bam.stats",
+                "hisat2/stringtie",
+                "hisat2/stringtie/out",
+                "hisat2/stringtie/out/genome_gfp.fasta",
+                "hisat2/stringtie/out/genome_gfp.gtf",
                 "hisat2/umicollapse",
                 "hisat2/umicollapse/genomic_dedup_log",
                 "hisat2/umicollapse/genomic_dedup_log/RAP1_IAA_30M_REP1.umi_dedup.sorted_UMICollapse.log",
@@ -3851,8 +3851,6 @@
                 "umitools/WT_REP2.umi_extract_2.fastq.gz"
             ],
             [
-                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055",
-                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28",
                 "RAP1_IAA_30M_REP1.biotype_counts_mqc.tsv:md5,8433a395e65315feb0f8bfca4a1d1aba",
                 "RAP1_IAA_30M_REP1.biotype_counts_rrna_mqc.tsv:md5,dde2de0cb90e10d0195c726f768e9941",
                 "RAP1_IAA_30M_REP1.featureCounts.tsv:md5,783a4395a02312e94b9f890fb9e18f6e",
@@ -3873,6 +3871,8 @@
                 "RAP1_UNINDUCED_REP2.infer_experiment.txt:md5,d48a674bd9e64adadd66b89b5c096056",
                 "WT_REP1.infer_experiment.txt:md5,8559d69b9f350897869ca61097643449",
                 "WT_REP2.infer_experiment.txt:md5,2ac93ef54e0aaa62482ceb45c91c64bb",
+                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055",
+                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28",
                 "cutadapt_filtered_reads_plot.txt:md5,3f122969fa288888e5abef061b7963f2",
                 "cutadapt_trimmed_sequences_plot_3_Counts.txt:md5,5e8a821c9a4deb46c11bc65969b8864f",
                 "cutadapt_trimmed_sequences_plot_3_Obs_Exp.txt:md5,bf8abefa7c5f2f1e1140749983279d9d",
@@ -3953,9 +3953,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-26T14:48:58.12271551"
+        "timestamp": "2026-04-09T22:49:16.093562671"
     },
     "--umi_dedup_tool 'umitools - stub": {
         "content": [
@@ -4007,10 +4007,6 @@
                 }
             },
             [
-                "custom",
-                "custom/out",
-                "custom/out/genome_transcriptome.fasta",
-                "custom/out/genome_transcriptome.gtf",
                 "fastqc",
                 "fastqc/raw",
                 "fastqc/raw/RAP1_IAA_30M_REP1_raw.html",
@@ -4040,6 +4036,11 @@
                 "multiqc/star_salmon/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_rnaseq_software_mqc_versions.yml",
+                "star_salmon",
+                "star_salmon/stringtie",
+                "star_salmon/stringtie/out",
+                "star_salmon/stringtie/out/genome_transcriptome.fasta",
+                "star_salmon/stringtie/out/genome_transcriptome.gtf",
                 "trimgalore",
                 "trimgalore/RAP1_IAA_30M_REP1_trimmed_1.fastq.gz_trimming_report.txt",
                 "trimgalore/RAP1_IAA_30M_REP1_trimmed_2.fastq.gz_trimming_report.txt",
@@ -4063,8 +4064,8 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-04T17:51:58.400008189"
+        "timestamp": "2026-04-09T23:22:02.261058066"
     }
 }

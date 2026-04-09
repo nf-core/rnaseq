@@ -142,10 +142,6 @@
                 }
             },
             [
-                "custom",
-                "custom/out",
-                "custom/out/genome_gfp.fasta",
-                "custom/out/genome_gfp.gtf",
                 "fastqc",
                 "fastqc/raw",
                 "fastqc/raw/RAP1_IAA_30M_REP1_raw_1_fastqc.html",
@@ -1197,6 +1193,9 @@
                 "star_salmon/stringtie/WT_REP2.coverage.gtf",
                 "star_salmon/stringtie/WT_REP2.gene.abundance.txt",
                 "star_salmon/stringtie/WT_REP2.transcripts.gtf",
+                "star_salmon/stringtie/out",
+                "star_salmon/stringtie/out/genome_gfp.fasta",
+                "star_salmon/stringtie/out/genome_gfp.gtf",
                 "trimgalore",
                 "trimgalore/RAP1_IAA_30M_REP1_trimmed_1.fastq.gz_trimming_report.txt",
                 "trimgalore/RAP1_IAA_30M_REP1_trimmed_2.fastq.gz_trimming_report.txt",
@@ -1210,8 +1209,6 @@
                 "trimgalore/WT_REP2_trimmed_2.fastq.gz_trimming_report.txt"
             ],
             [
-                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055",
-                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28",
                 "cutadapt_filtered_reads_plot.txt:md5,2875db20890141d1c23f7d1310ab65f0",
                 "cutadapt_trimmed_sequences_plot_3_Counts.txt:md5,c54c003a04b4630f52c4c34a86ddca8d",
                 "cutadapt_trimmed_sequences_plot_3_Obs_Exp.txt:md5,afbad9fda5caa0b86ab791765df63e4c",
@@ -1330,13 +1327,15 @@
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
                 "e_data.ctab:md5,5e7b9295357dc05ef166e50612b3c979",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
-                "i_data.ctab:md5,fca03502dd5b5e2831a64ff133d8c0b5"
+                "i_data.ctab:md5,fca03502dd5b5e2831a64ff133d8c0b5",
+                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055",
+                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-26T14:59:30.732479598"
+        "timestamp": "2026-04-09T23:27:40.999397325"
     }
 }

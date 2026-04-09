@@ -50,10 +50,6 @@
                 }
             },
             [
-                "custom",
-                "custom/out",
-                "custom/out/genome_transcriptome.fasta",
-                "custom/out/genome_transcriptome.gtf",
                 "fastqc",
                 "fastqc/raw",
                 "fastqc/raw/RAP1_IAA_30M_REP1_raw.html",
@@ -74,6 +70,11 @@
                 "fq_lint/raw/RAP1_UNINDUCED_REP2.fq_lint.txt",
                 "fq_lint/raw/WT_REP1.fq_lint.txt",
                 "fq_lint/raw/WT_REP2.fq_lint.txt",
+                "hisat2",
+                "hisat2/stringtie",
+                "hisat2/stringtie/out",
+                "hisat2/stringtie/out/genome_transcriptome.fasta",
+                "hisat2/stringtie/out/genome_transcriptome.gtf",
                 "multiqc",
                 "multiqc/hisat2",
                 "multiqc/hisat2/multiqc_data",
@@ -98,11 +99,11 @@
                 "genome_transcriptome.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
-        "timestamp": "2026-03-31T17:29:28.665283571",
         "meta": {
-            "nf-test": "0.9.4",
-            "nextflow": "25.10.2"
-        }
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.4"
+        },
+        "timestamp": "2026-04-09T13:38:25.427267127"
     },
     "Params: contaminant_screening_input=trimmed screens pre-alignment reads": {
         "content": [
@@ -254,10 +255,6 @@
                 "bbsplit/RAP1_UNINDUCED_REP2.stats.txt",
                 "bbsplit/WT_REP1.stats.txt",
                 "bbsplit/WT_REP2.stats.txt",
-                "custom",
-                "custom/out",
-                "custom/out/genome_gfp.fasta",
-                "custom/out/genome_gfp.gtf",
                 "fastqc",
                 "fastqc/filtered",
                 "fastqc/filtered/RAP1_IAA_30M_REP1_filtered_1_fastqc.html",
@@ -1347,6 +1344,10 @@
                 "star_salmon/samtools_stats/WT_REP2.sorted.bam.flagstat",
                 "star_salmon/samtools_stats/WT_REP2.sorted.bam.idxstats",
                 "star_salmon/samtools_stats/WT_REP2.sorted.bam.stats",
+                "star_salmon/stringtie",
+                "star_salmon/stringtie/out",
+                "star_salmon/stringtie/out/genome_gfp.fasta",
+                "star_salmon/stringtie/out/genome_gfp.gtf",
                 "trimgalore",
                 "trimgalore/RAP1_IAA_30M_REP1_trimmed_1.fastq.gz_trimming_report.txt",
                 "trimgalore/RAP1_IAA_30M_REP1_trimmed_2.fastq.gz_trimming_report.txt",
@@ -1358,8 +1359,6 @@
                 "trimgalore/WT_REP2_trimmed_2.fastq.gz_trimming_report.txt"
             ],
             [
-                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055",
-                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28",
                 "cutadapt_filtered_reads_plot.txt:md5,6fa381627f7c1f664f3d4b2cb79cce90",
                 "cutadapt_trimmed_sequences_plot_3_Counts.txt:md5,13dfa866fd91dbb072689efe9aa83b1f",
                 "cutadapt_trimmed_sequences_plot_3_Obs_Exp.txt:md5,07145dd8dd3db654859b18eb0389046c",
@@ -1475,14 +1474,16 @@
                 "RAP1_UNINDUCED_REP2.infer_experiment.txt:md5,7d5705880188f9beab1939e08d6b8f40",
                 "WT_REP1.infer_experiment.txt:md5,bf0c137f5fca06e7c40e1984a1acb06d",
                 "WT_REP2.infer_experiment.txt:md5,82e23b329ee60709f343bc2d17d43b14",
-                "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
+                "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
+                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055",
+                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28"
             ]
         ],
-        "timestamp": "2026-03-28T11:16:10.497395581",
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        }
+            "nextflow": "25.10.4"
+        },
+        "timestamp": "2026-04-09T16:11:37.284213817"
     },
     "Params: contaminant_screening_input=unmapped (default) screens post-alignment reads": {
         "content": [
@@ -1634,10 +1635,6 @@
                 "bbsplit/RAP1_UNINDUCED_REP2.stats.txt",
                 "bbsplit/WT_REP1.stats.txt",
                 "bbsplit/WT_REP2.stats.txt",
-                "custom",
-                "custom/out",
-                "custom/out/genome_gfp.fasta",
-                "custom/out/genome_gfp.gtf",
                 "fastqc",
                 "fastqc/filtered",
                 "fastqc/filtered/RAP1_IAA_30M_REP1_filtered_1_fastqc.html",
@@ -2727,6 +2724,10 @@
                 "star_salmon/samtools_stats/WT_REP2.sorted.bam.flagstat",
                 "star_salmon/samtools_stats/WT_REP2.sorted.bam.idxstats",
                 "star_salmon/samtools_stats/WT_REP2.sorted.bam.stats",
+                "star_salmon/stringtie",
+                "star_salmon/stringtie/out",
+                "star_salmon/stringtie/out/genome_gfp.fasta",
+                "star_salmon/stringtie/out/genome_gfp.gtf",
                 "trimgalore",
                 "trimgalore/RAP1_IAA_30M_REP1_trimmed_1.fastq.gz_trimming_report.txt",
                 "trimgalore/RAP1_IAA_30M_REP1_trimmed_2.fastq.gz_trimming_report.txt",
@@ -2738,8 +2739,6 @@
                 "trimgalore/WT_REP2_trimmed_2.fastq.gz_trimming_report.txt"
             ],
             [
-                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055",
-                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28",
                 "cutadapt_filtered_reads_plot.txt:md5,6fa381627f7c1f664f3d4b2cb79cce90",
                 "cutadapt_trimmed_sequences_plot_3_Counts.txt:md5,13dfa866fd91dbb072689efe9aa83b1f",
                 "cutadapt_trimmed_sequences_plot_3_Obs_Exp.txt:md5,07145dd8dd3db654859b18eb0389046c",
@@ -2855,14 +2854,16 @@
                 "RAP1_UNINDUCED_REP2.infer_experiment.txt:md5,7d5705880188f9beab1939e08d6b8f40",
                 "WT_REP1.infer_experiment.txt:md5,bf0c137f5fca06e7c40e1984a1acb06d",
                 "WT_REP2.infer_experiment.txt:md5,82e23b329ee60709f343bc2d17d43b14",
-                "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
+                "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
+                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055",
+                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28"
             ]
         ],
-        "timestamp": "2026-03-28T11:20:09.713081388",
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        }
+            "nextflow": "25.10.4"
+        },
+        "timestamp": "2026-04-09T16:28:20.325405351"
     },
     "Params: contaminant screening trimmed input with skip_alignment - stub": {
         "content": [
@@ -2909,10 +2910,6 @@
                 }
             },
             [
-                "custom",
-                "custom/out",
-                "custom/out/genome_transcriptome.fasta",
-                "custom/out/genome_transcriptome.gtf",
                 "fastqc",
                 "fastqc/raw",
                 "fastqc/raw/RAP1_IAA_30M_REP1_raw.html",
@@ -2941,6 +2938,11 @@
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_rnaseq_software_mqc_versions.yml",
+                "star_salmon",
+                "star_salmon/stringtie",
+                "star_salmon/stringtie/out",
+                "star_salmon/stringtie/out/genome_transcriptome.fasta",
+                "star_salmon/stringtie/out/genome_transcriptome.gtf",
                 "trimgalore",
                 "trimgalore/RAP1_IAA_30M_REP1_trimmed_1.fastq.gz_trimming_report.txt",
                 "trimgalore/RAP1_IAA_30M_REP1_trimmed_2.fastq.gz_trimming_report.txt",
@@ -2956,10 +2958,10 @@
                 "genome_transcriptome.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
-        "timestamp": "2026-03-31T17:30:01.490209123",
         "meta": {
-            "nf-test": "0.9.4",
-            "nextflow": "25.10.2"
-        }
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.4"
+        },
+        "timestamp": "2026-04-09T13:55:38.604924827"
     }
 }

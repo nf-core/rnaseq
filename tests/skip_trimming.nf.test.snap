@@ -155,10 +155,6 @@
                 "bbsplit/RAP1_UNINDUCED_REP2.stats.txt",
                 "bbsplit/WT_REP1.stats.txt",
                 "bbsplit/WT_REP2.stats.txt",
-                "custom",
-                "custom/out",
-                "custom/out/genome_gfp.fasta",
-                "custom/out/genome_gfp.gtf",
                 "fastqc",
                 "fastqc/filtered",
                 "fastqc/filtered/RAP1_IAA_30M_REP1_filtered_1_fastqc.html",
@@ -1205,11 +1201,12 @@
                 "star_salmon/stringtie/WT_REP2.ballgown/t_data.ctab",
                 "star_salmon/stringtie/WT_REP2.coverage.gtf",
                 "star_salmon/stringtie/WT_REP2.gene.abundance.txt",
-                "star_salmon/stringtie/WT_REP2.transcripts.gtf"
+                "star_salmon/stringtie/WT_REP2.transcripts.gtf",
+                "star_salmon/stringtie/out",
+                "star_salmon/stringtie/out/genome_gfp.fasta",
+                "star_salmon/stringtie/out/genome_gfp.gtf"
             ],
             [
-                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055",
-                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28",
                 "fastqc_raw-status-check-heatmap.txt:md5,5a89b0d8d162f6b1dbdaf39457bbc03b",
                 "fastqc_raw_adapter_content_plot.txt:md5,da0389be84cfdd189b1d045212eb2974",
                 "fastqc_raw_overrepresented_sequences_plot.txt:md5,25d88ea8a72f55e8a374ae802bc7f0b1",
@@ -1332,13 +1329,15 @@
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
                 "e_data.ctab:md5,3bddb4b7381a62a0104b7004e5b71f20",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
-                "i_data.ctab:md5,cd4c62717bb0a0db1a17e9c6d8788599"
+                "i_data.ctab:md5,cd4c62717bb0a0db1a17e9c6d8788599",
+                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055",
+                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-26T14:42:47.379535303"
+        "timestamp": "2026-04-09T21:37:02.722934985"
     }
 }

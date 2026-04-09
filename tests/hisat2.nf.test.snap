@@ -47,10 +47,6 @@
                 }
             },
             [
-                "custom",
-                "custom/out",
-                "custom/out/genome_transcriptome.fasta",
-                "custom/out/genome_transcriptome.gtf",
                 "fastqc",
                 "fastqc/raw",
                 "fastqc/raw/RAP1_IAA_30M_REP1_raw.html",
@@ -71,6 +67,11 @@
                 "fq_lint/raw/RAP1_UNINDUCED_REP2.fq_lint.txt",
                 "fq_lint/raw/WT_REP1.fq_lint.txt",
                 "fq_lint/raw/WT_REP2.fq_lint.txt",
+                "hisat2",
+                "hisat2/stringtie",
+                "hisat2/stringtie/out",
+                "hisat2/stringtie/out/genome_transcriptome.fasta",
+                "hisat2/stringtie/out/genome_transcriptome.gtf",
                 "multiqc",
                 "multiqc/hisat2",
                 "multiqc/hisat2/multiqc_data",
@@ -97,9 +98,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-04T17:02:38.159554469"
+        "timestamp": "2026-04-09T19:05:29.853107999"
     },
     "Params: --aligner hisat2": {
         "content": [
@@ -247,10 +248,6 @@
                 "bbsplit/RAP1_UNINDUCED_REP2.stats.txt",
                 "bbsplit/WT_REP1.stats.txt",
                 "bbsplit/WT_REP2.stats.txt",
-                "custom",
-                "custom/out",
-                "custom/out/genome_gfp.fasta",
-                "custom/out/genome_gfp.gtf",
                 "fastqc",
                 "fastqc/filtered",
                 "fastqc/filtered/RAP1_IAA_30M_REP1_filtered_1_fastqc.html",
@@ -783,6 +780,9 @@
                 "hisat2/stringtie/WT_REP2.coverage.gtf",
                 "hisat2/stringtie/WT_REP2.gene.abundance.txt",
                 "hisat2/stringtie/WT_REP2.transcripts.gtf",
+                "hisat2/stringtie/out",
+                "hisat2/stringtie/out/genome_gfp.fasta",
+                "hisat2/stringtie/out/genome_gfp.gtf",
                 "multiqc",
                 "multiqc/hisat2",
                 "multiqc/hisat2/multiqc_report.html",
@@ -1262,8 +1262,6 @@
                 "trimgalore/WT_REP2_trimmed_2.fastq.gz_trimming_report.txt"
             ],
             [
-                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055",
-                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28",
                 "RAP1_IAA_30M_REP1.biotype_counts_mqc.tsv:md5,cd7494b3bb12295a287f36506638f3c6",
                 "RAP1_IAA_30M_REP1.biotype_counts_rrna_mqc.tsv:md5,dde2de0cb90e10d0195c726f768e9941",
                 "RAP1_IAA_30M_REP1.featureCounts.tsv:md5,289e47b060051eb33c17e52aa0ce52cc",
@@ -1304,6 +1302,8 @@
                 "e_data.ctab:md5,22bdc84c1c4acce9798868e8c7b56004",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
                 "i_data.ctab:md5,80fe14762a8f7230d516bba37b7275d1",
+                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055",
+                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28",
                 "cutadapt_filtered_reads_plot.txt:md5,6fa381627f7c1f664f3d4b2cb79cce90",
                 "cutadapt_trimmed_sequences_plot_3_Counts.txt:md5,13dfa866fd91dbb072689efe9aa83b1f",
                 "cutadapt_trimmed_sequences_plot_3_Obs_Exp.txt:md5,07145dd8dd3db654859b18eb0389046c",
@@ -1373,8 +1373,8 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-26T14:02:51.500913235"
+        "timestamp": "2026-04-09T19:01:20.031119092"
     }
 }

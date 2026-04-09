@@ -166,6 +166,18 @@ module_order:
       path_filters_exclude:
         - "*.bowtie2_rrna.bowtie2.log"
 
+# Clarify proper pairs columns in the General Stats table:
+# RSeQC bam_stat reports proper pairs only for reads with MAPQ >= 30 (default),
+# while samtools stats reports proper pairs for all reads regardless of MAPQ.
+custom_table_header_config:
+  general_stats_table:
+    proper_pairs_percent:
+      title: "RSeQC: Proper Pairs (MAPQ>=30)"
+      description: "% Reads mapped in proper pairs with MAPQ >= 30 (RSeQC bam_stat)"
+    reads_properly_paired_percent:
+      title: "Samtools: Proper Pairs"
+      description: "% Reads mapped in proper pairs, all MAPQ values (samtools stats)"
+
 # Don't show % Dups in the General Stats table (we have this from Picard)
 table_columns_visible:
   "FastQC (raw)":

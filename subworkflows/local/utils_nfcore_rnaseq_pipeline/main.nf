@@ -322,6 +322,10 @@ def validateInputParameters() {
         error("Parabricks rna_fq2bam does not support --sjdbGTFfeatureExon CDS, which is required for prokaryotic alignment. Please use standard STAR instead.")
     }
 
+    if (params.use_parabricks_star && params.genome) {
+        error("Parabricks (--use_parabricks_star) is not compatible with --genome. iGenomes STAR indices are built with a different STAR version than Parabricks bundles. Please supply --fasta and --gtf explicitly instead.")
+    }
+
     if (params.with_umi && !params.skip_umi_extract) {
         if (!params.umitools_bc_pattern && !params.umitools_bc_pattern2) {
             error("UMI-tools requires a barcode pattern to extract barcodes from the reads.")
@@ -380,6 +384,15 @@ def validateInputParameters() {
     // Check that Kraken/Bracken database provided if using kraken2/bracken
     if (params.contaminant_screening in ['kraken2', 'kraken2_bracken'] && !params.kraken_db) {
         error("Contaminant screening set to kraken2 but no database was provided. Please provide a database with the --kraken_db option.")
+    }
+
+    if (params.contaminant_screening && params.contaminant_screening_input == 'unmapped') {
+        if (params.skip_alignment) {
+            error("Contaminant screening with '--contaminant_screening_input unmapped' requires alignment to be enabled. Use '--contaminant_screening_input trimmed' to screen reads before alignment.")
+        }
+        if (!(params.aligner in ['star_salmon', 'star_rsem', 'hisat2'])) {
+            error("Contaminant screening with '--contaminant_screening_input unmapped' is only supported with '--aligner star_salmon', '--aligner star_rsem', or '--aligner hisat2'. Use '--contaminant_screening_input trimmed' for other aligners.")
+        }
     }
 
     // Check that Sylph database and taxonomy is provided if using Sylph

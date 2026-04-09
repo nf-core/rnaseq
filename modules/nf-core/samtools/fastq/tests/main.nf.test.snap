@@ -67,16 +67,16 @@
                     [
                         "SAMTOOLS_FASTQ",
                         "samtools",
-                        "1.22.1"
+                        "1.23.1"
                     ]
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-02T17:05:55.514934"
+        "timestamp": "2026-03-19T08:58:51.815096"
     },
     "bam_fastq": {
         "content": [
@@ -148,16 +148,16 @@
                     [
                         "SAMTOOLS_FASTQ",
                         "samtools",
-                        "1.22.1"
+                        "1.23.1"
                     ]
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-02T17:05:40.578464"
+        "timestamp": "2026-03-19T08:58:41.34399"
     },
     "bam_verinterleave_sions": {
         "content": [
@@ -166,16 +166,16 @@
                     [
                         "SAMTOOLS_FASTQ",
                         "samtools",
-                        "1.22.1"
+                        "1.23.1"
                     ]
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-02T17:05:47.62481"
+        "timestamp": "2026-03-19T08:58:46.729284"
     },
     "bam_singleton": {
         "content": [
@@ -230,15 +230,15 @@
                     [
                         "SAMTOOLS_FASTQ",
                         "samtools",
-                        "1.22.1"
+                        "1.23.1"
                     ]
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-02T17:06:03.676263"
+        "timestamp": "2026-03-19T08:58:56.91914"
     }
 }

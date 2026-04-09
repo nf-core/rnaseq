@@ -32,6 +32,9 @@ You have the option to test your changes locally by running the pipeline. For re
 nf-test test --profile debug,test,docker --verbose
 ```
 
+> [!IMPORTANT]
+> Unlike most nf-core pipelines, this pipeline does **not** set a default `profile "test"` in `nf-test.config`. This is because the pipeline supports both CPU and GPU test profiles (`test` and `test_gpu`) with different resource limits, and hardcoding one would prevent the other from being used in CI. You must always include the `test` profile explicitly when running tests locally (e.g. `--profile=+test,docker`).
+
 When you create a pull request with changes, [GitHub Actions](https://github.com/features/actions) will run automatic tests.
 Typically, pull-requests are only fully reviewed when these tests are passing, though of course we can help out before then.
 

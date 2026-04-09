@@ -15,7 +15,7 @@ process SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT {
     output:
     tuple val(meta), path("*.rds")              , emit: rds
     tuple val(meta), path("*.R_sessionInfo.log"), emit: log
-    path "versions.yml"                         , emit: versions
+    path "versions.yml"                         , emit: versions, topic: versions
 
     when:
     task.ext.when == null || task.ext.when

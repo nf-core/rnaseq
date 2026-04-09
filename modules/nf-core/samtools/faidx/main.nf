@@ -1,22 +1,21 @@
 process SAMTOOLS_FAIDX {
-    tag "$fasta"
+    tag "${fasta}"
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/samtools:1.22.1--h96c455f_0' :
-        'biocontainers/samtools:1.22.1--h96c455f_0' }"
+    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/8c/8c5d2818c8b9f58e1fba77ce219fdaf32087ae53e857c4a496402978af26e78c/data'
+        : 'community.wave.seqera.io/library/htslib_samtools:1.23.1--5b6bb4ede7e612e5'}"
 
     input:
-    tuple val(meta), path(fasta)
-    tuple val(meta2), path(fai)
+    tuple val(meta), path(fasta), path(fai)
     val get_sizes
 
     output:
-    tuple val(meta), path ("*.{fa,fasta}") , emit: fa, optional: true
-    tuple val(meta), path ("*.sizes")      , emit: sizes, optional: true
-    tuple val(meta), path ("*.fai")        , emit: fai, optional: true
-    tuple val(meta), path ("*.gzi")        , emit: gzi, optional: true
+    tuple val(meta), path("*.{fa,fasta}"), emit: fa, optional: true
+    tuple val(meta), path("*.sizes"), emit: sizes, optional: true
+    tuple val(meta), path("*.fai"), emit: fai, optional: true
+    tuple val(meta), path("*.gzi"), emit: gzi, optional: true
     tuple val("${task.process}"), val('samtools'), eval("samtools version | sed '1!d;s/.* //'"), topic: versions, emit: versions_samtools
 
     when:
@@ -28,8 +27,8 @@ process SAMTOOLS_FAIDX {
     """
     samtools \\
         faidx \\
-        $fasta \\
-        $args
+        ${fasta} \\
+        ${args}
 
     ${get_sizes_command}
     """

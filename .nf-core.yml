@@ -1,18 +1,22 @@
 lint:
   actions_nf_test: false
-  nf_test_content: false
   files_exist:
     - conf/modules.config
   files_unchanged:
+    - .github/CONTRIBUTING.md
     - assets/email_template.html
     - assets/email_template.txt
+    - assets/nf-core-rnaseq_logo_light.png
+    - docs/images/nf-core-rnaseq_logo_dark.png
     - .gitignore
+    - nf-test.config
   modules_config: false
   multiqc_config: false
   nextflow_config:
     - config_defaults:
         - params.ribo_database_manifest
-nf_core_version: 3.5.1
+  nf_test_content: false
+nf_core_version: 3.5.2
 repository_type: pipeline
 template:
   author: "Harshil Patel, Phil Ewels, Rickard Hammarén"
@@ -23,4 +27,4 @@ template:
   name: rnaseq
   org: nf-core
   outdir: .
-  version: 3.23.0
+  version: 3.24.0

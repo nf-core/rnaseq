@@ -6,9 +6,6 @@
             "test.bam.bai",
             "1e02b8e6b4a02ab58bfe4ee795aba815",
             [
-
-            ],
-            [
                 [
                     {
                         "id": "test",
@@ -45,7 +42,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.stats:md5,31d57594a8d6ca076442a2c868ba241f"
+                    "test.stats:md5,0525dc522aabf00713916cbe85c9cc81"
                 ]
             ],
             [
@@ -101,9 +98,6 @@
                     },
                     "test.toTranscriptome.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                 ]
-            ],
-            [
-
             ],
             [
                 [

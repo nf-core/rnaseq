@@ -2,12 +2,14 @@
     "sarscov2_bam_bai": {
         "content": [
             "b7be15ac7aae194b04bdbb56f3534495",
+            "test.bam.bai",
+            "test.log",
             [
                 [
                     {
                         "id": "test"
                     },
-                    "test.stats:md5,d380f38aa5cdd1dba32f84f6c152f490"
+                    "test.stats:md5,70553e4c07cdfc8499e8256ac9fbb2f1"
                 ]
             ],
             [
@@ -29,9 +31,45 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-03T11:34:24.268180227"
+        "timestamp": "2026-03-19T10:41:13.746525"
+    },
+    "sarscov2_bam_bai - primary_only": {
+        "content": [
+            "b7be15ac7aae194b04bdbb56f3534495",
+            "test.bam.bai",
+            "test.log",
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.stats:md5,70553e4c07cdfc8499e8256ac9fbb2f1"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.flagstat:md5,18d602435a02a4d721b78d1812622159"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.idxstats:md5,85d20a901eef23ca50c323638a2eb602"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.4"
+        },
+        "timestamp": "2026-03-19T10:41:31.325361"
     },
     "sarscov2_bam_bai - stub": {
         "content": [
@@ -85,9 +123,6 @@
                     ]
                 ],
                 "6": [
-                    
-                ],
-                "7": [
                     [
                         {
                             "id": "test"
@@ -95,7 +130,7 @@
                         "test.stats:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "8": [
+                "7": [
                     [
                         {
                             "id": "test"
@@ -103,20 +138,12 @@
                         "test.flagstat:md5,67394650dbae96d1a4fcc70484822159"
                     ]
                 ],
-                "9": [
+                "8": [
                     [
                         {
                             "id": "test"
                         },
                         "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "bai": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "bam": [
@@ -126,9 +153,6 @@
                         },
                         "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
-                ],
-                "csi": [
-                    
                 ],
                 "deduplog": [
                     [
@@ -152,6 +176,14 @@
                             "id": "test"
                         },
                         "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "index": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "stats": [
@@ -189,9 +221,9 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nf-test": "0.9.4",
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-03T11:13:20.927345248"
+        "timestamp": "2026-03-12T11:41:08.515040393"
     }
 }

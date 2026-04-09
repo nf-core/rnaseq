@@ -5,9 +5,6 @@
             "test.Log.out",
             "sorted_.bam.bai",
             "d5861e7d7a76e47e17bfaa03be48447c",
-            [
-                
-            ],
             "test.Log.progress.out",
             [
                 
@@ -37,7 +34,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.stats:md5,e3dff64f76d23a44857a7dea3acf8f2f"
+                    "test.stats:md5,0b87650402363982ac22dbf4d4c58b0c"
                 ]
             ],
             [
@@ -96,9 +93,6 @@
                     },
                     "test.toTranscriptome.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                 ]
-            ],
-            [
-                
             ],
             [
                 [

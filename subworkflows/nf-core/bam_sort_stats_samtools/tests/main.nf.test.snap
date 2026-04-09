@@ -25,15 +25,15 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.stats:md5,1101fe711c4a389fdb5c4a1532107d1f"
+                    "test.stats:md5,0d0496957cd3bae8f557f2e9f6876a46"
                 ]
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-03T11:33:01.647190952"
+        "timestamp": "2026-03-19T09:55:29.570804"
     },
     "test_bam_sort_stats_samtools_paired_end": {
         "content": [
@@ -61,15 +61,15 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.stats:md5,f26c554c244ee86c89d62ebed509fd95"
+                    "test.stats:md5,12b526148cc9b6ffa8893903f65f19fc"
                 ]
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-03T11:33:08.706742267"
+        "timestamp": "2026-03-19T09:55:39.804101"
     },
     "test_bam_sort_stats_samtools_single_end - stub": {
         "content": [
@@ -93,9 +93,6 @@
                     ]
                 ],
                 "2": [
-                    
-                ],
-                "3": [
                     [
                         {
                             "id": "test",
@@ -104,7 +101,7 @@
                         "test.stats:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "4": [
+                "3": [
                     [
                         {
                             "id": "test",
@@ -113,22 +110,13 @@
                         "test.flagstat:md5,67394650dbae96d1a4fcc70484822159"
                     ]
                 ],
-                "5": [
+                "4": [
                     [
                         {
                             "id": "test",
                             "single_end": false
                         },
                         "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "bai": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "bam": [
@@ -139,9 +127,6 @@
                         },
                         "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
-                ],
-                "csi": [
-                    
                 ],
                 "flagstat": [
                     [
@@ -161,6 +146,15 @@
                         "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
+                "index": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
                 "stats": [
                     [
                         {
@@ -174,9 +168,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-03T11:11:02.1412136"
+        "timestamp": "2026-03-12T15:01:02.797853"
     },
     "test_bam_sort_stats_samtools_paired_end - stub": {
         "content": [
@@ -200,9 +194,6 @@
                     ]
                 ],
                 "2": [
-                    
-                ],
-                "3": [
                     [
                         {
                             "id": "test",
@@ -211,7 +202,7 @@
                         "test.stats:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "4": [
+                "3": [
                     [
                         {
                             "id": "test",
@@ -220,22 +211,13 @@
                         "test.flagstat:md5,67394650dbae96d1a4fcc70484822159"
                     ]
                 ],
-                "5": [
+                "4": [
                     [
                         {
                             "id": "test",
                             "single_end": false
                         },
                         "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "bai": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "bam": [
@@ -246,9 +228,6 @@
                         },
                         "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
-                ],
-                "csi": [
-                    
                 ],
                 "flagstat": [
                     [
@@ -268,6 +247,15 @@
                         "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
+                "index": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
                 "stats": [
                     [
                         {
@@ -281,8 +269,8 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-03T11:11:09.165267895"
+        "timestamp": "2026-03-12T15:01:13.722701"
     }
 }

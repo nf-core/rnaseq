@@ -17,6 +17,7 @@ include { UNTAR as UNTAR_HISAT2_INDEX       } from '../../../modules/nf-core/unt
 include { UNTAR as UNTAR_SALMON_INDEX       } from '../../../modules/nf-core/untar'
 include { UNTAR as UNTAR_KALLISTO_INDEX     } from '../../../modules/nf-core/untar'
 include { UNTAR as UNTAR_BOWTIE2_INDEX      } from '../../../modules/nf-core/untar'
+include { UNTAR as UNTAR_KRAKEN_DB          } from '../../../modules/nf-core/untar'
 
 include { CUSTOM_CATADDITIONALFASTA         } from '../../../modules/nf-core/custom/catadditionalfasta'
 include { SAMTOOLS_FAIDX                    } from '../../../modules/nf-core/samtools/faidx'
@@ -39,7 +40,6 @@ include { SENTIEON_RSEMPREPAREREFERENCE as SENTIEON_MAKE_TRANSCRIPTS_FASTA      
 include { PREPROCESS_TRANSCRIPTS_FASTA_GENCODE } from '../../../modules/local/preprocess_transcripts_fasta_gencode'
 include { GTF2BED                              } from '../../../modules/local/gtf2bed'
 include { GTF_FILTER                           } from '../../../modules/local/gtf_filter'
-include { STAR_GENOMEGENERATE as STAR_GENOMEGENERATE_IGENOMES } from '../../../modules/nf-core/star/genomegenerate'
 
 workflow PREPARE_GENOME {
 
@@ -61,6 +61,7 @@ workflow PREPARE_GENOME {
     bowtie2_index            // directory: /path/to/bowtie2/index/
     bbsplit_index            // directory: /path/to/bbsplit/index/
     sortmerna_index          // directory: /path/to/sortmerna/index/
+    kraken_db                // path: /path/to/kraken2/db/ or .tar.gz archive
     gencode                  // boolean: whether the genome is from GENCODE
     gffread_transcript_fasta // boolean: use gffread instead of RSEM for transcript FASTA extraction
     featurecounts_group_type // string: The attribute type used to group feature types in the GTF file when generating the biotype plot with featureCounts
@@ -73,6 +74,7 @@ workflow PREPARE_GENOME {
     skip_pseudo_alignment    // boolean: Skip all of the pseudoalignment-based processes within the pipeline
     use_sentieon_star        // boolean: whether to use sentieon STAR version
     use_parabricks_star      // boolean: whether to use parabricks STAR version
+    contaminant_screening    // string: contaminant screening tool ('kraken2', 'kraken2_bracken', 'sylph', or null)
 
     main:
     // Versions collector
@@ -205,7 +207,7 @@ workflow PREPARE_GENOME {
     ch_fai         = channel.empty()
     ch_chrom_sizes = channel.empty()
     if (fasta_provided) {
-        SAMTOOLS_FAIDX(ch_fasta.map { item -> [ [:], item ] }, [ [:], [] ], true)
+        SAMTOOLS_FAIDX(ch_fasta.map { item -> [ [:], item, [] ] }, true)
         ch_fai         = SAMTOOLS_FAIDX.out.fai.map { tuple -> tuple[1] }
         ch_chrom_sizes = SAMTOOLS_FAIDX.out.sizes.map { tuple -> tuple[1] }
     }
@@ -291,7 +293,13 @@ workflow PREPARE_GENOME {
     //----------------------------------------------------
     ch_star_index = channel.empty()
     if (prepare_tool_indices.intersect(['star_salmon', 'star_rsem'])) {
-        if (star_index) {
+        if (use_parabricks_star && fasta_provided) {
+            // Parabricks needs its own STAR index built with its bundled STAR version
+            ch_star_index = PARABRICKS_STARGENOMEGENERATE(
+                ch_fasta.map { item -> [ [:], item ] },
+                ch_gtf.map   { item -> [ [:], item ] }
+            ).index.map { tuple -> tuple[1] }
+        } else if (star_index) {
             if (star_index.endsWith('.tar.gz')) {
                 ch_star_index = UNTAR_STAR_INDEX ([ [:], file(star_index, checkIfExists: true) ]).untar.map { tuple -> tuple[1] }
             } else {
@@ -299,28 +307,12 @@ workflow PREPARE_GENOME {
             }
         }
         else if (fasta_provided) {
-            // Build new STAR index
-            // Possibly check AWS iGenome conditions
-            def is_aws_igenome = false
-            if (file(fasta, checkIfExists: true).getName() - '.gz' == 'genome.fa' && file(gtf, checkIfExists: true).getName() - '.gz' == 'genes.gtf') {
-                is_aws_igenome = true
-            }
-            if (is_aws_igenome) {
-                ch_star_index = STAR_GENOMEGENERATE_IGENOMES(
-                    ch_fasta.map { item -> [ [:], item ] },
-                    ch_gtf.map   { item -> [ [:], item ] }
-                ).index.map { tuple -> tuple[1] }
-            } else if (use_parabricks_star) {
-                ch_star_index = PARABRICKS_STARGENOMEGENERATE(
-                    ch_fasta.map { item -> [ [:], item ] },
-                    ch_gtf.map   { item -> [ [:], item ] }
-                ).index.map { tuple -> tuple[1] }
-            } else {
-                ch_star_index = STAR_GENOMEGENERATE(
-                    ch_fasta.map { item -> [ [:], item ] },
-                    ch_gtf.map { item -> [ [:], item ] }
-                ).index.map { tuple -> tuple[1] }
-            }
+            // Build new STAR index with current STAR version.
+            // No need for iGenomes STAR 2.6.1d here - that's only for pre-built index compatibility.
+            ch_star_index = STAR_GENOMEGENERATE(
+                ch_fasta.map { item -> [ [:], item ] },
+                ch_gtf.map { item -> [ [:], item ] }
+            ).index.map { tuple -> tuple[1] }
         }
     }
 
@@ -434,9 +426,22 @@ workflow PREPARE_GENOME {
         }
     }
 
+    //---------------------------------------------------------
+    // Kraken2 database (for contaminant screening)
+    //---------------------------------------------------------
+    ch_kraken_db = channel.empty()
+    if (contaminant_screening && kraken_db) {
+        if (kraken_db.endsWith('.tar.gz')) {
+            ch_kraken_db = UNTAR_KRAKEN_DB ( [ [:], file(kraken_db, checkIfExists: true) ] ).untar.map { tuple -> tuple[1] }
+        } else {
+            ch_kraken_db = channel.value(file(kraken_db, checkIfExists: true))
+        }
+    }
+
     //------------------
     // 17) Emit channels
     //------------------
+
     emit:
     fasta            = ch_fasta                  // channel: path(genome.fasta)
     gtf              = ch_gtf                    // channel: path(genome.gtf)
@@ -454,5 +459,6 @@ workflow PREPARE_GENOME {
     bowtie2_index    = ch_bowtie2_index          // channel: path(bowtie2/index/)
     salmon_index     = ch_salmon_index           // channel: path(salmon/index/)
     kallisto_index   = ch_kallisto_index         // channel: [ meta, path(kallisto/index/) ]
+    kraken_db        = ch_kraken_db              // channel: path(kraken2/db/)
     versions         = ch_versions               // channel: [ versions.yml ]
 }

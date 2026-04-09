@@ -31,7 +31,7 @@
                     "gunzip": 1.13
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": "1.22.1"
+                    "samtools": "1.23.1"
                 },
                 "STAR_GENOMEGENERATE": {
                     "gawk": "5.1.0",
@@ -75,6 +75,7 @@
                 "multiqc/star_salmon/multiqc_data",
                 "multiqc/star_salmon/multiqc_data/.stub",
                 "multiqc/star_salmon/multiqc_plots",
+                "multiqc/star_salmon/multiqc_plots/.stub",
                 "multiqc/star_salmon/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_rnaseq_software_mqc_versions.yml",
@@ -196,25 +197,25 @@
                     "salmon": "1.10.3"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": "1.22.1"
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": "1.22.1"
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": "1.22.1"
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": "1.22.1"
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": "1.22.1"
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_SORT_QUALIMAP": {
-                    "samtools": "1.22.1"
+                    "samtools": "1.23.1"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": "1.22.1"
+                    "samtools": "1.23.1"
                 },
                 "SENTIEON_STAR_ALIGN": {
                     "sentieon": 202503.02,
@@ -992,11 +993,11 @@
                 "star_salmon/log/WT_REP2.Log.progress.out",
                 "star_salmon/log/WT_REP2.SJ.out.tab",
                 "star_salmon/picard_metrics",
-                "star_salmon/picard_metrics/RAP1_IAA_30M_REP1.markdup.sorted.MarkDuplicates.metrics.txt",
-                "star_salmon/picard_metrics/RAP1_UNINDUCED_REP1.markdup.sorted.MarkDuplicates.metrics.txt",
-                "star_salmon/picard_metrics/RAP1_UNINDUCED_REP2.markdup.sorted.MarkDuplicates.metrics.txt",
-                "star_salmon/picard_metrics/WT_REP1.markdup.sorted.MarkDuplicates.metrics.txt",
-                "star_salmon/picard_metrics/WT_REP2.markdup.sorted.MarkDuplicates.metrics.txt",
+                "star_salmon/picard_metrics/RAP1_IAA_30M_REP1.markdup.sorted.metrics.txt",
+                "star_salmon/picard_metrics/RAP1_UNINDUCED_REP1.markdup.sorted.metrics.txt",
+                "star_salmon/picard_metrics/RAP1_UNINDUCED_REP2.markdup.sorted.metrics.txt",
+                "star_salmon/picard_metrics/WT_REP1.markdup.sorted.metrics.txt",
+                "star_salmon/picard_metrics/WT_REP2.markdup.sorted.metrics.txt",
                 "star_salmon/qualimap",
                 "star_salmon/qualimap/RAP1_IAA_30M_REP1",
                 "star_salmon/qualimap/RAP1_IAA_30M_REP1/css",
@@ -1437,9 +1438,6 @@
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "qualimap_gene_coverage_profile_Counts.txt:md5,02044ed1bf1eca19a8a87c9971cdc049",
-                "qualimap_gene_coverage_profile_Normalised.txt:md5,eeeea7f50278b3b335bef545784abbfa",
-                "qualimap_rnaseq_cov_hist.txt:md5,51407e597076f3a7f98622213bea6bce",
                 "rseqc_infer_experiment_plot.txt:md5,e4e48561a487982dcc87f48421fe4880",
                 "samtools-idxstats-mapped-reads-plot_Normalised_Counts.txt:md5,75acd04232d1804b5f960ee4c5db4722",
                 "samtools-idxstats-mapped-reads-plot_Observed_over_Expected_Counts.txt:md5,ae45731d8d4595f77e6b271004f3a070",
@@ -1520,21 +1518,6 @@
                 "RAP1_UNINDUCED_REP2.SJ.out.tab:md5,1f294365343a1a5e95682792fdb77033",
                 "WT_REP1.SJ.out.tab:md5,1350c2fa6a675bf107386c6cd3fc5204",
                 "WT_REP2.SJ.out.tab:md5,f6cc03643a5e3c1025a5b4754eb1be23",
-                "coverage_profile_along_genes_(high).txt:md5,fcb06d460810c0555de5396b9dae05e8",
-                "coverage_profile_along_genes_(low).txt:md5,e3c9a1ddfdb89f8534ff7548b70fce32",
-                "coverage_profile_along_genes_(total).txt:md5,e3c9a1ddfdb89f8534ff7548b70fce32",
-                "coverage_profile_along_genes_(high).txt:md5,9f1e29a4d6eec52e8796b080daaedca3",
-                "coverage_profile_along_genes_(low).txt:md5,353f42a84ff34167646fc83909eac2ff",
-                "coverage_profile_along_genes_(total).txt:md5,353f42a84ff34167646fc83909eac2ff",
-                "coverage_profile_along_genes_(high).txt:md5,3b20a736708df02ea8c86dc5829ae67e",
-                "coverage_profile_along_genes_(low).txt:md5,02b314b76ef1317f20e129412340755d",
-                "coverage_profile_along_genes_(total).txt:md5,02b314b76ef1317f20e129412340755d",
-                "coverage_profile_along_genes_(high).txt:md5,8bf366c7dbc6170035ee64a057c581f1",
-                "coverage_profile_along_genes_(low).txt:md5,a9102de3ff9679d1f7a86afa85997211",
-                "coverage_profile_along_genes_(total).txt:md5,a9102de3ff9679d1f7a86afa85997211",
-                "coverage_profile_along_genes_(high).txt:md5,3f13eb908d6e97e6831306e9527cc2e3",
-                "coverage_profile_along_genes_(low).txt:md5,24df553662d0cedaa74cf06a8fead40b",
-                "coverage_profile_along_genes_(total).txt:md5,24df553662d0cedaa74cf06a8fead40b",
                 "RAP1_IAA_30M_REP1.infer_experiment.txt:md5,169d25b95c008bebe9ce886fea6a4e33",
                 "RAP1_UNINDUCED_REP1.infer_experiment.txt:md5,2ca0ce0fd3204bd2cc4812c4655b1f1f",
                 "RAP1_UNINDUCED_REP2.infer_experiment.txt:md5,7d5705880188f9beab1939e08d6b8f40",

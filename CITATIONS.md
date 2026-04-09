@@ -16,6 +16,10 @@
 
   > Quinlan AR, Hall IM. BEDTools: a flexible suite of utilities for comparing genomic features. Bioinformatics. 2010 Mar 15;26(6):841-2. doi: 10.1093/bioinformatics/btq033. Epub 2010 Jan 28. PubMed PMID: 20110278; PubMed Central PMCID: PMC2832824.
 
+- [Bowtie2](https://pubmed.ncbi.nlm.nih.gov/22388286/)
+
+  > Langmead B, Salzberg SL. Fast gapped-read alignment with Bowtie 2. Nat Methods. 2012 Mar 4;9(4):357-9. doi: 10.1038/nmeth.1923. PubMed PMID: 22388286; PubMed Central PMCID: PMC3322381.
+
 - [Bracken](https://doi.org/10.7717/peerj-cs.104)
 
   > Lu, J., Breitwieser, F. P., Thielen, P., & Salzberg, S. L. (2017). Bracken: estimating species abundance in metagenomics data. PeerJ. Computer Science, 3(e104), e104. https://doi.org/10.7717/peerj-cs.104
@@ -42,6 +46,10 @@
 
   > Kim D, Paggi JM, Park C, Bennett C, Salzberg SL. Graph-based genome alignment and genotyping with HISAT2 and HISAT-genotype Graph-based genome alignment and genotyping with HISAT2 and HISAT-genotype. Nat Biotechnol. 2019 Aug;37(8):907-915. doi: 10.1038/s41587-019-0201-4. Epub 2019 Aug 2. PubMed PMID: 31375807.
 
+- [Kallisto](https://pubmed.ncbi.nlm.nih.gov/27043002/)
+
+  > Bray NL, Pimentel H, Melsted P, Pachter L. Near-optimal probabilistic RNA-seq quantification. Nat Biotechnol. 2016 May;34(5):525-7. doi: 10.1038/nbt.3519. Epub 2016 Apr 4. PubMed PMID: 27043002.
+
 - [Kraken2](https://doi.org/10.1186/s13059-019-1891-0)
 
   > Wood, D. E., Lu, J., & Langmead, B. (2019). Improved metagenomic analysis with Kraken 2. Genome Biology, 20(1), 257. https://doi.org/10.1186/s13059-019-1891-0
@@ -60,9 +68,17 @@
 
   > Okonechnikov K, Conesa A, García-Alcalde F. Qualimap 2: advanced multi-sample quality control for high-throughput sequencing data Bioinformatics. 2016 Jan 15;32(2):292-4. doi: 10.1093/bioinformatics/btv566. Epub 2015 Oct 1. PubMed PMID: 26428292; PubMed Central PMCID: PMC4708105.
 
+- [RiboDetector](https://pubmed.ncbi.nlm.nih.gov/35188571/)
+
+  > Deng ZL, Munch PC, Mreches R, McHardy AC. Rapid and accurate identification of ribosomal RNA sequences via deep learning. Nucleic Acids Res. 2022 Jun 10;50(10):e60. doi: 10.1093/nar/gkac112. PubMed PMID: 35188571; PubMed Central PMCID: PMC9177968.
+
 - [RSEM](https://pubmed.ncbi.nlm.nih.gov/21816040/)
 
   > Li B, Dewey CN. RSEM: accurate transcript quantification from RNA-Seq data with or without a reference genome BMC Bioinformatics. 2011 Aug 4;12:323. doi: 10.1186/1471-2105-12-323. PubMed PMID: 21816040; PubMed Central PMCID: PMC3163565.
+
+- [RustQC](https://github.com/seqeralabs/RustQC)
+
+  > Ewels P. RustQC: high-performance single-pass RNA-seq quality control. Seqera; 2026. Available from: https://github.com/seqeralabs/RustQC
 
 - [RSeQC](https://pubmed.ncbi.nlm.nih.gov/22743226/)
 
@@ -71,6 +87,10 @@
 - [Salmon](https://pubmed.ncbi.nlm.nih.gov/28263959/)
 
   > Patro R, Duggal G, Love MI, Irizarry RA, Kingsford C. Salmon provides fast and bias-aware quantification of transcript expression Nat Methods. 2017 Apr;14(4):417-419. doi: 10.1038/nmeth.4197. Epub 2017 Mar 6. PubMed PMID: 28263959; PubMed Central PMCID: PMC5600148.
+
+- [SeqKit](https://pubmed.ncbi.nlm.nih.gov/27706213/)
+
+  > Shen W, Le S, Li Y, Hu F. SeqKit: A Cross-Platform and Ultrafast Toolkit for FASTA/Q File Manipulation. PLoS One. 2016 Oct 5;11(10):e0163962. doi: 10.1371/journal.pone.0163962. PubMed PMID: 27706213; PubMed Central PMCID: PMC5051824.
 
 - [SAMtools](https://pubmed.ncbi.nlm.nih.gov/19505943/)
 
@@ -94,12 +114,21 @@
 
 - [Trim Galore!](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/)
 
+- [tximport](https://pubmed.ncbi.nlm.nih.gov/26925227/)
+
+  > Soneson C, Love MI, Robinson MD. Differential analyses for RNA-seq: transcript-level estimates improve gene-level inferences. F1000Res. 2015 Dec 30;4:1521. doi: 10.12688/f1000research.7563.2. PubMed PMID: 26925227; PubMed Central PMCID: PMC4712774.
+
+- [UCSC tools](https://pubmed.ncbi.nlm.nih.gov/20639541/)
+
+  > Kent WJ, Zweig AS, Barber G, Hinrichs AS, Karolchik D. BigWig and BigBed: enabling browsing of large distributed datasets. Bioinformatics. 2010 Sep 1;26(17):2204-7. doi: 10.1093/bioinformatics/btq351. Epub 2010 Jul 17. PubMed PMID: 20639541; PubMed Central PMCID: PMC2922891.
+
 - [UMI-tools](https://pubmed.ncbi.nlm.nih.gov/28100584/)
 
   > Smith T, Heger A, Sudbery I. UMI-tools: modeling sequencing errors in Unique Molecular Identifiers to improve quantification accuracy Genome Res. 2017 Mar;27(3):491-499. doi: 10.1101/gr.209601.116. Epub 2017 Jan 18. PubMed PMID: 28100584; PubMed Central PMCID: PMC5340976.
 
-- [UCSC tools](https://pubmed.ncbi.nlm.nih.gov/20639541/)
-  > Kent WJ, Zweig AS, Barber G, Hinrichs AS, Karolchik D. BigWig and BigBed: enabling browsing of large distributed datasets. Bioinformatics. 2010 Sep 1;26(17):2204-7. doi: 10.1093/bioinformatics/btq351. Epub 2010 Jul 17. PubMed PMID: 20639541; PubMed Central PMCID: PMC2922891.
+- [UMICollapse](https://pubmed.ncbi.nlm.nih.gov/31871845/)
+
+  > Liu D. Algorithms for efficiently collapsing reads with Unique Molecular Identifiers. PeerJ. 2019 Dec 16;7:e8275. doi: 10.7717/peerj.8275. PubMed PMID: 31871845; PubMed Central PMCID: PMC6921982.
 
 ## R packages
 

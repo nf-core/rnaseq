@@ -128,7 +128,7 @@ output:
       - rustqc:
           type: string
           description: The tool name
-      - "rustqc --version | sed 's/rustqc //'":
+      - "rustqc --version 2>&1 | sed -n '1s/rustqc //; 1s/ .*//p'":
           type: eval
           description: The expression to obtain the version of the tool
 
@@ -140,7 +140,7 @@ topics:
       - rustqc:
           type: string
           description: The tool name
-      - "rustqc --version | sed 's/rustqc //'":
+      - "rustqc --version 2>&1 | sed -n '1s/rustqc //; 1s/ .*//p'":
           type: eval
           description: The expression to obtain the version of the tool
 
@@ -153,10 +153,10 @@ maintainers:
 containers:
   docker:
     linux/amd64:
-      name: community.wave.seqera.io/library/rustqc:0.1.1--c6684d9942e792a7
-      build_id: bd-c6684d9942e792a7_1
+      name: community.wave.seqera.io/library/rustqc:0.2.1--00df1502b490e005
+      build_id: bd-00df1502b490e005_1
   singularity:
     linux/amd64:
-      name: oras://community.wave.seqera.io/library/rustqc:0.1.1--bb101515d2b2876b
-      build_id: bd-bb101515d2b2876b_1
-      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/58/58923a16e4a0186cb9c4a3b3b9df8a7c791731a634f1294bd0ea74d55c3666f7/data
+      name: oras://community.wave.seqera.io/library/rustqc:0.2.1--3982097e14c103d4
+      build_id: bd-3982097e14c103d4_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/2a/2a8a0514855c54307399fd0f664c2685e76c8cc07631e767c1e37c575b18d59f/data

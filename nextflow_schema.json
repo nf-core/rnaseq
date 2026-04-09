@@ -937,6 +937,13 @@
                     "help_text": "URL for messaging service integration. Currently supports Microsoft Teams and Slack.",
                     "hidden": true
                 },
+                "multiqc_table_sample_merge": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Group paired-end reads in the MultiQC General Statistics table.",
+                    "help_text": "When enabled (default), MultiQC merges paired-end read metrics (e.g. FastQC, Cutadapt) into grouped rows labelled 'Read 1' and 'Read 2' in the General Statistics table. Disable this if your sample names end in '_1' or '_2' (e.g. biological replicates), as these suffixes will be misinterpreted as read-pair indicators, causing incorrect sample grouping.",
+                    "fa_icon": "fas fa-layer-group"
+                },
                 "multiqc_config": {
                     "type": "string",
                     "format": "file-path",

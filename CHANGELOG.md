@@ -41,7 +41,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1770](https://github.com/nf-core/rnaseq/pull/1770) - Exclude non-deterministic qualimap MultiQC files from snapshots, fixing x86/ARM cross-platform CI mismatches
 - [PR #1771](https://github.com/nf-core/rnaseq/pull/1771) - Update ribodetector module to 0.3.3 (nf-core/modules#11131)
 - [PR #1772](https://github.com/nf-core/rnaseq/pull/1772) - Update ribodetector ARM64 container to 0.3.3
-- [PR #XXXX](https://github.com/nf-core/rnaseq/pull/XXXX) - Add `--multiqc_table_sample_merge` parameter to disable paired-end read grouping in MultiQC General Statistics table, fixing incorrect sample merging when sample names end in `_1`/`_2`
+- [PR #1777](https://github.com/nf-core/rnaseq/pull/XXXX) - Add `--multiqc_table_sample_merge` parameter to disable paired-end read grouping in MultiQC General Statistics table, fixing incorrect sample merging when sample names end in `_1`/`_2`
 
 ## [[3.23.0](https://github.com/nf-core/rnaseq/releases/tag/3.23.0)] - 2026-02-27
 

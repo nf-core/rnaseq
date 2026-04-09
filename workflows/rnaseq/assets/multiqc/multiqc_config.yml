@@ -172,11 +172,8 @@ module_order:
 custom_table_header_config:
   general_stats_table:
     proper_pairs_percent:
-      title: "RSeQC: Proper Pairs (MAPQ>=30)"
-      description: "% Reads mapped in proper pairs with MAPQ >= 30 (RSeQC bam_stat)"
-    reads_properly_paired_percent:
-      title: "Samtools: Proper Pairs"
-      description: "% Reads mapped in proper pairs, all MAPQ values (samtools stats)"
+      title: "% Proper Pairs (MAPQ>=30)"
+      description: "% Reads mapped in proper pairs with MAPQ >= 30 (RSeQC bam_stat). This value is typically lower than the samtools figure because multi-mapped reads (MAPQ < 30) are excluded from the count."
 
 # Don't show % Dups in the General Stats table (we have this from Picard)
 table_columns_visible:

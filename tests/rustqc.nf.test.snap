@@ -164,7 +164,7 @@
                     "picard": "3.4.0"
                 },
                 "RUSTQC": {
-                    "rustqc": "0.1.1"
+                    "rustqc": "0.2.1"
                 },
                 "SALMON_QUANT": {
                     "salmon": "1.10.3"
@@ -1160,11 +1160,11 @@
                 "star_salmon/rustqc/rseqc/junction_annotation/bed/WT_REP2.junction.Interact.bed",
                 "star_salmon/rustqc/rseqc/junction_annotation/bed/WT_REP2.junction.bed",
                 "star_salmon/rustqc/rseqc/junction_annotation/log",
-                "star_salmon/rustqc/rseqc/junction_annotation/log/RAP1_IAA_30M_REP1.junction_annotation.txt",
-                "star_salmon/rustqc/rseqc/junction_annotation/log/RAP1_UNINDUCED_REP1.junction_annotation.txt",
-                "star_salmon/rustqc/rseqc/junction_annotation/log/RAP1_UNINDUCED_REP2.junction_annotation.txt",
-                "star_salmon/rustqc/rseqc/junction_annotation/log/WT_REP1.junction_annotation.txt",
-                "star_salmon/rustqc/rseqc/junction_annotation/log/WT_REP2.junction_annotation.txt",
+                "star_salmon/rustqc/rseqc/junction_annotation/log/RAP1_IAA_30M_REP1.junction_annotation.log",
+                "star_salmon/rustqc/rseqc/junction_annotation/log/RAP1_UNINDUCED_REP1.junction_annotation.log",
+                "star_salmon/rustqc/rseqc/junction_annotation/log/RAP1_UNINDUCED_REP2.junction_annotation.log",
+                "star_salmon/rustqc/rseqc/junction_annotation/log/WT_REP1.junction_annotation.log",
+                "star_salmon/rustqc/rseqc/junction_annotation/log/WT_REP2.junction_annotation.log",
                 "star_salmon/rustqc/rseqc/junction_annotation/plot",
                 "star_salmon/rustqc/rseqc/junction_annotation/plot/RAP1_IAA_30M_REP1.splice_events.png",
                 "star_salmon/rustqc/rseqc/junction_annotation/plot/RAP1_IAA_30M_REP1.splice_events.svg",

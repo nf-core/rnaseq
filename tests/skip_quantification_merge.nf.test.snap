@@ -1258,14 +1258,15 @@
                 "WT_REP2/trimgalore",
                 "WT_REP2/trimgalore/WT_REP2_trimmed_1.fastq.gz_trimming_report.txt",
                 "WT_REP2/trimgalore/WT_REP2_trimmed_2.fastq.gz_trimming_report.txt",
-                "custom",
-                "custom/out",
-                "custom/out/genome_gfp.fasta",
-                "custom/out/genome_gfp.gtf",
                 "pipeline_info",
                 "pipeline_info/nf_core_rnaseq_software_mqc_versions.yml",
                 "salmon",
-                "salmon/salmon.merged.tx2gene.tsv"
+                "salmon/salmon.merged.tx2gene.tsv",
+                "star_salmon",
+                "star_salmon/stringtie",
+                "star_salmon/stringtie/out",
+                "star_salmon/stringtie/out/genome_gfp.fasta",
+                "star_salmon/stringtie/out/genome_gfp.gtf"
             ],
             [
                 "cutadapt_filtered_reads_plot.txt:md5,8c504811f542206611128eb7180a6c55",
@@ -1423,16 +1424,16 @@
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "cmd_info.json:md5,fe66c9d876645b9260d8c2488157d4d4",
                 "lib_format_counts.json:md5,088fd51db07022ffde47033bbd029400",
+                "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055",
-                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28",
-                "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
+                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28"
             ]
         ],
-        "timestamp": "2026-03-17T09:24:03.92732009",
         "meta": {
-            "nf-test": "0.9.4",
-            "nextflow": "25.10.2"
-        }
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.4"
+        },
+        "timestamp": "2026-04-09T21:25:21.583921044"
     },
     "Params: --pseudo_aligner salmon --skip_alignment --skip_quantification_merge - stub": {
         "content": [
@@ -1564,12 +1565,13 @@
                 "WT_REP2/trimgalore",
                 "WT_REP2/trimgalore/WT_REP2_trimmed_1.fastq.gz_trimming_report.txt",
                 "WT_REP2/trimgalore/WT_REP2_trimmed_2.fastq.gz_trimming_report.txt",
-                "custom",
-                "custom/out",
-                "custom/out/genome_transcriptome.fasta",
-                "custom/out/genome_transcriptome.gtf",
                 "pipeline_info",
-                "pipeline_info/nf_core_rnaseq_software_mqc_versions.yml"
+                "pipeline_info/nf_core_rnaseq_software_mqc_versions.yml",
+                "star_salmon",
+                "star_salmon/stringtie",
+                "star_salmon/stringtie/out",
+                "star_salmon/stringtie/out/genome_transcriptome.fasta",
+                "star_salmon/stringtie/out/genome_transcriptome.gtf"
             ],
             [
                 ".stub:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -1591,10 +1593,10 @@
                 "genome_transcriptome.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
-        "timestamp": "2026-03-17T09:24:36.786548818",
         "meta": {
-            "nf-test": "0.9.4",
-            "nextflow": "25.10.2"
-        }
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.4"
+        },
+        "timestamp": "2026-04-09T21:29:35.453446506"
     }
 }

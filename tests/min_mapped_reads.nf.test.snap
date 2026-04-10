@@ -96,10 +96,6 @@
                 "bbsplit/RAP1_UNINDUCED_REP2.stats.txt",
                 "bbsplit/WT_REP1.stats.txt",
                 "bbsplit/WT_REP2.stats.txt",
-                "custom",
-                "custom/out",
-                "custom/out/genome_gfp.fasta",
-                "custom/out/genome_gfp.gtf",
                 "fastqc",
                 "fastqc/trim",
                 "fastqc/trim/RAP1_IAA_30M_REP1_trimmed_1_val_1_fastqc.html",
@@ -542,6 +538,10 @@
                 "star_salmon/samtools_stats/WT_REP2.sorted.bam.flagstat",
                 "star_salmon/samtools_stats/WT_REP2.sorted.bam.idxstats",
                 "star_salmon/samtools_stats/WT_REP2.sorted.bam.stats",
+                "star_salmon/stringtie",
+                "star_salmon/stringtie/out",
+                "star_salmon/stringtie/out/genome_gfp.fasta",
+                "star_salmon/stringtie/out/genome_gfp.gtf",
                 "trimgalore",
                 "trimgalore/RAP1_IAA_30M_REP1_trimmed_1.fastq.gz_trimming_report.txt",
                 "trimgalore/RAP1_IAA_30M_REP1_trimmed_2.fastq.gz_trimming_report.txt",
@@ -553,8 +553,6 @@
                 "trimgalore/WT_REP2_trimmed_2.fastq.gz_trimming_report.txt"
             ],
             [
-                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055",
-                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28",
                 "cutadapt_filtered_reads_plot.txt:md5,6fa381627f7c1f664f3d4b2cb79cce90",
                 "cutadapt_trimmed_sequences_plot_3_Counts.txt:md5,13dfa866fd91dbb072689efe9aa83b1f",
                 "cutadapt_trimmed_sequences_plot_3_Obs_Exp.txt:md5,07145dd8dd3db654859b18eb0389046c",
@@ -638,14 +636,16 @@
                 "RAP1_UNINDUCED_REP2.SJ.out.tab:md5,1f294365343a1a5e95682792fdb77033",
                 "WT_REP1.SJ.out.tab:md5,1350c2fa6a675bf107386c6cd3fc5204",
                 "WT_REP2.SJ.out.tab:md5,f6cc03643a5e3c1025a5b4754eb1be23",
-                "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
+                "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
+                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055",
+                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-26T14:09:38.950551911"
+        "timestamp": "2026-04-09T19:13:27.755621214"
     },
     "Params: --min_mapped_reads 90 - stub": {
         "content": [
@@ -691,10 +691,6 @@
                 }
             },
             [
-                "custom",
-                "custom/out",
-                "custom/out/genome_transcriptome.fasta",
-                "custom/out/genome_transcriptome.gtf",
                 "fastqc",
                 "fastqc/trim",
                 "fq_lint",
@@ -713,6 +709,11 @@
                 "multiqc/star_salmon/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_rnaseq_software_mqc_versions.yml",
+                "star_salmon",
+                "star_salmon/stringtie",
+                "star_salmon/stringtie/out",
+                "star_salmon/stringtie/out/genome_transcriptome.fasta",
+                "star_salmon/stringtie/out/genome_transcriptome.gtf",
                 "trimgalore",
                 "trimgalore/RAP1_IAA_30M_REP1_trimmed_1.fastq.gz_trimming_report.txt",
                 "trimgalore/RAP1_IAA_30M_REP1_trimmed_2.fastq.gz_trimming_report.txt",
@@ -730,8 +731,8 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-04T17:14:31.33745271"
+        "timestamp": "2026-04-09T19:19:09.17271053"
     }
 }

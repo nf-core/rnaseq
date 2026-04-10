@@ -54,10 +54,6 @@
             [
                 "bowtie2_rrna",
                 "bowtie2_rrna/index",
-                "custom",
-                "custom/out",
-                "custom/out/genome_transcriptome.fasta",
-                "custom/out/genome_transcriptome.gtf",
                 "fastqc",
                 "fastqc/trim",
                 "fq_lint",
@@ -76,23 +72,27 @@
                 "multiqc/star_salmon/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_rnaseq_software_mqc_versions.yml",
-                "seqkit",
-                "seqkit/rfam-5.8s-database-id98_dna_converted.fasta.gz",
-                "seqkit/rfam-5.8s-database-id98_prefixed.fasta.gz",
-                "seqkit/rfam-5s-database-id98_dna_converted.fasta.gz",
-                "seqkit/rfam-5s-database-id98_prefixed.fasta.gz",
-                "seqkit/silva-arc-16s-id95_dna_converted.fasta.gz",
-                "seqkit/silva-arc-16s-id95_prefixed.fasta.gz",
-                "seqkit/silva-arc-23s-id98_dna_converted.fasta.gz",
-                "seqkit/silva-arc-23s-id98_prefixed.fasta.gz",
-                "seqkit/silva-bac-16s-id90_dna_converted.fasta.gz",
-                "seqkit/silva-bac-16s-id90_prefixed.fasta.gz",
-                "seqkit/silva-bac-23s-id98_dna_converted.fasta.gz",
-                "seqkit/silva-bac-23s-id98_prefixed.fasta.gz",
-                "seqkit/silva-euk-18s-id95_dna_converted.fasta.gz",
-                "seqkit/silva-euk-18s-id95_prefixed.fasta.gz",
-                "seqkit/silva-euk-28s-id98_dna_converted.fasta.gz",
-                "seqkit/silva-euk-28s-id98_prefixed.fasta.gz",
+                "star_salmon",
+                "star_salmon/stringtie",
+                "star_salmon/stringtie/out",
+                "star_salmon/stringtie/out/genome_transcriptome.fasta",
+                "star_salmon/stringtie/out/genome_transcriptome.gtf",
+                "star_salmon/stringtie/rfam-5.8s-database-id98_dna_converted.fasta.gz",
+                "star_salmon/stringtie/rfam-5.8s-database-id98_prefixed.fasta.gz",
+                "star_salmon/stringtie/rfam-5s-database-id98_dna_converted.fasta.gz",
+                "star_salmon/stringtie/rfam-5s-database-id98_prefixed.fasta.gz",
+                "star_salmon/stringtie/silva-arc-16s-id95_dna_converted.fasta.gz",
+                "star_salmon/stringtie/silva-arc-16s-id95_prefixed.fasta.gz",
+                "star_salmon/stringtie/silva-arc-23s-id98_dna_converted.fasta.gz",
+                "star_salmon/stringtie/silva-arc-23s-id98_prefixed.fasta.gz",
+                "star_salmon/stringtie/silva-bac-16s-id90_dna_converted.fasta.gz",
+                "star_salmon/stringtie/silva-bac-16s-id90_prefixed.fasta.gz",
+                "star_salmon/stringtie/silva-bac-23s-id98_dna_converted.fasta.gz",
+                "star_salmon/stringtie/silva-bac-23s-id98_prefixed.fasta.gz",
+                "star_salmon/stringtie/silva-euk-18s-id95_dna_converted.fasta.gz",
+                "star_salmon/stringtie/silva-euk-18s-id95_prefixed.fasta.gz",
+                "star_salmon/stringtie/silva-euk-28s-id98_dna_converted.fasta.gz",
+                "star_salmon/stringtie/silva-euk-28s-id98_prefixed.fasta.gz",
                 "trimgalore",
                 "trimgalore/RAP1_IAA_30M_REP1_trimmed_1.fastq.gz_trimming_report.txt",
                 "trimgalore/RAP1_IAA_30M_REP1_trimmed_2.fastq.gz_trimming_report.txt",
@@ -126,9 +126,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-04T17:29:20.563878423"
+        "timestamp": "2026-04-09T20:28:22.14933453"
     },
     "Params: --remove_ribo_rna": {
         "content": [
@@ -236,10 +236,6 @@
                 "bbsplit/RAP1_UNINDUCED_REP2.stats.txt",
                 "bbsplit/WT_REP1.stats.txt",
                 "bbsplit/WT_REP2.stats.txt",
-                "custom",
-                "custom/out",
-                "custom/out/genome_gfp.fasta",
-                "custom/out/genome_gfp.gtf",
                 "fastqc",
                 "fastqc/trim",
                 "fastqc/trim/RAP1_IAA_30M_REP1_trimmed_1_val_1_fastqc.html",
@@ -710,6 +706,10 @@
                 "star_salmon/samtools_stats/WT_REP2.sorted.bam.flagstat",
                 "star_salmon/samtools_stats/WT_REP2.sorted.bam.idxstats",
                 "star_salmon/samtools_stats/WT_REP2.sorted.bam.stats",
+                "star_salmon/stringtie",
+                "star_salmon/stringtie/out",
+                "star_salmon/stringtie/out/genome_gfp.fasta",
+                "star_salmon/stringtie/out/genome_gfp.gtf",
                 "trimgalore",
                 "trimgalore/RAP1_IAA_30M_REP1_trimmed_1.fastq.gz_trimming_report.txt",
                 "trimgalore/RAP1_IAA_30M_REP1_trimmed_2.fastq.gz_trimming_report.txt",
@@ -721,8 +721,6 @@
                 "trimgalore/WT_REP2_trimmed_2.fastq.gz_trimming_report.txt"
             ],
             [
-                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055",
-                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28",
                 "cutadapt_filtered_reads_plot.txt:md5,6fa381627f7c1f664f3d4b2cb79cce90",
                 "cutadapt_trimmed_sequences_plot_3_Counts.txt:md5,13dfa866fd91dbb072689efe9aa83b1f",
                 "cutadapt_trimmed_sequences_plot_3_Obs_Exp.txt:md5,07145dd8dd3db654859b18eb0389046c",
@@ -805,14 +803,16 @@
                 "RAP1_UNINDUCED_REP2.SJ.out.tab:md5,1f294365343a1a5e95682792fdb77033",
                 "WT_REP1.SJ.out.tab:md5,1350c2fa6a675bf107386c6cd3fc5204",
                 "WT_REP2.SJ.out.tab:md5,f6cc03643a5e3c1025a5b4754eb1be23",
-                "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
+                "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
+                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055",
+                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-26T14:25:30.875620761"
+        "timestamp": "2026-04-09T19:32:19.885757073"
     },
     "Params: --remove_ribo_rna - stub": {
         "content": [
@@ -861,10 +861,6 @@
                 }
             },
             [
-                "custom",
-                "custom/out",
-                "custom/out/genome_transcriptome.fasta",
-                "custom/out/genome_transcriptome.gtf",
                 "fastqc",
                 "fastqc/trim",
                 "fq_lint",
@@ -883,6 +879,11 @@
                 "multiqc/star_salmon/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_rnaseq_software_mqc_versions.yml",
+                "star_salmon",
+                "star_salmon/stringtie",
+                "star_salmon/stringtie/out",
+                "star_salmon/stringtie/out/genome_transcriptome.fasta",
+                "star_salmon/stringtie/out/genome_transcriptome.gtf",
                 "trimgalore",
                 "trimgalore/RAP1_IAA_30M_REP1_trimmed_1.fastq.gz_trimming_report.txt",
                 "trimgalore/RAP1_IAA_30M_REP1_trimmed_2.fastq.gz_trimming_report.txt",
@@ -900,9 +901,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-04T17:23:29.432103647"
+        "timestamp": "2026-04-09T19:49:36.08986962"
     },
     "Params: --remove_ribo_rna --ribo_removal_tool bowtie2": {
         "content": [
@@ -1036,10 +1037,6 @@
                 "bowtie2_rrna/WT_REP1.bowtie2_rrna.bowtie2.log",
                 "bowtie2_rrna/WT_REP2.bowtie2_rrna.bowtie2.log",
                 "bowtie2_rrna/index",
-                "custom",
-                "custom/out",
-                "custom/out/genome_gfp.fasta",
-                "custom/out/genome_gfp.gtf",
                 "fastqc",
                 "fastqc/trim",
                 "fastqc/trim/RAP1_IAA_30M_REP1_trimmed_1_val_1_fastqc.html",
@@ -1356,23 +1353,6 @@
                 "salmon/salmon.merged.transcript_lengths.tsv",
                 "salmon/salmon.merged.transcript_tpm.tsv",
                 "salmon/salmon.merged.tx2gene.tsv",
-                "seqkit",
-                "seqkit/rfam-5.8s-database-id98_dna_converted.fasta",
-                "seqkit/rfam-5.8s-database-id98_prefixed.fasta",
-                "seqkit/rfam-5s-database-id98_dna_converted.fasta",
-                "seqkit/rfam-5s-database-id98_prefixed.fasta",
-                "seqkit/silva-arc-16s-id95_dna_converted.fasta",
-                "seqkit/silva-arc-16s-id95_prefixed.fasta",
-                "seqkit/silva-arc-23s-id98_dna_converted.fasta",
-                "seqkit/silva-arc-23s-id98_prefixed.fasta",
-                "seqkit/silva-bac-16s-id90_dna_converted.fasta",
-                "seqkit/silva-bac-16s-id90_prefixed.fasta",
-                "seqkit/silva-bac-23s-id98_dna_converted.fasta",
-                "seqkit/silva-bac-23s-id98_prefixed.fasta",
-                "seqkit/silva-euk-18s-id95_dna_converted.fasta",
-                "seqkit/silva-euk-18s-id95_prefixed.fasta",
-                "seqkit/silva-euk-28s-id98_dna_converted.fasta",
-                "seqkit/silva-euk-28s-id98_prefixed.fasta",
                 "star_salmon",
                 "star_salmon/RAP1_IAA_30M_REP1",
                 "star_salmon/RAP1_IAA_30M_REP1.markdup.sorted.bam",
@@ -1528,6 +1508,26 @@
                 "star_salmon/samtools_stats/WT_REP2.sorted.bam.flagstat",
                 "star_salmon/samtools_stats/WT_REP2.sorted.bam.idxstats",
                 "star_salmon/samtools_stats/WT_REP2.sorted.bam.stats",
+                "star_salmon/stringtie",
+                "star_salmon/stringtie/out",
+                "star_salmon/stringtie/out/genome_gfp.fasta",
+                "star_salmon/stringtie/out/genome_gfp.gtf",
+                "star_salmon/stringtie/rfam-5.8s-database-id98_dna_converted.fasta",
+                "star_salmon/stringtie/rfam-5.8s-database-id98_prefixed.fasta",
+                "star_salmon/stringtie/rfam-5s-database-id98_dna_converted.fasta",
+                "star_salmon/stringtie/rfam-5s-database-id98_prefixed.fasta",
+                "star_salmon/stringtie/silva-arc-16s-id95_dna_converted.fasta",
+                "star_salmon/stringtie/silva-arc-16s-id95_prefixed.fasta",
+                "star_salmon/stringtie/silva-arc-23s-id98_dna_converted.fasta",
+                "star_salmon/stringtie/silva-arc-23s-id98_prefixed.fasta",
+                "star_salmon/stringtie/silva-bac-16s-id90_dna_converted.fasta",
+                "star_salmon/stringtie/silva-bac-16s-id90_prefixed.fasta",
+                "star_salmon/stringtie/silva-bac-23s-id98_dna_converted.fasta",
+                "star_salmon/stringtie/silva-bac-23s-id98_prefixed.fasta",
+                "star_salmon/stringtie/silva-euk-18s-id95_dna_converted.fasta",
+                "star_salmon/stringtie/silva-euk-18s-id95_prefixed.fasta",
+                "star_salmon/stringtie/silva-euk-28s-id98_dna_converted.fasta",
+                "star_salmon/stringtie/silva-euk-28s-id98_prefixed.fasta",
                 "trimgalore",
                 "trimgalore/RAP1_IAA_30M_REP1_trimmed_1.fastq.gz_trimming_report.txt",
                 "trimgalore/RAP1_IAA_30M_REP1_trimmed_2.fastq.gz_trimming_report.txt",
@@ -1539,8 +1539,6 @@
                 "trimgalore/WT_REP2_trimmed_2.fastq.gz_trimming_report.txt"
             ],
             [
-                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055",
-                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28",
                 "cutadapt_filtered_reads_plot.txt:md5,6fa381627f7c1f664f3d4b2cb79cce90",
                 "cutadapt_trimmed_sequences_plot_3_Counts.txt:md5,13dfa866fd91dbb072689efe9aa83b1f",
                 "cutadapt_trimmed_sequences_plot_3_Obs_Exp.txt:md5,07145dd8dd3db654859b18eb0389046c",
@@ -1593,22 +1591,6 @@
                 "cmd_info.json:md5,994cf13defc7a9d70bd4baf5477bfe31",
                 "lib_format_counts.json:md5,309cc18331216e02a46db112c69f16d2",
                 "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
-                "rfam-5.8s-database-id98_dna_converted.fasta:md5,990436ac4aa6cacf24cd5d1c1365f28a",
-                "rfam-5.8s-database-id98_prefixed.fasta:md5,3d4c00fbea3b50aa6d0769410e38cd2f",
-                "rfam-5s-database-id98_dna_converted.fasta:md5,b9a47a2f8ce51b41927ce2a417d86019",
-                "rfam-5s-database-id98_prefixed.fasta:md5,7a77fbd449b3718c9e12701607fea33e",
-                "silva-arc-16s-id95_dna_converted.fasta:md5,ba823f970600d6cc09fe176b12f6689f",
-                "silva-arc-16s-id95_prefixed.fasta:md5,ba823f970600d6cc09fe176b12f6689f",
-                "silva-arc-23s-id98_dna_converted.fasta:md5,cd922745710cb1172ae35c48cb279f80",
-                "silva-arc-23s-id98_prefixed.fasta:md5,cd922745710cb1172ae35c48cb279f80",
-                "silva-bac-16s-id90_dna_converted.fasta:md5,77ff43be66cbfa63a89d1998efd70ba9",
-                "silva-bac-16s-id90_prefixed.fasta:md5,77ff43be66cbfa63a89d1998efd70ba9",
-                "silva-bac-23s-id98_dna_converted.fasta:md5,b18ffc945418ba09da88347a36b85655",
-                "silva-bac-23s-id98_prefixed.fasta:md5,b18ffc945418ba09da88347a36b85655",
-                "silva-euk-18s-id95_dna_converted.fasta:md5,23aef4ed1a8fa51460945d6268d0d0c4",
-                "silva-euk-18s-id95_prefixed.fasta:md5,23aef4ed1a8fa51460945d6268d0d0c4",
-                "silva-euk-28s-id98_dna_converted.fasta:md5,4f0eeefffcf70b86df1a1303fe7fe19d",
-                "silva-euk-28s-id98_prefixed.fasta:md5,4f0eeefffcf70b86df1a1303fe7fe19d",
                 "ambig_info.tsv:md5,c4d8c250a7ed77c7f8afd10bee46be2f",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
@@ -1639,13 +1621,31 @@
                 "RAP1_UNINDUCED_REP2.SJ.out.tab:md5,1f294365343a1a5e95682792fdb77033",
                 "WT_REP1.SJ.out.tab:md5,1350c2fa6a675bf107386c6cd3fc5204",
                 "WT_REP2.SJ.out.tab:md5,f6cc03643a5e3c1025a5b4754eb1be23",
-                "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
+                "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
+                "genome_gfp.fasta:md5,e23e302af63736a199985a169fdac055",
+                "genome_gfp.gtf:md5,c98b12c302f15731bfc36bcf297cfe28",
+                "rfam-5.8s-database-id98_dna_converted.fasta:md5,990436ac4aa6cacf24cd5d1c1365f28a",
+                "rfam-5.8s-database-id98_prefixed.fasta:md5,3d4c00fbea3b50aa6d0769410e38cd2f",
+                "rfam-5s-database-id98_dna_converted.fasta:md5,b9a47a2f8ce51b41927ce2a417d86019",
+                "rfam-5s-database-id98_prefixed.fasta:md5,7a77fbd449b3718c9e12701607fea33e",
+                "silva-arc-16s-id95_dna_converted.fasta:md5,ba823f970600d6cc09fe176b12f6689f",
+                "silva-arc-16s-id95_prefixed.fasta:md5,ba823f970600d6cc09fe176b12f6689f",
+                "silva-arc-23s-id98_dna_converted.fasta:md5,cd922745710cb1172ae35c48cb279f80",
+                "silva-arc-23s-id98_prefixed.fasta:md5,cd922745710cb1172ae35c48cb279f80",
+                "silva-bac-16s-id90_dna_converted.fasta:md5,77ff43be66cbfa63a89d1998efd70ba9",
+                "silva-bac-16s-id90_prefixed.fasta:md5,77ff43be66cbfa63a89d1998efd70ba9",
+                "silva-bac-23s-id98_dna_converted.fasta:md5,b18ffc945418ba09da88347a36b85655",
+                "silva-bac-23s-id98_prefixed.fasta:md5,b18ffc945418ba09da88347a36b85655",
+                "silva-euk-18s-id95_dna_converted.fasta:md5,23aef4ed1a8fa51460945d6268d0d0c4",
+                "silva-euk-18s-id95_prefixed.fasta:md5,23aef4ed1a8fa51460945d6268d0d0c4",
+                "silva-euk-28s-id98_dna_converted.fasta:md5,4f0eeefffcf70b86df1a1303fe7fe19d",
+                "silva-euk-28s-id98_prefixed.fasta:md5,4f0eeefffcf70b86df1a1303fe7fe19d"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-26T14:31:20.582012634"
+        "timestamp": "2026-04-09T20:09:58.367917351"
     }
 }

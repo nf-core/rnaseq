@@ -43,6 +43,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1772](https://github.com/nf-core/rnaseq/pull/1772) - Update ribodetector ARM64 container to 0.3.3
 - [PR #1778](https://github.com/nf-core/rnaseq/pull/1778) - Document that the `test` profile must be specified explicitly when running nf-test locally (required for GPU test profile support)
 - [PR #1779](https://github.com/nf-core/rnaseq/pull/1779) - Update RustQC to 0.2.1: flag-based duplicate detection removes Parabricks `--skip-dup-check` workaround, junction_annotation `.txt` -> `.log` extension fix
+- [PR #1781](https://github.com/nf-core/rnaseq/pull/1781) - Fix SortMeRNA `%rRNA` appearing only under "Read 2" in MultiQC General Stats by using log filename for sample names instead of parsing paired-end read paths from log content
 
 ## [[3.23.0](https://github.com/nf-core/rnaseq/releases/tag/3.23.0)] - 2026-02-27
 

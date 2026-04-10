@@ -587,12 +587,10 @@ workflow RNASEQ {
                     meta, strand_log ->
                         def rseqc_inferred_strand = getInferexperimentStrandedness(strand_log, params.stranded_threshold, params.unstranded_threshold)
                         def rseqc_strandedness = rseqc_inferred_strand.inferred_strandedness
-    
                         def status = 'fail'
                         def multiqc_lines = []
                         if (meta.salmon_strand_analysis) {
                             def salmon_strandedness = meta.salmon_strand_analysis.inferred_strandedness
-    
                             if (salmon_strandedness == rseqc_strandedness && rseqc_strandedness != 'undetermined') {
                                 status = 'pass'
                             }

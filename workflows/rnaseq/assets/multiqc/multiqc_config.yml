@@ -87,6 +87,12 @@ export_plots_timeout: 60
 disable_version_detection: true
 sample_names_replace_exact: true
 
+# Use log filename (not content) for SortMeRNA sample names.
+# SortMeRNA logs two "Reads file:" lines for paired-end data and the
+# parser picks the second (R2), giving a spurious _2 suffix.
+use_filename_as_sample_name:
+  - sortmerna
+
 # Group paired-end reads together in the general stats table
 table_sample_merge:
   "Read 1":
@@ -176,6 +182,7 @@ table_columns_visible:
     percent_duplicates: false
 
 extra_fn_clean_exts:
+  - ".sortmerna"
   - ".umi_dedup"
   - "_val"
   - ".markdup"

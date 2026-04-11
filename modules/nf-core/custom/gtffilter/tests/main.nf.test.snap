@@ -1,0 +1,134 @@
+{
+    "test_custom_gtffilter_gzip": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.gtf:md5,aa8b2aa1e0b5fbbba3b04d471e1b0535"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,39c43040514c93566d2e3dca39e54cf2"
+                ],
+                "gtf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.gtf:md5,aa8b2aa1e0b5fbbba3b04d471e1b0535"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,39c43040514c93566d2e3dca39e54cf2"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-15T14:23:11.091273747"
+    },
+    "test_custom_gtffilter": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.gtf:md5,aa8b2aa1e0b5fbbba3b04d471e1b0535"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,39c43040514c93566d2e3dca39e54cf2"
+                ],
+                "gtf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.gtf:md5,aa8b2aa1e0b5fbbba3b04d471e1b0535"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,39c43040514c93566d2e3dca39e54cf2"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-15T14:23:03.654104046"
+    },
+    "test_custom_gtffilter_gzip - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,4547ffaa530b6d65b2dd1f607d7f85e3"
+                ],
+                "gtf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,4547ffaa530b6d65b2dd1f607d7f85e3"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-15T14:23:24.216284615"
+    },
+    "test_custom_gtffilter - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,4547ffaa530b6d65b2dd1f607d7f85e3"
+                ],
+                "gtf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,4547ffaa530b6d65b2dd1f607d7f85e3"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-15T14:23:17.765499066"
+    }
+}

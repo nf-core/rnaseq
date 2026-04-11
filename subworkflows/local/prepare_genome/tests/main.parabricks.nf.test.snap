@@ -44,10 +44,10 @@
                 "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/genome.fasta"
             ],
             [
-                "genome.filtered.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
+                "genes_with_empty_tid.filtered.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
-                "genome.filtered.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                "genes_with_empty_tid.filtered.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
                 "[Genome, Log.out, SA, SAindex, chrLength.txt, chrName.txt, chrNameLength.txt, chrStart.txt, exonGeTrInfo.tab, exonInfo.tab, geneInfo.tab, genomeParameters.txt, sjdbInfo.txt, sjdbList.fromGTF.out.tab, sjdbList.out.tab, transcriptInfo.tab]"

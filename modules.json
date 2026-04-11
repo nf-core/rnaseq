@@ -40,6 +40,11 @@
                         "git_sha": "96c57dfd98a0641886a67bd449fe33ee2ec0e374",
                         "installed_by": ["modules"]
                     },
+                    "custom/gtffilter": {
+                        "branch": "master",
+                        "git_sha": "c647aecc15f96c3fccd47b0fb4fcecbcc38fdb42",
+                        "installed_by": ["modules"]
+                    },
                     "custom/rsemmergecounts": {
                         "branch": "master",
                         "git_sha": "1d67856e83d01712c604ac2955d0e5d4b018bf68",

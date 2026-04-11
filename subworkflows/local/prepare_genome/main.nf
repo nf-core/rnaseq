@@ -39,7 +39,7 @@ include { SENTIEON_RSEMPREPAREREFERENCE as SENTIEON_MAKE_TRANSCRIPTS_FASTA      
 
 include { PREPROCESS_TRANSCRIPTS_FASTA_GENCODE } from '../../../modules/local/preprocess_transcripts_fasta_gencode'
 include { GTF2BED                              } from '../../../modules/local/gtf2bed'
-include { GTF_FILTER                           } from '../../../modules/local/gtf_filter'
+include { CUSTOM_GTFFILTER                     } from '../../../modules/nf-core/custom/gtffilter'
 
 workflow PREPARE_GENOME {
 
@@ -125,8 +125,13 @@ workflow PREPARE_GENOME {
     ) && !skip_gtf_filter
 
     if (filter_gtf_needed) {
-        GTF_FILTER(ch_fasta, ch_gtf)
-        ch_gtf      = GTF_FILTER.out.genome_gtf.first()
+        CUSTOM_GTFFILTER(
+            ch_gtf.map { item -> [ [id: item.baseName + '.filtered'], item ] },
+            fasta_provided
+                ? ch_fasta.map { item -> [ [id: 'genome'], item ] }
+                : channel.value([ [id: 'no_fasta'], [] ])
+        )
+        ch_gtf      = CUSTOM_GTFFILTER.out.gtf.map { _meta, filtered_gtf -> filtered_gtf }.first()
     }
 
     //---------------------------------------------------

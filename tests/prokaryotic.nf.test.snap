@@ -3,6 +3,9 @@
         "content": [
             46,
             {
+                "CUSTOM_GTFFILTER": {
+                    "python": "3.9.5"
+                },
                 "CUSTOM_TX2GENE": {
                     "python": "3.10.4"
                 },
@@ -23,9 +26,6 @@
                 },
                 "GTF2BED": {
                     "perl": "5.26.2"
-                },
-                "GTF_FILTER": {
-                    "python": "3.9.5"
                 },
                 "PICARD_MARKDUPLICATES": {
                     "picard": "3.4.0"
@@ -451,11 +451,11 @@
                 "i_data.ctab:md5,db3a5f082fe2231d4b7e68cf3996b62d"
             ]
         ],
+        "timestamp": "2026-02-26T14:16:24.358893576",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-02-26T14:16:24.358893576"
+        }
     },
     "Params: --aligner bowtie2_salmon --gffread_transcript_fasta": {
         "content": [
@@ -468,6 +468,9 @@
                 },
                 "BOWTIE2_BUILD": {
                     "bowtie2": "2.5.4"
+                },
+                "CUSTOM_GTFFILTER": {
+                    "python": "3.9.5"
                 },
                 "CUSTOM_TX2GENE": {
                     "python": "3.10.4"
@@ -489,9 +492,6 @@
                 },
                 "GTF2BED": {
                     "perl": "5.26.2"
-                },
-                "GTF_FILTER": {
-                    "python": "3.9.5"
                 },
                 "PICARD_MARKDUPLICATES": {
                     "picard": "3.4.0"
@@ -896,11 +896,11 @@
                 "samtools-idxstats-mapped-reads-plot_Raw_Counts.txt:md5,a8d7ee5c80619606f2a6a4b92c8bec5f"
             ]
         ],
+        "timestamp": "2026-02-26T14:18:17.797305278",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-02-26T14:18:17.797305278"
+        }
     },
     "Params: --aligner bowtie2_salmon --gffread_transcript_fasta - stub": {
         "content": [
@@ -913,6 +913,9 @@
                 },
                 "BOWTIE2_BUILD": {
                     "bowtie2": "2.5.4"
+                },
+                "CUSTOM_GTFFILTER": {
+                    "python": "3.9.5"
                 },
                 "CUSTOM_TX2GENE": {
                     "python": "3.10.4"
@@ -934,9 +937,6 @@
                 },
                 "GTF2BED": {
                     "perl": "5.26.2"
-                },
-                "GTF_FILTER": {
-                    "python": "3.9.5"
                 },
                 "SALMON_QUANT": {
                     "salmon": "1.10.3"
@@ -1040,16 +1040,19 @@
                 "salmon.merged.tx2gene.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
+        "timestamp": "2026-04-10T19:46:48.190988993",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-02-26T14:17:12.0540619"
+            "nf-test": "0.9.5",
+            "nextflow": "25.04.3"
+        }
     },
     "Params: --aligner star_salmon --prokaryotic - stub": {
         "content": [
             34,
             {
+                "CUSTOM_GTFFILTER": {
+                    "python": "3.9.5"
+                },
                 "CUSTOM_TX2GENE": {
                     "python": "3.10.4"
                 },
@@ -1070,9 +1073,6 @@
                 },
                 "GTF2BED": {
                     "perl": "5.26.2"
-                },
-                "GTF_FILTER": {
-                    "python": "3.9.5"
                 },
                 "SALMON_QUANT": {
                     "salmon": "1.10.3"
@@ -1202,10 +1202,10 @@
                 "salmon.merged.tx2gene.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
+        "timestamp": "2026-02-26T14:15:17.265018922",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-02-26T14:15:17.265018922"
+        }
     }
 }

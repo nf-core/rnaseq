@@ -659,10 +659,10 @@
                 "/ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/reference/genome.fasta"
             ],
             [
-                "genome.filtered.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
+                "genes_with_empty_tid.filtered.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
-                "genome.filtered.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                "genes_with_empty_tid.filtered.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
                 
@@ -695,10 +695,10 @@
                 
             ]
         ],
-        "timestamp": "2026-02-05T15:15:45.518394466",
+        "timestamp": "2026-04-10T21:33:59.272306338",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nf-test": "0.9.5",
+            "nextflow": "25.04.3"
         }
     },
     "gencode = false": {

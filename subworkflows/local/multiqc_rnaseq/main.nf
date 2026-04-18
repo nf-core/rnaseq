@@ -63,9 +63,15 @@ workflow MULTIQC_RNASEQ {
             .collect()
             .ifEmpty([])
 
+        // NOTE: `ch_collated_versions` is deliberately omitted from per-sample
+        // reports. It closes only after the workflow-global `versions` topic
+        // closes (i.e. after every process has emitted in every sample),
+        // which would turn progressive per-sample closure back into a
+        // full-run barrier. Per-sample reports therefore don't carry a
+        // Software Versions section in this iteration — the full per-run
+        // versions YAML is still published to `pipeline_info/` unchanged.
         ch_static_globals = ch_workflow_summary
             .mix(ch_methods_description)
-            .mix(ch_collated_versions)
             .collect()
 
         ch_multiqc_input = ch_per_sample_bundle

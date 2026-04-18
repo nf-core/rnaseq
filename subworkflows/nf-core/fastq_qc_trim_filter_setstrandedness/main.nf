@@ -508,6 +508,9 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     ch_post.view { id, f -> "DBG-subwf ch_post[${id}]=${f?.size()}" }
     ch_trim_read_count.view { meta, n -> "DBG-subwf trim_read_count[${meta.id}]=${n}" }
     ch_reads.view { meta, _r -> "DBG-subwf reads[${meta.id}]" }
+    ch_fastqc_raw_zip.view { meta, f -> "DBG-subwf fastqc_raw_zip[${meta?.id}]" }
+    ch_fastqc_trim_zip.view { meta, f -> "DBG-subwf fastqc_trim_zip[${meta?.id}]" }
+    ch_trim_log.view { meta, f -> "DBG-subwf trim_log[${meta?.id}]" }
 
     // Final per-sample bundle: join pre + post. Recover meta from the input
     // reads anchor (every sample that entered the subworkflow) — using

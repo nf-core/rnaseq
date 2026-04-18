@@ -433,7 +433,16 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
 
     def asList   = { v -> v instanceof List ? v : [v] }
     def tagById  = { ch -> ch.map { meta, f -> [meta.id, asList(f)] } }
-    def extend   = { acc, ch_new -> acc.join(ch_new).map { id, base, add -> [id, base + add] } }
+    // `remainder: true` is defensive: it keeps the join chain closing for
+    // samples where a particular contributor channel never emits (e.g. stub
+    // mode, where a module's stub block doesn't touch the files its `emit:`
+    // clause globs). The barrier is bounded by the joining-channel's
+    // closure (e.g. TRIMGALORE completing its 5 sample instances), not by
+    // the workflow-global topic close.
+    def extend   = { acc, ch_new ->
+        acc.join(ch_new, remainder: true)
+            .map { id, base, add -> [id, base + (add ?: [])] }
+    }
 
     // Versions helper: first emission from topic matching a bare process short-name.
     def firstTopicVersionOf = { short_name ->

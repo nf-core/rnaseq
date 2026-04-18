@@ -14,6 +14,7 @@ workflow MULTIQC_RNASEQ {
     take:
     ch_multiqc_files           // channel: [ val(meta), path(file) ]     - merged-mode input (flat)
     ch_per_sample_bundle       // channel: [ val(meta), [ files ] ]      - per-sample-mode input (one tuple per sample)
+    ch_per_sample_globals      // channel: [ [:], path(file) ]           - per-sample-mode run-level globals (fail_trimmed, fail_mapped, fail_strand, ...)
     ch_fastq                   // channel: [ val(meta), [ reads ] ]
     ch_collated_versions       // channel: path(versions yaml)
     samplesheet_path           // path: pipeline input samplesheet
@@ -53,12 +54,14 @@ workflow MULTIQC_RNASEQ {
         // sample's report can close as soon as that sample's bundle fires.
         //
         // Run-level context items (workflow summary, methods description,
-        // collated versions, and the cross-sample stragglers that land in
-        // `ch_multiqc_files` with an empty meta — fail_trimmed_samples_mqc,
-        // fail_mapped_samples_mqc, fail_strand_check_mqc, DESeq2 plots) are
-        // broadcast to every per-sample report via `combine`.
-        ch_global_files = ch_multiqc_files
-            .filter { meta, _file -> meta.id == null }
+        // plus the cross-sample stragglers: fail_trimmed_samples_mqc,
+        // fail_mapped_samples_mqc, fail_strand_check_mqc). These flow via
+        // `ch_per_sample_globals` — a separate accumulator maintained at each
+        // global's source site in the parent workflow. Filtering globals
+        // back out of the flat `ch_multiqc_files` would block on every
+        // per-sample contributor's channel closing, defeating progressive
+        // closure.
+        ch_global_files = ch_per_sample_globals
             .map { _meta, f -> f }
             .collect()
             .ifEmpty([])

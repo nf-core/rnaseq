@@ -125,6 +125,15 @@ workflow RNASEQ {
     // inside the helper.
     ch_mqc_per_sample_bundle = channel.empty()
 
+    // Cross-sample globals collected in parallel to the flat `ch_multiqc_files`
+    // mix, so per-sample MultiQC can include them without having to filter
+    // the flat stream (which closes only when every per-sample contributor
+    // finishes — turning progressive closure back into a full-run barrier).
+    // Each global emits a single path on its own schedule, and globals
+    // specific to merged mode (DESeq2) are simply never added in per-sample
+    // mode.
+    ch_mqc_globals = channel.empty()
+
     //
     // Collect versions from topic channel (for modules that emit versions via topics)
     //
@@ -235,6 +244,16 @@ workflow RNASEQ {
     ch_multiqc_files                  = ch_multiqc_files.mix(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.multiqc_files)
     ch_strand_inferred_filtered_fastq = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.reads
     ch_trim_read_count                = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.trim_read_count
+
+    // FASTQ_QC's flat `multiqc_files` also carries cross-sample items (the
+    // `fail_trimmed_samples_mqc.tsv` summary) with an empty meta.id. Fork
+    // those into `ch_mqc_globals` so per-sample MultiQC can pick them up
+    // without having to filter the slower mixed stream.
+    ch_mqc_globals = ch_mqc_globals.mix(
+        FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.multiqc_files
+            .filter { meta, _file -> meta.id == null }
+            .map { _meta, f -> [[:], f] }
+    )
 
     // Per-sample bundle accumulator: anchor on ch_fastq (every fastq-branch
     // sample flows through here) and extend with each FASTQ_QC named output.
@@ -820,6 +839,7 @@ workflow RNASEQ {
         MULTIQC_RNASEQ(
             ch_multiqc_files,
             ch_mqc_per_sample_bundle_final,
+            ch_mqc_globals,
             ch_fastq,
             ch_collated_versions,
             params.input,

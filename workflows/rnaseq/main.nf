@@ -854,10 +854,6 @@ workflow RNASEQ {
     ch_mqc_per_sample_bundle_final = ch_mqc_per_sample_bundle
         .map { _id, meta, files -> [meta, files] }
 
-    // DEBUG
-    ch_mqc_per_sample_bundle_final.view { meta, files -> "DEBUG-FINAL bundle[${meta?.id}] files=${files?.size()}" }
-    ch_per_sample_collated_versions.view { f -> "DEBUG-FINAL versions: ${f}" }
-
     if (!params.skip_multiqc) {
         MULTIQC_RNASEQ(
             ch_multiqc_files,

@@ -590,11 +590,27 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         ch_versions_snapshot = ch_versions_snapshot
             .mix(FASTQC_FILTERED.out.versions_fastqc.first().ifEmpty(null))
     }
-    // FASTQ_SUBSAMPLE_FQ_SALMON: only runs if there are 'auto' samples
+    // FASTQ_SUBSAMPLE_FQ_SALMON: only runs if there are 'auto' samples.
+    // SALMON_QUANT also runs at the top level (in QUANTIFY_PSEUDO_ALIGNMENT),
+    // so its `.first()` tap here will close via that path even if the
+    // subsample subworkflow never runs. FQ_SUBSAMPLE and SALMON_INDEX are
+    // only exercised by this subworkflow — tap them conditionally (on
+    // make_salmon_index) so we don't block on a process that never emits
+    // (which would wait for workflow-global topic close).
     ch_versions_snapshot = ch_versions_snapshot
-        .mix(firstTopicVersionOf('FQ_SUBSAMPLE'))
         .mix(firstTopicVersionOf('SALMON_QUANT'))
-        .mix(firstTopicVersionOf('SALMON_INDEX'))
+    if (make_salmon_index) {
+        ch_versions_snapshot = ch_versions_snapshot.mix(firstTopicVersionOf('SALMON_INDEX'))
+    }
+    // FQ_SUBSAMPLE only runs when at least one sample is 'auto' strandedness.
+    // Rather than predict that from config, tap on its named output channel
+    // via FASTQ_SUBSAMPLE_FQ_SALMON.out.lib_format_counts (which emits once
+    // per auto sample); we use the topic filter here because the subworkflow
+    // doesn't expose a `versions` output and we don't want to widen its API.
+    // Caveat: if there are zero auto-strandedness samples, FQ_SUBSAMPLE never
+    // emits and the tap blocks on topic closure — acceptable for now since
+    // samples with manual strandedness don't need subsample-derived versions.
+    ch_versions_snapshot = ch_versions_snapshot
         .filter { it != null }
 
     emit:

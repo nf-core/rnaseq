@@ -503,11 +503,14 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
 
     def ch_post = ch_post_pass.mix(ch_post_fail)
 
-    // Final per-sample bundle: join pre + post, recover current-phase meta
+    // Final per-sample bundle: join pre + post. Recover meta from the input
+    // reads anchor (every sample that entered the subworkflow) — using
+    // ch_strand_inferred_fastq would drop samples that didn't reach strand
+    // inference (e.g., all-fail trim in stub mode).
     def ch_multiqc_bundle = ch_pre
         .join(ch_post)
         .map { id, pre, post -> [id, pre + post] }
-        .join(ch_strand_inferred_fastq.map { meta, _r -> [meta.id, meta] })
+        .join(ch_reads.map { meta, _r -> [meta.id, meta] })
         .map { _id, files, meta -> [meta, files] }
 
     // Run-level global (single file across the run)

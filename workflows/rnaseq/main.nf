@@ -785,9 +785,16 @@ workflow RNASEQ {
         ch_counts_gene_length_scaled = QUANTIFY_PSEUDO_ALIGNMENT.out.counts_gene_length_scaled
         ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_PSEUDO_ALIGNMENT.out.multiqc)
 
-        // Per-sample bundle: join the pseudo-quant output into the accumulator
+        // Per-sample bundle: join the pseudo-quant output. Samples that failed
+        // min_trimmed_reads never reach quantification, so emit [id, []] for
+        // them so the join chain closes without dropping them.
+        def ch_quant_pass_bundle = QUANTIFY_PSEUDO_ALIGNMENT.out.multiqc
+            .map { meta, f -> [meta.id, f instanceof List ? f : [f]] }
+        def ch_quant_fail_bundle = ch_trim_status
+            .filter { _id, pass -> !pass }
+            .map { id, _p -> [id, []] }
         ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
-            .join(QUANTIFY_PSEUDO_ALIGNMENT.out.multiqc.map { meta, f -> [meta.id, f instanceof List ? f : [f]] })
+            .join(ch_quant_pass_bundle.mix(ch_quant_fail_bundle))
             .map { id, meta, base, add -> [id, meta, base + add] }
         ch_mqc_versions_tuple = ch_mqc_versions_tuple
             .mix(firstTopicVersionOf(params.pseudo_aligner == 'salmon' ? 'SALMON_QUANT' : 'KALLISTO_QUANT'))

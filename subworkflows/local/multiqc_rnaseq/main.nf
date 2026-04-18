@@ -70,11 +70,20 @@ workflow MULTIQC_RNASEQ {
         // reports. It closes only after the workflow-global `versions` topic
         // closes (i.e. after every process has emitted in every sample),
         // which would turn progressive per-sample closure back into a
-        // full-run barrier. Per-sample reports therefore don't carry a
-        // Software Versions section in this iteration — the full per-run
-        // versions YAML is still published to `pipeline_info/` unchanged.
+        // full-run barrier. Per-sample reports therefore carry a minimal
+        // manifest-only versions YAML (pipeline + Nextflow) instead of the
+        // full per-task collation — the complete YAML is still published to
+        // `pipeline_info/` unchanged for consumers who need it. Keeping a
+        // file under the same name preserves the MultiQC data/plots file
+        // layout expected by downstream tooling and the test snapshots
+        // (content is `.nftignored`).
+        ch_manifest_versions = channel.value(
+            "Workflow:\n    ${workflow.manifest.name}: ${workflow.manifest.version}\n    Nextflow: ${workflow.nextflow.version.toString()}\n"
+        ).collectFile(name: 'nf_core_rnaseq_software_mqc_versions.yml')
+
         ch_static_globals = ch_workflow_summary
             .mix(ch_methods_description)
+            .mix(ch_manifest_versions)
             .collect()
 
         ch_multiqc_input = ch_per_sample_bundle

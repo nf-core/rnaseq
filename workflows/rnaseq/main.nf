@@ -26,6 +26,7 @@ include { checkSamplesAfterGrouping      } from '../../subworkflows/local/utils_
 include { multiqcTsvFromList             } from '../../subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness'
 include { getInferexperimentStrandedness } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { mapBamToPublishedPath          } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { perSampleExtendBundle          } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -113,29 +114,16 @@ workflow RNASEQ {
     ch_percent_mapped = channel.empty()
     ch_unaligned_sequences = channel.empty()
 
-    // Per-sample MultiQC bundle accumulators (populated alongside the flat
-    // `ch_multiqc_files` mix). These feed the per-sample MultiQC branch so
-    // each sample's report can close progressively, without a count helper
-    // or a barrier on the global topic channel.
-    //
-    //   ch_mqc_per_sample_bundle: [meta.id, meta, files_list]  (built via .join chain)
-    //   ch_mqc_globals_new:       [[:], file]                   (run-level stragglers)
-    //   ch_mqc_versions_tuple:    [process, tool, version]      (from .first() taps)
+    // Per-sample MultiQC bundle: [meta.id, meta, files_list] per sample.
+    // Built via a declarative `perSampleExtendBundle(...)` chain at each
+    // contributor's call site below, using that contributor's existing named
+    // per-sample outputs. No counting, no workflow-logic duplication — an
+    // `if (!params.skip_X) { X(...) ; ch_mqc_per_sample_bundle = perSampleExtendBundle(...) }`
+    // pattern that mirrors how the flat `ch_multiqc_files.mix(...)` is
+    // already maintained today. Empty contributor channels (conditional
+    // processes that didn't run) are handled defensively via `remainder: true`
+    // inside the helper.
     ch_mqc_per_sample_bundle = channel.empty()
-    ch_mqc_globals_new       = channel.empty()
-    ch_mqc_versions_tuple    = channel.empty()
-
-    // Helper: first emission on the versions topic for a process short-name.
-    // Returns a value channel that closes after the first instance of the
-    // named process has emitted its version — so a run-level versions file
-    // built from these closes bounded by "one sample's worth of processing
-    // per process", not "all samples finish".
-    def firstTopicVersionOf = { short_name ->
-        channel.topic('versions')
-            .filter { entry -> entry instanceof List && entry.size() == 3 && entry[0].endsWith(":${short_name}") }
-            .first()
-            .ifEmpty(null)
-    }
 
     //
     // Collect versions from topic channel (for modules that emit versions via topics)
@@ -248,12 +236,24 @@ workflow RNASEQ {
     ch_strand_inferred_filtered_fastq = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.reads
     ch_trim_read_count                = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.trim_read_count
 
-    // Per-sample bundle: anchor from FASTQ_QC (every fastq-branch sample flows through here).
-    // Further contributors will be joined in at their call sites below.
-    ch_mqc_per_sample_bundle = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.multiqc_bundle
-        .map { meta, files -> [meta.id, meta, files] }
-    ch_mqc_globals_new       = ch_mqc_globals_new.mix(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.multiqc_globals)
-    ch_mqc_versions_tuple    = ch_mqc_versions_tuple.mix(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.versions)
+    // Per-sample bundle accumulator: anchor on ch_fastq (every fastq-branch
+    // sample flows through here) and extend with each FASTQ_QC named output.
+    // Each named output is either populated for a sample or not emitted (the
+    // underlying module's conditional) — `remainder: true` inside the helper
+    // turns "not emitted" into an empty placeholder so the chain closes
+    // per-sample without the contributor count being tracked explicitly.
+    ch_mqc_per_sample_bundle = ch_fastq.map { meta, _r -> [meta.id, meta, []] }
+    ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.fastqc_raw_zip)
+    ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.fastqc_trim_zip)
+    ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.trim_log)
+    ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.trim_json)
+    ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.umi_log)
+    ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.bbsplit_stats)
+    ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.sortmerna_log)
+    ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.ribodetector_log)
+    ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.seqkit_stats)
+    ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.bowtie2_log)
+    ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.fastqc_filtered_zip)
 
     ch_trim_status = ch_trim_read_count
         .map {
@@ -785,26 +785,7 @@ workflow RNASEQ {
         ch_counts_gene_length_scaled = QUANTIFY_PSEUDO_ALIGNMENT.out.counts_gene_length_scaled
         ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_PSEUDO_ALIGNMENT.out.multiqc)
 
-        // Per-sample bundle: join the pseudo-quant output. Samples that failed
-        // min_trimmed_reads never reach quantification, so emit [id, []] for
-        // them so the join chain closes without dropping them.
-        def ch_quant_pass_bundle = QUANTIFY_PSEUDO_ALIGNMENT.out.multiqc
-            .map { meta, f -> [meta.id, f instanceof List ? f : [f]] }
-        def ch_quant_fail_bundle = ch_trim_status
-            .filter { _id, pass -> !pass }
-            .map { id, _p -> [id, []] }
-        ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
-            .join(ch_quant_pass_bundle.mix(ch_quant_fail_bundle))
-            .map { id, meta, base, add -> [id, meta, base + add] }
-        // Versions: SALMON_QUANT/KALLISTO_QUANT use topic-tuple emission; we
-        // can tap them via firstTopicVersionOf. TXIMETA_TXIMPORT and
-        // CUSTOM_TX2GENE use the old-style `path "versions.yml", topic: versions`
-        // (a Path in the topic, not a 3-tuple), so they don't match the
-        // tuple-filter helper. Their versions are picked up via the
-        // topic_versions.versions_file branch in ch_per_sample_collated_versions
-        // construction below.
-        ch_mqc_versions_tuple = ch_mqc_versions_tuple
-            .mix(firstTopicVersionOf(params.pseudo_aligner == 'salmon' ? 'SALMON_QUANT' : 'KALLISTO_QUANT'))
+        ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, QUANTIFY_PSEUDO_ALIGNMENT.out.multiqc)
 
         if (!params.skip_qc & !params.skip_deseq2_qc & !params.skip_quantification_merge) {
             DESEQ2_QC_PSEUDO (
@@ -826,31 +807,6 @@ workflow RNASEQ {
         .mix(topic_versions_string)
         .collectFile(storeDir: "${params.outdir}/pipeline_info", name: 'nf_core_rnaseq_software_mqc_versions.yml', sort: true, newLine: true)
 
-    // Per-sample collated versions file: composed from `.first()` taps on each
-    // contributing process's versions emission (not from the workflow-global
-    // topic channel's close event). Content matches the merged-mode file above,
-    // but this file closes bounded by "one sample's worth of processing per
-    // process" — so per-sample MultiQC reports don't wait for the slowest
-    // sample's last task to emit.
-    ch_per_sample_versions_string = ch_mqc_versions_tuple
-        .filter { it != null }
-        .map { process, tool, version ->
-            [process[process.lastIndexOf(':') + 1..-1], "  ${tool}: ${version}"]
-        }
-        .groupTuple(by: 0)
-        .map { process, tool_versions ->
-            tool_versions.unique().sort()
-            "${process}:\n${tool_versions.join('\n')}"
-        }
-
-    ch_per_sample_collated_versions = softwareVersionsToYAML(
-            ch_versions.mix(
-                topic_versions.versions_file.first().ifEmpty(null)
-            ).filter { it != null }
-        )
-        .mix(ch_per_sample_versions_string)
-        .collectFile(name: 'nf_core_rnaseq_software_mqc_versions.yml', sort: true, newLine: true)
-
     //
     // SUBWORKFLOW: MultiQC
     //
@@ -864,8 +820,6 @@ workflow RNASEQ {
         MULTIQC_RNASEQ(
             ch_multiqc_files,
             ch_mqc_per_sample_bundle_final,
-            ch_mqc_globals_new,
-            ch_per_sample_collated_versions,
             ch_fastq,
             ch_collated_versions,
             params.input,

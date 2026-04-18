@@ -851,6 +851,34 @@ def mapBamToPublishedPath(bam_path, sample_id, aligner, outdir) {
 }
 
 //
+// Helpers for per-sample MultiQC bundle construction in the main workflow.
+// Defined as top-level functions (not inline closures) to satisfy the
+// Nextflow strict syntax lint, and grouped here so the main workflow can
+// stay declarative: each contributor's `.out.<per-sample output>` just gets
+// fed through these helpers and mixed into the bundle.
+//
+def perSampleTagById(ch) {
+    ch.map { meta, f ->
+        def files = (f instanceof List) ? f : [f]
+        [meta.id, files]
+    }
+}
+
+//
+// Extend a per-sample bundle accumulator with another contributor's per-sample
+// files. `remainder: true` is defensive: if a contributor's channel is empty
+// (e.g. the module's `if`-block wasn't entered, or its stub didn't touch the
+// files its `emit:` clause globs), the join still closes for every sample
+// and the missing contribution is replaced by an empty list. The barrier is
+// bounded by the joining channel's own closure (e.g. TRIMGALORE completing
+// its instances), not by the workflow-global topic close.
+//
+def perSampleExtendBundle(acc, ch_new) {
+    acc.join(perSampleTagById(ch_new), remainder: true)
+        .map { id, meta, base, add -> [id, meta, base + (add ?: [])] }
+}
+
+//
 // Print pipeline summary on completion
 //
 def rnaseqSummary(monochrome_logs=true, pass_mapped_reads=[:], pass_trimmed_reads=[:], pass_strand_check=[:]) {

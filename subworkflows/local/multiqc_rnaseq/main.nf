@@ -12,19 +12,17 @@ include { multiqcSampleMergeYaml  } from '../utils_nfcore_rnaseq_pipeline'
 workflow MULTIQC_RNASEQ {
 
     take:
-    ch_multiqc_files                  // channel: [ val(meta), path(file) ]    - flat, merged-mode input
-    ch_per_sample_bundle              // channel: [ val(meta), [ files ] ]     - per-sample mode, one tuple per sample
-    ch_per_sample_globals             // channel: [ [:], path(file) ]          - per-sample mode, run-level files
-    ch_per_sample_collated_versions   // channel: path(versions yaml)          - per-sample mode, early-closing
-    ch_fastq                          // channel: [ val(meta), [ reads ] ]
-    ch_collated_versions              // channel: path(versions yaml)          - merged mode
-    samplesheet_path                  // path: pipeline input samplesheet
-    samplesheet_schema                // path: samplesheet JSON schema
-    mqc_default_config                // path: pipeline-bundled MultiQC config
-    mqc_custom_config                 // path (or []): optional user MultiQC config
-    mqc_logo                          // path (or []): optional custom logo
-    methods_description_yml           // path: methods-description YAML template
-    skip_quantification_merge         // boolean
+    ch_multiqc_files           // channel: [ val(meta), path(file) ]     - merged-mode input (flat)
+    ch_per_sample_bundle       // channel: [ val(meta), [ files ] ]      - per-sample-mode input (one tuple per sample)
+    ch_fastq                   // channel: [ val(meta), [ reads ] ]
+    ch_collated_versions       // channel: path(versions yaml)
+    samplesheet_path           // path: pipeline input samplesheet
+    samplesheet_schema         // path: samplesheet JSON schema
+    mqc_default_config         // path: pipeline-bundled MultiQC config
+    mqc_custom_config          // path (or []): optional user MultiQC config
+    mqc_logo                   // path (or []): optional custom logo
+    methods_description_yml    // path: methods-description YAML template
+    skip_quantification_merge  // boolean
 
     main:
 
@@ -48,24 +46,31 @@ workflow MULTIQC_RNASEQ {
     ch_name_replacements = multiqcNameReplacements(ch_fastq)
 
     if (skip_quantification_merge) {
-        // One MultiQC report per sample. Each incoming tuple is already bundled
-        // as [meta, files_list] for a single sample — no groupTuple, no count
-        // helper. Globals (workflow summary, methods description, run-level
-        // stragglers like fail_trimmed_samples_mqc, and a per-sample-closing
-        // versions YAML) are broadcast to every per-sample report via `combine`.
-        ch_static_globals = ch_workflow_summary
-            .mix(ch_methods_description)
-            .mix(ch_per_sample_collated_versions)
-            .collect()
-
-        ch_run_level_globals = ch_per_sample_globals
+        // One MultiQC report per sample. `ch_per_sample_bundle` is already
+        // `[meta, files_list]` per sample (built by a structural
+        // `perSampleExtendBundle(...)` chain at each contributor's call site
+        // in the parent workflow), so there's no `groupTuple` here — each
+        // sample's report can close as soon as that sample's bundle fires.
+        //
+        // Run-level context items (workflow summary, methods description,
+        // collated versions, and the cross-sample stragglers that land in
+        // `ch_multiqc_files` with an empty meta — fail_trimmed_samples_mqc,
+        // fail_mapped_samples_mqc, fail_strand_check_mqc, DESeq2 plots) are
+        // broadcast to every per-sample report via `combine`.
+        ch_global_files = ch_multiqc_files
+            .filter { meta, _file -> meta.id == null }
             .map { _meta, f -> f }
             .collect()
             .ifEmpty([])
 
+        ch_static_globals = ch_workflow_summary
+            .mix(ch_methods_description)
+            .mix(ch_collated_versions)
+            .collect()
+
         ch_multiqc_input = ch_per_sample_bundle
             .combine(ch_static_globals.toList())
-            .combine(ch_run_level_globals.toList())
+            .combine(ch_global_files.toList())
             .combine(ch_mqc_dynamic_config)
             .map { meta, sample_files, static_globals, run_globals, dyn ->
                 def all_globals = (static_globals ?: []) + (run_globals ?: [])

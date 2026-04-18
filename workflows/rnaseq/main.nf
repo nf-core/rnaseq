@@ -860,12 +860,6 @@ workflow RNASEQ {
     ch_mqc_per_sample_bundle_final = ch_mqc_per_sample_bundle
         .map { _id, meta, files -> [meta, files] }
 
-    // DEBUG
-    def dbg_t0 = java.time.LocalTime.now()
-    ch_mqc_per_sample_bundle_final.view { meta, files -> "DBG[${java.time.LocalTime.now()}] bundle[${meta?.id}] files=${files?.size()}" }
-    ch_per_sample_collated_versions.view { f -> "DBG[${java.time.LocalTime.now()}] versions ready: ${f}" }
-    ch_mqc_versions_tuple.view { it -> "DBG[${java.time.LocalTime.now()}] version_tuple: ${it}" }
-
     if (!params.skip_multiqc) {
         MULTIQC_RNASEQ(
             ch_multiqc_files,

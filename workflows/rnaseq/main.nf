@@ -250,6 +250,9 @@ workflow RNASEQ {
 
     // Per-sample bundle: anchor from FASTQ_QC (every fastq-branch sample flows through here).
     // Further contributors will be joined in at their call sites below.
+    FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.multiqc_bundle.view { meta, files -> "DEBUG-FASTQ_QC bundle: ${meta.id} files=${files.size()}" }
+    FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.multiqc_globals.view { m, f -> "DEBUG-FASTQ_QC globals: ${f}" }
+    FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.versions.view { it -> "DEBUG-FASTQ_QC version: ${it}" }
     ch_mqc_per_sample_bundle = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.multiqc_bundle
         .map { meta, files -> [meta.id, meta, files] }
     ch_mqc_globals_new       = ch_mqc_globals_new.mix(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.multiqc_globals)

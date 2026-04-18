@@ -309,6 +309,7 @@ workflow RNASEQ {
         ch_star_log                      = ALIGN_STAR.out.log_final
         ch_unaligned_sequences           = ALIGN_STAR.out.fastq
         ch_multiqc_files                 = ch_multiqc_files.mix(ch_star_log)
+        ch_mqc_per_sample_bundle         = perSampleExtendBundle(ch_mqc_per_sample_bundle, ch_star_log)
 
         if (!params.with_umi && (params.skip_markduplicates || params.use_parabricks_star)) {
             // The deduplicated stats should take priority for MultiQC, but use
@@ -322,6 +323,9 @@ workflow RNASEQ {
                 .mix(ALIGN_STAR.out.stats)
                 .mix(ALIGN_STAR.out.flagstat)
                 .mix(ALIGN_STAR.out.idxstats)
+            ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, ALIGN_STAR.out.stats)
+            ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, ALIGN_STAR.out.flagstat)
+            ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, ALIGN_STAR.out.idxstats)
         }
     }
 
@@ -346,12 +350,16 @@ workflow RNASEQ {
         ch_unprocessed_bams              = ch_genome_bam.map { meta, bam -> [ meta, bam, '' ] }
         ch_bowtie2_log                   = ALIGN_BOWTIE2.out.log_final
         ch_multiqc_files                 = ch_multiqc_files.mix(ch_bowtie2_log)
+        ch_mqc_per_sample_bundle         = perSampleExtendBundle(ch_mqc_per_sample_bundle, ch_bowtie2_log)
 
         if (!params.with_umi && params.skip_markduplicates) {
             ch_multiqc_files = ch_multiqc_files
                 .mix(ALIGN_BOWTIE2.out.stats)
                 .mix(ALIGN_BOWTIE2.out.flagstat)
                 .mix(ALIGN_BOWTIE2.out.idxstats)
+            ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, ALIGN_BOWTIE2.out.stats)
+            ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, ALIGN_BOWTIE2.out.flagstat)
+            ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, ALIGN_BOWTIE2.out.idxstats)
         }
     }
 
@@ -371,6 +379,7 @@ workflow RNASEQ {
         ch_unprocessed_bams    = ch_genome_bam.map { meta, bam -> [ meta, bam, '' ] }
         ch_unaligned_sequences = FASTQ_ALIGN_HISAT2.out.fastq
         ch_multiqc_files = ch_multiqc_files.mix(FASTQ_ALIGN_HISAT2.out.summary)
+        ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, FASTQ_ALIGN_HISAT2.out.summary)
 
         if (!params.with_umi && params.skip_markduplicates) {
             // The deduplicated stats should take priority for MultiQC, but use
@@ -381,6 +390,9 @@ workflow RNASEQ {
                 .mix(FASTQ_ALIGN_HISAT2.out.stats)
                 .mix(FASTQ_ALIGN_HISAT2.out.flagstat)
                 .mix(FASTQ_ALIGN_HISAT2.out.idxstats)
+            ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, FASTQ_ALIGN_HISAT2.out.stats)
+            ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, FASTQ_ALIGN_HISAT2.out.flagstat)
+            ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, FASTQ_ALIGN_HISAT2.out.idxstats)
         }
     }
 
@@ -405,6 +417,12 @@ workflow RNASEQ {
 
         ch_multiqc_files = ch_multiqc_files
             .mix(BAM_DEDUP_UMI.out.multiqc_files)
+        // Per-sample bundle: BAM_DEDUP_UMI emits stats/flagstat/idxstats as
+        // a mix of genome + transcriptome (2 per sample each), so we tap
+        // only the single-emission genomic_dedup_log here. The samtools
+        // stats triple for UMI-dedup'd samples can be exposed as named
+        // outputs in a follow-up to nf-core/subworkflows.
+        ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, BAM_DEDUP_UMI.out.genomic_dedup_log)
     }
 
     //
@@ -423,6 +441,7 @@ workflow RNASEQ {
             params.skip_quantification_merge
         )
         ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_RSEM.out.stat)
+        ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, QUANTIFY_RSEM.out.stat)
 
         if (!params.skip_qc & !params.skip_deseq2_qc & !params.skip_quantification_merge) {
             DESEQ2_QC_RSEM (
@@ -505,6 +524,7 @@ workflow RNASEQ {
         .collectFile(name: 'fail_mapped_samples_mqc.tsv')
 
     ch_multiqc_files = ch_multiqc_files.mix(ch_fail_mapping_multiqc.map { file -> [[:], file] })
+    ch_mqc_globals   = ch_mqc_globals.mix(ch_fail_mapping_multiqc.map { file -> [[:], file] })
 
     // Where a percent mapping is present, use it to filter bam and index
 
@@ -535,6 +555,10 @@ workflow RNASEQ {
         ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.flagstat)
         ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.idxstats)
         ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.metrics)
+        ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, BAM_MARKDUPLICATES_PICARD.out.stats)
+        ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, BAM_MARKDUPLICATES_PICARD.out.flagstat)
+        ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, BAM_MARKDUPLICATES_PICARD.out.idxstats)
+        ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, BAM_MARKDUPLICATES_PICARD.out.metrics)
     }
 
     //
@@ -572,22 +596,41 @@ workflow RNASEQ {
             )
 
             // Collect all per-tool outputs, flatten to individual files, then filter for MultiQC
+            // RUSTQC emits six per-tool outputs where each is one `[meta, [files]]`
+            // per sample (files is a list of tool-specific outputs). For the flat
+            // `ch_multiqc_files` we flatten and filter by MultiQC-relevant filename.
+            // For the per-sample bundle we apply the same filter but keep the
+            // per-sample grouping so `perSampleExtendBundle` sees one tuple per
+            // sample per tool.
+            def _rustqcMqcFilter = { meta, files ->
+                def keep = (files instanceof List ? files : [files]).findAll { f ->
+                    if (f.name.endsWith('.featureCounts.tsv.summary')) return false
+                    f.name =~ /(?i)\.(txt|tsv|xls|log|stats|flagstat|idxstats|html)$/ || f.name.contains('_mqc.')
+                }
+                [meta, keep]
+            }
+            def ch_rustqc_dupradar    = RUSTQC.out.dupradar.map    { meta, files -> _rustqcMqcFilter(meta, files) }
+            def ch_rustqc_featurects  = RUSTQC.out.featurecounts.map { meta, files -> _rustqcMqcFilter(meta, files) }
+            def ch_rustqc_preseq      = RUSTQC.out.preseq.map      { meta, files -> _rustqcMqcFilter(meta, files) }
+            def ch_rustqc_samtools    = RUSTQC.out.samtools.map    { meta, files -> _rustqcMqcFilter(meta, files) }
+            def ch_rustqc_rseqc       = RUSTQC.out.rseqc.map       { meta, files -> _rustqcMqcFilter(meta, files) }
+            def ch_rustqc_qualimap    = RUSTQC.out.qualimap.map    { meta, files -> _rustqcMqcFilter(meta, files) }
+
             ch_multiqc_files = ch_multiqc_files.mix(
-                RUSTQC.out.dupradar
-                    .mix(RUSTQC.out.featurecounts)
-                    .mix(RUSTQC.out.preseq)
-                    .mix(RUSTQC.out.samtools)
-                    .mix(RUSTQC.out.rseqc)
-                    .mix(RUSTQC.out.qualimap)
-                    .flatMap { meta, files -> (files instanceof List ? files : [files]).collect { f -> [meta, f] } }
-                    .filter { _meta, f ->
-                        // Exclude gene-level featureCounts summary so MultiQC only sees the
-                        // biotype-level summary (*.biotype.tsv.summary), matching the default
-                        // pipeline's featureCounts -g gene_biotype output.
-                        if (f.name.endsWith('.featureCounts.tsv.summary')) return false
-                        f.name =~ /(?i)\.(txt|tsv|xls|log|stats|flagstat|idxstats|html)$/ || f.name.contains('_mqc.')
-                    }
+                ch_rustqc_dupradar
+                    .mix(ch_rustqc_featurects)
+                    .mix(ch_rustqc_preseq)
+                    .mix(ch_rustqc_samtools)
+                    .mix(ch_rustqc_rseqc)
+                    .mix(ch_rustqc_qualimap)
+                    .flatMap { meta, files -> files.collect { f -> [meta, f] } }
             )
+            ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, ch_rustqc_dupradar)
+            ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, ch_rustqc_featurects)
+            ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, ch_rustqc_preseq)
+            ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, ch_rustqc_samtools)
+            ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, ch_rustqc_rseqc)
+            ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, ch_rustqc_qualimap)
 
             // Extract infer_experiment from rseqc channel
             ch_inferexperiment_txt = RUSTQC.out.rseqc
@@ -611,6 +654,23 @@ workflow RNASEQ {
             )
             ch_multiqc_files = ch_multiqc_files.mix(BAM_QC_RNASEQ.out.multiqc_files)
             ch_inferexperiment_txt = BAM_QC_RNASEQ.out.inferexperiment_txt
+
+            // Per-sample bundle: use each of BAM_QC_RNASEQ's named per-sample
+            // outputs. They're all `[meta, file]` per sample (empty when the
+            // tool is gated off), so `perSampleExtendBundle`'s `remainder: true`
+            // handles the skipped ones without any workflow-logic replication.
+            ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, BAM_QC_RNASEQ.out.preseq_lc_extrap)
+            ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, BAM_QC_RNASEQ.out.biotype_tsv)
+            ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, BAM_QC_RNASEQ.out.qualimap_results)
+            ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, BAM_QC_RNASEQ.out.dupradar_multiqc)
+            ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, BAM_QC_RNASEQ.out.bamstat_txt)
+            ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, BAM_QC_RNASEQ.out.inferexperiment_txt)
+            ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, BAM_QC_RNASEQ.out.innerdistance_freq)
+            ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, BAM_QC_RNASEQ.out.junctionannotation_log)
+            ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, BAM_QC_RNASEQ.out.junctionsaturation_rscript)
+            ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, BAM_QC_RNASEQ.out.readdistribution_txt)
+            ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, BAM_QC_RNASEQ.out.readduplication_pos_xls)
+            ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, BAM_QC_RNASEQ.out.tin_txt)
         }
 
         //
@@ -677,7 +737,9 @@ workflow RNASEQ {
                 }
                 .set { ch_fail_strand_multiqc }
 
-            ch_multiqc_files = ch_multiqc_files.mix(ch_fail_strand_multiqc.collectFile(name: 'fail_strand_check_mqc.tsv').map { file -> [[:], file] })
+            def ch_fail_strand_global = ch_fail_strand_multiqc.collectFile(name: 'fail_strand_check_mqc.tsv').map { file -> [[:], file] }
+            ch_multiqc_files = ch_multiqc_files.mix(ch_fail_strand_global)
+            ch_mqc_globals   = ch_mqc_globals.mix(ch_fail_strand_global)
         }
 
     }
@@ -749,12 +811,14 @@ workflow RNASEQ {
 
             if (params.contaminant_screening == 'kraken2') {
                 ch_multiqc_files = ch_multiqc_files.mix(KRAKEN2.out.report)
+                ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, KRAKEN2.out.report)
             } else if (params.contaminant_screening == 'kraken2_bracken') {
                 BRACKEN (
                     ch_kraken_reports,
                     ch_kraken_db
                 )
                 ch_multiqc_files = ch_multiqc_files.mix(BRACKEN.out.txt)
+                ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, BRACKEN.out.txt)
             }
         } else if (params.contaminant_screening == 'sylph') {
             def sylph_databases = params.sylph_db ? params.sylph_db.split(',').collect{ path -> file(path.trim()) } : []
@@ -772,6 +836,7 @@ workflow RNASEQ {
                 ch_sylph_taxonomies
             )
             ch_multiqc_files = ch_multiqc_files.mix(SYLPHTAX_TAXPROF.out.taxprof_output)
+            ch_mqc_per_sample_bundle = perSampleExtendBundle(ch_mqc_per_sample_bundle, SYLPHTAX_TAXPROF.out.taxprof_output)
         }
     }
 

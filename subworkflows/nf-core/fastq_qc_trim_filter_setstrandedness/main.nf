@@ -495,12 +495,19 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
 
     def ch_post = ch_post_pass.mix(ch_post_fail)
 
+    // DEBUG
+    ch_pre.view { id, files -> "DEBUG FASTQ_QC ch_pre[${id}] files=${files?.size()}" }
+    ch_post.view { id, files -> "DEBUG FASTQ_QC ch_post[${id}] files=${files?.size()}" }
+    ch_strand_inferred_fastq.view { meta, _r -> "DEBUG FASTQ_QC strand_inferred[${meta?.id}]" }
+
     // Final per-sample bundle: join pre + post, recover current-phase meta
     def ch_multiqc_bundle = ch_pre
         .join(ch_post)
         .map { id, pre, post -> [id, pre + post] }
         .join(ch_strand_inferred_fastq.map { meta, _r -> [meta.id, meta] })
         .map { _id, files, meta -> [meta, files] }
+
+    ch_multiqc_bundle.view { meta, files -> "DEBUG FASTQ_QC multiqc_bundle[${meta?.id}] files=${files?.size()}" }
 
     // Run-level global (single file across the run)
     def ch_multiqc_globals = ch_fail_trimming_multiqc

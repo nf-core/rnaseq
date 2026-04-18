@@ -410,10 +410,180 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         .mix(ch_strand_fastq.known_strand)
         .set { ch_strand_inferred_fastq }
 
+    // ========================================================
+    // Per-sample MultiQC bundle + versions snapshot
+    // ========================================================
+    // A structural bundle that closes per sample, plus a versions
+    // channel bounded by "one sample's worth of processing per
+    // process". Lets callers run per-sample MultiQC progressively
+    // (no count helper, no workflow-global topic barrier).
+    //
+    // Bundle pattern: each contributor emits at most one tuple per
+    // sample via its named output; we join them with plain .join.
+    // For contributors that don't apply to a sample (trim-fail, or
+    // params-disabled for the whole run), we emit [id, []] so join
+    // closes without `remainder: true`.
+    //
+    // Versions pattern: .first() on each process's named versions
+    // emit or topic-filtered by process name for processes inside
+    // nested subworkflows. Each value channel closes after the
+    // first instance emits, so the mix closes when each contributor
+    // process has had one instance complete — not when all samples
+    // finish.
+
+    def asList   = { v -> v instanceof List ? v : [v] }
+    def tagById  = { ch -> ch.map { meta, f -> [meta.id, asList(f)] } }
+    def extend   = { acc, ch_new -> acc.join(ch_new).map { id, base, add -> [id, base + add] } }
+
+    // Versions helper: first emission from topic matching a bare process short-name.
+    def firstTopicVersionOf = { short_name ->
+        channel.topic('versions')
+            .filter { entry -> entry instanceof List && entry.size() == 3 && entry[0].endsWith(":${short_name}") }
+            .first()
+            .ifEmpty(null)
+    }
+
+    // ---- Pre-filter bundle contributors (every sample that entered trimming) ----
+    def ch_pre = ch_reads.map { meta, _r -> [meta.id, []] }
+    if (!skip_fastqc) {
+        ch_pre = extend(ch_pre, tagById(ch_fastqc_raw_zip))
+    }
+    if (!skip_trimming) {
+        if (trimmer == 'trimgalore') {
+            ch_pre = extend(ch_pre, tagById(ch_trim_zip))
+            ch_pre = extend(ch_pre, tagById(ch_trim_log))
+        } else { // fastp
+            ch_pre = extend(ch_pre, tagById(ch_trim_json))
+            if (!skip_fastqc) {
+                ch_pre = extend(ch_pre, tagById(ch_fastqc_trim_zip))
+            }
+        }
+    }
+    if (with_umi && !skip_umi_extract) {
+        ch_pre = extend(ch_pre, tagById(ch_umi_log))
+    }
+
+    // ---- Post-filter contributors (pass samples only; fail gets empty) ----
+    def ch_trim_branched = ch_trim_read_count
+        .map { meta, n -> [meta.id, n > min_trimmed_reads.toFloat()] }
+        .branch { _id, pass ->
+            pass: pass
+            fail: !pass
+        }
+    def ch_post_fail = ch_trim_branched.fail.map { id, _p -> [id, []] }
+    def ch_post_pass = ch_trim_branched.pass.map { id, _p -> [id, []] }
+
+    if (!skip_bbsplit) {
+        ch_post_pass = extend(ch_post_pass, tagById(ch_bbsplit_stats))
+    }
+    if (remove_ribo_rna) {
+        def ch_ribo
+        if (ribo_removal_tool == 'ribodetector') {
+            ch_ribo = ch_ribodetector_log
+                .join(ch_seqkit_stats)
+                .map { meta, rd, sk -> [meta.id, asList(rd) + asList(sk)] }
+        } else if (ribo_removal_tool == 'bowtie2') {
+            ch_ribo = tagById(ch_bowtie2_log)
+        } else {
+            ch_ribo = tagById(ch_sortmerna_log)
+        }
+        ch_post_pass = extend(ch_post_pass, ch_ribo)
+    }
+    if (!skip_fastqc && (!skip_bbsplit || remove_ribo_rna)) {
+        ch_post_pass = extend(ch_post_pass, tagById(ch_fastqc_filtered_zip))
+    }
+
+    def ch_post = ch_post_pass.mix(ch_post_fail)
+
+    // Final per-sample bundle: join pre + post, recover current-phase meta
+    def ch_multiqc_bundle = ch_pre
+        .join(ch_post)
+        .map { id, pre, post -> [id, pre + post] }
+        .join(ch_strand_inferred_fastq.map { meta, _r -> [meta.id, meta] })
+        .map { _id, files, meta -> [meta, files] }
+
+    // Run-level global (single file across the run)
+    def ch_multiqc_globals = ch_fail_trimming_multiqc
+        .collectFile(name: 'fail_trimmed_samples_mqc.tsv')
+        .map { f -> [[:], f] }
+
+    // ---- Versions snapshot ----
+    // Direct processes use their named versions_* output; processes inside
+    // nested subworkflows are tapped via the topic channel filter helper.
+    def ch_versions_snapshot = channel.empty()
+        .mix(CAT_FASTQ.out.versions_cat.first().ifEmpty(null))
+    if (!skip_linting) {
+        ch_versions_snapshot = ch_versions_snapshot
+            .mix(FQ_LINT.out.versions_fq.first().ifEmpty(null))
+    }
+    if (trimmer == 'trimgalore') {
+        ch_versions_snapshot = ch_versions_snapshot
+            .mix(firstTopicVersionOf('FASTQC'))
+            .mix(firstTopicVersionOf('TRIMGALORE'))
+        if (with_umi && !skip_umi_extract) {
+            ch_versions_snapshot = ch_versions_snapshot.mix(firstTopicVersionOf('UMITOOLS_EXTRACT'))
+        }
+    } else { // fastp
+        ch_versions_snapshot = ch_versions_snapshot
+            .mix(firstTopicVersionOf('FASTQC_RAW'))
+            .mix(firstTopicVersionOf('FASTP'))
+        if (!skip_fastqc && !skip_trimming) {
+            ch_versions_snapshot = ch_versions_snapshot.mix(firstTopicVersionOf('FASTQC_TRIM'))
+        }
+        if (with_umi && !skip_umi_extract) {
+            ch_versions_snapshot = ch_versions_snapshot.mix(firstTopicVersionOf('UMITOOLS_EXTRACT'))
+        }
+    }
+    if ((!skip_linting) && (!skip_trimming)) {
+        ch_versions_snapshot = ch_versions_snapshot
+            .mix(FQ_LINT_AFTER_TRIMMING.out.versions_fq.first().ifEmpty(null))
+    }
+    if (!skip_bbsplit) {
+        ch_versions_snapshot = ch_versions_snapshot
+            .mix(BBMAP_BBSPLIT.out.versions_bbmap.first().ifEmpty(null))
+        if (!skip_linting) {
+            ch_versions_snapshot = ch_versions_snapshot
+                .mix(FQ_LINT_AFTER_BBSPLIT.out.versions_fq.first().ifEmpty(null))
+        }
+    }
+    if (remove_ribo_rna) {
+        if (ribo_removal_tool == 'sortmerna') {
+            ch_versions_snapshot = ch_versions_snapshot.mix(firstTopicVersionOf('SORTMERNA'))
+        } else if (ribo_removal_tool == 'ribodetector') {
+            ch_versions_snapshot = ch_versions_snapshot
+                .mix(firstTopicVersionOf('RIBODETECTOR_CPU'))
+                .mix(firstTopicVersionOf('SEQKIT_STATS'))
+        } else if (ribo_removal_tool == 'bowtie2') {
+            ch_versions_snapshot = ch_versions_snapshot
+                .mix(firstTopicVersionOf('BOWTIE2_ALIGN'))
+                .mix(firstTopicVersionOf('BOWTIE2_BUILD'))
+                .mix(firstTopicVersionOf('SEQKIT_STATS'))
+                .mix(firstTopicVersionOf('SEQKIT_CONVERT'))
+                .mix(firstTopicVersionOf('SEQKIT_PAIR'))
+        }
+        if (!skip_linting) {
+            ch_versions_snapshot = ch_versions_snapshot
+                .mix(FQ_LINT_AFTER_RIBO_REMOVAL.out.versions_fq.first().ifEmpty(null))
+        }
+    }
+    if (!skip_fastqc && (!skip_bbsplit || remove_ribo_rna)) {
+        ch_versions_snapshot = ch_versions_snapshot
+            .mix(FASTQC_FILTERED.out.versions_fastqc.first().ifEmpty(null))
+    }
+    // FASTQ_SUBSAMPLE_FQ_SALMON: only runs if there are 'auto' samples
+    ch_versions_snapshot = ch_versions_snapshot
+        .mix(firstTopicVersionOf('FQ_SUBSAMPLE'))
+        .mix(firstTopicVersionOf('SALMON_QUANT'))
+        .mix(firstTopicVersionOf('SALMON_INDEX'))
+        .filter { it != null }
+
     emit:
     reads            = ch_strand_inferred_fastq
     trim_read_count  = ch_trim_read_count
     multiqc_files    = ch_multiqc_files.transpose()
+    multiqc_bundle   = ch_multiqc_bundle     // channel: [ val(meta), [ files ] ] per sample
+    multiqc_globals  = ch_multiqc_globals    // channel: [ [:], path ] run-level files
+    versions         = ch_versions_snapshot  // channel: [process, tool, version] tuples
 
     // Individual outputs for workflow outputs
     lint_log_raw     = ch_lint_log_raw

@@ -820,6 +820,7 @@ workflow RNASEQ {
     // process" — so per-sample MultiQC reports don't wait for the slowest
     // sample's last task to emit.
     ch_per_sample_versions_string = ch_mqc_versions_tuple
+        .filter { it != null }
         .map { process, tool, version ->
             [process[process.lastIndexOf(':') + 1..-1], "  ${tool}: ${version}"]
         }
@@ -830,7 +831,9 @@ workflow RNASEQ {
         }
 
     ch_per_sample_collated_versions = softwareVersionsToYAML(
-            ch_versions.mix(topic_versions.versions_file.first().ifEmpty(null).filter { it != null })
+            ch_versions.mix(
+                topic_versions.versions_file.first().ifEmpty(null)
+            ).filter { it != null }
         )
         .mix(ch_per_sample_versions_string)
         .collectFile(name: 'nf_core_rnaseq_software_mqc_versions.yml', sort: true, newLine: true)

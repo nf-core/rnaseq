@@ -444,19 +444,27 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     }
 
     // ---- Pre-filter bundle contributors (every sample that entered trimming) ----
+    // Mirror the flat-mix contributors from the trimmer-specific blocks above:
+    //   trimgalore: fastqc_zip + trim_zip + trim_log + umi_log
+    //     (parent subworkflow stores trimgalore's own fastqc-on-trimmed zip in
+    //      ch_fastqc_trim_zip; ch_trim_zip itself is never populated here)
+    //   fastp:      fastqc_raw_zip + fastqc_trim_zip + trim_json + umi_log
     def ch_pre = ch_reads.map { meta, _r -> [meta.id, []] }
     if (!skip_fastqc) {
         ch_pre = extend(ch_pre, tagById(ch_fastqc_raw_zip))
     }
     if (!skip_trimming) {
+        // fastqc-on-trimmed zip: produced by trimgalore itself (via --fastqc_args)
+        // or by a separate FASTQC_TRIM invocation for fastp. For fastp it's
+        // gated by !skip_fastqc; for trimgalore the pipeline config always
+        // passes --fastqc_args so the zip is always present.
+        if (trimmer == 'trimgalore' || !skip_fastqc) {
+            ch_pre = extend(ch_pre, tagById(ch_fastqc_trim_zip))
+        }
         if (trimmer == 'trimgalore') {
-            ch_pre = extend(ch_pre, tagById(ch_trim_zip))
             ch_pre = extend(ch_pre, tagById(ch_trim_log))
         } else { // fastp
             ch_pre = extend(ch_pre, tagById(ch_trim_json))
-            if (!skip_fastqc) {
-                ch_pre = extend(ch_pre, tagById(ch_fastqc_trim_zip))
-            }
         }
     }
     if (with_umi && !skip_umi_extract) {

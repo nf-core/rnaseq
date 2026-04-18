@@ -250,9 +250,6 @@ workflow RNASEQ {
 
     // Per-sample bundle: anchor from FASTQ_QC (every fastq-branch sample flows through here).
     // Further contributors will be joined in at their call sites below.
-    FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.multiqc_bundle.view { meta, files -> "DEBUG-FASTQ_QC bundle: ${meta.id} files=${files.size()}" }
-    FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.multiqc_globals.view { m, f -> "DEBUG-FASTQ_QC globals: ${f}" }
-    FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.versions.view { it -> "DEBUG-FASTQ_QC version: ${it}" }
     ch_mqc_per_sample_bundle = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.multiqc_bundle
         .map { meta, files -> [meta.id, meta, files] }
     ch_mqc_globals_new       = ch_mqc_globals_new.mix(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.multiqc_globals)
@@ -849,11 +846,6 @@ workflow RNASEQ {
     // Finalise the per-sample bundle: [meta, files_list] per sample
     ch_mqc_per_sample_bundle_final = ch_mqc_per_sample_bundle
         .map { _id, meta, files -> [meta, files] }
-
-    // DEBUG
-    ch_mqc_per_sample_bundle_final.view { meta, files -> "DEBUG: bundle for ${meta.id}: ${files.size()} files" }
-    ch_per_sample_collated_versions.view { f -> "DEBUG: per-sample versions file: ${f}" }
-    ch_mqc_globals_new.view { m, f -> "DEBUG: globals: ${f}" }
 
     if (!params.skip_multiqc) {
         MULTIQC_RNASEQ(

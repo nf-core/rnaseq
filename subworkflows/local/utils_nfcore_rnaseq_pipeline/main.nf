@@ -851,6 +851,21 @@ def mapBamToPublishedPath(bam_path, sample_id, aligner, outdir) {
 }
 
 //
+// Filter a RUSTQC per-tool output tuple `[meta, files_list]` down to the
+// files MultiQC actually consumes (and drop the gene-level featureCounts
+// summary so MultiQC only sees the biotype-level one). Keeps the per-sample
+// grouping intact so it can feed both the flat `ch_multiqc_files` mix (after
+// flatMap) and the per-sample bundle chain (as-is).
+//
+def rustqcMqcFilter(meta, files) {
+    def keep = (files instanceof List ? files : [files]).findAll { f ->
+        if (f.name.endsWith('.featureCounts.tsv.summary')) return false
+        f.name =~ /(?i)\.(txt|tsv|xls|log|stats|flagstat|idxstats|html)$/ || f.name.contains('_mqc.')
+    }
+    return [meta, keep]
+}
+
+//
 // Helpers for per-sample MultiQC bundle construction in the main workflow.
 // Defined as top-level functions (not inline closures) to satisfy the
 // Nextflow strict syntax lint, and grouped here so the main workflow can

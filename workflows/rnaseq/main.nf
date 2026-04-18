@@ -27,6 +27,7 @@ include { multiqcTsvFromList             } from '../../subworkflows/nf-core/fast
 include { getInferexperimentStrandedness } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { mapBamToPublishedPath          } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { perSampleExtendBundle          } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { rustqcMqcFilter                } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -602,19 +603,12 @@ workflow RNASEQ {
             // For the per-sample bundle we apply the same filter but keep the
             // per-sample grouping so `perSampleExtendBundle` sees one tuple per
             // sample per tool.
-            def _rustqcMqcFilter = { meta, files ->
-                def keep = (files instanceof List ? files : [files]).findAll { f ->
-                    if (f.name.endsWith('.featureCounts.tsv.summary')) return false
-                    f.name =~ /(?i)\.(txt|tsv|xls|log|stats|flagstat|idxstats|html)$/ || f.name.contains('_mqc.')
-                }
-                [meta, keep]
-            }
-            def ch_rustqc_dupradar    = RUSTQC.out.dupradar.map    { meta, files -> _rustqcMqcFilter(meta, files) }
-            def ch_rustqc_featurects  = RUSTQC.out.featurecounts.map { meta, files -> _rustqcMqcFilter(meta, files) }
-            def ch_rustqc_preseq      = RUSTQC.out.preseq.map      { meta, files -> _rustqcMqcFilter(meta, files) }
-            def ch_rustqc_samtools    = RUSTQC.out.samtools.map    { meta, files -> _rustqcMqcFilter(meta, files) }
-            def ch_rustqc_rseqc       = RUSTQC.out.rseqc.map       { meta, files -> _rustqcMqcFilter(meta, files) }
-            def ch_rustqc_qualimap    = RUSTQC.out.qualimap.map    { meta, files -> _rustqcMqcFilter(meta, files) }
+            def ch_rustqc_dupradar    = RUSTQC.out.dupradar.map    { meta, files -> rustqcMqcFilter(meta, files) }
+            def ch_rustqc_featurects  = RUSTQC.out.featurecounts.map { meta, files -> rustqcMqcFilter(meta, files) }
+            def ch_rustqc_preseq      = RUSTQC.out.preseq.map      { meta, files -> rustqcMqcFilter(meta, files) }
+            def ch_rustqc_samtools    = RUSTQC.out.samtools.map    { meta, files -> rustqcMqcFilter(meta, files) }
+            def ch_rustqc_rseqc       = RUSTQC.out.rseqc.map       { meta, files -> rustqcMqcFilter(meta, files) }
+            def ch_rustqc_qualimap    = RUSTQC.out.qualimap.map    { meta, files -> rustqcMqcFilter(meta, files) }
 
             ch_multiqc_files = ch_multiqc_files.mix(
                 ch_rustqc_dupradar

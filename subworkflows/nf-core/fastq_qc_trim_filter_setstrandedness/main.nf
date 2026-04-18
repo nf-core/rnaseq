@@ -503,6 +503,12 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
 
     def ch_post = ch_post_pass.mix(ch_post_fail)
 
+    // DEBUG
+    ch_pre.view { id, f -> "DBG-subwf ch_pre[${id}]=${f?.size()}" }
+    ch_post.view { id, f -> "DBG-subwf ch_post[${id}]=${f?.size()}" }
+    ch_trim_read_count.view { meta, n -> "DBG-subwf trim_read_count[${meta.id}]=${n}" }
+    ch_reads.view { meta, _r -> "DBG-subwf reads[${meta.id}]" }
+
     // Final per-sample bundle: join pre + post. Recover meta from the input
     // reads anchor (every sample that entered the subworkflow) — using
     // ch_strand_inferred_fastq would drop samples that didn't reach strand
@@ -512,6 +518,8 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         .map { id, pre, post -> [id, pre + post] }
         .join(ch_reads.map { meta, _r -> [meta.id, meta] })
         .map { _id, files, meta -> [meta, files] }
+
+    ch_multiqc_bundle.view { meta, files -> "DBG-subwf bundle[${meta.id}] files=${files?.size()}" }
 
     // Run-level global (single file across the run)
     def ch_multiqc_globals = ch_fail_trimming_multiqc

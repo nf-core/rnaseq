@@ -796,9 +796,15 @@ workflow RNASEQ {
         ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
             .join(ch_quant_pass_bundle.mix(ch_quant_fail_bundle))
             .map { id, meta, base, add -> [id, meta, base + add] }
+        // Versions: SALMON_QUANT/KALLISTO_QUANT use topic-tuple emission; we
+        // can tap them via firstTopicVersionOf. TXIMETA_TXIMPORT and
+        // CUSTOM_TX2GENE use the old-style `path "versions.yml", topic: versions`
+        // (a Path in the topic, not a 3-tuple), so they don't match the
+        // tuple-filter helper. Their versions are picked up via the
+        // topic_versions.versions_file branch in ch_per_sample_collated_versions
+        // construction below.
         ch_mqc_versions_tuple = ch_mqc_versions_tuple
             .mix(firstTopicVersionOf(params.pseudo_aligner == 'salmon' ? 'SALMON_QUANT' : 'KALLISTO_QUANT'))
-            .mix(firstTopicVersionOf('TXIMETA_TXIMPORT'))
 
         if (!params.skip_qc & !params.skip_deseq2_qc & !params.skip_quantification_merge) {
             DESEQ2_QC_PSEUDO (

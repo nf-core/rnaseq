@@ -349,7 +349,7 @@
                     },
                     "trimgalore": {
                         "branch": "master",
-                        "git_sha": "169eb38ed007a09d0c1fc6eb9f461597dbd66ef7",
+                        "git_sha": "8af1cb1c621cd41413e2ddeaca34717d1a0ff95d",
                         "installed_by": ["fastq_fastqc_umitools_trimgalore", "modules"]
                     },
                     "tximeta/tximport": {

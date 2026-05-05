@@ -4,8 +4,8 @@ process TRIMGALORE {
 
     conda "${moduleDir}/environment.yml"
     container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/trim-galore:0.6.10--hdfd78af_2' :
-        'quay.io/biocontainers/trim-galore:0.6.10--hdfd78af_2'}"
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/7e/7e44249e3fafe3d136ea726225551b51bca642387e16d9687b3e602207dedb20/data' :
+        'community.wave.seqera.io/library/trim-galore:2.1.0--27e6376b8f6c1872'}"
 
     input:
     tuple val(meta), path(reads)
@@ -46,8 +46,6 @@ process TRIMGALORE {
         def args_list = args.split("\\s(?=--)").toList()
         args_list.removeAll { arg -> arg.toLowerCase().contains('_r2 ') }
         """
-        # Drop any trim_galore output left over from an interrupted previous attempt.
-        rm -f ${prefix}_trimmed.fq.gz
         [ ! -f  ${prefix}.fastq.gz ] && ln -s ${reads} ${prefix}.fastq.gz
         trim_galore \\
             ${args_list.join(' ')} \\
@@ -58,10 +56,6 @@ process TRIMGALORE {
     }
     else {
         """
-        # Drop the per-mate intermediates --paired writes before validate_paired_end_files
-        # unlinks them. An attempt interrupted between cutadapt and validation leaves these
-        # behind and the output glob then matches 3 fastqs instead of 2.
-        rm -f ${prefix}_1_trimmed.fq.gz ${prefix}_2_trimmed.fq.gz
         [ ! -f  ${prefix}_1.fastq.gz ] && ln -s ${reads[0]} ${prefix}_1.fastq.gz
         [ ! -f  ${prefix}_2.fastq.gz ] && ln -s ${reads[1]} ${prefix}_2.fastq.gz
         trim_galore \\

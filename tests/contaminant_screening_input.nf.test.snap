@@ -37,7 +37,7 @@
                     "samtools": "1.23.1"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "0.6.10"
+                    "trimgalore": "2.1.0"
                 },
                 "UNTAR_HISAT2_INDEX": {
                     "untar": 1.34
@@ -93,10 +93,10 @@
                 
             ]
         ],
-        "timestamp": "2026-04-22T17:09:08.666478589",
+        "timestamp": "2026-05-05T10:11:59.316390728",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     },
     "Params: contaminant_screening_input=trimmed screens pre-alignment reads": {
@@ -230,7 +230,7 @@
                     "subread": "2.0.6"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "0.6.10"
+                    "trimgalore": "2.1.0"
                 },
                 "TXIMETA_TXIMPORT": {
                     "bioconductor-tximeta": "1.20.1"
@@ -1478,10 +1478,10 @@
                 "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
             ]
         ],
-        "timestamp": "2026-04-22T17:16:09.077795332",
+        "timestamp": "2026-05-05T10:16:15.017657178",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     },
     "Params: contaminant_screening_input=unmapped (default) screens post-alignment reads": {
@@ -1615,7 +1615,7 @@
                     "subread": "2.0.6"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "0.6.10"
+                    "trimgalore": "2.1.0"
                 },
                 "TXIMETA_TXIMPORT": {
                     "bioconductor-tximeta": "1.20.1"
@@ -2863,10 +2863,10 @@
                 "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
             ]
         ],
-        "timestamp": "2026-04-22T17:16:18.890515571",
+        "timestamp": "2026-05-05T10:20:02.740758289",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     },
     "Params: contaminant screening trimmed input with skip_alignment - stub": {
@@ -2904,7 +2904,7 @@
                     "samtools": "1.23.1"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "0.6.10"
+                    "trimgalore": "2.1.0"
                 },
                 "UNTAR_KRAKEN_DB": {
                     "untar": 1.34
@@ -2956,10 +2956,10 @@
                 
             ]
         ],
-        "timestamp": "2026-04-22T17:09:11.755621085",
+        "timestamp": "2026-05-05T10:12:23.896766027",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     }
 }

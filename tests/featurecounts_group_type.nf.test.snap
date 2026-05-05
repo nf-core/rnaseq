@@ -36,7 +36,7 @@
                     "star": "2.7.11b"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "0.6.10"
+                    "trimgalore": "2.1.0"
                 },
                 "UNTAR_SALMON_INDEX": {
                     "untar": 1.34
@@ -75,10 +75,10 @@
                 
             ]
         ],
-        "timestamp": "2026-04-22T17:17:16.00263487",
+        "timestamp": "2026-05-05T10:23:47.13648427",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     },
     "Params: --featurecounts_group_type false": {
@@ -162,7 +162,7 @@
                     "star": "2.7.11b"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "0.6.10"
+                    "trimgalore": "2.1.0"
                 },
                 "TXIMETA_TXIMPORT": {
                     "bioconductor-tximeta": "1.20.1"
@@ -734,10 +734,10 @@
                 "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
             ]
         ],
-        "timestamp": "2026-04-22T17:20:28.012909805",
+        "timestamp": "2026-05-05T10:23:23.176698281",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     }
 }

@@ -55,7 +55,7 @@
                     "bioconductor-summarizedexperiment": "1.32.0"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "0.6.10"
+                    "trimgalore": "2.1.0"
                 },
                 "TXIMETA_TXIMPORT": {
                     "bioconductor-tximeta": "1.20.1"
@@ -284,10 +284,10 @@
                 "multiqc_strand_check_summary_table.txt:md5,7825c502243e9901873965fd870cd789"
             ]
         ],
-        "timestamp": "2026-04-21T20:09:28.421156775",
+        "timestamp": "2026-05-05T10:27:55.474205553",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     },
     "Params: --pseudo_aligner kallisto --skip_qc --skip_alignment - stub": {
@@ -322,7 +322,7 @@
                     "samtools": "1.23.1"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "0.6.10"
+                    "trimgalore": "2.1.0"
                 },
                 "UNTAR_SALMON_INDEX": {
                     "untar": 1.34
@@ -360,10 +360,10 @@
                 
             ]
         ],
-        "timestamp": "2026-02-04T17:10:11.124774782",
+        "timestamp": "2026-05-05T10:28:18.775869295",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
         }
     }
 }

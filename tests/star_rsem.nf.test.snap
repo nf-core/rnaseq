@@ -147,7 +147,7 @@
                     "subread": "2.0.6"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "0.6.10"
+                    "trimgalore": "2.1.0"
                 },
                 "TXIMETA_TXIMPORT": {
                     "bioconductor-tximeta": "1.20.1"
@@ -1278,10 +1278,10 @@
                 "i_data.ctab:md5,7e81ace0a68bfe42482420b7275de195"
             ]
         ],
-        "timestamp": "2026-04-22T17:31:07.391686257",
+        "timestamp": "2026-05-05T10:35:22.651323033",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     },
     "Params: --aligner star_rsem - stub": {
@@ -1327,7 +1327,7 @@
                     "star": "2.7.11b"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "0.6.10"
+                    "trimgalore": "2.1.0"
                 },
                 "UNTAR_SALMON_INDEX": {
                     "untar": 1.34
@@ -1377,10 +1377,10 @@
                 
             ]
         ],
-        "timestamp": "2026-04-22T17:32:41.06267044",
+        "timestamp": "2026-05-05T10:35:47.84104358",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     }
 }

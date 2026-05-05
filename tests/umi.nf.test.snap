@@ -123,7 +123,7 @@
                     "subread": "2.0.6"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "0.6.10"
+                    "trimgalore": "2.1.0"
                 },
                 "TXIMETA_TXIMPORT": {
                     "bioconductor-tximeta": "1.20.1"
@@ -1231,10 +1231,10 @@
                 "WT_REP2.umi_extract_2.fastq.gz:md5,067ff23f8d1307ad241cd70bc186b5c1"
             ]
         ],
-        "timestamp": "2026-04-22T17:34:37.104038632",
+        "timestamp": "2026-05-05T10:44:25.200204538",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     },
     "--umi_dedup_tool 'umitools'": {
@@ -1352,7 +1352,7 @@
                     "subread": "2.0.6"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "0.6.10"
+                    "trimgalore": "2.1.0"
                 },
                 "TXIMETA_TXIMPORT": {
                     "bioconductor-tximeta": "1.20.1"
@@ -2497,10 +2497,10 @@
                 "WT_REP2.umi_extract_2.fastq.gz:md5,067ff23f8d1307ad241cd70bc186b5c1"
             ]
         ],
-        "timestamp": "2026-04-22T17:37:05.820604066",
+        "timestamp": "2026-05-05T10:41:38.77987356",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     },
     "Params: --aligner hisat2 --umi_dedup_tool 'umicollapse'": {
@@ -2602,7 +2602,7 @@
                     "subread": "2.0.6"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "0.6.10"
+                    "trimgalore": "2.1.0"
                 },
                 "UMICOLLAPSE": {
                     "umicollapse": "1.1.0-0"
@@ -3495,10 +3495,10 @@
                 "WT_REP2.umi_extract_2.fastq.gz:md5,067ff23f8d1307ad241cd70bc186b5c1"
             ]
         ],
-        "timestamp": "2026-04-22T17:25:23.385280417",
+        "timestamp": "2026-05-05T10:38:26.215367524",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     },
     "--umi_dedup_tool 'umitools - stub": {
@@ -3541,7 +3541,7 @@
                     "star": "2.7.11b"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "0.6.10"
+                    "trimgalore": "2.1.0"
                 },
                 "UMITOOLS_EXTRACT": {
                     "umitools": "1.1.6"
@@ -3600,10 +3600,10 @@
                 
             ]
         ],
-        "timestamp": "2026-04-22T17:33:28.968724315",
+        "timestamp": "2026-05-05T10:44:56.544257063",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     }
 }

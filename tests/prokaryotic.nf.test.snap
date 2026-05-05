@@ -77,7 +77,7 @@
                     "star": "2.7.11b"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "0.6.10"
+                    "trimgalore": "2.1.0"
                 },
                 "TXIMETA_TXIMPORT": {
                     "bioconductor-tximeta": "1.20.1"
@@ -477,10 +477,10 @@
                 "salmon.merged.tx2gene.tsv:md5,02c8aa14dbbbd6c4e45cf0a1b916b1ab"
             ]
         ],
-        "timestamp": "2026-04-24T10:09:10.940319318",
+        "timestamp": "2026-05-05T10:59:39.645057743",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.04.3"
+            "nextflow": "26.04.0"
         }
     },
     "Params: --aligner bowtie2_salmon --gffread_transcript_fasta (-k 200 multimapping)": {
@@ -556,7 +556,7 @@
                     "bioconductor-summarizedexperiment": "1.32.0"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "0.6.10"
+                    "trimgalore": "2.1.0"
                 },
                 "TXIMETA_TXIMPORT": {
                     "bioconductor-tximeta": "1.20.1"
@@ -924,10 +924,10 @@
                 "samtools-idxstats-mapped-reads-plot_Raw_Counts.txt:md5,a8d7ee5c80619606f2a6a4b92c8bec5f"
             ]
         ],
-        "timestamp": "2026-04-24T14:15:38.453121457",
+        "timestamp": "2026-05-05T11:01:14.47329685",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.04.3"
+            "nextflow": "26.04.0"
         }
     },
     "Params: --aligner bowtie2_salmon --gffread_transcript_fasta (-k 200 multimapping) - stub": {
@@ -994,7 +994,7 @@
                     "bioconductor-summarizedexperiment": "1.32.0"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "0.6.10"
+                    "trimgalore": "2.1.0"
                 },
                 "TXIMETA_TXIMPORT": {
                     "bioconductor-tximeta": "1.20.1"
@@ -1068,10 +1068,10 @@
                 "salmon.merged.tx2gene.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
-        "timestamp": "2026-04-24T10:10:02.776932497",
+        "timestamp": "2026-05-05T11:00:18.857709829",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.04.3"
+            "nextflow": "26.04.0"
         }
     },
     "Params: --aligner star_salmon --prokaryotic - stub": {
@@ -1140,7 +1140,7 @@
                     "star": "2.7.11b"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "0.6.10"
+                    "trimgalore": "2.1.0"
                 },
                 "TXIMETA_TXIMPORT": {
                     "bioconductor-tximeta": "1.20.1"
@@ -1230,10 +1230,10 @@
                 "salmon.merged.tx2gene.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
-        "timestamp": "2026-04-24T10:07:53.819270199",
+        "timestamp": "2026-05-05T10:58:42.211291025",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.04.3"
+            "nextflow": "26.04.0"
         }
     }
 }

@@ -129,7 +129,7 @@
                     "subread": "2.0.6"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "0.6.10"
+                    "trimgalore": "2.1.0"
                 },
                 "TXIMETA_TXIMPORT": {
                     "bioconductor-tximeta": "1.20.1"
@@ -1347,10 +1347,10 @@
                 "i_data.ctab:md5,fca03502dd5b5e2831a64ff133d8c0b5"
             ]
         ],
-        "timestamp": "2026-04-22T17:29:28.690498135",
+        "timestamp": "2026-05-05T10:02:03.931128932",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     }
 }

@@ -37,7 +37,7 @@
                     "samtools": "1.23.1"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "0.6.10"
+                    "trimgalore": "2.1.0"
                 },
                 "UNTAR_HISAT2_INDEX": {
                     "untar": 1.34
@@ -90,10 +90,10 @@
                 
             ]
         ],
-        "timestamp": "2026-04-22T17:11:20.845830751",
+        "timestamp": "2026-05-05T10:26:23.205424505",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     },
     "Params: --aligner hisat2": {
@@ -210,7 +210,7 @@
                     "subread": "2.0.6"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "0.6.10"
+                    "trimgalore": "2.1.0"
                 },
                 "UNTAR_HISAT2_INDEX": {
                     "untar": 1.34
@@ -1206,10 +1206,10 @@
                 "samtools-idxstats-mapped-reads-plot_Raw_Counts.txt:md5,6c323b383a6506d124506405b9463d93"
             ]
         ],
-        "timestamp": "2026-04-22T17:17:55.017730677",
+        "timestamp": "2026-05-05T10:25:55.780218499",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     }
 }

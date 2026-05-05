@@ -52,7 +52,7 @@
                     "samtools": "1.23.1"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "0.6.10"
+                    "trimgalore": "2.1.0"
                 },
                 "TXIMETA_TXIMPORT": {
                     "bioconductor-tximeta": "1.20.1"
@@ -1422,10 +1422,10 @@
                 "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
             ]
         ],
-        "timestamp": "2026-04-22T17:29:06.762359837",
+        "timestamp": "2026-05-05T10:31:37.894212004",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     },
     "Params: --pseudo_aligner salmon --skip_qc --skip_alignment": {
@@ -1481,7 +1481,7 @@
                     "bioconductor-summarizedexperiment": "1.32.0"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "0.6.10"
+                    "trimgalore": "2.1.0"
                 },
                 "TXIMETA_TXIMPORT": {
                     "bioconductor-tximeta": "1.20.1"
@@ -1792,10 +1792,10 @@
                 "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
             ]
         ],
-        "timestamp": "2026-04-22T17:27:10.699537381",
+        "timestamp": "2026-05-05T10:29:49.822939673",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     },
     "Params: --pseudo_aligner salmon --skip_alignment --skip_quantification_merge - stub": {
@@ -1833,7 +1833,7 @@
                     "samtools": "1.23.1"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "0.6.10"
+                    "trimgalore": "2.1.0"
                 },
                 "UNTAR_SALMON_INDEX": {
                     "untar": 1.34
@@ -1949,10 +1949,10 @@
                 "multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
-        "timestamp": "2026-04-22T17:26:23.085720345",
+        "timestamp": "2026-05-05T10:32:04.709046363",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     },
     "Params: --pseudo_aligner salmon --skip_qc --skip_alignment - stub": {
@@ -1987,7 +1987,7 @@
                     "samtools": "1.23.1"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "0.6.10"
+                    "trimgalore": "2.1.0"
                 },
                 "UNTAR_SALMON_INDEX": {
                     "untar": 1.34
@@ -2025,10 +2025,10 @@
                 
             ]
         ],
-        "timestamp": "2026-04-22T17:22:31.000255519",
+        "timestamp": "2026-05-05T10:30:13.849250938",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     }
 }

@@ -47,7 +47,7 @@
                     "bioconductor-summarizedexperiment": "1.32.0"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "0.6.10"
+                    "trimgalore": "2.1.0"
                 },
                 "TXIMETA_TXIMPORT": {
                     "bioconductor-tximeta": "1.20.1"
@@ -418,10 +418,10 @@
                 "salmon.merged.tx2gene.tsv:md5,1be389a28cc26d94b19ea918959ac72e"
             ]
         ],
+        "timestamp": "2026-05-05T10:07:08.080043401",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-02-26T14:11:36.231165357"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
     }
 }

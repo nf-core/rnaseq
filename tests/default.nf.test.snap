@@ -39,7 +39,7 @@
                     "star": "2.7.11b"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "0.6.10"
+                    "trimgalore": "2.1.0"
                 },
                 "UNTAR_SALMON_INDEX": {
                     "untar": 1.34
@@ -89,10 +89,10 @@
                 
             ]
         ],
-        "timestamp": "2026-04-22T17:05:15.139623477",
+        "timestamp": "2026-05-05T11:05:33.03319282",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     },
     "Params: default": {
@@ -238,7 +238,7 @@
                     "subread": "2.0.6"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "0.6.10"
+                    "trimgalore": "2.1.0"
                 },
                 "TXIMETA_TXIMPORT": {
                     "bioconductor-tximeta": "1.20.1"
@@ -1555,10 +1555,10 @@
                 "i_data.ctab:md5,041edee3193df311f621c09f4991892b"
             ]
         ],
-        "timestamp": "2026-04-22T16:55:37.518809226",
+        "timestamp": "2026-05-05T11:05:05.219464085",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     }
 }

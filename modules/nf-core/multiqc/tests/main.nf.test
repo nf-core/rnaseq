@@ -29,13 +29,26 @@ nextflow_process {
 
         then {
             assert process.success
-            assertAll(
-                { assert snapshot(
-                    file(process.out.report[0][1]).name,
-                    file(process.out.data[0][1]).name,
-                    process.out.findAll { key, val -> key.startsWith("versions")
-                }).match() }
-            )
+            assert snapshot(
+                sanitizeOutput(process.out).collectEntries { key, val ->
+                        if (key == "data") {
+                            return [key, val.collect { [path(it[1]).list().collect { file(it.toString()).name }] }]
+                        }
+                        else if (key == "plots") {
+                            return [key, val.collect { [
+                                "pdf",
+                                path("${it[1]}/pdf").list().collect { file(it.toString()).name },
+                                "png",
+                                path("${it[1]}/png").list().collect { file(it.toString()).name },
+                                "svg",
+                                path("${it[1]}/svg").list().collect { file(it.toString()).name }] }]
+                        }
+                        else if (key == "report") {
+                            return [key, file(val[0][1].toString()).name]
+                        }
+                        return [key, val]
+                    }
+            ).match()
         }
     }
 
@@ -59,13 +72,26 @@ nextflow_process {
 
         then {
             assert process.success
-            assertAll(
-                { assert snapshot(
-                    file(process.out.report[0][1]).name,
-                    file(process.out.data[0][1]).name,
-                    process.out.findAll { key, val -> key.startsWith("versions")
-                }).match() }
-            )
+            assert snapshot(
+                sanitizeOutput(process.out).collectEntries { key, val ->
+                        if (key == "data") {
+                            return [key, val.collect { [path(it[1]).list().collect { file(it.toString()).name }] }]
+                        }
+                        else if (key == "plots") {
+                            return [key, val.collect { [
+                                "pdf",
+                                path("${it[1]}/pdf").list().collect { file(it.toString()).name },
+                                "png",
+                                path("${it[1]}/png").list().collect { file(it.toString()).name },
+                                "svg",
+                                path("${it[1]}/svg").list().collect { file(it.toString()).name }] }]
+                        }
+                        else if (key == "report") {
+                            return [key, file(val[0][1].toString()).name]
+                        }
+                        return [key, val]
+                    }
+            ).match()
         }
     }
 
@@ -77,7 +103,7 @@ nextflow_process {
                 input[0] = channel.of([
                     [ id: 'FASTQC' ],
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastqc/test_fastqc.zip', checkIfExists: true),
-                    file("https://github.com/nf-core/tools/raw/dev/nf_core/pipeline-template/assets/multiqc_config.yml", checkIfExists: true),
+                    file("https://raw.githubusercontent.com/nf-core/seqinspector/1.0.0/assets/multiqc_config.yml", checkIfExists: true),
                     [],
                     [],
                     []
@@ -88,14 +114,26 @@ nextflow_process {
 
         then {
             assert process.success
-            assertAll(
-                { assert snapshot(
-                    file(process.out.report[0][1]).name,
-                    file(process.out.data[0][1]).name,
-                    file(process.out.plots[0][1]).name,
-                    process.out.findAll { key, val -> key.startsWith("versions")
-                }).match() }
-            )
+            assert snapshot(
+                sanitizeOutput(process.out).collectEntries { key, val ->
+                        if (key == "data") {
+                            return [key, val.collect { [path(it[1]).list().collect { file(it.toString()).name }] }]
+                        }
+                        else if (key == "plots") {
+                            return [key, val.collect { [
+                                "pdf",
+                                path("${it[1]}/pdf").list().collect { file(it.toString()).name },
+                                "png",
+                                path("${it[1]}/png").list().collect { file(it.toString()).name },
+                                "svg",
+                                path("${it[1]}/svg").list().collect { file(it.toString()).name }] }]
+                        }
+                        else if (key == "report") {
+                            return [key, file(val[0][1].toString()).name]
+                        }
+                        return [key, val]
+                    }
+            ).match()
         }
     }
 
@@ -108,8 +146,8 @@ nextflow_process {
                     [ id: 'FASTQC' ],
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastqc/test_fastqc.zip', checkIfExists: true),
                     [
-                        file("https://github.com/nf-core/tools/raw/dev/nf_core/pipeline-template/assets/multiqc_config.yml", checkIfExists: true),
-                        file("https://github.com/nf-core/tools/raw/dev/nf_core/pipeline-template/assets/multiqc_config.yml", checkIfExists: true)
+                        file("https://raw.githubusercontent.com/nf-core/seqinspector/1.0.0/assets/multiqc_config.yml", checkIfExists: true),
+                        file("https://raw.githubusercontent.com/nf-core/seqinspector/1.0.0/assets/multiqc_config.yml", checkIfExists: true)
                     ],
                     [],
                     [],
@@ -121,14 +159,26 @@ nextflow_process {
 
         then {
             assert process.success
-            assertAll(
-                { assert snapshot(
-                    file(process.out.report[0][1]).name,
-                    file(process.out.data[0][1]).name,
-                    file(process.out.plots[0][1]).name,
-                    process.out.findAll { key, val -> key.startsWith("versions")
-                }).match() }
-            )
+            assert snapshot(
+                sanitizeOutput(process.out).collectEntries { key, val ->
+                        if (key == "data") {
+                            return [key, val.collect { [path(it[1]).list().collect { file(it.toString()).name }] }]
+                        }
+                        else if (key == "plots") {
+                            return [key, val.collect { [
+                                "pdf",
+                                path("${it[1]}/pdf").list().collect { file(it.toString()).name },
+                                "png",
+                                path("${it[1]}/png").list().collect { file(it.toString()).name },
+                                "svg",
+                                path("${it[1]}/svg").list().collect { file(it.toString()).name }] }]
+                        }
+                        else if (key == "report") {
+                            return [key, file(val[0][1].toString()).name]
+                        }
+                        return [key, val]
+                    }
+            ).match()
         }
     }
 

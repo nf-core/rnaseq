@@ -62,6 +62,7 @@ jobs:
     runs-on: # use self-hosted runners
       - runs-on=${{ github.run_id }}-nf-test
       - runner=4cpu-linux-x64
+      - volume=50gb
     strategy:
       fail-fast: false
       matrix:

@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1853](https://github.com/nf-core/rnaseq/pull/1853) - Replace remaining pre-admonition `> **NB:**` / `> **Note**` / `> **Warning**` quoteblocks across `docs/usage.md`, `docs/output.md`, and `README.md` with nf-core flavored `:::note` / `:::warning` admonitions
 - [PR #1854](https://github.com/nf-core/rnaseq/pull/1854) - Switch the `SORTMERNA` ARM container in `conf/arm.config` to a Wave build from `bioconda::sortmerna=4.3.7`, retiring the last `seqera::` channel reference in the pipeline ([#1431](https://github.com/nf-core/rnaseq/issues/1431))
 - [PR #1861](https://github.com/nf-core/rnaseq/pull/1861) - Drop the outdated RiboDetector ONNX multiprocessing hang warnings from `docs/usage.md`, `docs/output.md`, and the `ribo_removal_tool` schema help text, resolved upstream in the pinned `ribodetector=0.3.3` ([#1856](https://github.com/nf-core/rnaseq/issues/1856))
+- [PR #1862](https://github.com/nf-core/rnaseq/pull/1862) - Correct the `docs/usage.md` note to state that `--extra_star_align_args` applies to `--aligner star_rsem`, since STAR runs as a standalone step and RSEM quantifies the resulting BAM ([#1857](https://github.com/nf-core/rnaseq/issues/1857))
 
 ## [[3.26.0](https://github.com/nf-core/rnaseq/releases/tag/3.26.0)] - 2026-05-07
 

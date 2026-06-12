@@ -257,9 +257,6 @@ When `--ribo_removal_tool bowtie2` is specified, the pipeline uses [Bowtie2](htt
 
 #### RiboDetector
 
-> [!WARNING]
-> RiboDetector has known issues with ONNX multiprocessing that can cause hangs in containerized environments. We recommend using SortMeRNA or Bowtie2 instead. See [hzi-bifo/RiboDetector#61](https://github.com/hzi-bifo/RiboDetector/pull/61) for details.
-
 <details markdown="1">
 <summary>Output files</summary>
 

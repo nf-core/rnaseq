@@ -327,7 +327,7 @@
                     "default": "sortmerna",
                     "fa_icon": "fas fa-tools",
                     "description": "Tool to use for rRNA removal.",
-                    "help_text": "Choose between 'sortmerna' (default), 'bowtie2', or 'ribodetector' for rRNA removal.\n\n- **sortmerna**: Reference-based filtering (default). Requires `--ribo_database_manifest`. Note: Default databases include SILVA sequences requiring licensing for commercial use.\n- **bowtie2**: Alignment-based filtering. Requires `--ribo_database_manifest`. Recommended for users with SILVA licensing concerns as it supports custom databases.\n- **ribodetector**: \u26a0\ufe0f EXPERIMENTAL - ML-based detection without reference requirement. Known ONNX multiprocessing issues can cause hangs in containerized environments. See https://github.com/hzi-bifo/RiboDetector/pull/61",
+                    "help_text": "Choose between 'sortmerna' (default), 'bowtie2', or 'ribodetector' for rRNA removal.\n\n- **sortmerna**: Reference-based filtering (default). Requires `--ribo_database_manifest`. Note: Default databases include SILVA sequences requiring licensing for commercial use.\n- **bowtie2**: Alignment-based filtering. Requires `--ribo_database_manifest`. Recommended for users with SILVA licensing concerns as it supports custom databases.\n- **ribodetector**: ML-based detection without a reference requirement. Useful for organisms lacking well-characterized rRNA sequences or to avoid database licensing requirements.",
                     "enum": ["sortmerna", "ribodetector", "bowtie2"]
                 },
                 "use_gpu_ribodetector": {

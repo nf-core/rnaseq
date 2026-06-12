@@ -1,5 +1,5 @@
 {
-    "Params: --featurecounts_group_type false - stub": {
+    "Params: skip_qc, skip_stringtie, skip_bigwig - stub": {
         "content": [
             22,
             {
@@ -81,7 +81,7 @@
             "nextflow": "25.10.4"
         }
     },
-    "Params: --featurecounts_group_type false": {
+    "Params: skip_qc, skip_stringtie, skip_bigwig": {
         "content": [
             112,
             {

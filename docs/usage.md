@@ -240,9 +240,6 @@ nextflow run nf-core/rnaseq --remove_ribo_rna --ribo_removal_tool bowtie2 ...
 
 ### RiboDetector
 
-> [!WARNING]
-> RiboDetector has known issues with ONNX multiprocessing that can cause hangs in containerized environments (Docker, Singularity). This makes it unreliable for production use in Nextflow pipelines. We recommend using SortMeRNA or Bowtie2 for rRNA removal until these issues are resolved upstream. See [hzi-bifo/RiboDetector#61](https://github.com/hzi-bifo/RiboDetector/pull/61) for details.
-
 [RiboDetector](https://github.com/hzi-bifo/RiboDetector) uses machine learning to identify rRNA reads without requiring a reference database. This makes it particularly useful when working with organisms that lack well-characterized rRNA sequences, or when you want to avoid database licensing requirements.
 
 ```bash

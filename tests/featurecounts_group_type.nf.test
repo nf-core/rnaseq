@@ -1,6 +1,6 @@
 nextflow_pipeline {
 
-    name "Test pipeline without a group type for featureCounts"
+    name "Test pipeline with QC, StringTie and bigWig generation skipped"
     script "../main.nf"
     tag "pipeline"
 

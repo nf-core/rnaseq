@@ -331,6 +331,10 @@ def validateInputParameters() {
         error("Parabricks (--use_parabricks_star) is not compatible with --genome. iGenomes STAR indices are built with a different STAR version than Parabricks bundles. Please supply --fasta and --gtf explicitly instead.")
     }
 
+    if (params.use_rustqc && params.skip_markduplicates) {
+        error("--use_rustqc requires duplicate-marked BAM files. Please remove --skip_markduplicates when using --use_rustqc.")
+    }
+
     if (params.with_umi && !params.skip_umi_extract) {
         if (!params.umitools_bc_pattern && !params.umitools_bc_pattern2) {
             error("UMI-tools requires a barcode pattern to extract barcodes from the reads.")

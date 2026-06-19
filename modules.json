@@ -17,12 +17,12 @@
                     },
                     "bowtie2/align": {
                         "branch": "master",
-                        "git_sha": "2221f422f008714c13816bc5c3346d7346a56ed0",
+                        "git_sha": "a0961c41021561ac7cf139f86bd7812a2f99e994",
                         "installed_by": ["fastq_remove_rrna"]
                     },
                     "bowtie2/build": {
                         "branch": "master",
-                        "git_sha": "2221f422f008714c13816bc5c3346d7346a56ed0",
+                        "git_sha": "a0961c41021561ac7cf139f86bd7812a2f99e994",
                         "installed_by": ["fastq_remove_rrna"]
                     },
                     "bracken/bracken": {
@@ -161,7 +161,7 @@
                     },
                     "ribodetector": {
                         "branch": "master",
-                        "git_sha": "fbfb84479283933dae1ba16df948ac04c0a49549",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["fastq_remove_rrna"]
                     },
                     "rsem/calculateexpression": {
@@ -238,7 +238,7 @@
                     },
                     "samtools/fastq": {
                         "branch": "master",
-                        "git_sha": "156feda0cb6589cd29c04902004fa3b53bc00205",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["fastq_remove_rrna", "modules"]
                     },
                     "samtools/flagstat": {
@@ -274,7 +274,7 @@
                     },
                     "samtools/view": {
                         "branch": "master",
-                        "git_sha": "2057a0a8dbd67000d08613a556570aa7184a7c89",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["bam_dedup_stats_samtools_umitools", "fastq_remove_rrna"]
                     },
                     "sentieon/rsemcalculateexpression": {
@@ -294,7 +294,7 @@
                     },
                     "seqkit/replace": {
                         "branch": "master",
-                        "git_sha": "2eccc519c7d25e24c8ef2a5a94062630b8383daf",
+                        "git_sha": "d07a945f421a4a91ce4e5a22db63e0e7f8741607",
                         "installed_by": ["fastq_remove_rrna"]
                     },
                     "seqkit/stats": {
@@ -468,12 +468,12 @@
                     },
                     "fastq_qc_trim_filter_setstrandedness": {
                         "branch": "master",
-                        "git_sha": "1298fbd2004c2913d6682ce4a419647d97a8fc3f",
+                        "git_sha": "2e0ae2fa5d14f045f2e1360928a5d003fa5d903d",
                         "installed_by": ["subworkflows"]
                     },
                     "fastq_remove_rrna": {
                         "branch": "master",
-                        "git_sha": "2057a0a8dbd67000d08613a556570aa7184a7c89",
+                        "git_sha": "d07a945f421a4a91ce4e5a22db63e0e7f8741607",
                         "installed_by": ["fastq_qc_trim_filter_setstrandedness"]
                     },
                     "fastq_subsample_fq_salmon": {

@@ -3,7 +3,7 @@ process BOWTIE2_ALIGN {
     label 'process_high'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+    container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container ?
         'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/b4/b41b403e81883126c3227fc45840015538e8e2212f13abc9ae84e4b98891d51c/data' :
         'community.wave.seqera.io/library/bowtie2_htslib_samtools_pigz:edeb13799090a2a6' }"
 
@@ -83,9 +83,9 @@ process BOWTIE2_ALIGN {
     def extension = (args2 ==~ extension_pattern) ? (args2 =~ extension_pattern)[0][2].toLowerCase() : "bam"
     def create_unmapped = ""
     if (meta.single_end) {
-        create_unmapped = save_unaligned ? "touch ${prefix}.unmapped.fastq.gz" : ""
+        create_unmapped = save_unaligned ? "echo | gzip > ${prefix}.unmapped.fastq.gz" : ""
     } else {
-        create_unmapped = save_unaligned ? "touch ${prefix}.unmapped_1.fastq.gz && touch ${prefix}.unmapped_2.fastq.gz" : ""
+        create_unmapped = save_unaligned ? "echo | gzip > ${prefix}.unmapped_1.fastq.gz && echo | gzip > ${prefix}.unmapped_2.fastq.gz" : ""
     }
     if (!fasta && extension=="cram") error "Fasta reference is required for CRAM output"
 

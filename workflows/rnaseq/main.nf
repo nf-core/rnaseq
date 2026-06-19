@@ -238,8 +238,8 @@ workflow RNASEQ {
 
     ch_multiqc_files                  = ch_multiqc_files.mix(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.multiqc_files)
     ch_strand_inferred_filtered_fastq = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.reads
-    ch_reads_raw                      = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.reads_raw
-    ch_reads_pre_bbsplit              = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.reads_pre_bbsplit
+    ch_reads_cat                      = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.reads_cat
+    ch_reads_trimmed                  = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.reads_trimmed
     ch_trim_read_count                = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.trim_read_count
 
     ch_trim_status = ch_trim_read_count
@@ -713,9 +713,9 @@ workflow RNASEQ {
         def ch_contaminant_sequences = params.contaminant_screening_input == 'trimmed'
             ? ch_strand_inferred_filtered_fastq
             : params.contaminant_screening_input == 'trim_only'
-                ? ch_reads_pre_bbsplit
+                ? ch_reads_trimmed
                 : params.contaminant_screening_input == 'raw'
-                    ? ch_reads_raw
+                    ? ch_reads_cat
                     : ch_unaligned_sequences
 
         if (params.contaminant_screening in ['kraken2', 'kraken2_bracken'] ) {

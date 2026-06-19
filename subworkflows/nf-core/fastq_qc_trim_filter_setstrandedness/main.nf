@@ -189,8 +189,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         ch_filtered_reads = ch_filtered_reads.join(FQ_LINT.out.lint.map { meta, _lint -> meta })
     }
 
-    // Snapshot for --contaminant_screening_input raw: reads before trimming
-    ch_reads_raw = ch_filtered_reads
+    ch_reads_cat = ch_filtered_reads
 
     //
     // SUBWORKFLOW: Read QC, extract UMI and trim adapters with TrimGalore!
@@ -294,8 +293,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         ch_filtered_reads = ch_filtered_reads.join(FQ_LINT_AFTER_TRIMMING.out.lint.map { meta, _lint -> meta })
     }
 
-    // Snapshot for --contaminant_screening_input trim_only: reads after trimming, before BBSplit/rRNA removal
-    ch_reads_pre_bbsplit = ch_filtered_reads
+    ch_reads_trimmed = ch_filtered_reads
 
     //
     // MODULE: Remove genome contaminant reads
@@ -433,10 +431,10 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
 
     emit:
     reads             = ch_strand_inferred_fastq
-    reads_raw         = ch_reads_raw
-    reads_pre_bbsplit = ch_reads_pre_bbsplit
+    reads_cat         = ch_reads_cat
+    reads_trimmed     = ch_reads_trimmed
     trim_read_count   = ch_trim_read_count
-    multiqc_files    = ch_multiqc_files.transpose()
+    multiqc_files     = ch_multiqc_files.transpose()
 
     // Individual outputs for workflow outputs
     lint_log_raw     = ch_lint_log_raw

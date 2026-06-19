@@ -46,9 +46,10 @@ input:
           e.g. [ id:'test', single_end:false ]
     - fasta:
         type: file
-        description: Bowtie2 genome fasta file
-        pattern: "*.fasta"
-        ontologies: []
+        description: Reference genome FASTA file
+        pattern: "*.{fa,fasta,fna}"
+        ontologies:
+          - edam: "http://edamontology.org/format_1929"
   - save_unaligned:
       type: boolean
       description: |

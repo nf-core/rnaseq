@@ -1,57 +1,12 @@
 {
-    "sarscov2 - [fastq1, fastq2], large_index, fasta, false, false - bam": {
-        "content": [
-            "test.bam",
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.bowtie2.log:md5,bd89ce1b28c93bf822bae391ffcedd19"
-                ]
-            ],
-            [
-                
-            ],
-            {
-                "versions_bowtie2": [
-                    [
-                        "BOWTIE2_ALIGN",
-                        "bowtie2",
-                        "2.5.4"
-                    ]
-                ],
-                "versions_pigz": [
-                    [
-                        "BOWTIE2_ALIGN",
-                        "pigz",
-                        "2.8"
-                    ]
-                ],
-                "versions_samtools": [
-                    [
-                        "BOWTIE2_ALIGN",
-                        "samtools",
-                        "1.21"
-                    ]
-                ]
-            }
-        ],
-        "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-03T15:18:12.706444258"
-    },
-    "sarscov2 - fastq, index, fasta, false, false - sam2": {
+    "sarscov2 - fastq, index, fasta_fai, false, false - sam": {
         "content": [
             [
-                "ERR5069949.2151832\t16\tMT192765.1\t17453\t42\t150M\t*\t0\t0\tACGCACATTGCTAACTAAGGGCACACTAGAACCAGAATATTTCAATTCAGTGTGTAGACTTATGAAAACTATAGGTCCAGACATGTTCCTCGGAACTTGTCGGCGTTGTCCTGCTGAAATTGTTGACACTGTGAGTGCTTTGGTTTATGA\tAAAA<EEEEEEAEEEAEAAAAEEEEEEEEEAAAEE<EEEEEAAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAEEEEAAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAAAAAA\tAS:i:0\tXN:i:0\tXM:i:0\tXO:i:0\tXG:i:0\tNM:i:0\tMD:Z:150\tYT:Z:UU\tRG:Z:test",
-                "ERR5069949.576388\t16\tMT192765.1\t5798\t42\t77M\t*\t0\t0\tGCATAGACGGTGCTTTACTTACAAAGTCCTCAGAATACAAAGGTCCTATTACGGATGTTTTCTACAAAGAAAACAGT\tEA/AEEE/<EEEEEEEEEEEAA<EEEEEEEEEEEEEEEEEEEEEAEEEEEAEEEAEE6/EEEAEEEEEEEEEA6AAA\tAS:i:0\tXN:i:0\tXM:i:0\tXO:i:0\tXG:i:0\tNM:i:0\tMD:Z:77\tYT:Z:UU\tRG:Z:test",
-                "ERR5069949.501486\t16\tMT192765.1\t5423\t42\t146M\t*\t0\t0\tTAGGTGAGTTAGGTGATGTTAGAGAAACAATGAGTTACTTGTTTCAACATGCCAATTTAGATTCTTGCAAAAGAGTCTTGAACGTGGTGTGTAAAACTTGTGGACAACAGCAGACAACCCTTAAGGGTGTAGAAGCTGTTATGTAC\tEAAAAEAEEEE6E<AEEEEEEEE<EEEEEEAAEE/EEEEEE/<EEEEEEAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAEEEEEEEEEEAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAAAAA\tAS:i:0\tXN:i:0\tXM:i:0\tXO:i:0\tXG:i:0\tNM:i:0\tMD:Z:146\tYT:Z:UU\tRG:Z:test",
-                "ERR5069949.1331889\t0\tMT192765.1\t13010\t42\t132M\t*\t0\t0\tGTCTACAAGCTGGTAATGCAACAGAAGTGCCTGCCAATTCAACTGTATTATCTTTCTGTGCTTTTGCTGTAGATGCTGCTAAAGCTTACAAAGATTATCTAGCTAGTGGGGGACAACCAATCACTAATTGTG\tA/AAAEEEEEEEEEEEEEEEEEEEAEEEEAEEEEEEEEEEEAEEEEEEEEEEEEEEE/EEEEE<AEAEEEEE/EAEAEEE/AEEEEEEEEEEEEEEEEEEEEAE/EEEEEEEEEEEEEEEEEEEEEEEA<EE\tAS:i:0\tXN:i:0\tXM:i:0\tXO:i:0\tXG:i:0\tNM:i:0\tMD:Z:132\tYT:Z:UU\tRG:Z:test",
-                "ERR5069949.2161340\t0\tMT192765.1\t17482\t42\t80M\t*\t0\t0\tAACCAGAATATTTCAATTCAGTGTGTAGACTTATGAAAACTATAGGTCCAGACATGTTCCTCGGAACTTGTCGGCGTTGT\tA/AA//EEAEA/E/AEEEE6EE/EEEA/6AEEEEEEEEE6EEEAEAEE//A/EEEEEE//E/E/A//E/E/<<EE</E/E\tAS:i:0\tXN:i:0\tXM:i:0\tXO:i:0\tXG:i:0\tNM:i:0\tMD:Z:80\tYT:Z:UU\tRG:Z:test"
+                "ERR5069949.29668\t16\tMT192765.1\t267\t42\t89M\t*\t0\t0\tCCTTGTCCCTGGTTACAACTAGAAACCACACGTCCAACTCAGTTTGCCTGTTTTACAGGTTCGCGACGTGCTCGTACGTGGCTTTGGAG\tE////6/E/EE/EE/<<///6EEE/////<AAA<A<A6AE/E/AE6A/EAEEEAEEEAEEEEEA/AEAE<EEEAEEE////6EEAA/AA\tMD:Z:14T4G5A63\tRG:Z:test\tXG:i:0\tNM:i:3\tXM:i:3\tXN:i:0\tXO:i:0\tAS:i:-9\tYT:Z:UU\n",
+                "ERR5069949.114870\t0\tMT192765.1\t643\t42\t150M\t*\t0\t0\tAAAGGAGCTGGTGGCCATAGTTACGGCGCCGATCTAAAGTCATTTGACTTAGGCGACGAGCTTGGCACTGATCCTTATGAAGATTTTCAAGAAAACTGGAACACTAAACATAGCAGTGGTGTTACCCGTGAACTCATGCGTGAGCTTAAC\tAAAAA/EAEEEEEEAEEEEEEEEE/EEEAEEEEEEEEEEEEEEEEAEAEAEEAEEEEEEEEEEEEEEEEAEAA<EE</AAEEEEEEEAEEEAEEEEEEEEEEEEEEEEEEEEEAEEA<AEEEEEEA<<AAE<EEEEEAE<AAEAAAEAEE\tMD:Z:150\tRG:Z:test\tXG:i:0\tNM:i:0\tXM:i:0\tXN:i:0\tXO:i:0\tAS:i:0\tYT:Z:UU\n",
+                "ERR5069949.147998\t16\tMT192765.1\t919\t42\t94M\t*\t0\t0\tTTTATTGACACTAAGAGGGGTGTATACTGCTGCCGTGAACATGAGCATGAAATTGCTTGGTACACGGAACGTTCTGAAAAGAGCTATGAATTGC\tEE<EEE//A/EEE/A</E<AEAE<EEEA<6EE/EEE/A/EAEAE<//EEEE/EEE6EEE/E/EE/EEE/EEAAEEEEEEEEEEEEEEAEAAAAA\tMD:Z:94\tRG:Z:test\tXG:i:0\tNM:i:0\tXM:i:0\tXN:i:0\tXO:i:0\tAS:i:0\tYT:Z:UU\n",
+                "ERR5069949.155944\t16\tMT192765.1\t1023\t42\t150M\t*\t0\t0\tTGAAATTAAATTGGCAAAGAAATTTGACACCTTCAATGGGGAATGTCCAAATTTTGTATTTCACTTAAATTCCATAATCAAGACTATTCAACCAAGGGTTGAAAAGAAAAAGCTTGATGGCTTTATGGGTAGAATTCGATCTGTCTATCC\tEA<EA/<A/6A/AEA/6/66/AAAEAEEE/EEA/6AAAAAAEE</AAEEEEAAEEEAA/EEE//A/EEEEE/AE/EEE6AEEEE/A/EAEEEEE/EEAEEEAE/AEA66AEEEEEEEEE<AEEEAEEEEEEEEE6EEEEEEEAEEAAAAA\tMD:Z:62C87\tRG:Z:test\tXG:i:0\tNM:i:1\tXM:i:1\tXN:i:0\tXO:i:0\tAS:i:-3\tYT:Z:UU\n",
+                "ERR5069949.184542\t0\tMT192765.1\t1055\t42\t151M\t*\t0\t0\tTCAATGGGGAATGTCCAAATTTTGTATTTCCCTTAAATTCCATAATCAAGACTATTCAACAAAGGGTTGAAAAGAAAAAGCTTGATGGCTTTATGGGTAGAATTCGATCTGTCTATCCAGTTGCGTCTCCAAATGAATGCAACCAAATGTG\tAAAAAEEEEE/EA/E/EEE/EEAEE/E/EE/EEEE//AEE/E/EEE//EEE/</E/EE<<//EE/EE<EEEEEAE/E/EAAEEEAEAEE<E</EEEE/E//E<<<///E<//A<AE</<AEEEAAE///EE</EE//AA///<E</A<AEA\tMD:Z:60C66A23\tRG:Z:test\tXG:i:0\tNM:i:2\tXM:i:2\tXN:i:0\tXO:i:0\tAS:i:-6\tYT:Z:UU\n"
             ],
             [
                 [
@@ -89,26 +44,465 @@
                 ]
             }
         ],
+        "timestamp": "2026-04-12T23:26:07.975947",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-02-25T09:58:55.356484"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
-    "sarscov2 - [fastq1, fastq2], index, fasta, true, true - cram": {
+    "sarscov2 - [fastq1, fastq2], large_index, fasta_fai, false, false - bam": {
+        "content": [
+            [
+                "ERR5069949.29668\t163\tMT192765.1\t121\t42\t150M\t=\t267\t235\tTATAATTAATAACTAATTACTGTCGTTGACAGGACACGAGTAACTCGTCTATCTTCTGCAGGCTGCTTACGGTTTCTTCCGTGTTGCAGCCGATCATCAGCACATCTAGGTTTTGTCCGGGTGTGACCGAAAGGTAAGATGGAGAGCCTT\tAAA/E/EEEEEEEEEAEEEEEEEEE/</E/E/EE<E/EEAAEA/E/EE//EA/EEEEEA/AEEE/EEEEE/E/EA/EE/EEE<E/E///E<AEE<<EEE/<EEEAA///AE/6A///A/AE/EAEE</EAEAE///AA/EEAEE/AAEAA\tMD:Z:76G73\tRG:Z:test\tXG:i:0\tNM:i:1\tXM:i:1\tXN:i:0\tXO:i:0\tAS:i:-5\tYS:i:-9\tYT:Z:CP\n",
+                "ERR5069949.29668\t83\tMT192765.1\t267\t42\t89M\t=\t121\t-235\tCCTTGTCCCTGGTTACAACTAGAAACCACACGTCCAACTCAGTTTGCCTGTTTTACAGGTTCGCGACGTGCTCGTACGTGGCTTTGGAG\tE////6/E/EE/EE/<<///6EEE/////<AAA<A<A6AE/E/AE6A/EAEEEAEEEAEEEEEA/AEAE<EEEAEEE////6EEAA/AA\tMD:Z:14T4G5A63\tRG:Z:test\tXG:i:0\tNM:i:3\tXM:i:3\tXN:i:0\tXO:i:0\tAS:i:-9\tYS:i:-5\tYT:Z:CP\n",
+                "ERR5069949.114870\t99\tMT192765.1\t643\t42\t150M\t=\t748\t255\tAAAGGAGCTGGTGGCCATAGTTACGGCGCCGATCTAAAGTCATTTGACTTAGGCGACGAGCTTGGCACTGATCCTTATGAAGATTTTCAAGAAAACTGGAACACTAAACATAGCAGTGGTGTTACCCGTGAACTCATGCGTGAGCTTAAC\tAAAAA/EAEEEEEEAEEEEEEEEE/EEEAEEEEEEEEEEEEEEEEAEAEAEEAEEEEEEEEEEEEEEEEAEAA<EE</AAEEEEEEEAEEEAEEEEEEEEEEEEEEEEEEEEEAEEA<AEEEEEEA<<AAE<EEEEEAE<AAEAAAEAEE\tMD:Z:150\tRG:Z:test\tXG:i:0\tNM:i:0\tXM:i:0\tXN:i:0\tXO:i:0\tAS:i:0\tYS:i:0\tYT:Z:CP\n",
+                "ERR5069949.147998\t163\tMT192765.1\t674\t42\t151M\t=\t919\t339\tATCTAAAGTCATTTGACTTAGGCCACGAGCTTGGCACTGATCCTTATGAAGATTTTCAAGAAAACTGGAACACTAAACATAGCAGTGGTGTTACCCGTGAACTCATGCGTGAGCTTAACGGAGGGGCATACACTCGCTATGTCGATAACAA\tAAAAAAE6EEE/EEE/E/EEA6E/EEE/AE/E//EEEEAA/E/E/EAEEEE/EEEEEEE<EE/E/A/A</<E</<AE<///A<AA<//E/AE/E/EEE/EEEEA//E/A</<AE/////E<AAE<EE//EA/<6/A</A//<AAAA<EE/A\tMD:Z:23G127\tRG:Z:test\tXG:i:0\tNM:i:1\tXM:i:1\tXN:i:0\tXO:i:0\tAS:i:-3\tYS:i:0\tYT:Z:CP\n",
+                "ERR5069949.114870\t147\tMT192765.1\t748\t42\t150M\t=\t643\t-255\tAAACATAGCAGTGGTGTTACCCGTGAACTCATGCGTGAGCTTAACGGAGGGGCATACACTCGCTATGTCGATAACAACTTCTGTGGCCCTGATGGCTACCCTCTTGAGTGCATTAAAGACCTTCTAGCACGTGCTGGTAAAGCTTCATGC\tAEEAA<<<AAAE/E/AA<<<<<<<</AE<AE<A/E<AAEE<EEA<AEEE/E<A<EEEEA/A/EEAEEAEAEEEE/EAEEEEEEEE<EEAEEEEEEEAEAAEAAEEEEEEAAEEEAEEEEEEEEEEEEEEEE/EEAEAEEEEEEEAAAAAA\tMD:Z:150\tRG:Z:test\tXG:i:0\tNM:i:0\tXM:i:0\tXN:i:0\tXO:i:0\tAS:i:0\tYS:i:0\tYT:Z:CP\n"
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.bowtie2.log:md5,bd89ce1b28c93bf822bae391ffcedd19"
+                ]
+            ],
+            [
+                
+            ],
+            {
+                "versions_bowtie2": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "bowtie2",
+                        "2.5.4"
+                    ]
+                ],
+                "versions_pigz": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "pigz",
+                        "2.8"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "samtools",
+                        "1.21"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-04-12T23:27:05.579233",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "sarscov2 - [fastq1, fastq2], index, fasta_fai, false, false - stub": {
+        "content": [
+            "test.bam",
+            "test.csi",
+            "test.bowtie2.log",
+            [
+                
+            ],
+            {
+                "versions_bowtie2": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "bowtie2",
+                        "2.5.4"
+                    ]
+                ],
+                "versions_pigz": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "pigz",
+                        "2.8"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "samtools",
+                        "1.21"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-04-12T23:27:44.00808",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "sarscov2 - fastq, index, fasta_fai, true, false - stub": {
+        "content": [
+            "test.bam",
+            "test.csi",
+            "test.bowtie2.log",
+            [
+                
+            ],
+            {
+                "versions_bowtie2": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "bowtie2",
+                        "2.5.4"
+                    ]
+                ],
+                "versions_pigz": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "pigz",
+                        "2.8"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "samtools",
+                        "1.21"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-04-12T23:27:52.514854",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "sarscov2 - fastq, index, fasta_fai, false, false - sam2": {
+        "content": [
+            [
+                "ERR5069949.29668\t16\tMT192765.1\t267\t42\t89M\t*\t0\t0\tCCTTGTCCCTGGTTACAACTAGAAACCACACGTCCAACTCAGTTTGCCTGTTTTACAGGTTCGCGACGTGCTCGTACGTGGCTTTGGAG\tE////6/E/EE/EE/<<///6EEE/////<AAA<A<A6AE/E/AE6A/EAEEEAEEEAEEEEEA/AEAE<EEEAEEE////6EEAA/AA\tMD:Z:14T4G5A63\tRG:Z:test\tXG:i:0\tNM:i:3\tXM:i:3\tXN:i:0\tXO:i:0\tAS:i:-9\tYT:Z:UU\n",
+                "ERR5069949.114870\t0\tMT192765.1\t643\t42\t150M\t*\t0\t0\tAAAGGAGCTGGTGGCCATAGTTACGGCGCCGATCTAAAGTCATTTGACTTAGGCGACGAGCTTGGCACTGATCCTTATGAAGATTTTCAAGAAAACTGGAACACTAAACATAGCAGTGGTGTTACCCGTGAACTCATGCGTGAGCTTAAC\tAAAAA/EAEEEEEEAEEEEEEEEE/EEEAEEEEEEEEEEEEEEEEAEAEAEEAEEEEEEEEEEEEEEEEAEAA<EE</AAEEEEEEEAEEEAEEEEEEEEEEEEEEEEEEEEEAEEA<AEEEEEEA<<AAE<EEEEEAE<AAEAAAEAEE\tMD:Z:150\tRG:Z:test\tXG:i:0\tNM:i:0\tXM:i:0\tXN:i:0\tXO:i:0\tAS:i:0\tYT:Z:UU\n",
+                "ERR5069949.147998\t16\tMT192765.1\t919\t42\t94M\t*\t0\t0\tTTTATTGACACTAAGAGGGGTGTATACTGCTGCCGTGAACATGAGCATGAAATTGCTTGGTACACGGAACGTTCTGAAAAGAGCTATGAATTGC\tEE<EEE//A/EEE/A</E<AEAE<EEEA<6EE/EEE/A/EAEAE<//EEEE/EEE6EEE/E/EE/EEE/EEAAEEEEEEEEEEEEEEAEAAAAA\tMD:Z:94\tRG:Z:test\tXG:i:0\tNM:i:0\tXM:i:0\tXN:i:0\tXO:i:0\tAS:i:0\tYT:Z:UU\n",
+                "ERR5069949.155944\t16\tMT192765.1\t1023\t42\t150M\t*\t0\t0\tTGAAATTAAATTGGCAAAGAAATTTGACACCTTCAATGGGGAATGTCCAAATTTTGTATTTCACTTAAATTCCATAATCAAGACTATTCAACCAAGGGTTGAAAAGAAAAAGCTTGATGGCTTTATGGGTAGAATTCGATCTGTCTATCC\tEA<EA/<A/6A/AEA/6/66/AAAEAEEE/EEA/6AAAAAAEE</AAEEEEAAEEEAA/EEE//A/EEEEE/AE/EEE6AEEEE/A/EAEEEEE/EEAEEEAE/AEA66AEEEEEEEEE<AEEEAEEEEEEEEE6EEEEEEEAEEAAAAA\tMD:Z:62C87\tRG:Z:test\tXG:i:0\tNM:i:1\tXM:i:1\tXN:i:0\tXO:i:0\tAS:i:-3\tYT:Z:UU\n",
+                "ERR5069949.184542\t0\tMT192765.1\t1055\t42\t151M\t*\t0\t0\tTCAATGGGGAATGTCCAAATTTTGTATTTCCCTTAAATTCCATAATCAAGACTATTCAACAAAGGGTTGAAAAGAAAAAGCTTGATGGCTTTATGGGTAGAATTCGATCTGTCTATCCAGTTGCGTCTCCAAATGAATGCAACCAAATGTG\tAAAAAEEEEE/EA/E/EEE/EEAEE/E/EE/EEEE//AEE/E/EEE//EEE/</E/EE<<//EE/EE<EEEEEAE/E/EAAEEEAEAEE<E</EEEE/E//E<<<///E<//A<AE</<AEEEAAE///EE</EE//AA///<E</A<AEA\tMD:Z:60C66A23\tRG:Z:test\tXG:i:0\tNM:i:2\tXM:i:2\tXN:i:0\tXO:i:0\tAS:i:-6\tYT:Z:UU\n"
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.bowtie2.log:md5,7b8a9e61b7646da1089b041333c41a87"
+                ]
+            ],
+            [
+                
+            ],
+            {
+                "versions_bowtie2": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "bowtie2",
+                        "2.5.4"
+                    ]
+                ],
+                "versions_pigz": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "pigz",
+                        "2.8"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "samtools",
+                        "1.21"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-04-12T23:26:17.399539",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "sarscov2 - [fastq1, fastq2], index, fasta_fai, false, false - bam": {
+        "content": [
+            [
+                "ERR5069949.29668\t163\tMT192765.1\t121\t42\t150M\t=\t267\t235\tTATAATTAATAACTAATTACTGTCGTTGACAGGACACGAGTAACTCGTCTATCTTCTGCAGGCTGCTTACGGTTTCTTCCGTGTTGCAGCCGATCATCAGCACATCTAGGTTTTGTCCGGGTGTGACCGAAAGGTAAGATGGAGAGCCTT\tAAA/E/EEEEEEEEEAEEEEEEEEE/</E/E/EE<E/EEAAEA/E/EE//EA/EEEEEA/AEEE/EEEEE/E/EA/EE/EEE<E/E///E<AEE<<EEE/<EEEAA///AE/6A///A/AE/EAEE</EAEAE///AA/EEAEE/AAEAA\tMD:Z:76G73\tRG:Z:test\tXG:i:0\tNM:i:1\tXM:i:1\tXN:i:0\tXO:i:0\tAS:i:-5\tYS:i:-9\tYT:Z:CP\n",
+                "ERR5069949.29668\t83\tMT192765.1\t267\t42\t89M\t=\t121\t-235\tCCTTGTCCCTGGTTACAACTAGAAACCACACGTCCAACTCAGTTTGCCTGTTTTACAGGTTCGCGACGTGCTCGTACGTGGCTTTGGAG\tE////6/E/EE/EE/<<///6EEE/////<AAA<A<A6AE/E/AE6A/EAEEEAEEEAEEEEEA/AEAE<EEEAEEE////6EEAA/AA\tMD:Z:14T4G5A63\tRG:Z:test\tXG:i:0\tNM:i:3\tXM:i:3\tXN:i:0\tXO:i:0\tAS:i:-9\tYS:i:-5\tYT:Z:CP\n",
+                "ERR5069949.114870\t99\tMT192765.1\t643\t42\t150M\t=\t748\t255\tAAAGGAGCTGGTGGCCATAGTTACGGCGCCGATCTAAAGTCATTTGACTTAGGCGACGAGCTTGGCACTGATCCTTATGAAGATTTTCAAGAAAACTGGAACACTAAACATAGCAGTGGTGTTACCCGTGAACTCATGCGTGAGCTTAAC\tAAAAA/EAEEEEEEAEEEEEEEEE/EEEAEEEEEEEEEEEEEEEEAEAEAEEAEEEEEEEEEEEEEEEEAEAA<EE</AAEEEEEEEAEEEAEEEEEEEEEEEEEEEEEEEEEAEEA<AEEEEEEA<<AAE<EEEEEAE<AAEAAAEAEE\tMD:Z:150\tRG:Z:test\tXG:i:0\tNM:i:0\tXM:i:0\tXN:i:0\tXO:i:0\tAS:i:0\tYS:i:0\tYT:Z:CP\n",
+                "ERR5069949.147998\t163\tMT192765.1\t674\t42\t151M\t=\t919\t339\tATCTAAAGTCATTTGACTTAGGCCACGAGCTTGGCACTGATCCTTATGAAGATTTTCAAGAAAACTGGAACACTAAACATAGCAGTGGTGTTACCCGTGAACTCATGCGTGAGCTTAACGGAGGGGCATACACTCGCTATGTCGATAACAA\tAAAAAAE6EEE/EEE/E/EEA6E/EEE/AE/E//EEEEAA/E/E/EAEEEE/EEEEEEE<EE/E/A/A</<E</<AE<///A<AA<//E/AE/E/EEE/EEEEA//E/A</<AE/////E<AAE<EE//EA/<6/A</A//<AAAA<EE/A\tMD:Z:23G127\tRG:Z:test\tXG:i:0\tNM:i:1\tXM:i:1\tXN:i:0\tXO:i:0\tAS:i:-3\tYS:i:0\tYT:Z:CP\n",
+                "ERR5069949.114870\t147\tMT192765.1\t748\t42\t150M\t=\t643\t-255\tAAACATAGCAGTGGTGTTACCCGTGAACTCATGCGTGAGCTTAACGGAGGGGCATACACTCGCTATGTCGATAACAACTTCTGTGGCCCTGATGGCTACCCTCTTGAGTGCATTAAAGACCTTCTAGCACGTGCTGGTAAAGCTTCATGC\tAEEAA<<<AAAE/E/AA<<<<<<<</AE<AE<A/E<AAEE<EEA<AEEE/E<A<EEEEA/A/EEAEEAEAEEEE/EAEEEEEEEE<EEAEEEEEEEAEAAEAAEEEEEEAAEEEAEEEEEEEEEEEEEEEE/EEAEAEEEEEEEAAAAAA\tMD:Z:150\tRG:Z:test\tXG:i:0\tNM:i:0\tXM:i:0\tXN:i:0\tXO:i:0\tAS:i:0\tYS:i:0\tYT:Z:CP\n"
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.bowtie2.log:md5,bd89ce1b28c93bf822bae391ffcedd19"
+                ]
+            ],
+            [
+                
+            ],
+            {
+                "versions_bowtie2": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "bowtie2",
+                        "2.5.4"
+                    ]
+                ],
+                "versions_pigz": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "pigz",
+                        "2.8"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "samtools",
+                        "1.21"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-04-12T23:26:36.593325",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "sarscov2 - fastq, index, fasta_fai, false, false - bam": {
+        "content": [
+            [
+                "ERR5069949.29668\t16\tMT192765.1\t267\t42\t89M\t*\t0\t0\tCCTTGTCCCTGGTTACAACTAGAAACCACACGTCCAACTCAGTTTGCCTGTTTTACAGGTTCGCGACGTGCTCGTACGTGGCTTTGGAG\tE////6/E/EE/EE/<<///6EEE/////<AAA<A<A6AE/E/AE6A/EAEEEAEEEAEEEEEA/AEAE<EEEAEEE////6EEAA/AA\tMD:Z:14T4G5A63\tRG:Z:test\tXG:i:0\tNM:i:3\tXM:i:3\tXN:i:0\tXO:i:0\tAS:i:-9\tYT:Z:UU\n",
+                "ERR5069949.114870\t0\tMT192765.1\t643\t42\t150M\t*\t0\t0\tAAAGGAGCTGGTGGCCATAGTTACGGCGCCGATCTAAAGTCATTTGACTTAGGCGACGAGCTTGGCACTGATCCTTATGAAGATTTTCAAGAAAACTGGAACACTAAACATAGCAGTGGTGTTACCCGTGAACTCATGCGTGAGCTTAAC\tAAAAA/EAEEEEEEAEEEEEEEEE/EEEAEEEEEEEEEEEEEEEEAEAEAEEAEEEEEEEEEEEEEEEEAEAA<EE</AAEEEEEEEAEEEAEEEEEEEEEEEEEEEEEEEEEAEEA<AEEEEEEA<<AAE<EEEEEAE<AAEAAAEAEE\tMD:Z:150\tRG:Z:test\tXG:i:0\tNM:i:0\tXM:i:0\tXN:i:0\tXO:i:0\tAS:i:0\tYT:Z:UU\n",
+                "ERR5069949.147998\t16\tMT192765.1\t919\t42\t94M\t*\t0\t0\tTTTATTGACACTAAGAGGGGTGTATACTGCTGCCGTGAACATGAGCATGAAATTGCTTGGTACACGGAACGTTCTGAAAAGAGCTATGAATTGC\tEE<EEE//A/EEE/A</E<AEAE<EEEA<6EE/EEE/A/EAEAE<//EEEE/EEE6EEE/E/EE/EEE/EEAAEEEEEEEEEEEEEEAEAAAAA\tMD:Z:94\tRG:Z:test\tXG:i:0\tNM:i:0\tXM:i:0\tXN:i:0\tXO:i:0\tAS:i:0\tYT:Z:UU\n",
+                "ERR5069949.155944\t16\tMT192765.1\t1023\t42\t150M\t*\t0\t0\tTGAAATTAAATTGGCAAAGAAATTTGACACCTTCAATGGGGAATGTCCAAATTTTGTATTTCACTTAAATTCCATAATCAAGACTATTCAACCAAGGGTTGAAAAGAAAAAGCTTGATGGCTTTATGGGTAGAATTCGATCTGTCTATCC\tEA<EA/<A/6A/AEA/6/66/AAAEAEEE/EEA/6AAAAAAEE</AAEEEEAAEEEAA/EEE//A/EEEEE/AE/EEE6AEEEE/A/EAEEEEE/EEAEEEAE/AEA66AEEEEEEEEE<AEEEAEEEEEEEEE6EEEEEEEAEEAAAAA\tMD:Z:62C87\tRG:Z:test\tXG:i:0\tNM:i:1\tXM:i:1\tXN:i:0\tXO:i:0\tAS:i:-3\tYT:Z:UU\n",
+                "ERR5069949.184542\t0\tMT192765.1\t1055\t42\t151M\t*\t0\t0\tTCAATGGGGAATGTCCAAATTTTGTATTTCCCTTAAATTCCATAATCAAGACTATTCAACAAAGGGTTGAAAAGAAAAAGCTTGATGGCTTTATGGGTAGAATTCGATCTGTCTATCCAGTTGCGTCTCCAAATGAATGCAACCAAATGTG\tAAAAAEEEEE/EA/E/EEE/EEAEE/E/EE/EEEE//AEE/E/EEE//EEE/</E/EE<<//EE/EE<EEEEEAE/E/EAAEEEAEAEE<E</EEEE/E//E<<<///E<//A<AE</<AEEEAAE///EE</EE//AA///<E</A<AEA\tMD:Z:60C66A23\tRG:Z:test\tXG:i:0\tNM:i:2\tXM:i:2\tXN:i:0\tXO:i:0\tAS:i:-6\tYT:Z:UU\n"
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.bowtie2.log:md5,7b8a9e61b7646da1089b041333c41a87"
+                ]
+            ],
+            [
+                
+            ],
+            {
+                "versions_bowtie2": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "bowtie2",
+                        "2.5.4"
+                    ]
+                ],
+                "versions_pigz": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "pigz",
+                        "2.8"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "samtools",
+                        "1.21"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-04-12T23:25:58.084242",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "sarscov2 - fastq, large_index, fasta_fai, false, false - bam": {
+        "content": [
+            [
+                "ERR5069949.29668\t16\tMT192765.1\t267\t42\t89M\t*\t0\t0\tCCTTGTCCCTGGTTACAACTAGAAACCACACGTCCAACTCAGTTTGCCTGTTTTACAGGTTCGCGACGTGCTCGTACGTGGCTTTGGAG\tE////6/E/EE/EE/<<///6EEE/////<AAA<A<A6AE/E/AE6A/EAEEEAEEEAEEEEEA/AEAE<EEEAEEE////6EEAA/AA\tMD:Z:14T4G5A63\tRG:Z:test\tXG:i:0\tNM:i:3\tXM:i:3\tXN:i:0\tXO:i:0\tAS:i:-9\tYT:Z:UU\n",
+                "ERR5069949.114870\t0\tMT192765.1\t643\t42\t150M\t*\t0\t0\tAAAGGAGCTGGTGGCCATAGTTACGGCGCCGATCTAAAGTCATTTGACTTAGGCGACGAGCTTGGCACTGATCCTTATGAAGATTTTCAAGAAAACTGGAACACTAAACATAGCAGTGGTGTTACCCGTGAACTCATGCGTGAGCTTAAC\tAAAAA/EAEEEEEEAEEEEEEEEE/EEEAEEEEEEEEEEEEEEEEAEAEAEEAEEEEEEEEEEEEEEEEAEAA<EE</AAEEEEEEEAEEEAEEEEEEEEEEEEEEEEEEEEEAEEA<AEEEEEEA<<AAE<EEEEEAE<AAEAAAEAEE\tMD:Z:150\tRG:Z:test\tXG:i:0\tNM:i:0\tXM:i:0\tXN:i:0\tXO:i:0\tAS:i:0\tYT:Z:UU\n",
+                "ERR5069949.147998\t16\tMT192765.1\t919\t42\t94M\t*\t0\t0\tTTTATTGACACTAAGAGGGGTGTATACTGCTGCCGTGAACATGAGCATGAAATTGCTTGGTACACGGAACGTTCTGAAAAGAGCTATGAATTGC\tEE<EEE//A/EEE/A</E<AEAE<EEEA<6EE/EEE/A/EAEAE<//EEEE/EEE6EEE/E/EE/EEE/EEAAEEEEEEEEEEEEEEAEAAAAA\tMD:Z:94\tRG:Z:test\tXG:i:0\tNM:i:0\tXM:i:0\tXN:i:0\tXO:i:0\tAS:i:0\tYT:Z:UU\n",
+                "ERR5069949.155944\t16\tMT192765.1\t1023\t42\t150M\t*\t0\t0\tTGAAATTAAATTGGCAAAGAAATTTGACACCTTCAATGGGGAATGTCCAAATTTTGTATTTCACTTAAATTCCATAATCAAGACTATTCAACCAAGGGTTGAAAAGAAAAAGCTTGATGGCTTTATGGGTAGAATTCGATCTGTCTATCC\tEA<EA/<A/6A/AEA/6/66/AAAEAEEE/EEA/6AAAAAAEE</AAEEEEAAEEEAA/EEE//A/EEEEE/AE/EEE6AEEEE/A/EAEEEEE/EEAEEEAE/AEA66AEEEEEEEEE<AEEEAEEEEEEEEE6EEEEEEEAEEAAAAA\tMD:Z:62C87\tRG:Z:test\tXG:i:0\tNM:i:1\tXM:i:1\tXN:i:0\tXO:i:0\tAS:i:-3\tYT:Z:UU\n",
+                "ERR5069949.184542\t0\tMT192765.1\t1055\t42\t151M\t*\t0\t0\tTCAATGGGGAATGTCCAAATTTTGTATTTCCCTTAAATTCCATAATCAAGACTATTCAACAAAGGGTTGAAAAGAAAAAGCTTGATGGCTTTATGGGTAGAATTCGATCTGTCTATCCAGTTGCGTCTCCAAATGAATGCAACCAAATGTG\tAAAAAEEEEE/EA/E/EEE/EEAEE/E/EE/EEEE//AEE/E/EEE//EEE/</E/EE<<//EE/EE<EEEEEAE/E/EAAEEEAEAEE<E</EEEE/E//E<<<///E<//A<AE</<AEEEAAE///EE</EE//AA///<E</A<AEA\tMD:Z:60C66A23\tRG:Z:test\tXG:i:0\tNM:i:2\tXM:i:2\tXN:i:0\tXO:i:0\tAS:i:-6\tYT:Z:UU\n"
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.bowtie2.log:md5,7b8a9e61b7646da1089b041333c41a87"
+                ]
+            ],
+            [
+                
+            ],
+            {
+                "versions_bowtie2": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "bowtie2",
+                        "2.5.4"
+                    ]
+                ],
+                "versions_pigz": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "pigz",
+                        "2.8"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "samtools",
+                        "1.21"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-04-12T23:26:56.142817",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "sarscov2 - fastq, index, fasta_fai, false, true - bam": {
+        "content": [
+            [
+                "ERR5069949.29668\t16\tMT192765.1\t267\t42\t89M\t*\t0\t0\tCCTTGTCCCTGGTTACAACTAGAAACCACACGTCCAACTCAGTTTGCCTGTTTTACAGGTTCGCGACGTGCTCGTACGTGGCTTTGGAG\tE////6/E/EE/EE/<<///6EEE/////<AAA<A<A6AE/E/AE6A/EAEEEAEEEAEEEEEA/AEAE<EEEAEEE////6EEAA/AA\tMD:Z:14T4G5A63\tRG:Z:test\tXG:i:0\tNM:i:3\tXM:i:3\tXN:i:0\tXO:i:0\tAS:i:-9\tYT:Z:UU\n",
+                "ERR5069949.114870\t0\tMT192765.1\t643\t42\t150M\t*\t0\t0\tAAAGGAGCTGGTGGCCATAGTTACGGCGCCGATCTAAAGTCATTTGACTTAGGCGACGAGCTTGGCACTGATCCTTATGAAGATTTTCAAGAAAACTGGAACACTAAACATAGCAGTGGTGTTACCCGTGAACTCATGCGTGAGCTTAAC\tAAAAA/EAEEEEEEAEEEEEEEEE/EEEAEEEEEEEEEEEEEEEEAEAEAEEAEEEEEEEEEEEEEEEEAEAA<EE</AAEEEEEEEAEEEAEEEEEEEEEEEEEEEEEEEEEAEEA<AEEEEEEA<<AAE<EEEEEAE<AAEAAAEAEE\tMD:Z:150\tRG:Z:test\tXG:i:0\tNM:i:0\tXM:i:0\tXN:i:0\tXO:i:0\tAS:i:0\tYT:Z:UU\n",
+                "ERR5069949.147998\t16\tMT192765.1\t919\t42\t94M\t*\t0\t0\tTTTATTGACACTAAGAGGGGTGTATACTGCTGCCGTGAACATGAGCATGAAATTGCTTGGTACACGGAACGTTCTGAAAAGAGCTATGAATTGC\tEE<EEE//A/EEE/A</E<AEAE<EEEA<6EE/EEE/A/EAEAE<//EEEE/EEE6EEE/E/EE/EEE/EEAAEEEEEEEEEEEEEEAEAAAAA\tMD:Z:94\tRG:Z:test\tXG:i:0\tNM:i:0\tXM:i:0\tXN:i:0\tXO:i:0\tAS:i:0\tYT:Z:UU\n",
+                "ERR5069949.155944\t16\tMT192765.1\t1023\t42\t150M\t*\t0\t0\tTGAAATTAAATTGGCAAAGAAATTTGACACCTTCAATGGGGAATGTCCAAATTTTGTATTTCACTTAAATTCCATAATCAAGACTATTCAACCAAGGGTTGAAAAGAAAAAGCTTGATGGCTTTATGGGTAGAATTCGATCTGTCTATCC\tEA<EA/<A/6A/AEA/6/66/AAAEAEEE/EEA/6AAAAAAEE</AAEEEEAAEEEAA/EEE//A/EEEEE/AE/EEE6AEEEE/A/EAEEEEE/EEAEEEAE/AEA66AEEEEEEEEE<AEEEAEEEEEEEEE6EEEEEEEAEEAAAAA\tMD:Z:62C87\tRG:Z:test\tXG:i:0\tNM:i:1\tXM:i:1\tXN:i:0\tXO:i:0\tAS:i:-3\tYT:Z:UU\n",
+                "ERR5069949.184542\t0\tMT192765.1\t1055\t42\t151M\t*\t0\t0\tTCAATGGGGAATGTCCAAATTTTGTATTTCCCTTAAATTCCATAATCAAGACTATTCAACAAAGGGTTGAAAAGAAAAAGCTTGATGGCTTTATGGGTAGAATTCGATCTGTCTATCCAGTTGCGTCTCCAAATGAATGCAACCAAATGTG\tAAAAAEEEEE/EA/E/EEE/EEAEE/E/EE/EEEE//AEE/E/EEE//EEE/</E/EE<<//EE/EE<EEEEEAE/E/EAAEEEAEAEE<E</EEEE/E//E<<<///E<//A<AE</<AEEEAAE///EE</EE//AA///<E</A<AEA\tMD:Z:60C66A23\tRG:Z:test\tXG:i:0\tNM:i:2\tXM:i:2\tXN:i:0\tXO:i:0\tAS:i:-6\tYT:Z:UU\n"
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.bowtie2.log:md5,7b8a9e61b7646da1089b041333c41a87"
+                ]
+            ],
+            [
+                
+            ],
+            {
+                "versions_bowtie2": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "bowtie2",
+                        "2.5.4"
+                    ]
+                ],
+                "versions_pigz": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "pigz",
+                        "2.8"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "samtools",
+                        "1.21"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-04-12T23:26:26.456571",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "sarscov2 - [fastq1, fastq2], index, fasta_fai, false, true - bam": {
+        "content": [
+            [
+                "ERR5069949.29668\t163\tMT192765.1\t121\t42\t150M\t=\t267\t235\tTATAATTAATAACTAATTACTGTCGTTGACAGGACACGAGTAACTCGTCTATCTTCTGCAGGCTGCTTACGGTTTCTTCCGTGTTGCAGCCGATCATCAGCACATCTAGGTTTTGTCCGGGTGTGACCGAAAGGTAAGATGGAGAGCCTT\tAAA/E/EEEEEEEEEAEEEEEEEEE/</E/E/EE<E/EEAAEA/E/EE//EA/EEEEEA/AEEE/EEEEE/E/EA/EE/EEE<E/E///E<AEE<<EEE/<EEEAA///AE/6A///A/AE/EAEE</EAEAE///AA/EEAEE/AAEAA\tMD:Z:76G73\tRG:Z:test\tXG:i:0\tNM:i:1\tXM:i:1\tXN:i:0\tXO:i:0\tAS:i:-5\tYS:i:-9\tYT:Z:CP\n",
+                "ERR5069949.29668\t83\tMT192765.1\t267\t42\t89M\t=\t121\t-235\tCCTTGTCCCTGGTTACAACTAGAAACCACACGTCCAACTCAGTTTGCCTGTTTTACAGGTTCGCGACGTGCTCGTACGTGGCTTTGGAG\tE////6/E/EE/EE/<<///6EEE/////<AAA<A<A6AE/E/AE6A/EAEEEAEEEAEEEEEA/AEAE<EEEAEEE////6EEAA/AA\tMD:Z:14T4G5A63\tRG:Z:test\tXG:i:0\tNM:i:3\tXM:i:3\tXN:i:0\tXO:i:0\tAS:i:-9\tYS:i:-5\tYT:Z:CP\n",
+                "ERR5069949.114870\t99\tMT192765.1\t643\t42\t150M\t=\t748\t255\tAAAGGAGCTGGTGGCCATAGTTACGGCGCCGATCTAAAGTCATTTGACTTAGGCGACGAGCTTGGCACTGATCCTTATGAAGATTTTCAAGAAAACTGGAACACTAAACATAGCAGTGGTGTTACCCGTGAACTCATGCGTGAGCTTAAC\tAAAAA/EAEEEEEEAEEEEEEEEE/EEEAEEEEEEEEEEEEEEEEAEAEAEEAEEEEEEEEEEEEEEEEAEAA<EE</AAEEEEEEEAEEEAEEEEEEEEEEEEEEEEEEEEEAEEA<AEEEEEEA<<AAE<EEEEEAE<AAEAAAEAEE\tMD:Z:150\tRG:Z:test\tXG:i:0\tNM:i:0\tXM:i:0\tXN:i:0\tXO:i:0\tAS:i:0\tYS:i:0\tYT:Z:CP\n",
+                "ERR5069949.147998\t163\tMT192765.1\t674\t42\t151M\t=\t919\t339\tATCTAAAGTCATTTGACTTAGGCCACGAGCTTGGCACTGATCCTTATGAAGATTTTCAAGAAAACTGGAACACTAAACATAGCAGTGGTGTTACCCGTGAACTCATGCGTGAGCTTAACGGAGGGGCATACACTCGCTATGTCGATAACAA\tAAAAAAE6EEE/EEE/E/EEA6E/EEE/AE/E//EEEEAA/E/E/EAEEEE/EEEEEEE<EE/E/A/A</<E</<AE<///A<AA<//E/AE/E/EEE/EEEEA//E/A</<AE/////E<AAE<EE//EA/<6/A</A//<AAAA<EE/A\tMD:Z:23G127\tRG:Z:test\tXG:i:0\tNM:i:1\tXM:i:1\tXN:i:0\tXO:i:0\tAS:i:-3\tYS:i:0\tYT:Z:CP\n",
+                "ERR5069949.114870\t147\tMT192765.1\t748\t42\t150M\t=\t643\t-255\tAAACATAGCAGTGGTGTTACCCGTGAACTCATGCGTGAGCTTAACGGAGGGGCATACACTCGCTATGTCGATAACAACTTCTGTGGCCCTGATGGCTACCCTCTTGAGTGCATTAAAGACCTTCTAGCACGTGCTGGTAAAGCTTCATGC\tAEEAA<<<AAAE/E/AA<<<<<<<</AE<AE<A/E<AAEE<EEA<AEEE/E<A<EEEEA/A/EEAEEAEAEEEE/EAEEEEEEEE<EEAEEEEEEEAEAAEAAEEEEEEAAEEEAEEEEEEEEEEEEEEEE/EEAEAEEEEEEEAAAAAA\tMD:Z:150\tRG:Z:test\tXG:i:0\tNM:i:0\tXM:i:0\tXN:i:0\tXO:i:0\tAS:i:0\tYS:i:0\tYT:Z:CP\n"
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.bowtie2.log:md5,bd89ce1b28c93bf822bae391ffcedd19"
+                ]
+            ],
+            [
+                
+            ],
+            {
+                "versions_bowtie2": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "bowtie2",
+                        "2.5.4"
+                    ]
+                ],
+                "versions_pigz": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "pigz",
+                        "2.8"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "samtools",
+                        "1.21"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-04-12T23:26:46.095482",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "sarscov2 - [fastq1, fastq2], index, fasta_fai, true, true - cram": {
         "content": [
             "test.cram",
             "test.cram.crai"
         ],
+        "timestamp": "2026-04-12T23:27:34.774088",
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
-        },
-        "timestamp": "2024-03-19T08:46:08.033126014"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
-    "sarscov2 - fastq, index, fasta, false, false - bam": {
+    "sarscov2 - fastq, index, fasta_fai, true, false - bam": {
         "content": [
-            "test.bam",
+            [
+                "ERR5069949.29668\t16\tMT192765.1\t267\t42\t89M\t*\t0\t0\tCCTTGTCCCTGGTTACAACTAGAAACCACACGTCCAACTCAGTTTGCCTGTTTTACAGGTTCGCGACGTGCTCGTACGTGGCTTTGGAG\tE////6/E/EE/EE/<<///6EEE/////<AAA<A<A6AE/E/AE6A/EAEEEAEEEAEEEEEA/AEAE<EEEAEEE////6EEAA/AA\tMD:Z:14T4G5A63\tRG:Z:test\tXG:i:0\tNM:i:3\tXM:i:3\tXN:i:0\tXO:i:0\tAS:i:-9\tYT:Z:UU\n",
+                "ERR5069949.114870\t0\tMT192765.1\t643\t42\t150M\t*\t0\t0\tAAAGGAGCTGGTGGCCATAGTTACGGCGCCGATCTAAAGTCATTTGACTTAGGCGACGAGCTTGGCACTGATCCTTATGAAGATTTTCAAGAAAACTGGAACACTAAACATAGCAGTGGTGTTACCCGTGAACTCATGCGTGAGCTTAAC\tAAAAA/EAEEEEEEAEEEEEEEEE/EEEAEEEEEEEEEEEEEEEEAEAEAEEAEEEEEEEEEEEEEEEEAEAA<EE</AAEEEEEEEAEEEAEEEEEEEEEEEEEEEEEEEEEAEEA<AEEEEEEA<<AAE<EEEEEAE<AAEAAAEAEE\tMD:Z:150\tRG:Z:test\tXG:i:0\tNM:i:0\tXM:i:0\tXN:i:0\tXO:i:0\tAS:i:0\tYT:Z:UU\n",
+                "ERR5069949.147998\t16\tMT192765.1\t919\t42\t94M\t*\t0\t0\tTTTATTGACACTAAGAGGGGTGTATACTGCTGCCGTGAACATGAGCATGAAATTGCTTGGTACACGGAACGTTCTGAAAAGAGCTATGAATTGC\tEE<EEE//A/EEE/A</E<AEAE<EEEA<6EE/EEE/A/EAEAE<//EEEE/EEE6EEE/E/EE/EEE/EEAAEEEEEEEEEEEEEEAEAAAAA\tMD:Z:94\tRG:Z:test\tXG:i:0\tNM:i:0\tXM:i:0\tXN:i:0\tXO:i:0\tAS:i:0\tYT:Z:UU\n",
+                "ERR5069949.155944\t16\tMT192765.1\t1023\t42\t150M\t*\t0\t0\tTGAAATTAAATTGGCAAAGAAATTTGACACCTTCAATGGGGAATGTCCAAATTTTGTATTTCACTTAAATTCCATAATCAAGACTATTCAACCAAGGGTTGAAAAGAAAAAGCTTGATGGCTTTATGGGTAGAATTCGATCTGTCTATCC\tEA<EA/<A/6A/AEA/6/66/AAAEAEEE/EEA/6AAAAAAEE</AAEEEEAAEEEAA/EEE//A/EEEEE/AE/EEE6AEEEE/A/EAEEEEE/EEAEEEAE/AEA66AEEEEEEEEE<AEEEAEEEEEEEEE6EEEEEEEAEEAAAAA\tMD:Z:62C87\tRG:Z:test\tXG:i:0\tNM:i:1\tXM:i:1\tXN:i:0\tXO:i:0\tAS:i:-3\tYT:Z:UU\n",
+                "ERR5069949.184542\t0\tMT192765.1\t1055\t42\t151M\t*\t0\t0\tTCAATGGGGAATGTCCAAATTTTGTATTTCCCTTAAATTCCATAATCAAGACTATTCAACAAAGGGTTGAAAAGAAAAAGCTTGATGGCTTTATGGGTAGAATTCGATCTGTCTATCCAGTTGCGTCTCCAAATGAATGCAACCAAATGTG\tAAAAAEEEEE/EA/E/EEE/EEAEE/E/EE/EEEE//AEE/E/EEE//EEE/</E/EE<<//EE/EE<EEEEEAE/E/EAAEEEAEAEE<E</EEEE/E//E<<<///E<//A<AE</<AEEEAAE///EE</EE//AA///<E</A<AEA\tMD:Z:60C66A23\tRG:Z:test\tXG:i:0\tNM:i:2\tXM:i:2\tXN:i:0\tXO:i:0\tAS:i:-6\tYT:Z:UU\n"
+            ],
             [
                 [
                     {
@@ -145,188 +539,21 @@
                 ]
             }
         ],
+        "timestamp": "2026-04-12T23:27:25.342107",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-02-03T10:46:53.843035"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
-    "sarscov2 - fastq, index, fasta, true, false - bam": {
+    "sarscov2 - [fastq1, fastq2], index, fasta_fai, true, false - bam": {
         "content": [
-            "test.bam",
             [
-                [
-                    {
-                        "id": "test",
-                        "single_end": true
-                    },
-                    "test.bowtie2.log:md5,7b8a9e61b7646da1089b041333c41a87"
-                ]
+                "ERR5069949.29668\t163\tMT192765.1\t121\t42\t150M\t=\t267\t235\tTATAATTAATAACTAATTACTGTCGTTGACAGGACACGAGTAACTCGTCTATCTTCTGCAGGCTGCTTACGGTTTCTTCCGTGTTGCAGCCGATCATCAGCACATCTAGGTTTTGTCCGGGTGTGACCGAAAGGTAAGATGGAGAGCCTT\tAAA/E/EEEEEEEEEAEEEEEEEEE/</E/E/EE<E/EEAAEA/E/EE//EA/EEEEEA/AEEE/EEEEE/E/EA/EE/EEE<E/E///E<AEE<<EEE/<EEEAA///AE/6A///A/AE/EAEE</EAEAE///AA/EEAEE/AAEAA\tMD:Z:76G73\tRG:Z:test\tXG:i:0\tNM:i:1\tXM:i:1\tXN:i:0\tXO:i:0\tAS:i:-5\tYS:i:-9\tYT:Z:CP\n",
+                "ERR5069949.29668\t83\tMT192765.1\t267\t42\t89M\t=\t121\t-235\tCCTTGTCCCTGGTTACAACTAGAAACCACACGTCCAACTCAGTTTGCCTGTTTTACAGGTTCGCGACGTGCTCGTACGTGGCTTTGGAG\tE////6/E/EE/EE/<<///6EEE/////<AAA<A<A6AE/E/AE6A/EAEEEAEEEAEEEEEA/AEAE<EEEAEEE////6EEAA/AA\tMD:Z:14T4G5A63\tRG:Z:test\tXG:i:0\tNM:i:3\tXM:i:3\tXN:i:0\tXO:i:0\tAS:i:-9\tYS:i:-5\tYT:Z:CP\n",
+                "ERR5069949.114870\t99\tMT192765.1\t643\t42\t150M\t=\t748\t255\tAAAGGAGCTGGTGGCCATAGTTACGGCGCCGATCTAAAGTCATTTGACTTAGGCGACGAGCTTGGCACTGATCCTTATGAAGATTTTCAAGAAAACTGGAACACTAAACATAGCAGTGGTGTTACCCGTGAACTCATGCGTGAGCTTAAC\tAAAAA/EAEEEEEEAEEEEEEEEE/EEEAEEEEEEEEEEEEEEEEAEAEAEEAEEEEEEEEEEEEEEEEAEAA<EE</AAEEEEEEEAEEEAEEEEEEEEEEEEEEEEEEEEEAEEA<AEEEEEEA<<AAE<EEEEEAE<AAEAAAEAEE\tMD:Z:150\tRG:Z:test\tXG:i:0\tNM:i:0\tXM:i:0\tXN:i:0\tXO:i:0\tAS:i:0\tYS:i:0\tYT:Z:CP\n",
+                "ERR5069949.147998\t163\tMT192765.1\t674\t42\t151M\t=\t919\t339\tATCTAAAGTCATTTGACTTAGGCCACGAGCTTGGCACTGATCCTTATGAAGATTTTCAAGAAAACTGGAACACTAAACATAGCAGTGGTGTTACCCGTGAACTCATGCGTGAGCTTAACGGAGGGGCATACACTCGCTATGTCGATAACAA\tAAAAAAE6EEE/EEE/E/EEA6E/EEE/AE/E//EEEEAA/E/E/EAEEEE/EEEEEEE<EE/E/A/A</<E</<AE<///A<AA<//E/AE/E/EEE/EEEEA//E/A</<AE/////E<AAE<EE//EA/<6/A</A//<AAAA<EE/A\tMD:Z:23G127\tRG:Z:test\tXG:i:0\tNM:i:1\tXM:i:1\tXN:i:0\tXO:i:0\tAS:i:-3\tYS:i:0\tYT:Z:CP\n",
+                "ERR5069949.114870\t147\tMT192765.1\t748\t42\t150M\t=\t643\t-255\tAAACATAGCAGTGGTGTTACCCGTGAACTCATGCGTGAGCTTAACGGAGGGGCATACACTCGCTATGTCGATAACAACTTCTGTGGCCCTGATGGCTACCCTCTTGAGTGCATTAAAGACCTTCTAGCACGTGCTGGTAAAGCTTCATGC\tAEEAA<<<AAAE/E/AA<<<<<<<</AE<AE<A/E<AAEE<EEA<AEEE/E<A<EEEEA/A/EEAEEAEAEEEE/EAEEEEEEEE<EEAEEEEEEEAEAAEAAEEEEEEAAEEEAEEEEEEEEEEEEEEEE/EEAEAEEEEEEEAAAAAA\tMD:Z:150\tRG:Z:test\tXG:i:0\tNM:i:0\tXM:i:0\tXN:i:0\tXO:i:0\tAS:i:0\tYS:i:0\tYT:Z:CP\n"
             ],
-            [
-                
-            ],
-            {
-                "versions_bowtie2": [
-                    [
-                        "BOWTIE2_ALIGN",
-                        "bowtie2",
-                        "2.5.4"
-                    ]
-                ],
-                "versions_pigz": [
-                    [
-                        "BOWTIE2_ALIGN",
-                        "pigz",
-                        "2.8"
-                    ]
-                ],
-                "versions_samtools": [
-                    [
-                        "BOWTIE2_ALIGN",
-                        "samtools",
-                        "1.21"
-                    ]
-                ]
-            }
-        ],
-        "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-03T15:18:25.788314396"
-    },
-    "sarscov2 - fastq, large_index, fasta, false, false - bam": {
-        "content": [
-            "test.bam",
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": true
-                    },
-                    "test.bowtie2.log:md5,7b8a9e61b7646da1089b041333c41a87"
-                ]
-            ],
-            [
-                
-            ],
-            {
-                "versions_bowtie2": [
-                    [
-                        "BOWTIE2_ALIGN",
-                        "bowtie2",
-                        "2.5.4"
-                    ]
-                ],
-                "versions_pigz": [
-                    [
-                        "BOWTIE2_ALIGN",
-                        "pigz",
-                        "2.8"
-                    ]
-                ],
-                "versions_samtools": [
-                    [
-                        "BOWTIE2_ALIGN",
-                        "samtools",
-                        "1.21"
-                    ]
-                ]
-            }
-        ],
-        "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-03T15:18:06.123712951"
-    },
-    "sarscov2 - fastq, index, fasta, false, true - bam": {
-        "content": [
-            "test.bam",
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": true
-                    },
-                    "test.bowtie2.log:md5,7b8a9e61b7646da1089b041333c41a87"
-                ]
-            ],
-            [
-                
-            ],
-            {
-                "versions_bowtie2": [
-                    [
-                        "BOWTIE2_ALIGN",
-                        "bowtie2",
-                        "2.5.4"
-                    ]
-                ],
-                "versions_pigz": [
-                    [
-                        "BOWTIE2_ALIGN",
-                        "pigz",
-                        "2.8"
-                    ]
-                ],
-                "versions_samtools": [
-                    [
-                        "BOWTIE2_ALIGN",
-                        "samtools",
-                        "1.21"
-                    ]
-                ]
-            }
-        ],
-        "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-03T15:17:45.85694104"
-    },
-    "sarscov2 - fastq, index, fasta, true, false - stub": {
-        "content": [
-            "test.bam",
-            "test.csi",
-            "test.bowtie2.log",
-            [
-                
-            ],
-            {
-                "versions_bowtie2": [
-                    [
-                        "BOWTIE2_ALIGN",
-                        "bowtie2",
-                        "2.5.4"
-                    ]
-                ],
-                "versions_pigz": [
-                    [
-                        "BOWTIE2_ALIGN",
-                        "pigz",
-                        "2.8"
-                    ]
-                ],
-                "versions_samtools": [
-                    [
-                        "BOWTIE2_ALIGN",
-                        "samtools",
-                        "1.21"
-                    ]
-                ]
-            }
-        ],
-        "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-03T15:18:45.009237771"
-    },
-    "sarscov2 - [fastq1, fastq2], index, fasta, false, false - bam": {
-        "content": [
-            "test.bam",
             [
                 [
                     {
@@ -363,189 +590,10 @@
                 ]
             }
         ],
+        "timestamp": "2026-04-12T23:27:15.901525",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-03T15:17:52.571603438"
-    },
-    "sarscov2 - [fastq1, fastq2], index, fasta, false, false - stub": {
-        "content": [
-            "test.bam",
-            "test.csi",
-            "test.bowtie2.log",
-            [
-                
-            ],
-            {
-                "versions_bowtie2": [
-                    [
-                        "BOWTIE2_ALIGN",
-                        "bowtie2",
-                        "2.5.4"
-                    ]
-                ],
-                "versions_pigz": [
-                    [
-                        "BOWTIE2_ALIGN",
-                        "pigz",
-                        "2.8"
-                    ]
-                ],
-                "versions_samtools": [
-                    [
-                        "BOWTIE2_ALIGN",
-                        "samtools",
-                        "1.21"
-                    ]
-                ]
-            }
-        ],
-        "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-03T15:18:38.851739544"
-    },
-    "sarscov2 - fastq, index, fasta, false, false - sam": {
-        "content": [
-            [
-                "ERR5069949.2151832\t16\tMT192765.1\t17453\t42\t150M\t*\t0\t0\tACGCACATTGCTAACTAAGGGCACACTAGAACCAGAATATTTCAATTCAGTGTGTAGACTTATGAAAACTATAGGTCCAGACATGTTCCTCGGAACTTGTCGGCGTTGTCCTGCTGAAATTGTTGACACTGTGAGTGCTTTGGTTTATGA\tAAAA<EEEEEEAEEEAEAAAAEEEEEEEEEAAAEE<EEEEEAAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAEEEEAAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAAAAAA\tAS:i:0\tXN:i:0\tXM:i:0\tXO:i:0\tXG:i:0\tNM:i:0\tMD:Z:150\tYT:Z:UU\tRG:Z:test",
-                "ERR5069949.576388\t16\tMT192765.1\t5798\t42\t77M\t*\t0\t0\tGCATAGACGGTGCTTTACTTACAAAGTCCTCAGAATACAAAGGTCCTATTACGGATGTTTTCTACAAAGAAAACAGT\tEA/AEEE/<EEEEEEEEEEEAA<EEEEEEEEEEEEEEEEEEEEEAEEEEEAEEEAEE6/EEEAEEEEEEEEEA6AAA\tAS:i:0\tXN:i:0\tXM:i:0\tXO:i:0\tXG:i:0\tNM:i:0\tMD:Z:77\tYT:Z:UU\tRG:Z:test",
-                "ERR5069949.501486\t16\tMT192765.1\t5423\t42\t146M\t*\t0\t0\tTAGGTGAGTTAGGTGATGTTAGAGAAACAATGAGTTACTTGTTTCAACATGCCAATTTAGATTCTTGCAAAAGAGTCTTGAACGTGGTGTGTAAAACTTGTGGACAACAGCAGACAACCCTTAAGGGTGTAGAAGCTGTTATGTAC\tEAAAAEAEEEE6E<AEEEEEEEE<EEEEEEAAEE/EEEEEE/<EEEEEEAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAEEEEEEEEEEAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAAAAA\tAS:i:0\tXN:i:0\tXM:i:0\tXO:i:0\tXG:i:0\tNM:i:0\tMD:Z:146\tYT:Z:UU\tRG:Z:test",
-                "ERR5069949.1331889\t0\tMT192765.1\t13010\t42\t132M\t*\t0\t0\tGTCTACAAGCTGGTAATGCAACAGAAGTGCCTGCCAATTCAACTGTATTATCTTTCTGTGCTTTTGCTGTAGATGCTGCTAAAGCTTACAAAGATTATCTAGCTAGTGGGGGACAACCAATCACTAATTGTG\tA/AAAEEEEEEEEEEEEEEEEEEEAEEEEAEEEEEEEEEEEAEEEEEEEEEEEEEEE/EEEEE<AEAEEEEE/EAEAEEE/AEEEEEEEEEEEEEEEEEEEEAE/EEEEEEEEEEEEEEEEEEEEEEEA<EE\tAS:i:0\tXN:i:0\tXM:i:0\tXO:i:0\tXG:i:0\tNM:i:0\tMD:Z:132\tYT:Z:UU\tRG:Z:test",
-                "ERR5069949.2161340\t0\tMT192765.1\t17482\t42\t80M\t*\t0\t0\tAACCAGAATATTTCAATTCAGTGTGTAGACTTATGAAAACTATAGGTCCAGACATGTTCCTCGGAACTTGTCGGCGTTGT\tA/AA//EEAEA/E/AEEEE6EE/EEEA/6AEEEEEEEEE6EEEAEAEE//A/EEEEEE//E/E/A//E/E/<<EE</E/E\tAS:i:0\tXN:i:0\tXM:i:0\tXO:i:0\tXG:i:0\tNM:i:0\tMD:Z:80\tYT:Z:UU\tRG:Z:test"
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": true
-                    },
-                    "test.bowtie2.log:md5,7b8a9e61b7646da1089b041333c41a87"
-                ]
-            ],
-            [
-                
-            ],
-            {
-                "versions_bowtie2": [
-                    [
-                        "BOWTIE2_ALIGN",
-                        "bowtie2",
-                        "2.5.4"
-                    ]
-                ],
-                "versions_pigz": [
-                    [
-                        "BOWTIE2_ALIGN",
-                        "pigz",
-                        "2.8"
-                    ]
-                ],
-                "versions_samtools": [
-                    [
-                        "BOWTIE2_ALIGN",
-                        "samtools",
-                        "1.21"
-                    ]
-                ]
-            }
-        ],
-        "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-02-25T09:58:38.116539"
-    },
-    "sarscov2 - [fastq1, fastq2], index, fasta, true, false - bam": {
-        "content": [
-            "test.bam",
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.bowtie2.log:md5,bd89ce1b28c93bf822bae391ffcedd19"
-                ]
-            ],
-            [
-                
-            ],
-            {
-                "versions_bowtie2": [
-                    [
-                        "BOWTIE2_ALIGN",
-                        "bowtie2",
-                        "2.5.4"
-                    ]
-                ],
-                "versions_pigz": [
-                    [
-                        "BOWTIE2_ALIGN",
-                        "pigz",
-                        "2.8"
-                    ]
-                ],
-                "versions_samtools": [
-                    [
-                        "BOWTIE2_ALIGN",
-                        "samtools",
-                        "1.21"
-                    ]
-                ]
-            }
-        ],
-        "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-03T15:18:19.168328408"
-    },
-    "sarscov2 - [fastq1, fastq2], index, fasta, false, true - bam": {
-        "content": [
-            "test.bam",
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.bowtie2.log:md5,bd89ce1b28c93bf822bae391ffcedd19"
-                ]
-            ],
-            [
-                
-            ],
-            {
-                "versions_bowtie2": [
-                    [
-                        "BOWTIE2_ALIGN",
-                        "bowtie2",
-                        "2.5.4"
-                    ]
-                ],
-                "versions_pigz": [
-                    [
-                        "BOWTIE2_ALIGN",
-                        "pigz",
-                        "2.8"
-                    ]
-                ],
-                "versions_samtools": [
-                    [
-                        "BOWTIE2_ALIGN",
-                        "samtools",
-                        "1.21"
-                    ]
-                ]
-            }
-        ],
-        "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-03T15:17:59.201650301"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     }
 }

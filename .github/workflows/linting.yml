@@ -74,3 +74,21 @@ jobs:
             lint_log.txt
             lint_results.md
             PR_number.txt
+
+      # Build a comment for the shared pr-comment.yml poster to publish on the PR
+      - name: Prepare PR comment
+        if: ${{ always() }}
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          mkdir -p pr-comment
+          echo "$PR_NUMBER" > pr-comment/pr_number.txt
+          echo "lint" > pr-comment/header.txt
+          [ -f lint_results.md ] && cp lint_results.md pr-comment/comment.md || true
+
+      - name: Upload PR comment artifact
+        if: ${{ always() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: pr-comment
+          path: pr-comment/

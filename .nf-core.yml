@@ -18,6 +18,8 @@ lint:
     - docs/images/nf-core-rnaseq_logo_dark.png
     - .gitignore
     - nf-test.config
+  merge_markers:
+    - modules/nf-core/bowtie2/align/tests/main.nf.test.snap
   modules_config: false
   nextflow_config:
     - config_defaults:

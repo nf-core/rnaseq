@@ -221,3 +221,4 @@ umitools/*.umi_extract.log
 {salmon,star_salmon,bowtie2_salmon}/salmon.merged.transcript_lengths.tsv
 {salmon,star_salmon,bowtie2_salmon}/salmon.merged.transcript_tpm.tsv
 {star_salmon,star_rsem,hisat2}/contaminants/kraken2/kraken_reports/*.kraken2.report.txt
+seqkit/**

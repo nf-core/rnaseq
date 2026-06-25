@@ -22,7 +22,7 @@ process BOWTIE2_ALIGN {
     tuple val(meta), path("*.crai")     , emit: crai    , optional:true
     tuple val(meta), path("*.log")      , emit: log
     tuple val(meta), path("*fastq.gz")  , emit: fastq   , optional:true
-    tuple val("${task.process}"), val('bowtie2'), eval("bowtie2 --version 2>&1 | sed -n '1s/.*bowtie2-align-s version //p'"), emit: versions_bowtie2, topic: versions
+    tuple val("${task.process}"), val('bowtie2'), eval("bowtie2 --version 2>&1 | sed -n 's/.*bowtie2-align-s version //p'"), emit: versions_bowtie2, topic: versions
     tuple val("${task.process}"), val('samtools'), eval("samtools version | sed '1!d;s/.* //'"), emit: versions_samtools, topic: versions
     tuple val("${task.process}"), val('pigz'), eval("pigz --version 2>&1 | sed 's/pigz //'"), emit: versions_pigz, topic: versions
 

@@ -17,7 +17,7 @@
                     },
                     "bowtie2/align": {
                         "branch": "master",
-                        "git_sha": "92b8df948fd89f3bb4a50b61bd59abfdf3a87b2e",
+                        "git_sha": "2221f422f008714c13816bc5c3346d7346a56ed0",
                         "installed_by": ["fastq_remove_rrna"]
                     },
                     "bowtie2/build": {

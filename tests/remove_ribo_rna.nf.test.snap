@@ -76,8 +76,8 @@
                 "pipeline_info",
                 "pipeline_info/nf_core_rnaseq_software_mqc_versions.yml",
                 "seqkit",
-                "seqkit/smr_v4.3_fast_db_dna_converted.fasta.gz",
-                "seqkit/smr_v4.3_fast_db_prefixed.fasta.gz",
+                "seqkit/smr_v4.3_fast_db_dna_converted.fasta",
+                "seqkit/smr_v4.3_fast_db_prefixed.fasta",
                 "trimgalore",
                 "trimgalore/RAP1_IAA_30M_REP1_trimmed_1.fastq.gz_trimming_report.txt",
                 "trimgalore/RAP1_IAA_30M_REP1_trimmed_2.fastq.gz_trimming_report.txt",
@@ -89,8 +89,8 @@
                 "trimgalore/WT_REP2_trimmed_2.fastq.gz_trimming_report.txt"
             ],
             [
-                "smr_v4.3_fast_db_dna_converted.fasta.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "smr_v4.3_fast_db_prefixed.fasta.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                "smr_v4.3_fast_db_dna_converted.fasta:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "smr_v4.3_fast_db_prefixed.fasta:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
         "timestamp": "2026-04-22T17:21:48.312879133",

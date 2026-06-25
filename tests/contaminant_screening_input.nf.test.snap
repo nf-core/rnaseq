@@ -30,10 +30,6 @@
                 "GUNZIP_GTF": {
                     "gunzip": 1.13
                 },
-                "KRAKEN2": {
-                    "kraken2": "2.1.6",
-                    "pigz": 2.8
-                },
                 "SAMTOOLS_FAIDX": {
                     "samtools": "1.23.1"
                 },

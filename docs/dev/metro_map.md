@@ -11,6 +11,7 @@ pip install 'nf-metro>=1.0.0' cairosvg
 nf-metro render assets/metro_map.mmd \
   -o docs/images/nf-core-rnaseq_metro_map_grey.svg \
   --theme light --x-spacing 60 --y-spacing 40 --no-chrome-css \
+  --diamond-style symmetric \
   --logo docs/images/nf-core-rnaseq_logo_light.png
 
 python -c "import cairosvg; cairosvg.svg2png(
@@ -21,6 +22,7 @@ python -c "import cairosvg; cairosvg.svg2png(
 nf-metro render assets/metro_map.mmd \
   -o docs/images/nf-core-rnaseq_metro_map_grey_animated.svg \
   --theme light --x-spacing 60 --y-spacing 40 --no-chrome-css --animate \
+  --diamond-style symmetric \
   --logo docs/images/nf-core-rnaseq_logo_light.png
 
 # Copy static PNG to docs subdir

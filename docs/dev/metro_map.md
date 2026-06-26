@@ -6,9 +6,11 @@ The pipeline overview metro map is generated from `assets/metro_map.mmd` using [
 pip install 'nf-metro>=1.0.0' cairosvg
 
 # Static SVG + PNG
+# --no-chrome-css bakes concrete colors so cairosvg can rasterize the file;
+# without it cairosvg aborts on the CSS custom properties used for theming.
 nf-metro render assets/metro_map.mmd \
   -o docs/images/nf-core-rnaseq_metro_map_grey.svg \
-  --theme light --x-spacing 60 --y-spacing 40 \
+  --theme light --x-spacing 60 --y-spacing 40 --no-chrome-css \
   --logo docs/images/nf-core-rnaseq_logo_light.png
 
 python -c "import cairosvg; cairosvg.svg2png(
@@ -18,7 +20,7 @@ python -c "import cairosvg; cairosvg.svg2png(
 # Animated SVG (used in README)
 nf-metro render assets/metro_map.mmd \
   -o docs/images/nf-core-rnaseq_metro_map_grey_animated.svg \
-  --theme light --x-spacing 60 --y-spacing 40 --animate \
+  --theme light --x-spacing 60 --y-spacing 40 --no-chrome-css --animate \
   --logo docs/images/nf-core-rnaseq_logo_light.png
 
 # Copy static PNG to docs subdir

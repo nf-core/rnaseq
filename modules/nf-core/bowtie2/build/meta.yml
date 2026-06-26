@@ -24,8 +24,10 @@ input:
           e.g. [ id:'test', single_end:false ]
     - fasta:
         type: file
-        description: Input genome fasta file
-        ontologies: []
+        description: Reference genome FASTA file
+        pattern: "*.{fa,fasta,fna}"
+        ontologies:
+          - edam: "http://edamontology.org/format_1929"
 output:
   index:
     - - meta:

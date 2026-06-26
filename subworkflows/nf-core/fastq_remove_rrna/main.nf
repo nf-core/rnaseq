@@ -1,14 +1,14 @@
-include { BOWTIE2_ALIGN                               } from '../../../modules/nf-core/bowtie2/align/main'
-include { BOWTIE2_ALIGN as BOWTIE2_ALIGN_PE             } from '../../../modules/nf-core/bowtie2/align/main'
-include { BOWTIE2_BUILD                               } from '../../../modules/nf-core/bowtie2/build/main'
-include { RIBODETECTOR                                } from '../../../modules/nf-core/ribodetector/main'
-include { SAMTOOLS_FASTQ as SAMTOOLS_FASTQ_BOWTIE2    } from '../../../modules/nf-core/samtools/fastq/main'
-include { SAMTOOLS_VIEW as SAMTOOLS_VIEW_BOWTIE2      } from '../../../modules/nf-core/samtools/view/main'
-include { SEQKIT_REPLACE                              } from '../../../modules/nf-core/seqkit/replace/main'
-include { SEQKIT_REPLACE as SEQKIT_REPLACE_U2T         } from '../../../modules/nf-core/seqkit/replace/main'
-include { SEQKIT_STATS                                } from '../../../modules/nf-core/seqkit/stats/main'
-include { SORTMERNA                                 } from '../../../modules/nf-core/sortmerna/main'
-include { SORTMERNA as SORTMERNA_INDEX              } from '../../../modules/nf-core/sortmerna/main'
+include { BOWTIE2_ALIGN                            } from '../../../modules/nf-core/bowtie2/align'
+include { BOWTIE2_ALIGN as BOWTIE2_ALIGN_PE        } from '../../../modules/nf-core/bowtie2/align'
+include { BOWTIE2_BUILD                            } from '../../../modules/nf-core/bowtie2/build'
+include { RIBODETECTOR                             } from '../../../modules/nf-core/ribodetector'
+include { SAMTOOLS_FASTQ as SAMTOOLS_FASTQ_BOWTIE2 } from '../../../modules/nf-core/samtools/fastq'
+include { SAMTOOLS_VIEW as SAMTOOLS_VIEW_BOWTIE2   } from '../../../modules/nf-core/samtools/view'
+include { SEQKIT_REPLACE                           } from '../../../modules/nf-core/seqkit/replace'
+include { SEQKIT_REPLACE as SEQKIT_REPLACE_U2T     } from '../../../modules/nf-core/seqkit/replace'
+include { SEQKIT_STATS                             } from '../../../modules/nf-core/seqkit/stats'
+include { SORTMERNA                                } from '../../../modules/nf-core/sortmerna'
+include { SORTMERNA as SORTMERNA_INDEX             } from '../../../modules/nf-core/sortmerna'
 
 //
 // Function that parses seqkit stats TSV output to extract the mean read length
@@ -35,13 +35,13 @@ def getReadLengthFromSeqkitStats(stats_file) {
 
 workflow FASTQ_REMOVE_RRNA {
     take:
-    ch_reads             // channel: [ val(meta), [ reads ] ]
-    ch_rrna_fastas       // channel: one or more fasta files containing rrna sequences
-    ch_sortmerna_index   // channel: /path/to/sortmerna/index/ (optional)
-    ch_bowtie2_index     // channel: /path/to/bowtie2/index/ (optional)
-    ribo_removal_tool    // string (enum): 'sortmerna', 'ribodetector', or 'bowtie2'
+    ch_reads // channel: [ val(meta), [ reads ] ]
+    ch_rrna_fastas // channel: one or more fasta files containing rrna sequences
+    ch_sortmerna_index // channel: /path/to/sortmerna/index/ (optional)
+    ch_bowtie2_index // channel: /path/to/bowtie2/index/ (optional)
+    ribo_removal_tool // string (enum): 'sortmerna', 'ribodetector', or 'bowtie2'
     make_sortmerna_index // boolean: Whether to create a sortmerna index before running sortmerna
-    make_bowtie2_index   // boolean: Whether to create a bowtie2 index before running bowtie2
+    make_bowtie2_index // boolean: Whether to create a bowtie2 index before running bowtie2
 
     main:
 
@@ -49,13 +49,13 @@ workflow FASTQ_REMOVE_RRNA {
     ch_filtered_reads = ch_reads
 
     // Individual output channels for workflow outputs
-    ch_sortmerna_log     = channel.empty()
-    ch_ribodetector_log  = channel.empty()
-    ch_seqkit_stats      = channel.empty()
-    ch_bowtie2_log       = channel.empty()
+    ch_sortmerna_log = channel.empty()
+    ch_ribodetector_log = channel.empty()
+    ch_seqkit_stats = channel.empty()
+    ch_bowtie2_log = channel.empty()
     ch_bowtie2_index_out = channel.empty()
-    ch_seqkit_prefixed   = channel.empty()
-    ch_seqkit_converted  = channel.empty()
+    ch_seqkit_prefixed = channel.empty()
+    ch_seqkit_converted = channel.empty()
 
     if (ribo_removal_tool == 'sortmerna') {
         ch_sortmerna_fastas = ch_rrna_fastas
@@ -83,9 +83,7 @@ workflow FASTQ_REMOVE_RRNA {
     }
     else if (ribo_removal_tool == 'ribodetector') {
         // Run seqkit stats to determine average read length
-        SEQKIT_STATS(
-            ch_filtered_reads
-        )
+        SEQKIT_STATS(ch_filtered_reads)
 
         ch_seqkit_stats = SEQKIT_STATS.out.stats
         ch_multiqc_files = ch_multiqc_files.mix(SEQKIT_STATS.out.stats)
@@ -108,7 +106,6 @@ workflow FASTQ_REMOVE_RRNA {
         ch_filtered_reads = RIBODETECTOR.out.fastq
         ch_ribodetector_log = RIBODETECTOR.out.log
         ch_multiqc_files = ch_multiqc_files.mix(RIBODETECTOR.out.log)
-        // Note: ribodetector versions collected via topic
     }
     else if (ribo_removal_tool == 'bowtie2') {
         if (make_bowtie2_index) {
@@ -119,9 +116,7 @@ workflow FASTQ_REMOVE_RRNA {
                 .set { ch_rrna_with_meta }
 
             // Step 1: Add filename prefixes to sequence headers
-            SEQKIT_REPLACE(
-                ch_rrna_with_meta
-            )
+            SEQKIT_REPLACE(ch_rrna_with_meta, '')
             ch_seqkit_prefixed = SEQKIT_REPLACE.out.fastx
 
             // Step 2: Convert U to T in sequences (RNA to DNA)
@@ -129,9 +124,7 @@ workflow FASTQ_REMOVE_RRNA {
                 .map { meta, fasta_file -> [[id: "${meta.id}_dna"], fasta_file] }
                 .set { ch_prefixed_fastas }
 
-            SEQKIT_REPLACE_U2T(
-                ch_prefixed_fastas
-            )
+            SEQKIT_REPLACE_U2T(ch_prefixed_fastas, '')
             ch_seqkit_converted = SEQKIT_REPLACE_U2T.out.fastx
 
             // Collect processed files (already prefixed and U->T converted)
@@ -141,9 +134,7 @@ workflow FASTQ_REMOVE_RRNA {
                 .map { fasta_file -> [[id: 'rrna_refs'], fasta_file] }
                 .set { ch_combined_fasta }
 
-            BOWTIE2_BUILD(
-                ch_combined_fasta
-            )
+            BOWTIE2_BUILD(ch_combined_fasta)
             ch_bowtie2_index = BOWTIE2_BUILD.out.index.first()
             ch_bowtie2_index_out = BOWTIE2_BUILD.out.index
         }
@@ -161,9 +152,9 @@ workflow FASTQ_REMOVE_RRNA {
         BOWTIE2_ALIGN(
             ch_reads_for_bowtie2.single_end,
             ch_bowtie2_index,
-            [[], []],  // No reference fasta needed
-            true,      // save_unaligned - for single-end this works correctly
-            false,     // sort_bam - not needed
+            [[], []], // No reference fasta needed
+            true,     // save_unaligned - for single-end this works correctly
+            false,    // sort_bam - not needed
         )
 
         ch_bowtie2_log = BOWTIE2_ALIGN.out.log
@@ -175,9 +166,9 @@ workflow FASTQ_REMOVE_RRNA {
         BOWTIE2_ALIGN_PE(
             ch_reads_for_bowtie2.paired_end,
             ch_bowtie2_index,
-            [[], []],  // No reference fasta needed for BAM output
-            false,     // save_unaligned - we'll extract from BAM instead
-            false,     // sort_bam - not needed
+            [[], []], // No reference fasta needed for BAM output
+            false,    // save_unaligned - we'll extract from BAM instead
+            false,    // sort_bam - not needed
         )
 
         ch_bowtie2_log = ch_bowtie2_log.mix(BOWTIE2_ALIGN_PE.out.log)
@@ -187,17 +178,17 @@ workflow FASTQ_REMOVE_RRNA {
         // This removes any pair where at least one mate aligned to rRNA
         SAMTOOLS_VIEW_BOWTIE2(
             BOWTIE2_ALIGN_PE.out.bam.map { meta, bam_file -> [meta, bam_file, []] },
-            [[], [], []],  // No reference fasta
-            [[], []],  // No qname file
-            [[], []],  // No bed file
-            []         // No index format
+            [[], [], []], // No reference fasta
+            [[], []],     // No qname file
+            [[], []],     // No bed file
+            []            // No index format
         )
         // Note: samtools/view versions collected via topic
 
         // Convert filtered BAM back to paired FASTQ
         SAMTOOLS_FASTQ_BOWTIE2(
             SAMTOOLS_VIEW_BOWTIE2.out.bam,
-            false  // not interleaved
+            false, // not interleaved
         )
 
         // Combine single-end and paired-end results
@@ -207,13 +198,13 @@ workflow FASTQ_REMOVE_RRNA {
     }
 
     emit:
-    reads            = ch_filtered_reads   // channel: [ val(meta), [ reads ] ]
-    multiqc_files    = ch_multiqc_files    // channel: [ val(meta), [ log files ] ]
-    sortmerna_log    = ch_sortmerna_log    // channel: [ val(meta), [ log ] ]
+    reads            = ch_filtered_reads // channel: [ val(meta), [ reads ] ]
+    multiqc_files    = ch_multiqc_files // channel: [ val(meta), [ log files ] ]
+    sortmerna_log    = ch_sortmerna_log // channel: [ val(meta), [ log ] ]
     ribodetector_log = ch_ribodetector_log // channel: [ val(meta), [ log ] ]
-    seqkit_stats     = ch_seqkit_stats     // channel: [ val(meta), [ stats ] ]
-    bowtie2_log      = ch_bowtie2_log      // channel: [ val(meta), [ log ] ]
+    seqkit_stats     = ch_seqkit_stats // channel: [ val(meta), [ stats ] ]
+    bowtie2_log      = ch_bowtie2_log // channel: [ val(meta), [ log ] ]
     bowtie2_index    = ch_bowtie2_index_out // channel: [ val(meta), [ index ] ]
-    seqkit_prefixed  = ch_seqkit_prefixed  // channel: [ val(meta), [ fasta ] ]
+    seqkit_prefixed  = ch_seqkit_prefixed // channel: [ val(meta), [ fasta ] ]
     seqkit_converted = ch_seqkit_converted // channel: [ val(meta), [ fasta ] ]
 }

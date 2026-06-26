@@ -37,10 +37,10 @@
                     "samtools": "1.23.1"
                 },
                 "SEQKIT_REPLACE": {
-                    "seqkit": "2.9.0"
+                    "seqkit": "2.13.0"
                 },
                 "SEQKIT_REPLACE_U2T": {
-                    "seqkit": "2.9.0"
+                    "seqkit": "2.13.0"
                 },
                 "STAR_GENOMEGENERATE": {
                     "gawk": "5.1.0",
@@ -972,10 +972,10 @@
                     "samtools": "1.23.1"
                 },
                 "SEQKIT_REPLACE": {
-                    "seqkit": "2.9.0"
+                    "seqkit": "2.13.0"
                 },
                 "SEQKIT_REPLACE_U2T": {
-                    "seqkit": "2.9.0"
+                    "seqkit": "2.13.0"
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"

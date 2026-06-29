@@ -398,7 +398,7 @@ def validateInputParameters() {
     if (params.contaminant_screening && params.contaminant_screening_input == 'unmapped') {
         if (params.skip_alignment) {
             error("Contaminant screening with '--contaminant_screening_input unmapped' requires alignment to be enabled. Use '--contaminant_screening_input trim_only' or '--contaminant_screening_input trimmed' to screen reads before alignment.")
-        }
+            error("Contaminant screening with '--contaminant_screening_input unmapped' requires alignment to be enabled. Use '--contaminant_screening_input raw', '--contaminant_screening_input trim_only', or '--contaminant_screening_input trimmed' to screen reads before alignment.")
         if (!(params.aligner in ['star_salmon', 'star_rsem', 'hisat2'])) {
             error("Contaminant screening with '--contaminant_screening_input unmapped' is only supported with '--aligner star_salmon', '--aligner star_rsem', or '--aligner hisat2'. Use '--contaminant_screening_input trim_only' or '--contaminant_screening_input trimmed' for other aligners.")
             error("Contaminant screening with '--contaminant_screening_input unmapped' is only supported with '--aligner star_salmon', '--aligner star_rsem', or '--aligner hisat2'. Use '--contaminant_screening_input raw', '--contaminant_screening_input trim_only', or '--contaminant_screening_input trimmed' for other aligners.")

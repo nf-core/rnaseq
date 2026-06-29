@@ -9,7 +9,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Enhancements and fixes
 
-- [PR #1874](https://github.com/nf-core/rnaseq/pull/1874) - Add `trim_only` and `raw` options to `--contaminant_screening_input`: `trim_only` screens reads after adapter trimming but before BBSplit/rRNA removal, enabling detection of contaminants that a species-limited BBSplit index would otherwise discard; `raw` screens pre-trimming reads as a baseline ([#1870](https://github.com/nf-core/rnaseq/issues/1870))
 - [PR #1878](https://github.com/nf-core/rnaseq/pull/1878) - Add `trim_only` and `raw` options to `--contaminant_screening_input`: `trim_only` screens reads after adapter trimming but before BBSplit/rRNA removal, enabling detection of contaminants that a species-limited BBSplit index would otherwise discard; `raw` screens pre-trimming reads as a baseline ([#1870](https://github.com/nf-core/rnaseq/issues/1870))
 - [PR #1680](https://github.com/nf-core/rnaseq/pull/1680) - Raise the Nextflow floor to 25.10.4 across `nextflow.config`, the three `nf-test*` workflow matrices, and the README/ro-crate version badges; bump `nf-schema` to 2.6.1; clear the v2-parser lint warnings in local subworkflows and resync six nf-core components carrying upstream-merged strict-syntax fixes
 - [PR #1775](https://github.com/nf-core/rnaseq/pull/1775) - Add Parabricks resource configuration guide for full-size genomes (GPU count, memory scaling, retry strategy, `--low-memory` flag)

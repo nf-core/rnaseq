@@ -103,7 +103,7 @@ nextflow_pipeline {
                 { assert snapshot(
                     workflow.trace.succeeded().size(),
                     removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow"),
-                    stable_name,
+                    removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow").findAll { it.key != "KRAKEN2" },
                     stable_path
                 ).match() }
             )

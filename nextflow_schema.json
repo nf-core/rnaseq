@@ -678,7 +678,7 @@
                 "contaminant_screening_input": {
                     "type": "string",
                     "description": "Read set to screen for contaminants: aligner-unmapped reads (default), trimmed reads (post-BBSplit/rRNA), post-trim pre-BBSplit reads, or raw reads.",
-                    "help_text": "Use `unmapped` (default) to screen reads rejected by STAR/HISAT2 — requires alignment. Use `trimmed` to screen reads that passed BBSplit and rRNA filtering before alignment. Use `trim_only` to screen reads after adapter trimming but before BBSplit/rRNA removal — recommended when BBSplit removes expected contaminants (e.g. EBV with a mouse-only BBSplit index). Use `raw` to screen pre-trimming reads (adapter sequences still present). `unmapped` requires `--aligner star_salmon`, `--aligner star_rsem`, or `--aligner hisat2`.",
+                    "help_text": "Use `unmapped` (default) to screen reads rejected by STAR/HISAT2 — requires alignment. Use `trimmed` to screen reads that passed BBSplit and rRNA filtering before alignment. Use `trim_only` to screen reads after adapter trimming but before BBSplit/rRNA removal — recommended when BBSplit removes expected contaminants. Use `raw` to screen pre-trimming reads (adapter sequences still present). `unmapped` requires `--aligner star_salmon`, `--aligner star_rsem`, or `--aligner hisat2`.",
                     "default": "unmapped",
                     "fa_icon": "fas fa-filter",
                     "enum": ["trimmed", "unmapped", "trim_only", "raw"]

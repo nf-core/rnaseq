@@ -4,6 +4,7 @@
 %%metro file: fastq_in | FASTQ
 %%metro file: report_final | HTML
 %%metro file: report_quant | HTML
+%%metro file: report_bowtie2 | HTML
 %%metro line: star_rsem | Aligner: STAR, Quantification: RSEM | #0570b0
 %%metro line: star_salmon | Aligner: STAR, Quantification: Salmon (default) | #2db572
 %%metro line: hisat2 | Aligner: HISAT2, Quantification: None | #f5c542
@@ -49,6 +50,7 @@
 %%metro process: tximport_ga        | QUANTIFY_RSEM:QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT:TXIMETA_TXIMPORT
 %%metro process: summarized_exp_ga  | QUANTIFY_BAM_SALMON:QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT:SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT
 %%metro process: summarized_exp_ga  | QUANTIFY_RSEM:QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT:SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT
+%%metro process: multiqc_bowtie2    | MULTIQC_RNASEQ:MULTIQC
 
 %% Pseudo-alignment & quantification
 %%metro process: salmon_pseudo      | QUANTIFY_PSEUDO_ALIGNMENT:SALMON_QUANT
@@ -125,7 +127,7 @@ graph LR
 
     subgraph genome_align [Genome alignment & quantification]
         %%metro entry: left | star_salmon, star_rsem, hisat2, bowtie2_salmon
-        %%metro exit: right | star_salmon, star_rsem, bowtie2_salmon
+        %%metro exit: right | star_salmon, star_rsem
         %%metro exit: right | hisat2
         star[STAR]
         hisat2_align[HISAT2]
@@ -135,6 +137,8 @@ graph LR
         umi_tools_dedup[UMI-tools Dedup]
         tximport_ga[tximport]
         summarized_exp_ga[Sum. Exp.]
+        multiqc_bowtie2[MultiQC]
+        report_bowtie2[ ]
         _h1[hidden]
         _h2[hidden]
         _h3[hidden]
@@ -150,6 +154,8 @@ graph LR
         salmon_quant -->|star_salmon,bowtie2_salmon| tximport_ga
         rsem -->|star_rsem| tximport_ga
         tximport_ga -->|star_salmon,star_rsem,bowtie2_salmon| summarized_exp_ga
+        summarized_exp_ga -->|bowtie2_salmon| multiqc_bowtie2
+        multiqc_bowtie2 -->|bowtie2_salmon| report_bowtie2
     end
 
     subgraph pseudo_align [Pseudo-alignment & quantification]
@@ -170,21 +176,21 @@ graph LR
 
     subgraph postprocessing [Post-processing]
         %%metro direction: TB
-        %%metro entry: left | star_salmon, star_rsem, hisat2, bowtie2_salmon
-        %%metro exit: bottom | star_salmon, star_rsem, hisat2, bowtie2_salmon
+        %%metro entry: left | star_salmon, star_rsem, hisat2
+        %%metro exit: bottom | star_salmon, star_rsem, hisat2
         picard[Picard]
         bedtools[BEDTools]
         bedgraph[bedGraphToBigWig]
         stringtie[StringTie]
 
-        picard -->|star_salmon,star_rsem,hisat2,bowtie2_salmon| bedtools
-        bedtools -->|star_salmon,star_rsem,hisat2,bowtie2_salmon| bedgraph
-        bedgraph -->|star_salmon,star_rsem,hisat2,bowtie2_salmon| stringtie
+        picard -->|star_salmon,star_rsem,hisat2| bedtools
+        bedtools -->|star_salmon,star_rsem,hisat2| bedgraph
+        bedgraph -->|star_salmon,star_rsem,hisat2| stringtie
     end
 
     subgraph qc_report [Quality control & reporting]
         %%metro direction: RL
-        %%metro entry: top | star_salmon, star_rsem, hisat2, bowtie2_salmon
+        %%metro entry: top | star_salmon, star_rsem, hisat2
         rseqc[RSeQC]
         preseq[Preseq]
         qualimap[Qualimap]
@@ -196,16 +202,16 @@ graph LR
         multiqc_final[MultiQC]
         report_final[ ]
 
-        rseqc -->|star_salmon,star_rsem,hisat2,bowtie2_salmon| preseq
-        preseq -->|star_salmon,star_rsem,hisat2,bowtie2_salmon| qualimap
-        qualimap -->|star_salmon,star_rsem,hisat2,bowtie2_salmon| dupradar
-        dupradar -->|star_salmon,star_rsem,hisat2,bowtie2_salmon| featurecounts
-        featurecounts -->|star_salmon,star_rsem,hisat2,bowtie2_salmon| deseq2_pca
-        deseq2_pca -->|star_salmon,star_rsem,hisat2,bowtie2_salmon| kraken2
-        deseq2_pca -->|star_salmon,star_rsem,hisat2,bowtie2_salmon| sylph
-        kraken2 -->|star_salmon,star_rsem,hisat2,bowtie2_salmon| multiqc_final
-        sylph -->|star_salmon,star_rsem,hisat2,bowtie2_salmon| multiqc_final
-        multiqc_final -->|star_salmon,star_rsem,hisat2,bowtie2_salmon| report_final
+        rseqc -->|star_salmon,star_rsem,hisat2| preseq
+        preseq -->|star_salmon,star_rsem,hisat2| qualimap
+        qualimap -->|star_salmon,star_rsem,hisat2| dupradar
+        dupradar -->|star_salmon,star_rsem,hisat2| featurecounts
+        featurecounts -->|star_salmon,star_rsem,hisat2| deseq2_pca
+        deseq2_pca -->|star_salmon,star_rsem,hisat2| kraken2
+        deseq2_pca -->|star_salmon,star_rsem,hisat2| sylph
+        kraken2 -->|star_salmon,star_rsem,hisat2| multiqc_final
+        sylph -->|star_salmon,star_rsem,hisat2| multiqc_final
+        multiqc_final -->|star_salmon,star_rsem,hisat2| report_final
     end
 
     %% Inter-section edges
@@ -214,6 +220,6 @@ graph LR
     infer_strandedness -->|bowtie2_salmon| bowtie2_align
     infer_strandedness -->|pseudo_salmon| salmon_pseudo
     infer_strandedness -->|pseudo_kallisto| kallisto
-    summarized_exp_ga -->|star_salmon,star_rsem,bowtie2_salmon| picard
+    summarized_exp_ga -->|star_salmon,star_rsem| picard
     _h3 -->|hisat2| picard
-    stringtie -->|star_salmon,star_rsem,hisat2,bowtie2_salmon| rseqc
+    stringtie -->|star_salmon,star_rsem,hisat2| rseqc

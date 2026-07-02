@@ -3,16 +3,17 @@
 The pipeline overview metro map is generated from `assets/metro_map.mmd` using [nf-metro](https://github.com/pinin4fjords/nf-metro). If you add or rename pipeline steps, update the `.mmd` source and regenerate the images:
 
 ```bash
-pip install 'nf-metro>=1.0.0' cairosvg
+pip install 'nf-metro>=1.1.0' cairosvg
+
+# Theme, diamond style, and logo are set via %%metro directives in the .mmd
+# source, so the render command only needs output-serialization flags.
 
 # Static SVG + PNG
 # --no-chrome-css bakes concrete colors so cairosvg can rasterize the file;
 # without it cairosvg aborts on the CSS custom properties used for theming.
 nf-metro render assets/metro_map.mmd \
   -o docs/images/nf-core-rnaseq_metro_map_grey.svg \
-  --theme light --x-spacing 60 --y-spacing 40 --no-chrome-css \
-  --diamond-style symmetric \
-  --logo docs/images/nf-core-rnaseq_logo_light.png
+  --no-chrome-css
 
 python -c "import cairosvg; cairosvg.svg2png(
     url='docs/images/nf-core-rnaseq_metro_map_grey.svg',
@@ -21,9 +22,7 @@ python -c "import cairosvg; cairosvg.svg2png(
 # Animated SVG (used in README)
 nf-metro render assets/metro_map.mmd \
   -o docs/images/nf-core-rnaseq_metro_map_grey_animated.svg \
-  --theme light --x-spacing 60 --y-spacing 40 --no-chrome-css --animate \
-  --diamond-style symmetric \
-  --logo docs/images/nf-core-rnaseq_logo_light.png
+  --no-chrome-css --animate
 
 # Copy static PNG to docs subdir
 cp docs/images/nf-core-rnaseq_metro_map_grey.png \
@@ -44,7 +43,7 @@ render time and enable `nf-metro serve` to light up stations in real time as the
 pipeline runs:
 
 ```bash
-pip install 'nf-metro>=1.0.0'
+pip install 'nf-metro>=1.1.0'
 
 # Serve the map and start the pipeline (one-liner)
 nf-metro serve assets/metro_map.mmd --open --shutdown-after-complete -- \

@@ -50,12 +50,10 @@ workflow QUANTIFY_RSEM {
 
     if (!skip_merge) {
         CUSTOM_RSEMMERGECOUNTS (
-            ch_counts_gene
-                .collect{ _meta, genes_count -> genes_count }
-                .map { genes_count -> [ ['id': 'all_samples'], genes_count ] },
-            ch_counts_transcript
-                .collect{ _meta, transcripts_count -> transcripts_count }
-        )
+        ch_counts_gene.map{ _meta, genes_count -> genes_count }.toSortedList({ a, b -> a.name <=> b.name }),
+        ch_counts_transcript.map{ _meta, transcripts_count -> transcripts_count }.toSortedList({ a, b -> a.name <=> b.name })
+    )
+ 
         ch_merged_counts_gene       = CUSTOM_RSEMMERGECOUNTS.out.counts_gene
         ch_merged_tpm_gene          = CUSTOM_RSEMMERGECOUNTS.out.tpm_gene
         ch_merged_counts_transcript = CUSTOM_RSEMMERGECOUNTS.out.counts_transcript

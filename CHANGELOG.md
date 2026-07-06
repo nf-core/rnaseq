@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1862](https://github.com/nf-core/rnaseq/pull/1862) - Correct the `docs/usage.md` note to state that `--extra_star_align_args` applies to `--aligner star_rsem`, since STAR runs as a standalone step and RSEM quantifies the resulting BAM ([#1857](https://github.com/nf-core/rnaseq/issues/1857))
 - [PR #1864](https://github.com/nf-core/rnaseq/pull/1864) - Bump nf-schema to 2.7.2, fixing boolean CLI parameter validation failures under Nextflow 26.x strict syntax ([#1860](https://github.com/nf-core/rnaseq/issues/1860))
 - [PR #1869](https://github.com/nf-core/rnaseq/pull/1869) - Add pipeline validation error when `--use_rustqc` and `--skip_markduplicates` are set together, since RustQC requires duplicate-marked BAM files ([#1865](https://github.com/nf-core/rnaseq/issues/1865))
+- [PR #1882](https://github.com/nf-core/rnaseq/pull/1882) - Pass `--skip-dup-check` to RustQC when `--with_umi` is set, so `--use_rustqc` works with UMI-deduplicated BAMs: UMICollapse / UMI-tools physically remove PCR duplicates, leaving no reads flagged `0x400`, so duplication QC is not applicable and RustQC's duplicate-marking check would otherwise abort the run ([#1881](https://github.com/nf-core/rnaseq/issues/1881))
 
 ## [[3.26.0](https://github.com/nf-core/rnaseq/releases/tag/3.26.0)] - 2026-05-07
 

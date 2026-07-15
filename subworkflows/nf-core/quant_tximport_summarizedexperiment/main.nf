@@ -53,12 +53,16 @@ workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT {
     // In per-sample mode, run once per sample instead of collecting all
     //
     // Sorted by name for a stable cache key; the R script derives sample
-    // identity from staged file names, not list position.
+    // identity from staged file names, not list position. The empty-list
+    // guard preserves the no-op-on-empty behaviour of the plain collect()
+    // this replaced, since toSortedList() always emits (even []) where
+    // collect() does not emit at all on an empty upstream.
     //
     ch_tximport_input = skip_merge
         ? quant_results
         : quant_results
             .toSortedList { a, b -> a[1].name <=> b[1].name }
+            .filter { sorted -> sorted.size() > 0 }
             .map { sorted -> [ ['id': 'all_samples'], sorted.collect { it[1] } ] }
 
     TXIMETA_TXIMPORT (

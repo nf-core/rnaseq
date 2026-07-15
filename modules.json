@@ -354,7 +354,7 @@
                     },
                     "tximeta/tximport": {
                         "branch": "master",
-                        "git_sha": "77df703775155f3f0f8922f9354501e0289348c2",
+                        "git_sha": "2e17764b67b7613c0a420c3f13d9360c3377bee8",
                         "installed_by": ["quant_tximport_summarizedexperiment", "quantify_pseudo_alignment"]
                     },
                     "ucsc/bedclip": {

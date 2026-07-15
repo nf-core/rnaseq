@@ -51,11 +51,9 @@ workflow QUANTIFY_RSEM {
     if (!skip_merge) {
         //
         // Sorted by name for a stable cache key; the script globs the
-        // staged directory, so order doesn't affect output. The empty-list
-        // guards preserve the no-op-on-empty behaviour of the plain
-        // collect() this replaced, since toSortedList() always emits
-        // (even []) where collect() does not emit at all on an empty
-        // upstream.
+        // staged directory, so order doesn't affect output. Filtered to
+        // skip CUSTOM_RSEMMERGECOUNTS when there are no samples, since
+        // toSortedList() emits [] rather than nothing on an empty channel.
         //
         CUSTOM_RSEMMERGECOUNTS (
             ch_counts_gene

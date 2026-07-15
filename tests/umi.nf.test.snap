@@ -123,7 +123,7 @@
                     "subread": "2.0.6"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "2.1.0"
+                    "trimgalore": "2.3.0"
                 },
                 "TXIMETA_TXIMPORT": {
                     "bioconductor-tximeta": "1.20.1"
@@ -1354,7 +1354,7 @@
                     "subread": "2.0.6"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "2.1.0"
+                    "trimgalore": "2.3.0"
                 },
                 "TXIMETA_TXIMPORT": {
                     "bioconductor-tximeta": "1.20.1"
@@ -2606,7 +2606,7 @@
                     "subread": "2.0.6"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "2.1.0"
+                    "trimgalore": "2.3.0"
                 },
                 "UMICOLLAPSE": {
                     "umicollapse": "1.1.0-0"
@@ -3545,7 +3545,7 @@
                     "star": "2.7.11b"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "2.1.0"
+                    "trimgalore": "2.3.0"
                 },
                 "UMITOOLS_EXTRACT": {
                     "umitools": "1.1.6"

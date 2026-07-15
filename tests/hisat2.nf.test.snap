@@ -37,7 +37,7 @@
                     "samtools": "1.23.1"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "2.1.0"
+                    "trimgalore": "2.3.0"
                 },
                 "UNTAR_HISAT2_INDEX": {
                     "untar": 1.34
@@ -210,7 +210,7 @@
                     "subread": "2.0.6"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "2.1.0"
+                    "trimgalore": "2.3.0"
                 },
                 "UNTAR_HISAT2_INDEX": {
                     "untar": 1.34

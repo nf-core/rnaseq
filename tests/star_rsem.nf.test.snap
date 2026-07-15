@@ -147,7 +147,7 @@
                     "subread": "2.0.6"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "2.1.0"
+                    "trimgalore": "2.3.0"
                 },
                 "TXIMETA_TXIMPORT": {
                     "bioconductor-tximeta": "1.20.1"
@@ -1329,7 +1329,7 @@
                     "star": "2.7.11b"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "2.1.0"
+                    "trimgalore": "2.3.0"
                 },
                 "UNTAR_SALMON_INDEX": {
                     "untar": 1.34

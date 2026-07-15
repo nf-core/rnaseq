@@ -4,8 +4,8 @@ process TXIMETA_TXIMPORT {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/bioconductor-tximeta%3A1.20.1--r43hdfd78af_0' :
-        'quay.io/biocontainers/bioconductor-tximeta:1.20.1--r43hdfd78af_0' }"
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/bd/bdba33f8ad1b2df156f8f6775279fb217ce0f8233a3dc637337245de9ad2f29f/data' :
+        'community.wave.seqera.io/library/bioconductor-tximeta_jq:78bccd386c46a07c' }"
 
     input:
     tuple val(meta), path("quants/*")

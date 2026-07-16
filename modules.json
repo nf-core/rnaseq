@@ -483,7 +483,7 @@
                     },
                     "quant_tximport_summarizedexperiment": {
                         "branch": "master",
-                        "git_sha": "22438ef171adc6f91bd550cef58d8a54f8a7e9ed",
+                        "git_sha": "fbf6cd41f577f23d33a2d8354f6d8b4feafdffe0",
                         "installed_by": ["quantify_pseudo_alignment", "quantify_rsem"]
                     },
                     "quantify_pseudo_alignment": {
@@ -493,7 +493,7 @@
                     },
                     "quantify_rsem": {
                         "branch": "master",
-                        "git_sha": "22438ef171adc6f91bd550cef58d8a54f8a7e9ed",
+                        "git_sha": "fbf6cd41f577f23d33a2d8354f6d8b4feafdffe0",
                         "installed_by": ["subworkflows"]
                     },
                     "utils_nextflow_pipeline": {

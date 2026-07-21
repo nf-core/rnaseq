@@ -38,15 +38,7 @@ logger.setLevel(logging.INFO)
 
 
 def format_yaml_like(data: dict, indent: int = 0) -> str:
-    """Formats a dictionary to a YAML-like string.
-
-    Args:
-        data (dict): The dictionary to format.
-        indent (int): The current indentation level.
-
-    Returns:
-        str: A string formatted as YAML.
-    """
+    """Formats a dictionary to a YAML-like string."""
     yaml_str = ""
     for key, value in data.items():
         spaces = "  " * indent
@@ -58,8 +50,7 @@ def format_yaml_like(data: dict, indent: int = 0) -> str:
 
 
 def extract_fasta_seq_names(fasta_name: str) -> Set[str]:
-    """Extracts the sequence names from a FASTA file."""
-
+    """Extracts sequence names from a FASTA file."""
     is_gz = fasta_name.endswith(".gz")
     open_fn = gzip.open if is_gz else open
 
@@ -74,14 +65,19 @@ def extract_fasta_seq_names(fasta_name: str) -> Set[str]:
 
 
 def tab_delimited(file: str) -> float:
-    """Check if file is tab-delimited and return median number of tabs."""
-    with open(file) as f:
+    """Check if file is tab-delimited and return median number of tabs (supports gzip)."""
+    is_gz = file.endswith(".gz")
+    open_fn = gzip.open if is_gz else open
+
+    with open_fn(file) as f:
         data = f.read(102400)
-        return statistics.median(line.count("\\t") for line in data.split("\\n"))
+        data = data.decode("utf-8") if is_gz else data
+        lines = [line for line in data.split("\n") if line.strip()]
+        return statistics.median(line.count("\t") for line in lines)
 
 
 def filter_gtf(fasta: Optional[str], gtf_in: str, filtered_gtf_out: str, skip_transcript_id_check: bool) -> None:
-    """Filter GTF file based on FASTA sequence names."""
+    """Filter GTF file based on FASTA sequence names and flexible attribute rules."""
     if tab_delimited(gtf_in) != 8:
         raise ValueError("Invalid GTF file: Expected 9 tab-separated columns.")
 
@@ -92,6 +88,10 @@ def filter_gtf(fasta: Optional[str], gtf_in: str, filtered_gtf_out: str, skip_tr
         logger.debug("All sequence IDs from FASTA: " + ", ".join(sorted(seq_names_in_genome)))
 
     seq_names_in_gtf = set()
+    
+    # Flexible pattern matching for transcript_id across Ensembl ("..."), RefSeq/NCBI (=...), or unquoted formats
+    transcript_id_pattern = re.compile(r'transcript_id[\s=]+["\']?([^"\';\s]+)')
+
     try:
         is_gz = gtf_in.endswith(".gz")
         open_fn = gzip.open if is_gz else open
@@ -99,11 +99,30 @@ def filter_gtf(fasta: Optional[str], gtf_in: str, filtered_gtf_out: str, skip_tr
             line_count = 0
             for line in gtf:
                 line = line.decode("utf-8") if is_gz else line
-                seq_name = line.split("\\t")[0]
-                seq_names_in_gtf.add(seq_name)  # Add sequence name to the set
+                
+                # 1. Preserve GTF header/comment lines starting with '#'
+                if line.startswith("#"):
+                    out.write(line.encode() if is_gz else line)
+                    continue
 
+                fields = line.split("\\t")
+                if len(fields) < 9:
+                    continue
+
+                seq_name = fields[0]
+                feature_type = fields[2]
+                seq_names_in_gtf.add(seq_name)
+
+                # 2. Filter by sequence name (if FASTA sequence headers provided)
                 if seq_names_in_genome is None or seq_name in seq_names_in_genome:
-                    if skip_transcript_id_check or re.search(r'transcript_id "([^"]+)"', line):
+                    has_transcript_id = bool(transcript_id_pattern.search(line))
+                    is_gene_feature = (feature_type == "gene")
+
+                    # 3. Retain feature if:
+                    # - skip_transcript_id_check is set, OR
+                    # - feature is a top-level 'gene' line, OR
+                    # - line contains a valid transcript_id attribute
+                    if skip_transcript_id_check or is_gene_feature or has_transcript_id:
                         out.write(line.encode() if is_gz else line)
                         line_count += 1
 

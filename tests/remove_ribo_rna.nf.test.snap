@@ -36,12 +36,6 @@
                 "SAMTOOLS_FAIDX": {
                     "samtools": "1.23.1"
                 },
-                "SEQKIT_REPLACE": {
-                    "seqkit": "2.9.0"
-                },
-                "SEQKIT_REPLACE_U2T": {
-                    "seqkit": "2.9.0"
-                },
                 "STAR_GENOMEGENERATE": {
                     "gawk": "5.1.0",
                     "samtools": 1.21,
@@ -75,9 +69,6 @@
                 "multiqc/star_salmon/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_rnaseq_software_mqc_versions.yml",
-                "seqkit",
-                "seqkit/smr_v4.3_fast_db_dna_converted.fasta.gz",
-                "seqkit/smr_v4.3_fast_db_prefixed.fasta.gz",
                 "trimgalore",
                 "trimgalore/RAP1_IAA_30M_REP1_trimmed_1.fastq.gz_trimming_report.txt",
                 "trimgalore/RAP1_IAA_30M_REP1_trimmed_2.fastq.gz_trimming_report.txt",
@@ -89,8 +80,6 @@
                 "trimgalore/WT_REP2_trimmed_2.fastq.gz_trimming_report.txt"
             ],
             [
-                "smr_v4.3_fast_db_dna_converted.fasta.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "smr_v4.3_fast_db_prefixed.fasta.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
             ]
         ],
         "timestamp": "2026-04-22T17:21:48.312879133",
@@ -971,12 +960,6 @@
                 "SAMTOOLS_VIEW_BOWTIE2": {
                     "samtools": "1.23.1"
                 },
-                "SEQKIT_REPLACE": {
-                    "seqkit": "2.9.0"
-                },
-                "SEQKIT_REPLACE_U2T": {
-                    "seqkit": "2.9.0"
-                },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
                 },
@@ -1342,9 +1325,6 @@
                 "salmon/salmon.merged.transcript_tpm.tsv",
                 "salmon/salmon.merged.tx2gene.tsv",
                 "salmon/salmon.merged.tx2gene_augmented.tsv",
-                "seqkit",
-                "seqkit/smr_v4.3_fast_db_dna_converted.fasta",
-                "seqkit/smr_v4.3_fast_db_prefixed.fasta",
                 "star_salmon",
                 "star_salmon/RAP1_IAA_30M_REP1",
                 "star_salmon/RAP1_IAA_30M_REP1.markdup.sorted.bam",
@@ -1567,8 +1547,6 @@
                 "lib_format_counts.json:md5,16dcff00f7cf47636023f0f34ecb6e6f",
                 "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "salmon.merged.tx2gene_augmented.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
-                "smr_v4.3_fast_db_dna_converted.fasta:md5,8203043c7c7c55e3608afe90d28cfb7d",
-                "smr_v4.3_fast_db_prefixed.fasta:md5,22042291892d8986ceb3df59d14ffa17",
                 "ambig_info.tsv:md5,520c30e5346fcbf3d84789218020baf6",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",

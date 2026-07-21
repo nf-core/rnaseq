@@ -3,6 +3,28 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## dev - xxxx-xx-xx
+
+### Credits
+
+### Enhancements and fixes
+
+- [PR #1878](https://github.com/nf-core/rnaseq/pull/1878) - Add `trim_only` and `raw` options to `--contaminant_screening_input`: `trim_only` screens reads after adapter trimming but before BBSplit/rRNA removal, enabling detection of contaminants that a species-limited BBSplit index would otherwise discard; `raw` screens pre-trimming reads as a baseline ([#1870](https://github.com/nf-core/rnaseq/issues/1870))
+- [PR #1680](https://github.com/nf-core/rnaseq/pull/1680) - Raise the Nextflow floor to 25.10.4 across `nextflow.config`, the three `nf-test*` workflow matrices, and the README/ro-crate version badges; bump `nf-schema` to 2.6.1; clear the v2-parser lint warnings in local subworkflows and resync six nf-core components carrying upstream-merged strict-syntax fixes
+- [PR #1775](https://github.com/nf-core/rnaseq/pull/1775) - Add Parabricks resource configuration guide for full-size genomes (GPU count, memory scaling, retry strategy, `--low-memory` flag)
+- [PR #1844](https://github.com/nf-core/rnaseq/pull/1844) - Bump version to 3.27.0dev after release 3.26.0; flip the MultiQC report links and RO-Crate URL/version back to dev
+- [PR #1848](https://github.com/nf-core/rnaseq/pull/1848) - Align `actions/checkout` SHA in `nf-test-arm.yml` and `nf-test-gpu.yml` with the template-derived `nf-test.yml` (`v6`) ([#1847](https://github.com/nf-core/rnaseq/issues/1847))
+- [PR #1849](https://github.com/nf-core/rnaseq/pull/1849) - Tidy-up batch addressing [#1845](https://github.com/nf-core/rnaseq/issues/1845): README/schema clarifications, `&` → `&&` in three guards, deduplicated `withName` blocks, and removal of the unmaintained `bin/fastq_dir_to_samplesheet.py` (use [nf-core/fetchngs](https://nf-co.re/fetchngs) for samplesheet generation)
+- [PR #1850](https://github.com/nf-core/rnaseq/pull/1850) - Use the active aligner's display name in the MultiQC `fail_mapped` per-sample status row, and drop the hardcoded "STAR" reference from the pipeline-completion `min_mapped_reads` warning, so Bowtie2 reports no longer mislabel the metric as STAR ([#1846](https://github.com/nf-core/rnaseq/issues/1846))
+- [PR #1851](https://github.com/nf-core/rnaseq/pull/1851) - Split `PREPARE_GENOME` into `PREPARE_GENOME_REFERENCES` (FASTA / GTF / BED / transcript FASTA / chrom.sizes / rRNA / Kraken DB) and `PREPARE_GENOME_INDICES` (per-aligner index build/load) for clearer ownership; no user-facing parameter, output, or behaviour change ([#1721](https://github.com/nf-core/rnaseq/issues/1721)).
+- [PR #1852](https://github.com/nf-core/rnaseq/pull/1852) - Flatten `workflows/rnaseq/assets/` back to top-level `assets/` so `nf-core pipelines bump-version` finds `assets/multiqc_config.yml` and updates the report-comment URLs automatically on release bumps
+- [PR #1853](https://github.com/nf-core/rnaseq/pull/1853) - Replace remaining pre-admonition `> **NB:**` / `> **Note**` / `> **Warning**` quoteblocks across `docs/usage.md`, `docs/output.md`, and `README.md` with nf-core flavored `:::note` / `:::warning` admonitions
+- [PR #1854](https://github.com/nf-core/rnaseq/pull/1854) - Switch the `SORTMERNA` ARM container in `conf/arm.config` to a Wave build from `bioconda::sortmerna=4.3.7`, retiring the last `seqera::` channel reference in the pipeline ([#1431](https://github.com/nf-core/rnaseq/issues/1431))
+- [PR #1861](https://github.com/nf-core/rnaseq/pull/1861) - Drop the outdated RiboDetector ONNX multiprocessing hang warnings from `docs/usage.md`, `docs/output.md`, and the `ribo_removal_tool` schema help text, resolved upstream in the pinned `ribodetector=0.3.3` ([#1856](https://github.com/nf-core/rnaseq/issues/1856))
+- [PR #1862](https://github.com/nf-core/rnaseq/pull/1862) - Correct the `docs/usage.md` note to state that `--extra_star_align_args` applies to `--aligner star_rsem`, since STAR runs as a standalone step and RSEM quantifies the resulting BAM ([#1857](https://github.com/nf-core/rnaseq/issues/1857))
+- [PR #1864](https://github.com/nf-core/rnaseq/pull/1864) - Bump nf-schema to 2.7.2, fixing boolean CLI parameter validation failures under Nextflow 26.x strict syntax ([#1860](https://github.com/nf-core/rnaseq/issues/1860))
+- [PR #1869](https://github.com/nf-core/rnaseq/pull/1869) - Add pipeline validation error when `--use_rustqc` and `--skip_markduplicates` are set together, since RustQC requires duplicate-marked BAM files ([#1865](https://github.com/nf-core/rnaseq/issues/1865))
+
 ## [[3.26.0](https://github.com/nf-core/rnaseq/releases/tag/3.26.0)] - 2026-05-07
 
 ### Credits

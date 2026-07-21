@@ -70,9 +70,8 @@ workflow RNASEQ {
 
     take:
     ch_samplesheet          // channel: path(sample_sheet.csv)
-    ch_fasta                // channel: path(genome.fasta)
+    ch_fasta_fai            // channel: [ meta, path(genome.fasta), path(genome.fai) ]
     ch_gtf                  // channel: path(genome.gtf)
-    ch_fai                  // channel: path(genome.fai)
     ch_chrom_sizes          // channel: path(genome.sizes)
     ch_gene_bed             // channel: path(gene.bed)
     ch_transcript_fasta     // channel: path(transcript.fasta)
@@ -93,15 +92,22 @@ workflow RNASEQ {
     main:
 
     // Header files for MultiQC
-    def ch_pca_header_multiqc        = file("$projectDir/workflows/rnaseq/assets/multiqc/deseq2_pca_header.txt", checkIfExists: true)
-    def sample_status_header_multiqc = file("$projectDir/workflows/rnaseq/assets/multiqc/sample_status_header.txt", checkIfExists: true)
-    def ch_clustering_header_multiqc = file("$projectDir/workflows/rnaseq/assets/multiqc/deseq2_clustering_header.txt", checkIfExists: true)
-    def ch_biotypes_header_multiqc   = file("$projectDir/workflows/rnaseq/assets/multiqc/biotypes_header.txt", checkIfExists: true)
+    def ch_pca_header_multiqc        = file("$projectDir/assets/deseq2_pca_header.txt", checkIfExists: true)
+    def sample_status_header_multiqc = file("$projectDir/assets/sample_status_header.txt", checkIfExists: true)
+    def ch_clustering_header_multiqc = file("$projectDir/assets/deseq2_clustering_header.txt", checkIfExists: true)
+    def ch_biotypes_header_multiqc   = file("$projectDir/assets/biotypes_header.txt", checkIfExists: true)
     def ch_transcript_fasta_placeholder = ch_pca_header_multiqc
 
-    // Pre-build fasta_fai value channels for subworkflows that need [meta, fasta, fai]
-    // .first() converts the queue channel to a value channel so it can be consumed multiple times
-    ch_fasta_fai            = ch_fasta.combine(ch_fai).map { fasta, fai -> [ [:], fasta, fai ] }.first()
+    // Match the General Statistics column the active aligner emits so the
+    // MultiQC fail_mapped row reads consistently with the rest of the report.
+    def aligner_display_name = [
+        'star_salmon'    : 'STAR uniquely mapped reads',
+        'star_rsem'      : 'STAR uniquely mapped reads',
+        'hisat2'         : 'HISAT2 overall alignment rate',
+        'bowtie2_salmon' : 'Bowtie2 overall alignment rate',
+    ].get(params.aligner, 'Aligned reads')
+
+    ch_fasta                = ch_fasta_fai.map { _meta, fasta, _fai -> fasta }.first()
     ch_transcript_fasta_fai = ch_transcript_fasta.map { fasta -> [[:], fasta, []] }
 
     ch_multiqc_files = channel.empty()
@@ -149,10 +155,11 @@ workflow RNASEQ {
         .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
         .map {
             meta, fastq_1, fastq_2, genome_bam, transcriptome_bam ->
+                def m = meta + [ id: meta.id as String ]
                 if (!fastq_2) {
-                    return [ meta.id, meta + [ single_end:true ], [ fastq_1 ], genome_bam, transcriptome_bam ]
+                    return [ m.id, m + [ single_end:true ], [ fastq_1 ], genome_bam, transcriptome_bam ]
                 } else {
-                    return [ meta.id, meta + [ single_end:false ], [ fastq_1, fastq_2 ], genome_bam, transcriptome_bam ]
+                    return [ m.id, m + [ single_end:false ], [ fastq_1, fastq_2 ], genome_bam, transcriptome_bam ]
                 }
         }
         .groupTuple()
@@ -231,6 +238,8 @@ workflow RNASEQ {
 
     ch_multiqc_files                  = ch_multiqc_files.mix(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.multiqc_files)
     ch_strand_inferred_filtered_fastq = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.reads
+    ch_reads_cat                      = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.reads_cat
+    ch_reads_trimmed                  = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.reads_trimmed
     ch_trim_read_count                = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.trim_read_count
 
     ch_trim_status = ch_trim_read_count
@@ -426,7 +435,7 @@ workflow RNASEQ {
         ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
             .join(QUANTIFY_RSEM.out.stat.map { meta, f -> [meta.id, f] }, remainder: true)
 
-        if (!params.skip_qc & !params.skip_deseq2_qc & !params.skip_quantification_merge) {
+        if (!params.skip_qc && !params.skip_deseq2_qc && !params.skip_quantification_merge) {
             DESEQ2_QC_RSEM (
                 QUANTIFY_RSEM.out.counts_gene_length_scaled.map { _meta, counts -> counts },
                 ch_pca_header_multiqc,
@@ -456,7 +465,7 @@ workflow RNASEQ {
             params.kallisto_quant_fraglen_sd,
             params.skip_quantification_merge
         )
-        if (!params.skip_qc & !params.skip_deseq2_qc & !params.skip_quantification_merge) {
+        if (!params.skip_qc && !params.skip_deseq2_qc && !params.skip_quantification_merge) {
             DESEQ2_QC_BAM_SALMON (
                 QUANTIFY_BAM_SALMON.out.counts_gene_length_scaled.map { _meta, counts -> counts },
                 ch_pca_header_multiqc,
@@ -703,7 +712,11 @@ workflow RNASEQ {
         //
         def ch_contaminant_sequences = params.contaminant_screening_input == 'trimmed'
             ? ch_strand_inferred_filtered_fastq
-            : ch_unaligned_sequences
+            : params.contaminant_screening_input == 'trim_only'
+                ? ch_reads_trimmed
+                : params.contaminant_screening_input == 'raw'
+                    ? ch_reads_cat
+                    : ch_unaligned_sequences
 
         if (params.contaminant_screening in ['kraken2', 'kraken2_bracken'] ) {
             KRAKEN2 (
@@ -779,7 +792,7 @@ workflow RNASEQ {
         ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
             .join(QUANTIFY_PSEUDO_ALIGNMENT.out.multiqc.map { meta, f -> [meta.id, f] }, remainder: true)
 
-        if (!params.skip_qc & !params.skip_deseq2_qc & !params.skip_quantification_merge) {
+        if (!params.skip_qc && !params.skip_deseq2_qc && !params.skip_quantification_merge) {
             DESEQ2_QC_PSEUDO (
                 ch_counts_gene_length_scaled.map { _meta, counts -> counts },
                 ch_pca_header_multiqc,
@@ -809,18 +822,19 @@ workflow RNASEQ {
             ch_strand_data,
             ch_trim_read_count,
             ch_genome_bam_bai_mapping.percent_mapped_pass,
+            aligner_display_name,
             ch_fastq,
             ch_collated_versions,
             params.input,
             "${projectDir}/assets/schema_input.json",
-            file("$projectDir/workflows/rnaseq/assets/multiqc/multiqc_config.yml", checkIfExists: true),
+            file("$projectDir/assets/multiqc_config.yml", checkIfExists: true),
             params.multiqc_config ? file(params.multiqc_config, checkIfExists: true) : [],
             params.multiqc_logo   ? file(params.multiqc_logo,   checkIfExists: true) : [],
             params.multiqc_methods_description
                 ? file(params.multiqc_methods_description)
-                : file("$projectDir/workflows/rnaseq/assets/multiqc/methods_description_template.yml", checkIfExists: true),
-            file("$projectDir/workflows/rnaseq/assets/multiqc/strand_check_summary.yaml",     checkIfExists: true),
-            file("$projectDir/workflows/rnaseq/assets/multiqc/strand_check_composition.yaml", checkIfExists: true),
+                : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true),
+            file("$projectDir/assets/strand_check_summary.yaml",     checkIfExists: true),
+            file("$projectDir/assets/strand_check_composition.yaml", checkIfExists: true),
             sample_status_header_multiqc,
             params.min_trimmed_reads,
             params.skip_quantification_merge

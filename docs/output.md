@@ -94,7 +94,9 @@ If multiple libraries/runs have been provided for the same sample in the input s
 - `fq_lint/*`
   - `*.fq_lint.txt`: Linting report per library from `fq lint`.
 
-> **NB:** You will see subdirectories here based on the stage of preprocessing for the files that have been linted, for example `raw`, `trimmed`.
+:::note
+You will see subdirectories here based on the stage of preprocessing for the files that have been linted, for example `raw`, `trimmed`.
+:::
 
 </details>
 
@@ -109,7 +111,9 @@ If multiple libraries/runs have been provided for the same sample in the input s
   - `*_fastqc.html`: FastQC report containing quality metrics.
   - `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images.
 
-> **NB:** The FastQC plots in this directory are generated relative to the raw, input reads. They may contain adapter sequence and regions of low quality. To see how your reads look after adapter and quality trimming please refer to the FastQC reports in the `trimgalore/fastqc/` directory.
+:::note
+The FastQC plots in this directory are generated relative to the raw, input reads. They may contain adapter sequence and regions of low quality. To see how your reads look after adapter and quality trimming please refer to the FastQC reports in the `trimgalore/fastqc/` directory.
+:::
 
 </details>
 
@@ -152,7 +156,9 @@ To facilitate processing of input data which has the UMI barcode already embedde
 
 [Trim Galore!](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/) is a wrapper tool around Cutadapt and FastQC to peform quality and adapter trimming on FastQ files. Trim Galore! will automatically detect and trim the appropriate adapter sequence. It is the default trimming tool used by this pipeline, however you can use fastp instead by specifying the `--trimmer fastp` parameter. You can specify additional options for Trim Galore! via the `--extra_trimgalore_args` parameters.
 
-> **NB:** TrimGalore! will only run using multiple cores if you are able to use more than > 5 and > 6 CPUs for single- and paired-end data, respectively. The total cores available to TrimGalore! will also be capped at 4 (7 and 8 CPUs in total for single- and paired-end data, respectively) because there is no longer a run-time benefit. See [release notes](https://github.com/FelixKrueger/TrimGalore/blob/master/Changelog.md#version-060-release-on-1-mar-2019) and [discussion whilst adding this logic to the nf-core/atacseq pipeline](https://github.com/nf-core/atacseq/pull/65).
+:::note
+TrimGalore! will only run using multiple cores if you are able to use more than > 5 and > 6 CPUs for single- and paired-end data, respectively. The total cores available to TrimGalore! will also be capped at 4 (7 and 8 CPUs in total for single- and paired-end data, respectively) because there is no longer a run-time benefit. See [release notes](https://github.com/FelixKrueger/TrimGalore/blob/master/Changelog.md#version-060-release-on-1-mar-2019) and [discussion whilst adding this logic to the nf-core/atacseq pipeline](https://github.com/nf-core/atacseq/pull/65).
+:::
 
 ![MultiQC - cutadapt trimmed sequence length plot](images/mqc_cutadapt_trimmed.png)
 
@@ -250,9 +256,6 @@ When `--ribo_removal_tool bowtie2` is specified, the pipeline uses [Bowtie2](htt
 </details>
 
 #### RiboDetector
-
-> [!WARNING]
-> RiboDetector has known issues with ONNX multiprocessing that can cause hangs in containerized environments. We recommend using SortMeRNA or Bowtie2 instead. See [hzi-bifo/RiboDetector#61](https://github.com/hzi-bifo/RiboDetector/pull/61) for details.
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -1083,7 +1086,9 @@ According to the [`txtimport` documentation](https://bioconductor.org/packages/r
 - Use bias-corrected counts _without an offset_: load and use `salmon.merged.gene_counts_length_scaled.tsv` or `salmon.merged.gene_counts_scaled.tsv` directly as you would with a regular gene-level counts matrix. These files were created using the `tximport` argument `countsFromAbundance="scaledTPM"` or `"lengthScaledTPM"` to scale counts to library size or to library size and average transcript length respectively.
 - Use the original (bias-uncorrected) counts _without an offset_: load and use the `txi$counts` matrix (or `salmon.merged.gene_counts.tsv`) with `DESeq2`. This is generally **not** recommended, since it does not correct for potential differential isoform usage (the offset). However, if you have 3’ tagged RNA-seq data, then this _is_ the most suitable method, because the counts do not exhibit any length bias.
 
-> **NB:** The default Salmon parameters and a k-mer size of 31 are used to create the index. As [documented here](https://salmon.readthedocs.io/en/latest/salmon.html#preparing-transcriptome-indices-mapping-based-mode) and [discussed here](https://github.com/COMBINE-lab/salmon/issues/482#issuecomment-583799668), a k-mer size off 31 works well with reads that are 75bp or longer.
+:::note
+The default Salmon parameters and a k-mer size of 31 are used to create the index. As [documented here](https://salmon.readthedocs.io/en/latest/salmon.html#preparing-transcriptome-indices-mapping-based-mode) and [discussed here](https://github.com/COMBINE-lab/salmon/issues/482#issuecomment-583799668), a k-mer size of 31 works well with reads that are 75bp or longer.
+:::
 
 ![MultiQC - Salmon fragment length distribution plot](images/mqc_salmon.png)
 

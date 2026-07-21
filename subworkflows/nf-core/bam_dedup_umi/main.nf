@@ -126,7 +126,7 @@ workflow BAM_DEDUP_UMI {
         .join(UMI_DEDUP_GENOME.out.stats,    remainder: true)
         .join(UMI_DEDUP_GENOME.out.flagstat, remainder: true)
         .join(UMI_DEDUP_GENOME.out.idxstats, remainder: true)
-        .map { row -> [row[0], row.drop(1).findAll { it != null }.collectMany { e -> (e instanceof List) ? e : [e] }] }
+        .map { row -> [row[0], row.drop(1).findAll { f -> f != null }.collectMany { e -> (e instanceof List) ? e : [e] }] }
 
     emit:
     bam                            = UMI_DEDUP_GENOME.out.bam // channel: [ val(meta), path(bam) ]

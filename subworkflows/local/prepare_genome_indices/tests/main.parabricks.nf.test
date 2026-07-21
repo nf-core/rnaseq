@@ -1,0 +1,226 @@
+nextflow_workflow {
+
+    name "Test Subworkflow PREPARE_GENOME_INDICES"
+    script "../main.nf"
+    workflow "PREPARE_GENOME_INDICES"
+    config "./nextflow.config"
+    tag "gpu"
+
+
+    test("use_parabricks_star = true") {
+
+        setup {
+            run("PREPARE_GENOME_REFERENCES") {
+                script "../../prepare_genome_references/main.nf"
+                workflow {
+                    """
+                    gencode                  = false
+                    gffread_transcript_fasta = false
+                    featurecounts_group_type = 'gene_biotype'
+                    aligner                  = 'star_salmon'
+                    pseudo_aligner           = null
+                    skip_gtf_filter          = false
+                    skip_bbsplit             = true
+                    ribo_removal_tool        = null
+                    skip_alignment           = false
+                    skip_pseudo_alignment    = true
+                    use_sentieon_star        = false
+                    use_parabricks_star      = true
+
+                    input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                    input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                    input[2]  = null  // gff
+                    input[3]  = null  // additional_fasta
+                    input[4]  = null  // transcript_fasta
+                    input[5]  = null  // gene_bed
+                    input[6]  = null  // sortmerna_fasta_list
+                    input[7]  = null  // kraken_db
+                    input[8]  = gencode
+                    input[9]  = gffread_transcript_fasta
+                    input[10] = featurecounts_group_type
+                    input[11] = aligner
+                    input[12] = pseudo_aligner
+                    input[13] = skip_gtf_filter
+                    input[14] = ribo_removal_tool
+                    input[15] = skip_alignment
+                    input[16] = skip_pseudo_alignment
+                    input[17] = use_sentieon_star
+                    input[18] = null  // contaminant_screening
+                    input[19] = false  // prokaryotic
+                    """
+                }
+            }
+        }
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                gffread_transcript_fasta = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = null
+                skip_gtf_filter          = false
+                skip_bbsplit             = true
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = true
+                use_sentieon_star        = false
+                use_parabricks_star      = true
+
+                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
+                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
+                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
+                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[4]  = true  // fasta_provided
+                input[5]  = null  // splicesites
+                input[6]  = null  // bbsplit_fasta_list
+                input[7]  = null  // star_index
+                input[8]  = null  // rsem_index
+                input[9]  = null  // salmon_index
+                input[10] = null  // kallisto_index
+                input[11] = null  // hisat2_index
+                input[12] = null  // bowtie2_index
+                input[13] = null  // bbsplit_index
+                input[14] = null  // sortmerna_index
+                input[15] = aligner
+                input[16] = pseudo_aligner
+                input[17] = skip_bbsplit
+                input[18] = ribo_removal_tool
+                input[19] = skip_alignment
+                input[20] = skip_pseudo_alignment
+                input[21] = use_sentieon_star
+                input[22] = use_parabricks_star
+                input[23] = false  // star_index_legacy
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("use_parabricks_star = true - stub") {
+
+        options "-stub"
+
+        setup {
+            run("PREPARE_GENOME_REFERENCES") {
+                script "../../prepare_genome_references/main.nf"
+                options "-stub"
+                workflow {
+                    """
+                    gencode                  = false
+                    gffread_transcript_fasta = false
+                    featurecounts_group_type = 'gene_biotype'
+                    aligner                  = 'star_salmon'
+                    pseudo_aligner           = null
+                    skip_gtf_filter          = false
+                    skip_bbsplit             = true
+                    ribo_removal_tool        = null
+                    skip_alignment           = false
+                    skip_pseudo_alignment    = true
+                    use_sentieon_star        = false
+                    use_parabricks_star      = true
+
+                    input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                    input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                    input[2]  = null  // gff
+                    input[3]  = null  // additional_fasta
+                    input[4]  = null  // transcript_fasta
+                    input[5]  = null  // gene_bed
+                    input[6]  = null  // sortmerna_fasta_list
+                    input[7]  = null  // kraken_db
+                    input[8]  = gencode
+                    input[9]  = gffread_transcript_fasta
+                    input[10] = featurecounts_group_type
+                    input[11] = aligner
+                    input[12] = pseudo_aligner
+                    input[13] = skip_gtf_filter
+                    input[14] = ribo_removal_tool
+                    input[15] = skip_alignment
+                    input[16] = skip_pseudo_alignment
+                    input[17] = use_sentieon_star
+                    input[18] = null  // contaminant_screening
+                    input[19] = false  // prokaryotic
+                    """
+                }
+            }
+        }
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                gffread_transcript_fasta = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = null
+                skip_gtf_filter          = false
+                skip_bbsplit             = true
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = true
+                use_sentieon_star        = false
+                use_parabricks_star      = true
+
+                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
+                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
+                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
+                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[4]  = true  // fasta_provided
+                input[5]  = null  // splicesites
+                input[6]  = null  // bbsplit_fasta_list
+                input[7]  = null  // star_index
+                input[8]  = null  // rsem_index
+                input[9]  = null  // salmon_index
+                input[10] = null  // kallisto_index
+                input[11] = null  // hisat2_index
+                input[12] = null  // bowtie2_index
+                input[13] = null  // bbsplit_index
+                input[14] = null  // sortmerna_index
+                input[15] = aligner
+                input[16] = pseudo_aligner
+                input[17] = skip_bbsplit
+                input[18] = ribo_removal_tool
+                input[19] = skip_alignment
+                input[20] = skip_pseudo_alignment
+                input[21] = use_sentieon_star
+                input[22] = use_parabricks_star
+                input[23] = false  // star_index_legacy
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+
+}

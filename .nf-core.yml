@@ -3,7 +3,6 @@ lint:
   container_configs: false
   files_exist:
     - conf/modules.config
-    - assets/multiqc_config.yml
     - conf/containers_conda_lock_files_amd64.config
     - conf/containers_conda_lock_files_arm64.config
     - conf/containers_docker_amd64.config
@@ -20,7 +19,6 @@ lint:
     - .gitignore
     - nf-test.config
   modules_config: false
-  multiqc_config: false
   nextflow_config:
     - config_defaults:
         - params.ribo_database_manifest
@@ -36,4 +34,4 @@ template:
   name: rnaseq
   org: nf-core
   outdir: .
-  version: 3.26.0
+  version: 3.27.0dev

@@ -327,7 +327,7 @@
                     "default": "sortmerna",
                     "fa_icon": "fas fa-tools",
                     "description": "Tool to use for rRNA removal.",
-                    "help_text": "Choose between 'sortmerna' (default), 'bowtie2', or 'ribodetector' for rRNA removal.\n\n- **sortmerna**: Reference-based filtering (default). Requires `--ribo_database_manifest`. Note: Default databases include SILVA sequences requiring licensing for commercial use.\n- **bowtie2**: Alignment-based filtering. Requires `--ribo_database_manifest`. Recommended for users with SILVA licensing concerns as it supports custom databases.\n- **ribodetector**: \u26a0\ufe0f EXPERIMENTAL - ML-based detection without reference requirement. Known ONNX multiprocessing issues can cause hangs in containerized environments. See https://github.com/hzi-bifo/RiboDetector/pull/61",
+                    "help_text": "Choose between 'sortmerna' (default), 'bowtie2', or 'ribodetector' for rRNA removal.\n\n- **sortmerna**: Reference-based filtering (default). Requires `--ribo_database_manifest`. Note: Default databases include SILVA sequences requiring licensing for commercial use.\n- **bowtie2**: Alignment-based filtering. Requires `--ribo_database_manifest`. Recommended for users with SILVA licensing concerns as it supports custom databases.\n- **ribodetector**: ML-based detection without a reference requirement. Useful for organisms lacking well-characterized rRNA sequences or to avoid database licensing requirements.",
                     "enum": ["sortmerna", "ribodetector", "bowtie2"]
                 },
                 "use_gpu_ribodetector": {
@@ -341,7 +341,7 @@
                     "format": "file-path",
                     "exists": true,
                     "mimetype": "text/plain",
-                    "default": "${projectDir}/workflows/rnaseq/assets/rrna-db-defaults.txt",
+                    "default": "${projectDir}/assets/rrna-db-defaults.txt",
                     "fa_icon": "fas fa-database",
                     "description": "Text file containing paths to fasta files (one per line) that will be used to create the database for SortMeRNA.",
                     "help_text": "By default, [rRNA databases](https://github.com/biocore/sortmerna/tree/master/data/rRNA_databases) from the SortMeRNA GitHub repository are used. See the example in `assets/rrna-default-dbs.txt`. Note: commercial/non-academic entities require [SILVA licensing](https://www.arb-silva.de/silva-license-information) for these databases."
@@ -550,13 +550,13 @@
                 },
                 "kallisto_quant_fraglen": {
                     "type": "integer",
-                    "description": "In single-end mode Kallisto requires an estimated fragment length. Specify a default value for that here. TODO: use existing RSeQC results to do this dynamically.",
+                    "description": "In single-end mode Kallisto requires an estimated fragment length (in base pairs). Specify a default value for that here.",
                     "default": 200,
                     "fa_icon": "fas fa-ruler-horizontal"
                 },
                 "kallisto_quant_fraglen_sd": {
                     "type": "integer",
-                    "description": "In single-end mode, Kallisto requires an estimated standard error for fragment length. Specify a default value for that here. TODO: use existing RSeQC results to do this dynamically.",
+                    "description": "In single-end mode, Kallisto requires an estimated standard error for fragment length (in base pairs). Specify a default value for that here.",
                     "default": 200,
                     "fa_icon": "fas fa-sort-amount-up-alt"
                 },
@@ -677,11 +677,11 @@
                 },
                 "contaminant_screening_input": {
                     "type": "string",
-                    "description": "Read set to screen for contaminants: aligner-unmapped reads (default) or trimmed/filter-passed reads before alignment.",
-                    "help_text": "Use `unmapped` to preserve the existing behavior and focus screening on reads rejected by STAR/HISAT2. Use `trimmed` to screen the reads that enter alignment, for example to inspect contaminants removed earlier by BBSplit. `unmapped` requires alignment with `--aligner star_salmon`, `--aligner star_rsem`, or `--aligner hisat2`.",
+                    "description": "Read set to screen for contaminants: aligner-unmapped reads (default), trimmed reads (post-BBSplit/rRNA), post-trim pre-BBSplit reads, or raw reads.",
+                    "help_text": "Use `unmapped` (default) to screen reads rejected by STAR/HISAT2 — requires alignment. Use `trimmed` to screen reads that passed BBSplit and rRNA filtering before alignment. Use `trim_only` to screen reads after adapter trimming but before BBSplit/rRNA removal — recommended when BBSplit removes expected contaminants. Use `raw` to screen pre-trimming reads (adapter sequences still present). `unmapped` requires `--aligner star_salmon`, `--aligner star_rsem`, or `--aligner hisat2`.",
                     "default": "unmapped",
                     "fa_icon": "fas fa-filter",
-                    "enum": ["trimmed", "unmapped"]
+                    "enum": ["trimmed", "unmapped", "trim_only", "raw"]
                 },
                 "kraken_db": {
                     "type": "string",
@@ -802,26 +802,31 @@
                 },
                 "skip_dupradar": {
                     "type": "boolean",
+                    "default": false,
                     "fa_icon": "fas fa-fast-forward",
-                    "description": "Skip dupRadar."
+                    "description": "Skip dupRadar. Has no effect under `--use_rustqc` (experimental)."
                 },
                 "skip_qualimap": {
                     "type": "boolean",
+                    "default": false,
                     "fa_icon": "fas fa-fast-forward",
-                    "description": "Skip Qualimap."
+                    "description": "Skip Qualimap. Has no effect under `--use_rustqc` (experimental)."
                 },
                 "skip_rseqc": {
                     "type": "boolean",
+                    "default": false,
                     "fa_icon": "fas fa-fast-forward",
-                    "description": "Skip RSeQC."
+                    "description": "Skip RSeQC. Has no effect under `--use_rustqc` (experimental)."
                 },
                 "skip_biotype_qc": {
                     "type": "boolean",
+                    "default": false,
                     "fa_icon": "fas fa-fast-forward",
-                    "description": "Skip additional featureCounts process for biotype QC."
+                    "description": "Skip additional featureCounts process for biotype QC. Has no effect under `--use_rustqc` (experimental)."
                 },
                 "skip_deseq2_qc": {
                     "type": "boolean",
+                    "default": false,
                     "fa_icon": "fas fa-fast-forward",
                     "description": "Skip DESeq2 PCA and heatmap plotting."
                 },

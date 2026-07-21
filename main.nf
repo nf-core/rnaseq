@@ -36,13 +36,14 @@ params.bowtie2_index    = getGenomeAttribute('bowtie2')
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { RNASEQ                  } from './workflows/rnaseq'
-include { PREPARE_GENOME          } from './subworkflows/local/prepare_genome'
-include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
-include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
-include { checkMaxContigSize      } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
-include { defineQcTools           } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
-include { isStarIndexLegacy       } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { RNASEQ                     } from './workflows/rnaseq'
+include { PREPARE_GENOME_REFERENCES  } from './subworkflows/local/prepare_genome_references'
+include { PREPARE_GENOME_INDICES     } from './subworkflows/local/prepare_genome_indices'
+include { PIPELINE_INITIALISATION    } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { PIPELINE_COMPLETION        } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { checkMaxContigSize         } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { defineQcTools              } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { isStarIndexLegacy          } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -58,18 +59,42 @@ workflow NFCORE_RNASEQ {
     main:
 
     //
-    // SUBWORKFLOW: Prepare reference genome files
+    // SUBWORKFLOW: Prepare reference genome files (FASTA, GTF, BED, transcript FASTA, chrom.sizes, rRNA FASTAs, Kraken DB)
     //
-    PREPARE_GENOME (
+    PREPARE_GENOME_REFERENCES (
         params.fasta,
         params.gtf,
         params.gff,
         params.additional_fasta,
         params.transcript_fasta,
         params.gene_bed,
+        params.ribo_database_manifest,
+        params.kraken_db,
+        params.gencode,
+        params.gffread_transcript_fasta,
+        params.featurecounts_group_type,
+        params.aligner,
+        params.pseudo_aligner,
+        params.skip_gtf_filter,
+        params.remove_ribo_rna ? params.ribo_removal_tool : null,
+        params.skip_alignment,
+        params.skip_pseudo_alignment,
+        params.use_sentieon_star,
+        params.contaminant_screening,
+        params.prokaryotic ?: false
+    )
+
+    //
+    // SUBWORKFLOW: Build or load aligner / pseudo-aligner / filtering indices
+    //
+    PREPARE_GENOME_INDICES (
+        PREPARE_GENOME_REFERENCES.out.fasta_fai,
+        PREPARE_GENOME_REFERENCES.out.gtf,
+        PREPARE_GENOME_REFERENCES.out.transcript_fasta,
+        PREPARE_GENOME_REFERENCES.out.rrna_fastas,
+        params.fasta ? true : false,
         params.splicesites,
         params.bbsplit_fasta_list,
-        params.ribo_database_manifest,
         params.star_index,
         params.rsem_index,
         params.salmon_index,
@@ -78,30 +103,23 @@ workflow NFCORE_RNASEQ {
         params.bowtie2_index,
         params.bbsplit_index,
         params.sortmerna_index,
-        params.kraken_db,
-        params.gencode,
-        params.gffread_transcript_fasta,
-        params.featurecounts_group_type,
         params.aligner,
         params.pseudo_aligner,
-        params.skip_gtf_filter,
         params.skip_bbsplit,
         params.remove_ribo_rna ? params.ribo_removal_tool : null,
         params.skip_alignment,
         params.skip_pseudo_alignment,
         params.use_sentieon_star,
         params.use_parabricks_star,
-        params.contaminant_screening,
-        params.prokaryotic ?: false,
         isStarIndexLegacy() ?: false
     )
 
     // Check if contigs in genome fasta file > 512 Mbp
     if (!params.skip_alignment && !params.bam_csi_index) {
-        PREPARE_GENOME
+        PREPARE_GENOME_REFERENCES
             .out
-            .fai
-            .map { fai -> checkMaxContigSize(fai) }
+            .fasta_fai
+            .map { _meta, _fasta, fai -> checkMaxContigSize(fai) }
     }
 
     //
@@ -110,31 +128,30 @@ workflow NFCORE_RNASEQ {
     ch_samplesheet = channel.value(file(params.input, checkIfExists: true))
 
     // Bowtie2 rRNA index is built on-demand inside the fastq_remove_rrna subworkflow
-    // rather than in PREPARE_GENOME, to avoid duplicating the rRNA FASTA preparation logic
+    // rather than in PREPARE_GENOME_INDICES, to avoid duplicating the rRNA FASTA preparation logic
     ch_bowtie2_rrna_index = channel.empty()
 
     def qc_tools = defineQcTools(params)
 
     RNASEQ (
         ch_samplesheet,
-        PREPARE_GENOME.out.fasta,
-        PREPARE_GENOME.out.gtf,
-        PREPARE_GENOME.out.fai,
-        PREPARE_GENOME.out.chrom_sizes,
-        PREPARE_GENOME.out.gene_bed,
-        PREPARE_GENOME.out.transcript_fasta,
-        PREPARE_GENOME.out.star_index,
-        PREPARE_GENOME.out.rsem_index,
-        PREPARE_GENOME.out.hisat2_index,
-        PREPARE_GENOME.out.bowtie2_index,
-        PREPARE_GENOME.out.salmon_index,
-        PREPARE_GENOME.out.kallisto_index,
-        PREPARE_GENOME.out.bbsplit_index,
-        PREPARE_GENOME.out.rrna_fastas,
-        PREPARE_GENOME.out.sortmerna_index,
+        PREPARE_GENOME_REFERENCES.out.fasta_fai,
+        PREPARE_GENOME_REFERENCES.out.gtf,
+        PREPARE_GENOME_REFERENCES.out.chrom_sizes,
+        PREPARE_GENOME_REFERENCES.out.gene_bed,
+        PREPARE_GENOME_REFERENCES.out.transcript_fasta,
+        PREPARE_GENOME_INDICES.out.star_index,
+        PREPARE_GENOME_INDICES.out.rsem_index,
+        PREPARE_GENOME_INDICES.out.hisat2_index,
+        PREPARE_GENOME_INDICES.out.bowtie2_index,
+        PREPARE_GENOME_INDICES.out.salmon_index,
+        PREPARE_GENOME_INDICES.out.kallisto_index,
+        PREPARE_GENOME_INDICES.out.bbsplit_index,
+        PREPARE_GENOME_REFERENCES.out.rrna_fastas,
+        PREPARE_GENOME_INDICES.out.sortmerna_index,
         ch_bowtie2_rrna_index,
-        PREPARE_GENOME.out.splicesites,
-        PREPARE_GENOME.out.kraken_db,
+        PREPARE_GENOME_INDICES.out.splicesites,
+        PREPARE_GENOME_REFERENCES.out.kraken_db,
         qc_tools
     )
 

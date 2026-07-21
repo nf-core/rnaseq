@@ -127,9 +127,10 @@ workflow NFCORE_RNASEQ {
     //
     ch_samplesheet = channel.value(file(params.input, checkIfExists: true))
 
-    // Bowtie2 rRNA index is built on-demand inside the fastq_remove_rrna subworkflow
-    // rather than in PREPARE_GENOME_INDICES, to avoid duplicating the rRNA FASTA preparation logic
-    ch_bowtie2_rrna_index = channel.empty()
+    // When a pre-built index is not provided, Bowtie2 rRNA index is built on-demand
+    // inside the fastq_remove_rrna subworkflow rather than in PREPARE_GENOME_INDICES,
+    // to avoid duplicating the rRNA FASTA preparation logic
+    ch_bowtie2_rrna_index = params.bowtie2_rrna_index ? channel.value(file(params.bowtie2_rrna_index, checkIfExists: true)) : channel.empty()
 
     def qc_tools = defineQcTools(params)
 

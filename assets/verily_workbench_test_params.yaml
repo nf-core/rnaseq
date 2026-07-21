@@ -1,0 +1,9 @@
+# Parameters for running the `test` profile on Verily Workbench.
+#
+# Select this file at the "Set up parameters" step of the Workbench job
+# wizard. The Workbench "Output resource bucket" step sets Nextflow's workDir,
+# not `outdir`, so `outdir` must be supplied here as a pipeline parameter.
+#
+# The `test` profile already sets input + reference files, so only `outdir` is
+# needed here. Replace the bucket below with your workspace's output bucket.
+outdir: gs://nf-data-wb-tepid-acorn-3033/rnaseq-results

@@ -9,6 +9,7 @@ include { SEQKIT_REPLACE as SEQKIT_REPLACE_U2T     } from '../../../modules/nf-c
 include { SEQKIT_STATS                             } from '../../../modules/nf-core/seqkit/stats'
 include { SORTMERNA                                } from '../../../modules/nf-core/sortmerna'
 include { SORTMERNA as SORTMERNA_INDEX             } from '../../../modules/nf-core/sortmerna'
+include { UNTAR as UNTAR_BOWTIE2_RRNA_INDEX        } from '../../../modules/nf-core/untar/' 
 
 //
 // Function that parses seqkit stats TSV output to extract the mean read length
@@ -137,6 +138,21 @@ workflow FASTQ_REMOVE_RRNA {
             BOWTIE2_BUILD(ch_combined_fasta)
             ch_bowtie2_index = BOWTIE2_BUILD.out.index.first()
             ch_bowtie2_index_out = BOWTIE2_BUILD.out.index
+        }
+        else {
+            if (params.bowtie2_rrna_index.endsWith('.tar.gz')) {
+                ch_bowtie2_index = UNTAR_BOWTIE2_RRNA_INDEX(
+                    channel.value([
+                        [id: 'bowtie2_rrna'], 
+                        file(params.bowtie2_rrna_index, checkIfExists: true)
+                    ])
+                ).untar.first()
+            } else {
+                ch_bowtie2_index = channel.value([
+                    [id: 'bowtie2_rrna'], 
+                    file(params.bowtie2_rrna_index, checkIfExists: true)
+                ])
+            }
         }
 
         // Branch reads by single-end vs paired-end for different filtering strategies

@@ -28,9 +28,17 @@ workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT {
     // tx2gene independently per sample. If a use case arises requiring mixed
     // transcriptomes, this will need to be revisited.
     //
+    // The sample is selected by sorting on the staged results name so the same
+    // one is chosen on every run, keeping the CUSTOM_TX2GENE cache key stable
+    // across -resume. Picking by arrival order would vary between runs and
+    // invalidate the cache for tx2gene and everything downstream of it. The
+    // empty-list guard keeps tx2gene from running when no quant results are
+    // supplied, since toSortedList still emits an empty list in that case.
+    //
     ch_tx2gene_quants = quant_results
-        .first()
-        .map { _meta, results -> [ [:], results ] }
+        .toSortedList { a, b -> a[1].name <=> b[1].name }
+        .filter { sorted -> sorted.size() > 0 }
+        .map { sorted -> [ [:], sorted.first()[1] ] }
 
     CUSTOM_TX2GENE (
         gtf.map { gtf_file -> [ [:], gtf_file ] },

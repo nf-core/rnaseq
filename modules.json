@@ -483,7 +483,7 @@
                     },
                     "quant_tximport_summarizedexperiment": {
                         "branch": "master",
-                        "git_sha": "77df703775155f3f0f8922f9354501e0289348c2",
+                        "git_sha": "2724f164f1c751b368918fb78e7f4049df6f736d",
                         "installed_by": ["quantify_pseudo_alignment", "quantify_rsem"]
                     },
                     "quantify_pseudo_alignment": {

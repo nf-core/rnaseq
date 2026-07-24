@@ -2,10 +2,13 @@ name: nf-core template version comment
 # This workflow is triggered on PRs to check if the pipeline template version matches the latest nf-core version.
 # It posts a comment to the PR, even if it comes from a fork.
 
-on: pull_request_target
+on:
+  pull_request:
+
+permissions: {}
 
 jobs:
-  template_version:
+  check_template_version:
     runs-on: ubuntu-latest
     steps:
       - name: Check out pipeline code
@@ -22,25 +25,36 @@ jobs:
       - name: Install nf-core
         run: |
           python -m pip install --upgrade pip
-          pip install nf-core==${{ steps.read_yml.outputs['nf_core_version'] }}
+          pip install nf-core
 
-      - name: Check nf-core outdated
-        id: nf_core_outdated
-        run: echo "OUTPUT=$(pip list --outdated | grep nf-core)" >> ${GITHUB_ENV}
+      - name: Build PR comment if template is outdated
+        # The fork-controlled version is passed via the environment and only ever
+        # used as quoted shell data (never interpolated into a command), so it
+        # cannot be used for script injection.
+        env:
+          PR_VERSION: ${{ steps.read_yml.outputs['nf_core_version'] }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          mkdir -p pr-comment
+          echo "$PR_NUMBER" > pr-comment/pr_number.txt
+          echo "template-version" > pr-comment/header.txt
 
-      - name: Post nf-core template version comment
-        uses: mshick/add-pr-comment@8e4927817251f1ff60c001f04568532b38e0b4a0 # v3
-        if: |
-          contains(env.OUTPUT, 'nf-core')
+          latest_version=$(nf-core --version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n1)
+
+          if [ -n "$PR_VERSION" ] && [ -n "$latest_version" ] && [ "$PR_VERSION" != "$latest_version" ]; then
+            cat > pr-comment/comment.md <<EOF
+          > [!WARNING]
+          > Newer version of the nf-core template is available.
+          >
+          > Your pipeline is using an old version of the nf-core template: ${PR_VERSION}.
+          > Please update your pipeline to the latest version.
+          >
+          > For more documentation on how to update your pipeline, please see the [Synchronisation documentation](https://nf-co.re/docs/developing/template-syncs/overview).
+          EOF
+          fi
+
+      - name: Upload PR comment artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          repo-token: ${{ secrets.NF_CORE_BOT_AUTH_TOKEN }}
-          allow-repeats: false
-          message: |
-            > [!WARNING]
-            > Newer version of the nf-core template is available.
-            >
-            > Your pipeline is using an old version of the nf-core template: ${{ steps.read_yml.outputs['nf_core_version'] }}.
-            > Please update your pipeline to the latest version.
-            >
-            > For more documentation on how to update your pipeline, please see the [Synchronisation documentation](https://nf-co.re/docs/developing/template-syncs/overview).
-          #
+          name: pr-comment
+          path: pr-comment/

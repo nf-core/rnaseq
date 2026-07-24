@@ -1,9 +1,17 @@
 lint:
   actions_nf_test: false
+  container_configs: false
   files_exist:
     - conf/modules.config
+    - conf/containers_conda_lock_files_amd64.config
+    - conf/containers_conda_lock_files_arm64.config
+    - conf/containers_docker_amd64.config
+    - conf/containers_docker_arm64.config
+    - conf/containers_singularity_https_amd64.config
+    - conf/containers_singularity_https_arm64.config
+    - conf/containers_singularity_oras_amd64.config
+    - conf/containers_singularity_oras_arm64.config
   files_unchanged:
-    - .github/CONTRIBUTING.md
     - assets/email_template.html
     - assets/email_template.txt
     - assets/nf-core-rnaseq_logo_light.png
@@ -11,12 +19,11 @@ lint:
     - .gitignore
     - nf-test.config
   modules_config: false
-  multiqc_config: false
   nextflow_config:
     - config_defaults:
         - params.ribo_database_manifest
   nf_test_content: false
-nf_core_version: 4.0.2
+nf_core_version: 4.0.3
 repository_type: pipeline
 template:
   author: "Harshil Patel, Phil Ewels, Rickard Hammar\xE9n"
@@ -27,4 +34,4 @@ template:
   name: rnaseq
   org: nf-core
   outdir: .
-  version: 3.25.1
+  version: 3.27.0dev

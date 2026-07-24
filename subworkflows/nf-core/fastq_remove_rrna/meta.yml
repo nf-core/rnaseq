@@ -1,0 +1,104 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "fastq_remove_rrna"
+description: Remove ribosomal RNA reads from FASTQ files using SortMeRNA, RiboDetector, or Bowtie2
+keywords:
+  - fastq
+  - rrna
+  - ribosomal
+  - filter
+  - sortmerna
+  - ribodetector
+  - bowtie2
+components:
+  - bowtie2/align
+  - bowtie2/build
+  - ribodetector
+  - samtools/fastq
+  - samtools/view
+  - seqkit/replace
+  - seqkit/stats
+  - sortmerna
+input:
+  - ch_reads:
+      type: file
+      description: |
+        List of FastQ files of size 1 and 2 for single-end and paired-end data, respectively.
+      structure:
+        - meta:
+            type: map
+            description: Groovy Map containing sample information e.g. [ id:'test', single_end:false ]
+        - reads:
+            type: file
+            description: FastQ files
+            pattern: "*.{fq,fastq}{,.gz}"
+  - ch_rrna_fastas:
+      type: file
+      description: |
+        Channel containing one or more FASTA files with rRNA sequences for use with SortMeRNA or Bowtie2.
+        Not required for RiboDetector which uses built-in models.
+      structure:
+        - fasta:
+            type: file
+            description: rRNA reference fasta files
+            pattern: "*.{fa,fasta}{,.gz}"
+  - ch_sortmerna_index:
+      type: directory
+      description: |
+        Pre-built SortMeRNA index directory. Optional - can be built on-the-fly if make_sortmerna_index is true.
+      structure:
+        - meta:
+            type: map
+            description: Metadata for the SortMeRNA index
+        - index:
+            type: directory
+            description: SortMeRNA index directory
+  - ch_bowtie2_index:
+      type: directory
+      description: |
+        Pre-built Bowtie2 index directory. Optional - can be built on-the-fly if make_bowtie2_index is true.
+      structure:
+        - meta:
+            type: map
+            description: Metadata for the Bowtie2 index
+        - index:
+            type: directory
+            description: Bowtie2 index directory
+  - ribo_removal_tool:
+      type: string
+      description: Specifies the rRNA removal tool to use
+      enum: ["sortmerna", "ribodetector", "bowtie2"]
+  - make_sortmerna_index:
+      type: boolean
+      description: Whether to create SortMeRNA index before running SortMeRNA
+  - make_bowtie2_index:
+      type: boolean
+      description: Whether to create Bowtie2 index before running Bowtie2 for rRNA removal
+output:
+  - reads:
+      type: file
+      description: |
+        FASTQ files with rRNA reads removed.
+      structure:
+        - meta:
+            type: map
+            description: Groovy Map containing sample information
+        - reads:
+            type: file
+            description: Filtered FastQ files
+            pattern: "*.{fq,fastq}{,.gz}"
+  - multiqc_files:
+      type: file
+      description: |
+        Log files from the rRNA removal tool, compatible with MultiQC.
+      structure:
+        - meta:
+            type: map
+            description: Metadata for the log files
+        - log:
+            type: file
+            description: Tool-specific log files
+            pattern: "*.log"
+authors:
+  - "@pinin4fjords"
+maintainers:
+  - "@pinin4fjords"

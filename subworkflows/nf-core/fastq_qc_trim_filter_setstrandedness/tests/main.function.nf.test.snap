@@ -1,0 +1,47 @@
+{
+    "Test Function getSalmonInferredStrandedness forward": {
+        "content": [
+            {
+                "inferred_strandedness": "forward",
+                "forwardFragments": 100.0,
+                "reverseFragments": 0.0,
+                "unstrandedFragments": 0.0
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-17T10:28:59.284820592"
+    },
+    "Test Function getSalmonInferredStrandedness unstranded": {
+        "content": [
+            {
+                "inferred_strandedness": "unstranded",
+                "forwardFragments": 50.0,
+                "reverseFragments": 50.0,
+                "unstrandedFragments": 0.0
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-17T10:28:47.514036696"
+    },
+    "Test Function getSalmonInferredStrandedness reverse": {
+        "content": [
+            {
+                "inferred_strandedness": "reverse",
+                "forwardFragments": 0.0,
+                "reverseFragments": 100.0,
+                "unstrandedFragments": 0.0
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-17T10:29:11.43961965"
+    }
+}

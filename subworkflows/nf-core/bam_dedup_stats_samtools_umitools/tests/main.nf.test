@@ -1,0 +1,115 @@
+nextflow_workflow {
+
+    name "Test Workflow BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS"
+    script "../main.nf"
+    workflow "BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS"
+    config "./nextflow.config"
+    tag "subworkflows"
+    tag "subworkflows_nfcore"
+    tag "subworkflows/bam_dedup_stats_samtools_umitools"
+    tag "subworkflows/bam_stats_samtools"
+    tag "bam_dedup_stats_samtools_umitools"
+    tag "bam_stats_samtools"
+    tag "samtools"
+    tag "samtools/index"
+    tag "samtools/view"
+    tag "samtools/stats"
+    tag "samtools/idxstats"
+    tag "samtools/flagstat"
+    tag "umitools"
+    tag "umitools/dedup"
+
+    test("sarscov2_bam_bai") {
+
+        when {
+            workflow {
+                """
+                val_get_dedup_stats = false
+
+                input[0] = Channel.of([
+                    [ id:'test'], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam.bai', checkIfExists: true)
+                ])
+                input[1] = val_get_dedup_stats
+                input[2] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    bam(workflow.out.bam[0][1]).getSamLinesMD5(),
+                    file(workflow.out.index[0][1]).name,
+                    file(workflow.out.deduplog[0][1]).name,
+                    workflow.out.stats,
+                    workflow.out.flagstat,
+                    workflow.out.idxstats
+                ).match() }
+            )
+        }
+    }
+
+    test("sarscov2_bam_bai - primary_only") {
+
+        when {
+            workflow {
+                """
+                val_get_dedup_stats = false
+
+                input[0] = Channel.of([
+                    [ id:'test'], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam.bai', checkIfExists: true)
+                ])
+                input[1] = val_get_dedup_stats
+                input[2] = true
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    bam(workflow.out.bam[0][1]).getSamLinesMD5(),
+                    file(workflow.out.index[0][1]).name,
+                    file(workflow.out.deduplog[0][1]).name,
+                    workflow.out.stats,
+                    workflow.out.flagstat,
+                    workflow.out.idxstats
+                ).match() }
+            )
+        }
+    }
+
+    test("sarscov2_bam_bai - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                val_get_dedup_stats = false
+
+                input[0] = Channel.of([
+                    [ id:'test'], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam.bai', checkIfExists: true)
+                ])
+                input[1] = val_get_dedup_stats
+                input[2] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(workflow.out).match() }
+            )
+        }
+    }
+}

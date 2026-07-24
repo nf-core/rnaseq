@@ -1,0 +1,145 @@
+nextflow_process {
+
+    name "Test Process STAR_GENOMEPARAMS_UPGRADE"
+    script "../main.nf"
+    process "STAR_GENOMEPARAMS_UPGRADE"
+
+    test("upgrade legacy 2.6.1d-style index") {
+
+        config "./nextflow.legacy_index.config"
+
+        setup {
+            run("STAR_GENOMEGENERATE") {
+                script "../../../../modules/nf-core/star/genomegenerate/main.nf"
+                process {
+                    """
+                    input[0] = channel.of([
+                        [ id:'test_fasta' ],
+                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                    ])
+                    input[1] = channel.of([
+                        [ id:'test_gtf' ],
+                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                    ])
+                    """
+                }
+            }
+        }
+
+        when {
+            process {
+                """
+                input[0] = STAR_GENOMEGENERATE.out.index.map { _meta, idx -> [ [ id:'star_index' ], idx ] }
+                """
+            }
+        }
+
+        then {
+            def patched = path("${process.out.index[0][1]}/genomeParameters.txt").text
+            assertAll(
+                { assert process.success },
+                { assert patched.contains('versionGenome\t2.7.4a') },
+                { assert patched.contains('genomeType\tFull') },
+                { assert patched.contains('genomeTransformType\tNone') },
+                { assert patched.contains('genomeTransformVCF\t-') },
+                { assert !patched.contains('versionGenome\t20201') },
+                { assert snapshot(
+                    process.out.index.collect { meta, idx -> [ meta, file(idx).list().sort() ] }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("idempotent on modern 2.7.x index") {
+
+        // STAR_GENOMEGENERATE here uses the default modern container (no legacy config),
+        // so the produced index is already at versionGenome 2.7.4a; the upgrade process
+        // should pass it through unchanged.
+
+        setup {
+            run("STAR_GENOMEGENERATE") {
+                script "../../../../modules/nf-core/star/genomegenerate/main.nf"
+                process {
+                    """
+                    input[0] = channel.of([
+                        [ id:'test_fasta' ],
+                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                    ])
+                    input[1] = channel.of([
+                        [ id:'test_gtf' ],
+                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                    ])
+                    """
+                }
+            }
+        }
+
+        when {
+            process {
+                """
+                input[0] = STAR_GENOMEGENERATE.out.index.map { _meta, idx -> [ [ id:'star_index' ], idx ] }
+                """
+            }
+        }
+
+        then {
+            def patched = path("${process.out.index[0][1]}/genomeParameters.txt").text
+            assertAll(
+                { assert process.success },
+                { assert patched.contains('versionGenome\t2.7.4a') },
+                { assert !patched.contains('versionGenome\t20201') }
+            )
+        }
+
+        cleanup {
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("upgrade legacy index - stub") {
+
+        options "-stub"
+        config "./nextflow.legacy_index.config"
+
+        setup {
+            run("STAR_GENOMEGENERATE") {
+                script "../../../../modules/nf-core/star/genomegenerate/main.nf"
+                process {
+                    """
+                    input[0] = channel.of([
+                        [ id:'test_fasta' ],
+                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                    ])
+                    input[1] = channel.of([
+                        [ id:'test_gtf' ],
+                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                    ])
+                    """
+                }
+            }
+        }
+
+        when {
+            process {
+                """
+                input[0] = STAR_GENOMEGENERATE.out.index.map { _meta, idx -> [ [ id:'star_index' ], idx ] }
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+        cleanup {
+            new File("${launchDir}").deleteDir()
+        }
+    }
+}

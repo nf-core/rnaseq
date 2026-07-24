@@ -110,24 +110,24 @@ maintainers:
 containers:
   conda:
     linux/amd64:
-      lock_file: modules/nf-core/multiqc/.conda-lock/linux_amd64-bd-db7c73dae76bc9e6_1.txt
+      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-ee7739d47738383b_1/condalock
     linux/arm64:
-      lock_file: modules/nf-core/multiqc/.conda-lock/linux_arm64-bd-d167b8012595a136_1.txt
+      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-58d7dee710ab3aa8_1/condalock
   docker:
     linux/amd64:
-      name: community.wave.seqera.io/library/multiqc:1.34--db7c73dae76bc9e6
-      build_id: bd-db7c73dae76bc9e6_1
-      scan_id: sc-66fc7138dbf1cf48_1
+      build_id: bd-ee7739d47738383b_1
+      name: community.wave.seqera.io/library/multiqc:1.33--ee7739d47738383b
+      scanId: sc-6ddec592dcadd583_4
     linux/arm64:
-      name: community.wave.seqera.io/library/multiqc:1.34--d167b8012595a136
-      build_id: bd-d167b8012595a136_1
-      scan_id: sc-ac701dfa631a2af9_1
+      build_id: bd-58d7dee710ab3aa8_1
+      name: community.wave.seqera.io/library/multiqc:1.33--58d7dee710ab3aa8
+      scanId: sc-a04c42273e34c55c_2
   singularity:
     linux/amd64:
-      name: oras://community.wave.seqera.io/library/multiqc:1.34--4fc8657c816047c0
-      build_id: bd-4fc8657c816047c0_1
-      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/1b/1bef8af6be88c5733461959c46ac8ef73d18f65277f62a1695d0e1633054f9c2/data
+      build_id: bd-e3576ddf588fa00d_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/34/34e733a9ae16a27e80fe00f863ea1479c96416017f24a907996126283e7ecd4d/data
+      name: oras://community.wave.seqera.io/library/multiqc:1.33--e3576ddf588fa00d
     linux/arm64:
-      name: oras://community.wave.seqera.io/library/multiqc:1.34--7fbd82d945c06726
-      build_id: bd-7fbd82d945c06726_1
-      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/9a/9a1fec9662a152683e6fcae440d0ce20920b3b89dc62d1e3a52e73f92eba0969/data
+      build_id: bd-2537ca5f8445e3c2_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/78/78b89e91d89e9cc99ad5ade5be311f347838cb2acbfb4f13bc343b170be09ce4/data
+      name: oras://community.wave.seqera.io/library/multiqc:1.33--2537ca5f8445e3c2

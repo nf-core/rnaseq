@@ -1,0 +1,55 @@
+{
+    "stub sarscov2 illumina single-end [fastq_gz]": {
+        "content": [
+            {
+                "versions_sylphtax": [
+                    [
+                        "SYLPHTAX_TAXPROF",
+                        "sylph-tax",
+                        "1.2.0"
+                    ]
+                ]
+            },
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.sylphmpa:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-02T14:48:37.167778561"
+    },
+    "sarscov2 illumina single-end [fastq_gz]": {
+        "content": [
+            {
+                "versions_sylphtax": [
+                    [
+                        "SYLPHTAX_TAXPROF",
+                        "sylph-tax",
+                        "1.2.0"
+                    ]
+                ]
+            },
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.sylphmpa:md5,1fd81c2f226e4766853d324d7aca1fc9"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-02T14:48:30.003068972"
+    }
+}

@@ -1,0 +1,184 @@
+{
+    "sarscov2 - fastq - paired-end - stub": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    [
+                        "test_1_trimmed.fq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                        "test_2_trimmed.fq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    [
+                        "test_1.fastq.gz_trimming_report.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "test_2.fastq.gz_trimming_report.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ]
+            ],
+            {
+                "versions_trimgalore": [
+                    [
+                        "TRIMGALORE",
+                        "trimgalore",
+                        "2.3.0"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-05-05T08:48:10.832490464",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    },
+    "sarscov2 - fastq - paired-end - keep-unpaired": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    [
+                        "test_1_val_1.fq.gz:md5,75413e85910bbc2e1556e12f6479f935",
+                        "test_2_val_2.fq.gz:md5,d3c588c12646ebd36a0812fe02d0bda6"
+                    ]
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    [
+                        "test_1_unpaired_1.fq.gz:md5,17e0e878f6d0e93b9008a05f128660b6",
+                        "test_2_unpaired_2.fq.gz:md5,b09a064368a867e099e66df5ef69b044"
+                    ]
+                ]
+            ],
+            "4cbef464fbc09252a1282078ec23942e",
+            "ee1b8a371f1490e5faf5e346523b8886",
+            {
+                "versions_trimgalore": [
+                    [
+                        "TRIMGALORE",
+                        "trimgalore",
+                        "2.3.0"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-05-05T09:34:57.668635539",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    },
+    "sarscov2 - fastq - single-end - stub": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test_trimmed.fq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.fastq.gz_trimming_report.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ],
+            {
+                "versions_trimgalore": [
+                    [
+                        "TRIMGALORE",
+                        "trimgalore",
+                        "2.3.0"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-05-05T08:48:05.803691794",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    },
+    "sarscov2 - fastq - paired-end": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    [
+                        "test_1_val_1.fq.gz:md5,566d44cca0d22c522d6cf0e50c7165dc",
+                        "test_2_val_2.fq.gz:md5,3c023e8e890b897821df3dc98f48c2b3"
+                    ]
+                ]
+            ],
+            "4da0165f1c5a0d3f1d5eea9ad17fb1fb",
+            "808929d2f70ffea0ddd7750bbb400b02",
+            {
+                "versions_trimgalore": [
+                    [
+                        "TRIMGALORE",
+                        "trimgalore",
+                        "2.3.0"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-05-05T09:34:52.551563029",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    },
+    "sarscov2 - fastq - single-end": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test_trimmed.fq.gz:md5,566d44cca0d22c522d6cf0e50c7165dc"
+                ]
+            ],
+            "76dd6b9d009e332d2aa6443de525c182",
+            {
+                "versions_trimgalore": [
+                    [
+                        "TRIMGALORE",
+                        "trimgalore",
+                        "2.3.0"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-05-05T09:34:47.273738299",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    }
+}

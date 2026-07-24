@@ -1,0 +1,149 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: "deseq2_qc"
+description: |
+  DESeq2-based sample QC: build a DESeq2 dataset from a gene-level count matrix and emit
+  PCA value tables, sample-distance matrices, the corresponding diagnostic PDFs and RData
+  objects, and the gene-level size factors. The PCA and clustering outputs are also
+  re-emitted as MultiQC-compatible TSVs (header prepended, file/heading labels rewritten
+  from a caller-supplied `args2` label so reports stay disambiguated per quantification
+  source - e.g. `star_salmon` vs `salmon`).
+keywords:
+  - deseq2
+  - qc
+  - pca
+  - clustering
+  - rnaseq
+tools:
+  - "r-base":
+      description: "Base R distribution"
+      homepage: "https://www.r-project.org/"
+      documentation: "https://www.r-project.org/other-docs.html"
+      licence:
+        - "GPL v2"
+      identifier: ""
+  - "bioconductor-deseq2":
+      description: "Differential gene expression analysis based on the negative binomial distribution"
+      homepage: "https://bioconductor.org/packages/DESeq2/"
+      documentation: "https://bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html"
+      tool_dev_url: "https://github.com/thelovelab/DESeq2"
+      doi: "10.1186/s13059-014-0550-8"
+      licence:
+        - "LGPL v3"
+      identifier: ""
+input:
+  - - counts:
+        type: file
+        description: |
+          Gene-level raw count matrix (samples on columns, genes on rows) - typically the
+          `*.gene_counts.tsv` output of the rnaseq tximport step.
+        pattern: "*.{tsv,txt}"
+        ontologies: []
+  - - pca_header_multiqc:
+        type: file
+        description: |
+          MultiQC custom-content header file prepended to the PCA values TSV so MultiQC
+          renders a labelled scatter plot.
+        pattern: "*.txt"
+        ontologies: []
+  - - clustering_header_multiqc:
+        type: file
+        description: |
+          MultiQC custom-content header file prepended to the sample-distance matrix so
+          MultiQC renders a labelled heatmap.
+        pattern: "*.txt"
+        ontologies: []
+output:
+  pdf:
+    - "*.pdf":
+        type: file
+        description: Diagnostic plots (PCA biplot, sample-distance heatmap, library-size barplot)
+        pattern: "*.pdf"
+        ontologies: []
+  rdata:
+    - "*.RData":
+        type: file
+        description: Serialised DESeq2 dataset (`dds`) and intermediate R objects
+        pattern: "*.RData"
+        ontologies: []
+  pca_txt:
+    - "*pca.vals.txt":
+        type: file
+        description: Tab-separated PCA component values per sample
+        pattern: "*pca.vals.txt"
+        ontologies: []
+  pca_multiqc:
+    - "*pca.vals_mqc.tsv":
+        type: file
+        description: PCA values TSV pre-pended with the MultiQC custom-content header
+        pattern: "*pca.vals_mqc.tsv"
+        ontologies: []
+  dists_txt:
+    - "*sample.dists.txt":
+        type: file
+        description: Sample-to-sample Euclidean distance matrix
+        pattern: "*sample.dists.txt"
+        ontologies: []
+  dists_multiqc:
+    - "*sample.dists_mqc.tsv":
+        type: file
+        description: Sample-distance matrix pre-pended with the MultiQC custom-content header
+        pattern: "*sample.dists_mqc.tsv"
+        ontologies: []
+  log:
+    - "*.log":
+        type: file
+        description: R session info / runtime log
+        pattern: "*.log"
+        ontologies: []
+  size_factors:
+    - "size_factors":
+        type: directory
+        description: Per-sample size factors written as individual `*.size_factors.RData` files
+        pattern: "size_factors"
+        ontologies: []
+  versions_r_base:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - r-base:
+          type: string
+          description: The name of the tool
+      - "Rscript -e 'cat(as.character(getRversion()))'":
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_deseq2:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - bioconductor-deseq2:
+          type: string
+          description: The name of the tool
+      - 'Rscript -e "library(DESeq2); cat(as.character(packageVersion(''DESeq2'')))"':
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - r-base:
+          type: string
+          description: The name of the tool
+      - "Rscript -e 'cat(as.character(getRversion()))'":
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - bioconductor-deseq2:
+          type: string
+          description: The name of the tool
+      - 'Rscript -e "library(DESeq2); cat(as.character(packageVersion(''DESeq2'')))"':
+          type: eval
+          description: The expression to obtain the version of the tool
+authors:
+  - "@drpatelh"
+  - "@pinin4fjords"
+maintainers:
+  - "@pinin4fjords"

@@ -1,0 +1,80 @@
+name: stringtie_merge
+description: Merges the annotation gtf file and the stringtie output gtf files
+keywords:
+  - merge
+  - gtf
+  - reference
+tools:
+  - stringtie2:
+      description: |
+        Transcript assembly and quantification for RNA-Seq
+      homepage: https://ccb.jhu.edu/software/stringtie/index.shtml
+      documentation: https://ccb.jhu.edu/software/stringtie/index.shtml?t=manual
+      licence:
+        - "MIT"
+      identifier: biotools:stringtie
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - gtf:
+        type: file
+        description: |
+          Stringtie transcript gtf output(s) to be merged together.
+        pattern: "*.{gtf|gff}"
+        ontologies:
+          - edam: "http://edamontology.org/format_2306"
+          - edam: "http://edamontology.org/format_1975"
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - annotation_gtf:
+        type: file
+        description: |
+          Reference annotation gtf file (optional).
+        pattern: "*.{gtf}"
+        ontologies:
+          - edam: "http://edamontology.org/format_2306"
+output:
+  versions_stringtie:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - stringtie:
+          type: string
+          description: The name of the tool
+      - stringtie --version:
+          type: eval
+          description: The expression to obtain the version of the tool
+  merged_gtf:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - ${prefix}.gtf:
+          type: file
+          description: A unified non-redundant set of isoforms from the provided
+            gtf files.
+          pattern: "${prefix}.{gtf}"
+          ontologies:
+            - edam: "http://edamontology.org/format_2306"
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - stringtie:
+          type: string
+          description: The name of the tool
+      - stringtie --version:
+          type: eval
+          description: The expression to obtain the version of the tool
+authors:
+  - "@yuukiiwa"
+maintainers:
+  - "@yuukiiwa"

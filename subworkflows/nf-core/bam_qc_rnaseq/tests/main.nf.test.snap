@@ -1,0 +1,287 @@
+{
+    "saccharomyces_cerevisiae paired-end [bam] - all modules - stub": {
+        "content": [
+            {
+                "bamstat_txt": [
+                    "test.bam_stat.txt"
+                ],
+                "biotype_tsv": [
+                    "test.biotype_counts_mqc.tsv"
+                ],
+                "dupradar_multiqc": [
+                    "test_dup_intercept_mqc.txt",
+                    "test_duprateExpDensCurve_mqc.txt"
+                ],
+                "featurecounts_counts": [
+                    "test.featureCounts.tsv"
+                ],
+                "inferexperiment_txt": [
+                    "test.infer_experiment.txt"
+                ],
+                "multiqc_files": [
+                    "test",
+                    "test.bam_stat.txt",
+                    "test.biotype_counts_mqc.tsv",
+                    "test.infer_experiment.txt",
+                    "test.inner_distance_freq.txt",
+                    "test.junctionSaturation_plot.r",
+                    "test.junction_annotation.log",
+                    "test.lc_extrap.txt",
+                    "test.pos.DupRate.xls",
+                    "test.read_distribution.txt",
+                    "test.summary.txt",
+                    "test_dup_intercept_mqc.txt",
+                    "test_duprateExpDensCurve_mqc.txt"
+                ],
+                "per_sample_mqc_bundle": [
+                    "test",
+                    "test.bam_stat.txt",
+                    "test.biotype_counts_mqc.tsv",
+                    "test.infer_experiment.txt",
+                    "test.inner_distance_freq.txt",
+                    "test.junctionSaturation_plot.r",
+                    "test.junction_annotation.log",
+                    "test.lc_extrap.txt",
+                    "test.pos.DupRate.xls",
+                    "test.read_distribution.txt",
+                    "test.summary.txt",
+                    "test_dup_intercept_mqc.txt",
+                    "test_duprateExpDensCurve_mqc.txt"
+                ],
+                "preseq_lc_extrap": [
+                    "test.lc_extrap.txt"
+                ],
+                "qualimap_results": [
+                    "test"
+                ],
+                "readdistribution_txt": [
+                    "test.read_distribution.txt"
+                ],
+                "tin_txt": [
+                    "test.summary.txt"
+                ]
+            }
+        ],
+        "timestamp": "2026-04-10T14:55:15.57192368",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "saccharomyces_cerevisiae paired-end [bam] - all modules": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false,
+                        "strandedness": "reverse"
+                    },
+                    "test_dupMatrix.txt:md5,4cd083a8144215f9d80c34d3841bde36"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false,
+                        "strandedness": "reverse"
+                    },
+                    "test_intercept_slope.txt:md5,dc393f346ae9f43bd5704d9c8affe351"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false,
+                        "strandedness": "reverse"
+                    },
+                    [
+                        "test_dup_intercept_mqc.txt:md5,64da8d99554272a1a7501a1b52eed667",
+                        "test_duprateExpDensCurve_mqc.txt:md5,5441cfe6cf13ebd0ac26c1adae8fe131"
+                    ]
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false,
+                        "strandedness": "reverse"
+                    },
+                    "test.bam_stat.txt:md5,bedd1069cd80ba60e4c2582f0b272dc0"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false,
+                        "strandedness": "reverse"
+                    },
+                    "test.infer_experiment.txt:md5,a042a3c5dea0327933454c22d3db7b9e"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false,
+                        "strandedness": "reverse"
+                    },
+                    "test.read_distribution.txt:md5,b21eced1f3cb1c26b4e748160275ab04"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false,
+                        "strandedness": "reverse"
+                    },
+                    "test.DupRate_plot.r:md5,cf6de4497dc1480dba295aea4949d6ab"
+                ],
+                [
+                    {
+                        "id": "test",
+                        "single_end": false,
+                        "strandedness": "reverse"
+                    },
+                    "test.pos.DupRate.xls:md5,ae658848e182671218e14a79941ecf67"
+                ],
+                [
+                    {
+                        "id": "test",
+                        "single_end": false,
+                        "strandedness": "reverse"
+                    },
+                    "test.seq.DupRate.xls:md5,97fc0d868448adf5f8799da0644c2df7"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false,
+                        "strandedness": "reverse"
+                    },
+                    "test.summary.txt:md5,0588ec890e99b20299edb759527741ca"
+                ]
+            ]
+        ],
+        "timestamp": "2026-04-10T14:54:48.143695956",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "saccharomyces_cerevisiae single-end [bam] - all modules": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true,
+                        "strandedness": "reverse"
+                    },
+                    "test_dupMatrix.txt:md5,0b4aafa812ef154a2409b3e0acfebada"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true,
+                        "strandedness": "reverse"
+                    },
+                    "test_intercept_slope.txt:md5,0dc5b562ff54376cc1a1a7d92f218c58"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true,
+                        "strandedness": "reverse"
+                    },
+                    [
+                        "test_dup_intercept_mqc.txt:md5,ef0821176e262ea24cafbd989f6550a7",
+                        "test_duprateExpDensCurve_mqc.txt:md5,3743208006d3389428b1faa741378c30"
+                    ]
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true,
+                        "strandedness": "reverse"
+                    },
+                    "test.bam_stat.txt:md5,203794185a965ac4098d400abe79f123"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true,
+                        "strandedness": "reverse"
+                    },
+                    "test.infer_experiment.txt:md5,763e0b4dc06ebcd736e4ba54f57f700d"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true,
+                        "strandedness": "reverse"
+                    },
+                    "test.read_distribution.txt:md5,520f3ff160bd671582926040bcdbae54"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true,
+                        "strandedness": "reverse"
+                    },
+                    "test.DupRate_plot.r:md5,deee1e49cfb1c7eb679a9e049af78b9c"
+                ],
+                [
+                    {
+                        "id": "test",
+                        "single_end": true,
+                        "strandedness": "reverse"
+                    },
+                    "test.pos.DupRate.xls:md5,290cb109fa1ff4524ec5bda36ecd222e"
+                ],
+                [
+                    {
+                        "id": "test",
+                        "single_end": true,
+                        "strandedness": "reverse"
+                    },
+                    "test.seq.DupRate.xls:md5,a0abd41eae5a0db12b3206ba39c2ac6f"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true,
+                        "strandedness": "reverse"
+                    },
+                    "test.summary.txt:md5,c1d6833aaa82d4288884a56ae2328590"
+                ]
+            ]
+        ],
+        "timestamp": "2026-04-10T14:54:59.745465997",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    }
+}

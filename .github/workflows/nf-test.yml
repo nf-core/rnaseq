@@ -1,12 +1,6 @@
 name: Run nf-test
 on:
   pull_request:
-    paths-ignore:
-      - "docs/**"
-      - "**/meta.yml"
-      - "**/*.md"
-      - "**/*.png"
-      - "**/*.svg"
   release:
     types: [published]
   workflow_dispatch:
@@ -18,7 +12,7 @@ concurrency:
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  NFT_VER: "0.9.4"
+  NFT_VER: "0.9.5"
   NFT_WORKDIR: "~"
   NXF_ANSI_LOG: false
   NXF_SINGULARITY_CACHEDIR: ${{ github.workspace }}/.singularity
@@ -49,8 +43,12 @@ jobs:
         uses: ./.github/actions/get-shards
         env:
           NFT_VER: ${{ env.NFT_VER }}
+          # Skip sentieon tests on fork PRs where secrets are not available
+          SKIP_SENTIEON: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != 'nf-core/rnaseq' }}
+          # Skip GPU tests on CPU runners
+          SKIP_GPU: "true"
         with:
-          max_shards: 7
+          max_shards: 20
 
       - name: debug
         run: |
@@ -64,6 +62,7 @@ jobs:
     runs-on: # use self-hosted runners
       - runs-on=${{ github.run_id }}-nf-test
       - runner=4cpu-linux-x64
+      - volume=80gb
     strategy:
       fail-fast: false
       matrix:
@@ -95,9 +94,21 @@ jobs:
         continue-on-error: ${{ matrix.NXF_VER == 'latest-everything' }}
         env:
           NFT_WORKDIR: ${{ env.NFT_WORKDIR }}
+          SENTIEON_AUTH_MECH: "GitHub Actions - token"
+          SENTIEON_ENCRYPTION_KEY: ${{ secrets.SENTIEON_ENCRYPTION_KEY }}
+          SENTIEON_LICENSE_MESSAGE: ${{ secrets.SENTIEON_LICENSE_MESSAGE }}
+          SENTIEON_LICSRVR_IP: ${{ secrets.SENTIEON_LICSRVR_IP }}
           NXF_VERSION: ${{ matrix.NXF_VER }}
+          # Skip sentieon tests on fork PRs where secrets are not available,
+          # and on conda because conda-resolved sentieon + its license-server
+          # handshake isn't deterministic run-to-run, so classifyStrand can
+          # flip on a threshold boundary and the summary-table md5 drifts
+          # vs the docker-captured snapshot.
+          SKIP_SENTIEON: ${{ (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != 'nf-core/rnaseq') || matrix.profile == 'conda' }}
+          # Skip GPU tests on CPU runners
+          SKIP_GPU: "true"
         with:
-          profile: ${{ matrix.profile }}
+          profile: test,${{ matrix.profile }}
           shard: ${{ matrix.shard }}
           total_shards: ${{ env.TOTAL_SHARDS }}
 
@@ -133,7 +144,7 @@ jobs:
           path: pr-comment-fragment/
 
   confirm-pass:
-    needs: [nf-test]
+    needs: [nf-test-changes, nf-test]
     if: always()
     runs-on: # use self-hosted runners
       - runs-on=${{ github.run_id }}-confirm-pass
@@ -154,7 +165,7 @@ jobs:
       - name: debug-print
         if: always()
         run: |
-          echo "::group::DEBUG: `needs` Contents"
+          echo "::group::DEBUG: needs Contents"
           echo "DEBUG: toJSON(needs) = ${{ toJSON(needs) }}"
           echo "DEBUG: toJSON(needs.*.result) = ${{ toJSON(needs.*.result) }}"
           echo "::endgroup::"

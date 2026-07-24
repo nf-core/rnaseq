@@ -8,9 +8,7 @@
 ----------------------------------------------------
 Run Name: $runName
 
-<% if (success){
-    out << "## nf-core/rnaseq execution completed successfully! ##"
-} else {
+<% if (!success){
     out << """####################################################
 ## nf-core/rnaseq execution completed unsuccessfully! ##
 ####################################################
@@ -19,7 +17,12 @@ The full error message was:
 
 ${errorReport}
 """
-} %>
+} else {
+    out << "## nf-core/rnaseq execution completed successfully! ##"
+}
+%>
+
+
 
 
 The workflow was completed at $dateComplete (duration: $duration)

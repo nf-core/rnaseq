@@ -1,0 +1,68 @@
+nextflow_process {
+
+    name "Test Process STRINGTIE_MERGE"
+    script "../main.nf"
+    process "STRINGTIE_MERGE"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "stringtie"
+    tag "stringtie/merge"
+    tag "stringtie/stringtie"
+
+    setup {
+        run("STRINGTIE_STRINGTIE") {
+            script "../../stringtie/main.nf"
+            process {
+            """
+            input[0] = [
+                        [ id:'test', strandedness:'reverse' ], // meta map
+                        [ file(params.modules_testdata_base_path + "genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true) ]
+                        ]
+            input[1] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
+            """
+            }
+        }
+    }
+
+    test("homo_sapiens - forward strandedness") {
+
+        when {
+            process {
+                """
+                input[0] = STRINGTIE_STRINGTIE.out.transcript_gtf
+                input[1] = [[id:'ref', strandedness:'forward'], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+            { assert process.success },
+            { assert snapshot(
+                sanitizeOutput(process.out)
+                ).match() }
+            )
+        }
+    }
+
+    test("homo_sapiens - reverse strandedness") {
+
+        when {
+            process {
+                """
+                input[0] = STRINGTIE_STRINGTIE.out.transcript_gtf
+                input[1] = [[id:'ref', strandedness:'reverse'], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+            { assert process.success },
+            { assert snapshot(
+                sanitizeOutput(process.out)
+                ).match() }
+            )
+        }
+    }
+}

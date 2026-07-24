@@ -1,0 +1,162 @@
+name: rustqc
+description: All-in-one RNA-seq post-alignment QC replacing dupRadar, featureCounts biotype QC, RSeQC, Preseq, Qualimap, and SAMtools stats
+keywords:
+  - rnaseq
+  - quality control
+  - qc
+  - bam
+  - dupradar
+  - featurecounts
+  - rseqc
+  - preseq
+  - qualimap
+  - samtools
+tools:
+  - rustqc:
+      description: |
+        RustQC is a high-performance, Rust-based tool that replaces multiple
+        post-alignment RNA-seq QC tools in a single pass over the BAM file.
+        It produces output compatible with MultiQC for dupRadar, featureCounts
+        biotype QC, RSeQC (bam_stat, infer_experiment, read_distribution,
+        read_duplication, junction_annotation, junction_saturation,
+        inner_distance, TIN), Preseq, Qualimap, and SAMtools
+        (flagstat, idxstats, stats).
+      homepage: https://seqeralabs.github.io/RustQC/
+      documentation: https://seqeralabs.github.io/RustQC/
+      tool_dev_url: https://github.com/seqeralabs/rustqc
+      licence: ["GPL-3.0-or-later"]
+      identifier: ""
+
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - bam:
+        type: file
+        description: Sorted BAM file
+        pattern: "*.{bam}"
+        ontologies: []
+    - bai:
+        type: file
+        description: BAM index file
+        pattern: "*.{bai}"
+        ontologies: []
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'genome' ]
+    - gtf:
+        type: file
+        description: GTF annotation file
+        pattern: "*.{gtf}"
+        ontologies: []
+
+output:
+  dupradar:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "${prefix}/dupradar/*":
+          type: file
+          description: dupRadar-compatible duplication rate plots and tables
+          pattern: "${prefix}/dupradar/*"
+          ontologies: []
+  featurecounts:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "${prefix}/featurecounts/*":
+          type: file
+          description: featureCounts-compatible biotype quantification files
+          pattern: "${prefix}/featurecounts/*"
+          ontologies: []
+  preseq:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "${prefix}/preseq/*":
+          type: file
+          description: Preseq-compatible library complexity extrapolation
+          pattern: "${prefix}/preseq/*"
+          ontologies: []
+  samtools:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "${prefix}/samtools/*":
+          type: file
+          description: SAMtools flagstat, idxstats, and stats output
+          pattern: "${prefix}/samtools/*"
+          ontologies: []
+  rseqc:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "${prefix}/rseqc/**":
+          type: file
+          description: RSeQC-compatible outputs (bam_stat, infer_experiment, read_distribution, read_duplication, junction_annotation, junction_saturation, inner_distance, TIN)
+          pattern: "${prefix}/rseqc/**"
+          ontologies: []
+  qualimap:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "${prefix}/qualimap/**":
+          type: file
+          description: Qualimap RNA-seq QC report and raw data
+          pattern: "${prefix}/qualimap/**"
+          ontologies: []
+  versions_rustqc:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - rustqc:
+          type: string
+          description: The tool name
+      - "rustqc --version 2>&1 | sed -n '1s/rustqc //; 1s/ .*//p'":
+          type: eval
+          description: The expression to obtain the version of the tool
+
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - rustqc:
+          type: string
+          description: The tool name
+      - "rustqc --version 2>&1 | sed -n '1s/rustqc //; 1s/ .*//p'":
+          type: eval
+          description: The expression to obtain the version of the tool
+
+authors:
+  - "@ewels"
+  - "@pinin4fjords"
+maintainers:
+  - "@ewels"
+  - "@pinin4fjords"
+containers:
+  docker:
+    linux/amd64:
+      name: community.wave.seqera.io/library/rustqc:0.2.1--00df1502b490e005
+      build_id: bd-00df1502b490e005_1
+  singularity:
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/rustqc:0.2.1--3982097e14c103d4
+      build_id: bd-3982097e14c103d4_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/2a/2a8a0514855c54307399fd0f664c2685e76c8cc07631e767c1e37c575b18d59f/data

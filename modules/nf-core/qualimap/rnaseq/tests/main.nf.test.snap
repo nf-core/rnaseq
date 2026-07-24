@@ -1,0 +1,69 @@
+{
+    "homo_sapiens [bam] - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            
+                        ]
+                    ]
+                ],
+                "1": [
+                    [
+                        "QUALIMAP_RNASEQ",
+                        "qualimap",
+                        "2.3"
+                    ]
+                ],
+                "results": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            
+                        ]
+                    ]
+                ],
+                "versions_qualimap": [
+                    [
+                        "QUALIMAP_RNASEQ",
+                        "qualimap",
+                        "2.3"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-02T14:37:16.973048807"
+    },
+    "homo_sapiens [bam]": {
+        "content": [
+            "qualimapReport.html",
+            "rnaseq_qc_results.txt:md5,b77878cac45beaa79a892af54aad2da3",
+            {
+                "versions_qualimap": [
+                    [
+                        "QUALIMAP_RNASEQ",
+                        "qualimap",
+                        "2.3"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-02T14:37:10.64233656"
+    }
+}

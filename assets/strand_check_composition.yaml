@@ -1,0 +1,16 @@
+id: strand_check_composition
+# parent_id / parent_name / parent_description are inherited from
+# strand_check_summary.yaml at build time so they live in one place.
+section_name: "Strandedness: read composition"
+description: >
+  Stacked percentage of sense, antisense and unstranded read fragments per
+  sample. When both Salmon and RSeQC inferred strandedness, use the dataset
+  switcher above the plot to flip between their views.
+plot_type: bargraph
+pconfig:
+  id: strand_check_composition_bargraph
+  title: Strandedness read composition
+  ylab: "% of fragments"
+  # Data is already normalised to percentages, so the counts/percent
+  # toggle would relabel the same values without transforming them.
+  cpswitch: false

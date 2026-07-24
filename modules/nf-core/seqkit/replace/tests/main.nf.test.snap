@@ -1,0 +1,106 @@
+{
+    "sarscov2 - fasta - stub": {
+        "content": [
+            {
+                "fastx": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fasta:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions_seqkit": [
+                    [
+                        "SEQKIT_REPLACE",
+                        "seqkit",
+                        "2.13.0"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-06-13T12:47:21.226842064",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
+    },
+    "sarscov2 - fasta - replace - uncompressed": {
+        "content": [
+            {
+                "fastx": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fasta:md5,b1518908253a4997fcad98270751112e"
+                    ]
+                ],
+                "versions_seqkit": [
+                    [
+                        "SEQKIT_REPLACE",
+                        "seqkit",
+                        "2.13.0"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-06-12T17:26:01.449665395",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
+    },
+    "sarscov2 - fasta - uncomp - custom": {
+        "content": [
+            {
+                "fastx": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fasta:md5,05d3294a62c72f5489f067c1da3c2f6c"
+                    ]
+                ],
+                "versions_seqkit": [
+                    [
+                        "SEQKIT_REPLACE",
+                        "seqkit",
+                        "2.13.0"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-06-13T12:54:19.323281146",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
+    },
+    "sarscov2 - fasta - replace": {
+        "content": [
+            {
+                "fastx": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fasta.gz:md5,c40eaff961f6f2a48bb7e8fd156ed5d7"
+                    ]
+                ],
+                "versions_seqkit": [
+                    [
+                        "SEQKIT_REPLACE",
+                        "seqkit",
+                        "2.13.0"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-06-12T17:25:54.471016576",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
+    }
+}

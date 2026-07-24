@@ -1,0 +1,21 @@
+{
+    "Should merge transcripts across multiple samples": {
+        "content": [
+            {
+                "stringtie_gtf": [
+                    [
+                        {
+                            "id": "stringtie_merge"
+                        },
+                        "stringtie_merge.gtf:md5,3d11d4f54395709b4fdca53ea31cea7e"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.4"
+        },
+        "timestamp": "2026-04-14T13:36:54.066473"
+    }
+}

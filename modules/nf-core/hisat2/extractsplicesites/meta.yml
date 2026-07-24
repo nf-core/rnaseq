@@ -1,0 +1,69 @@
+name: hisat2_extractsplicesites
+description: Extracts splicing sites from a gtf files
+keywords:
+  - splicing
+  - gtf
+  - genome
+  - reference
+tools:
+  - hisat2:
+      description: HISAT2 is a fast and sensitive alignment program for mapping next-generation
+        sequencing reads (both DNA and RNA) to a population of human genomes as well
+        as to a single reference genome.
+      homepage: https://daehwankimlab.github.io/hisat2/
+      documentation: https://daehwankimlab.github.io/hisat2/manual/
+      doi: "10.1038/s41587-019-0201-4"
+      licence: ["MIT"]
+      identifier: biotools:hisat2
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'genome' ]
+    - gtf:
+        type: file
+        description: Reference gtf annotation file
+        pattern: "*.{gtf}"
+        ontologies: []
+output:
+  txt:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing reference information
+            e.g. [ id:'genome' ]
+      - "*.splice_sites.txt":
+          type: file
+          description: Splice sites in txt file
+          pattern: "*.txt"
+          ontologies: []
+  versions_hisat2:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - hisat2:
+          type: string
+          description: The tool name
+      - hisat2 --version | grep -o "version [^ ]*" | cut -d " " -f 2:
+          type: eval
+          description: The expression to obtain the version of the tool
+
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - hisat2:
+          type: string
+          description: The tool name
+      - hisat2 --version | grep -o "version [^ ]*" | cut -d " " -f 2:
+          type: eval
+          description: The expression to obtain the version of the tool
+
+authors:
+  - "@ntoda03"
+  - "@ramprasadn"
+maintainers:
+  - "@ntoda03"
+  - "@ramprasadn"

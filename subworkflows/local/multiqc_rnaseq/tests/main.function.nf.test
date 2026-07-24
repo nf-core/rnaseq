@@ -1,0 +1,643 @@
+nextflow_function {
+
+    name "Test Functions"
+    script "../main.nf"
+
+    test("Test Function multiqcSampleMergeYamlPattern plain id") {
+
+        function "multiqcSampleMergeYamlPattern"
+
+        when {
+            function {
+                """
+                input[0] = 'sample_1'
+                input[1] = 1
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() }
+            )
+        }
+    }
+
+    test("Test Function multiqcSampleMergeYamlPattern escapes regex and YAML metacharacters") {
+
+        function "multiqcSampleMergeYamlPattern"
+
+        when {
+            function {
+                """
+                input[0] = "foo.1\\\$bar'baz"
+                input[1] = 2
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() }
+            )
+        }
+    }
+
+    test("Test Function multiqcSampleMergeYaml empty PE set") {
+
+        function "multiqcSampleMergeYaml"
+
+        when {
+            function {
+                """
+                def sheet = file("\${workDir}/se_only_samplesheet.csv")
+                def fq1 = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357070_1.fastq.gz'
+                def fq2 = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357072_1.fastq.gz'
+                sheet.text = [
+                    'sample,fastq_1,fastq_2,strandedness',
+                    "sample_1,\${fq1},,auto",
+                    "sample_2,\${fq2},,auto",
+                ].join('\\n') + '\\n'
+
+                input[0] = sheet
+                input[1] = file("\${projectDir}/assets/schema_input.json", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() }
+            )
+        }
+    }
+
+    test("Test Function multiqcSampleMergeYaml PE samples with tricky IDs") {
+
+        function "multiqcSampleMergeYaml"
+
+        when {
+            function {
+                """
+                def sheet = file("\${workDir}/pe_samplesheet.csv")
+                def fq1a = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357070_1.fastq.gz'
+                def fq2a = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357070_2.fastq.gz'
+                def fq1b = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357072_1.fastq.gz'
+                def fq2b = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357072_2.fastq.gz'
+                sheet.text = [
+                    'sample,fastq_1,fastq_2,strandedness',
+                    "sample_1,\${fq1a},\${fq2a},auto",
+                    "foo.1,\${fq1b},\${fq2b},auto",
+                ].join('\\n') + '\\n'
+
+                input[0] = sheet
+                input[1] = file("\${projectDir}/assets/schema_input.json", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() }
+            )
+        }
+    }
+
+    test("Test Function loadMultiqcAsset drops underscore-prefixed anchor keys and resolves merge keys") {
+
+        function "loadMultiqcAsset"
+
+        when {
+            function {
+                """
+                def asset = file("\${workDir}/sample_asset.yaml")
+                asset.text = '''\
+_anchors:
+  pct: &pct
+    suffix: "%"
+    min: 0
+    max: 100
+
+id: demo
+headers:
+  col_a:
+    <<: *pct
+    title: "A"
+  col_b:
+    title: "B"
+'''
+                input[0] = asset
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() }
+            )
+        }
+    }
+
+    test("Test Function inferenceCertainty null input") {
+
+        function "inferenceCertainty"
+
+        when {
+            function {
+                """
+                input[0] = null
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert function.result == null },
+            )
+        }
+    }
+
+    test("Test Function inferenceCertainty forward call") {
+
+        function "inferenceCertainty"
+
+        when {
+            function {
+                """
+                input[0] = [
+                    inferred_strandedness: 'forward',
+                    forwardFragments:      80.0,
+                    reverseFragments:      20.0,
+                    unstrandedFragments:    0.0,
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() },
+            )
+        }
+    }
+
+    test("Test Function inferenceCertainty reverse call") {
+
+        function "inferenceCertainty"
+
+        when {
+            function {
+                """
+                input[0] = [
+                    inferred_strandedness: 'reverse',
+                    forwardFragments:      10.0,
+                    reverseFragments:      90.0,
+                    unstrandedFragments:    0.0,
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() },
+            )
+        }
+    }
+
+    test("Test Function inferenceCertainty unstranded call drops to null") {
+
+        function "inferenceCertainty"
+
+        when {
+            function {
+                """
+                input[0] = [
+                    inferred_strandedness: 'unstranded',
+                    forwardFragments:      45.0,
+                    reverseFragments:      45.0,
+                    unstrandedFragments:   10.0,
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert function.result == null },
+            )
+        }
+    }
+
+    test("Test Function inferenceCertainty undetermined call drops to null") {
+
+        function "inferenceCertainty"
+
+        when {
+            function {
+                """
+                input[0] = [
+                    inferred_strandedness: 'undetermined',
+                    forwardFragments:      30.0,
+                    reverseFragments:      30.0,
+                    unstrandedFragments:   40.0,
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert function.result == null },
+            )
+        }
+    }
+
+    test("Test Function inferenceCertainty zero stranded fragments drops to null") {
+
+        function "inferenceCertainty"
+
+        when {
+            function {
+                """
+                input[0] = [
+                    inferred_strandedness: 'unstranded',
+                    forwardFragments:       0,
+                    reverseFragments:       0,
+                    unstrandedFragments:  100,
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert function.result == null },
+            )
+        }
+    }
+
+    test("Test Function roundOneDecimal") {
+
+        function "roundOneDecimal"
+
+        when {
+            function {
+                """
+                input[0] = 12.34567
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert function.result == 12.3d },
+            )
+        }
+    }
+
+    test("Test Function roundOneDecimal preserves null") {
+
+        function "roundOneDecimal"
+
+        when {
+            function {
+                """
+                input[0] = null
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert function.result == null },
+            )
+        }
+    }
+
+    test("Test Function strandSummaryCells with both salmon and rseqc") {
+
+        function "strandSummaryCells"
+
+        when {
+            function {
+                """
+                input[0] = [id: 'WT_REP1']
+                input[1] = 'auto'
+                input[2] = 'pass'
+                input[3] = [
+                    inferred_strandedness: 'reverse',
+                    forwardFragments:      10.0,
+                    reverseFragments:      85.0,
+                    unstrandedFragments:    5.0,
+                ]
+                input[4] = [
+                    inferred_strandedness: 'reverse',
+                    forwardFragments:       9.1,
+                    reverseFragments:      86.3,
+                    unstrandedFragments:    4.6,
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() },
+            )
+        }
+    }
+
+    test("Test Function strandSummaryCells salmon-only falls back to dashes for rseqc") {
+
+        function "strandSummaryCells"
+
+        when {
+            function {
+                """
+                input[0] = [id: 'WT_REP1']
+                input[1] = 'auto'
+                input[2] = '-'
+                input[3] = [
+                    inferred_strandedness: 'forward',
+                    forwardFragments:      82.0,
+                    reverseFragments:      13.0,
+                    unstrandedFragments:    5.0,
+                ]
+                input[4] = null
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() },
+            )
+        }
+    }
+
+    test("Test Function strandCheckSummaryYaml emits JSON keyed by sample id") {
+
+        function "strandCheckSummaryYaml"
+
+        when {
+            function {
+                """
+                input[0] = [
+                    id: 'demo',
+                    headers: [
+                        provided:        [title: 'Provided'],
+                        salmon_inferred: [title: 'Salmon inferred'],
+                        salmon_pct:      [title: 'Salmon %'],
+                        salmon_s:        [title: 'Salmon Sense %'],
+                        salmon_a:        [title: 'Salmon Antisense %'],
+                        salmon_u:        [title: 'Salmon Unstranded %'],
+                        rseqc_inferred:  [title: 'RSeQC inferred'],
+                        rseqc_pct:       [title: 'RSeQC %'],
+                        rseqc_s:         [title: 'RSeQC Sense %'],
+                        rseqc_a:         [title: 'RSeQC Antisense %'],
+                        rseqc_u:         [title: 'RSeQC Unstranded %'],
+                        status:          [title: 'Status'],
+                    ],
+                ]
+                input[1] = [
+                    [
+                        [id: 'WT_REP1'],
+                        'auto',
+                        'pass',
+                        [inferred_strandedness: 'reverse', forwardFragments: 10.0, reverseFragments: 85.0, unstrandedFragments: 5.0],
+                        [inferred_strandedness: 'reverse', forwardFragments:  9.1, reverseFragments: 86.3, unstrandedFragments: 4.6],
+                    ],
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result.md5()).match() },
+            )
+        }
+    }
+
+    test("Test Function strandCheckSummaryYaml sorts multi-sample rows by sample id") {
+
+        function "strandCheckSummaryYaml"
+
+        when {
+            function {
+                """
+                input[0] = [
+                    id: 'demo',
+                    headers: [
+                        provided:        [title: 'Provided'],
+                        salmon_inferred: [title: 'Salmon inferred'],
+                        salmon_pct:      [title: 'Salmon %'],
+                        salmon_s:        [title: 'Salmon Sense %'],
+                        salmon_a:        [title: 'Salmon Antisense %'],
+                        salmon_u:        [title: 'Salmon Unstranded %'],
+                        rseqc_inferred:  [title: 'RSeQC inferred'],
+                        rseqc_pct:       [title: 'RSeQC %'],
+                        rseqc_s:         [title: 'RSeQC Sense %'],
+                        rseqc_a:         [title: 'RSeQC Antisense %'],
+                        rseqc_u:         [title: 'RSeQC Unstranded %'],
+                        status:          [title: 'Status'],
+                    ],
+                ]
+                // Rows supplied in shuffled order; the helper must emit the data
+                // map keyed by sample id in alphabetical order.
+                input[1] = [
+                    [
+                        [id: 'WT_REP2'],
+                        'auto', 'pass',
+                        [inferred_strandedness: 'reverse', forwardFragments: 10.0, reverseFragments: 85.0, unstrandedFragments: 5.0],
+                        [inferred_strandedness: 'reverse', forwardFragments:  9.1, reverseFragments: 86.3, unstrandedFragments: 4.6],
+                    ],
+                    [
+                        [id: 'RAP1_IAA_30M_REP1'],
+                        'auto', 'pass',
+                        [inferred_strandedness: 'reverse', forwardFragments: 11.0, reverseFragments: 84.0, unstrandedFragments: 5.0],
+                        [inferred_strandedness: 'reverse', forwardFragments:  9.5, reverseFragments: 85.0, unstrandedFragments: 5.5],
+                    ],
+                    [
+                        [id: 'WT_REP1'],
+                        'auto', 'pass',
+                        [inferred_strandedness: 'reverse', forwardFragments: 10.0, reverseFragments: 85.0, unstrandedFragments: 5.0],
+                        [inferred_strandedness: 'reverse', forwardFragments:  9.1, reverseFragments: 86.3, unstrandedFragments: 4.6],
+                    ],
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                {
+                    // Parse the JSON and assert keys appear alphabetically.
+                    def json   = new groovy.json.JsonSlurper().parseText(function.result)
+                    def keys   = json.data.keySet().toList()
+                    def sorted = keys.toSorted()
+                    assert keys == sorted : "Expected sample keys in alphabetical order, got: ${keys}"
+                },
+                { assert snapshot(function.result.md5()).match() },
+            )
+        }
+    }
+
+    test("Test Function strandCheckSummaryYaml rejects rows with undeclared columns") {
+
+        function "strandCheckSummaryYaml"
+
+        when {
+            function {
+                """
+                // headers declare only `provided`, so any other cell emitted by
+                // strandSummaryCells is an undeclared column
+                input[0] = [id: 'demo', headers: [provided: [title: 'Provided']]]
+                input[1] = [
+                    [
+                        [id: 'WT_REP1'],
+                        'auto',
+                        '-',
+                        [inferred_strandedness: 'forward', forwardFragments: 90.0, reverseFragments: 10.0, unstrandedFragments: 0.0],
+                        null,
+                    ],
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert !function.success },
+                { assert function.stdout.any { it.contains('strand_check_summary.yaml headers do not declare columns') } || function.errors.any { it.toString().contains('strand_check_summary.yaml headers do not declare columns') } },
+            )
+        }
+    }
+
+    test("Test Function strandCompositionMap null input") {
+
+        function "strandCompositionMap"
+
+        when {
+            function {
+                """
+                input[0] = null
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert function.result == null },
+            )
+        }
+    }
+
+    test("Test Function strandCompositionMap rounds fragment percentages") {
+
+        function "strandCompositionMap"
+
+        when {
+            function {
+                """
+                input[0] = [
+                    inferred_strandedness: 'reverse',
+                    forwardFragments:       9.111,
+                    reverseFragments:      86.333,
+                    unstrandedFragments:    4.556,
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() },
+            )
+        }
+    }
+
+    test("Test Function strandCheckCompositionYaml single-method emits flat dataset without switcher") {
+
+        function "strandCheckCompositionYaml"
+
+        when {
+            function {
+                """
+                input[0] = [
+                    id: 'demo',
+                    pconfig: [id: 'demo_bar', title: 'Demo', ylab: '% of fragments'],
+                ]
+                input[1] = [
+                    [
+                        [id: 'WT_REP1'],
+                        'auto',
+                        '-',
+                        [inferred_strandedness: 'forward', forwardFragments: 82.0, reverseFragments: 13.0, unstrandedFragments: 5.0],
+                        null,
+                    ],
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() },
+            )
+        }
+    }
+
+    test("Test Function strandCheckCompositionYaml dual-method adds a data_labels switcher") {
+
+        function "strandCheckCompositionYaml"
+
+        when {
+            function {
+                """
+                input[0] = [
+                    id: 'demo',
+                    pconfig: [id: 'demo_bar', title: 'Demo', ylab: '% of fragments'],
+                ]
+                input[1] = [
+                    [
+                        [id: 'WT_REP1'],
+                        'auto',
+                        'pass',
+                        [inferred_strandedness: 'reverse', forwardFragments: 10.0, reverseFragments: 85.0, unstrandedFragments: 5.0],
+                        [inferred_strandedness: 'reverse', forwardFragments:  9.1, reverseFragments: 86.3, unstrandedFragments: 4.6],
+                    ],
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() },
+            )
+        }
+    }
+}

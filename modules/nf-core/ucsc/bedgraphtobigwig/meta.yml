@@ -1,0 +1,70 @@
+name: ucsc_bedgraphtobigwig
+description: Convert a bedGraph file to bigWig format.
+keywords:
+  - bedgraph
+  - bigwig
+  - ucsc
+  - bedgraphtobigwig
+  - converter
+tools:
+  - ucsc:
+      description: Convert a bedGraph file to bigWig format.
+      homepage: http://hgdownload.cse.ucsc.edu/admin/exe/
+      documentation: https://genome.ucsc.edu/goldenPath/help/bigWig.html
+      licence: ["varies; see http://genome.ucsc.edu/license"]
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - bedgraph:
+        type: file
+        description: bedGraph file
+        pattern: "*.{bedGraph}"
+        ontologies: []
+  - sizes:
+      type: file
+      description: chromosome sizes file
+      pattern: "*.{sizes}"
+      ontologies: []
+output:
+  bigwig:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.bigWig":
+          type: file
+          description: bigWig file
+          pattern: "*.{bigWig}"
+          ontologies: []
+  versions_ucsc:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - ucsc:
+          type: string
+          description: The tool name
+      - echo $VERSION:
+          type: eval
+          description: The expression to obtain the version of the tool
+
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - ucsc:
+          type: string
+          description: The tool name
+      - echo $VERSION:
+          type: eval
+          description: The expression to obtain the version of the tool
+
+authors:
+  - "@drpatelh"
+maintainers:
+  - "@drpatelh"

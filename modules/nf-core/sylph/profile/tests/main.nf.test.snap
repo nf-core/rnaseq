@@ -1,0 +1,81 @@
+{
+    "sarscov2 illumina paired-end [fastq_gz]": {
+        "content": [
+            {
+                "versions_sylph": [
+                    [
+                        "SYLPH_PROFILE",
+                        "sylph",
+                        "sylph 0.9.0"
+                    ]
+                ]
+            },
+            "Sample_file\tGenome_file\tTaxonomic_abundance\tSequence_abundance\tAdjusted_ANI\tEff_cov\tANI_5-95_percentile\tEff_lambda\tLambda_5-95_percentile\tMedian_cov\tMean_cov_geq1\tContainment_ind\tNaive_ANI\tkmers_reassigned\tContig_name"
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-01-19T13:53:39.426666755"
+    },
+    "sarscov2 illumina single-end [fastq_gz]": {
+        "content": [
+            {
+                "versions_sylph": [
+                    [
+                        "SYLPH_PROFILE",
+                        "sylph",
+                        "sylph 0.9.0"
+                    ]
+                ]
+            },
+            "Sample_file\tGenome_file\tTaxonomic_abundance\tSequence_abundance\tAdjusted_ANI\tEff_cov\tANI_5-95_percentile\tEff_lambda\tLambda_5-95_percentile\tMedian_cov\tMean_cov_geq1\tContainment_ind\tNaive_ANI\tkmers_reassigned\tContig_name"
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-01-19T13:53:34.383249183"
+    },
+    "sarscov2 illumina paired-end [fastq_gz]-stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        "SYLPH_PROFILE",
+                        "sylph",
+                        "sylph 0.9.0"
+                    ]
+                ],
+                "profile_out": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions_sylph": [
+                    [
+                        "SYLPH_PROFILE",
+                        "sylph",
+                        "sylph 0.9.0"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-01-19T13:53:44.570456167"
+    }
+}

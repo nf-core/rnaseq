@@ -1,0 +1,424 @@
+{
+    "sarscov2 - bam - single_end": {
+        "content": [
+            "test_duprateExpBoxplot.pdf",
+            "test_expressionHist.pdf",
+            "test_duprateExpDens.pdf",
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true,
+                        "strandedness": "forward"
+                    },
+                    "test_dupMatrix.txt:md5,2beda4c140548a2b8c91bf6bde01ddc6"
+                ]
+            ],
+            null,
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true,
+                        "strandedness": "forward"
+                    },
+                    [
+                        "test_dup_intercept_mqc.txt:md5,602a30c09b79533abbbb76efbb168e3e",
+                        "test_duprateExpDensCurve_mqc.txt:md5,b41f82f7d515d5e2b3e7993add90d26b"
+                    ]
+                ]
+            ],
+            {
+                "DUPRADAR": {
+                    "bioconductor-dupradar": "1.38.0"
+                }
+            }
+        ],
+        "timestamp": "2026-04-10T13:28:41.184045226",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "versions": {
+        "content": [
+            {
+                "DUPRADAR": {
+                    "bioconductor-dupradar": "1.38.0"
+                }
+            }
+        ],
+        "timestamp": "2026-04-10T13:28:41.1989833",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "sarscov2 - bam - single_end - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true,
+                            "strandedness": "forward"
+                        },
+                        "test_duprateExpDens.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true,
+                            "strandedness": "forward"
+                        },
+                        "test_duprateExpBoxplot.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true,
+                            "strandedness": "forward"
+                        },
+                        "test_expressionHist.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true,
+                            "strandedness": "forward"
+                        },
+                        "test_dupMatrix.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "4": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true,
+                            "strandedness": "forward"
+                        },
+                        "test_intercept_slope.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "5": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true,
+                            "strandedness": "forward"
+                        },
+                        [
+                            "test_dup_intercept_mqc.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test_duprateExpDensCurve_mqc.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "6": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true,
+                            "strandedness": "forward"
+                        },
+                        "test.R_sessionInfo.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "7": [
+                    "versions.yml:md5,2b4e70ac61a7bbbaef2ad21d95064ee2"
+                ],
+                "boxplot": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true,
+                            "strandedness": "forward"
+                        },
+                        "test_duprateExpBoxplot.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "dupmatrix": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true,
+                            "strandedness": "forward"
+                        },
+                        "test_dupMatrix.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "hist": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true,
+                            "strandedness": "forward"
+                        },
+                        "test_expressionHist.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "intercept_slope": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true,
+                            "strandedness": "forward"
+                        },
+                        "test_intercept_slope.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "multiqc": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true,
+                            "strandedness": "forward"
+                        },
+                        [
+                            "test_dup_intercept_mqc.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test_duprateExpDensCurve_mqc.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "scatter2d": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true,
+                            "strandedness": "forward"
+                        },
+                        "test_duprateExpDens.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "session_info": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true,
+                            "strandedness": "forward"
+                        },
+                        "test.R_sessionInfo.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,2b4e70ac61a7bbbaef2ad21d95064ee2"
+                ]
+            }
+        ],
+        "timestamp": "2026-04-10T13:28:47.435208509",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "sarscov2 - bam - paired_end": {
+        "content": [
+            "test_duprateExpBoxplot.pdf",
+            "test_expressionHist.pdf",
+            "test_duprateExpDens.pdf",
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false,
+                        "strandedness": "forward"
+                    },
+                    "test_dupMatrix.txt:md5,5a327feaba56e5ea96a2cb7e8577e196"
+                ]
+            ],
+            null,
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false,
+                        "strandedness": "forward"
+                    },
+                    [
+                        "test_dup_intercept_mqc.txt:md5,4071a87d8db9731e9a74e51f00523056",
+                        "test_duprateExpDensCurve_mqc.txt:md5,af58f18dd239447f04fa4a313124a549"
+                    ]
+                ]
+            ],
+            {
+                "DUPRADAR": {
+                    "bioconductor-dupradar": "1.38.0"
+                }
+            }
+        ],
+        "timestamp": "2026-04-10T13:28:56.119446765",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "sarscov2 - bam - paired_end - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "strandedness": "forward"
+                        },
+                        "test_duprateExpDens.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "strandedness": "forward"
+                        },
+                        "test_duprateExpBoxplot.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "strandedness": "forward"
+                        },
+                        "test_expressionHist.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "strandedness": "forward"
+                        },
+                        "test_dupMatrix.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "4": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "strandedness": "forward"
+                        },
+                        "test_intercept_slope.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "5": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "strandedness": "forward"
+                        },
+                        [
+                            "test_dup_intercept_mqc.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test_duprateExpDensCurve_mqc.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "6": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "strandedness": "forward"
+                        },
+                        "test.R_sessionInfo.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "7": [
+                    "versions.yml:md5,2b4e70ac61a7bbbaef2ad21d95064ee2"
+                ],
+                "boxplot": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "strandedness": "forward"
+                        },
+                        "test_duprateExpBoxplot.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "dupmatrix": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "strandedness": "forward"
+                        },
+                        "test_dupMatrix.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "hist": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "strandedness": "forward"
+                        },
+                        "test_expressionHist.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "intercept_slope": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "strandedness": "forward"
+                        },
+                        "test_intercept_slope.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "multiqc": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "strandedness": "forward"
+                        },
+                        [
+                            "test_dup_intercept_mqc.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test_duprateExpDensCurve_mqc.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "scatter2d": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "strandedness": "forward"
+                        },
+                        "test_duprateExpDens.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "session_info": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "strandedness": "forward"
+                        },
+                        "test.R_sessionInfo.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,2b4e70ac61a7bbbaef2ad21d95064ee2"
+                ]
+            }
+        ],
+        "timestamp": "2026-04-10T13:29:02.570599881",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    }
+}

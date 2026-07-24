@@ -1,0 +1,182 @@
+nextflow_process {
+
+    name "Test Process PARABRICKS_RNAFQ2BAM"
+    script "../main.nf"
+    process "PARABRICKS_RNAFQ2BAM"
+
+    tag "gpu_highmem"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "parabricks"
+    tag "parabricks/rnafq2bam"
+    tag "star/genomegenerate"
+
+    setup {
+
+        run("STAR_GENOMEGENERATE") {
+            script "../../../star/genomegenerate/main.nf"
+            process {
+                """
+                input[0] = [
+                    [ id:'minigenome_fasta' ],
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/minigenome.fa')
+                ]
+                input[1] = [
+                    [ id:'minigenome_gtf' ],
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/minigenome.gtf')
+                ]
+                """
+            }
+        }
+    }
+
+    test("homo_sapiens") {
+
+        config "./nextflow.config"
+
+        when {
+            params {
+                module_args = '--low-memory --read-files-command zcat --x3'
+                // Ref: https://forums.developer.nvidia.com/t/problem-with-gpu/256825/6
+                // Parabricks’s rnafq2bam requires 24GB of memory.
+                // Using --low-memory for testing
+            }
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:true ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/test_starfusion_rnaseq_1.fastq.gz', checkIfExists: true) ]
+                ])
+                input[1] = Channel.of([
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                ])
+                input[2] = STAR_GENOMEGENERATE.out.index
+                input[3] = false
+                input[4] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    file(process.out.log_final[0][1]).name,
+                    process.out.findAll { key, val -> key.startsWith('versions') },
+                    bam(process.out.bam[0][1]).getReadsMD5()
+                ).match() }
+            )
+        }
+    }
+
+    test("homo_sapiens - stub") {
+
+        config "./nextflow.config"
+        options "-stub"
+
+        when {
+            params {
+                module_args = ''
+            }
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:true ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/test_starfusion_rnaseq_1.fastq.gz', checkIfExists: true) ]
+                ])
+                input[1] = Channel.of([
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/minigenome.fa', checkIfExists: true)
+                ])
+                input[2] = STAR_GENOMEGENERATE.out.index
+                input[3] = false
+                input[4] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("homo_sapiens_chimeric") {
+
+        config "./nextflow.config"
+
+        when {
+            params {
+                module_args = '--low-memory --read-files-command zcat --out-chim-type Junctions --min-chim-segment 15 --x3'
+                // Ref: https://forums.developer.nvidia.com/t/problem-with-gpu/256825/6
+                // Parabricks’s rnafq2bam requires 24GB of memory.
+                // Using --low-memory for testing
+            }
+            process {
+                """
+                 input[0] = Channel.of([
+                    [ id:'test', single_end:true ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/test_starfusion_rnaseq_1.fastq.gz', checkIfExists: true) ]
+                ])
+                input[1] = Channel.of([
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                ])
+                input[2] = STAR_GENOMEGENERATE.out.index
+                input[3] = false
+                input[4] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    bam(process.out.bam[0][1]).getReadsMD5(),
+                    file(process.out.bai[0][1]).name,
+                    file(process.out.junction[0][1]).name,
+                    process.out.findAll { key, val -> key.startsWith('versions') }
+                ).match() }
+            )
+        }
+    }
+
+    test("homo_sapiens_chimeric - stub") {
+
+        config "./nextflow.config"
+        options "-stub"
+
+        when {
+            params {
+                module_args = '--out-chim-type Junctions'
+            }
+            process {
+                """
+                 input[0] = Channel.of([
+                    [ id:'test', single_end:true ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/test_starfusion_rnaseq_1.fastq.gz', checkIfExists: true) ]
+                ])
+                input[1] = Channel.of([
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                ])
+                input[2] = STAR_GENOMEGENERATE.out.index
+                input[3] = false
+                input[4] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+}

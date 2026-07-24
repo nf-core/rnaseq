@@ -1,0 +1,154 @@
+nextflow_process {
+
+    name "Test Process CUSTOM_MULTIQCCUSTOMBIOTYPE"
+    script "../main.nf"
+    process "CUSTOM_MULTIQCCUSTOMBIOTYPE"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "custom"
+    tag "custom/multiqccustombiotype"
+
+    test("featurecounts biotype counts") {
+
+        when {
+            process {
+                """
+                // Create a minimal featureCounts output file
+                def count_file = file("\${workDir}/test.featureCounts.txt")
+                count_file.text = [
+                    '# Program:featureCounts v2.0.1',
+                    'Geneid\tChr\tStart\tEnd\tStrand\tLength\ttest',
+                    'protein_coding\tchr1\t1\t1000\t+\t1000\t5000',
+                    'rRNA\tchr1\t2000\t3000\t+\t1000\t500',
+                    'lincRNA\tchr1\t4000\t5000\t+\t1000\t200',
+                    'miRNA\tchr1\t6000\t7000\t+\t1000\t100'
+                ].join('\\n') + '\\n'
+
+                // Create a biotypes header file
+                def header_file = file("\${workDir}/biotypes_header.txt")
+                header_file.text = [
+                    "# id: 'biotype_counts'",
+                    "# section_name: 'Biotype Counts'",
+                    "# description: 'shows reads overlapping genomic features of different biotypes'",
+                    "# plot_type: 'bargraph'",
+                    "# anchor: 'featurecounts_biotype'",
+                ].join('\\n') + '\\n'
+
+                input[0] = channel.of([ [ id:'test' ], count_file ])
+                input[1] = channel.of([ [:], header_file ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("featurecounts biotype counts - too many biotypes fails") {
+
+        when {
+            process {
+                """
+                def count_file = file("\${workDir}/too_many.featureCounts.txt")
+                def lines = [
+                    '# Program:featureCounts v2.0.1',
+                    'Geneid\tChr\tStart\tEnd\tStrand\tLength\ttest'
+                ]
+                (1..150).each { i ->
+                    lines << "biotype_\${i}\tchr1\t\${i * 1000}\t\${i * 1000 + 500}\t+\t500\t\${i}"
+                }
+                count_file.text = lines.join('\\n') + '\\n'
+
+                def header_file = file("\${workDir}/biotypes_header.txt")
+                header_file.text = [
+                    "# id: 'biotype_counts'",
+                    "# section_name: 'Biotype Counts'",
+                    "# description: 'shows reads overlapping genomic features of different biotypes'",
+                    "# plot_type: 'bargraph'",
+                    "# anchor: 'featurecounts_biotype'",
+                ].join('\\n') + '\\n'
+
+                input[0] = channel.of([ [ id:'test' ], count_file ])
+                input[1] = channel.of([ [:], header_file ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.failed },
+                { assert process.errorReport.contains('Too many categories') }
+            )
+        }
+    }
+
+    test("featurecounts biotype counts - custom max_biotypes via ext fails") {
+
+        config "./nextflow.config"
+
+        when {
+            process {
+                """
+                def count_file = file("\${workDir}/test.featureCounts.txt")
+                count_file.text = [
+                    '# Program:featureCounts v2.0.1',
+                    'Geneid\tChr\tStart\tEnd\tStrand\tLength\ttest',
+                    'protein_coding\tchr1\t1\t1000\t+\t1000\t5000',
+                    'rRNA\tchr1\t2000\t3000\t+\t1000\t500',
+                    'lincRNA\tchr1\t4000\t5000\t+\t1000\t200',
+                    'miRNA\tchr1\t6000\t7000\t+\t1000\t100'
+                ].join('\\n') + '\\n'
+
+                def header_file = file("\${workDir}/biotypes_header.txt")
+                header_file.text = [
+                    "# id: 'biotype_counts'",
+                    "# section_name: 'Biotype Counts'",
+                    "# description: 'shows reads overlapping genomic features of different biotypes'",
+                    "# plot_type: 'bargraph'",
+                    "# anchor: 'featurecounts_biotype'",
+                ].join('\\n') + '\\n'
+
+                input[0] = channel.of([ [ id:'test' ], count_file ])
+                input[1] = channel.of([ [:], header_file ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.failed },
+                { assert process.errorReport.contains('Too many categories') }
+            )
+        }
+    }
+
+    test("featurecounts biotype counts - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                def count_file = file("\${workDir}/test.featureCounts.txt")
+                count_file.text = 'stub'
+                def header_file = file("\${workDir}/biotypes_header.txt")
+                header_file.text = 'stub'
+
+                input[0] = channel.of([ [ id:'test' ], count_file ])
+                input[1] = channel.of([ [:], header_file ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+}

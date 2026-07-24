@@ -40,7 +40,7 @@ The nf-core stance on the use of AI and LLMs is that humans are still ultimately
 
 If you’re using AI tools, try to stick by these guidelines:
 
-- Keep PRs as small and focussed as possible
+- Keep PRs as small and focused as possible
 - Avoid any unnecessary changes, such as moving or refactoring code (unless that is the explicit intention of the PR)
 - Review all generated code yourself before opening a PR, and ensure that you understand it
 - Engage with the community review process and expect to make revisions
@@ -65,6 +65,9 @@ To get started, open the repository in [Codespaces](https://github.com/nf-core/r
 
 Once you have made your changes, run the pipeline with nf-test to test them locally.
 For additional information, use the `--verbose` flag to view the Nextflow console log output.
+
+> [!IMPORTANT]
+> Unlike most nf-core pipelines, this pipeline does **not** set a default `profile "test"` in `nf-test.config`. This is because the pipeline supports both CPU and GPU test profiles (`test` and `test_gpu`) with different resource limits, and hardcoding one would prevent the other from being used in CI. You must always include the `test` profile explicitly when running tests locally (e.g. `--profile=+test,docker`).
 
 ```bash
 nf-test test --tag test --profile +docker --verbose
@@ -182,4 +185,46 @@ If you update images or graphics, follow the nf-core [style guidelines](https://
 
 ## Pipeline specific contribution guidelines
 
-<!-- TODO nf-core: Add any pipeline specific contribution guidelines here, such as coding styles, procedures, checklists etc. -->
+A few conventions that are specific to nf-core/rnaseq and tend to surprise new contributors:
+
+#### Test profiles
+
+The pipeline ships three test profile families: `test` (CPU smoke test, ~15 GB resourceLimits), `test_prokaryotic` (composes on top of `test`, swaps in the bacterial/archaeal samplesheet and `bowtie2_salmon` aligner), and `test_gpu` (~30 GB resourceLimits for GPU CI). `nf-test.config` deliberately does **not** set a default profile - you must always pass one explicitly (e.g. `--profile +test,docker`).
+
+GPU/license-server-bound CI cases are gated on env vars so they don't run by default on contributor laptops:
+
+- `SKIP_GPU=1` skips Parabricks and GPU ribodetector tests
+- `SKIP_SENTIEON=1` skips Sentieon STAR tests
+- `SKIP_PARABRICKS=1` is a finer-grained subset of `SKIP_GPU`
+
+#### Test data
+
+Eukaryotic test data is pulled from the iGenomes S3 mirror (`pipelines_testdata_base_path = s3://ngi-igenomes/testdata/nf-core/pipelines/rnaseq/3.15/`); prokaryotic test data is pulled from `nf-core/test-datasets` on GitHub (Salmonella SL1344 subset). Both are pinned in `conf/test.config` and `conf/test_prokaryotic.config`; if you need to add a new fixture, prefer extending one of those rather than introducing a new bucket.
+
+#### nf-core modules and subworkflows
+
+Modules and subworkflows under `modules/nf-core/` and `subworkflows/nf-core/` are managed by the nf-core tooling - install or update them with `nf-core modules install` / `nf-core subworkflows update`, do **not** edit them directly. Edits should go through a PR to [nf-core/modules](https://github.com/nf-core/modules) first; the pipeline then picks up the new SHA via a `modules.json` bump. Pipeline-specific code (anything not portable to other pipelines) lives under `modules/local/` and `subworkflows/local/`.
+
+#### Module configs
+
+Per-tool publishDir, ext.args, and ext.prefix settings are split into one file per logical group under `conf/modules/` (e.g. `conf/modules/align_star.config`, `conf/modules/quantify_rsem.config`) and included from `nextflow.config`. When you add a new local module, add or extend the matching file rather than dropping settings into `nextflow.config` directly.
+
+#### Version reporting
+
+Modules emit their versions onto the `versions` channel topic so the calling workflow does not have to thread a `ch_versions` through every process (PR #1689). Modules that still also declare a `path "versions.yml", emit: versions` output do so because they are templated (the `.r`/`.py` template script writes the YAML); those modules populate the topic too and don't need migrating - leave them alone.
+
+#### `--genome` reference catalogues
+
+`--genome <key>` resolves a bundle of reference paths from the `params.genomes` map. The pipeline ships the iGenomes catalogue out of the box, but the same mechanism works with a user-authored catalogue - that is the recommended path for modern reference data, since the iGenomes annotations are stale. If you add new fields to genome map entries, make them optional and gate behaviour on their presence (see e.g. the `star_legacy` flag in `conf/igenomes.config`).
+
+#### Snapshots
+
+Non-deterministic outputs (STAR, Salmon, Kallisto, RSEM, HISAT2 indices; qualimap reports) are snapshotted by file-name-only (`getSnapshot()` filtered) rather than content. Deterministic text outputs are snapshotted by md5. Verbose JSON test output (e.g. helper-function tests) should snapshot `.md5()` of the result rather than inlining the JSON. Don't snapshot timestamps or paths that contain hash directories.
+
+#### `.nftignore`
+
+`tests/.nftignore` (and `tests/.nftignore_rustqc` for the RustQC variant) is a list of glob patterns that nf-test excludes from `${outputDir}` snapshots at the pipeline-test level. It is the right place to drop outputs that are content-stable but not byte-stable (e.g. files that include a timestamp, paths under multiqc/multiqc_data, log files where ordering varies), or that are already covered elsewhere. If a pipeline-level snapshot is fluttering on a file you don't actually need to assert on, add it here rather than rerunning until you get lucky.
+
+#### CHANGELOG
+
+One-line entry per PR under the unreleased section, focused on the _what_, not the implementation history. A `### Software dependencies` table at the end of each release section captures tool version bumps (Old → New).

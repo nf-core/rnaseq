@@ -1,0 +1,50 @@
+{
+    "gencode fasta": {
+        "content": [
+            {
+                "0": [
+                    "gencodeFasta.fixed.fa:md5,e9267fa40efc784cc92575b5ba8a441b"
+                ],
+                "1": [
+                    [
+                        "PREPROCESS_TRANSCRIPTS_FASTA_GENCODE",
+                        "sed",
+                        "4.7"
+                    ]
+                ],
+                "fasta": [
+                    "gencodeFasta.fixed.fa:md5,e9267fa40efc784cc92575b5ba8a441b"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-02-04T15:59:40.238809244"
+    },
+    "gencode fasta - stub": {
+        "content": [
+            {
+                "0": [
+                    "gencodeFasta.fixed.fa:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "1": [
+                    [
+                        "PREPROCESS_TRANSCRIPTS_FASTA_GENCODE",
+                        "sed",
+                        "4.7"
+                    ]
+                ],
+                "fasta": [
+                    "gencodeFasta.fixed.fa:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-02-04T15:59:48.074469078"
+    }
+}

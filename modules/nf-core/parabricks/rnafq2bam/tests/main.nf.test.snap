@@ -1,0 +1,769 @@
+{
+    "homo_sapiens - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Log.final.out:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Log.out:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "10": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        [
+                            "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "11": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "12": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "13": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Chimeric.out.junction:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "14": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.out.sam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "15": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Signal.UniqueMultiple.str1.out.wig:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "16": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Signal.UniqueMultiple.str1.out.bg:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "17": [
+                    
+                ],
+                "18": [
+                    
+                ],
+                "19": [
+                    [
+                        "PARABRICKS_RNAFQ2BAM",
+                        "parabricks",
+                        "4.6.0-1"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Log.progress.out:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "4": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "5": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        [
+                            "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "6": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "7": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.toTranscriptome.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "8": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Aligned.unsort.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "9": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        [
+                            "test.unmapped_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test.unmapped_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                        ]
+                    ]
+                ],
+                "bai": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "bam_sorted": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        [
+                            "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "bam_sorted_aligned": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "bam_transcript": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.toTranscriptome.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "bam_unsorted": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Aligned.unsort.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "bedgraph": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Signal.UniqueMultiple.str1.out.bg:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "duplicate_metrics": [
+                    
+                ],
+                "fastq": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        [
+                            "test.unmapped_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test.unmapped_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                        ]
+                    ]
+                ],
+                "junction": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Chimeric.out.junction:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "log_final": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Log.final.out:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "log_out": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Log.out:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "log_progress": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Log.progress.out:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "qc_metrics": [
+                    
+                ],
+                "read_per_gene_tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "sam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.out.sam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "spl_junc_tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        [
+                            "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "versions_parabricks": [
+                    [
+                        "PARABRICKS_RNAFQ2BAM",
+                        "parabricks",
+                        "4.6.0-1"
+                    ]
+                ],
+                "wig": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Signal.UniqueMultiple.str1.out.wig:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-09T09:28:46.515275982"
+    },
+    "homo_sapiens_chimeric - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Log.final.out:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Log.out:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "10": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        [
+                            "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "11": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "12": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "13": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Chimeric.out.junction:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "14": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.out.sam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "15": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Signal.UniqueMultiple.str1.out.wig:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "16": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Signal.UniqueMultiple.str1.out.bg:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "17": [
+                    
+                ],
+                "18": [
+                    
+                ],
+                "19": [
+                    [
+                        "PARABRICKS_RNAFQ2BAM",
+                        "parabricks",
+                        "4.6.0-1"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Log.progress.out:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "4": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "5": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        [
+                            "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "6": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "7": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.toTranscriptome.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "8": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Aligned.unsort.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "9": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        [
+                            "test.unmapped_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test.unmapped_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                        ]
+                    ]
+                ],
+                "bai": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "bam_sorted": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        [
+                            "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "bam_sorted_aligned": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "bam_transcript": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.toTranscriptome.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "bam_unsorted": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Aligned.unsort.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "bedgraph": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Signal.UniqueMultiple.str1.out.bg:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "duplicate_metrics": [
+                    
+                ],
+                "fastq": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        [
+                            "test.unmapped_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test.unmapped_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                        ]
+                    ]
+                ],
+                "junction": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Chimeric.out.junction:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "log_final": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Log.final.out:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "log_out": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Log.out:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "log_progress": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Log.progress.out:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "qc_metrics": [
+                    
+                ],
+                "read_per_gene_tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "sam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.out.sam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "spl_junc_tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        [
+                            "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "versions_parabricks": [
+                    [
+                        "PARABRICKS_RNAFQ2BAM",
+                        "parabricks",
+                        "4.6.0-1"
+                    ]
+                ],
+                "wig": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Signal.UniqueMultiple.str1.out.wig:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-09T09:29:54.340122816"
+    },
+    "homo_sapiens": {
+        "content": [
+            "test.Log.final.out",
+            {
+                "versions_parabricks": [
+                    [
+                        "PARABRICKS_RNAFQ2BAM",
+                        "parabricks",
+                        "4.6.0-1"
+                    ]
+                ]
+            },
+            "220938db5c88cdfcb9d98e10630a9e31"
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-09T09:27:02.147122093"
+    },
+    "homo_sapiens_chimeric": {
+        "content": [
+            "220938db5c88cdfcb9d98e10630a9e31",
+            "test.bam.bai",
+            "test.Chimeric.out.junction",
+            {
+                "versions_parabricks": [
+                    [
+                        "PARABRICKS_RNAFQ2BAM",
+                        "parabricks",
+                        "4.6.0-1"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-09T09:29:44.105218347"
+    }
+}

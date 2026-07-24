@@ -1,0 +1,54 @@
+{
+    "Should run without failures - stub": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "genome"
+                    },
+                    "hisat2"
+                ]
+            ],
+            {
+                "versions_hisat2": [
+                    [
+                        "HISAT2_BUILD",
+                        "hisat2",
+                        "2.2.1"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-02T15:53:37.611420605"
+    },
+    "Should run without failures": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "genome"
+                    },
+                    "hisat2"
+                ]
+            ],
+            {
+                "versions_hisat2": [
+                    [
+                        "HISAT2_BUILD",
+                        "hisat2",
+                        "2.2.1"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-02T15:53:31.34596606"
+    }
+}

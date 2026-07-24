@@ -1,0 +1,218 @@
+{
+    "sarscov2 - single_end": {
+        "content": [
+            {
+                "versions_salmon": [
+                    [
+                        "SALMON_QUANT",
+                        "salmon",
+                        "1.10.3"
+                    ]
+                ]
+            },
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test_lib_format_counts.json:md5,c7999dfccd32c090d94e5951522eecd4"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-01-19T14:53:59.375252"
+    },
+    "sarscov2 - single_end stub": {
+        "content": [
+            {
+                "versions_salmon": [
+                    [
+                        "SALMON_QUANT",
+                        "salmon",
+                        "1.10.3"
+                    ]
+                ]
+            },
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test_lib_format_counts.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-01-19T14:54:06.507228"
+    },
+    "sarscov2 - single_end lib type A": {
+        "content": [
+            {
+                "versions_salmon": [
+                    [
+                        "SALMON_QUANT",
+                        "salmon",
+                        "1.10.3"
+                    ]
+                ]
+            },
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test_lib_format_counts.json:md5,c7999dfccd32c090d94e5951522eecd4"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-01-19T14:54:15.005117"
+    },
+    "sarscov2 - pair_end multiple": {
+        "content": [
+            {
+                "versions_salmon": [
+                    [
+                        "SALMON_QUANT",
+                        "salmon",
+                        "1.10.3"
+                    ]
+                ]
+            },
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test_lib_format_counts.json:md5,4a2ee0fac91a4a3471872808d8bd3ff8"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-01-19T14:54:48.338822"
+    },
+    "sarscov2 - pair_end multiple stub": {
+        "content": [
+            {
+                "versions_salmon": [
+                    [
+                        "SALMON_QUANT",
+                        "salmon",
+                        "1.10.3"
+                    ]
+                ]
+            },
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test_lib_format_counts.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-01-19T14:54:56.134603"
+    },
+    "sarscov2 - single_end lib type A stub": {
+        "content": [
+            {
+                "versions_salmon": [
+                    [
+                        "SALMON_QUANT",
+                        "salmon",
+                        "1.10.3"
+                    ]
+                ]
+            },
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test_lib_format_counts.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-01-19T14:54:22.024404"
+    },
+    "sarscov2 - pair_end": {
+        "content": [
+            {
+                "versions_salmon": [
+                    [
+                        "SALMON_QUANT",
+                        "salmon",
+                        "1.10.3"
+                    ]
+                ]
+            },
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test_lib_format_counts.json:md5,e9516e73c9fb39145513b2a41a0af95f"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-01-19T14:54:30.967174"
+    },
+    "sarscov2 - pair_end stub": {
+        "content": [
+            {
+                "versions_salmon": [
+                    [
+                        "SALMON_QUANT",
+                        "salmon",
+                        "1.10.3"
+                    ]
+                ]
+            },
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test_lib_format_counts.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-01-19T14:54:38.572004"
+    }
+}

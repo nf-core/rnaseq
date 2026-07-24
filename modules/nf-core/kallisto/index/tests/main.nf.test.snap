@@ -1,0 +1,48 @@
+{
+    "sarscov2 transcriptome.fasta - stub": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "transcriptome"
+                    },
+                    [
+                        
+                    ]
+                ]
+            ],
+            {
+                "versions_kallisto": [
+                    [
+                        "KALLISTO_INDEX",
+                        "kallisto",
+                        "0.51.1"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-01-28T17:53:06.991465"
+    },
+    "sarscov2 transcriptome.fasta": {
+        "content": [
+            {
+                "versions_kallisto": [
+                    [
+                        "KALLISTO_INDEX",
+                        "kallisto",
+                        "0.51.1"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-01-28T17:52:50.923273"
+    }
+}

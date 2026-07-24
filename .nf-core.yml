@@ -26,7 +26,7 @@ lint:
     - config_defaults:
         - params.ribo_database_manifest
   nf_test_content: false
-nf_core_version: 4.0.2
+nf_core_version: 4.0.3
 repository_type: pipeline
 template:
   author: "Harshil Patel, Phil Ewels, Rickard Hammarén"

@@ -236,7 +236,7 @@ nextflow_pipeline {
             params {
                 outdir             = "$outputDir"
                 remove_ribo_rna    = true
-                ribo_removal_tool  = 'bowtie2'`
+                ribo_removal_tool  = 'bowtie2'
                 bowtie2_rrna_index = '' // Pending PR of test dataset on nf-core/test-datasets:rnaseq
                 skip_qc        = true
                 skip_stringtie = true

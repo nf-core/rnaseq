@@ -103,6 +103,7 @@ workflow NFCORE_RNASEQ {
         params.bowtie2_index,
         params.bbsplit_index,
         params.sortmerna_index,
+        params.bowtie2_rrna_index,
         params.aligner,
         params.pseudo_aligner,
         params.skip_bbsplit,
@@ -126,12 +127,6 @@ workflow NFCORE_RNASEQ {
     // WORKFLOW: Run nf-core/rnaseq workflow
     //
     ch_samplesheet = channel.value(file(params.input, checkIfExists: true))
-
-    // When a pre-built index is not provided, Bowtie2 rRNA index is built on-demand
-    // inside the fastq_remove_rrna subworkflow rather than in PREPARE_GENOME_INDICES,
-    // to avoid duplicating the rRNA FASTA preparation logic
-    ch_bowtie2_rrna_index = params.bowtie2_rrna_index ? channel.value(file(params.bowtie2_rrna_index, checkIfExists: true)) : channel.empty()
-
     def qc_tools = defineQcTools(params)
 
     RNASEQ (
@@ -150,7 +145,7 @@ workflow NFCORE_RNASEQ {
         PREPARE_GENOME_INDICES.out.bbsplit_index,
         PREPARE_GENOME_REFERENCES.out.rrna_fastas,
         PREPARE_GENOME_INDICES.out.sortmerna_index,
-        ch_bowtie2_rrna_index,
+        PREPARE_GENOME_INDICES.out.bowtie2_rrna_index,
         PREPARE_GENOME_INDICES.out.splicesites,
         PREPARE_GENOME_REFERENCES.out.kraken_db,
         qc_tools

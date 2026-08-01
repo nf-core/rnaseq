@@ -336,7 +336,7 @@
                     "exists": true,
                     "fa_icon": "fas fa-bezier-curve",
                     "description": "Path to directory or tar.gz archive for pre-built Bowtie2 index for rRNA removal.",
-                    "help_text": "Optional when using `--remove_ribo_rna` and `--ribo_removal_tool` is set to `bowtie2`. If not provided, by the index will be built using the database provided with `--ribo_database_manifest`"
+                    "help_text": "Optional when using `--remove_ribo_rna` and `--ribo_removal_tool` is set to `bowtie2`. If not provided, the index will be built using the database provided with `--ribo_database_manifest`"
                 },
                 "use_gpu_ribodetector": {
                     "type": "boolean",

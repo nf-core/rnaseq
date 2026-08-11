@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1884](https://github.com/nf-core/rnaseq/pull/1884) - Update `trimgalore` module to 2.3.0
 - [PR #1885](https://github.com/nf-core/rnaseq/pull/1885) - Bump `quant_tximport_summarizedexperiment` and `quantify_rsem` ([nf-core/modules#12377](https://github.com/nf-core/modules/pull/12377)): sort the collected per-sample inputs to `TXIMETA_TXIMPORT` and `CUSTOM_RSEMMERGECOUNTS` by staged file name, keeping their cache keys stable across `-resume` instead of following non-deterministic task-completion order ([#1879](https://github.com/nf-core/rnaseq/issues/1879))
 - [PR #1894](https://github.com/nf-core/rnaseq/pull/1894) - Important! Template update for nf-core/tools v4.0.3
+- [PR #1899](https://github.com/nf-core/rnaseq/pull/1899) - Update GPU based STAR (Parabricks rna_fq2bam) to version 4.7.1.
 
 ## [[3.26.0](https://github.com/nf-core/rnaseq/releases/tag/3.26.0)] - 2026-05-07
 

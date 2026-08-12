@@ -197,7 +197,7 @@ nextflow_pipeline {
                 outdir             = "$outputDir"
                 remove_ribo_rna    = true
                 ribo_removal_tool  = 'bowtie2'
-                bowtie2_rrna_index = '' // Pending PR of test dataset on nf-core/test-datasets:rnaseq
+                bowtie2_rrna_index = 'https://raw.githubusercontent.com/nf-core/test-datasets/2b0c9e0bc57123564e82308cc5c7b6756320ba01/reference/bowtie2_rrna_index.tar.gz'
                 skip_qc        = true
                 skip_stringtie = true
                 skip_bigwig    = true
@@ -237,7 +237,7 @@ nextflow_pipeline {
                 outdir             = "$outputDir"
                 remove_ribo_rna    = true
                 ribo_removal_tool  = 'bowtie2'
-                bowtie2_rrna_index = '' // Pending PR of test dataset on nf-core/test-datasets:rnaseq
+                bowtie2_rrna_index = 'https://raw.githubusercontent.com/nf-core/test-datasets/2b0c9e0bc57123564e82308cc5c7b6756320ba01/reference/bowtie2_rrna_index.tar.gz'
                 skip_qc        = true
                 skip_stringtie = true
                 skip_bigwig    = true

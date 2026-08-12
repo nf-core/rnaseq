@@ -64,7 +64,7 @@ workflow PREPARE_GENOME_INDICES {
     def prepare_tool_indices = []
     if (!skip_bbsplit)                                           { prepare_tool_indices << 'bbsplit' }
     if (ribo_removal_tool == 'sortmerna')                        { prepare_tool_indices << 'sortmerna' }
-    if (ribo_removal_tool == 'bowtie2' && bowtie2_rrna_index)    { prepare_tool_indices << 'bowtie2_rrna' } // If no index is provided, this subworkflow does not need to build an index as that is handled by the fastq_remove_rrna subworkflow. 
+    if (ribo_removal_tool == 'bowtie2' && bowtie2_rrna_index)    { prepare_tool_indices << 'bowtie2_rrna' } // If no index is provided, this subworkflow does not need to build an index as that is handled by the fastq_remove_rrna subworkflow.
     if ((!skip_alignment && aligner) || aligner == 'star_rsem')  { prepare_tool_indices << aligner }
     if (!skip_pseudo_alignment && pseudo_aligner)                { prepare_tool_indices << pseudo_aligner }
 

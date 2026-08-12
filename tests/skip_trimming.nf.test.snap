@@ -133,10 +133,10 @@
                     "star": "2.7.11b"
                 },
                 "STRINGTIE_MERGE": {
-                    "stringtie": "2.2.1"
+                    "stringtie": "3.0.3"
                 },
                 "STRINGTIE_STRINGTIE": {
-                    "stringtie": "2.2.3"
+                    "stringtie": "3.0.3"
                 },
                 "SUBREAD_FEATURECOUNTS": {
                     "subread": "2.0.6"
@@ -1339,32 +1339,32 @@
                 "WT_REP2.infer_experiment.txt:md5,c895dbd41b5a075ad4032e2732145b6a",
                 "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "salmon.merged.tx2gene_augmented.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
-                "e2t.ctab:md5,70e6afcfb5e8477b0ef371477d9b4176",
-                "e_data.ctab:md5,91c9bebff23398e2cd962478a6b56c65",
-                "i2t.ctab:md5,2545fce97da6b7d3724e00f67328ec80",
+                "e2t.ctab:md5,3715247ba719aadb4ab2a7d1dfb0791a",
+                "e_data.ctab:md5,5c516d01d788162b1a1ed2d008f1bbb1",
+                "i2t.ctab:md5,edb6aee991eb96a40e55f91e0dfb7b00",
                 "i_data.ctab:md5,3e1a6ee2016b7c835f6d1804edd990dc",
-                "e2t.ctab:md5,70e6afcfb5e8477b0ef371477d9b4176",
-                "e_data.ctab:md5,36fa87986ac10ac67084d86abe0cf76f",
-                "i2t.ctab:md5,2545fce97da6b7d3724e00f67328ec80",
+                "e2t.ctab:md5,3715247ba719aadb4ab2a7d1dfb0791a",
+                "e_data.ctab:md5,0a24ffcba5cf45fedd801c4bd96d927f",
+                "i2t.ctab:md5,edb6aee991eb96a40e55f91e0dfb7b00",
                 "i_data.ctab:md5,d3c8106bdc46f7ed942289629e20f317",
-                "e2t.ctab:md5,70e6afcfb5e8477b0ef371477d9b4176",
-                "e_data.ctab:md5,f192325cec2d7b04c4cf253d9e0a54f8",
-                "i2t.ctab:md5,2545fce97da6b7d3724e00f67328ec80",
+                "e2t.ctab:md5,3715247ba719aadb4ab2a7d1dfb0791a",
+                "e_data.ctab:md5,2566af0b1ee033e81195e5734fcd442c",
+                "i2t.ctab:md5,edb6aee991eb96a40e55f91e0dfb7b00",
                 "i_data.ctab:md5,0586c56dffca2f5836eb07cbaa2068f9",
-                "e2t.ctab:md5,70e6afcfb5e8477b0ef371477d9b4176",
-                "e_data.ctab:md5,7f89399e91fc893ee04871d52bdfe4fc",
-                "i2t.ctab:md5,2545fce97da6b7d3724e00f67328ec80",
+                "e2t.ctab:md5,3715247ba719aadb4ab2a7d1dfb0791a",
+                "e_data.ctab:md5,af9d174ec0f2a16e9a23f6ce3850eacd",
+                "i2t.ctab:md5,edb6aee991eb96a40e55f91e0dfb7b00",
                 "i_data.ctab:md5,31573ae25daff9e8ff6154fea600b02d",
-                "e2t.ctab:md5,70e6afcfb5e8477b0ef371477d9b4176",
-                "e_data.ctab:md5,64e7900c94ea6fe6cc7ed8bb8f9322b9",
-                "i2t.ctab:md5,2545fce97da6b7d3724e00f67328ec80",
+                "e2t.ctab:md5,3715247ba719aadb4ab2a7d1dfb0791a",
+                "e_data.ctab:md5,5782e4cbc79755e1171fb30ab882a036",
+                "i2t.ctab:md5,edb6aee991eb96a40e55f91e0dfb7b00",
                 "i_data.ctab:md5,042075e0929819608527f05b28b063d6"
             ]
         ],
-        "timestamp": "2026-05-01T16:38:15.703046491",
+        "timestamp": "2026-08-12T14:31:40.556566671",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
+            "nextflow": "26.04.6"
         }
     },
     "Params: --skip_trimming": {

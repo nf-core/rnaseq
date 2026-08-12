@@ -46,6 +46,27 @@ nextflow_pipeline {
         }
     }
 
+    test("Params: all samples below mapped reads threshold with de novo StringTie") {
+        tag "stringtie_empty_merge"
+
+        when {
+            params {
+                outdir = "$outputDir"
+                skip_qc = true
+                min_mapped_reads = 100
+                stringtie_ignore_gtf = true
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.trace.succeeded().findAll { it.name.contains('STRINGTIE_STRINGTIE') }.isEmpty() },
+                { assert workflow.trace.succeeded().findAll { it.name.contains('STRINGTIE_MERGE') }.isEmpty() }
+            )
+        }
+    }
+
     test("Params: --skip_qc --min_mapped_reads 90 - stub") {
 
         options "-stub"

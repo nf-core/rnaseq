@@ -89,7 +89,7 @@
                     "star": "2.7.11b"
                 },
                 "STRINGTIE_STRINGTIE": {
-                    "stringtie": "2.2.3"
+                    "stringtie": "3.0.3"
                 },
                 "TRIMGALORE": {
                     "trimgalore": "2.3.0"
@@ -704,23 +704,23 @@
                 "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "salmon.merged.tx2gene_augmented.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,3f149502efe2a9d4bac98b1dd18c15e7",
+                "e_data.ctab:md5,5a55280a8b4588fd6f5c5ae9f3a132bf",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
                 "i_data.ctab:md5,a052ab04070e72cc318fb7680b0764e3",
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,e82329a443b9ff50a86e42aff91bd704",
+                "e_data.ctab:md5,1d4da4db1f0ef9d63b45f98a52be7408",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
                 "i_data.ctab:md5,d279003d92f7feef9adb31203f84474a",
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,10e2d00f93f9e74f224bd3c1bfbeb29b",
+                "e_data.ctab:md5,791240758ca290ff3e766eedd039ff41",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
                 "i_data.ctab:md5,525413b70bcf62c24c8f96182e09883e"
             ]
         ],
-        "timestamp": "2026-05-01T16:35:52.888498212",
+        "timestamp": "2026-08-12T14:57:57.86261812",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
+            "nextflow": "26.04.6"
         }
     },
     "Params: --skip_qc --min_mapped_reads 90 - stub": {

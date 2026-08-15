@@ -101,6 +101,7 @@ nextflow_workflow {
                     workflow.out.salmon_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.sortmerna_index,
+                    workflow.out.bowtie2_rrna_index,
                     workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },

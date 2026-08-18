@@ -4,9 +4,9 @@ process STRINGTIE_MERGE {
 
     // Note: 2.7X indices incompatible with AWS iGenomes.
     conda "${moduleDir}/environment.yml"
-    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
-        ? 'https://depot.galaxyproject.org/singularity/stringtie:2.2.1--hecb563c_2'
-        : 'biocontainers/stringtie:2.2.1--hecb563c_2'}"
+    container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container ?
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/3f/3facd74a0f728c9bb9e9a731b58c343895d2dbdfeb812ce5747f701103fc61cf/data' :
+        'community.wave.seqera.io/library/stringtie:3.0.3--e8043d00caecd051' }"
 
     input:
     tuple val(meta), path(gtf)

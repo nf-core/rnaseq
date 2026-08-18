@@ -8,22 +8,22 @@
                             "id": "test",
                             "strandedness": "reverse"
                         },
-                        "test.gtf:md5,40780dc05eff7cf2c77705f857768441"
+                        "test.gtf:md5,ea6e012500cbc5b5a04e8569fd78cdfa"
                     ]
                 ],
                 "versions_stringtie": [
                     [
                         "STRINGTIE_MERGE",
                         "stringtie",
-                        "2.2.1"
+                        "3.0.3"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-04-08T13:02:20.089324763",
+        "timestamp": "2026-08-07T14:58:21.387191799",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.3"
         }
     },
     "homo_sapiens - reverse strandedness": {
@@ -35,22 +35,22 @@
                             "id": "test",
                             "strandedness": "reverse"
                         },
-                        "test.gtf:md5,40780dc05eff7cf2c77705f857768441"
+                        "test.gtf:md5,ea6e012500cbc5b5a04e8569fd78cdfa"
                     ]
                 ],
                 "versions_stringtie": [
                     [
                         "STRINGTIE_MERGE",
                         "stringtie",
-                        "2.2.1"
+                        "3.0.3"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-04-08T13:02:52.305961798",
+        "timestamp": "2026-08-07T14:58:27.936872798",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.3"
         }
     }
 }

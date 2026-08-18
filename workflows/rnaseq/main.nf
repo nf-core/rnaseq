@@ -542,14 +542,19 @@ workflow RNASEQ {
     if (!params.skip_stringtie) {
         if (params.stringtie_ignore_gtf) {
             BAM_STRINGTIE_MERGE(
-                ch_genome_bam,
+                ch_genome_bam.map { meta, bam -> [meta, bam, []] },
+                channel.value([]),
                 ch_gtf.map { gtf -> [ [:], gtf ] }
             )
             ch_stringtie_gtf = BAM_STRINGTIE_MERGE.out.stringtie_gtf.map { _meta, gtf -> gtf }
         } else {
             ch_stringtie_gtf = ch_gtf
         }
-        STRINGTIE_STRINGTIE(ch_genome_bam, ch_stringtie_gtf)
+        STRINGTIE_STRINGTIE(
+            ch_genome_bam.map { meta, bam -> [meta, bam, []] },
+            channel.value('expression-estimation'),
+            ch_stringtie_gtf
+        )
     }
 
     //

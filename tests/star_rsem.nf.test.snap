@@ -141,7 +141,7 @@
                     "star": "2.7.11b"
                 },
                 "STRINGTIE_STRINGTIE": {
-                    "stringtie": "2.2.3"
+                    "stringtie": "3.0.3"
                 },
                 "SUBREAD_FEATURECOUNTS": {
                     "subread": "2.0.6"
@@ -1259,23 +1259,23 @@
                 "WT_REP1.infer_experiment.txt:md5,d55921c0084806cdf49b9bd8653c8e09",
                 "WT_REP2.infer_experiment.txt:md5,fe87600c55f433ba995fe18bed5cf5f1",
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,5dfd0678eefe33f2c45eea45f6262557",
+                "e_data.ctab:md5,3f86dadede5bb76985020c073886ef18",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
                 "i_data.ctab:md5,19a438db88bdb92228e64a0a8350adbd",
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,a02dec82f07185700cc237e617ecc809",
+                "e_data.ctab:md5,d646e05e9abf757b614ccfda581dad13",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
                 "i_data.ctab:md5,addcf0f6836e0f81184d5ddaa525895f",
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,5354c397909a72a25607c550170e2874",
+                "e_data.ctab:md5,764b3cc3355231b2d088c3d9655faf7a",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
                 "i_data.ctab:md5,389b41d0123509f18af9da9bb2e626cd",
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,282685569dc501a8769c98c0c2885378",
+                "e_data.ctab:md5,b63efcb8cc473a2663730eadd2933ae0",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
                 "i_data.ctab:md5,daedcbf428f3912587722da1c5db50d1",
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,49e5912dedb709344c7a14b5980c1b40",
+                "e_data.ctab:md5,c5ac9a4af5e0a750c5370dd968602e58",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
                 "i_data.ctab:md5,7e81ace0a68bfe42482420b7275de195"
             ]

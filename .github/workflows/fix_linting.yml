@@ -94,12 +94,6 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ github.event.issue.number }}
         run: |
-          current_head_sha=$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}" --jq '.head.sha')
-          if [ "$current_head_sha" != "$EXPECTED_HEAD_SHA" ]; then
-            echo "Pull request head changed after linting completed."
-            exit 1
-          fi
-
           gh pr checkout "$PR_NUMBER"
           if [ "$(git rev-parse HEAD)" != "$EXPECTED_HEAD_SHA" ]; then
             echo "Checked-out head does not match the linted commit."

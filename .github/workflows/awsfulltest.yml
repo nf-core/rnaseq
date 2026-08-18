@@ -48,6 +48,30 @@ jobs:
               return;
             }
 
+            const isTrusted = async (username) => {
+              try {
+                const { data } = await github.rest.repos.getCollaboratorPermissionLevel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  username,
+                });
+                return ['admin', 'maintain', 'write'].includes(data.permission);
+              } catch (error) {
+                if (error.status === 404) {
+                  return false;
+                }
+                throw error;
+              }
+            };
+
+            // Only a trusted reviewer's approval can be the deciding one, so check
+            // the current reviewer first to skip listing every review in the common case.
+            const currentReviewer = context.payload.review.user.login;
+            if (!(await isTrusted(currentReviewer))) {
+              setResult(false);
+              return;
+            }
+
             const reviews = await github.paginate(github.rest.pulls.listReviews, {
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -68,31 +92,16 @@ jobs:
             const approvedUsers = [...latestReviewByUser]
               .filter(([, state]) => state === 'APPROVED')
               .map(([login]) => login);
-            const trustedApprovals = [];
 
+            let trustedApprovalCount = 0;
             for (const username of approvedUsers) {
-              try {
-                const { data } = await github.rest.repos.getCollaboratorPermissionLevel({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  username,
-                });
-                if (['admin', 'maintain', 'write'].includes(data.permission)) {
-                  trustedApprovals.push(username);
-                }
-              } catch (error) {
-                if (error.status !== 404) {
-                  throw error;
-                }
+              if (await isTrusted(username)) {
+                trustedApprovalCount++;
               }
             }
 
-            const currentReviewer = context.payload.review.user.login;
-            const isSecondTrustedApproval =
-              trustedApprovals.length === 2 && trustedApprovals.includes(currentReviewer);
-
-            core.info(`Trusted approvals: ${trustedApprovals.length}`);
-            setResult(isSecondTrustedApproval, 'dev');
+            core.info(`Trusted approvals: ${trustedApprovalCount}`);
+            setResult(trustedApprovalCount === 2, 'dev');
 
   run-platform:
     name: Run AWS full tests

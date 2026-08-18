@@ -19,6 +19,9 @@ on:
 env:
   NXF_ANSI_LOG: false
 
+permissions:
+  contents: read
+
 jobs:
   configure:
     runs-on: ubuntu-latest

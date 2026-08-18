@@ -5,6 +5,8 @@ on:
     types: [published]
   workflow_dispatch:
 
+permissions: {}
+
 jobs:
   toot:
     runs-on: ubuntu-latest

@@ -3,6 +3,8 @@ on:
   schedule:
     - cron: "0 0 * * 0" # Once a week
 
+permissions: {}
+
 jobs:
   clean-up:
     runs-on: ubuntu-latest

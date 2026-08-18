@@ -13,6 +13,9 @@ on:
           - aws
           - azure
           - gcp
+
+permissions: {}
+
 jobs:
   run-full-tests-on-aws:
     if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'aws' || !github.event.inputs }}
@@ -21,7 +24,7 @@ jobs:
       matrix:
         aligner: ["star_salmon", "star_rsem"]
     steps:
-      - uses: seqeralabs/action-tower-launch@v2
+      - uses: seqeralabs/action-tower-launch@51565b514bff1827cf34620de25d0055759f1fc9 # v2
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
@@ -47,7 +50,7 @@ jobs:
       matrix:
         aligner: ["star_salmon", "star_rsem"]
     steps:
-      - uses: seqeralabs/action-tower-launch@v2
+      - uses: seqeralabs/action-tower-launch@51565b514bff1827cf34620de25d0055759f1fc9 # v2
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
@@ -74,7 +77,7 @@ jobs:
       matrix:
         aligner: ["star_salmon", "star_rsem"]
     steps:
-      - uses: seqeralabs/action-tower-launch@v2
+      - uses: seqeralabs/action-tower-launch@51565b514bff1827cf34620de25d0055759f1fc9 # v2
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}

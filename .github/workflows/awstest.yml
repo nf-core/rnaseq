@@ -4,6 +4,9 @@ name: nf-core AWS test
 
 on:
   workflow_dispatch:
+
+permissions: {}
+
 jobs:
   run-platform:
     name: Run AWS tests

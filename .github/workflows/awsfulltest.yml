@@ -43,7 +43,8 @@ jobs:
             slack {
               enabled = true
               bot {
-                token = '${{ secrets.NFSLACK_BOT_TOKEN }}'
+                // Resolved by Seqera Platform secret store at launch
+                token = secrets.NFSLACK_BOT_TOKEN
                 channel = 'rnaseq'
               }
               onStart {
@@ -70,3 +71,4 @@ jobs:
           path: |
             tower_action_*.log
             tower_action_*.json
+          retention-days: 3

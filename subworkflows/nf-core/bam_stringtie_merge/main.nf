@@ -4,19 +4,22 @@ include { STRINGTIE_MERGE     } from '../../../modules/nf-core/stringtie/merge/m
 
 workflow BAM_STRINGTIE_MERGE {
     take:
-    bam_sorted // channel: [ meta, bam ]
-    ch_chrgtf // channel: [ meta, gtf ]
+    ch_bams    // channel: [ meta, srbam, lrbam ]
+    ch_mode    // channel: [ val(mode) ]
+    ch_chrgtf  // channel: [ meta, gtf ]
 
     main:
 
     STRINGTIE_STRINGTIE(
-        bam_sorted,
-        ch_chrgtf.map { _meta, gtf -> [gtf] },
+        ch_bams,
+        ch_mode,
+        ch_chrgtf.map { _meta, gtf -> [gtf] }
     )
 
     STRINGTIE_STRINGTIE.out.transcript_gtf
         .map { _meta, gtf -> gtf }
         .toSortedList { a, b -> a.name <=> b.name }
+        .filter { gtfs -> gtfs.size() > 0 }
         .map { gtfs -> [ [id: 'stringtie_merge'], gtfs ] }
         .set { collected_gtfs }
 

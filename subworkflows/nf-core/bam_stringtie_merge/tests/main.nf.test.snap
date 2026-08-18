@@ -7,15 +7,15 @@
                         {
                             "id": "stringtie_merge"
                         },
-                        "stringtie_merge.gtf:md5,3d11d4f54395709b4fdca53ea31cea7e"
+                        "stringtie_merge.gtf:md5,53e72decd9a087e267b42cc777c1581c"
                     ]
                 ]
             }
         ],
+        "timestamp": "2026-08-07T15:17:03.55785871",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-04-14T13:36:54.066473"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
     }
 }

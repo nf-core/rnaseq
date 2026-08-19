@@ -28,7 +28,7 @@ jobs:
           comment-id: ${{ github.event.comment.id }}
           reactions: eyes
 
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -47,7 +47,7 @@ jobs:
       # Install and run prek
       - name: Run prek
         id: prek
-        uses: j178/prek-action@6ad80277337ad479fe43bd70701c3f7f8aa74db3 # v2
+        uses: j178/prek-action@4e14d07f9231acabce116ccfca13b13dd9755ece # v3.0.0
         continue-on-error: true
 
       - name: Create lint fix patch
@@ -82,7 +82,7 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: needs.prepare-fix.result == 'success' && needs.prepare-fix.outputs.has_patch == 'true'
         with:
           persist-credentials: false

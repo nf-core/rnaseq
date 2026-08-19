@@ -6,21 +6,22 @@ on:
 permissions: {}
 
 jobs:
-  prepare-fix:
-    # The write token is used only before untrusted pull request code runs.
+  acknowledge:
+    # Gatekeeper for the whole workflow: the commenter must be the PR author or an
+    # org member/collaborator, because the bot pushes to the PR head branch - on a
+    # release PR that head is a protected branch (dev), and the bot's push would
+    # bypass branch protection.
+    # The eyes reaction lives in its own job (not prepare-fix) so that the job
+    # running the pull request's own lint hooks never holds a write scope.
     if: >
       contains(github.event.comment.html_url, '/pull/') &&
       contains(github.event.comment.body, '@nf-core-bot fix linting') &&
-      github.repository == 'nf-core/rnaseq'
+      github.repository == 'nf-core/rnaseq' &&
+      (github.event.comment.user.login == github.event.issue.user.login ||
+      contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.comment.author_association))
     permissions:
-      contents: read
       issues: write
-      pull-requests: read
     runs-on: ubuntu-latest
-    outputs:
-      head_sha: ${{ steps.pr.outputs.head_sha }}
-      has_patch: ${{ steps.patch.outputs.has_patch }}
-      prek_outcome: ${{ steps.prek.outcome }}
     steps:
       - name: React on comment
         uses: peter-evans/create-or-update-comment@e8674b075228eee787fea43ef493e45ece1004c9 # v5
@@ -28,6 +29,19 @@ jobs:
           comment-id: ${{ github.event.comment.id }}
           reactions: eyes
 
+  prepare-fix:
+    # Runs the pull request's own lint hooks (arbitrary untrusted code), so this
+    # job gets read-only scopes and no secrets.
+    needs: acknowledge
+    permissions:
+      contents: read
+      pull-requests: read
+    runs-on: ubuntu-latest
+    outputs:
+      head_sha: ${{ steps.pr.outputs.head_sha }}
+      has_patch: ${{ steps.patch.outputs.has_patch }}
+      prek_outcome: ${{ steps.prek.outcome }}
+    steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
@@ -72,9 +86,10 @@ jobs:
           retention-days: 1
 
   push-fix:
-    # This job runs on a fresh runner and never executes pull request code.
+    # This job runs on a fresh runner and never executes pull request code, which
+    # is why all write-scope work (push, reactions, comments) happens here.
     needs: prepare-fix
-    if: ${{ always() && needs.prepare-fix.result != 'skipped' }}
+    if: ${{ always() && contains(fromJSON('["success", "failure"]'), needs.prepare-fix.result) }}
     permissions:
       actions: read
       contents: read
@@ -148,7 +163,9 @@ jobs:
           reactions: hooray
 
       - name: Report failure
-        if: ${{ always() && (failure() || needs.prepare-fix.result != 'success') }}
+        # Keyed on failure (not "anything but success") so a cancelled run
+        # doesn't post a misleading "it didn't work" comment.
+        if: ${{ always() && (failure() || needs.prepare-fix.result == 'failure') }}
         env:
           ACTOR: ${{ github.actor }}
           COMMENT_ID: ${{ github.event.comment.id }}

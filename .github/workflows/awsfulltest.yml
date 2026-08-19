@@ -60,6 +60,7 @@ jobs:
                 if (error.status === 404) {
                   return false;
                 }
+                core.warning(`Unexpected error checking collaborator permission for ${username}: ${error.status} ${error.message}`);
                 throw error;
               }
             };

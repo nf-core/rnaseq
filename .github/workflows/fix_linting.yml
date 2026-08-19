@@ -79,16 +79,16 @@ jobs:
       actions: read
       contents: read
       issues: write
-      pull-requests: read
+      pull-requests: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-        if: needs.prepare-fix.outputs.has_patch == 'true'
+        if: needs.prepare-fix.result == 'success' && needs.prepare-fix.outputs.has_patch == 'true'
         with:
           persist-credentials: false
 
       - name: Checkout exact pull request head
-        if: needs.prepare-fix.outputs.has_patch == 'true'
+        if: needs.prepare-fix.result == 'success' && needs.prepare-fix.outputs.has_patch == 'true'
         env:
           EXPECTED_HEAD_SHA: ${{ needs.prepare-fix.outputs.head_sha }}
           GH_TOKEN: ${{ github.token }}
@@ -101,14 +101,14 @@ jobs:
           fi
 
       - name: Download lint fix patch
-        if: needs.prepare-fix.outputs.has_patch == 'true'
+        if: needs.prepare-fix.result == 'success' && needs.prepare-fix.outputs.has_patch == 'true'
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: lint-fix
           path: ${{ runner.temp }}/lint-fix
 
       - name: Apply lint fix patch
-        if: needs.prepare-fix.outputs.has_patch == 'true'
+        if: needs.prepare-fix.result == 'success' && needs.prepare-fix.outputs.has_patch == 'true'
         env:
           PATCH_FILE: ${{ runner.temp }}/lint-fix/lint-fix.patch
         run: |
@@ -121,7 +121,7 @@ jobs:
 
       - name: Commit and push changes
         id: commit-and-push
-        if: needs.prepare-fix.outputs.has_patch == 'true'
+        if: needs.prepare-fix.result == 'success' && needs.prepare-fix.outputs.has_patch == 'true'
         env:
           GH_TOKEN: ${{ secrets.nf_core_bot_auth_token }}
         run: |

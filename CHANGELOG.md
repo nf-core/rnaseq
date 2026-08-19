@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1894](https://github.com/nf-core/rnaseq/pull/1894) - Important! Template update for nf-core/tools v4.0.3
 - [PR #1899](https://github.com/nf-core/rnaseq/pull/1899) - Update GPU based STAR (Parabricks rna_fq2bam) to version 4.7.1.
 - [PR #1902](https://github.com/nf-core/rnaseq/pull/1902) - Update `bam_stringtie_merge` and StringTie modules ([nf-core/modules#12661](https://github.com/nf-core/modules/pull/12661)), allowing runs where all samples fail `--min_mapped_reads` to complete with skipped-sample warnings instead of failing an empty StringTie merge ([#1901](https://github.com/nf-core/rnaseq/issues/1901))
+- [PR #1907](https://github.com/nf-core/rnaseq/pull/1907) - Update `fastq_qc_trim_filter_setstrandedness` ([nf-core/modules#12745](https://github.com/nf-core/modules/pull/12745)), fixing a crash in Salmon auto-strandedness inference when no `--fasta` is supplied (e.g. kallisto-only pseudoalignment runs)
 
 ## [[3.26.0](https://github.com/nf-core/rnaseq/releases/tag/3.26.0)] - 2026-05-07
 

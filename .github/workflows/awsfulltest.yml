@@ -55,7 +55,8 @@ jobs:
                   repo: context.repo.repo,
                   username,
                 });
-                return ['admin', 'maintain', 'write'].includes(data.permission);
+                // The legacy permission field reports the maintain role as write.
+                return ['admin', 'write'].includes(data.permission);
               } catch (error) {
                 if (error.status === 404) {
                   return false;
@@ -67,8 +68,8 @@ jobs:
 
             // Only a trusted reviewer's approval can be the deciding one, so check
             // the current reviewer first to skip listing every review in the common case.
-            const currentReviewer = context.payload.review.user.login;
-            if (!(await isTrusted(currentReviewer))) {
+            const currentReviewer = context.payload.review.user?.login;
+            if (!currentReviewer || !(await isTrusted(currentReviewer))) {
               setResult(false);
               return;
             }
@@ -80,17 +81,27 @@ jobs:
               per_page: 100,
             });
 
-            // Only the latest effective review from each user counts.
-            const latestReviewByUser = new Map();
+            // Only the latest effective review from each user counts, and only
+            // reviews submitted before the triggering one (review ids increase
+            // monotonically). Counting relative to the triggering review makes the
+            // decision deterministic however long jobs sit queued: exactly one
+            // approval event observes the 1 -> 2 crossing and launches the tests.
+            const priorStateByUser = new Map();
             for (const review of reviews) {
               const login = review.user?.login;
-              if (!login || ['COMMENTED', 'PENDING'].includes(review.state)) {
+              if (!login || review.id >= context.payload.review.id || ['COMMENTED', 'PENDING'].includes(review.state)) {
                 continue;
               }
-              latestReviewByUser.set(login, review.state);
+              priorStateByUser.set(login, review.state);
             }
 
-            const approvedUsers = [...latestReviewByUser]
+            if (priorStateByUser.get(currentReviewer) === 'APPROVED') {
+              // A repeat approval doesn't change the count, so it must not re-launch.
+              setResult(false);
+              return;
+            }
+
+            const approvedUsers = [...priorStateByUser]
               .filter(([, state]) => state === 'APPROVED')
               .map(([login]) => login);
 
@@ -101,8 +112,8 @@ jobs:
               }
             }
 
-            core.info(`Trusted approvals: ${trustedApprovalCount}`);
-            setResult(trustedApprovalCount === 2, 'dev');
+            core.info(`Trusted approvals before this one: ${trustedApprovalCount}`);
+            setResult(trustedApprovalCount === 1, 'dev');
 
   run-platform:
     name: Run AWS full tests

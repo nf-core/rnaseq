@@ -21,6 +21,7 @@ lint:
     - nf-test.config
     - .github/workflows/branch.yml
     - .github/workflows/linting.yml
+    - .github/workflows/pr-comment.yml
   modules_config: false
   nextflow_config:
     - config_defaults:

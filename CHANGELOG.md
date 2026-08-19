@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1894](https://github.com/nf-core/rnaseq/pull/1894) - Important! Template update for nf-core/tools v4.0.3
 - [PR #1899](https://github.com/nf-core/rnaseq/pull/1899) - Update GPU based STAR (Parabricks rna_fq2bam) to version 4.7.1.
 - [PR #1902](https://github.com/nf-core/rnaseq/pull/1902) - Update `bam_stringtie_merge` and StringTie modules ([nf-core/modules#12661](https://github.com/nf-core/modules/pull/12661)), allowing runs where all samples fail `--min_mapped_reads` to complete with skipped-sample warnings instead of failing an empty StringTie merge ([#1901](https://github.com/nf-core/rnaseq/issues/1901))
+- [PR #1905](https://github.com/nf-core/rnaseq/pull/1905) - Give `TRIMGALORE` an explicit 4 GB memory allocation, replacing the `process_low_memory` label's 1 GB budget that paired with an 8-cpu band and OOM-killed every sample on every retry ([#1903](https://github.com/nf-core/rnaseq/issues/1903))
 
 ## [[3.26.0](https://github.com/nf-core/rnaseq/releases/tag/3.26.0)] - 2026-05-07
 

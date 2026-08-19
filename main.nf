@@ -76,7 +76,7 @@ workflow NFCORE_RNASEQ {
         params.aligner,
         params.pseudo_aligner,
         params.skip_gtf_filter,
-        params.remove_ribo_rna ? params.ribo_removal_tool : null,
+        params.remove_ribo_rna && !(params.ribo_removal_tool == "bowtie2" && params.bowtie2_rrna_index) ? params.ribo_removal_tool : null,
         params.skip_alignment,
         params.skip_pseudo_alignment,
         params.use_sentieon_star,

@@ -113,7 +113,7 @@ jobs:
         aligner: ["star_salmon", "star_rsem"]
     steps:
       - name: Launch workflow via Seqera Platform
-        uses: seqeralabs/action-tower-launch@51565b514bff1827cf34620de25d0055759f1fc9 # v2
+        uses: seqeralabs/action-tower-launch@v2
         # TODO nf-core: You can customise AWS full pipeline tests as required
         # Add full size test data (but still relatively small datasets for few samples)
         # on the `test_full.config` test runs with only one set of parameters

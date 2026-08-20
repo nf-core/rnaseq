@@ -786,7 +786,7 @@
     },
     "Params: --remove_ribo_rna --ribo_removal_tool bowtie2 --bowtie2_rrna_index - stub": {
         "content": [
-            24,
+            23,
             {
                 "BBMAP_BBSPLIT": {
                     "bbmap": 39.18
@@ -810,9 +810,6 @@
                     "gunzip": 1.13
                 },
                 "GUNZIP_GTF": {
-                    "gunzip": 1.13
-                },
-                "GUNZIP_RRNA_FASTAS": {
                     "gunzip": 1.13
                 },
                 "SAMTOOLS_FAIDX": {
@@ -866,7 +863,7 @@
                 
             ]
         ],
-        "timestamp": "2026-08-01T03:15:40.672583287",
+        "timestamp": "2026-08-20T11:45:07.789069721",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
@@ -1678,7 +1675,7 @@
     },
     "Params: --remove_ribo_rna --ribo_removal_tool bowtie2 --bowtie2_rrna_index": {
         "content": [
-            130,
+            129,
             {
                 "BBMAP_BBSPLIT": {
                     "bbmap": 39.18
@@ -1727,9 +1724,6 @@
                     "gunzip": 1.13
                 },
                 "GUNZIP_GTF": {
-                    "gunzip": 1.13
-                },
-                "GUNZIP_RRNA_FASTAS": {
                     "gunzip": 1.13
                 },
                 "PICARD_MARKDUPLICATES": {
@@ -2385,7 +2379,7 @@
                 "salmon.merged.tx2gene_augmented.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
             ]
         ],
-        "timestamp": "2026-08-15T05:24:01.249560691",
+        "timestamp": "2026-08-20T11:44:20.825438718",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"

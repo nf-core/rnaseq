@@ -4,6 +4,7 @@
 
 include { UNTAR as UNTAR_BBSPLIT_INDEX      } from '../../../modules/nf-core/untar'
 include { UNTAR as UNTAR_SORTMERNA_INDEX    } from '../../../modules/nf-core/untar'
+include { UNTAR as UNTAR_BOWTIE2_RRNA_INDEX } from '../../../modules/nf-core/untar'
 include { UNTAR as UNTAR_STAR_INDEX         } from '../../../modules/nf-core/untar'
 include { UNTAR as UNTAR_RSEM_INDEX         } from '../../../modules/nf-core/untar'
 include { UNTAR as UNTAR_HISAT2_INDEX       } from '../../../modules/nf-core/untar'
@@ -43,6 +44,7 @@ workflow PREPARE_GENOME_INDICES {
     bowtie2_index            // directory: /path/to/bowtie2/index/
     bbsplit_index            // directory: /path/to/bbsplit/index/
     sortmerna_index          // directory: /path/to/sortmerna/index/
+    bowtie2_rrna_index       // directory: /path/to/bowtie2/index/
     aligner                  // string: Specifies the alignment algorithm to use - available options are 'star_salmon', 'star_rsem', 'hisat2', and 'bowtie2_salmon'
     pseudo_aligner           // string: Specifies the pseudo aligner to use - available options are 'salmon'. Runs in addition to '--aligner'
     skip_bbsplit             // boolean: Skip BBSplit for removal of non-reference genome reads
@@ -62,6 +64,7 @@ workflow PREPARE_GENOME_INDICES {
     def prepare_tool_indices = []
     if (!skip_bbsplit)                                           { prepare_tool_indices << 'bbsplit' }
     if (ribo_removal_tool == 'sortmerna')                        { prepare_tool_indices << 'sortmerna' }
+    if (ribo_removal_tool == 'bowtie2' && bowtie2_rrna_index)    { prepare_tool_indices << 'bowtie2_rrna' } // If no index is provided, this subworkflow does not need to build an index as that is handled by the fastq_remove_rrna subworkflow.
     if ((!skip_alignment && aligner) || aligner == 'star_rsem')  { prepare_tool_indices << aligner }
     if (!skip_pseudo_alignment && pseudo_aligner)                { prepare_tool_indices << pseudo_aligner }
 
@@ -122,6 +125,19 @@ workflow PREPARE_GENOME_INDICES {
             )
             ch_sortmerna_index = SORTMERNA_INDEX.out.index.first()
         }
+    }
+
+    //-------------------------------------------------------------
+    // 3b) Bowtie2 rRNA index - only handles untar
+    //-------------------------------------------------------------
+    ch_bowtie2_rrna_index = channel.empty()
+    if ('bowtie2_rrna' in prepare_tool_indices) {
+        if (bowtie2_rrna_index.endsWith('.tar.gz')) {
+            ch_bowtie2_rrna_index = UNTAR_BOWTIE2_RRNA_INDEX ([ [:], file(bowtie2_rrna_index, checkIfExists: true) ]).untar.first()
+        } else {
+            ch_bowtie2_rrna_index = channel.value([ [:], file(bowtie2_rrna_index, checkIfExists: true) ])
+        }
+        // No need to build as that is handled in the fastq_remove_rrna subworkflow from nf-core
     }
 
     //----------------------------------------------------
@@ -267,13 +283,14 @@ workflow PREPARE_GENOME_INDICES {
     }
 
     emit:
-    splicesites      = ch_splicesites            // channel: path(genome.splicesites.txt)
-    bbsplit_index    = ch_bbsplit_index          // channel: path(bbsplit/index/)
-    sortmerna_index  = ch_sortmerna_index        // channel: path(sortmerna/index/)
-    star_index       = ch_star_index             // channel: path(star/index/)
-    rsem_index       = ch_rsem_index             // channel: path(rsem/index/)
-    hisat2_index     = ch_hisat2_index           // channel: path(hisat2/index/)
-    bowtie2_index    = ch_bowtie2_index          // channel: path(bowtie2/index/)
-    salmon_index     = ch_salmon_index           // channel: path(salmon/index/)
-    kallisto_index   = ch_kallisto_index         // channel: [ meta, path(kallisto/index/) ]
+    splicesites         = ch_splicesites            // channel: path(genome.splicesites.txt)
+    bbsplit_index       = ch_bbsplit_index          // channel: path(bbsplit/index/)
+    sortmerna_index     = ch_sortmerna_index        // channel: path(sortmerna/index/)
+    bowtie2_rrna_index  = ch_bowtie2_rrna_index     // channel: path(bowtie2/index/)
+    star_index          = ch_star_index             // channel: path(star/index/)
+    rsem_index          = ch_rsem_index             // channel: path(rsem/index/)
+    hisat2_index        = ch_hisat2_index           // channel: path(hisat2/index/)
+    bowtie2_index       = ch_bowtie2_index          // channel: path(bowtie2/index/)
+    salmon_index        = ch_salmon_index           // channel: path(salmon/index/)
+    kallisto_index      = ch_kallisto_index         // channel: [ meta, path(kallisto/index/) ]
 }

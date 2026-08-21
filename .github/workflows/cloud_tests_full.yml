@@ -21,13 +21,13 @@ jobs:
       matrix:
         aligner: ["star_salmon", "star_rsem"]
     steps:
-      - uses: seqeralabs/action-tower-launch@v2
+      - uses: seqeralabs/action-seqera-launch@1bcb34fe032e7eeda8861d85490e890cf5aa6c76 # v1.0.0-rc.1
         with:
-          workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
-          access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
-          compute_env: ${{ secrets.TOWER_CE_AWS_CPU }}
-          workdir: "${{ secrets.TOWER_BUCKET_AWS }}/work/rnaseq/work-${{ github.sha }}"
-          run_name: "aws_rnaseq_full_${{ matrix.aligner }}"
+          workspace-id: ${{ secrets.TOWER_WORKSPACE_ID }}
+          access-token: ${{ secrets.TOWER_ACCESS_TOKEN }}
+          compute-env: ${{ secrets.TOWER_CE_AWS_CPU }}
+          work-dir: "${{ secrets.TOWER_BUCKET_AWS }}/work/rnaseq/work-${{ github.sha }}"
+          run-name: "aws_rnaseq_full_${{ matrix.aligner }}"
           revision: ${{ github.sha }}
           profiles: test_full_aws
           parameters: |
@@ -35,10 +35,7 @@ jobs:
                 "aligner": "${{ matrix.aligner }}",
                 "outdir": "${{ secrets.TOWER_BUCKET_AWS }}/rnaseq/results-${{ github.sha }}/aligner_${{ matrix.aligner }}/"
             }
-      - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
-        with:
-          name: Tower debug log file (aws-${{ matrix.aligner }})
-          path: tower_action_*.log
+          wait: running
 
   run-full-tests-on-azure:
     if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'azure' || !github.event.inputs }}
@@ -47,13 +44,13 @@ jobs:
       matrix:
         aligner: ["star_salmon", "star_rsem"]
     steps:
-      - uses: seqeralabs/action-tower-launch@v2
+      - uses: seqeralabs/action-seqera-launch@1bcb34fe032e7eeda8861d85490e890cf5aa6c76 # v1.0.0-rc.1
         with:
-          workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
-          access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
-          compute_env: ${{ secrets.TOWER_CE_AZURE_CPU }}
-          workdir: "${{ secrets.TOWER_BUCKET_AZURE }}/work/rnaseq/work-${{ github.sha }}"
-          run_name: "azure_rnaseq_full_${{ matrix.aligner }}"
+          workspace-id: ${{ secrets.TOWER_WORKSPACE_ID }}
+          access-token: ${{ secrets.TOWER_ACCESS_TOKEN }}
+          compute-env: ${{ secrets.TOWER_CE_AZURE_CPU }}
+          work-dir: "${{ secrets.TOWER_BUCKET_AZURE }}/work/rnaseq/work-${{ github.sha }}"
+          run-name: "azure_rnaseq_full_${{ matrix.aligner }}"
           revision: ${{ github.sha }}
           profiles: test_full_azure
           parameters: |
@@ -62,10 +59,7 @@ jobs:
                 "outdir": "${{ secrets.TOWER_BUCKET_AZURE }}/rnaseq/results-${{ github.sha }}/aligner_${{ matrix.aligner }}/",
                 "igenomes_base": "${{ secrets.TOWER_IGENOMES_BASE_AZURE }}"
             }
-      - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
-        with:
-          name: Tower debug log file (azure-${{ matrix.aligner }})
-          path: tower_action_*.log
+          wait: running
 
   run-full-tests-on-gcp:
     if: ${{ github.event.inputs.platform == 'gcp' || !github.event.inputs }}
@@ -74,13 +68,13 @@ jobs:
       matrix:
         aligner: ["star_salmon", "star_rsem"]
     steps:
-      - uses: seqeralabs/action-tower-launch@v2
+      - uses: seqeralabs/action-seqera-launch@1bcb34fe032e7eeda8861d85490e890cf5aa6c76 # v1.0.0-rc.1
         with:
-          workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
-          access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
-          compute_env: ${{ secrets.TOWER_CE_GCP_CPU }}
-          workdir: "${{ secrets.TOWER_BUCKET_GCP }}/work/rnaseq/work-${{ github.sha }}"
-          run_name: "gcp_rnaseq_full_${{ matrix.aligner }}"
+          workspace-id: ${{ secrets.TOWER_WORKSPACE_ID }}
+          access-token: ${{ secrets.TOWER_ACCESS_TOKEN }}
+          compute-env: ${{ secrets.TOWER_CE_GCP_CPU }}
+          work-dir: "${{ secrets.TOWER_BUCKET_GCP }}/work/rnaseq/work-${{ github.sha }}"
+          run-name: "gcp_rnaseq_full_${{ matrix.aligner }}"
           revision: ${{ github.sha }}
           profiles: test_full_gcp
           parameters: |
@@ -88,7 +82,4 @@ jobs:
                 "aligner": "${{ matrix.aligner }}",
                 "outdir": "${{ secrets.TOWER_BUCKET_GCP }}/rnaseq/results-${{ github.sha }}/aligner_${{ matrix.aligner }}/"
             }
-      - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
-        with:
-          name: Tower debug log file (gcp-${{ matrix.aligner }})
-          path: tower_action_*.log
+          wait: running

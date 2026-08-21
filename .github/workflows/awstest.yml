@@ -12,22 +12,18 @@ jobs:
     steps:
       # Launch workflow using Seqera Platform CLI tool action
       - name: Launch workflow via Seqera Platform
-        uses: seqeralabs/action-tower-launch@51565b514bff1827cf34620de25d0055759f1fc9 # v2
+        uses: seqeralabs/action-seqera-launch@1bcb34fe032e7eeda8861d85490e890cf5aa6c76 # v1.0.0-rc.1
         with:
-          workspace_id: ${{ vars.TOWER_WORKSPACE_ID }}
-          access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
-          compute_env: ${{ vars.TOWER_COMPUTE_ENV }}
+          workspace-id: ${{ vars.TOWER_WORKSPACE_ID }}
+          access-token: ${{ secrets.TOWER_ACCESS_TOKEN }}
+          compute-env: ${{ vars.TOWER_COMPUTE_ENV }}
           revision: ${{ github.sha }}
-          workdir: s3://${{ vars.AWS_S3_BUCKET }}/work/rnaseq/work-${{ github.sha }}
+          work-dir: s3://${{ vars.AWS_S3_BUCKET }}/work/rnaseq/work-${{ github.sha }}
           parameters: |
             {
               "outdir": "s3://${{ vars.AWS_S3_BUCKET }}/rnaseq/results-test-${{ github.sha }}"
             }
           profiles: test
-
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
-        with:
-          name: Seqera Platform debug log file
-          path: |
-            tower_action_*.log
-            tower_action_*.json
+          # Fail the step if the run does not reach RUNNING, so a bad revision or
+          # parameter set shows up here instead of only in Seqera.
+          wait: running

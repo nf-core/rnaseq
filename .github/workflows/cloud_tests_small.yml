@@ -14,59 +14,34 @@ on:
           - azure
           - gcp
 jobs:
-  run-small-tests-on-aws:
-    if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'aws' }}
+  run-small-tests:
+    name: Launch small test on ${{ matrix.platform }}
     runs-on: ubuntu-latest
+    strategy:
+      # The per-cloud jobs this matrix replaces were independent; one cloud
+      # failing must not cancel the others.
+      fail-fast: false
+      matrix:
+        # "all" deliberately excludes gcp, matching the job-level conditions
+        # this matrix replaces; gcp runs only when selected explicitly.
+        platform: ${{ fromJSON(inputs.platform == 'all' && '["aws", "azure"]' || format('["{0}"]', inputs.platform)) }}
+    env:
+      COMPUTE_ENV: >-
+        ${{ secrets[format('TOWER_CE_{0}_CPU', fromJSON('{"aws": "AWS", "azure": "AZURE", "gcp": "GCP"}')[matrix.platform])] }}
+      BUCKET: >-
+        ${{ secrets[format('TOWER_BUCKET_{0}', fromJSON('{"aws": "AWS", "azure": "AZURE", "gcp": "GCP"}')[matrix.platform])] }}
     steps:
       - uses: seqeralabs/action-seqera-launch@1bcb34fe032e7eeda8861d85490e890cf5aa6c76 # v1.0.0-rc.1
         with:
           workspace-id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access-token: ${{ secrets.TOWER_ACCESS_TOKEN }}
-          compute-env: ${{ secrets.TOWER_CE_AWS_CPU }}
-          work-dir: "${{ secrets.TOWER_BUCKET_AWS }}/work/rnaseq/work-${{ github.sha }}"
-          run-name: "aws_rnaseq_small"
+          compute-env: ${{ env.COMPUTE_ENV }}
+          work-dir: "${{ env.BUCKET }}/work/rnaseq/work-${{ github.sha }}"
+          run-name: "${{ matrix.platform }}_rnaseq_small"
           revision: ${{ github.sha }}
           profiles: test
           parameters: |
             {
-                "outdir": "${{ secrets.TOWER_BUCKET_AWS }}/rnaseq/results-test-${{ github.sha }}/"
-            }
-          wait: running
-
-  run-small-tests-on-azure:
-    if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'azure' }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: seqeralabs/action-seqera-launch@1bcb34fe032e7eeda8861d85490e890cf5aa6c76 # v1.0.0-rc.1
-        with:
-          workspace-id: ${{ secrets.TOWER_WORKSPACE_ID }}
-          access-token: ${{ secrets.TOWER_ACCESS_TOKEN }}
-          compute-env: ${{ secrets.TOWER_CE_AZURE_CPU }}
-          work-dir: "${{ secrets.TOWER_BUCKET_AZURE }}/work/rnaseq/work-${{ github.sha }}"
-          run-name: "azure_rnaseq_small"
-          revision: ${{ github.sha }}
-          profiles: test
-          parameters: |
-            {
-                "outdir": "${{ secrets.TOWER_BUCKET_AZURE }}/rnaseq/results-test-${{ github.sha }}/"
-            }
-          wait: running
-
-  run-small-tests-on-gcp:
-    if: ${{ github.event.inputs.platform == 'gcp' }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: seqeralabs/action-seqera-launch@1bcb34fe032e7eeda8861d85490e890cf5aa6c76 # v1.0.0-rc.1
-        with:
-          workspace-id: ${{ secrets.TOWER_WORKSPACE_ID }}
-          access-token: ${{ secrets.TOWER_ACCESS_TOKEN }}
-          compute-env: ${{ secrets.TOWER_CE_GCP_CPU }}
-          work-dir: "${{ secrets.TOWER_BUCKET_GCP }}/work/rnaseq/work-${{ github.sha }}"
-          run-name: "gcp_rnaseq_small"
-          revision: ${{ github.sha }}
-          profiles: test
-          parameters: |
-            {
-                "outdir": "${{ secrets.TOWER_BUCKET_GCP }}/rnaseq/results-test-${{ github.sha }}/"
+                "outdir": "${{ env.BUCKET }}/rnaseq/results-test-${{ github.sha }}/"
             }
           wait: running

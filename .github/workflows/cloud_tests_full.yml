@@ -14,72 +14,38 @@ on:
           - azure
           - gcp
 jobs:
-  run-full-tests-on-aws:
-    if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'aws' || !github.event.inputs }}
+  run-full-tests:
+    name: Launch full test on ${{ matrix.platform }} (${{ matrix.aligner }})
     runs-on: ubuntu-latest
     strategy:
+      # The per-cloud jobs this matrix replaces were independent; one cloud
+      # failing must not cancel the others.
+      fail-fast: false
       matrix:
+        # "all" deliberately excludes gcp, matching the job-level conditions
+        # this matrix replaces; gcp runs only when selected explicitly.
+        platform: ${{ fromJSON(inputs.platform == 'all' && '["aws", "azure"]' || format('["{0}"]', inputs.platform)) }}
         aligner: ["star_salmon", "star_rsem"]
+    env:
+      COMPUTE_ENV: >-
+        ${{ secrets[format('TOWER_CE_{0}_CPU', fromJSON('{"aws": "AWS", "azure": "AZURE", "gcp": "GCP"}')[matrix.platform])] }}
+      BUCKET: >-
+        ${{ secrets[format('TOWER_BUCKET_{0}', fromJSON('{"aws": "AWS", "azure": "AZURE", "gcp": "GCP"}')[matrix.platform])] }}
     steps:
       - uses: seqeralabs/action-seqera-launch@1bcb34fe032e7eeda8861d85490e890cf5aa6c76 # v1.0.0-rc.1
         with:
           workspace-id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access-token: ${{ secrets.TOWER_ACCESS_TOKEN }}
-          compute-env: ${{ secrets.TOWER_CE_AWS_CPU }}
-          work-dir: "${{ secrets.TOWER_BUCKET_AWS }}/work/rnaseq/work-${{ github.sha }}"
-          run-name: "aws_rnaseq_full_${{ matrix.aligner }}"
+          compute-env: ${{ env.COMPUTE_ENV }}
+          work-dir: "${{ env.BUCKET }}/work/rnaseq/work-${{ github.sha }}"
+          run-name: "${{ matrix.platform }}_rnaseq_full_${{ matrix.aligner }}"
           revision: ${{ github.sha }}
-          profiles: test_full_aws
+          profiles: test_full_${{ matrix.platform }}
+          # YAML, not JSON: the action accepts either (parseParametersText tries
+          # JSON then YAML), and YAML lets the azure-only igenomes_base line
+          # collapse to a blank line on the other platforms.
           parameters: |
-            {
-                "aligner": "${{ matrix.aligner }}",
-                "outdir": "${{ secrets.TOWER_BUCKET_AWS }}/rnaseq/results-${{ github.sha }}/aligner_${{ matrix.aligner }}/"
-            }
-          wait: running
-
-  run-full-tests-on-azure:
-    if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'azure' || !github.event.inputs }}
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        aligner: ["star_salmon", "star_rsem"]
-    steps:
-      - uses: seqeralabs/action-seqera-launch@1bcb34fe032e7eeda8861d85490e890cf5aa6c76 # v1.0.0-rc.1
-        with:
-          workspace-id: ${{ secrets.TOWER_WORKSPACE_ID }}
-          access-token: ${{ secrets.TOWER_ACCESS_TOKEN }}
-          compute-env: ${{ secrets.TOWER_CE_AZURE_CPU }}
-          work-dir: "${{ secrets.TOWER_BUCKET_AZURE }}/work/rnaseq/work-${{ github.sha }}"
-          run-name: "azure_rnaseq_full_${{ matrix.aligner }}"
-          revision: ${{ github.sha }}
-          profiles: test_full_azure
-          parameters: |
-            {
-                "aligner": "${{ matrix.aligner }}",
-                "outdir": "${{ secrets.TOWER_BUCKET_AZURE }}/rnaseq/results-${{ github.sha }}/aligner_${{ matrix.aligner }}/",
-                "igenomes_base": "${{ secrets.TOWER_IGENOMES_BASE_AZURE }}"
-            }
-          wait: running
-
-  run-full-tests-on-gcp:
-    if: ${{ github.event.inputs.platform == 'gcp' || !github.event.inputs }}
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        aligner: ["star_salmon", "star_rsem"]
-    steps:
-      - uses: seqeralabs/action-seqera-launch@1bcb34fe032e7eeda8861d85490e890cf5aa6c76 # v1.0.0-rc.1
-        with:
-          workspace-id: ${{ secrets.TOWER_WORKSPACE_ID }}
-          access-token: ${{ secrets.TOWER_ACCESS_TOKEN }}
-          compute-env: ${{ secrets.TOWER_CE_GCP_CPU }}
-          work-dir: "${{ secrets.TOWER_BUCKET_GCP }}/work/rnaseq/work-${{ github.sha }}"
-          run-name: "gcp_rnaseq_full_${{ matrix.aligner }}"
-          revision: ${{ github.sha }}
-          profiles: test_full_gcp
-          parameters: |
-            {
-                "aligner": "${{ matrix.aligner }}",
-                "outdir": "${{ secrets.TOWER_BUCKET_GCP }}/rnaseq/results-${{ github.sha }}/aligner_${{ matrix.aligner }}/"
-            }
+            aligner: "${{ matrix.aligner }}"
+            outdir: "${{ env.BUCKET }}/rnaseq/results-${{ github.sha }}/aligner_${{ matrix.aligner }}/"
+            ${{ matrix.platform == 'azure' && format('igenomes_base: "{0}"', secrets.TOWER_IGENOMES_BASE_AZURE) || '' }}
           wait: running

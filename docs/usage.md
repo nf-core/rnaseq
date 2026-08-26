@@ -232,7 +232,7 @@ Both plain `.fasta` and `.fasta.gz` entries are accepted; gzipped files are deco
 
 ### Bowtie2
 
-[Bowtie2](https://github.com/BenLangmead/bowtie2) performs alignment-based filtering against rRNA reference sequences. Reads that align to the rRNA references are filtered out, and unaligned reads are kept for downstream analysis. This option also requires an rRNA database manifest file specified via `--ribo_database_manifest`.
+[Bowtie2](https://github.com/BenLangmead/bowtie2) performs alignment-based filtering against rRNA reference sequences. Reads that align to the rRNA references are filtered out, and unaligned reads are kept for downstream analysis. This option also requires an rRNA database manifest file specified via `--ribo_database_manifest` or a pre-built Bowtie2 index specified via `--bowtie2_rrna_index`.
 
 ```bash
 nextflow run nf-core/rnaseq --remove_ribo_rna --ribo_removal_tool bowtie2 ...

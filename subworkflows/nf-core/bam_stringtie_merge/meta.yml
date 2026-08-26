@@ -25,6 +25,14 @@ input:
         Reference gene annotation (GTF) for guided assembly and merge.
         Structure: [ val(meta), path(gtf) ]
       pattern: "*.gtf"
+  - ch_mode:
+      type: string
+      description: |
+        Mode in which to run StringTie
+      enum:
+        - long-reads-assembly
+        - mix-reads-assembly
+        - expression-estimation
 output:
   - stringtie_gtf:
       type: file

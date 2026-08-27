@@ -203,7 +203,7 @@ workflow RNASEQ {
 
     // Determine if we need to build rRNA removal indexes
     def make_sortmerna_index = !params.sortmerna_index && params.remove_ribo_rna && params.ribo_removal_tool == 'sortmerna'
-    def make_bowtie2_index   = params.remove_ribo_rna && params.ribo_removal_tool == 'bowtie2'
+    def make_bowtie2_index   = !params.bowtie2_rrna_index && params.remove_ribo_rna && params.ribo_removal_tool == 'bowtie2'
 
     FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS (
         ch_fastq,                                   // ch_reads
@@ -542,14 +542,19 @@ workflow RNASEQ {
     if (!params.skip_stringtie) {
         if (params.stringtie_ignore_gtf) {
             BAM_STRINGTIE_MERGE(
-                ch_genome_bam,
+                ch_genome_bam.map { meta, bam -> [meta, bam, []] },
+                channel.value([]),
                 ch_gtf.map { gtf -> [ [:], gtf ] }
             )
             ch_stringtie_gtf = BAM_STRINGTIE_MERGE.out.stringtie_gtf.map { _meta, gtf -> gtf }
         } else {
             ch_stringtie_gtf = ch_gtf
         }
-        STRINGTIE_STRINGTIE(ch_genome_bam, ch_stringtie_gtf)
+        STRINGTIE_STRINGTIE(
+            ch_genome_bam.map { meta, bam -> [meta, bam, []] },
+            channel.value('expression-estimation'),
+            ch_stringtie_gtf
+        )
     }
 
     //

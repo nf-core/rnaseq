@@ -98,7 +98,7 @@
                     "bioconductor-summarizedexperiment": "1.32.0"
                 },
                 "STRINGTIE_STRINGTIE": {
-                    "stringtie": "2.2.3"
+                    "stringtie": "3.0.3"
                 },
                 "SUBREAD_FEATURECOUNTS": {
                     "subread": "2.0.6"
@@ -924,23 +924,23 @@
                 "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "salmon.merged.tx2gene_augmented.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,98a2b6a7555e58c7f21b45a1f48e5cbf",
+                "e_data.ctab:md5,3a4f4a1f036dd658b2d93059fbfd731d",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
                 "i_data.ctab:md5,a052ab04070e72cc318fb7680b0764e3",
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,3b807743d8cb11ce6fd638df079454b4",
+                "e_data.ctab:md5,27283bd39506a38b61c3c266438ef748",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
                 "i_data.ctab:md5,80de7e1afe4edf4bb66844f785f578fa",
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,a94aebb60f5391f5f5ff19bf2bc7be4e",
+                "e_data.ctab:md5,fd3d300bee332ee59652bde9444deddd",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
                 "i_data.ctab:md5,736d87185be73db758648b76c01ac00b",
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,eca97e0aed2cfaa185382b9d344e8338",
+                "e_data.ctab:md5,4a5a4ce1a79f6f7fa4a25f4b1264604d",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
                 "i_data.ctab:md5,907ab2e06346df131cbdb929afc005a8",
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,b03f3118d1aa58fceadcb3311028e856",
+                "e_data.ctab:md5,b36471458087572e6e72cd730eed866d",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
                 "i_data.ctab:md5,041edee3193df311f621c09f4991892b"
             ]
@@ -1061,7 +1061,7 @@
                     "star": "2.7.11b"
                 },
                 "STRINGTIE_STRINGTIE": {
-                    "stringtie": "2.2.3"
+                    "stringtie": "3.0.3"
                 },
                 "SUBREAD_FEATURECOUNTS": {
                     "subread": "2.0.6"
@@ -1829,11 +1829,11 @@
                 "WT_REP2.biotype_counts_mqc.tsv:md5,c04c2936bbfac3bff284f96b7233b158",
                 "WT_REP2.biotype_counts_rrna_mqc.tsv:md5,12294618fe44df1e7f39348372dcb481",
                 "WT_REP2.featureCounts.tsv:md5,da2c6d621864e2f26958e2c299708c3e",
-                "rsem.merged.gene_counts.tsv:md5,060949cead024e393378bec58c82c976",
-                "rsem.merged.gene_counts_length_scaled.tsv:md5,8ceb1a2f0662630ad658d565db50c852",
-                "rsem.merged.gene_counts_scaled.tsv:md5,fdc2bb1618019953151b053107293543",
-                "rsem.merged.gene_lengths.tsv:md5,5b43d4327096c8714351fa3b147ace4b",
-                "rsem.merged.gene_tpm.tsv:md5,b4b1a0f093a5be3f43e2a5f583138709",
+                "rsem.merged.gene_counts.tsv:md5,43ac77bb055be372ee42deb5ec0199f6",
+                "rsem.merged.gene_counts_length_scaled.tsv:md5,58040cecbc89aee6e7b53761bfad19ef",
+                "rsem.merged.gene_counts_scaled.tsv:md5,7873cf3b356435d6175ff4821288be0d",
+                "rsem.merged.gene_lengths.tsv:md5,6455b4186bdf2e786017724bc00966d8",
+                "rsem.merged.gene_tpm.tsv:md5,72aa275645fde43a528e42b254285b32",
                 "rsem.merged.transcript_counts.tsv:md5,058a1780f4e0622c0cffb38ff7dcb66a",
                 "rsem.merged.transcript_lengths.tsv:md5,abcbf186029d6accc817a5b84a71e650",
                 "rsem.merged.transcript_tpm.tsv:md5,2368b7b8e5561ff2d5a0672bb2f0301b",
@@ -1851,28 +1851,28 @@
                 "WT_REP1.infer_experiment.txt:md5,d55921c0084806cdf49b9bd8653c8e09",
                 "WT_REP2.infer_experiment.txt:md5,fe87600c55f433ba995fe18bed5cf5f1",
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,5dfd0678eefe33f2c45eea45f6262557",
+                "e_data.ctab:md5,3f86dadede5bb76985020c073886ef18",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
                 "i_data.ctab:md5,19a438db88bdb92228e64a0a8350adbd",
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,fd95c815882005ccd312821bb9cf3dc7",
+                "e_data.ctab:md5,383a11c4d8b0982cb58acf08415fbe00",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
                 "i_data.ctab:md5,addcf0f6836e0f81184d5ddaa525895f",
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,4aa066edadef5325777dd54ca042cfab",
+                "e_data.ctab:md5,8b149142ecf57541f8e92d88f7d08e7f",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
                 "i_data.ctab:md5,84d39323e429ad397223542b9d6f7c40",
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,74b66ee626c2864ece15c4872224856c",
+                "e_data.ctab:md5,aabc9d1f248478cb480e073330d5ac5c",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
                 "i_data.ctab:md5,daedcbf428f3912587722da1c5db50d1",
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,49e5912dedb709344c7a14b5980c1b40",
+                "e_data.ctab:md5,c5ac9a4af5e0a750c5370dd968602e58",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
                 "i_data.ctab:md5,7e81ace0a68bfe42482420b7275de195"
             ]
         ],
-        "timestamp": "2026-05-01T16:23:34.874577699",
+        "timestamp": "2026-07-15T12:50:56.239252039",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.0"

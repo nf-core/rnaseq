@@ -83,15 +83,16 @@ nextflow_workflow {
                 input[12] = null  // bowtie2_index
                 input[13] = null  // bbsplit_index
                 input[14] = null  // sortmerna_index
-                input[15] = aligner
-                input[16] = pseudo_aligner
-                input[17] = skip_bbsplit
-                input[18] = ribo_removal_tool
-                input[19] = skip_alignment
-                input[20] = skip_pseudo_alignment
-                input[21] = use_sentieon_star
-                input[22] = use_parabricks_star
-                input[23] = false  // star_index_legacy
+                input[15] = null  // bowtie2_rrna_index
+                input[16] = aligner
+                input[17] = pseudo_aligner
+                input[18] = skip_bbsplit
+                input[19] = ribo_removal_tool
+                input[20] = skip_alignment
+                input[21] = skip_pseudo_alignment
+                input[22] = use_sentieon_star
+                input[23] = use_parabricks_star
+                input[24] = false  // star_index_legacy
                 """
             }
         }
@@ -192,15 +193,16 @@ nextflow_workflow {
                 input[12] = null  // bowtie2_index
                 input[13] = null  // bbsplit_index
                 input[14] = null  // sortmerna_index
-                input[15] = aligner
-                input[16] = pseudo_aligner
-                input[17] = skip_bbsplit
-                input[18] = ribo_removal_tool
-                input[19] = skip_alignment
-                input[20] = skip_pseudo_alignment
-                input[21] = use_sentieon_star
-                input[22] = use_parabricks_star
-                input[23] = false  // star_index_legacy
+                input[15] = null  // bowtie2_rrna_index
+                input[16] = aligner
+                input[17] = pseudo_aligner
+                input[18] = skip_bbsplit
+                input[19] = ribo_removal_tool
+                input[20] = skip_alignment
+                input[21] = skip_pseudo_alignment
+                input[22] = use_sentieon_star
+                input[23] = use_parabricks_star
+                input[24] = false  // star_index_legacy
                 """
             }
         }

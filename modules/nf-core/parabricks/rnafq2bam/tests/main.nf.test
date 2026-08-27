@@ -30,16 +30,13 @@ nextflow_process {
         }
     }
 
-    test("homo_sapiens") {
+    config "./nextflow.config"
 
-        config "./nextflow.config"
+    test("homo_sapiens") {
 
         when {
             params {
-                module_args = '--low-memory --read-files-command zcat --x3'
-                // Ref: https://forums.developer.nvidia.com/t/problem-with-gpu/256825/6
-                // Parabricks’s rnafq2bam requires 24GB of memory.
-                // Using --low-memory for testing
+                module_args = '--num-streams-per-gpu 1 --read-files-command zcat --x3'
             }
             process {
                 """
@@ -72,7 +69,6 @@ nextflow_process {
 
     test("homo_sapiens - stub") {
 
-        config "./nextflow.config"
         options "-stub"
 
         when {
@@ -106,14 +102,9 @@ nextflow_process {
 
     test("homo_sapiens_chimeric") {
 
-        config "./nextflow.config"
-
         when {
             params {
-                module_args = '--low-memory --read-files-command zcat --out-chim-type Junctions --min-chim-segment 15 --x3'
-                // Ref: https://forums.developer.nvidia.com/t/problem-with-gpu/256825/6
-                // Parabricks’s rnafq2bam requires 24GB of memory.
-                // Using --low-memory for testing
+                module_args = '--num-streams-per-gpu 1 --read-files-command zcat --out-chim-type Junctions --min-chim-segment 15 --x3'
             }
             process {
                 """
@@ -147,7 +138,6 @@ nextflow_process {
 
     test("homo_sapiens_chimeric - stub") {
 
-        config "./nextflow.config"
         options "-stub"
 
         when {

@@ -4,6 +4,12 @@
 # Written by Lorena Pantano, later modified by Jonathan Manning, and released
 # under the MIT license.
 
+# tximport::summarizeToGene() reorders gene-level output rows via base R's
+# rowsum(reorder=TRUE), which sorts by the process locale's collation order.
+# Fix LC_COLLATE so row order (and therefore output content) is reproducible
+# across execution environments regardless of their default locale.
+Sys.setlocale("LC_COLLATE", "C")
+
 # Loading required libraries
 library(SummarizedExperiment)
 library(tximport)

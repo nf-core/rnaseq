@@ -50,7 +50,7 @@
                     "gunzip": 1.13
                 },
                 "PARABRICKS_RNA_FQ2BAM": {
-                    "parabricks": "4.6.0-1"
+                    "parabricks": "4.7.1-1"
                 },
                 "PARABRICKS_STARGENOMEGENERATE": {
                     "gawk": "5.1.0",
@@ -85,7 +85,7 @@
                     "bioconductor-summarizedexperiment": "1.32.0"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "2.1.0"
+                    "trimgalore": "2.3.0"
                 },
                 "TXIMETA_TXIMPORT": {
                     "bioconductor-tximeta": "1.20.1"
@@ -633,9 +633,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nextflow": "26.04.6"
         },
-        "timestamp": "2026-02-09T11:01:14.364447839"
+        "timestamp": "2026-07-31T12:53:06.381504124"
     },
     "Params: parabricks star_salmon (with markdups) - stub": {
         "content": [
@@ -677,7 +677,7 @@
                     "samtools": "1.23.1"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "2.1.0"
+                    "trimgalore": "2.3.0"
                 },
                 "UNTAR_SALMON_INDEX": {
                     "untar": 1.34
@@ -773,7 +773,7 @@
                     "samtools": "1.23.1"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "2.1.0"
+                    "trimgalore": "2.3.0"
                 },
                 "UNTAR_SALMON_INDEX": {
                     "untar": 1.34
@@ -880,7 +880,7 @@
                     "gunzip": 1.13
                 },
                 "PARABRICKS_RNA_FQ2BAM": {
-                    "parabricks": "4.6.0-1"
+                    "parabricks": "4.7.1-1"
                 },
                 "PARABRICKS_STARGENOMEGENERATE": {
                     "gawk": "5.1.0",
@@ -915,7 +915,7 @@
                     "bioconductor-summarizedexperiment": "1.32.0"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "2.1.0"
+                    "trimgalore": "2.3.0"
                 },
                 "TXIMETA_TXIMPORT": {
                     "bioconductor-tximeta": "1.20.1"
@@ -1453,8 +1453,8 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nextflow": "26.04.6"
         },
-        "timestamp": "2026-02-09T11:13:00.399098759"
+        "timestamp": "2026-07-31T12:58:57.904720898"
     }
 }

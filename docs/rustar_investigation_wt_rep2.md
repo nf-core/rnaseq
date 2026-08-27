@@ -85,7 +85,7 @@ What was measured:
 From `aux_info/meta_info.json`:
 
 | Sample              | Layout | STAR frag mean | STAR frag SD | rustar frag mean | rustar frag SD | STAR eq classes | rustar eq classes |
-|---------------------|--------|----------------|--------------|------------------|----------------|-----------------|-------------------|
+| ------------------- | ------ | -------------- | ------------ | ---------------- | -------------- | --------------- | ----------------- |
 | RAP1_IAA_30M_REP1   | PE     | 168.84         | 66.09        | **250.00**       | **25.00**      | 113             | **429**           |
 | RAP1_UNINDUCED_REP1 | SE     | 250.00         | 25.00        | 250.00           | 25.00          | 94              | 95                |
 | RAP1_UNINDUCED_REP2 | SE     | 250.00         | 25.00        | 250.00           | 25.00          | 107             | 104               |
@@ -113,28 +113,28 @@ From `aux_info/meta_info.json`:
 
 Verbatim record comparison for fragment `SRR6357072.1900203`:
 
-| Field       | STAR (r1 / r2)         | rustar (r1 / r2)       |
-|-------------|------------------------|------------------------|
-| FLAG        | 163 / 83               | 81 / 129               |
-| RNAME       | `YAR010C` / `YAR010C`  | `YAR010C` / `YAR010C`  |
-| POS         | 1045 / 1103            | 1103 / 1045            |
-| MAPQ        | 255 / 255              | 255 / 255              |
-| CIGAR       | `101M` / `101M`        | `101M` / `101M`        |
-| **RNEXT**   | `=` / `=`              | **`*`** / **`*`**      |
-| **PNEXT**   | 1103 / 1045            | **0** / **0**          |
-| **TLEN**    | 159 / -159             | **0** / **0**          |
+| Field     | STAR (r1 / r2)        | rustar (r1 / r2)      |
+| --------- | --------------------- | --------------------- |
+| FLAG      | 163 / 83              | 81 / 129              |
+| RNAME     | `YAR010C` / `YAR010C` | `YAR010C` / `YAR010C` |
+| POS       | 1045 / 1103           | 1103 / 1045           |
+| MAPQ      | 255 / 255             | 255 / 255             |
+| CIGAR     | `101M` / `101M`       | `101M` / `101M`       |
+| **RNEXT** | `=` / `=`             | **`*`** / **`*`**     |
+| **PNEXT** | 1103 / 1045           | **0** / **0**         |
+| **TLEN**  | 159 / -159            | **0** / **0**         |
 
 The alignment positions are equivalent (within mate-strand swap) - rustar genuinely finds the same fragment. It just refuses to tell Salmon that the two records are mates. STAR's FLAG 163 contains `PROPERLY_SEGMENTED` (0x2); rustar's FLAG 81 does not.
 
 ### 3. NH/HI multi-mapper structure is essentially the same
 
-| Tag      | STAR records | rustar records |
-|----------|--------------|----------------|
-| NH:i:1   | 65 200       | 63 646         |
-| NH:i:2   | 19 084       | 19 004         |
-| NH:i:3   | 18           | 18             |
-| NH:i:4   | 80           | 64             |
-| NH:i:6   | 24           | 12             |
+| Tag    | STAR records | rustar records |
+| ------ | ------------ | -------------- |
+| NH:i:1 | 65 200       | 63 646         |
+| NH:i:2 | 19 084       | 19 004         |
+| NH:i:3 | 18           | 18             |
+| NH:i:4 | 80           | 64             |
+| NH:i:6 | 24           | 12             |
 
 So this is not a tie-breaking / multi-mapper assignment problem. The total multi-mapper population is nearly identical; the issue is the SAM bookkeeping for paired records.
 
@@ -158,13 +158,13 @@ max        0.981523
 Top 6 genes by absolute TPM delta in WT_REP2 (NumReads agreement is excellent; EffectiveLength change drives the TPM swing):
 
 | gene_id | TPM_star | TPM_rustar | TPM_delta | NumReads_star | NumReads_rustar | Length | EffLen_star | EffLen_rustar | EffLen_ratio |
-|---------|---------:|-----------:|----------:|--------------:|----------------:|-------:|------------:|--------------:|-------------:|
-| snR18   | 28 641 | **93 080** | +64 439 | 8.00 | 8.00 | 102 | 13.01 | **3.54** | 0.27 |
-| YAR009C | 229 302 | 201 000 | -28 302 | 16 852 | 16 290 | 3 591 | 3 423.15 | 3 341.00 | 0.98 |
-| YAL038W | 220 550 | 207 930 | -12 620 | 6 322 | 6 320 | 1 503 | 1 335.15 | 1 253.00 | 0.94 |
-| YAR010C | 245 119 | 235 742 | -9 376  | 6 079 | 6 136 | 1 323 | 1 155.15 | 1 073.00 | 0.93 |
-| YAL005C | 109 599 | 102 066 | -7 533  | 4 144 | 4 157 | 1 929 | 1 761.15 | 1 679.00 | 0.95 |
-| YAL003W | 72 309  | 65 003  | -7 306  | 704   | 585  | 621   | 453.49  | 371.00 | 0.82 |
+| ------- | -------: | ---------: | --------: | ------------: | --------------: | -----: | ----------: | ------------: | -----------: |
+| snR18   |   28 641 | **93 080** |   +64 439 |          8.00 |            8.00 |    102 |       13.01 |      **3.54** |         0.27 |
+| YAR009C |  229 302 |    201 000 |   -28 302 |        16 852 |          16 290 |  3 591 |    3 423.15 |      3 341.00 |         0.98 |
+| YAL038W |  220 550 |    207 930 |   -12 620 |         6 322 |           6 320 |  1 503 |    1 335.15 |      1 253.00 |         0.94 |
+| YAR010C |  245 119 |    235 742 |    -9 376 |         6 079 |           6 136 |  1 323 |    1 155.15 |      1 073.00 |         0.93 |
+| YAL005C |  109 599 |    102 066 |    -7 533 |         4 144 |           4 157 |  1 929 |    1 761.15 |      1 679.00 |         0.95 |
+| YAL003W |   72 309 |     65 003 |    -7 306 |           704 |             585 |    621 |      453.49 |        371.00 |         0.82 |
 
 Gene NumReads agreement summary:
 
@@ -178,16 +178,16 @@ Because TPMs are normalised so that `sum(TPM) = 1e6`, a small over-shrinking of 
 
 ### 5. rustar `Log.final.out` reports `Annotated (sjdb) = 0` on WT_REP2
 
-| Metric                                | STAR | rustar |
-|---------------------------------------|------|--------|
-| Number of splices: Total              | 762  | 371    |
-| **Number of splices: Annotated (sjdb)** | **644** | **0** |
-| Number of splices: GT/AG              | 724  | 276    |
-| Number of splices: Non-canonical      | 35   | 92     |
-| Reads unmapped: too short             | 1 540 (3.11 %) | 4 193 (8.46 %) |
-| Reads unmapped: other                 | 2 656 (5.36 %) | 0     |
+| Metric                                  | STAR           | rustar         |
+| --------------------------------------- | -------------- | -------------- |
+| Number of splices: Total                | 762            | 371            |
+| **Number of splices: Annotated (sjdb)** | **644**        | **0**          |
+| Number of splices: GT/AG                | 724            | 276            |
+| Number of splices: Non-canonical        | 35             | 92             |
+| Reads unmapped: too short               | 1 540 (3.11 %) | 4 193 (8.46 %) |
+| Reads unmapped: other                   | 2 656 (5.36 %) | 0              |
 
-This is consistent with rustar honouring `--sjdbGTFfile` for index lookup but never crediting annotation-derived junctions to the `sjdb` bucket in the log. The total-splice gap (371 vs 762) and the higher non-canonical rate (92 vs 35) are also consistent with rustar's two-pass step not seeding pass-1 from the GTF SJ database, but this is a **second, lower-severity issue** and is *not* the cause of the TPM divergence; the BAM bookkeeping is.
+This is consistent with rustar honouring `--sjdbGTFfile` for index lookup but never crediting annotation-derived junctions to the `sjdb` bucket in the log. The total-splice gap (371 vs 762) and the higher non-canonical rate (92 vs 35) are also consistent with rustar's two-pass step not seeding pass-1 from the GTF SJ database, but this is a **second, lower-severity issue** and is _not_ the cause of the TPM divergence; the BAM bookkeeping is.
 
 ## Root cause in rustar source
 
@@ -215,7 +215,7 @@ That is the only post-processing applied to paired transcriptome records. Notabl
 - `record.mate_alignment_start_mut()` - never set, so PNEXT remains 0.
 - `record.template_length_mut()` - never set, so TLEN remains 0.
 
-Compare with the *genome* BAM emission, which does set these correctly: `src/io/sam.rs::build_paired_records` line 276 onward, and `build_paired_mate_record` lines 1163-1260 which explicitly sets PROPERLY_SEGMENTED at line 1187-1188:
+Compare with the _genome_ BAM emission, which does set these correctly: `src/io/sam.rs::build_paired_records` line 276 onward, and `build_paired_mate_record` lines 1163-1260 which explicitly sets PROPERLY_SEGMENTED at line 1187-1188:
 
 ```rust
 if is_proper_pair {
@@ -303,7 +303,7 @@ A secondary, fragment-length-distribution check (also one-line):
 jq '.frag_length_mean, .frag_length_sd' results-*/star_salmon/WT_REP2/aux_info/meta_info.json
 ```
 
-If rustar reports anything other than 250.0 / 25.0 *and* WT_REP2 Pearson r still drops below 0.99 on gene TPM, the proximate cause is elsewhere.
+If rustar reports anything other than 250.0 / 25.0 _and_ WT_REP2 Pearson r still drops below 0.99 on gene TPM, the proximate cause is elsewhere.
 
 A third check, downstream of the fix: re-run Salmon on rustar's existing transcriptome BAM with `--fldMean 168 --fldSD 71` (forcing the right prior) and verify that gene TPM Pearson rises to >= 0.995. If it does, that confirms the EffectiveLength path is the sole driver; if it doesn't, there's a second problem hiding behind this one.
 
@@ -313,7 +313,7 @@ A third check, downstream of the fix: re-run Salmon on rustar's existing transcr
 
 **Body**:
 
-```markdown
+````markdown
 ## Summary
 
 For paired-end input, rustar-aligner v0.1.0's `Aligned.toTranscriptome.out.bam`
@@ -334,20 +334,20 @@ Standard nf-core/rnaseq `-profile test,docker` with `--use_rustar_star`
 
 `samtools flagstat WT_REP2.Aligned.toTranscriptome.out.bam`:
 
-| Field                                   | STAR 2.7.11b | rustar 0.1.0 |
-|-----------------------------------------|-------------:|-------------:|
-| properly paired                         | 74 772 (100 %) | **0 (0 %)** |
-| with mate mapped to a different chr     | 0            | 73 172      |
+| Field                               |   STAR 2.7.11b | rustar 0.1.0 |
+| ----------------------------------- | -------------: | -----------: |
+| properly paired                     | 74 772 (100 %) |  **0 (0 %)** |
+| with mate mapped to a different chr |              0 |       73 172 |
 
 First record pair (`SRR6357072.1900203`):
 
-| Field   | STAR        | rustar  |
-|---------|-------------|---------|
-| FLAG    | 163 / 83    | 81 / 129 |
-| RNAME   | `YAR010C`   | `YAR010C` |
-| RNEXT   | `=`         | **`*`**  |
-| PNEXT   | 1103 / 1045 | **0 / 0** |
-| TLEN    | 159 / -159  | **0 / 0** |
+| Field | STAR        | rustar    |
+| ----- | ----------- | --------- |
+| FLAG  | 163 / 83    | 81 / 129  |
+| RNAME | `YAR010C`   | `YAR010C` |
+| RNEXT | `=`         | **`*`**   |
+| PNEXT | 1103 / 1045 | **0 / 0** |
+| TLEN  | 159 / -159  | **0 / 0** |
 
 Salmon `aux_info/meta_info.json` `frag_length_mean` / `frag_length_sd`:
 
@@ -372,6 +372,7 @@ for r in rec2s.iter_mut() {
     *r.flags_mut() |= Flags::SEGMENTED | Flags::LAST_SEGMENT;
 }
 ```
+````
 
 This is the only post-processing applied to paired transcriptome records.
 `PROPERLY_SEGMENTED`, `MATE_REVERSE_COMPLEMENTED`,
@@ -417,8 +418,9 @@ Add an integration test that:
 2. Asserts `samtools view -c -f 2 <bam>` == count of primary paired records.
 3. Asserts no records have `RNEXT = '*'` for both-mate-mapped reads.
 4. (Optional) Runs Salmon downstream and asserts `meta_info.json
-   .frag_length_mean` is not equal to 250.0 (i.e. inference succeeded).
-```
+.frag_length_mean` is not equal to 250.0 (i.e. inference succeeded).
+
+````
 
 ## What a follow-up investigator should pick up
 
@@ -483,7 +485,7 @@ g["TPM_abs_delta"]  = g["TPM_delta"].abs()
 g["EffLen_ratio"]   = g["EffLen_rustar"] / g["EffLen_star"]
 
 print(g.sort_values("TPM_abs_delta", ascending=False).head(20).round(2))
-```
+````
 
 Files needed (copied from the VM):
 

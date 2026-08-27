@@ -19,13 +19,13 @@ Issues 1-2 are likely the most impactful for downstream nf-core/rnaseq consumers
 
 ### Samples and what was characterised
 
-| Sample              | Layout | Genome BAM categories 1-8 | Transcriptome BAM | Spot-check |
-|---------------------|--------|---------------------------|-------------------|------------|
-| WT_REP2             | PE     | full                      | known-bug confirmed (see prior doc) | - |
-| RAP1_UNINDUCED_REP1 | SE     | full                      | not characterised | - |
-| WT_REP1             | PE     | flagstat + tag inventory  | known-bug confirmed | yes |
-| RAP1_IAA_30M_REP1   | PE     | flagstat + tag inventory  | known-bug confirmed | yes |
-| RAP1_UNINDUCED_REP2 | SE     | flagstat + tag inventory  | not paired         | yes |
+| Sample              | Layout | Genome BAM categories 1-8 | Transcriptome BAM                   | Spot-check |
+| ------------------- | ------ | ------------------------- | ----------------------------------- | ---------- |
+| WT_REP2             | PE     | full                      | known-bug confirmed (see prior doc) | -          |
+| RAP1_UNINDUCED_REP1 | SE     | full                      | not characterised                   | -          |
+| WT_REP1             | PE     | flagstat + tag inventory  | known-bug confirmed                 | yes        |
+| RAP1_IAA_30M_REP1   | PE     | flagstat + tag inventory  | known-bug confirmed                 | yes        |
+| RAP1_UNINDUCED_REP2 | SE     | flagstat + tag inventory  | not paired                          | yes        |
 
 ### Commands and helper scripts
 
@@ -51,8 +51,8 @@ samtools sort -n -@ 4 -O sam <BAM> | grep -v "^@" > sorted/<key>.sam
 
 The work directories used:
 
-| Sample              | STAR work dir | rustar work dir |
-|---------------------|---------------|-----------------|
+| Sample              | STAR work dir                            | rustar work dir                          |
+| ------------------- | ---------------------------------------- | ---------------------------------------- |
 | WT_REP1             | `work/ee/09a9d7045e7a6cbb606372f97420eb` | `work/e7/91f0997ccfaa8ad4e623a304820459` |
 | WT_REP2             | `work/e0/b8c327bfa0a964eecd894bcb05b569` | `work/d7/43755befdffb99383bedb820e900f9` |
 | RAP1_IAA_30M_REP1   | `work/e2/49de29a5e06418584554f94d388406` | `work/cc/81563a4b47309a642a01cfbbcc5be1` |
@@ -67,10 +67,10 @@ The work directories used:
 
 Both BAMs cover ~99.9% of the same fragments. Per sample:
 
-| Sample              | STAR primary keys | rustar primary keys | both | STAR-only | rustar-only |
-|---------------------|------------------:|--------------------:|-----:|----------:|------------:|
-| WT_REP2             | 90 709            | 90 716              | 90 659 | 50      | 57          |
-| RAP1_UNINDUCED_REP1 | 47 713            | 47 693              | 47 688 | 25      | 5           |
+| Sample              | STAR primary keys | rustar primary keys |   both | STAR-only | rustar-only |
+| ------------------- | ----------------: | ------------------: | -----: | --------: | ----------: |
+| WT_REP2             |            90 709 |              90 716 | 90 659 |        50 |          57 |
+| RAP1_UNINDUCED_REP1 |            47 713 |              47 693 | 47 688 |        25 |           5 |
 
 Most of the 50-100 "X-only" reads on WT_REP2 are reads where STAR found a spliced alignment that rustar reports as unmapped, or vice versa. The numbers are too small to chase individually for a 5-sample test profile, but a >0.1% read-set divergence rate at this depth means real production runs will see hundreds of differing reads.
 
@@ -82,21 +82,21 @@ Spot check on WT_REP1: STAR `180 597` primary, rustar `180 596` (1 fewer); same 
 
 In WT_REP2 (PE): only 2 reads out of 90 659 have any flag-bit difference, both flipping `0x10` + `0x20` (strand of self and mate). RAP1_UNINDUCED_REP1 (SE) has 13 reads flipping `0x10` alone.
 
-| Bit               | WT_REP2 differs | RAP1_UN1 differs |
-|-------------------|----------------:|-----------------:|
-| 0x1   paired      | 0               | 0                |
-| 0x2   proper-pair | 0 (genome BAM!)*| n/a              |
-| 0x4   unmapped    | 0               | 0                |
-| 0x8   mate-unmap  | 0               | n/a              |
-| 0x10  reverse     | 2               | 13               |
-| 0x20  mate-rev    | 2               | n/a              |
-| 0x40 / 0x80       | 0               | n/a              |
-| 0x100 secondary   | 0               | 0                |
-| 0x200 QC fail     | 0               | 0                |
-| 0x400 duplicate   | 0               | 0                |
-| 0x800 supplemental| 0               | 0                |
+| Bit                |   WT_REP2 differs | RAP1_UN1 differs |
+| ------------------ | ----------------: | ---------------: |
+| 0x1 paired         |                 0 |                0 |
+| 0x2 proper-pair    | 0 (genome BAM!)\* |              n/a |
+| 0x4 unmapped       |                 0 |                0 |
+| 0x8 mate-unmap     |                 0 |              n/a |
+| 0x10 reverse       |                 2 |               13 |
+| 0x20 mate-rev      |                 2 |              n/a |
+| 0x40 / 0x80        |                 0 |              n/a |
+| 0x100 secondary    |                 0 |                0 |
+| 0x200 QC fail      |                 0 |                0 |
+| 0x400 duplicate    |                 0 |                0 |
+| 0x800 supplemental |                 0 |                0 |
 
-\* Genome BAM `0x2` is correctly populated (90 714 records in WT_REP2). The proper-pair bug is *transcriptome-BAM specific*. This is the key data point for "is the prior bug also in the genome BAM?" - it isn't.
+\* Genome BAM `0x2` is correctly populated (90 714 records in WT*REP2). The proper-pair bug is \_transcriptome-BAM specific*. This is the key data point for "is the prior bug also in the genome BAM?" - it isn't.
 
 The strand-flip cases are reads with ambiguous orientation (e.g. palindromic-ish soft-clipped ends); the per-mate position usually swaps as well. Looks like RNG-driven tie-breaking on which mate-orientation to call primary.
 
@@ -107,9 +107,9 @@ The strand-flip cases are reads with ambiguous orientation (e.g. palindromic-ish
 Both aligners use the same `{0, 1, 3, 255}` STAR-style scheme keyed on multi-mapper count (NH=1 -> 255; NH=2 -> 3; NH=3 -> 1; NH>=4 -> 0). MAPQ deltas are driven entirely by NH transitions:
 
 | Sample              | MAPQ identical | MAPQ differs |
-|---------------------|---------------:|-------------:|
-| WT_REP2             | 89 805         | 854          |
-| RAP1_UNINDUCED_REP1 | 47 496         | 192          |
+| ------------------- | -------------: | -----------: |
+| WT_REP2             |         89 805 |          854 |
+| RAP1_UNINDUCED_REP1 |         47 496 |          192 |
 
 The MAPQ-delta distribution on WT_REP2 is symmetric around zero (`{-255: 14, -254: 96, -252: 368, -3: 10, -2: 28, -1: 14, +2: 4, +252: 318, +255: 2}`), consistent with reads moving symmetrically between NH classes (368 went NH 1->2, 318 went NH 2->1 - see category 7). The +/- 252 entries are reads going NH=1 (mapq 255) <-> NH=2 (mapq 3).
 
@@ -120,13 +120,13 @@ The MAPQ-delta distribution on WT_REP2 is symmetric around zero (`{-255: 14, -25
 WT_REP2: 340 reads have identical position + orientation but different CIGAR.
 
 | CIGAR shape category                              | WT_REP2 | RAP1_UN1 |
-|---------------------------------------------------|--------:|---------:|
-| STAR has splice (N), rustar has only M/S          | 234     | 45       |
-| rustar has splice (N), STAR has only M/S          | 80      | 4        |
-| Same op set, lengths differ (mostly M/S boundary) | 13      | 0        |
-| STAR has soft-clip (S), rustar doesn't            | 9       | 0        |
-| rustar has soft-clip (S), STAR doesn't            | 2       | 1        |
-| Same op set with indels, lengths differ           | 2       | 1        |
+| ------------------------------------------------- | ------: | -------: |
+| STAR has splice (N), rustar has only M/S          |     234 |       45 |
+| rustar has splice (N), STAR has only M/S          |      80 |        4 |
+| Same op set, lengths differ (mostly M/S boundary) |      13 |        0 |
+| STAR has soft-clip (S), rustar doesn't            |       9 |        0 |
+| rustar has soft-clip (S), STAR doesn't            |       2 |        1 |
+| Same op set with indels, lengths differ           |       2 |        1 |
 
 The dominant pattern (>70%) is **STAR finds a splice through a known annotated junction, rustar emits a straight `101M` (or `99M2S`)**. Example `SRR6357072.32572100`: STAR maps `96M14674N5M` across a yeast intron (one of the annotated junctions in `genome_gfp.gtf`); rustar maps `101M` at the same exonic start - it just doesn't try the splice. NH for this read drops from 2 (STAR, where the spliced and unspliced both score) to 1 (rustar, only the unspliced version found).
 
@@ -139,9 +139,9 @@ This is the same root cause as the `Annotated (sjdb) = 0` finding in the prior d
 Same name + mate-bit, both primary:
 
 | Sample              | Same rname, diff pos | Different rname |
-|---------------------|---------------------:|----------------:|
-| WT_REP2             | 1 212                | 0               |
-| RAP1_UNINDUCED_REP1 | 768                  | 0               |
+| ------------------- | -------------------: | --------------: |
+| WT_REP2             |                1 212 |               0 |
+| RAP1_UNINDUCED_REP1 |                  768 |               0 |
 
 No read maps to a different reference between the two aligners. The 1 212 same-chr position differences are mostly NH>=2 reads where rustar picks a different alignment as primary (see category 7).
 
@@ -151,21 +151,22 @@ No read maps to a different reference between the two aligners. The 1 212 same-c
 
 Genome BAM tags emitted by each aligner (per `--outSAMattributes NH HI AS NM MD` + the `--outSAMstrandField intronMotif` directive):
 
-| Tag | STAR present | rustar present | Notes |
-|-----|:-:|:-:|------|
-| `NH` | yes | yes | values differ on 870 reads (WT_REP2); see category 7 |
-| `HI` | yes | yes | rare disagreement (8 reads WT_REP2) - tie-breaking on which hit is index 1 |
-| `AS` | yes | yes | **864 same-CIGAR records disagree** (1 % of all comparable reads); rustar AS is always lower by 2-5. Worth filing - byte-level identity on AS for uniquely-mapped reads is explicitly promised in rustar's README. |
-| `NM` | **yes** | **no** | rustar emits `nM` instead - see issue 1 in TL;DR |
-| `nM` | no | yes | rustar's `nM` counts substitutions only, not indels. 1 663 records have `NM != nM` even on identical CIGAR (WT_REP2). |
-| `MD` | yes | yes | identical where CIGAR is identical (89 107 / 89 107 in WT_REP2). Differs only when CIGAR differs. |
-| `XS` (strand) | yes | **no** | 1 300 records in WT_REP2 lose strand info. **BUG (high)** |
-| `RG:Z:` (genome BAM) | yes | yes | both populated on every record |
-| `RG:Z:` (transcriptome BAM) | yes | **no** | rustar @RG header exists but per-record tag is missing - issue 5 |
+| Tag                         | STAR present | rustar present | Notes                                                                                                                                                                                                              |
+| --------------------------- | :----------: | :------------: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `NH`                        |     yes      |      yes       | values differ on 870 reads (WT_REP2); see category 7                                                                                                                                                               |
+| `HI`                        |     yes      |      yes       | rare disagreement (8 reads WT_REP2) - tie-breaking on which hit is index 1                                                                                                                                         |
+| `AS`                        |     yes      |      yes       | **864 same-CIGAR records disagree** (1 % of all comparable reads); rustar AS is always lower by 2-5. Worth filing - byte-level identity on AS for uniquely-mapped reads is explicitly promised in rustar's README. |
+| `NM`                        |   **yes**    |     **no**     | rustar emits `nM` instead - see issue 1 in TL;DR                                                                                                                                                                   |
+| `nM`                        |      no      |      yes       | rustar's `nM` counts substitutions only, not indels. 1 663 records have `NM != nM` even on identical CIGAR (WT_REP2).                                                                                              |
+| `MD`                        |     yes      |      yes       | identical where CIGAR is identical (89 107 / 89 107 in WT_REP2). Differs only when CIGAR differs.                                                                                                                  |
+| `XS` (strand)               |     yes      |     **no**     | 1 300 records in WT_REP2 lose strand info. **BUG (high)**                                                                                                                                                          |
+| `RG:Z:` (genome BAM)        |     yes      |      yes       | both populated on every record                                                                                                                                                                                     |
+| `RG:Z:` (transcriptome BAM) |     yes      |     **no**     | rustar @RG header exists but per-record tag is missing - issue 5                                                                                                                                                   |
 
 STAR-specific `jM` (junction motif) and `jI` (intron coordinates) are not requested by the pipeline (`--outSAMattributes` excludes them) so neither aligner emits them; **NOT TESTED**.
 
 **Verdict per tag**:
+
 - `NM`/`nM`: **BUG (high)** - file separately.
 - `XS`: **BUG (high)** - file separately.
 - `AS`: **BUG (low)** - small per-read divergence (<=5 score units), needs an issue against rustar's promised byte-equivalence claim.
@@ -173,12 +174,12 @@ STAR-specific `jM` (junction motif) and `jI` (intron coordinates) are not reques
 
 ### 7. Primary/secondary assignment for multi-mappers
 
-For reads where STAR reports NH>=2 *and* rustar reports the same NH (i.e. comparable cardinality):
+For reads where STAR reports NH>=2 _and_ rustar reports the same NH (i.e. comparable cardinality):
 
 | Sample              | Multi-mapper reads | Same primary locus | Different primary locus | Same full locus set |
-|---------------------|-------------------:|-------------------:|------------------------:|--------------------:|
-| WT_REP2             | 1 572              | 671 (43%)          | 901 (57%)               | 1 560 (99%)         |
-| RAP1_UNINDUCED_REP1 | 1 013              | 337 (33%)          | 676 (67%)               | 1 010 (99%)         |
+| ------------------- | -----------------: | -----------------: | ----------------------: | ------------------: |
+| WT_REP2             |              1 572 |          671 (43%) |               901 (57%) |         1 560 (99%) |
+| RAP1_UNINDUCED_REP1 |              1 013 |          337 (33%) |               676 (67%) |         1 010 (99%) |
 
 **99% of multi-mappers have the same locus set in both BAMs** - the aligners agree on which positions are tied. They disagree only on which tied alignment is reported with `HI:i:1`. This is consistent with rustar using a different RNG (ChaCha) than STAR (Mersenne Twister) for tie-breaking; the call sites are deterministic with `--runRNGseed 0` but the bit-level streams are not aligned.
 
@@ -197,6 +198,7 @@ Both genome BAMs have `@HD VN:1.4` (STAR) / `@HD VN:1.6` (rustar), both without 
 **NOT TESTED.** STAR was not invoked with `--outReadsUnmapped Fastx`; both aligners produced an empty unmapped-FASTQ stream and the pipeline correctly handles this. To test this category one would need to add `--outReadsUnmapped Fastx` to the ALIGN_STAR module CLI (and verify rustar honours the flag at all).
 
 Reproducer if needed:
+
 ```bash
 # Add --outReadsUnmapped Fastx to the args in both modules/nf-core/star/align/main.nf
 #  and modules/local/rustar/align/main.nf, then compare .Unmapped.out.mate{1,2}.
@@ -216,15 +218,15 @@ Primary / secondary record counts are within 2-3% of STAR's on every sample - th
 
 ## Consolidated issues to file at https://github.com/scverse/rustar-aligner
 
-| # | Severity | Title | One-line repro |
-|---|----------|-------|----------------|
-| 1 | **high**   | `NM` tag is renamed to `nM` and re-defined to exclude indels | `samtools view <rustar>.Aligned.out.bam \| head \| grep -oE '[nN]M:i:[0-9]+'` returns `nM:i:N` only, even when the CIGAR contains `D`/`I` ops |
-| 2 | **high**   | `XS` tag (intron-motif strand) never emitted with `--outSAMstrandField intronMotif` | `samtools view <rustar>.Aligned.out.bam \| grep -c 'XS:A:'` returns 0; STAR-equivalent returns ~1 % of reads (1 300 / 90 716 on WT_REP2) |
-| 3 | **medium** | `--sjdbGTFfile` not seeded into pass-1 alignment; `Annotated (sjdb)` always 0, ~50 % of splices missed | `grep 'Annotated (sjdb)' <rustar>.Log.final.out` -> `\| 0` on every sample with `--twopassMode Basic --sjdbGTFfile genome.gtf` |
-| 4 | **medium** | More secondary alignments emitted than STAR with same `--outFilterMultimapNmax`; NH tail extends to 20 vs STAR's 7 | `samtools view -f 0x100 -c <rustar>.Aligned.out.bam` returns ~17 % more than STAR on identical input |
-| 5 | **low**    | Transcriptome BAM omits per-record `RG:Z:` tag despite `@RG` header being present | `samtools view <rustar>.Aligned.toTranscriptome.out.bam \| head -1 \| grep -c 'RG:Z:'` returns 0; STAR returns 1 |
-| 6 | **low**    | `@PG` header line lacks `PN`, `VN`, `CL` fields | `samtools view -H <rustar>.Aligned.out.bam \| grep '^@PG'` shows `@PG ID:rustar-aligner` only; provenance is lost |
-| 7 | **low**    | `AS` tag value disagrees with STAR by 2-5 on identical-CIGAR records | 864 records in WT_REP2; rustar's README claims byte-equivalence on uniquely-mapped AS, so this contradicts the spec |
+| #   | Severity   | Title                                                                                                              | One-line repro                                                                                                                                |
+| --- | ---------- | ------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | **high**   | `NM` tag is renamed to `nM` and re-defined to exclude indels                                                       | `samtools view <rustar>.Aligned.out.bam \| head \| grep -oE '[nN]M:i:[0-9]+'` returns `nM:i:N` only, even when the CIGAR contains `D`/`I` ops |
+| 2   | **high**   | `XS` tag (intron-motif strand) never emitted with `--outSAMstrandField intronMotif`                                | `samtools view <rustar>.Aligned.out.bam \| grep -c 'XS:A:'` returns 0; STAR-equivalent returns ~1 % of reads (1 300 / 90 716 on WT_REP2)      |
+| 3   | **medium** | `--sjdbGTFfile` not seeded into pass-1 alignment; `Annotated (sjdb)` always 0, ~50 % of splices missed             | `grep 'Annotated (sjdb)' <rustar>.Log.final.out` -> `\| 0` on every sample with `--twopassMode Basic --sjdbGTFfile genome.gtf`                |
+| 4   | **medium** | More secondary alignments emitted than STAR with same `--outFilterMultimapNmax`; NH tail extends to 20 vs STAR's 7 | `samtools view -f 0x100 -c <rustar>.Aligned.out.bam` returns ~17 % more than STAR on identical input                                          |
+| 5   | **low**    | Transcriptome BAM omits per-record `RG:Z:` tag despite `@RG` header being present                                  | `samtools view <rustar>.Aligned.toTranscriptome.out.bam \| head -1 \| grep -c 'RG:Z:'` returns 0; STAR returns 1                              |
+| 6   | **low**    | `@PG` header line lacks `PN`, `VN`, `CL` fields                                                                    | `samtools view -H <rustar>.Aligned.out.bam \| grep '^@PG'` shows `@PG ID:rustar-aligner` only; provenance is lost                             |
+| 7   | **low**    | `AS` tag value disagrees with STAR by 2-5 on identical-CIGAR records                                               | 864 records in WT_REP2; rustar's README claims byte-equivalence on uniquely-mapped AS, so this contradicts the spec                           |
 
 Plus the existing high-severity issue (paired-end transcriptome BAM mate-pair fields), already drafted in `rustar_investigation_wt_rep2.md` and ready to file.
 

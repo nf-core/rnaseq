@@ -99,14 +99,15 @@ let donor_sa = last_exon.genome_end;
 ```
 
 That is **genome-wide absolute 0-based** (the comment "STAR's gAend+1"
-+ the fact that `sa_pos_to_forward` returns a position in the padded
-genome buffer, not chr-local space; confirmed by
-[`index/mod.rs:166-175`](https://github.com/scverse/rustar-aligner/blob/main/src/index/mod.rs#L166-L175)
-which never references `chr_start`). For yeast chrI in the test
-profile, `chr_start[0] = 0`, so the genome-absolute 0-based value
-equals the chr-local 0-based value, which is **1 less** than the
-chr-local 1-based value the DB stores. For any other chromosome the
-offset compounds by `chr_start[chr_idx]`.
+
+- the fact that `sa_pos_to_forward` returns a position in the padded
+  genome buffer, not chr-local space; confirmed by
+  [`index/mod.rs:166-175`](https://github.com/scverse/rustar-aligner/blob/main/src/index/mod.rs#L166-L175)
+  which never references `chr_start`). For yeast chrI in the test
+  profile, `chr_start[0] = 0`, so the genome-absolute 0-based value
+  equals the chr-local 0-based value, which is **1 less** than the
+  chr-local 1-based value the DB stores. For any other chromosome the
+  offset compounds by `chr_start[chr_idx]`.
 
 Result: **every stitch-time lookup misses by exactly 1 on chr 0 (the
 only chromosome with annotated junctions in the test data), and by
@@ -331,12 +332,12 @@ with all other CLI args identical (verified via `.command.sh`).
 `md5sum` per file, per sample:
 
 | Sample              | Log.final.out | SJ.out.tab | SJ.pass1.out.tab |
-|---------------------|---------------|------------|------------------|
-| WT_REP1             | DIFFER*       | IDENTICAL  | IDENTICAL        |
-| WT_REP2             | DIFFER*       | IDENTICAL  | IDENTICAL        |
-| RAP1_IAA_30M_REP1   | DIFFER*       | IDENTICAL  | IDENTICAL        |
-| RAP1_UNINDUCED_REP1 | DIFFER*       | IDENTICAL  | IDENTICAL        |
-| RAP1_UNINDUCED_REP2 | DIFFER*       | IDENTICAL  | IDENTICAL        |
+| ------------------- | ------------- | ---------- | ---------------- |
+| WT_REP1             | DIFFER\*      | IDENTICAL  | IDENTICAL        |
+| WT_REP2             | DIFFER\*      | IDENTICAL  | IDENTICAL        |
+| RAP1_IAA_30M_REP1   | DIFFER\*      | IDENTICAL  | IDENTICAL        |
+| RAP1_UNINDUCED_REP1 | DIFFER\*      | IDENTICAL  | IDENTICAL        |
+| RAP1_UNINDUCED_REP2 | DIFFER\*      | IDENTICAL  | IDENTICAL        |
 
 \* `Log.final.out` differs in **timestamps only**:
 
@@ -372,27 +373,28 @@ name-sorted order.
 Same per file between the two runs, on every BAM:
 
 | Sample              | Aligned.out.bam (run1/run2) | Aligned.toTranscriptome.out.bam (run1/run2) |
-|---------------------|----------------------------:|--------------------------------------------:|
-| WT_REP1             | 188 322 / 188 322           | 161 724 / 161 724                           |
-| WT_REP2             |  94 458 /  94 458           |  82 744 /  82 744                           |
-| RAP1_IAA_30M_REP1   |  94 950 /  94 950           |  85 152 /  85 152                           |
-| RAP1_UNINDUCED_REP1 |  48 952 /  48 952           |  45 609 /  45 609                           |
-| RAP1_UNINDUCED_REP2 |  98 201 /  98 201           |  92 675 /  92 675                           |
+| ------------------- | --------------------------: | ------------------------------------------: |
+| WT_REP1             |           188 322 / 188 322 |                           161 724 / 161 724 |
+| WT_REP2             |             94 458 / 94 458 |                             82 744 / 82 744 |
+| RAP1_IAA_30M_REP1   |             94 950 / 94 950 |                             85 152 / 85 152 |
+| RAP1_UNINDUCED_REP1 |             48 952 / 48 952 |                             45 609 / 45 609 |
+| RAP1_UNINDUCED_REP2 |             98 201 / 98 201 |                             92 675 / 92 675 |
 
 No record loss or gain across reruns.
 
 #### Same-order SAM body
 
 `docker run ... samtools view <bam> | md5sum` — all 10 BAMs (5 samples
-* 2 BAM types) produce DIFFERENT md5s between the two runs. The
-records are emitted in different order across reruns.
+
+- 2 BAM types) produce DIFFERENT md5s between the two runs. The
+  records are emitted in different order across reruns.
 
 #### Name-sorted SAM body
 
 `docker run ... samtools sort -n -O sam <bam> | grep -v '^@' | md5sum`:
 
 | Sample              | Aligned.out.bam | Aligned.toTranscriptome.out.bam |
-|---------------------|-----------------|---------------------------------|
+| ------------------- | --------------- | ------------------------------- |
 | WT_REP1             | IDENTICAL       | IDENTICAL                       |
 | WT_REP2             | IDENTICAL       | IDENTICAL                       |
 | RAP1_IAA_30M_REP1   | IDENTICAL       | IDENTICAL                       |

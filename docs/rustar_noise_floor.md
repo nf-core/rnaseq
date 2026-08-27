@@ -6,12 +6,12 @@ Quantitative companion to [`rustar_bam_comparison.md`](rustar_bam_comparison.md)
 
 Per-sample gene_tpm Pearson on the test profile (yeast subset + GFP, 5 samples, paired and single-end), worst case across samples:
 
-| Contrast | gene_tpm Pearson worst | gene_counts Pearson worst | %mapped worst Δ (pp) |
-|---|---:|---:|---:|
-| STAR vs STAR, **same seed**, fresh rerun | 0.9999999997 | 0.9999999999 | +0.00 |
-| STAR vs STAR, seed 0 vs seed 1           | 0.9999999994 | 0.9999999999 | +0.00 |
-| rustar vs rustar, seed 0 vs seed 1       | 0.9999999996 | 0.9999999994 | +0.00 |
-| STAR vs rustar, same (seed 0)            | **0.9850** (WT_REP2) | 0.9998 | -0.21 |
+| Contrast                                 | gene_tpm Pearson worst | gene_counts Pearson worst | %mapped worst Δ (pp) |
+| ---------------------------------------- | ---------------------: | ------------------------: | -------------------: |
+| STAR vs STAR, **same seed**, fresh rerun |           0.9999999997 |              0.9999999999 |                +0.00 |
+| STAR vs STAR, seed 0 vs seed 1           |           0.9999999994 |              0.9999999999 |                +0.00 |
+| rustar vs rustar, seed 0 vs seed 1       |           0.9999999996 |              0.9999999994 |                +0.00 |
+| STAR vs rustar, same (seed 0)            |   **0.9850** (WT_REP2) |                    0.9998 |                -0.21 |
 
 Both STAR's and rustar's own seed-to-seed variance is ~1e-9 on Pearson and below the harness's 0.01 pp display precision on % mapped. **The STAR-vs-rustar deltas are 7-9 orders of magnitude larger than either aligner's own seed-driven noise envelope. The previously-documented `WT_REP2 = 0.985` divergence is firmly outside the noise floor; it is real cross-aligner signal driven by the upstream BUGs catalogued in [`rustar_bam_comparison.md`](rustar_bam_comparison.md), not RNG noise.**
 
@@ -25,13 +25,13 @@ MarkDuplicates dup-bit agreement on STAR-vs-rustar matched primary records range
 
 Three new pipeline runs on top of the existing `results-star/` / `results-rustar/` baseline. All five runs use `-profile test,docker` on the `nf-dev-rnaseq` VM (36 CPU / 69 GB), Nextflow 26.04, same input samplesheet:
 
-| outdir                 | aligner | --runRNGseed | how                                                |
-|------------------------|---------|--------------|----------------------------------------------------|
-| `results-star/`        | STAR    | 0 (default)  | original PR-1855 baseline                          |
-| `results-star-rerun/`  | STAR    | 0 (default)  | `-params-file star-rerun.params.yml`               |
-| `results-star-seed1/`  | STAR    | 1            | `-params-file star-seed1.params.yml` (sets `extra_star_align_args: '--runRNGseed 1'`) |
-| `results-rustar/`      | rustar  | 0 (default)  | original PR-1855 baseline                          |
-| `results-rustar-seed1/`| rustar  | 1            | `-params-file rustar-seed1.params.yml` (`use_rustar_star: true` + `extra_star_align_args: '--runRNGseed 1'`) |
+| outdir                  | aligner | --runRNGseed | how                                                                                                          |
+| ----------------------- | ------- | ------------ | ------------------------------------------------------------------------------------------------------------ |
+| `results-star/`         | STAR    | 0 (default)  | original PR-1855 baseline                                                                                    |
+| `results-star-rerun/`   | STAR    | 0 (default)  | `-params-file star-rerun.params.yml`                                                                         |
+| `results-star-seed1/`   | STAR    | 1            | `-params-file star-seed1.params.yml` (sets `extra_star_align_args: '--runRNGseed 1'`)                        |
+| `results-rustar/`       | rustar  | 0 (default)  | original PR-1855 baseline                                                                                    |
+| `results-rustar-seed1/` | rustar  | 1            | `-params-file rustar-seed1.params.yml` (`use_rustar_star: true` + `extra_star_align_args: '--runRNGseed 1'`) |
 
 Params files at `/home/ubuntu/rnaseq-rustar-aligner/{star-rerun,star-seed1,rustar-seed1}.params.yml`. The `--runRNGseed 1` override is plumbed via the existing `params.extra_star_align_args` dedup logic at `conf/modules/align_star.config:108-121`, which strips the pipeline default `--runRNGseed 0` and replaces it with the user value. The `withName: '.*ALIGN_STAR:STAR_ALIGN|.*ALIGN_STAR:RUSTAR_ALIGN|...'` selector applies to both aligner modules so the override hits both code paths.
 
@@ -56,22 +56,22 @@ Each run was ~3.5 - 4.5 minutes wall on the unloaded VM. Run 1 (STAR rerun) 17:3
 ### Per-sample, per-contrast (gene_tpm Pearson, full precision)
 
 | Sample              | STAR vs STAR (same seed) | STAR vs STAR (seed 0 vs 1) | rustar vs rustar (seed 0 vs 1) | STAR vs rustar (seed 0 both) |
-|---------------------|---:|---:|---:|---:|
-| RAP1_IAA_30M_REP1   | 0.9999999997 | 0.9999999997 | 0.9999999999950 | **0.9968** |
-| RAP1_UNINDUCED_REP1 | 1.0000000000 | 1.0000000000 | 1.0000000000000 | 0.9997     |
-| RAP1_UNINDUCED_REP2 | 1.0000000000 | 1.0000000000 | 0.9999999999999 | 0.9997     |
-| WT_REP1             | 0.9999999999 | 0.9999999996 | 0.9999999999618 | **0.9955** |
-| WT_REP2             | 1.0000000000 | 0.9999999994 | 0.9999999999812 | **0.9850** |
+| ------------------- | -----------------------: | -------------------------: | -----------------------------: | ---------------------------: |
+| RAP1_IAA_30M_REP1   |             0.9999999997 |               0.9999999997 |                0.9999999999950 |                   **0.9968** |
+| RAP1_UNINDUCED_REP1 |             1.0000000000 |               1.0000000000 |                1.0000000000000 |                       0.9997 |
+| RAP1_UNINDUCED_REP2 |             1.0000000000 |               1.0000000000 |                0.9999999999999 |                       0.9997 |
+| WT_REP1             |             0.9999999999 |               0.9999999996 |                0.9999999999618 |                   **0.9955** |
+| WT_REP2             |             1.0000000000 |               0.9999999994 |                0.9999999999812 |                   **0.9850** |
 
 ### Per-sample, per-contrast (gene_counts Pearson, full precision)
 
 | Sample              | STAR vs STAR (same seed) | STAR vs STAR (seed 0 vs 1) | rustar vs rustar (seed 0 vs 1) | STAR vs rustar |
-|---------------------|---:|---:|---:|---:|
-| RAP1_IAA_30M_REP1   | 0.9999999999999 | 0.9999999999999 | 0.99999999998 | 0.9998 |
-| RAP1_UNINDUCED_REP1 | 1.0000000000000 | 1.0000000000000 | 1.0000000000000 | 0.9999 |
-| RAP1_UNINDUCED_REP2 | 1.0000000000000 | 1.0000000000000 | 0.9999999999999 | 0.9999 |
-| WT_REP1             | 0.9999999999999 | 0.9999999999999 | 0.9999999999993 | 0.9999 |
-| WT_REP2             | 0.9999999999999 | 0.9999999999999 | 0.9999999999996 | 0.9998 |
+| ------------------- | -----------------------: | -------------------------: | -----------------------------: | -------------: |
+| RAP1_IAA_30M_REP1   |          0.9999999999999 |            0.9999999999999 |                  0.99999999998 |         0.9998 |
+| RAP1_UNINDUCED_REP1 |          1.0000000000000 |            1.0000000000000 |                1.0000000000000 |         0.9999 |
+| RAP1_UNINDUCED_REP2 |          1.0000000000000 |            1.0000000000000 |                0.9999999999999 |         0.9999 |
+| WT_REP1             |          0.9999999999999 |            0.9999999999999 |                0.9999999999993 |         0.9999 |
+| WT_REP2             |          0.9999999999999 |            0.9999999999999 |                0.9999999999996 |         0.9998 |
 
 ### % uniquely mapped reads
 
@@ -85,22 +85,22 @@ Re-running STAR with the same seed reproduces the prior median wall time exactly
 
 Subset of the STAR self-rerun (`results-star/` vs `results-star-rerun/`) on the published `<sample>.markdup.sorted.bam`:
 
-| BAM equality test (md5)                                  | Result |
-|----------------------------------------------------------|--------|
-| Raw BAM bytes                                            | DIFFER on all 5 samples |
-| `samtools view` SAM body, same order                     | DIFFER on all 5 samples |
-| `samtools sort -n -O sam` SAM body                       | DIFFER on all 5 samples |
-| Same body, with the 0x400 (duplicate) flag bit masked off + sorted    | **IDENTICAL on all 5 samples** |
+| BAM equality test (md5)                                            | Result                         |
+| ------------------------------------------------------------------ | ------------------------------ |
+| Raw BAM bytes                                                      | DIFFER on all 5 samples        |
+| `samtools view` SAM body, same order                               | DIFFER on all 5 samples        |
+| `samtools sort -n -O sam` SAM body                                 | DIFFER on all 5 samples        |
+| Same body, with the 0x400 (duplicate) flag bit masked off + sorted | **IDENTICAL on all 5 samples** |
 
 In other words: STAR with `--runRNGseed 0` produces a bit-identical alignment of every read (qname, flag-minus-dup-bit, rname, pos, MAPQ, CIGAR, plus all tags), but downstream Picard MarkDuplicates flips the duplicate bit on a small number of reads between runs. Per-record dup-bit disagreement count:
 
 | Sample              | Records | MarkDup STAR-self disagree | Disagreement rate |
-|---------------------|--------:|---------------------------:|-------------------:|
-| WT_REP1             | 184 589 |  12                        | 0.0065 %           |
-| WT_REP2             |  92 683 |   4                        | 0.0043 %           |
-| RAP1_IAA_30M_REP1   |  93 368 |   8                        | 0.0086 %           |
-| RAP1_UNINDUCED_REP1 |  48 823 |  26                        | 0.0533 %           |
-| RAP1_UNINDUCED_REP2 |  98 088 |  18                        | 0.0184 %           |
+| ------------------- | ------: | -------------------------: | ----------------: |
+| WT_REP1             | 184 589 |                         12 |          0.0065 % |
+| WT_REP2             |  92 683 |                          4 |          0.0043 % |
+| RAP1_IAA_30M_REP1   |  93 368 |                          8 |          0.0086 % |
+| RAP1_UNINDUCED_REP1 |  48 823 |                         26 |          0.0533 % |
+| RAP1_UNINDUCED_REP2 |  98 088 |                         18 |          0.0184 % |
 
 Total dup count per sample is identical across reruns — MarkDuplicates marks the same number of records as duplicates, it just picks a different one from each duplicate set as the "keeper". The disagreement count scales with the dup fraction (the SE samples with 74-80% dup rate generate the most pairs to choose between).
 
@@ -110,28 +110,28 @@ Salmon's `quant.sf` is also non-byte-identical across STAR-same-seed reruns (`Ef
 
 ## Results: MarkDuplicates decision agreement (bonus)
 
-| Contrast | Sample | Total matched primaries | Dup-bit disagree | Agreement rate |
-|---|---|---:|---:|---:|
-| STAR vs STAR (same seed)        | WT_REP1             | 184 589 |  12 | 99.9935 % |
-|                                 | WT_REP2             |  92 683 |   4 | 99.9957 % |
-|                                 | RAP1_IAA_30M_REP1   |  93 368 |   8 | 99.9914 % |
-|                                 | RAP1_UNINDUCED_REP1 |  48 823 |  26 | 99.9467 % |
-|                                 | RAP1_UNINDUCED_REP2 |  98 088 |  18 | 99.9816 % |
-| STAR vs STAR (seed 0 vs 1)      | WT_REP1             | 184 589 |  12 | 99.9935 % |
-|                                 | WT_REP2             |  92 683 |  12 | 99.9871 % |
-|                                 | RAP1_IAA_30M_REP1   |  93 368 |   0 | 100.0000 % |
-|                                 | RAP1_UNINDUCED_REP1 |  48 823 |  20 | 99.9590 % |
-|                                 | RAP1_UNINDUCED_REP2 |  98 088 |  16 | 99.9837 % |
-| rustar vs rustar (seed 0 vs 1)  | WT_REP1             | 184 942 | 238 | 99.8713 % |
-|                                 | WT_REP2             |  92 846 |  86 | 99.9074 % |
-|                                 | RAP1_IAA_30M_REP1   |  93 584 |  82 | 99.9124 % |
-|                                 | RAP1_UNINDUCED_REP1 |  48 818 | 120 | 99.7542 % |
-|                                 | RAP1_UNINDUCED_REP2 |  98 049 | 162 | 99.8348 % |
-| STAR vs rustar (seed 0 both)    | WT_REP1             | 183 790 | 2 357 | 98.7176 % |
-|                                 | WT_REP2             |  92 303 |   256 | 99.7227 % |
-|                                 | RAP1_IAA_30M_REP1   |  93 074 |   208 | 99.7765 % |
-|                                 | RAP1_UNINDUCED_REP1 |  48 713 |   231 | 99.5258 % |
-|                                 | RAP1_UNINDUCED_REP2 |  97 826 |   301 | 99.6923 % |
+| Contrast                       | Sample              | Total matched primaries | Dup-bit disagree | Agreement rate |
+| ------------------------------ | ------------------- | ----------------------: | ---------------: | -------------: |
+| STAR vs STAR (same seed)       | WT_REP1             |                 184 589 |               12 |      99.9935 % |
+|                                | WT_REP2             |                  92 683 |                4 |      99.9957 % |
+|                                | RAP1_IAA_30M_REP1   |                  93 368 |                8 |      99.9914 % |
+|                                | RAP1_UNINDUCED_REP1 |                  48 823 |               26 |      99.9467 % |
+|                                | RAP1_UNINDUCED_REP2 |                  98 088 |               18 |      99.9816 % |
+| STAR vs STAR (seed 0 vs 1)     | WT_REP1             |                 184 589 |               12 |      99.9935 % |
+|                                | WT_REP2             |                  92 683 |               12 |      99.9871 % |
+|                                | RAP1_IAA_30M_REP1   |                  93 368 |                0 |     100.0000 % |
+|                                | RAP1_UNINDUCED_REP1 |                  48 823 |               20 |      99.9590 % |
+|                                | RAP1_UNINDUCED_REP2 |                  98 088 |               16 |      99.9837 % |
+| rustar vs rustar (seed 0 vs 1) | WT_REP1             |                 184 942 |              238 |      99.8713 % |
+|                                | WT_REP2             |                  92 846 |               86 |      99.9074 % |
+|                                | RAP1_IAA_30M_REP1   |                  93 584 |               82 |      99.9124 % |
+|                                | RAP1_UNINDUCED_REP1 |                  48 818 |              120 |      99.7542 % |
+|                                | RAP1_UNINDUCED_REP2 |                  98 049 |              162 |      99.8348 % |
+| STAR vs rustar (seed 0 both)   | WT_REP1             |                 183 790 |            2 357 |      98.7176 % |
+|                                | WT_REP2             |                  92 303 |              256 |      99.7227 % |
+|                                | RAP1_IAA_30M_REP1   |                  93 074 |              208 |      99.7765 % |
+|                                | RAP1_UNINDUCED_REP1 |                  48 713 |              231 |      99.5258 % |
+|                                | RAP1_UNINDUCED_REP2 |                  97 826 |              301 |      99.6923 % |
 
 Two interesting sub-patterns:
 
@@ -164,7 +164,7 @@ There is a real **secondary divergence** that the seed change exposes: MarkDupli
 
 ### Are the STAR-vs-rustar deltas inside or outside the noise envelope?
 
-**Outside, by 7-9 orders of magnitude.** STAR's own seed-driven gene_tpm Pearson noise is `1 - 0.9999999994 ~= 6e-10`. The STAR-vs-rustar deltas range `1 - 0.985 = 1.5e-2` (WT_REP2) to `1 - 0.9997 = 3e-4` (RAP1_UNINDUCED_REP*). Every cross-aligner Pearson on every sample is comfortably outside the noise floor.
+**Outside, by 7-9 orders of magnitude.** STAR's own seed-driven gene_tpm Pearson noise is `1 - 0.9999999994 ~= 6e-10`. The STAR-vs-rustar deltas range `1 - 0.985 = 1.5e-2` (WT_REP2) to `1 - 0.9997 = 3e-4` (RAP1_UNINDUCED_REP\*). Every cross-aligner Pearson on every sample is comfortably outside the noise floor.
 
 Verdict tag: the STAR-vs-rustar cross-aligner deltas previously catalogued in [`rustar_differences.md`](rustar_differences.md), [`rustar_investigation_wt_rep2.md`](rustar_investigation_wt_rep2.md), and [`rustar_quant_and_multiqc.md`](rustar_quant_and_multiqc.md) are **BUG** / **BEHAVIOURAL** rather than **RNG** / **FLOATING-POINT**. This is consistent with the upstream attribution: most of the WT_REP2 delta is driven by the paired-end transcriptome BAM mate-field bug (scverse/rustar-aligner#22), with secondary contributions from the sjdb-not-seeded bug (#27) and the NH-tail / multi-mapper sampling difference (#31). None of those are RNG-driven.
 
@@ -172,7 +172,7 @@ Verdict tag: the STAR-vs-rustar cross-aligner deltas previously catalogued in [`
 
 **They propagate cleanly.** Disagreement on STAR-vs-rustar matched primary records is 98.7-99.8 % per sample, which is what you'd expect from a tool that keys on `(rname, pos, orientation, mate-pos)` when those upstream fields already disagree on a small fraction of reads (cf. `rustar_bam_comparison.md` categories 4-5). Within-aligner same-seed agreement is 99.95-99.99 %; cross-aligner is one order of magnitude lower than that, which tracks with the cross-aligner BAM divergence floor.
 
-If MarkDuplicates were *compounding* the divergence (e.g. via cascading-effect read filtering) we'd expect to see cross-aligner agreement drop to ~95 % or worse and asymmetry biased by total dup count. We don't — disagreement is approximately symmetric (`star_dup_rustar_notdup ~= rustar_dup_star_notdup` on PE samples and within ~2x on SE), which is the signature of a propagation rather than amplification.
+If MarkDuplicates were _compounding_ the divergence (e.g. via cascading-effect read filtering) we'd expect to see cross-aligner agreement drop to ~95 % or worse and asymmetry biased by total dup count. We don't — disagreement is approximately symmetric (`star_dup_rustar_notdup ~= rustar_dup_star_notdup` on PE samples and within ~2x on SE), which is the signature of a propagation rather than amplification.
 
 Vocabulary tag: **BEHAVIOURAL** (propagation, not amplification). MarkDuplicates is doing its job consistently; the upstream BAM divergence is what drives the cross-aligner disagreement.
 

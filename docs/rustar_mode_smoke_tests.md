@@ -28,20 +28,20 @@ outdir: results-star-gc
 
 ### Header counters (`N_unmapped` / `N_multimapping` / `N_noFeature` / `N_ambiguous`)
 
-| Sample | Counter | STAR uns / fwd / rev | rustar uns / fwd / rev |
-|---|---|---|---|
-| RAP1_IAA_30M_REP1 | N_unmapped     | 3 824 / 3 824 / 3 824 | 3 823 / 3 823 / 3 823 |
-| RAP1_IAA_30M_REP1 | N_multimapping | 916 / 916 / 916       | **1 022** / 1 022 / 1 022 |
-| RAP1_IAA_30M_REP1 | N_noFeature    | 2 277 / 37 670 / 2 544 | 2 255 / 37 601 / 2 522 |
-| RAP1_IAA_30M_REP1 | N_ambiguous    | 7 026 / 12 / 119      | 6 960 / 11 / 91 |
-| WT_REP1           | N_unmapped     | 8 926 / 8 926 / 8 926 | 8 928 / 8 928 / 8 928 |
-| WT_REP1           | N_multimapping | 1 996 / 1 996 / 1 996 | **2 173** / 2 173 / 2 173 |
-| WT_REP1           | N_noFeature    | 5 163 / 76 713 / 5 679 | 5 133 / 76 654 / 5 642 |
-| WT_REP1           | N_ambiguous    | 11 323 / 20 / 274     | 11 130 / 22 / 197 |
-| WT_REP2           | N_unmapped     | 4 196 / 4 196 / 4 196 | 4 194 / 4 194 / 4 194 |
-| WT_REP2           | N_multimapping | 987 / 987 / 987       | **1 065** / 1 065 / 1 065 |
-| WT_REP2           | N_noFeature    | 2 506 / 37 538 / 2 814 | 2 476 / 37 501 / 2 783 |
-| WT_REP2           | N_ambiguous    | 6 651 / 12 / 144      | 6 586 / 11 / 120 |
+| Sample            | Counter        | STAR uns / fwd / rev   | rustar uns / fwd / rev    |
+| ----------------- | -------------- | ---------------------- | ------------------------- |
+| RAP1_IAA_30M_REP1 | N_unmapped     | 3 824 / 3 824 / 3 824  | 3 823 / 3 823 / 3 823     |
+| RAP1_IAA_30M_REP1 | N_multimapping | 916 / 916 / 916        | **1 022** / 1 022 / 1 022 |
+| RAP1_IAA_30M_REP1 | N_noFeature    | 2 277 / 37 670 / 2 544 | 2 255 / 37 601 / 2 522    |
+| RAP1_IAA_30M_REP1 | N_ambiguous    | 7 026 / 12 / 119       | 6 960 / 11 / 91           |
+| WT_REP1           | N_unmapped     | 8 926 / 8 926 / 8 926  | 8 928 / 8 928 / 8 928     |
+| WT_REP1           | N_multimapping | 1 996 / 1 996 / 1 996  | **2 173** / 2 173 / 2 173 |
+| WT_REP1           | N_noFeature    | 5 163 / 76 713 / 5 679 | 5 133 / 76 654 / 5 642    |
+| WT_REP1           | N_ambiguous    | 11 323 / 20 / 274      | 11 130 / 22 / 197         |
+| WT_REP2           | N_unmapped     | 4 196 / 4 196 / 4 196  | 4 194 / 4 194 / 4 194     |
+| WT_REP2           | N_multimapping | 987 / 987 / 987        | **1 065** / 1 065 / 1 065 |
+| WT_REP2           | N_noFeature    | 2 506 / 37 538 / 2 814 | 2 476 / 37 501 / 2 783    |
+| WT_REP2           | N_ambiguous    | 6 651 / 12 / 144       | 6 586 / 11 / 120          |
 
 (Full 5-sample table in `/tmp/rustar_gc_analysis/gc_report.md` on the VM.)
 
@@ -59,13 +59,13 @@ NH=1 primary mappers match (22 398 -> 22 494); rustar adds noisy secondary hits 
 
 ### Per-sample Pearson on per-gene counts
 
-| Sample              | unstranded | forward  | reverse  | n_genes | identical cells (uns/fwd/rev) | max |Δ| (uns/fwd/rev) |
-|---------------------|-----------:|---------:|---------:|--------:|------------------------------:|----------------------:|
-| RAP1_IAA_30M_REP1   | 0.999999   | 0.999988 | 0.999999 | 125     | 114 / 113 / 114               | 20 / 19 / 27          |
-| RAP1_UNINDUCED_REP1 | 0.999999   | 0.999987 | 1.000000 | 125     | 114 / 119 / 114               | 25 / 25 / 11          |
-| RAP1_UNINDUCED_REP2 | 0.999999   | 0.999986 | 0.999999 | 125     | 112 / 118 / 113               | 62 / 56 / 60          |
-| WT_REP1             | 0.999998   | 0.999945 | 0.999999 | 125     | 111 / 111 / 110               | 56 / 82 / 39          |
-| WT_REP2             | 0.999997   | 0.999982 | 0.999997 | 125     | 116 / 110 / 116               | 46 / 27 / 40          |
+| Sample              | unstranded |  forward |  reverse | n_genes | identical cells (uns/fwd/rev) |          max | Δ   | (uns/fwd/rev) |
+| ------------------- | ---------: | -------: | -------: | ------: | ----------------------------: | -----------: | --- | ------------- |
+| RAP1_IAA_30M_REP1   |   0.999999 | 0.999988 | 0.999999 |     125 |               114 / 113 / 114 | 20 / 19 / 27 |
+| RAP1_UNINDUCED_REP1 |   0.999999 | 0.999987 | 1.000000 |     125 |               114 / 119 / 114 | 25 / 25 / 11 |
+| RAP1_UNINDUCED_REP2 |   0.999999 | 0.999986 | 0.999999 |     125 |               112 / 118 / 113 | 62 / 56 / 60 |
+| WT_REP1             |   0.999998 | 0.999945 | 0.999999 |     125 |               111 / 111 / 110 | 56 / 82 / 39 |
+| WT_REP2             |   0.999997 | 0.999982 | 0.999997 |     125 |               116 / 110 / 116 | 46 / 27 / 40 |
 
 89-95 % of cells per sample/column are byte-identical; the rest drift inside +/-1 % of the per-gene count. No order-of-magnitude divergence. Largest absolute reverse-stranded deltas (YAL038W, YAR009C, YAR010C) are all genes already flagged by the NH-tail analysis above.
 
@@ -112,10 +112,10 @@ Before this PR's fix the `|RUSTAR_GENOMEGENERATE` slot was missing, so under `--
 
 A minimal direct rustar invocation that passes `--sjdbGTFfeatureExon CDS` at **both** index and alignment time produces a transcriptome BAM byte-equivalent to STAR's:
 
-| Aligner | `@SQ` lines | records | mapping rate |
-|---------|------------:|--------:|-------------:|
-| STAR 2.7.11b | 13 | 8 082 | 86.78 % |
-| rustar v0.1.0 | 13 | 8 082 | 86.78 % |
+| Aligner       | `@SQ` lines | records | mapping rate |
+| ------------- | ----------: | ------: | -----------: |
+| STAR 2.7.11b  |          13 |   8 082 |      86.78 % |
+| rustar v0.1.0 |          13 |   8 082 |      86.78 % |
 
 The earlier diagnosis that "rustar's transcriptome projection ignores `--sjdbGTFfeatureExon` and hardcodes `exon`" was wrong. rustar honours the flag fine when it's plumbed through; our pipeline wasn't plumbing it through.
 
@@ -124,9 +124,9 @@ The genome BAM was healthy on both aligners throughout (8 428 records, identical
 ### Other prokaryotic-mode findings (genome BAM is fine)
 
 | Sample    | STAR mapped | rustar mapped | Δ (pp) |
-|-----------|------------:|--------------:|-------:|
-| SALM_REP1 | 86.78 %     | 86.78 %       | 0.00   |
-| SALM_REP2 | 86.69 %     | 86.69 %       | 0.00   |
+| --------- | ----------: | ------------: | -----: |
+| SALM_REP1 |     86.78 % |       86.78 % |   0.00 |
+| SALM_REP2 |     86.69 % |       86.69 % |   0.00 |
 
 - **`--alignIntronMax 1` is honoured.** Zero `N` ops in any CIGAR; `Number of splices: Total = 0`; both SJ tabs empty. **Not a silent-ignore bug.**
 - **Cosmetic `Log.final.out` categorisation.** STAR splits unmapped into `too short` + `other`; rustar always reports `other = 0` and folds STAR's `other` into `too short` (238 + 404 = 642 on SALM_REP1). Total mapped count conserved; MultiQC unmapped bar reads ~3x higher than STAR's. **BEHAVIOURAL (low).**

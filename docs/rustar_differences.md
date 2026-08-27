@@ -11,6 +11,17 @@ The verification setup: standard `-profile test,docker` on the
 `nf-dev-rnaseq` VM (36 CPU / 69 GB), back-to-back STAR and rustar runs,
 identical inputs.
 
+**2026-08-27 re-verification**: every issue filed below has since been
+closed upstream (rustar-aligner moved 0.1.0 → 0.2.0 over the same period).
+[`rustar_reverification_2026-08.md`](rustar_reverification_2026-08.md)
+re-checks each one directly against the current image rather than trusting
+the "closed" label - most are genuinely fixed (including the headline #22
+TPM bug), two are improved but short of full parity, and one (#31, NH-tail
+depth) shows no measurable change despite being closed with no linked PR.
+The tables below are left as the historical record of what the original
+investigation found; the "Tracked upstream" table at the bottom is updated
+with current status and links to the re-verification evidence.
+
 ## Verified
 
 ### Wall-time and RAM (test profile, one tile of yeast + GFP)
@@ -29,6 +40,8 @@ samplesheet on AWS is a follow-up.
 
 ### Mapping rate (per `Log.final.out`)
 
+Original (v0.1.0, 2026-05-12):
+
 | Sample              | STAR  | rustar | Δ (pp) |
 |---------------------|-------|--------|--------|
 | RAP1_IAA_30M_REP1   | 90.44 | 90.23  | -0.21  |
@@ -37,10 +50,21 @@ samplesheet on AWS is a follow-up.
 | WT_REP1             | 88.99 | 88.81  | -0.18  |
 | WT_REP2             | 89.54 | 89.39  | -0.15  |
 
-All within ±0.25 pp of STAR. Consistent with what rustar reports upstream
-on its yeast 10 k-read benchmark.
+Re-verified (v0.2.0, 2026-08-27):
+
+| Sample              | STAR  | rustar | Δ (pp) |
+|---------------------|-------|--------|--------|
+| RAP1_IAA_30M_REP1   | 90.44 | 90.24  | -0.20  |
+| RAP1_UNINDUCED_REP1 | 95.96 | 95.91  | -0.05  |
+| RAP1_UNINDUCED_REP2 | 95.85 | 95.83  | -0.02  |
+| WT_REP1             | 88.99 | 88.82  | -0.17  |
+| WT_REP2             | 89.54 | 89.40  | -0.14  |
+
+Unchanged, within ±0.25 pp of STAR both times.
 
 ### Quantification concordance (per-sample Pearson on merged Salmon matrices)
+
+Original (v0.1.0, 2026-05-12):
 
 | Sample              | gene_tpm | gene_counts |
 |---------------------|----------|-------------|
@@ -50,83 +74,87 @@ on its yeast 10 k-read benchmark.
 | WT_REP1             | 0.995496 | 0.999890    |
 | WT_REP2             | **0.985040** | 0.999842 |
 
-`gene_counts` (raw `NumReads`) is essentially identical across both
-runs. `gene_tpm` is also very close on three samples but diverges
-materially on `WT_REP2`, with `RAP1_IAA_30M_REP1` and `WT_REP1` showing
-the same effect at smaller magnitude. The two single-end samples
-(`RAP1_UNINDUCED_REP1/2`) are clean.
+`gene_counts` (raw `NumReads`) was essentially identical across both
+runs even then. `gene_tpm` diverged materially on `WT_REP2`, with
+`RAP1_IAA_30M_REP1` and `WT_REP1` showing the same effect at smaller
+magnitude - all three are paired-end. The two single-end samples
+(`RAP1_UNINDUCED_REP1/2`) were already clean, which was the tell: see
+[`rustar_investigation_wt_rep2.md`](rustar_investigation_wt_rep2.md) for
+the root-cause deep dive (rustar v0.1.0's `Aligned.toTranscriptome.out.bam`
+didn't populate mate-pair fields or the proper-pair flag on paired-end
+records, so Salmon fell back to its default fragment-length prior,
+distorting `EffectiveLength`/TPM for short transcripts). Filed as
+[scverse/rustar-aligner#22](https://github.com/scverse/rustar-aligner/issues/22).
 
-This is **not** sample-specific. See
-[`rustar_investigation_wt_rep2.md`](rustar_investigation_wt_rep2.md)
-for the deep dive - short version: rustar v0.1.0's
-`Aligned.toTranscriptome.out.bam` doesn't populate mate-pair fields
-(`RNEXT` / `PNEXT` / `TLEN`) or set the proper-pair flag on paired-end
-records, so Salmon can't infer a fragment-length distribution and
-falls back to its default prior (mean 250, SD 25). That distorts
-`EffectiveLength` for short transcripts, which is what we see in TPM.
-The hit is bigger on `WT_REP2` because of how its mapped reads
-distribute across short vs long transcripts.
+**Fixed as of v0.2.0** (re-verified 2026-08-27, see
+[`rustar_reverification_2026-08.md`](rustar_reverification_2026-08.md)):
 
-This is the headline bug to file upstream once the report is in
-shape; everything below is secondary.
+| Sample              | gene_tpm | gene_counts |
+|---------------------|----------|-------------|
+| RAP1_IAA_30M_REP1   | 0.999841 | 0.999852    |
+| RAP1_UNINDUCED_REP1 | 0.999914 | 0.999912    |
+| RAP1_UNINDUCED_REP2 | 0.999916 | 0.999911    |
+| WT_REP1             | 0.999853 | 0.999890    |
+| WT_REP2             | 0.999839 | 0.999858    |
 
-## Module-level workarounds we had to add
+All five samples now clear 0.9998 on both matrices. The paired-end
+transcriptome BAM records carry proper `RNEXT`/`PNEXT`/`TLEN` and the
+proper-pair flag; confirmed directly with `samtools view`, not just
+inferred from the TPM improvement.
 
-These are deltas baked into `modules/local/rustar_align/` so the rustar
-modules slot into the existing `ALIGN_STAR` subworkflow without
-collateral damage. They are not user-visible. The goal is to keep them
-small and clearly marked so they can be retired as rustar tightens its
-STAR compatibility.
+## Module-level workarounds
 
-### `--limitGenomeGenerateRAM` is not accepted
+**Update 2026-08-27: all three workarounds below have been removed.**
+rustar-aligner 0.2.0 fixed the upstream behaviour each one compensated
+for (see [`rustar_reverification_2026-08.md`](rustar_reverification_2026-08.md)
+for the direct verification of each). Removing them was confirmed
+behaviour-neutral: `bin/compare_aligner_runs.py` produced identical
+pass/fail results and Pearson correlations before and after removal.
+Kept here as a historical record of what v0.1.0 needed and why.
+
+### `--limitGenomeGenerateRAM` was not accepted (v0.1.0)
 
 STAR exposes `--limitGenomeGenerateRAM`; the upstream `STAR_GENOMEGENERATE`
 module derives a value from `task.memory` and passes it. rustar v0.1.0
-rejects this flag at startup (`error: unexpected argument
-'--limitGenomeGenerateRAM' found`).
+rejected this flag at startup (`error: unexpected argument
+'--limitGenomeGenerateRAM' found`), so `modules/local/rustar_align/genomegenerate/main.nf`
+omitted it. Filed as [scverse/rustar-aligner#25](https://github.com/scverse/rustar-aligner/issues/25).
+**Fixed in 0.2.0** - the flag is now accepted (`--help` lists a
+`31G` default) and is restored in the module, computed identically to
+`STAR_GENOMEGENERATE` (`task.memory.toBytes() - 100000000`).
 
-`modules/local/rustar_align/genomegenerate/main.nf` therefore omits the
-flag and relies on rustar's built-in memory management. We should
-check whether this matters on full-size genomes.
-
-### `--outFileNamePrefix` ending in `.` is treated as a directory
+### `--outFileNamePrefix` ending in `.` was treated as a directory (v0.1.0)
 
 STAR treats `--outFileNamePrefix SAMPLE.` as a literal string prefix and
 writes `SAMPLE.Aligned.out.bam`, `SAMPLE.Log.final.out`, etc. side by
-side in the work directory.
+side in the work directory. rustar v0.1.0 instead interpreted the same
+value as a directory name and wrote bare-named files inside it, so
+`modules/local/rustar_align/align/main.nf` post-processed by flattening
+that directory back into STAR-style filenames. Filed as
+[scverse/rustar-aligner#26](https://github.com/scverse/rustar-aligner/issues/26).
+**Fixed in 0.2.0** (via upstream PR #46) - verified directly with a
+standalone CLI invocation; the flattening step is removed.
 
-rustar v0.1.0 instead interprets the same value as a directory name and
-writes bare-named files inside it:
-
-```
-SAMPLE./
-  Aligned.out.bam
-  Aligned.toTranscriptome.out.bam
-  Log.final.out
-  SJ.out.tab
-  SJ.pass1.out.tab
-```
-
-`modules/local/rustar_align/align/main.nf` post-processes by flattening
-that directory back into STAR-style prefixed filenames so the downstream
-emit globs (`*Log.final.out`, etc.) still match. Worth filing upstream.
-
-### `Log.out` and `Log.progress.out` are not written
+### `Log.out` and `Log.progress.out` were not written (v0.1.0)
 
 STAR emits three log files: `Log.final.out` (summary stats, MultiQC
 input), `Log.out` (verbose run log) and `Log.progress.out` (per-chunk
-progress). rustar v0.1.0 only writes `Log.final.out`.
+progress). rustar v0.1.0 only wrote `Log.final.out`, so both were
+marked `optional: true` in `RUSTAR_ALIGN`. Filed as
+[scverse/rustar-aligner#28](https://github.com/scverse/rustar-aligner/issues/28)
+(folded into [#55](https://github.com/scverse/rustar-aligner/issues/55),
+fixed via upstream PR #82). **Fixed in 0.2.0** - both files now contain
+real STAR-equivalent content (parameter dump, per-phase progress,
+`ALL DONE!`), not stubs; `optional: true` removed from the module.
 
-Marked `Log.out` / `Log.progress.out` as `optional: true` outputs in
-`RUSTAR_ALIGN`. Nothing in the pipeline currently consumes them, but if
-that changes we'll need to re-evaluate.
+### Extra `SJ.pass1.out.tab` at the top level (v0.1.0)
 
-### Extra `SJ.pass1.out.tab` is emitted
-
-rustar writes both `SJ.out.tab` and `SJ.pass1.out.tab` (the two-pass
-intermediate). STAR keeps the intermediate inside `<prefix>_STARpass1/`
-rather than at the top level. Currently the rustar one is caught by the
-existing `*.tab` glob and silently emitted - harmless but unusual.
+rustar wrote both `SJ.out.tab` and `SJ.pass1.out.tab` (the two-pass
+intermediate) at the top level. STAR keeps the intermediate inside
+`<prefix>_STARpass1/`. Covered by the same #28/#55 fix above -
+**fixed in 0.2.0**: the pass-1 table now lives in `<prefix>_STARpass1/`
+like STAR's, and the top-level duplicate is gone (confirmed by the
+nf-test snapshot diff losing those entries entirely on re-generation).
 
 ### Version reporting
 
@@ -166,30 +194,34 @@ upstream (Nextflow / nf-schema), separately from rustar.
 - Full-size run on the `test_full` samplesheet (GRCh37, larger reads) to
   produce performance and concordance numbers that map to user
   expectations. The test-profile numbers above are not load-bearing.
-- Whether the `--limitGenomeGenerateRAM` omission matters at human-genome
-  scale.
 - Whether rustar's `--quantTranscriptomeSAMoutput BanSingleEnd` matches
-  STAR's interpretation byte-for-byte. Almost certainly fine, but worth
-  a glance once the paired-end mate-field bug is fixed.
+  STAR's interpretation byte-for-byte.
 
 ## Tracked upstream
 
-All filed against [scverse/rustar-aligner](https://github.com/scverse/rustar-aligner/issues). Cross-references back to the doc that captured the evidence:
+All filed against [scverse/rustar-aligner](https://github.com/scverse/rustar-aligner/issues).
+Every row below is now closed upstream; the **Status** column and
+[`rustar_reverification_2026-08.md`](rustar_reverification_2026-08.md) record what re-checking
+each one directly on rustar-aligner 0.2.0 actually found - "closed" isn't taken at face value.
 
-| # | Severity | Summary | Evidence |
-|---|---|---|---|
-| [#22](https://github.com/scverse/rustar-aligner/issues/22) | high | Paired-end transcriptome BAM omits mate fields (`RNEXT`/`PNEXT`/`TLEN`) + proper-pair flag, Salmon falls back to its default fragment-length prior and distorts TPM. | [`rustar_investigation_wt_rep2.md`](rustar_investigation_wt_rep2.md) |
-| [#25](https://github.com/scverse/rustar-aligner/issues/25) | medium | `--limitGenomeGenerateRAM` rejected by the CLI parser. | [`rustar_differences.md`](rustar_differences.md) (module workaround) |
-| [#26](https://github.com/scverse/rustar-aligner/issues/26) | medium | `--outFileNamePrefix SAMPLE.` treated as a directory rather than a string prefix. | [`rustar_differences.md`](rustar_differences.md) (module workaround) |
-| [#27](https://github.com/scverse/rustar-aligner/issues/27) | medium | `Log.final.out` always reports `Annotated (sjdb) = 0` despite `--sjdbGTFfile`; ~50% of splices missing. Root cause: `is_annotated()` coord-space bug at `src/align/stitch.rs:1306-1314`. | [`rustar_two_pass_and_determinism.md`](rustar_two_pass_and_determinism.md) |
-| [#28](https://github.com/scverse/rustar-aligner/issues/28) | low | Output-shape gaps: `Log.out` / `Log.progress.out` not written, `SJ.pass1.out.tab` lives at the top level instead of under `<prefix>_STARpass1/`. | [`rustar_differences.md`](rustar_differences.md), [`rustar_bam_comparison.md`](rustar_bam_comparison.md) |
-| [#29](https://github.com/scverse/rustar-aligner/issues/29) | high | `--outSAMattributes NM` emits `nM:i:` instead of `NM:i:`, with different semantics (substitutions only, no indels). Breaks samtools stats, Picard, MultiQC. | [`rustar_bam_comparison.md`](rustar_bam_comparison.md), [`rustar_quant_and_multiqc.md`](rustar_quant_and_multiqc.md) |
-| [#30](https://github.com/scverse/rustar-aligner/issues/30) | high | `--outSAMstrandField intronMotif` accepted but no `XS:A:` tags ever emitted. Breaks StringTie, Cufflinks. (RSeQC `infer_experiment` uses the BAM strand bit instead so is unaffected.) | [`rustar_bam_comparison.md`](rustar_bam_comparison.md), [`rustar_quant_and_multiqc.md`](rustar_quant_and_multiqc.md) |
-| [#31](https://github.com/scverse/rustar-aligner/issues/31) | medium | Multi-mapper NH cap extends to 20 vs STAR's 7; ~17% more secondaries on identical input. Possibly missing an `--outFilterMultimapScoreRange`-equivalent threshold. | [`rustar_bam_comparison.md`](rustar_bam_comparison.md) |
-| [#32](https://github.com/scverse/rustar-aligner/issues/32) | low | Transcriptome BAM lacks per-record `RG:Z:` despite the `@RG` header being present. Genome BAM is fine. | [`rustar_bam_comparison.md`](rustar_bam_comparison.md) |
-| [#33](https://github.com/scverse/rustar-aligner/issues/33) | low | `@PG` header is content-free (just `ID:rustar-aligner`, no `PN`/`VN`/`CL`); `AS:i:` values disagree by 2-5 units on 864 records with identical CIGAR. | [`rustar_bam_comparison.md`](rustar_bam_comparison.md) |
-| [#34](https://github.com/scverse/rustar-aligner/issues/34) | high | BAM `QUAL` field is offset by +33 (Phred+33 ASCII bytes written instead of raw Phred values). Explains the "average_quality = 68 vs STAR's 35" symptom in MultiQC; spotted by the verification session, not our own audits. Highest-impact BAM-correctness issue after #22 because every downstream tool that reads QUAL is wrong. | [`rustar_quant_and_multiqc.md`](rustar_quant_and_multiqc.md) (symptom captured but mis-attributed at the time) |
-| [#35](https://github.com/scverse/rustar-aligner/issues/35) | medium | `--chimSegmentMin > 0` + `--twopassMode Basic` aborts the run when `--outFileNamePrefix` doesn't end in `/`. Silent run-killer: no `Aligned.out.bam`, no `Log.final.out`. | [`rustar_cli_compat.md`](rustar_cli_compat.md) |
+| # | Severity | Summary | Status (2026-08-27) | Evidence |
+|---|---|---|---|---|
+| [#22](https://github.com/scverse/rustar-aligner/issues/22) | high | Paired-end transcriptome BAM omits mate fields (`RNEXT`/`PNEXT`/`TLEN`) + proper-pair flag, Salmon falls back to its default fragment-length prior and distorts TPM. | ✅ Fixed, verified | [`rustar_investigation_wt_rep2.md`](rustar_investigation_wt_rep2.md), [`rustar_reverification_2026-08.md`](rustar_reverification_2026-08.md) |
+| [#25](https://github.com/scverse/rustar-aligner/issues/25) | medium | `--limitGenomeGenerateRAM` rejected by the CLI parser. | ✅ Fixed, verified | [`rustar_reverification_2026-08.md`](rustar_reverification_2026-08.md) |
+| [#26](https://github.com/scverse/rustar-aligner/issues/26) | medium | `--outFileNamePrefix SAMPLE.` treated as a directory rather than a string prefix. | ✅ Fixed (upstream PR #46), verified | [`rustar_reverification_2026-08.md`](rustar_reverification_2026-08.md) |
+| [#27](https://github.com/scverse/rustar-aligner/issues/27) | medium | `Log.final.out` always reports `Annotated (sjdb) = 0` despite `--sjdbGTFfile`; ~50% of splices missing. Root cause: `is_annotated()` coord-space bug at `src/align/stitch.rs:1306-1314`. | 🟡 Improved, not at parity | [`rustar_two_pass_and_determinism.md`](rustar_two_pass_and_determinism.md), [`rustar_reverification_2026-08.md`](rustar_reverification_2026-08.md) |
+| [#28](https://github.com/scverse/rustar-aligner/issues/28) | low | Output-shape gaps: `Log.out` / `Log.progress.out` not written, `SJ.pass1.out.tab` lives at the top level instead of under `<prefix>_STARpass1/`. | ✅ Fixed (via #55 → upstream PR #82), verified | [`rustar_bam_comparison.md`](rustar_bam_comparison.md), [`rustar_reverification_2026-08.md`](rustar_reverification_2026-08.md) |
+| [#29](https://github.com/scverse/rustar-aligner/issues/29) | high | `--outSAMattributes NM` emits `nM:i:` instead of `NM:i:`, with different semantics (substitutions only, no indels). Breaks samtools stats, Picard, MultiQC. | ✅ Fixed, verified (indel semantics checked directly) | [`rustar_bam_comparison.md`](rustar_bam_comparison.md), [`rustar_quant_and_multiqc.md`](rustar_quant_and_multiqc.md), [`rustar_reverification_2026-08.md`](rustar_reverification_2026-08.md) |
+| [#30](https://github.com/scverse/rustar-aligner/issues/30) | high | `--outSAMstrandField intronMotif` accepted but no `XS:A:` tags ever emitted. Breaks StringTie, Cufflinks. (RSeQC `infer_experiment` uses the BAM strand bit instead so is unaffected.) | 🟡 Improved, not at parity (64% vs STAR's 100% coverage on spliced reads) | [`rustar_bam_comparison.md`](rustar_bam_comparison.md), [`rustar_reverification_2026-08.md`](rustar_reverification_2026-08.md) |
+| [#31](https://github.com/scverse/rustar-aligner/issues/31) | medium | Multi-mapper NH cap extends to 20 vs STAR's 7; ~17% more secondaries on identical input. Possibly missing an `--outFilterMultimapScoreRange`-equivalent threshold. | 🔴 Closed with no linked PR; **no measurable change** on re-test | [`rustar_bam_comparison.md`](rustar_bam_comparison.md), [`rustar_reverification_2026-08.md`](rustar_reverification_2026-08.md) |
+| [#32](https://github.com/scverse/rustar-aligner/issues/32) | low | Transcriptome BAM lacks per-record `RG:Z:` despite the `@RG` header being present. Genome BAM is fine. | ✅ Fixed, verified | [`rustar_bam_comparison.md`](rustar_bam_comparison.md), [`rustar_reverification_2026-08.md`](rustar_reverification_2026-08.md) |
+| [#33](https://github.com/scverse/rustar-aligner/issues/33) | low | `@PG` header is content-free (just `ID:rustar-aligner`, no `PN`/`VN`/`CL`); `AS:i:` values disagree by 2-5 units on 864 records with identical CIGAR. | ✅ Fixed (header), verified | [`rustar_bam_comparison.md`](rustar_bam_comparison.md), [`rustar_reverification_2026-08.md`](rustar_reverification_2026-08.md) |
+| [#34](https://github.com/scverse/rustar-aligner/issues/34) | high | BAM `QUAL` field is offset by +33 (Phred+33 ASCII bytes written instead of raw Phred values). Explains the "average_quality = 68 vs STAR's 35" symptom in MultiQC; spotted by the verification session, not our own audits. Highest-impact BAM-correctness issue after #22 because every downstream tool that reads QUAL is wrong. | ✅ Fixed, verified (`average_quality` now 35.5 for both) | [`rustar_quant_and_multiqc.md`](rustar_quant_and_multiqc.md), [`rustar_reverification_2026-08.md`](rustar_reverification_2026-08.md) |
+| [#35](https://github.com/scverse/rustar-aligner/issues/35) | medium | `--chimSegmentMin > 0` + `--twopassMode Basic` aborts the run when `--outFileNamePrefix` doesn't end in `/`. Silent run-killer: no `Aligned.out.bam`, no `Log.final.out`. | ✅ Fixed, verified | [`rustar_cli_compat.md`](rustar_cli_compat.md), [`rustar_reverification_2026-08.md`](rustar_reverification_2026-08.md) |
+| [#47](https://github.com/scverse/rustar-aligner/issues/47) / [#50](https://github.com/scverse/rustar-aligner/issues/50) | medium | Follow-ups on #27: pass-1 doesn't seed candidates from `--sjdbGTFfile`; `sjdb_score` bonus added instead of replacing motif score. | 🟡 Improved, not at parity (same gap as #27) | [`rustar_reverification_2026-08.md`](rustar_reverification_2026-08.md) |
+| [#48](https://github.com/scverse/rustar-aligner/issues/48) | medium | `Log.final.out` folds all unmapped reads into `too short`; `other` bucket always 0. | 🔴 Closed with no observed fix; **no measurable change** on re-test | [`rustar_reverification_2026-08.md`](rustar_reverification_2026-08.md) |
+| [#53](https://github.com/scverse/rustar-aligner/issues/53) | low | `Number of reads mapped to too many loci` always 0; reads exceeding `--outFilterMultimapNmax` dropped from accounting. | ⚪ Untestable on the yeast test set (nothing exceeds the threshold either way) | [`rustar_reverification_2026-08.md`](rustar_reverification_2026-08.md) |
+| [#55](https://github.com/scverse/rustar-aligner/issues/55) | low | `Log.out`/`Log.progress.out` need real STAR-equivalent content, not stubs (a rejected earlier PR attempted a stub fix). | ✅ Fixed (upstream PR #82), verified | [`rustar_reverification_2026-08.md`](rustar_reverification_2026-08.md) |
 
 ## Fixed in this PR (was originally suspected upstream)
 

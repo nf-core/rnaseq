@@ -6,8 +6,8 @@ closed. This doc re-verifies each one directly, on identical `-profile test,dock
 rather than trusting the tracker's "closed" label - per the standing rule for this integration,
 the bar is methodological parity (same computation, same categorisation), not "issue says
 fixed". Several issues turned out to be genuinely fixed; a few are improved but not at parity;
-two (#31, #48) show no measurable change despite each having a merged upstream fix (#77;
-#49 + #141) - see the root-cause dig below for what's actually going on.
+two (#31, #48) show no measurable change - traced to premature closes: the PRs that
+closed them (#77, #141) fix a different, adjacent bug, not the one reported. See below.
 
 Setup: `ghcr.io/scverse/rustar-aligner:dev`, image built 2026-08-23T22:29Z, `rustar-aligner
 0.2.0` (git `207773b`), on `nf-dev-rnaseq` (36 CPU / 69 GB). STAR and rustar run back-to-back,
@@ -37,12 +37,24 @@ with `bin/compare_aligner_runs.py` plus direct `samtools view`/`stats` inspectio
 | [#27](https://github.com/scverse/rustar-aligner/issues/27) / [#47](https://github.com/scverse/rustar-aligner/issues/47) / [#50](https://github.com/scverse/rustar-aligner/issues/50) | `Annotated (sjdb)` always 0; ~50% of splices dropped from pass-1 seeding | Massively better - no longer 0 - but still short of STAR. WT_REP2: rustar reports 674 total splices / 388 annotated (57.6%); STAR reports 762 total / 644 annotated (84.5%). Total-splice recovery is 88% of STAR's count; annotated-fraction is 27pp below STAR's. Not a regression from "closed", but not parity either. |
 | [#30](https://github.com/scverse/rustar-aligner/issues/30) | `--outSAMstrandField intronMotif` never emitted `XS:A:` | XS is now emitted, but not on every spliced record: 896/1393 (64%) of N-CIGAR reads in WT_REP2's genome BAM carry `XS:A:`, vs 1100/1100 (100%) for STAR on the same reads. The shortfall tracks the #27 gap above - reads whose splice rustar can't credit as annotated/canonical likely fall into `Non-canonical` (92 rustar vs 35 STAR) and lose the strand call along with it, rather than being an independent bug. |
 
-## No measurable change, despite each having a merged upstream fix
+## No measurable change - and now we know why: the closing PRs fixed a different bug
 
-| # | Original finding | Empirical status (2026-08-27) |
+Both re-confirmed live against `ghcr.io/scverse/rustar-aligner:dev` pulled fresh on
+2026-08-27T15:01Z - git `3713dfb`, built minutes before this check, the literal tip
+of `main` at the time (top commit: "perf(build): enable geometric LCP memoization for
+genome indexing (#228)", same day). This rules out image staleness entirely: every fix
+PR below has been in every `:dev` build for weeks, and the symptom is unchanged.
+
+| # | Original finding | Why the closing PR doesn't fix it |
 |---|---|---|
-| [#31](https://github.com/scverse/rustar-aligner/issues/31) | NH tail extends deeper than STAR's (originally 20 vs 6-7); looked like `--outFilterMultimapScoreRange` wasn't applied | **No measurable change, despite a merged fix.** `--outFilterMultimapScoreRange` is now advertised in `--help` with the correct default (`1`, matching STAR), but the empirical NH distribution on WT_REP2 is essentially unchanged: rustar still reaches NH:20 with 18/90680 primary reads at NH>7, while STAR's max in the same file is NH:7. Maintainer Psy-Fer marked this closed as completed, citing PR #77 ("addressed now and merged by #77 and previous fixes", 2026-06-01) - the `:dev` image tested here (built 2026-08-23, git `207773b`, from PR #236, well past #77) should include it. Root-cause dig below. |
-| [#48](https://github.com/scverse/rustar-aligner/issues/48) | `Log.final.out` folds all unmapped reads into `too short`; `other` bucket always 0 | **No measurable change, despite two merged fixes.** WT_REP2: rustar reports `too short: 4189 (8.45%)`, `other: 0 (0.00%)`. STAR on the identical input reports `too short: 1540 (3.11%)`, `other: 2656 (5.36%)` - a real categorical split that rustar still collapses entirely into one bucket. Total unmapped-non-mismatch count is close (4189 vs 4196) so this isn't a counting bug, it's a mis-categorisation. This was closed via PR #49 and then PR #141 ("check too many loci after the quality filter, matching STAR's", merged 2026-07-28, Psy-Fer: "fixed by #141") - both predate the `:dev` image tested here. Root-cause dig below. |
+| [#31](https://github.com/scverse/rustar-aligner/issues/31) | NH tail extends deeper than STAR's (20 vs 6-7) | Closed citing PR #77 ("Integration/pr batch 1", a 14-PR batch merge). Read directly: #77 bundles PR #54, which fixes `too_many_loci` **accounting** (routing reads over `--outFilterMultimapNmax` to the right counter) - it does not touch the NH-depth cap itself. Re-ran on the fresh image: rustar still reaches `NH:20` on WT_REP2 (40 primary alignments at NH:20, entries at NH:11/15/20 that STAR never produces), STAR's max on the same input is `NH:7`. The underlying divergence #31 reported was never addressed by any PR in the batch - the issue was closed on the strength of adjacent fixes in the same integration PR, not this one. |
+| [#48](https://github.com/scverse/rustar-aligner/issues/48) | `Log.final.out` folds all unmapped reads into `too short`; `other` bucket always 0 | Closed citing PR #141 ("check too many loci after the quality filter, matching STAR's"). Read directly: #141 fixes reads being mislabeled `too many loci` instead of `too short` when they fail the quality filter first (its own repro: 269 vs 26,285 in `too many loci` before the fix, on a chr21 human test) - a `too_many_loci` vs `too_short` bug. It says nothing about, and doesn't touch, the `too_short` vs `other` split that #48 actually reported. Re-ran on the fresh image: WT_REP2 still reports `too short: 4189 (8.45%)`, `other: 0 (0.00%)`; STAR on the identical input reports `too short: 1540 (3.11%)`, `other: 2656 (5.36%)`. Total unmapped-non-mismatch count matches closely (4189 vs 4196) so it's a mis-categorisation, not a counting bug - and it's a different mis-categorisation than the one #141 fixed. |
+
+Both look like premature closes: the maintainer (or an automated linker) associated the
+issue with a PR that fixed a neighbouring symptom in the same subsystem, not the one
+reported. Recommend filing fresh, narrowly-scoped issues rather than reopening the old
+ones, since the old repros (0.1.0-era) no longer match the current codebase's internals -
+these fresh numbers are the right repro to attach.
 
 ## Untestable on this dataset
 

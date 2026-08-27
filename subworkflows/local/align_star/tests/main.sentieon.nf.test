@@ -31,6 +31,7 @@ nextflow_workflow {
                 star_ignore_sjdbgtf = false
                 use_sentieon_star    = true
                 use_parabricks_star  = false
+                use_rustar_star      = false
                 skip_markduplicates  = false
 
                 input[0] = channel.of([
@@ -53,7 +54,8 @@ nextflow_workflow {
                 ])
                 input[5] = use_sentieon_star
                 input[6] = use_parabricks_star
-                input[7] = skip_markduplicates
+                input[7] = use_rustar_star
+                input[8] = skip_markduplicates
                 """
             }
         }
@@ -112,6 +114,7 @@ nextflow_workflow {
                 star_ignore_sjdbgtf = false
                 use_sentieon_star    = true
                 use_parabricks_star  = false
+                use_rustar_star      = false
                 skip_markduplicates  = false
 
                 input[0] = channel.of([
@@ -134,7 +137,8 @@ nextflow_workflow {
                 ])
                 input[5] = use_sentieon_star
                 input[6] = use_parabricks_star
-                input[7] = skip_markduplicates
+                input[7] = use_rustar_star
+                input[8] = skip_markduplicates
                 """
             }
         }

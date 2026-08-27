@@ -17,6 +17,7 @@ include { BBMAP_BBSPLIT                     } from '../../../modules/nf-core/bbm
 include { SORTMERNA as SORTMERNA_INDEX      } from '../../../modules/nf-core/sortmerna'
 include { STAR_GENOMEGENERATE               } from '../../../modules/nf-core/star/genomegenerate'
 include { STAR_GENOMEGENERATE as PARABRICKS_STARGENOMEGENERATE } from '../../../modules/nf-core/star/genomegenerate'
+include { RUSTAR_GENOMEGENERATE             } from '../../../modules/local/rustar_align/genomegenerate/main'
 include { HISAT2_EXTRACTSPLICESITES         } from '../../../modules/nf-core/hisat2/extractsplicesites'
 include { HISAT2_BUILD                      } from '../../../modules/nf-core/hisat2/build'
 include { SALMON_INDEX                      } from '../../../modules/nf-core/salmon/index'
@@ -53,6 +54,7 @@ workflow PREPARE_GENOME_INDICES {
     skip_pseudo_alignment    // boolean: Skip all of the pseudoalignment-based processes within the pipeline
     use_sentieon_star        // boolean: whether to use sentieon STAR version
     use_parabricks_star      // boolean: whether to use parabricks STAR version
+    use_rustar_star          // boolean: whether to use rustar-aligner in place of STAR for index generation
     star_index_legacy        // boolean: whether the supplied star_index was built with STAR 2.6.x and needs genomeParameters.txt upgraded to the 2.7.4a metadata schema
 
     main:
@@ -148,6 +150,13 @@ workflow PREPARE_GENOME_INDICES {
         if (use_parabricks_star && fasta_provided) {
             // Parabricks needs its own STAR index built with its bundled STAR version
             ch_star_index = PARABRICKS_STARGENOMEGENERATE(
+                ch_fasta.map { item -> [ [:], item ] },
+                ch_gtf.map   { item -> [ [:], item ] }
+            ).index.map { tuple -> tuple[1] }
+        } else if (use_rustar_star && fasta_provided && !star_index) {
+            // rustar-aligner reads the STAR index format unchanged, so a pre-built
+            // STAR index works as-is. Only branch here when we have to build one.
+            ch_star_index = RUSTAR_GENOMEGENERATE(
                 ch_fasta.map { item -> [ [:], item ] },
                 ch_gtf.map   { item -> [ [:], item ] }
             ).index.map { tuple -> tuple[1] }

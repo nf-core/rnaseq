@@ -455,6 +455,11 @@
                     "description": "Optionally accelerate STAR and MarkDuplicates with Parabricks",
                     "fa_icon": "fas fa-running"
                 },
+                "use_rustar_star": {
+                    "type": "boolean",
+                    "description": "Use rustar-aligner (https://github.com/scverse/rustar-aligner), a Rust port of STAR, in place of the standard STAR processes. Experimental.",
+                    "fa_icon": "fas fa-running"
+                },
                 "gpu_container_options": {
                     "type": "string",
                     "description": "Override container GPU flags for GPU tasks. Auto-detects if not set (--gpus all for Docker, --nv for Singularity/Apptainer).",

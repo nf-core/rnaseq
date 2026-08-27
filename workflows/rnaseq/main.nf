@@ -279,6 +279,7 @@ workflow RNASEQ {
             ch_fasta_fai,
             params.use_sentieon_star,
             params.use_parabricks_star,
+            params.use_rustar_star,
             params.skip_markduplicates
         )
 

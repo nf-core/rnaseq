@@ -1763,7 +1763,7 @@
                 "fastqc_trimmed_sequence_duplication_levels_plot.txt:md5,0758257b497283b1ef28171e694db6db",
                 "multiqc_citations.txt:md5,f789abe663d4b4214f0ddeb413a7f150",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,54743154d0e8858980acffeb5b6f6a97",
-                "multiqc_strand_check_composition_bargraph.txt:md5,6aa97fcc3863afb9b8e9fbe8a02b5cd1",
+                "multiqc_strand_check_composition_bargraph.txt:md5,d52b92bf44d6b31a1fd067b6ead43a03",
                 "multiqc_strand_check_summary_table.txt:md5,7825c502243e9901873965fd870cd789",
                 "ambig_info.tsv:md5,de973a4b22a4457217ae3dc04caf9401",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",

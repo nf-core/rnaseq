@@ -2305,7 +2305,7 @@
                 "multiqc_citations.txt:md5,5dde7a448d7767cdb5f37a84e9fe2da9",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,54743154d0e8858980acffeb5b6f6a97",
                 "multiqc_samtools_idxstats.txt:md5,8b8f6cb092004918c18319a8cd64eb4c",
-                "multiqc_strand_check_composition_bargraph.txt:md5,6aa97fcc3863afb9b8e9fbe8a02b5cd1",
+                "multiqc_strand_check_composition_bargraph.txt:md5,d52b92bf44d6b31a1fd067b6ead43a03",
                 "multiqc_strand_check_summary_table.txt:md5,7825c502243e9901873965fd870cd789",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",

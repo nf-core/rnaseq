@@ -19,6 +19,7 @@ process RUSTAR_GENOMEGENERATE {
     def args        = task.ext.args ?: ''
     def args_list   = args.tokenize()
     def include_gtf = gtf ? "--sjdbGTFfile $gtf" : ''
+    def memory      = task.memory ? "--limitGenomeGenerateRAM ${task.memory.toBytes() - 100000000}" : ''
     // Heuristic mirrors STAR_GENOMEGENERATE's gawk/samtools-faidx pipeline, but
     // computed in Groovy so we don't need samtools+gawk in the rustar container.
     // Approximating genome length with the on-disk fasta size is within 1-2% of
@@ -39,6 +40,7 @@ process RUSTAR_GENOMEGENERATE {
         $include_gtf \\
         --runThreadN $task.cpus \\
         $auto_sa_index \\
+        $memory \\
         $args
     """
 

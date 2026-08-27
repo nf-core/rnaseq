@@ -12,11 +12,8 @@ process RUSTAR_ALIGN {
 
     output:
     tuple val(meta), path('*Log.final.out')                          , emit: log_final
-    // rustar v0.1.0 emits only Log.final.out, not the verbose Log.out /
-    // Log.progress.out streams STAR writes. Mark them optional so the channels
-    // stay quiet rather than failing the task.
-    tuple val(meta), path('*Log.out')                                , optional:true, emit: log_out
-    tuple val(meta), path('*Log.progress.out')                       , optional:true, emit: log_progress
+    tuple val(meta), path('*Log.out')                                , emit: log_out
+    tuple val(meta), path('*Log.progress.out')                       , emit: log_progress
     tuple val("${task.process}"), val('rustar-aligner'), eval("rustar-aligner --version | sed -n '1{s/^rustar-aligner //;p}'"), emit: versions_rustar, topic: versions
 
     tuple val(meta), path('*d.out.bam')                              , optional:true, emit: bam
@@ -56,16 +53,6 @@ process RUSTAR_ALIGN {
         $ignore_gtf \\
         $attrRG \\
         $args
-
-    # rustar v0.1.0 treats a trailing-dot --outFileNamePrefix as a directory and
-    # writes bare-named outputs inside it. STAR concatenates the prefix straight
-    # onto the filename. Move the rustar outputs up so downstream globs match.
-    if [ -d "${prefix}." ]; then
-        for f in "${prefix}."/*; do
-            mv "\$f" "${prefix}.\$(basename \$f)"
-        done
-        rmdir "${prefix}."
-    fi
 
     $mv_unsorted_bam
 

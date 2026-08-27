@@ -37,7 +37,7 @@
                     "samtools": "1.23.1"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "2.1.0"
+                    "trimgalore": "2.3.0"
                 },
                 "UNTAR_HISAT2_INDEX": {
                     "untar": 1.34
@@ -204,13 +204,13 @@
                     "samtools": "1.23.1"
                 },
                 "STRINGTIE_STRINGTIE": {
-                    "stringtie": "2.2.3"
+                    "stringtie": "3.0.3"
                 },
                 "SUBREAD_FEATURECOUNTS": {
                     "subread": "2.0.6"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "2.1.0"
+                    "trimgalore": "2.3.0"
                 },
                 "UNTAR_HISAT2_INDEX": {
                     "untar": 1.34
@@ -1148,23 +1148,23 @@
                 "WT_REP1.infer_experiment.txt:md5,13e3c748f5b968455a39eb9fefd87053",
                 "WT_REP2.infer_experiment.txt:md5,230910b354a5531d1c4bf711ccd6e493",
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,c93ce5b90352398208e3d88c68df45c6",
+                "e_data.ctab:md5,813ec11f84170c416ed97b54c8ac68a7",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
                 "i_data.ctab:md5,fe9d92d1d28e1bc1b223e2ce22b4ef05",
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,293d64f70bd8353b822e4fa8a6f082a3",
+                "e_data.ctab:md5,4a6dd1045208c78435c6ac35c29a26dd",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
                 "i_data.ctab:md5,d279003d92f7feef9adb31203f84474a",
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,ed48a29b77c315cb61a6bf09e68c877d",
+                "e_data.ctab:md5,e206bae105ffdc0b0886bc51c05b404f",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
                 "i_data.ctab:md5,cf2506824949c02e0bfde17a9ed86e61",
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,a17c7749a005a89875876eb2d90721d4",
+                "e_data.ctab:md5,f6a6e57f9c48444477b72d7987e0049c",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
                 "i_data.ctab:md5,2e2d760739539fba09cbb666ab95afa1",
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,22bdc84c1c4acce9798868e8c7b56004",
+                "e_data.ctab:md5,af1e56fbe20aec91b313a7923f8f0072",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
                 "i_data.ctab:md5,80fe14762a8f7230d516bba37b7275d1",
                 "cutadapt_filtered_reads_plot.txt:md5,6fa381627f7c1f664f3d4b2cb79cce90",

@@ -331,6 +331,10 @@ def validateInputParameters() {
         error("Parabricks (--use_parabricks_star) is not compatible with --genome. iGenomes STAR indices are built with a different STAR version than Parabricks bundles. Please supply --fasta and --gtf explicitly instead.")
     }
 
+    if (params.use_rustqc && params.skip_markduplicates) {
+        error("--use_rustqc requires duplicate-marked BAM files. Please remove --skip_markduplicates when using --use_rustqc.")
+    }
+
     if (params.with_umi && !params.skip_umi_extract) {
         if (!params.umitools_bc_pattern && !params.umitools_bc_pattern2) {
             error("UMI-tools requires a barcode pattern to extract barcodes from the reads.")
@@ -393,13 +397,16 @@ def validateInputParameters() {
 
     if (params.contaminant_screening && params.contaminant_screening_input == 'unmapped') {
         if (params.skip_alignment) {
-            error("Contaminant screening with '--contaminant_screening_input unmapped' requires alignment to be enabled. Use '--contaminant_screening_input trimmed' to screen reads before alignment.")
+            error("Contaminant screening with '--contaminant_screening_input unmapped' requires alignment to be enabled. Use '--contaminant_screening_input raw', '--contaminant_screening_input trim_only', or '--contaminant_screening_input trimmed' to screen reads before alignment.")
         }
         if (!(params.aligner in ['star_salmon', 'star_rsem', 'hisat2'])) {
-            error("Contaminant screening with '--contaminant_screening_input unmapped' is only supported with '--aligner star_salmon', '--aligner star_rsem', or '--aligner hisat2'. Use '--contaminant_screening_input trimmed' for other aligners.")
+            error("Contaminant screening with '--contaminant_screening_input unmapped' is only supported with '--aligner star_salmon', '--aligner star_rsem', or '--aligner hisat2'. Use '--contaminant_screening_input raw', '--contaminant_screening_input trim_only', or '--contaminant_screening_input trimmed' for other aligners.")
         }
     }
 
+    if (params.contaminant_screening && params.contaminant_screening_input == 'trim_only' && params.skip_trimming) {
+        error("Contaminant screening with '--contaminant_screening_input trim_only' requires trimming to be enabled. When '--skip_trimming' is set, pre- and post-trim reads are identical. Use '--contaminant_screening_input raw' to screen adapter-bearing reads.")
+    }
     // Check that Sylph database and taxonomy is provided if using Sylph
     if (params.contaminant_screening == 'sylph') {
         if (!params.sylph_db) {

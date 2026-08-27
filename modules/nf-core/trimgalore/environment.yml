@@ -4,4 +4,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::trim-galore=2.1.0
+  - bioconda::trim-galore=2.3.0

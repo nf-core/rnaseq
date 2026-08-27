@@ -123,13 +123,13 @@
                     "star": "2.7.11b"
                 },
                 "STRINGTIE_STRINGTIE": {
-                    "stringtie": "2.2.3"
+                    "stringtie": "3.0.3"
                 },
                 "SUBREAD_FEATURECOUNTS": {
                     "subread": "2.0.6"
                 },
                 "TRIMGALORE": {
-                    "trimgalore": "2.1.0"
+                    "trimgalore": "2.3.0"
                 },
                 "TXIMETA_TXIMPORT": {
                     "bioconductor-tximeta": "1.20.1"
@@ -1324,27 +1324,27 @@
                 "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "salmon.merged.tx2gene_augmented.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,98a2b6a7555e58c7f21b45a1f48e5cbf",
+                "e_data.ctab:md5,3a4f4a1f036dd658b2d93059fbfd731d",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
                 "i_data.ctab:md5,a052ab04070e72cc318fb7680b0764e3",
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,3b807743d8cb11ce6fd638df079454b4",
+                "e_data.ctab:md5,27283bd39506a38b61c3c266438ef748",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
                 "i_data.ctab:md5,80de7e1afe4edf4bb66844f785f578fa",
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,a94aebb60f5391f5f5ff19bf2bc7be4e",
+                "e_data.ctab:md5,fd3d300bee332ee59652bde9444deddd",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
                 "i_data.ctab:md5,736d87185be73db758648b76c01ac00b",
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,b9e2d0f94430222c0274027ba9d6d281",
+                "e_data.ctab:md5,80e4a482481b1c9fa99319f337dadab4",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
                 "i_data.ctab:md5,df50f33ac5cf29b10fc2cf7869bc7930",
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,97efe1e6bdae7b98ffc98dee68a50e14",
+                "e_data.ctab:md5,33dddbe8eccb246696e68fa467cacc9f",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
                 "i_data.ctab:md5,01a491280a0a4d7dde2caf22a6a2bab8",
                 "e2t.ctab:md5,54dd6de2daa90e973f47524a738a3d69",
-                "e_data.ctab:md5,5e7b9295357dc05ef166e50612b3c979",
+                "e_data.ctab:md5,db34e7adc0b7883c6b3168cd4a91cfaa",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
                 "i_data.ctab:md5,fca03502dd5b5e2831a64ff133d8c0b5"
             ]

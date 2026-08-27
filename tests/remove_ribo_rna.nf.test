@@ -113,7 +113,7 @@ nextflow_pipeline {
 
         then {
             // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}', 'seqkit', 'seqkit/**'])
             // stable_path: All files in ${params.outdir}/ with stable content
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
             assertAll(
@@ -122,7 +122,7 @@ nextflow_pipeline {
                     // Number of successful tasks
                     workflow.trace.succeeded().size(),
                     // pipeline versions.yml file for multiqc from which Nextflow and pipeline versions are removed (all from the workflow key)
-                    removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow"),
+                    removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow").findAll { it.key != "SEQKIT_REPLACE" && it.key != "SEQKIT_REPLACE_U2T" },
                     // All stable path name, with a relative path
                     stable_name,
                     // All files with stable contents
@@ -161,7 +161,7 @@ nextflow_pipeline {
 
         then {
             // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}', 'seqkit', 'seqkit/**'])
             // stable_path: All files in ${params.outdir}/ with stable content
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
             assertAll(
@@ -170,7 +170,92 @@ nextflow_pipeline {
                     // Number of successful tasks
                     workflow.trace.succeeded().size(),
                     // pipeline versions.yml file for multiqc from which Nextflow and pipeline versions are removed (all from the workflow key)
-                    removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow"),
+                    removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow").findAll { it.key != "SEQKIT_REPLACE" && it.key != "SEQKIT_REPLACE_U2T" },
+                    // All stable path name, with a relative path
+                    stable_name,
+                    // All files with stable contents
+                    stable_path
+                ).match() }
+            )
+        }
+
+        cleanup {
+            // Only prune/delete on CI - keeping local VM state intact prevents
+            // cross-test launchDir wipes that break nf-test snapshot walks.
+            if (System.getenv("CI") == "true") {
+                if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                    "docker system prune -a -f --volumes".execute()
+                }
+                new File("${launchDir}").deleteDir()
+            }
+        }
+    }
+    test("Params: --remove_ribo_rna --ribo_removal_tool bowtie2 --bowtie2_rrna_index") {
+
+        when {
+            params {
+                outdir             = "$outputDir"
+                remove_ribo_rna    = true
+                ribo_removal_tool  = 'bowtie2'
+                bowtie2_rrna_index = 'https://raw.githubusercontent.com/nf-core/test-datasets/2b0c9e0bc57123564e82308cc5c7b6756320ba01/reference/bowtie2_rrna_index.tar.gz'
+                skip_qc        = true
+                skip_stringtie = true
+                skip_bigwig    = true
+            }
+        }
+
+        then {
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}', 'seqkit', 'seqkit/**'])
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    // Number of tasks should be lower than the standard bowtie2 test because the index build step is skipped
+                    workflow.trace.succeeded().size(),
+                    removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow").findAll { it.key != "SEQKIT_REPLACE" && it.key != "SEQKIT_REPLACE_U2T" },
+                    stable_name,
+                    stable_path
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("CI") == "true") {
+                if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                    "docker system prune -a -f --volumes".execute()
+                }
+                new File("${launchDir}").deleteDir()
+            }
+        }
+    }
+    test("Params: --remove_ribo_rna --ribo_removal_tool bowtie2 --bowtie2_rrna_index - stub") {
+
+        options "-stub"
+
+        when {
+            params {
+                outdir             = "$outputDir"
+                remove_ribo_rna    = true
+                ribo_removal_tool  = 'bowtie2'
+                bowtie2_rrna_index = 'https://raw.githubusercontent.com/nf-core/test-datasets/2b0c9e0bc57123564e82308cc5c7b6756320ba01/reference/bowtie2_rrna_index.tar.gz'
+                skip_qc        = true
+                skip_stringtie = true
+                skip_bigwig    = true
+            }
+        }
+
+        then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}', 'seqkit', 'seqkit/**'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow and pipeline versions are removed (all from the workflow key)
+                    removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow").findAll { it.key != "SEQKIT_REPLACE" && it.key != "SEQKIT_REPLACE_U2T" },
                     // All stable path name, with a relative path
                     stable_name,
                     // All files with stable contents

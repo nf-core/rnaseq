@@ -82,6 +82,80 @@ nextflow_pipeline {
         }
     }
 
+    test("Params: contaminant screening trim_only input - stub") {
+
+        options "-stub"
+
+        when {
+            params {
+                outdir                      = "$outputDir"
+                skip_alignment              = true
+                contaminant_screening       = 'kraken2'
+                contaminant_screening_input = 'trim_only'
+            }
+        }
+
+        then {
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.trace.succeeded().size(),
+                    removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow").findAll { it.key != "KRAKEN2" },
+                    stable_name,
+                    stable_path
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("CI") == "true") {
+                if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                    "docker system prune -a -f --volumes".execute()
+                }
+                new File("${launchDir}").deleteDir()
+            }
+        }
+    }
+
+    test("Params: contaminant screening raw input - stub") {
+
+        options "-stub"
+
+        when {
+            params {
+                outdir                      = "$outputDir"
+                skip_alignment              = true
+                contaminant_screening       = 'kraken2'
+                contaminant_screening_input = 'raw'
+            }
+        }
+
+        then {
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.trace.succeeded().size(),
+                    removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow").findAll { it.key != "KRAKEN2" },
+                    stable_name,
+                    stable_path
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("CI") == "true") {
+                if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                    "docker system prune -a -f --volumes".execute()
+                }
+                new File("${launchDir}").deleteDir()
+            }
+        }
+    }
+
     test("Params: contaminant_screening_input=trimmed screens pre-alignment reads") {
 
         when {

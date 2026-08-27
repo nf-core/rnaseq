@@ -203,7 +203,7 @@ workflow RNASEQ {
 
     // Determine if we need to build rRNA removal indexes
     def make_sortmerna_index = !params.sortmerna_index && params.remove_ribo_rna && params.ribo_removal_tool == 'sortmerna'
-    def make_bowtie2_index   = params.remove_ribo_rna && params.ribo_removal_tool == 'bowtie2'
+    def make_bowtie2_index   = !params.bowtie2_rrna_index && params.remove_ribo_rna && params.ribo_removal_tool == 'bowtie2'
 
     FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS (
         ch_fastq,                                   // ch_reads
@@ -238,6 +238,8 @@ workflow RNASEQ {
 
     ch_multiqc_files                  = ch_multiqc_files.mix(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.multiqc_files)
     ch_strand_inferred_filtered_fastq = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.reads
+    ch_reads_cat                      = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.reads_cat
+    ch_reads_trimmed                  = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.reads_trimmed
     ch_trim_read_count                = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.trim_read_count
 
     ch_trim_status = ch_trim_read_count
@@ -541,14 +543,19 @@ workflow RNASEQ {
     if (!params.skip_stringtie) {
         if (params.stringtie_ignore_gtf) {
             BAM_STRINGTIE_MERGE(
-                ch_genome_bam,
+                ch_genome_bam.map { meta, bam -> [meta, bam, []] },
+                channel.value([]),
                 ch_gtf.map { gtf -> [ [:], gtf ] }
             )
             ch_stringtie_gtf = BAM_STRINGTIE_MERGE.out.stringtie_gtf.map { _meta, gtf -> gtf }
         } else {
             ch_stringtie_gtf = ch_gtf
         }
-        STRINGTIE_STRINGTIE(ch_genome_bam, ch_stringtie_gtf)
+        STRINGTIE_STRINGTIE(
+            ch_genome_bam.map { meta, bam -> [meta, bam, []] },
+            channel.value('expression-estimation'),
+            ch_stringtie_gtf
+        )
     }
 
     //
@@ -711,7 +718,11 @@ workflow RNASEQ {
         //
         def ch_contaminant_sequences = params.contaminant_screening_input == 'trimmed'
             ? ch_strand_inferred_filtered_fastq
-            : ch_unaligned_sequences
+            : params.contaminant_screening_input == 'trim_only'
+                ? ch_reads_trimmed
+                : params.contaminant_screening_input == 'raw'
+                    ? ch_reads_cat
+                    : ch_unaligned_sequences
 
         if (params.contaminant_screening in ['kraken2', 'kraken2_bracken'] ) {
             KRAKEN2 (

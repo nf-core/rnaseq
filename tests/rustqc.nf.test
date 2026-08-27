@@ -57,8 +57,6 @@ nextflow_pipeline {
                 umitools_bc_pattern     = "^(?P<umi_1>CGA.{8}){s<=2}.*"
                 umi_dedup_tool          = 'umicollapse'
                 skip_bbsplit            = true
-                // UMI dedup removes PCR duplicates, so RustQC runs with --skip-dup-check;
-                // this guards that --use_rustqc --with_umi completes instead of aborting.
                 skip_stringtie          = true
                 skip_bigwig             = true
                 skip_pseudo_alignment   = true

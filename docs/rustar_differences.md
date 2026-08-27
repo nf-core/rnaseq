@@ -12,15 +12,18 @@ The verification setup: standard `-profile test,docker` on the
 identical inputs.
 
 **2026-08-27 re-verification**: every issue filed below has since been
-closed upstream (rustar-aligner moved 0.1.0 → 0.2.0 over the same period).
+closed upstream, each via a merged fix PR (rustar-aligner moved 0.1.0 →
+0.2.0 over the same period).
 [`rustar_reverification_2026-08.md`](rustar_reverification_2026-08.md)
 re-checks each one directly against the current image rather than trusting
 the "closed" label - most are genuinely fixed (including the headline #22
-TPM bug), two are improved but short of full parity, and one (#31, NH-tail
-depth) shows no measurable change despite being closed with no linked PR.
-The tables below are left as the historical record of what the original
-investigation found; the "Tracked upstream" table at the bottom is updated
-with current status and links to the re-verification evidence.
+TPM bug), two are improved but short of full parity, and two (#31 NH-tail
+depth, #48 unmapped-read categorisation) show no measurable change at all
+despite each having a merged fix (#77; #49 + #141) that predates the image
+tested. See the root-cause dig in `rustar_reverification_2026-08.md` for
+why. The tables below are left as the historical record of what the
+original investigation found; the "Tracked upstream" table at the bottom is
+updated with current status and links to the re-verification evidence.
 
 ## Verified
 
@@ -213,13 +216,13 @@ each one directly on rustar-aligner 0.2.0 actually found - "closed" isn't taken 
 | [#28](https://github.com/scverse/rustar-aligner/issues/28) | low | Output-shape gaps: `Log.out` / `Log.progress.out` not written, `SJ.pass1.out.tab` lives at the top level instead of under `<prefix>_STARpass1/`. | ✅ Fixed (via #55 → upstream PR #82), verified | [`rustar_bam_comparison.md`](rustar_bam_comparison.md), [`rustar_reverification_2026-08.md`](rustar_reverification_2026-08.md) |
 | [#29](https://github.com/scverse/rustar-aligner/issues/29) | high | `--outSAMattributes NM` emits `nM:i:` instead of `NM:i:`, with different semantics (substitutions only, no indels). Breaks samtools stats, Picard, MultiQC. | ✅ Fixed, verified (indel semantics checked directly) | [`rustar_bam_comparison.md`](rustar_bam_comparison.md), [`rustar_quant_and_multiqc.md`](rustar_quant_and_multiqc.md), [`rustar_reverification_2026-08.md`](rustar_reverification_2026-08.md) |
 | [#30](https://github.com/scverse/rustar-aligner/issues/30) | high | `--outSAMstrandField intronMotif` accepted but no `XS:A:` tags ever emitted. Breaks StringTie, Cufflinks. (RSeQC `infer_experiment` uses the BAM strand bit instead so is unaffected.) | 🟡 Improved, not at parity (64% vs STAR's 100% coverage on spliced reads) | [`rustar_bam_comparison.md`](rustar_bam_comparison.md), [`rustar_reverification_2026-08.md`](rustar_reverification_2026-08.md) |
-| [#31](https://github.com/scverse/rustar-aligner/issues/31) | medium | Multi-mapper NH cap extends to 20 vs STAR's 7; ~17% more secondaries on identical input. Possibly missing an `--outFilterMultimapScoreRange`-equivalent threshold. | 🔴 Closed with no linked PR; **no measurable change** on re-test | [`rustar_bam_comparison.md`](rustar_bam_comparison.md), [`rustar_reverification_2026-08.md`](rustar_reverification_2026-08.md) |
+| [#31](https://github.com/scverse/rustar-aligner/issues/31) | medium | Multi-mapper NH cap extends to 20 vs STAR's 7; ~17% more secondaries on identical input. Possibly missing an `--outFilterMultimapScoreRange`-equivalent threshold. | 🔴 Closed as fixed (PR #77), but **no measurable change** on re-test against an image built well after that fix | [`rustar_bam_comparison.md`](rustar_bam_comparison.md), [`rustar_reverification_2026-08.md`](rustar_reverification_2026-08.md) |
 | [#32](https://github.com/scverse/rustar-aligner/issues/32) | low | Transcriptome BAM lacks per-record `RG:Z:` despite the `@RG` header being present. Genome BAM is fine. | ✅ Fixed, verified | [`rustar_bam_comparison.md`](rustar_bam_comparison.md), [`rustar_reverification_2026-08.md`](rustar_reverification_2026-08.md) |
 | [#33](https://github.com/scverse/rustar-aligner/issues/33) | low | `@PG` header is content-free (just `ID:rustar-aligner`, no `PN`/`VN`/`CL`); `AS:i:` values disagree by 2-5 units on 864 records with identical CIGAR. | ✅ Fixed (header), verified | [`rustar_bam_comparison.md`](rustar_bam_comparison.md), [`rustar_reverification_2026-08.md`](rustar_reverification_2026-08.md) |
 | [#34](https://github.com/scverse/rustar-aligner/issues/34) | high | BAM `QUAL` field is offset by +33 (Phred+33 ASCII bytes written instead of raw Phred values). Explains the "average_quality = 68 vs STAR's 35" symptom in MultiQC; spotted by the verification session, not our own audits. Highest-impact BAM-correctness issue after #22 because every downstream tool that reads QUAL is wrong. | ✅ Fixed, verified (`average_quality` now 35.5 for both) | [`rustar_quant_and_multiqc.md`](rustar_quant_and_multiqc.md), [`rustar_reverification_2026-08.md`](rustar_reverification_2026-08.md) |
 | [#35](https://github.com/scverse/rustar-aligner/issues/35) | medium | `--chimSegmentMin > 0` + `--twopassMode Basic` aborts the run when `--outFileNamePrefix` doesn't end in `/`. Silent run-killer: no `Aligned.out.bam`, no `Log.final.out`. | ✅ Fixed, verified | [`rustar_cli_compat.md`](rustar_cli_compat.md), [`rustar_reverification_2026-08.md`](rustar_reverification_2026-08.md) |
 | [#47](https://github.com/scverse/rustar-aligner/issues/47) / [#50](https://github.com/scverse/rustar-aligner/issues/50) | medium | Follow-ups on #27: pass-1 doesn't seed candidates from `--sjdbGTFfile`; `sjdb_score` bonus added instead of replacing motif score. | 🟡 Improved, not at parity (same gap as #27) | [`rustar_reverification_2026-08.md`](rustar_reverification_2026-08.md) |
-| [#48](https://github.com/scverse/rustar-aligner/issues/48) | medium | `Log.final.out` folds all unmapped reads into `too short`; `other` bucket always 0. | 🔴 Closed with no observed fix; **no measurable change** on re-test | [`rustar_reverification_2026-08.md`](rustar_reverification_2026-08.md) |
+| [#48](https://github.com/scverse/rustar-aligner/issues/48) | medium | `Log.final.out` folds all unmapped reads into `too short`; `other` bucket always 0. | 🔴 Closed as fixed (PR #49, then PR #141), but **no measurable change** on re-test against an image built well after both fixes | [`rustar_reverification_2026-08.md`](rustar_reverification_2026-08.md) |
 | [#53](https://github.com/scverse/rustar-aligner/issues/53) | low | `Number of reads mapped to too many loci` always 0; reads exceeding `--outFilterMultimapNmax` dropped from accounting. | ⚪ Untestable on the yeast test set (nothing exceeds the threshold either way) | [`rustar_reverification_2026-08.md`](rustar_reverification_2026-08.md) |
 | [#55](https://github.com/scverse/rustar-aligner/issues/55) | low | `Log.out`/`Log.progress.out` need real STAR-equivalent content, not stubs (a rejected earlier PR attempted a stub fix). | ✅ Fixed (upstream PR #82), verified | [`rustar_reverification_2026-08.md`](rustar_reverification_2026-08.md) |
 

@@ -1195,7 +1195,7 @@
                 "multiqc_featurecounts_biotype_plot.txt:md5,6d251bec0231afccd0682e454a3b17bc",
                 "multiqc_samtools_idxstats.txt:md5,66a8e8aecb6233f5a3521151b1ce8d49",
                 "multiqc_strand_check_composition_bargraph.txt:md5,167bf9bea99fe3651cf410b706b7abd8",
-                "multiqc_strand_check_composition_bargraph_1.txt:md5,d52b92bf44d6b31a1fd067b6ead43a03",
+                "multiqc_strand_check_composition_bargraph_1.txt:md5,6aa97fcc3863afb9b8e9fbe8a02b5cd1",
                 "multiqc_strand_check_summary_table.txt:md5,403d67757cb972959d07595327adee3b",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",

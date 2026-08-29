@@ -290,18 +290,9 @@ head(counts(dds_final, normalized = TRUE))
 
 head(counts(dds_final))
 
-# Convert the normalised counts from the DESeq2 object to a tibble
+# Convert the normalised counts from the DESeq2 object to a tibble, convert row names to column "gene"
 
-normalised_counts <- as_tibble(counts(dds_final, normalized = TRUE))
-
-# Add a column for gene names to the normalised counts tibble
-
-normalised_counts$gene <- rownames(counts(dds_final))
-
-# Relocate the gene column to the first position
-
-normalised_counts <- normalised_counts %>%
-  relocate(gene, .before = control_rep1)
+normalised_counts <- as_tibble(counts(dds_final, normalized = TRUE), rownames="gene")
 
 # Save the normalised counts
 
@@ -350,18 +341,9 @@ resultsNames(dds_final)
 # res <- results(dds, contrast = c("design_formula", "condition_of_interest", "reference_condition"))
 # Command to set the contrast, if necessary
 
-# Store the res object inside another variable because the original res file will be required for other functions
-
-res_viz <- res
-
-# Add gene names as a new column to the results table
-
-res_viz$gene <- rownames(res)
-
-# Convert the results to a tibble for easier manipulation and relocate the gene column to the first position
-
-res_viz <- as_tibble(res_viz) %>%
-  relocate(gene, .before = baseMean)
+# The original res object will be required for other functions
+# Make a copy as a tibble, with gene names as a new column
+res_viz <- res %>% as_tibble(rownames="gene")
 
 # Save the results table
 
@@ -469,20 +451,11 @@ ggsave("de_results/heatmap.png", plot = heatmap, width = 6, height = 5, dpi = 30
 
 # Convert the results to a tibble and add a column indicating differential expression status
 
-res_tb <- as_tibble(res) %>%
+res_tb <- as_tibble(res, rownames="gene") %>%
   mutate(diffexpressed = case_when(
     log2FoldChange > 1 & padj < 0.05 ~ 'upregulated',
     log2FoldChange < -1 & padj < 0.05 ~ 'downregulated',
     TRUE ~ 'not_de'))
-
-# Add a new column with gene names
-
-res_tb$gene <- rownames(res)
-
-# Relocate the gene column to the first position
-
-res_tb <-  res_tb %>%
-  relocate(gene, .before = baseMean)
 
 # Order the table by padj and add a new column for gene labels
 

@@ -4,14 +4,17 @@ on:
   push:
     branches: [master, dev]
 
+permissions:
+  contents: read
+
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Install Nextflow
-        uses: nf-core/setup-nextflow@v2
+        uses: nf-core/setup-nextflow@v3
 
       - name: Nextflow strict syntax lint
         run: nextflow lint -o concise -exclude nf-test.config .

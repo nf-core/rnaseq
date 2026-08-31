@@ -106,7 +106,7 @@
                     },
                     "hisat2/align": {
                         "branch": "master",
-                        "git_sha": "cebe21bbd158c15c8fab172e37cfe97a239f4b77",
+                        "git_sha": "7ff2dbaefb93fdd3825b7bff1d86d2f3c7e946f5",
                         "installed_by": ["fastq_align_hisat2"]
                     },
                     "hisat2/build": {

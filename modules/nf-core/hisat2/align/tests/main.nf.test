@@ -29,23 +29,16 @@ nextflow_process {
                 script "../../build/main.nf"
                 process {
                 """
-                input[0] = Channel.of([
-                    [id:'genome'],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
-                ])
-                input[1] = Channel.of([ [id:'genome'],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
-                ])
-                input[2] = HISAT2_EXTRACTSPLICESITES.out.txt
+                def fasta_file = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                def gtf_file = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
+                input[0] = HISAT2_EXTRACTSPLICESITES.out.txt.map { meta, txt -> [meta, fasta_file, gtf_file, txt] }
+                input[1] = '3.GB'
                 """
                 }
             }
         }
 
         when {
-            params {
-                outdir = "$outputDir"
-            }
             process {
                 """
                 input[0] = Channel.of([
@@ -60,11 +53,9 @@ nextflow_process {
         }
 
         then {
+            assert process.success
             assertAll(
-                { assert process.success },
-                { assert snapshot(process.out.summary).match("se_summary") },
-                { assert snapshot(process.out.fastq).match("se_fastq") },
-                { assert snapshot(process.out.findAll { key, val -> key.startsWith('versions') }).match("se_versions") }
+                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["bam"])).match() }
             )
         }
     }
@@ -89,23 +80,16 @@ nextflow_process {
                 script "../../build/main.nf"
                 process {
                 """
-                input[0] = Channel.of([
-                    [id:'genome'],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
-                ])
-                input[1] = Channel.of([ [id:'genome'],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
-                ])
-                input[2] = HISAT2_EXTRACTSPLICESITES.out.txt
+                def fasta_file = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                def gtf_file = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
+                input[0] = HISAT2_EXTRACTSPLICESITES.out.txt.map { meta, txt -> [meta, fasta_file, gtf_file, txt] }
+                input[1] = false
                 """
                 }
             }
         }
 
         when {
-            params {
-                outdir = "$outputDir"
-            }
             process {
                 """
                 input[0] = Channel.of([
@@ -120,9 +104,9 @@ nextflow_process {
         }
 
         then {
+            assert process.success
             assertAll(
-                { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(sanitizeOutput(process.out)).match() }
             )
         }
     }
@@ -146,23 +130,16 @@ nextflow_process {
                 script "../../build/main.nf"
                 process {
                 """
-                input[0] = Channel.of([
-                    [id:'genome'],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
-                ])
-                input[1] = Channel.of([ [id:'genome'],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
-                ])
-                input[2] = HISAT2_EXTRACTSPLICESITES.out.txt
+                def fasta_file = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                def gtf_file = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
+                input[0] = HISAT2_EXTRACTSPLICESITES.out.txt.map { meta, txt -> [meta, fasta_file, gtf_file, txt] }
+                input[1] = '3.GB'
                 """
                 }
             }
         }
 
         when {
-            params {
-                outdir = "$outputDir"
-            }
             process {
                 """
                 input[0] = Channel.of([
@@ -178,11 +155,9 @@ nextflow_process {
         }
 
         then {
+            assert process.success
             assertAll(
-                { assert process.success },
-                { assert snapshot(process.out.summary).match("pe_summary") },
-                { assert snapshot(process.out.fastq).match("pe_fastq") },
-                { assert snapshot(process.out.findAll { key, val -> key.startsWith('versions') }).match("pe_versions") }
+                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["bam"])).match() }
             )
         }
     }
@@ -207,23 +182,16 @@ nextflow_process {
                 script "../../build/main.nf"
                 process {
                 """
-                input[0] = Channel.of([
-                    [id:'genome'],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
-                ])
-                input[1] = Channel.of([ [id:'genome'],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
-                ])
-                input[2] = HISAT2_EXTRACTSPLICESITES.out.txt
+                def fasta_file = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                def gtf_file = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
+                input[0] = HISAT2_EXTRACTSPLICESITES.out.txt.map { meta, txt -> [meta, fasta_file, gtf_file, txt] }
+                input[1] = false
                 """
                 }
             }
         }
 
         when {
-            params {
-                outdir = "$outputDir"
-            }
             process {
                 """
                 input[0] = Channel.of([
@@ -239,9 +207,9 @@ nextflow_process {
         }
 
         then {
+            assert process.success
             assertAll(
-                { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(sanitizeOutput(process.out)).match() }
             )
         }
     }
@@ -255,19 +223,17 @@ nextflow_process {
                 """
                 input[0] = Channel.of([
                     [id:'genome'],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
+                    [],
+                    []
                 ])
-                input[1] = [[:],[]]
-                input[2] = [[:],[]]
+                input[1] = false
                 """
                 }
             }
         }
 
         when {
-            params {
-                outdir = "$outputDir"
-            }
             process {
                 """
                 input[0] = Channel.of([
@@ -282,11 +248,9 @@ nextflow_process {
         }
 
         then {
+            assert process.success
             assertAll(
-                { assert process.success },
-                { assert snapshot(process.out.summary).match("se_no_ss_summary") },
-                { assert snapshot(process.out.fastq).match("se_no_ss_fastq") },
-                { assert snapshot(process.out.findAll { key, val -> key.startsWith('versions') }).match("se_no_ss_versions") }
+                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["bam"])).match() }
             )
         }
     }
@@ -301,19 +265,17 @@ nextflow_process {
                 """
                 input[0] = Channel.of([
                     [id:'genome'],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
+                    [],
+                    []
                 ])
-                input[1] = [[:],[]]
-                input[2] = [[:],[]]
+                input[1] = false
                 """
                 }
             }
         }
 
         when {
-            params {
-                outdir = "$outputDir"
-            }
             process {
                 """
                 input[0] = Channel.of([
@@ -328,9 +290,9 @@ nextflow_process {
         }
 
         then {
+            assert process.success
             assertAll(
-                { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(sanitizeOutput(process.out)).match() }
             )
         }
     }
@@ -344,19 +306,17 @@ nextflow_process {
                 """
                 input[0] = Channel.of([
                     [id:'genome'],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
+                    [],
+                    []
                 ])
-                input[1] = [[:],[]]
-                input[2] = [[:],[]]
+                input[1] = false
                 """
                 }
             }
         }
 
         when {
-            params {
-                outdir = "$outputDir"
-            }
             process {
                 """
                 input[0] = Channel.of([
@@ -372,11 +332,9 @@ nextflow_process {
         }
 
         then {
+            assert process.success
             assertAll(
-                { assert process.success },
-                { assert snapshot(process.out.summary).match("pe_no_ss_summary") },
-                { assert snapshot(process.out.fastq).match("pe_no_ss_fastq") },
-                { assert snapshot(process.out.findAll { key, val -> key.startsWith('versions') }).match("pe_no_ss_versions") }
+                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["bam"])).match() }
             )
         }
     }
@@ -391,19 +349,17 @@ nextflow_process {
                 """
                 input[0] = Channel.of([
                     [id:'genome'],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
+                    [],
+                    []
                 ])
-                input[1] = [[:],[]]
-                input[2] = [[:],[]]
+                input[1] = false
                 """
                 }
             }
         }
 
         when {
-            params {
-                outdir = "$outputDir"
-            }
             process {
                 """
                 input[0] = Channel.of([
@@ -419,9 +375,9 @@ nextflow_process {
         }
 
         then {
+            assert process.success
             assertAll(
-                { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(sanitizeOutput(process.out)).match() }
             )
         }
     }

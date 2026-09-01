@@ -54,6 +54,7 @@ workflow PREPARE_GENOME_INDICES {
     use_sentieon_star        // boolean: whether to use sentieon STAR version
     use_parabricks_star      // boolean: whether to use parabricks STAR version
     star_index_legacy        // boolean: whether the supplied star_index was built with STAR 2.6.x and needs genomeParameters.txt upgraded to the 2.7.4a metadata schema
+    hisat2_build_memory      // val: memory threshold for HISAT2 index building with splice sites
 
     main:
     ch_fasta = ch_fasta_fai.map { _meta, fasta_file, _fai -> fasta_file }
@@ -220,7 +221,8 @@ workflow PREPARE_GENOME_INDICES {
             ch_hisat2_index = HISAT2_BUILD(
                 ch_fasta.map { item -> [ [:], item ] },
                 ch_gtf.map { item -> [ [:], item ] },
-                ch_splicesites.map { item -> [ [:], item ] }
+                ch_splicesites.map { item -> [ [:], item ] },
+                hisat2_build_memory
             ).index.map { tuple -> tuple[1] }
         }
     }

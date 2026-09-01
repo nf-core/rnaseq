@@ -219,9 +219,10 @@ workflow PREPARE_GENOME_INDICES {
         }
         else if (fasta_provided) {
             ch_hisat2_index = HISAT2_BUILD(
-                ch_fasta.map { item -> [ [:], item ] },
-                ch_gtf.map { item -> [ [:], item ] },
-                ch_splicesites.map { item -> [ [:], item ] },
+                ch_fasta
+                    .join(ch_gtf)
+                    .join(ch_splicesites)
+                    .map { fasta_file, gtf_file, ss_file -> [ [:], fasta_file, gtf_file, ss_file ] },
                 hisat2_build_memory
             ).index.map { tuple -> tuple[1] }
         }

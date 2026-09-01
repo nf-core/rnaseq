@@ -116,7 +116,7 @@
                     },
                     "hisat2/extractsplicesites": {
                         "branch": "master",
-                        "git_sha": "7ff2dbaefb93fdd3825b7bff1d86d2f3c7e946f5",
+                        "git_sha": "22b467cf44542d7e16b1410c5dbd5982c9545f27",
                         "installed_by": ["modules"]
                     },
                     "kallisto/index": {

@@ -134,7 +134,8 @@
                     "samtools": 1.24
                 },
                 "HISAT2_EXTRACTSPLICESITES": {
-                    "hisat2": "2.2.3"
+                    "hisat2": "2.2.3",
+                    "samtools": 1.24
                 },
                 "RUSTQC": {
                     "rustqc": "0.2.1"

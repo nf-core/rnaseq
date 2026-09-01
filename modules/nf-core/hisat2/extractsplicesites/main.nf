@@ -13,6 +13,7 @@ process HISAT2_EXTRACTSPLICESITES {
     output:
     tuple val(meta), path("*.splice_sites.txt"), emit: txt
     tuple val("${task.process}"), val('hisat2'), eval('hisat2 --version | grep -o "version [^ ]*" | cut -d " " -f 2'), topic: versions, emit: versions_hisat2
+    tuple val("${task.process}"), val('samtools'), eval("samtools --version | sed -n '1s/samtools //p'"), emit: versions_samtools, topic: versions
 
     when:
     task.ext.when == null || task.ext.when

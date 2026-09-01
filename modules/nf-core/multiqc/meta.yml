@@ -110,24 +110,24 @@ maintainers:
 containers:
   conda:
     linux/amd64:
-      lock_file: modules/nf-core/multiqc/.conda-lock/linux_amd64-bd-db7c73dae76bc9e6_1.txt
+      lock_file: modules/nf-core/multiqc/.conda-lock/linux_amd64-bd-c17fb751507e9dfc_1.txt
     linux/arm64:
-      lock_file: modules/nf-core/multiqc/.conda-lock/linux_arm64-bd-d167b8012595a136_1.txt
+      lock_file: modules/nf-core/multiqc/.conda-lock/linux_arm64-bd-5c84a5000a226ab5_1.txt
   docker:
     linux/amd64:
-      name: community.wave.seqera.io/library/multiqc:1.34--db7c73dae76bc9e6
-      build_id: bd-db7c73dae76bc9e6_1
-      scan_id: sc-66fc7138dbf1cf48_1
+      name: community.wave.seqera.io/library/multiqc:1.35--c17fb751507e9dfc
+      build_id: bd-c17fb751507e9dfc_1
+      scan_id: sc-3b1b3932f9846892_1
     linux/arm64:
-      name: community.wave.seqera.io/library/multiqc:1.34--d167b8012595a136
-      build_id: bd-d167b8012595a136_1
-      scan_id: sc-ac701dfa631a2af9_1
+      name: community.wave.seqera.io/library/multiqc:1.35--5c84a5000a226ab5
+      build_id: bd-5c84a5000a226ab5_1
+      scan_id: sc-0d39df41e9737bbd_1
   singularity:
     linux/amd64:
-      name: oras://community.wave.seqera.io/library/multiqc:1.34--4fc8657c816047c0
-      build_id: bd-4fc8657c816047c0_1
-      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/1b/1bef8af6be88c5733461959c46ac8ef73d18f65277f62a1695d0e1633054f9c2/data
+      name: oras://community.wave.seqera.io/library/multiqc:1.35--c680f2aea25ccec2
+      build_id: bd-c680f2aea25ccec2_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/c8/c8e346f4f6080eadf1253505e6ff09ef004454fc18e8d672006fd7b222cc412e/data
     linux/arm64:
-      name: oras://community.wave.seqera.io/library/multiqc:1.34--7fbd82d945c06726
-      build_id: bd-7fbd82d945c06726_1
-      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/9a/9a1fec9662a152683e6fcae440d0ce20920b3b89dc62d1e3a52e73f92eba0969/data
+      name: oras://community.wave.seqera.io/library/multiqc:1.35--c0468833d65b2f81
+      build_id: bd-c0468833d65b2f81_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/e4/e48aa28aebc881254a499b24c3e1ce77b8df1b85a5432699ed6f72eb17ac7fb5/data

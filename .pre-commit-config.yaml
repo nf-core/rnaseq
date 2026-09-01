@@ -4,7 +4,7 @@ repos:
     hooks:
       - id: prettier
         additional_dependencies:
-          - prettier@3.8.3
+          - prettier@3.9.6
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
@@ -25,9 +25,26 @@ repos:
               subworkflows/(?!local/).*|
               .*\.snap$
           )$
+      - id: check-added-large-files
+        args: [--maxkb=5000]
+        exclude: |
+          (?x)^(
+              .*ro-crate-metadata.json$|
+              .*\.snap$|
+              lib/nfcore_external_java_deps.jar$|
+              docs/.*\.(svg|pdf)$|
+              assets/.*$
+          )$
+      - id: check-merge-conflict
   - repo: https://github.com/seqeralabs/nf-lint-pre-commit
     rev: v0.3.0
     hooks:
       - id: nextflow-lint
         files: '\.nf$|nextflow\.config$'
         args: ["-output", "json"]
+  - repo: local
+    hooks:
+      - id: block-pipeline-outdir
+        name: Prevent committing output from pipeline test runs to the pipeline code itself
+        entry: ./.hooks/block_pipeline_outdir.sh
+        language: script

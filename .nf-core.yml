@@ -11,6 +11,7 @@ lint:
     - conf/containers_singularity_https_arm64.config
     - conf/containers_singularity_oras_amd64.config
     - conf/containers_singularity_oras_arm64.config
+    - .github/workflows/linting_comment.yml
   files_unchanged:
     - assets/email_template.html
     - assets/email_template.txt
@@ -18,12 +19,14 @@ lint:
     - docs/images/nf-core-rnaseq_logo_dark.png
     - .gitignore
     - nf-test.config
+    - .github/workflows/branch.yml
+    - .github/workflows/linting.yml
   modules_config: false
   nextflow_config:
     - config_defaults:
         - params.ribo_database_manifest
   nf_test_content: false
-nf_core_version: 4.0.3
+nf_core_version: 4.1.0
 repository_type: pipeline
 template:
   author: "Harshil Patel, Phil Ewels, Rickard Hammar\xE9n"

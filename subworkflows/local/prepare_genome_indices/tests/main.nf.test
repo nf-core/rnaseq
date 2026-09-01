@@ -90,6 +90,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -203,6 +204,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -315,6 +317,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -427,6 +430,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -539,6 +543,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -651,6 +656,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -763,6 +769,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -875,6 +882,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -987,6 +995,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -1099,6 +1108,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -1211,6 +1221,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -1323,6 +1334,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -1435,6 +1447,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -1547,6 +1560,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -1659,6 +1673,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -1771,6 +1786,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -1883,6 +1899,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -1995,6 +2012,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -2107,6 +2125,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -2219,6 +2238,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -2331,6 +2351,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -2446,6 +2467,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -2561,6 +2583,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -2676,6 +2699,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -2791,6 +2815,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -2894,6 +2919,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -3009,6 +3035,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -3124,6 +3151,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -3239,6 +3267,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -3354,6 +3383,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -3469,6 +3499,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -3584,6 +3615,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -3699,6 +3731,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -3814,6 +3847,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -3929,6 +3963,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -4044,6 +4079,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -4159,6 +4195,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -4274,6 +4311,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -4389,6 +4427,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -4504,6 +4543,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -4607,6 +4647,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }
@@ -4722,6 +4763,7 @@ nextflow_workflow {
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
+                input[25] = params.hisat2_build_memory
                 """
             }
         }

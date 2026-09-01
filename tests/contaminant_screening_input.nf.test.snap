@@ -133,7 +133,7 @@
                     "gunzip": 1.13
                 },
                 "HISAT2_EXTRACTSPLICESITES": {
-                    "hisat2": "2.2.1"
+                    "hisat2": "2.2.3"
                 },
                 "SAMTOOLS_FAIDX": {
                     "samtools": "1.23.1"

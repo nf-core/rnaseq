@@ -77,11 +77,17 @@ Special thanks to the following for their contributions to the release:
 
 ### Software dependencies
 
-| Dependency      | Old version | New version |
-| --------------- | ----------- | ----------- |
-| `trim-galore`   | 0.6.10      | 2.1.0       |
-| `gawk`          |             | 5.3.1       |
-| `STAR` (legacy) | 2.6.1d      |             |
+| Dependency                  | Old version | New version |
+| --------------------------- | ----------- | ----------- |
+| `trim-galore`               | 0.6.10      | 2.1.0       |
+| `gawk`                      |             | 5.3.1       |
+| `STAR` (legacy)             | 2.6.1d      |             |
+| `hisat2/align`              | 2.2.1       | 2.2.3       |
+| --`samtools`                | 1.20        | 1.24        |
+| `hisat2/build`              | 2.2.1       | 2.2.3       |
+| --`samtools`                | 1.20        |             |
+| `hisat2/extractsplicesites` | 2.2.1       | 2.2.3       |
+| --`samtools`                | 1.20        | 1.24        |
 
 `gawk` is added as a dependency of the new `STAR_GENOMEPARAMS_UPGRADE` local module. The `STAR` (legacy) row reflects removal of the parallel STAR 2.6.1d build that ran alongside the default aligner for legacy iGenomes indices; the pipeline-default STAR is unchanged.
 

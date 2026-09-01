@@ -34,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1902](https://github.com/nf-core/rnaseq/pull/1902) - Update `bam_stringtie_merge` and StringTie modules ([nf-core/modules#12661](https://github.com/nf-core/modules/pull/12661)), allowing runs where all samples fail `--min_mapped_reads` to complete with skipped-sample warnings instead of failing an empty StringTie merge ([#1901](https://github.com/nf-core/rnaseq/issues/1901))
 - [PR #1907](https://github.com/nf-core/rnaseq/pull/1907) - Update `fastq_qc_trim_filter_setstrandedness` ([nf-core/modules#12745](https://github.com/nf-core/modules/pull/12745)), fixing a crash in Salmon auto-strandedness inference when no `--fasta` is supplied (e.g. kallisto-only pseudoalignment runs)
 - [PR #1911](https://github.com/nf-core/rnaseq/pull/1911) - Copy instead of symlink index files in `STAR_GENOMEPARAMS_UPGRADE`, fixing broken/missing index files on object-storage-backed work directories (e.g. Azure Batch via azcopy) that can't represent symlinks
+- [PR #1913](https://github.com/nf-core/rnaseq/pull/1913) - Update HISAT2 modules
 
 ## [[3.26.0](https://github.com/nf-core/rnaseq/releases/tag/3.26.0)] - 2026-05-07
 
@@ -76,11 +77,17 @@ Special thanks to the following for their contributions to the release:
 
 ### Software dependencies
 
-| Dependency      | Old version | New version |
-| --------------- | ----------- | ----------- |
-| `trim-galore`   | 0.6.10      | 2.1.0       |
-| `gawk`          |             | 5.3.1       |
-| `STAR` (legacy) | 2.6.1d      |             |
+| Dependency                  | Old version | New version |
+| --------------------------- | ----------- | ----------- |
+| `trim-galore`               | 0.6.10      | 2.1.0       |
+| `gawk`                      |             | 5.3.1       |
+| `STAR` (legacy)             | 2.6.1d      |             |
+| `hisat2/align`              | 2.2.1       | 2.2.3       |
+| --`samtools`                | 1.20        | 1.24        |
+| `hisat2/build`              | 2.2.1       | 2.2.3       |
+| --`samtools`                | 1.20        |             |
+| `hisat2/extractsplicesites` | 2.2.1       | 2.2.3       |
+| --`samtools`                | 1.20        | 1.24        |
 
 `gawk` is added as a dependency of the new `STAR_GENOMEPARAMS_UPGRADE` local module. The `STAR` (legacy) row reflects removal of the parallel STAR 2.6.1d build that ran alongside the default aligner for legacy iGenomes indices; the pipeline-default STAR is unchanged.
 

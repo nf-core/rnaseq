@@ -8,9 +8,7 @@ keywords:
   - reference
 tools:
   - hisat2:
-      description: HISAT2 is a fast and sensitive alignment program for mapping next-generation
-        sequencing reads (both DNA and RNA) to a population of human genomes as well
-        as to a single reference genome.
+      description: HISAT2 is a fast and sensitive alignment program for mapping next-generation sequencing reads (both DNA and RNA) to a population of human genomes as well as to a single reference genome.
       homepage: https://daehwankimlab.github.io/hisat2/
       documentation: https://daehwankimlab.github.io/hisat2/manual/
       doi: "10.1038/s41587-019-0201-4"
@@ -27,26 +25,22 @@ input:
         description: Reference fasta file
         pattern: "*.{fa,fasta,fna}"
         ontologies: []
-  - - meta2:
-        type: map
-        description: |
-          Groovy Map containing reference information
-          e.g. [ id:'genome' ]
     - gtf:
         type: file
         description: Reference gtf annotation file
         pattern: "*.{gtf}"
         ontologies: []
-  - - meta3:
-        type: map
-        description: |
-          Groovy Map containing reference information
-          e.g. [ id:'genome' ]
     - splicesites:
         type: file
         description: Splices sites in gtf file
         pattern: "*.{txt}"
         ontologies: []
+  - hisat2_memory_input:
+      type: string
+      description: |
+        Memory threshold for HISAT2 index building. When available process memory
+        meets or exceeds this value, splice sites and exons are used to build a
+        splice-aware index. Use false to disable splice-aware indexing.
 output:
   index:
     - - meta:
@@ -84,5 +78,28 @@ topics:
 
 authors:
   - "@ntoda03"
+  - "@srisarya"
 maintainers:
   - "@ntoda03"
+containers:
+  docker:
+    linux/amd64:
+      name: community.wave.seqera.io/library/hisat2:2.2.3--2616fa83d3b9d8f8
+      build_id: bd-2616fa83d3b9d8f8_1
+      scan_id: sc-734493ace7062424_1
+    linux/arm64:
+      name: community.wave.seqera.io/library/hisat2:2.2.3--0b83b24baf5a98d0
+      build_id: ""
+      scan_id: sc-98ff2d246e5f21bc_1
+  singularity:
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/hisat2:2.2.3--43d6b2eab6ddad26
+      build_id: ""
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/a1/a16b8102041e76f25358477471bafe813828313f7a8787066f390354cd7b8b7c/data
+    linux/arm64:
+      name: oras://community.wave.seqera.io/library/hisat2:2.2.3--2e8243af13980ed3
+      build_id: ""
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/4e/4edf1cfd94406d23f9a32bab4361cfbf770b0e6fdedb1fbc97d966c6074f51f8/data
+  conda:
+    linux/amd64:
+      lock_file: modules/nf-core/hisat2/build/.conda-lock/linux_amd64-bd-2616fa83d3b9d8f8_1.txt

@@ -11,18 +11,22 @@ pip install 'nf-metro>=1.1.0' cairosvg
 # Static SVG + PNG
 # --no-chrome-css bakes concrete colors so cairosvg can rasterize the file;
 # without it cairosvg aborts on the CSS custom properties used for theming.
+# --no-chrome-css also drops the light/dark pair entirely (bakes to one
+# resolved mode), so pin one explicitly rather than relying on the default.
 nf-metro render assets/metro_map.mmd \
   -o docs/images/nf-core-rnaseq_metro_map_grey.svg \
-  --no-chrome-css
+  --no-chrome-css --mode light
 
 python -c "import cairosvg; cairosvg.svg2png(
     url='docs/images/nf-core-rnaseq_metro_map_grey.svg',
     write_to='docs/images/nf-core-rnaseq_metro_map_grey.png', output_width=2265)"
 
-# Animated SVG (used in README)
+# Animated SVG (used in README) - no --no-chrome-css here: this file is
+# viewed directly in a browser, never rasterized, so it keeps light-dark()
+# and follows the viewer's (or GitHub's) light/dark setting.
 nf-metro render assets/metro_map.mmd \
   -o docs/images/nf-core-rnaseq_metro_map_grey_animated.svg \
-  --no-chrome-css --animate
+  --animate
 
 # Copy static PNG to docs subdir
 cp docs/images/nf-core-rnaseq_metro_map_grey.png \

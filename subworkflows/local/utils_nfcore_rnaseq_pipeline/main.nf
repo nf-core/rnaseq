@@ -397,13 +397,16 @@ def validateInputParameters() {
 
     if (params.contaminant_screening && params.contaminant_screening_input == 'unmapped') {
         if (params.skip_alignment) {
-            error("Contaminant screening with '--contaminant_screening_input unmapped' requires alignment to be enabled. Use '--contaminant_screening_input trimmed' to screen reads before alignment.")
+            error("Contaminant screening with '--contaminant_screening_input unmapped' requires alignment to be enabled. Use '--contaminant_screening_input raw', '--contaminant_screening_input trim_only', or '--contaminant_screening_input trimmed' to screen reads before alignment.")
         }
         if (!(params.aligner in ['star_salmon', 'star_rsem', 'hisat2'])) {
-            error("Contaminant screening with '--contaminant_screening_input unmapped' is only supported with '--aligner star_salmon', '--aligner star_rsem', or '--aligner hisat2'. Use '--contaminant_screening_input trimmed' for other aligners.")
+            error("Contaminant screening with '--contaminant_screening_input unmapped' is only supported with '--aligner star_salmon', '--aligner star_rsem', or '--aligner hisat2'. Use '--contaminant_screening_input raw', '--contaminant_screening_input trim_only', or '--contaminant_screening_input trimmed' for other aligners.")
         }
     }
 
+    if (params.contaminant_screening && params.contaminant_screening_input == 'trim_only' && params.skip_trimming) {
+        error("Contaminant screening with '--contaminant_screening_input trim_only' requires trimming to be enabled. When '--skip_trimming' is set, pre- and post-trim reads are identical. Use '--contaminant_screening_input raw' to screen adapter-bearing reads.")
+    }
     // Check that Sylph database and taxonomy is provided if using Sylph
     if (params.contaminant_screening == 'sylph') {
         if (!params.sylph_db) {

@@ -330,6 +330,14 @@
                     "help_text": "Choose between 'sortmerna' (default), 'bowtie2', or 'ribodetector' for rRNA removal.\n\n- **sortmerna**: Reference-based filtering (default). Requires `--ribo_database_manifest`. Note: Default databases include SILVA sequences requiring licensing for commercial use.\n- **bowtie2**: Alignment-based filtering. Requires `--ribo_database_manifest`. Recommended for users with SILVA licensing concerns as it supports custom databases.\n- **ribodetector**: ML-based detection without a reference requirement. Useful for organisms lacking well-characterized rRNA sequences or to avoid database licensing requirements.",
                     "enum": ["sortmerna", "ribodetector", "bowtie2"]
                 },
+                "bowtie2_rrna_index": {
+                    "type": "string",
+                    "format": "path",
+                    "exists": true,
+                    "fa_icon": "fas fa-bezier-curve",
+                    "description": "Path to directory or tar.gz archive for pre-built Bowtie2 index for rRNA removal.",
+                    "help_text": "Optional when using `--remove_ribo_rna` and `--ribo_removal_tool` is set to `bowtie2`. If not provided, the index will be built using the database provided with `--ribo_database_manifest`"
+                },
                 "use_gpu_ribodetector": {
                     "type": "boolean",
                     "description": "Enable GPU acceleration for ribodetector.",
@@ -677,11 +685,11 @@
                 },
                 "contaminant_screening_input": {
                     "type": "string",
-                    "description": "Read set to screen for contaminants: aligner-unmapped reads (default) or trimmed/filter-passed reads before alignment.",
-                    "help_text": "Use `unmapped` to preserve the existing behavior and focus screening on reads rejected by STAR/HISAT2. Use `trimmed` to screen the reads that enter alignment, for example to inspect contaminants removed earlier by BBSplit. `unmapped` requires alignment with `--aligner star_salmon`, `--aligner star_rsem`, or `--aligner hisat2`.",
+                    "description": "Read set to screen for contaminants: aligner-unmapped reads (default), trimmed reads (post-BBSplit/rRNA), post-trim pre-BBSplit reads, or raw reads.",
+                    "help_text": "Use `unmapped` (default) to screen reads rejected by STAR/HISAT2 — requires alignment. Use `trimmed` to screen reads that passed BBSplit and rRNA filtering before alignment. Use `trim_only` to screen reads after adapter trimming but before BBSplit/rRNA removal — recommended when BBSplit removes expected contaminants. Use `raw` to screen pre-trimming reads (adapter sequences still present). `unmapped` requires `--aligner star_salmon`, `--aligner star_rsem`, or `--aligner hisat2`.",
                     "default": "unmapped",
                     "fa_icon": "fas fa-filter",
-                    "enum": ["trimmed", "unmapped"]
+                    "enum": ["trimmed", "unmapped", "trim_only", "raw"]
                 },
                 "kraken_db": {
                     "type": "string",

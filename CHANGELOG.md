@@ -3,13 +3,13 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## dev - xxxx-xx-xx
+## v3.27.0dev - [date]
 
 ### Credits
 
 ### Enhancements and fixes
 
-- [PR #1421](https://github.com/nf-core/rnaseq/pull/1421) - Accept purely numeric sample IDs in `assets/schema_input.json` and coerce `meta.id` to `String` after `samplesheetToList` ([#1419](https://github.com/nf-core/rnaseq/issues/1419))
+- [PR #1878](https://github.com/nf-core/rnaseq/pull/1878) - Add `trim_only` and `raw` options to `--contaminant_screening_input`: `trim_only` screens reads after adapter trimming but before BBSplit/rRNA removal, enabling detection of contaminants that a species-limited BBSplit index would otherwise discard; `raw` screens pre-trimming reads as a baseline ([#1870](https://github.com/nf-core/rnaseq/issues/1870))
 - [PR #1680](https://github.com/nf-core/rnaseq/pull/1680) - Raise the Nextflow floor to 25.10.4 across `nextflow.config`, the three `nf-test*` workflow matrices, and the README/ro-crate version badges; bump `nf-schema` to 2.6.1; clear the v2-parser lint warnings in local subworkflows and resync six nf-core components carrying upstream-merged strict-syntax fixes
 - [PR #1775](https://github.com/nf-core/rnaseq/pull/1775) - Add Parabricks resource configuration guide for full-size genomes (GPU count, memory scaling, retry strategy, `--low-memory` flag)
 - [PR #1844](https://github.com/nf-core/rnaseq/pull/1844) - Bump version to 3.27.0dev after release 3.26.0; flip the MultiQC report links and RO-Crate URL/version back to dev
@@ -25,6 +25,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1864](https://github.com/nf-core/rnaseq/pull/1864) - Bump nf-schema to 2.7.2, fixing boolean CLI parameter validation failures under Nextflow 26.x strict syntax ([#1860](https://github.com/nf-core/rnaseq/issues/1860))
 - [PR #1869](https://github.com/nf-core/rnaseq/pull/1869) - Add pipeline validation error when `--use_rustqc` and `--skip_markduplicates` are set together, since RustQC requires duplicate-marked BAM files ([#1865](https://github.com/nf-core/rnaseq/issues/1865))
 - [PR #1876](https://github.com/nf-core/rnaseq/pull/1876) - Wire 39 of 54 metro map stations to their Nextflow fully-qualified process names via `%%metro process_scope:`/`%%metro process:` directives so `nf-metro serve`/`check-mapping` can drive live-progress mode, fix several topology inaccuracies in `assets/metro_map.mmd`, and re-render with nf-metro 1.1.0
+- [PR #1882](https://github.com/nf-core/rnaseq/pull/1882) - Pass `--skip-dup-check` to RustQC when `--with_umi` is set, so `--use_rustqc` works with UMI-deduplicated BAMs: UMICollapse / UMI-tools physically remove PCR duplicates, leaving no reads flagged `0x400`, so duplication QC is not applicable and RustQC's duplicate-marking check would otherwise abort the run ([#1881](https://github.com/nf-core/rnaseq/issues/1881))
+- [PR #1883](https://github.com/nf-core/rnaseq/pull/1883) - Update the `tximeta/tximport` module ([nf-core/modules#12362](https://github.com/nf-core/modules/pull/12362)): add a `jq` build dependency and set `LC_COLLATE=C` for reproducible gene-level output ordering
+- [PR #1884](https://github.com/nf-core/rnaseq/pull/1884) - Update `trimgalore` module to 2.3.0
+- [PR #1885](https://github.com/nf-core/rnaseq/pull/1885) - Bump `quant_tximport_summarizedexperiment` and `quantify_rsem` ([nf-core/modules#12377](https://github.com/nf-core/modules/pull/12377)): sort the collected per-sample inputs to `TXIMETA_TXIMPORT` and `CUSTOM_RSEMMERGECOUNTS` by staged file name, keeping their cache keys stable across `-resume` instead of following non-deterministic task-completion order ([#1879](https://github.com/nf-core/rnaseq/issues/1879))
+- [PR #1892](https://github.com/nf-core/rnaseq/pull/1892) - Support a pre-built Bowtie2 index for rRNA removal via `--bowtie2_rrna_index`, skipping on-the-fly index construction from `--ribo_database_manifest` when one is supplied ([#1731](https://github.com/nf-core/rnaseq/issues/1731))
+- [PR #1894](https://github.com/nf-core/rnaseq/pull/1894) - Important! Template update for nf-core/tools v4.0.3
+- [PR #1899](https://github.com/nf-core/rnaseq/pull/1899) - Update GPU based STAR (Parabricks rna_fq2bam) to version 4.7.1.
+- [PR #1902](https://github.com/nf-core/rnaseq/pull/1902) - Update `bam_stringtie_merge` and StringTie modules ([nf-core/modules#12661](https://github.com/nf-core/modules/pull/12661)), allowing runs where all samples fail `--min_mapped_reads` to complete with skipped-sample warnings instead of failing an empty StringTie merge ([#1901](https://github.com/nf-core/rnaseq/issues/1901))
+- [PR #1907](https://github.com/nf-core/rnaseq/pull/1907) - Update `fastq_qc_trim_filter_setstrandedness` ([nf-core/modules#12745](https://github.com/nf-core/modules/pull/12745)), fixing a crash in Salmon auto-strandedness inference when no `--fasta` is supplied (e.g. kallisto-only pseudoalignment runs)
+- [PR #1911](https://github.com/nf-core/rnaseq/pull/1911) - Copy instead of symlink index files in `STAR_GENOMEPARAMS_UPGRADE`, fixing broken/missing index files on object-storage-backed work directories (e.g. Azure Batch via azcopy) that can't represent symlinks
 
 ## [[3.26.0](https://github.com/nf-core/rnaseq/releases/tag/3.26.0)] - 2026-05-07
 

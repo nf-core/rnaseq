@@ -25,6 +25,30 @@ input:
         option. When this input is empty it will automatically use the configured schema or
         "${projectDir}/nextflow_schema.json" as default. The schema should not be given in this way
         for meta pipelines.
+  - help:
+      type: boolean, string
+      description: |
+        Show the help message and exit. When a parameter name is given, show the help message for that parameter instead of the general help message.
+  - help_full:
+      type: boolean
+      description: Show the full help message and exit.
+  - show_hidden:
+      type: boolean
+      description: Show hidden parameters in the help message.
+  - before_text:
+      type: string
+      description: Text to show before the parameters summary and help message.
+  - after_text:
+      type: string
+      description: Text to show after the parameters summary and help message.
+  - command:
+      type: string
+      description: An example command to run the pipeline, to show in the help message and the summary.
+  - cli_typecast:
+      type: boolean
+      description: |
+        Whether to apply typecasting to the parameters given via the CLI before validation.
+        Set this to `null` to use the default behavior.
 output:
   - dummy_emit:
       type: boolean

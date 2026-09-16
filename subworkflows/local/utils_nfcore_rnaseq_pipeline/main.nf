@@ -85,7 +85,8 @@ ${colors.purple}  nf-core/rnaseq ${workflow.manifest.version}${colors.reset}
         show_hidden,
         before_text,
         after_text,
-        command
+        command,
+        false
     )
 
     //

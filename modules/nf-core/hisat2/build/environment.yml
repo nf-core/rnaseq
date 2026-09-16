@@ -4,5 +4,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::hisat2=2.2.1
-  - bioconda::samtools=1.20
+  - bioconda::hisat2=2.2.3

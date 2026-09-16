@@ -35,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1905](https://github.com/nf-core/rnaseq/pull/1905) - Give `TRIMGALORE` an explicit 4 GB memory allocation, replacing the `process_low_memory` label's 1 GB budget that paired with an 8-cpu band and OOM-killed every sample on every retry ([#1903](https://github.com/nf-core/rnaseq/issues/1903))
 - [PR #1907](https://github.com/nf-core/rnaseq/pull/1907) - Update `fastq_qc_trim_filter_setstrandedness` ([nf-core/modules#12745](https://github.com/nf-core/modules/pull/12745)), fixing a crash in Salmon auto-strandedness inference when no `--fasta` is supplied (e.g. kallisto-only pseudoalignment runs)
 - [PR #1911](https://github.com/nf-core/rnaseq/pull/1911) - Copy instead of symlink index files in `STAR_GENOMEPARAMS_UPGRADE`, fixing broken/missing index files on object-storage-backed work directories (e.g. Azure Batch via azcopy) that can't represent symlinks
+- [PR #1913](https://github.com/nf-core/rnaseq/pull/1913) - Update HISAT2 modules; add `--extra_hisat2_align_args` ([#1916](https://github.com/nf-core/rnaseq/issues/1916))
 - [PR #1915](https://github.com/nf-core/rnaseq/pull/1915) - Add `manifest.diagram` to `nextflow.config`, pointing at the metro map, and wire up process names for `nf-metro serve` live-progress tracking
 - [PR #1917](https://github.com/nf-core/rnaseq/pull/1917) - Update `trimgalore` module ([nf-core/modules#12978](https://github.com/nf-core/modules/pull/12978)), dropping the now-redundant `process_low_memory` label
 
@@ -79,11 +80,17 @@ Special thanks to the following for their contributions to the release:
 
 ### Software dependencies
 
-| Dependency      | Old version | New version |
-| --------------- | ----------- | ----------- |
-| `trim-galore`   | 0.6.10      | 2.1.0       |
-| `gawk`          |             | 5.3.1       |
-| `STAR` (legacy) | 2.6.1d      |             |
+| Dependency                             | Old version | New version |
+| -------------------------------------- | ----------- | ----------- |
+| `trim-galore`                          | 0.6.10      | 2.1.0       |
+| `gawk`                                 |             | 5.3.1       |
+| `STAR` (legacy)                        | 2.6.1d      |             |
+| `hisat2/align`                         | 2.2.1       | 2.2.3       |
+| `samtools` (hisat2/align)              | 1.20        | 1.24        |
+| `hisat2/build`                         | 2.2.1       | 2.2.3       |
+| `samtools` (hisat2/build)              | 1.20        |             |
+| `hisat2/extractsplicesites`            | 2.2.1       | 2.2.3       |
+| `samtools` (hisat2/extractsplicesites) | 1.20        | 1.24        |
 
 `gawk` is added as a dependency of the new `STAR_GENOMEPARAMS_UPGRADE` local module. The `STAR` (legacy) row reflects removal of the parallel STAR 2.6.1d build that ran alongside the default aligner for legacy iGenomes indices; the pipeline-default STAR is unchanged.
 

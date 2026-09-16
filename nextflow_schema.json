@@ -538,6 +538,12 @@
                     "description": "Extra arguments to pass to STAR alignment command in addition to defaults defined by the pipeline. Only available for the STAR-Salmon route.",
                     "fa_icon": "fas fa-plus"
                 },
+                "extra_hisat2_align_args": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Extra arguments to pass to HISAT2 alignment command in addition to defaults defined by the pipeline. Only available when using --aligner hisat2.",
+                    "fa_icon": "fas fa-plus"
+                },
                 "extra_bowtie2_align_args": {
                     "type": "string",
                     "minLength": 1,

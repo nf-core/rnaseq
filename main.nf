@@ -112,7 +112,8 @@ workflow NFCORE_RNASEQ {
         params.skip_pseudo_alignment,
         params.use_sentieon_star,
         params.use_parabricks_star,
-        isStarIndexLegacy() ?: false
+        isStarIndexLegacy() ?: false,
+        params.hisat2_build_memory
     )
 
     // Check if contigs in genome fasta file > 512 Mbp

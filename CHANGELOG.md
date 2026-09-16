@@ -39,6 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1914](https://github.com/nf-core/rnaseq/pull/1914) - Important! Template update for nf-core/tools v4.1.0
 - [PR #1915](https://github.com/nf-core/rnaseq/pull/1915) - Add `manifest.diagram` to `nextflow.config`, pointing at the metro map, and wire up process names for `nf-metro serve` live-progress tracking
 - [PR #1917](https://github.com/nf-core/rnaseq/pull/1917) - Update `trimgalore` module ([nf-core/modules#12978](https://github.com/nf-core/modules/pull/12978)), dropping the now-redundant `process_low_memory` label
+- [PR #1918](https://github.com/nf-core/rnaseq/pull/1918) - Update all nf-core modules and subworkflows to latest upstream
 
 ## [[3.26.0](https://github.com/nf-core/rnaseq/releases/tag/3.26.0)] - 2026-05-07
 

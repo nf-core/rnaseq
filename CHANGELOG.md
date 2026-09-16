@@ -38,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1913](https://github.com/nf-core/rnaseq/pull/1913) - Update HISAT2 modules; add `--extra_hisat2_align_args` ([#1916](https://github.com/nf-core/rnaseq/issues/1916))
 - [PR #1914](https://github.com/nf-core/rnaseq/pull/1914) - Important! Template update for nf-core/tools v4.1.0
 - [PR #1915](https://github.com/nf-core/rnaseq/pull/1915) - Add `manifest.diagram` to `nextflow.config`, pointing at the metro map, and wire up process names for `nf-metro serve` live-progress tracking
+- [PR #1919](https://github.com/nf-core/rnaseq/pull/1919) - Skip biotype QC with a warning instead of crashing when the biotype attribute is absent on the GTF rows featureCounts reads (e.g. NCBI annotations, which only set it on `gene` rows) ([#1886](https://github.com/nf-core/rnaseq/issues/1886))
 - [PR #1917](https://github.com/nf-core/rnaseq/pull/1917) - Update `trimgalore` module ([nf-core/modules#12978](https://github.com/nf-core/modules/pull/12978)), dropping the now-redundant `process_low_memory` label
 
 ## [[3.26.0](https://github.com/nf-core/rnaseq/releases/tag/3.26.0)] - 2026-05-07

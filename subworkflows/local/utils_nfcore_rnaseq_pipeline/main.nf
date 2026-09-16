@@ -748,14 +748,10 @@ def defineQcTools(params) {
 }
 
 //
-// Check whether the biotype attribute used for featureCounts QC is present on the
-// feature-type rows featureCounts reads (its -g/-t flags). Some annotation providers
-// (e.g. NCBI) only set the biotype attribute on 'gene' rows, not on the 'exon' rows
-// featureCounts groups by, which makes featureCounts abort.
-//
-// Only checked for a plain (non-gzipped) '--gtf' input: '--gff' is converted to GTF
-// later by gffread, and a gzipped GTF is decompressed later by GUNZIP, so in both
-// cases the raw file checked here wouldn't reflect what featureCounts will see.
+// featureCounts requires the biotype attribute on rows matching its feature type
+// (its -t value), not merely present somewhere in the GTF. Only checked for a plain
+// '--gtf': '--gff' and a gzipped '--gtf' are transformed before featureCounts sees
+// them, so the raw file checked here wouldn't match what it actually reads.
 //
 def biotypeQcUsable(params) {
     if (!params.gtf || params.gtf.endsWith('.gz')) {

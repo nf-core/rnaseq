@@ -77,7 +77,7 @@
                     },
                     "fastqc": {
                         "branch": "master",
-                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
+                        "git_sha": "3009f27c4e4b6e99da4eeebe82799e13924a4a1f",
                         "installed_by": [
                             "fastq_fastqc_umitools_fastp",
                             "fastq_fastqc_umitools_trimgalore",
@@ -136,7 +136,7 @@
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "98403d15b0e50edae1f3fec5eae5e24982f1fade",
+                        "git_sha": "2c73cc8fa92cf48de3da0b643fdf357a8a290b36",
                         "installed_by": ["modules"]
                     },
                     "parabricks/rnafq2bam": {

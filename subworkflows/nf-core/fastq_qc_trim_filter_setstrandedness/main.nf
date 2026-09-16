@@ -155,7 +155,6 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     ch_ribodetector_log   = channel.empty()
     ch_seqkit_stats       = channel.empty()
     ch_bowtie2_log        = channel.empty()
-    ch_bowtie2_index      = channel.empty()
     ch_seqkit_prefixed    = channel.empty()
     ch_seqkit_converted   = channel.empty()
     ch_fastqc_filtered_html = channel.empty()
@@ -380,10 +379,10 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     // SUBWORKFLOW: Sub-sample FastQ files and pseudoalign with Salmon to auto-infer strandedness
     //
     // Return empty channel if ch_strand_fastq.auto_strand is empty so salmon index isn't created
-
     ch_fasta
+        .map { fasta -> [fasta] }
         .combine(ch_strand_fastq.auto_strand)
-        .map { items -> items.first() }
+        .map { items -> items[0] }
         .first()
         .set { ch_genome_fasta }
 

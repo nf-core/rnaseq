@@ -473,6 +473,9 @@
                 
             ],
             [
+                
+            ],
+            [
                 "[Genome, Log.out, SA, SAindex, chrLength.txt, chrName.txt, chrNameLength.txt, chrStart.txt, exonGeTrInfo.tab, exonInfo.tab, geneInfo.tab, genomeParameters.txt, sjdbInfo.txt, sjdbList.fromGTF.out.tab, sjdbList.out.tab, transcriptInfo.tab]"
             ],
             [
@@ -488,10 +491,10 @@
                 
             ]
         ],
-        "timestamp": "2026-05-08T16:53:07.548962562",
+        "timestamp": "2026-08-15T05:15:30.832626733",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.04.3"
+            "nextflow": "26.04.6"
         }
     },
     "gencode = true - stub": {

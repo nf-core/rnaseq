@@ -20,7 +20,12 @@ jobs:
       (github.event.comment.user.login == github.event.issue.user.login ||
       contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.comment.author_association))
     permissions:
+      # Reacting to a comment on a PR's conversation tab needs pull-requests: write
+      # too - issues: write alone 403s ("Resource not accessible by integration"),
+      # confirmed against a live dry run even though the REST endpoint is
+      # /issues/comments/{id}/reactions.
       issues: write
+      pull-requests: write
     runs-on: ubuntu-latest
     steps:
       - name: React on comment

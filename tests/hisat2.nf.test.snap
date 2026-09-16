@@ -31,7 +31,8 @@
                     "gunzip": 1.13
                 },
                 "HISAT2_EXTRACTSPLICESITES": {
-                    "hisat2": "2.2.1"
+                    "hisat2": "2.2.3",
+                    "samtools": 1.24
                 },
                 "SAMTOOLS_FAIDX": {
                     "samtools": "1.23.1"
@@ -146,11 +147,12 @@
                     "gunzip": 1.13
                 },
                 "HISAT2_ALIGN": {
-                    "hisat2": "2.2.1",
-                    "samtools": 1.2
+                    "hisat2": "2.2.3",
+                    "samtools": 1.24
                 },
                 "HISAT2_EXTRACTSPLICESITES": {
-                    "hisat2": "2.2.1"
+                    "hisat2": "2.2.3",
+                    "samtools": 1.24
                 },
                 "PICARD_MARKDUPLICATES": {
                     "picard": "3.4.0"

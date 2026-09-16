@@ -1,17 +1,15 @@
 process HISAT2_BUILD {
-    tag "${fasta}"
+    tag "${meta.id}"
     label 'process_high'
-    label 'process_high_memory'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/d2/d2ec9b73c6b92e99334c6500b1b622edaac316315ac1708f0b425df3131d0a83/data' :
-        'community.wave.seqera.io/library/hisat2_samtools:6be64e12472a7b75' }"
+    container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/a1/a16b8102041e76f25358477471bafe813828313f7a8787066f390354cd7b8b7c/data'
+        : 'community.wave.seqera.io/library/hisat2:2.2.3--2616fa83d3b9d8f8'}"
 
     input:
-    tuple val(meta), path(fasta)
-    tuple val(meta2), path(gtf)
-    tuple val(meta3), path(splicesites)
+    tuple val(meta), path(fasta), path(gtf), path(splicesites)
+    val hisat2_memory_input
 
     output:
     tuple val(meta), path("hisat2"), emit: index
@@ -22,29 +20,28 @@ process HISAT2_BUILD {
 
     script:
     def args = task.ext.args ?: ''
-    def avail_mem = 0
+
     if (!task.memory) {
-        log.info("[HISAT2 index build] Available memory not known - defaulting to 0. Specify process memory requirements to change this.")
+        error("[HISAT2 index build] No memory specified for process. Please configure memory for 'process_high' label.")
     }
-    else {
-        log.info("[HISAT2 index build] Available memory: ${task.memory}")
-        avail_mem = task.memory.toGiga()
-    }
+    def avail_mem = task.memory.toGiga()
+    def hisat2_build_memory = hisat2_memory_input ? (hisat2_memory_input as MemoryUnit).toGiga() : Integer.MAX_VALUE
 
     def ss = ''
     def exon = ''
     def extract_exons = ''
-    def hisat2_build_memory = params.hisat2_build_memory ? (params.hisat2_build_memory as MemoryUnit).toGiga() : 0
+
     if (avail_mem >= hisat2_build_memory) {
-        log.info("[HISAT2 index build] At least ${hisat2_build_memory} GB available, so using splice sites and exons to build HISAT2 index")
+        log.info("[HISAT2 index build] ${avail_mem} GB available, using splice sites and exons to build HISAT2 index")
         extract_exons = gtf ? "hisat2_extract_exons.py ${gtf} > ${gtf.baseName}.exons.txt" : ""
         ss = splicesites ? "--ss ${splicesites}" : ""
         exon = gtf ? "--exon ${gtf.baseName}.exons.txt" : ""
     }
     else {
-        log.info("[HISAT2 index build] Less than ${hisat2_build_memory} GB available, so NOT using splice sites and exons to build HISAT2 index.")
-        log.info("[HISAT2 index build] Use --hisat2_build_memory [small number] to skip this check.")
+        log.info("[HISAT2 index build] Only ${avail_mem} GB available (< ${hisat2_build_memory} GB threshold), so NOT using splice sites and exons to build HISAT2 index.")
+        log.info("[HISAT2 index build] Increase memory allocation or lower --hisat2_build_memory to enable splice-aware indexing.")
     }
+
     """
     mkdir hisat2
     ${extract_exons}

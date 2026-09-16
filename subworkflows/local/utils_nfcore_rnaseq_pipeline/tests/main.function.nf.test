@@ -351,15 +351,19 @@ nextflow_function {
 
     }
 
-    test("Test Function biotypeInGtf success") {
+    test("Test Function biotypeQcUsable success") {
 
-        function "biotypeInGtf"
+        function "biotypeQcUsable"
 
         when {
             function {
                 """
-                input[0] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
-                input[1] = "gene_biotype"
+                input[0] = [
+                    gtf: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf',
+                    gencode: false,
+                    featurecounts_group_type: 'gene_biotype',
+                    featurecounts_feature_type: 'exon',
+                ]
                 """
             }
         }
@@ -373,15 +377,51 @@ nextflow_function {
 
     }
 
-    test("Test Function biotypeInGtf failed") {
+    test("Test Function biotypeQcUsable failed - attribute absent") {
 
-        function "biotypeInGtf"
+        function "biotypeQcUsable"
 
         when {
             function {
                 """
-                input[0] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
-                input[1] = "NotAppearingInThisFile"
+                input[0] = [
+                    gtf: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf',
+                    gencode: false,
+                    featurecounts_group_type: 'NotAppearingInThisFile',
+                    featurecounts_feature_type: 'exon',
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() }
+            )
+        }
+
+    }
+
+    test("Test Function biotypeQcUsable failed - attribute only on gene rows") {
+
+        function "biotypeQcUsable"
+
+        when {
+            function {
+                """
+                def gtf_gene_level_only = file("\${workDir}/gene_level_biotype_only.gtf")
+                gtf_gene_level_only.text = [
+                    'chr1\\tunknown\\tgene\\t1\\t100\\t.\\t+\\t.\\tgene_id "GENE1"; gene_biotype "protein_coding";',
+                    'chr1\\tunknown\\texon\\t1\\t100\\t.\\t+\\t.\\tgene_id "GENE1"; transcript_id "TRANSCRIPT1";',
+                ].join('\\n') + '\\n'
+
+                input[0] = [
+                    gtf: gtf_gene_level_only.toString(),
+                    gencode: false,
+                    featurecounts_group_type: 'gene_biotype',
+                    featurecounts_feature_type: 'exon',
+                ]
                 """
             }
         }

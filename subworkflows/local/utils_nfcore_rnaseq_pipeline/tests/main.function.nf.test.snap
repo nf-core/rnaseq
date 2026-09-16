@@ -15,16 +15,6 @@
             "nextflow": "23.10.1"
         }
     },
-    "Test Function biotypeInGtf success": {
-        "content": [
-            true
-        ],
-        "timestamp": "2024-03-06T14:34:03.414382",
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
-        }
-    },
     "Test Function checkSamplesAfterGrouping success": {
         "content": [
             [
@@ -69,6 +59,16 @@
             "nextflow": "23.10.1"
         }
     },
+    "Test Function biotypeQcUsable success": {
+        "content": [
+            true
+        ],
+        "timestamp": "2026-09-16T12:26:14.467253087",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    },
     "Test Function toolBibliographyText": {
         "content": [
             "<li>Andrews S, (2010) FastQC, URL: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/).</li> <li>Ewels, P., Magnusson, M., Lundin, S., & K\u00e4ller, M. (2016). MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics , 32(19), 3047\u20133048. doi: /10.1093/bioinformatics/btw354</li>"
@@ -92,16 +92,6 @@
     "Test Function genomeExistsError missing genome": {
         "content": null,
         "timestamp": "2024-03-06T14:33:01.625542",
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
-        }
-    },
-    "Test Function biotypeInGtf failed": {
-        "content": [
-            false
-        ],
-        "timestamp": "2024-03-06T14:34:07.750259",
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
@@ -137,6 +127,16 @@
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
+        }
+    },
+    "Test Function biotypeQcUsable failed - attribute only on gene rows": {
+        "content": [
+            false
+        ],
+        "timestamp": "2026-09-16T12:26:32.911038387",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
         }
     },
     "Test Function ucscGenomeWarn": {
@@ -184,6 +184,16 @@
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
+        }
+    },
+    "Test Function biotypeQcUsable failed - attribute absent": {
+        "content": [
+            false
+        ],
+        "timestamp": "2026-09-16T12:26:24.266703492",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
         }
     },
     "Test Function rsemStarIndexWarn": {

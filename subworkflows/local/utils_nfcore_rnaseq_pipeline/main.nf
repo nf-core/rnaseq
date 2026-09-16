@@ -720,7 +720,7 @@ def defineQcTools(params) {
 
     if (!params.skip_qc) {
         if (!params.skip_preseq)    { tools << 'preseq' }
-        if (!params.skip_biotype_qc){ tools << 'biotype_qc' }
+        if (!params.skip_biotype_qc && biotypeQcUsable(params)) { tools << 'biotype_qc' }
         if (!params.skip_qualimap)  { tools << 'qualimap' }
         if (!params.skip_dupradar)  { tools << 'dupradar' }
 
@@ -748,21 +748,37 @@ def defineQcTools(params) {
 }
 
 //
-// Function to check whether biotype field exists in GTF file
+// Check whether the biotype attribute used for featureCounts QC is present on the
+// feature-type rows featureCounts reads (its -g/-t flags). Some annotation providers
+// (e.g. NCBI) only set the biotype attribute on 'gene' rows, not on the 'exon' rows
+// featureCounts groups by, which makes featureCounts abort.
 //
-def biotypeInGtf(gtf_file, biotype) {
+// Only checked for a plain (non-gzipped) '--gtf' input: '--gff' is converted to GTF
+// later by gffread, and a gzipped GTF is decompressed later by GUNZIP, so in both
+// cases the raw file checked here wouldn't reflect what featureCounts will see.
+//
+def biotypeQcUsable(params) {
+    if (!params.gtf || params.gtf.endsWith('.gz')) {
+        return true
+    }
+
+    def biotype      = params.gencode ? 'gene_type' : params.featurecounts_group_type
+    def feature_type = params.featurecounts_feature_type
+    def gtf_file     = file(params.gtf)
+
     def hits = 0
     gtf_file.eachLine { line ->
-        def attributes = line.split('\t')[-1].split()
-        if (attributes.contains(biotype)) {
+        def fields = line.split('\t')
+        if (fields.size() > 2 && fields[2] == feature_type && fields[-1].split().contains(biotype)) {
             hits += 1
         }
     }
+
     if (hits) {
         return true
     } else {
         log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
-            "  Biotype attribute '${biotype}' not found in the last column of the GTF file!\n\n" +
+            "  Biotype attribute '${biotype}' not found on '${feature_type}' rows of the GTF file!\n\n" +
             "  Biotype QC will be skipped to circumvent the issue below:\n" +
             "  https://github.com/nf-core/rnaseq/issues/460\n\n" +
             "  Amend '--featurecounts_group_type' to change this behaviour.\n" +

@@ -112,6 +112,7 @@ workflow NFCORE_RNASEQ {
         params.skip_pseudo_alignment,
         params.use_sentieon_star,
         params.use_parabricks_star,
+        params.use_rustar_star,
         isStarIndexLegacy() ?: false
     )
 

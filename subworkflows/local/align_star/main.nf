@@ -3,6 +3,7 @@
 //
 include { SENTIEON_STARALIGN as SENTIEON_STAR_ALIGN } from '../../../modules/nf-core/sentieon/staralign/main'
 include { PARABRICKS_RNAFQ2BAM as PARABRICKS_RNA_FQ2BAM } from '../../../modules/nf-core/parabricks/rnafq2bam/main'
+include { RUSTAR_ALIGN                              } from '../../../modules/local/rustar_align/align/main'
 include { STAR_ALIGN                                } from '../../../modules/nf-core/star/align'
 include { BAM_SORT_STATS_SAMTOOLS                   } from '../../nf-core/bam_sort_stats_samtools'
 
@@ -32,6 +33,7 @@ workflow ALIGN_STAR {
     fasta_fai            // channel: [ val(meta), path(fasta), path(fai) ]
     use_sentieon_star    // boolean: whether star alignment is accelerated with Sentieon
     use_parabricks_star  // boolean: whether star alignment (and mark duplicates) is accelerated with Parabricks
+    use_rustar_star      // boolean: whether to use rustar-aligner in place of STAR
     skip_markduplicates  // boolean: whether to skip marking duplicates
 
     main:
@@ -50,6 +52,11 @@ workflow ALIGN_STAR {
 
         PARABRICKS_RNA_FQ2BAM(reads, fasta_fai.map { meta, fasta, _fai -> [ meta, fasta ] }, index, true, !skip_markduplicates)
         ch_star_out = PARABRICKS_RNA_FQ2BAM
+
+    } else if (use_rustar_star) {
+
+        RUSTAR_ALIGN(reads, index, gtf, star_ignore_sjdbgtf)
+        ch_star_out = RUSTAR_ALIGN
 
     } else {
 

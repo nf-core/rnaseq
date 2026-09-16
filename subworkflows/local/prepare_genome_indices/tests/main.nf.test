@@ -80,7 +80,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -89,7 +89,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -193,7 +194,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -202,7 +203,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -305,7 +307,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -314,7 +316,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -417,7 +420,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -426,7 +429,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -529,7 +533,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -538,7 +542,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -641,7 +646,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -650,7 +655,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -753,7 +759,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -762,7 +768,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -865,7 +872,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -874,7 +881,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -977,7 +985,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -986,7 +994,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -1089,7 +1098,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -1098,7 +1107,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -1201,7 +1211,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -1210,7 +1220,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -1313,7 +1324,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -1322,7 +1333,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -1425,7 +1437,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -1434,7 +1446,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -1537,7 +1550,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -1546,7 +1559,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -1649,7 +1663,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -1658,7 +1672,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -1761,7 +1776,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -1770,7 +1785,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -1873,7 +1889,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -1882,7 +1898,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -1985,7 +2002,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -1994,7 +2011,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -2097,7 +2115,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -2106,7 +2124,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -2209,7 +2228,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -2218,7 +2237,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -2321,7 +2341,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -2330,7 +2350,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -2436,7 +2457,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -2445,7 +2466,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -2551,7 +2573,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -2560,7 +2582,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -2666,7 +2689,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -2675,7 +2698,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -2781,7 +2805,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -2790,7 +2814,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -2884,7 +2909,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -2893,7 +2918,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -2999,7 +3025,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -3008,7 +3034,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -3114,7 +3141,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -3123,7 +3150,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -3229,7 +3257,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -3238,7 +3266,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -3344,7 +3373,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -3353,7 +3382,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -3459,7 +3489,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -3468,7 +3498,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -3574,7 +3605,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -3583,7 +3614,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -3689,7 +3721,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -3698,7 +3730,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -3804,7 +3837,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -3813,7 +3846,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -3919,7 +3953,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -3928,7 +3962,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -4034,7 +4069,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -4043,7 +4078,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -4149,7 +4185,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -4158,7 +4194,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -4264,7 +4301,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -4273,7 +4310,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -4379,7 +4417,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -4388,7 +4426,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -4494,7 +4533,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -4503,7 +4542,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -4597,7 +4637,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -4606,7 +4646,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }
@@ -4712,7 +4753,7 @@ nextflow_workflow {
                 input[12] = null
                 input[13] = null
                 input[14] = null
-                input[15] = null
+                input[15] = null  // bowtie2_rrna_index
                 input[16] = aligner
                 input[17] = pseudo_aligner
                 input[18] = skip_bbsplit
@@ -4721,7 +4762,8 @@ nextflow_workflow {
                 input[21] = skip_pseudo_alignment
                 input[22] = use_sentieon_star
                 input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
+                input[24] = false  // use_rustar_star
+                input[25] = false  // star_index_legacy
                 """
             }
         }

@@ -35,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1907](https://github.com/nf-core/rnaseq/pull/1907) - Update `fastq_qc_trim_filter_setstrandedness` ([nf-core/modules#12745](https://github.com/nf-core/modules/pull/12745)), fixing a crash in Salmon auto-strandedness inference when no `--fasta` is supplied (e.g. kallisto-only pseudoalignment runs)
 - [PR #1911](https://github.com/nf-core/rnaseq/pull/1911) - Copy instead of symlink index files in `STAR_GENOMEPARAMS_UPGRADE`, fixing broken/missing index files on object-storage-backed work directories (e.g. Azure Batch via azcopy) that can't represent symlinks
 - [PR #1913](https://github.com/nf-core/rnaseq/pull/1913) - Update HISAT2 modules
+- [PR #1915](https://github.com/nf-core/rnaseq/pull/1915) - Add `manifest.diagram` to `nextflow.config`, pointing at the metro map, and wire up process names for `nf-metro serve` live-progress tracking
 
 ## [[3.26.0](https://github.com/nf-core/rnaseq/releases/tag/3.26.0)] - 2026-05-07
 

@@ -196,6 +196,26 @@
             "nextflow": "26.04.6"
         }
     },
+    "Test Function biotypeQcUsable success - gzipped GTF": {
+        "content": [
+            true
+        ],
+        "timestamp": "2026-09-16T14:22:55.556264786",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    },
+    "Test Function biotypeQcUsable failed - gzipped GTF with attribute only on gene rows": {
+        "content": [
+            false
+        ],
+        "timestamp": "2026-09-16T14:23:04.221837123",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    },
     "Test Function rsemStarIndexWarn": {
         "content": null,
         "timestamp": "2024-03-06T14:33:30.02058",

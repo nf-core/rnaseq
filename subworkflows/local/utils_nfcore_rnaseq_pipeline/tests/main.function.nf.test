@@ -435,6 +435,74 @@ nextflow_function {
 
     }
 
+    test("Test Function biotypeQcUsable success - gzipped GTF") {
+
+        function "biotypeQcUsable"
+
+        when {
+            function {
+                """
+                def gtf_gz = file("\${workDir}/exon_level_biotype.gtf.gz")
+                new java.util.zip.GZIPOutputStream(gtf_gz.newOutputStream()).withWriter { writer ->
+                    writer << ([
+                        'chr1\\tunknown\\tgene\\t1\\t100\\t.\\t+\\t.\\tgene_id "GENE1"; gene_biotype "protein_coding";',
+                        'chr1\\tunknown\\texon\\t1\\t100\\t.\\t+\\t.\\tgene_id "GENE1"; gene_biotype "protein_coding"; transcript_id "TRANSCRIPT1";',
+                    ].join('\\n') + '\\n')
+                }
+
+                input[0] = [
+                    gtf: gtf_gz.toString(),
+                    gencode: false,
+                    featurecounts_group_type: 'gene_biotype',
+                    featurecounts_feature_type: 'exon',
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() }
+            )
+        }
+
+    }
+
+    test("Test Function biotypeQcUsable failed - gzipped GTF with attribute only on gene rows") {
+
+        function "biotypeQcUsable"
+
+        when {
+            function {
+                """
+                def gtf_gz = file("\${workDir}/gene_level_biotype_only.gtf.gz")
+                new java.util.zip.GZIPOutputStream(gtf_gz.newOutputStream()).withWriter { writer ->
+                    writer << ([
+                        'chr1\\tunknown\\tgene\\t1\\t100\\t.\\t+\\t.\\tgene_id "GENE1"; gene_biotype "protein_coding";',
+                        'chr1\\tunknown\\texon\\t1\\t100\\t.\\t+\\t.\\tgene_id "GENE1"; transcript_id "TRANSCRIPT1";',
+                    ].join('\\n') + '\\n')
+                }
+
+                input[0] = [
+                    gtf: gtf_gz.toString(),
+                    gencode: false,
+                    featurecounts_group_type: 'gene_biotype',
+                    featurecounts_feature_type: 'exon',
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() }
+            )
+        }
+
+    }
+
     test("Test Function getInferexperimentStrandedness reverse") {
 
         function "getInferexperimentStrandedness"

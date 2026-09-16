@@ -749,12 +749,12 @@ def defineQcTools(params) {
 
 //
 // featureCounts requires the biotype attribute on rows matching its feature type
-// (its -t value), not merely present somewhere in the GTF. Only checked for a plain
-// '--gtf': '--gff' and a gzipped '--gtf' are transformed before featureCounts sees
-// them, so the raw file checked here wouldn't match what it actually reads.
+// (its -t value), not merely present somewhere in the GTF. Only checked for '--gtf':
+// '--gff' is converted to GTF later by gffread, so the raw file checked here wouldn't
+// match what featureCounts actually reads.
 //
 def biotypeQcUsable(params) {
-    if (!params.gtf || params.gtf.endsWith('.gz')) {
+    if (!params.gtf) {
         return true
     }
 
@@ -763,21 +763,29 @@ def biotypeQcUsable(params) {
     def gtf_file     = file(params.gtf)
 
     def hits = 0
-    gtf_file.eachLine { line ->
+    def countHit = { line ->
         def fields = line.split('\t')
         if (fields.size() > 2 && fields[2] == feature_type && fields[-1].split().contains(biotype)) {
             hits += 1
         }
     }
+    if (gtf_file.name.endsWith('.gz')) {
+        new java.util.zip.GZIPInputStream(gtf_file.newInputStream()).eachLine(countHit)
+    } else {
+        gtf_file.eachLine(countHit)
+    }
 
     if (hits) {
         return true
     } else {
+        def suggestion = params.gencode
+            ? "  '--gencode' forces this to 'gene_type'; use a GTF where it is set on '${feature_type}' rows.\n"
+            : "  Amend '--featurecounts_group_type' to change this behaviour.\n"
         log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
             "  Biotype attribute '${biotype}' not found on '${feature_type}' rows of the GTF file!\n\n" +
             "  Biotype QC will be skipped to circumvent the issue below:\n" +
             "  https://github.com/nf-core/rnaseq/issues/460\n\n" +
-            "  Amend '--featurecounts_group_type' to change this behaviour.\n" +
+            suggestion +
             "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         return false
     }

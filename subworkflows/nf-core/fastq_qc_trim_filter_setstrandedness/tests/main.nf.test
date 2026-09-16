@@ -122,6 +122,7 @@ nextflow_workflow {
                 { assert pelines2.size() == 4508 },
                 { assert workflow.out.trim_read_count[0][1] == 3022 },
                 { assert sortmernaRrnaCount == 20 },  // 10 pairs = 20 individual reads (100% detection)
+                { assert path(workflow.out.trim_reads_merged[0][1]).linesGzip.size() == 3022 * 4 },  // fastp's merged overlapping read pairs, excluded from `reads`
                 { assert snapshot(
                     pelines1.join('\n').md5(),
                     pelines2.join('\n').md5(),

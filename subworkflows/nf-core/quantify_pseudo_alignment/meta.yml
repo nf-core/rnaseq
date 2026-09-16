@@ -11,11 +11,6 @@ components:
   - quant_tximport_summarizedexperiment
   - salmon/quant
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing study-level sample sheet information. e.g. [
-          id:'SRP1234' ].
   - samplesheet:
       type: file
       description: |
@@ -32,6 +27,11 @@ input:
       type: path
       description: |
         Path to Salmon or Kallisto index in the tool-appropriate form.
+  - transcript_fasta:
+      type: file
+      description: |
+        Channel with the transcriptome in FASTA format. Required when running
+        Salmon in alignment mode.
   - gtf:
       type: file
       description: |
@@ -72,11 +72,6 @@ input:
         creation. Useful for very large cohorts.
 
 output:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing study-level sample sheet information. e.g. [
-          id:'SRP1234' ].
   - results:
       type: file
       description: |
@@ -87,6 +82,20 @@ output:
       description: |
         Channel containing those pseudoaligner outputs readable by MultiQC for
         passing to workflow-level reporting.
+  - tx2gene:
+      type: file
+      description: |
+        Transcript-to-gene mapping file generated from the GTF.
+      pattern: "*.tx2gene.tsv"
+  - tx2gene_augmented:
+      type: file
+      description: |
+        tx2gene mapping table actually used by tximport, equal to the input
+        tx2gene with self-mappings appended for any transcripts present in the
+        quantification output but missing from the input. Use this file (not
+        `tx2gene`) to reproduce the published gene-level outputs from the
+        per-sample quantification files.
+      pattern: "*tx2gene_augmented.tsv"
   - tpm_gene:
       type: file
       description: |

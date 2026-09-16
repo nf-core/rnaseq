@@ -3,35 +3,38 @@ process FASTQC {
     label 'process_low'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/fastqc:0.12.1--hdfd78af_0' :
-        'biocontainers/fastqc:0.12.1--hdfd78af_0' }"
+    container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
+        ? 'https://depot.galaxyproject.org/singularity/fastqc:0.12.1--hdfd78af_0'
+        : 'quay.io/biocontainers/fastqc:0.12.1--hdfd78af_0'}"
 
     input:
-    tuple val(meta), path(reads)
+    tuple val(meta), path(reads, stageAs: '?/*')
 
     output:
-    tuple val(meta)             , path("*.html")                                                       , emit: html
-    tuple val(meta)             , path("*.zip")                                                        , emit: zip
+    tuple val(meta), path("*.html"), emit: html
+    tuple val(meta), path("*.zip"), emit: zip
     tuple val("${task.process}"), val('fastqc'), eval('fastqc --version | sed "/FastQC v/!d; s/.*v//"'), emit: versions_fastqc, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
-    def args          = task.ext.args ?: ''
-    def prefix        = task.ext.prefix ?: "${meta.id}"
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
     // Make list of old name and new name pairs to use for renaming in the bash while loop
-    def old_new_pairs = reads instanceof Path || reads.size() == 1 ? [[ reads, "${prefix}.${reads.extension}" ]] : reads.withIndex().collect { entry, index -> [ entry, "${prefix}_${index + 1}.${entry.extension}" ] }
-    def rename_to     = old_new_pairs*.join(' ').join(' ')
-    def renamed_files = old_new_pairs.collect{ _old_name, new_name -> new_name }.join(' ')
+    def old_new_pairs = reads instanceof Path || reads.size() == 1 ? [[reads, "${prefix}.${reads.extension}"]] : reads.withIndex().collect { entry, index -> [entry, "${prefix}_${index + 1}.${entry.extension}"] }
+    def rename_to = old_new_pairs*.join(' ').join(' ')
+    def renamed_files = old_new_pairs.collect { _old_name, new_name -> new_name }.join(' ')
 
     // The total amount of allocated RAM by FastQC is equal to the number of threads defined (--threads) time the amount of RAM defined (--memory)
     // https://github.com/s-andrews/FastQC/blob/1faeea0412093224d7f6a07f777fad60a5650795/fastqc#L211-L222
-    // Dividing the task.memory by task.cpu allows to stick to requested amount of RAM in the label
-    def memory_in_mb = task.memory ? task.memory.toUnit('MB') / task.cpus : null
+    // Dividing the task.memory by task.cpus allows to stick to requested amount of RAM in the label
+    def memory_in_mb = task.memory
+        ? (task.memory.toUnit('MB') / task.cpus).intValue()
+        : null
     // FastQC memory value allowed range (100 - 10000)
     def fastqc_memory = memory_in_mb > 10000 ? 10000 : (memory_in_mb < 100 ? 100 : memory_in_mb)
+    def fastqc_memory_arg = fastqc_memory ? "--memory ${fastqc_memory}" : ''
 
     """
     printf "%s %s\\n" ${rename_to} | while read old_name new_name; do
@@ -41,7 +44,7 @@ process FASTQC {
     fastqc \\
         ${args} \\
         --threads ${task.cpus} \\
-        --memory ${fastqc_memory} \\
+        ${fastqc_memory_arg} \\
         ${renamed_files}
     """
 

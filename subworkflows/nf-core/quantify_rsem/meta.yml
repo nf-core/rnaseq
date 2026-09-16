@@ -12,11 +12,6 @@ components:
   - custom/rsemmergecounts
   - quant_tximport_summarizedexperiment
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing study-level sample sheet information. e.g. [
-          id:'SRP1234' ].
   - samplesheet:
       type: file
       description: |
@@ -58,10 +53,6 @@ input:
         skips SummarizedExperiment creation. Useful for very large cohorts.
 
 output:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information. e.g. [ id:'test' ].
   - raw_counts_gene:
       type: file
       description: |

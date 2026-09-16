@@ -62,8 +62,7 @@ output:
             e.g. [ id:'test', single_end:false ]
       - "*.bai":
           type: file
-          description: An optional BAM index file. If desired, --CREATE_INDEX must be
-            passed as a flag
+          description: An optional BAM index file. If desired, --CREATE_INDEX must be passed as a flag
           pattern: "*.{bai}"
           ontologies: []
   cram:
@@ -117,3 +116,27 @@ maintainers:
   - "@drpatelh"
   - "@projectoriented"
   - "@ramprasadn"
+containers:
+  docker:
+    linux/amd64:
+      name: community.wave.seqera.io/library/picard:3.5.0--842d4c70c98af9b4
+      build_id: bd-842d4c70c98af9b4_1
+      scan_id: sc-52d55041dda7855d_1
+    linux/arm64:
+      name: community.wave.seqera.io/library/picard:3.5.0--4f3ced346a5bb45f
+      build_id: bd-4f3ced346a5bb45f_1
+      scan_id: sc-8dd275c723ec21de_1
+  singularity:
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/picard:3.5.0--89375ac386b71342
+      build_id: bd-89375ac386b71342_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/b4/b474c6f12c0502377b95062b75ef4b7778864b1353c7fc1d5a3b1f3b3017fd2e/data
+    linux/arm64:
+      name: oras://community.wave.seqera.io/library/picard:3.5.0--51fe15653ca25a7c
+      build_id: bd-51fe15653ca25a7c_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/35/35ed881e77f6b66f1b9204394c8909fd66da367891434a81f536704a13fad3c3/data
+  conda:
+    linux/amd64:
+      lock_file: modules/nf-core/picard/markduplicates/.conda-lock/linux_amd64-bd-842d4c70c98af9b4_1.txt
+    linux/arm64:
+      lock_file: modules/nf-core/picard/markduplicates/.conda-lock/linux_arm64-bd-4f3ced346a5bb45f_1.txt

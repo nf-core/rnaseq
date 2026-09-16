@@ -4,4 +4,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - "bioconda::sylph-tax=1.2.0"
+  - "bioconda::sylph-tax=1.9.0"

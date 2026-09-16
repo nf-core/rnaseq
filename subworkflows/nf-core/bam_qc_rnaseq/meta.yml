@@ -24,35 +24,39 @@ components:
   - samtools/sort
   - bam_rseqc
 input:
-  - meta:
-      type: map
+  - ch_bam_bai:
+      type: file
       description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false, strandedness:'reverse' ]
-  - bam:
+        Coordinate-sorted BAM file aligned to the genome, with its index.
+
+        Structure: [ val(meta), path(bam), path(bai) ]
+      pattern: "*.{bam,bai}"
+  - ch_gtf:
       type: file
-      description: Coordinate-sorted BAM file aligned to the genome
-      pattern: "*.{bam}"
-  - bai:
-      type: file
-      description: Index for the genome-aligned BAM file
-      pattern: "*.{bai}"
-  - gtf:
-      type: file
-      description: GTF annotation file
+      description: |
+        GTF annotation file.
+
+        Structure: [ val(meta), path(gtf) ]
       pattern: "*.{gtf}"
-  - gene_bed:
-      type: file
-      description: BED12 file for the reference gene model
-      pattern: "*.{bed}"
-  - fasta_fai:
+  - ch_gene_bed:
       type: file
       description: |
-        Tuple of FASTA and FAI files for samtools sort
-        [ val(meta), path(fasta), path(fai) ]
-  - biotypes_header:
+        BED12 file for the reference gene model.
+
+        Structure: [ path(bed) ]
+      pattern: "*.{bed}"
+  - ch_fasta_fai:
       type: file
-      description: Header file for biotype counts MultiQC section
+      description: |
+        FASTA reference and its index, used by samtools sort.
+
+        Structure: [ val(meta), path(fasta), path(fai) ]
+  - ch_biotypes_header:
+      type: file
+      description: |
+        Header file for the biotype counts MultiQC section.
+
+        Structure: [ val(meta), path(biotypes_header.txt) ]
       pattern: "*.{txt}"
   - tools:
       type: list
@@ -70,61 +74,290 @@ input:
 output:
   - multiqc_files:
       type: file
-      description: Collected MultiQC-compatible output files from all enabled tools
+      description: |
+        Collected MultiQC-compatible output files from all enabled tools.
+
+        Structure: [ val(meta), path(files) ]
   - preseq_lc_extrap:
       type: file
-      description: Preseq library complexity extrapolation curve
+      description: |
+        Preseq library complexity extrapolation curve.
+
+        Structure: [ val(meta), path(txt) ]
       pattern: "*.lc_extrap.txt"
   - preseq_log:
       type: file
-      description: Preseq log file
+      description: |
+        Preseq log file.
+
+        Structure: [ val(meta), path(log) ]
       pattern: "*.log"
   - featurecounts_counts:
       type: file
-      description: featureCounts count matrix
+      description: |
+        featureCounts count matrix.
+
+        Structure: [ val(meta), path(txt) ]
       pattern: "*.featureCounts.txt"
   - featurecounts_summary:
       type: file
-      description: featureCounts summary statistics
+      description: |
+        featureCounts summary statistics.
+
+        Structure: [ val(meta), path(txt) ]
       pattern: "*.featureCounts.txt.summary"
   - biotype_tsv:
       type: file
-      description: Biotype counts formatted for MultiQC bargraph
+      description: |
+        Biotype counts formatted for MultiQC bargraph.
+
+        Structure: [ val(meta), path(tsv) ]
       pattern: "*biotype_counts_mqc.tsv"
   - biotype_rrna:
       type: file
-      description: rRNA percentage for MultiQC general stats
+      description: |
+        rRNA percentage for MultiQC general stats.
+
+        Structure: [ val(meta), path(tsv) ]
       pattern: "*biotype_counts_rrna_mqc.tsv"
   - qualimap_results:
       type: directory
-      description: Qualimap RNA-seq QC results directory
+      description: |
+        Qualimap RNA-seq QC results directory.
+
+        Structure: [ val(meta), path(dir) ]
+  - dupradar_scatter2d:
+      type: file
+      description: |
+        PDF duplication rate against total read count plot.
+
+        Structure: [ val(meta), path(pdf) ]
+      pattern: "*_duprateExpDens.pdf"
+  - dupradar_boxplot:
+      type: file
+      description: |
+        PDF duplication rate ~ total reads per kilobase (RPK) boxplot.
+
+        Structure: [ val(meta), path(pdf) ]
+      pattern: "*_duprateExpBoxplot.pdf"
+  - dupradar_hist:
+      type: file
+      description: |
+        PDF expression histogram.
+
+        Structure: [ val(meta), path(pdf) ]
+      pattern: "*_expressionHist.pdf"
+  - dupradar_dupmatrix:
+      type: file
+      description: |
+        Text file containing tags falling on the features described in the GTF file.
+
+        Structure: [ val(meta), path(txt) ]
+      pattern: "*_dupMatrix.txt"
+  - dupradar_intercept_slope:
+      type: file
+      description: |
+        Text file containing intercept and slope from dupRadar modelling.
+
+        Structure: [ val(meta), path(txt) ]
+      pattern: "*_intercept_slope.txt"
   - dupradar_multiqc:
       type: file
-      description: dupRadar MultiQC-compatible output
+      description: |
+        dupRadar MultiQC-compatible output.
+
+        Structure: [ val(meta), path(txt) ]
       pattern: "*_mqc.txt"
   - inferexperiment_txt:
       type: file
-      description: RSeQC infer_experiment results (for strandedness detection)
+      description: |
+        RSeQC infer_experiment results (for strandedness detection).
+
+        Structure: [ val(meta), path(txt) ]
       pattern: "*.infer_experiment.txt"
   - bamstat_txt:
       type: file
-      description: RSeQC bam_stat report
+      description: |
+        RSeQC bam_stat report.
+
+        Structure: [ val(meta), path(txt) ]
       pattern: "*.bam_stat.txt"
+  - innerdistance_all:
+      type: file
+      description: |
+        All the output files from RSeQC inner_distance.
+
+        Structure: [ val(meta), path(txt/pdf/r) ]
+      pattern: "*.{txt,pdf,R}"
+  - innerdistance_distance:
+      type: file
+      description: |
+        The inner distances.
+
+        Structure: [ val(meta), path(txt) ]
+      pattern: "*.inner_distance.txt"
+  - innerdistance_freq:
+      type: file
+      description: |
+        Frequencies of different insert sizes.
+
+        Structure: [ val(meta), path(txt) ]
+      pattern: "*.inner_distance_freq.txt"
+  - innerdistance_mean:
+      type: file
+      description: |
+        Mean/median values of inner distances.
+
+        Structure: [ val(meta), path(txt) ]
+      pattern: "*.inner_distance_mean.txt"
+  - innerdistance_pdf:
+      type: file
+      description: |
+        Distribution plot of inner distances.
+
+        Structure: [ val(meta), path(pdf) ]
+      pattern: "*.inner_distance_plot.pdf"
+  - innerdistance_rscript:
+      type: file
+      description: |
+        Script to reproduce the inner distance plot.
+
+        Structure: [ val(meta), path(r) ]
+      pattern: "*.inner_distance_plot.R"
+  - junctionannotation_all:
+      type: file
+      description: |
+        All the output files from RSeQC junction_annotation.
+
+        Structure: [ val(meta), path(bed/xls/pdf/r/log) ]
+      pattern: "*.{bed,xls,pdf,R,log}"
+  - junctionannotation_bed:
+      type: file
+      description: |
+        BED file of annotated junctions.
+
+        Structure: [ val(meta), path(bed) ]
+      pattern: "*.junction.bed"
+  - junctionannotation_interact_bed:
+      type: file
+      description: |
+        Interact BED file.
+
+        Structure: [ val(meta), path(bed) ]
+      pattern: "*.Interact.bed"
+  - junctionannotation_xls:
+      type: file
+      description: |
+        XLS file with junction information.
+
+        Structure: [ val(meta), path(xls) ]
+      pattern: "*.xls"
+  - junctionannotation_pdf:
+      type: file
+      description: |
+        Junction plot.
+
+        Structure: [ val(meta), path(pdf) ]
+      pattern: "*.junction.pdf"
+  - junctionannotation_events_pdf:
+      type: file
+      description: |
+        Events plot.
+
+        Structure: [ val(meta), path(pdf) ]
+      pattern: "*.events.pdf"
+  - junctionannotation_rscript:
+      type: file
+      description: |
+        Rscript to reproduce the junction annotation plots.
+
+        Structure: [ val(meta), path(r) ]
+      pattern: "*.r"
+  - junctionannotation_log:
+      type: file
+      description: |
+        Log file generated by RSeQC junction_annotation.
+
+        Structure: [ val(meta), path(log) ]
+      pattern: "*.log"
+  - junctionsaturation_all:
+      type: file
+      description: |
+        All the output files from RSeQC junction_saturation.
+
+        Structure: [ val(meta), path(pdf/r) ]
+      pattern: "*.{pdf,R}"
+  - junctionsaturation_pdf:
+      type: file
+      description: |
+        Junction saturation report.
+
+        Structure: [ val(meta), path(pdf) ]
+      pattern: "*.pdf"
+  - junctionsaturation_rscript:
+      type: file
+      description: |
+        Junction saturation R-script.
+
+        Structure: [ val(meta), path(r) ]
+      pattern: "*.r"
   - readdistribution_txt:
       type: file
-      description: RSeQC read_distribution report
+      description: |
+        RSeQC read_distribution report.
+
+        Structure: [ val(meta), path(txt) ]
       pattern: "*.read_distribution.txt"
+  - readduplication_all:
+      type: file
+      description: |
+        All the output files from RSeQC read_duplication.
+
+        Structure: [ val(meta), path(xls/pdf/r) ]
+      pattern: "*.{xls,pdf,R}"
+  - readduplication_seq_xls:
+      type: file
+      description: |
+        Read duplication rate determined from the sequence of the read.
+
+        Structure: [ val(meta), path(xls) ]
+      pattern: "*seq.DupRate.xls"
+  - readduplication_pos_xls:
+      type: file
+      description: |
+        Read duplication rate determined from the mapping position of the read.
+
+        Structure: [ val(meta), path(xls) ]
+      pattern: "*pos.DupRate.xls"
+  - readduplication_pdf:
+      type: file
+      description: |
+        Plot of duplication rate.
+
+        Structure: [ val(meta), path(pdf) ]
+      pattern: "*.pdf"
+  - readduplication_rscript:
+      type: file
+      description: |
+        Script to reproduce the duplication rate plot.
+
+        Structure: [ val(meta), path(r) ]
+      pattern: "*.R"
   - tin_txt:
       type: file
-      description: RSeQC TIN results summary
+      description: |
+        RSeQC TIN results summary.
+
+        Structure: [ val(meta), path(txt) ]
       pattern: "*.txt"
   - per_sample_mqc_bundle:
-      type: tuple
+      type: file
       description: |
         Per-sample MultiQC-feeding outputs (Preseq, biotype TSV, Qualimap,
         dupRadar, and RSeQC bamstat/inferexperiment/innerdistance_freq/
         junctionannotation_log/junctionsaturation_rscript/readdistribution/
         readduplication_pos/tin) joined on meta.
+
         Structure: [ val(meta), list(files) ]
 authors:
   - "@pinin4fjords"

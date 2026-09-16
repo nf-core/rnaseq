@@ -3,9 +3,9 @@ process UCSC_BEDCLIP {
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/ucsc-bedclip:377--h0b8a92a_2' :
-        'biocontainers/ucsc-bedclip:377--h0b8a92a_2' }"
+    container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/ucsc-bedclip:482--h0b57e2e_0' :
+        'quay.io/biocontainers/ucsc-bedclip:482--h0b57e2e_0' }"
 
     input:
     tuple val(meta), path(bedgraph)
@@ -13,15 +13,14 @@ process UCSC_BEDCLIP {
 
     output:
     tuple val(meta), path("*.bedGraph"), emit: bedgraph
-    tuple val("${task.process}"), val('ucsc'), eval("echo $VERSION"), topic: versions, emit: versions_ucsc
-
+    tuple val("${task.process}"), val('ucsc'), val('482'), topic: versions, emit: versions_ucsc
+    // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
     when:
     task.ext.when == null || task.ext.when
 
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    VERSION = '377' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
     """
     bedClip \\
         $args \\
@@ -32,7 +31,6 @@ process UCSC_BEDCLIP {
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
-    VERSION = '377' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
     """
     touch ${prefix}.bedGraph
     """

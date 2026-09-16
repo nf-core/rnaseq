@@ -132,6 +132,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
 
     ch_filtered_reads = channel.empty()
     ch_trim_read_count = channel.empty()
+    ch_trim_reads_merged = channel.empty()
     ch_multiqc_files = channel.empty()
     ch_lint_log_raw = channel.empty()
     ch_lint_log_trimmed = channel.empty()
@@ -240,6 +241,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         )
         ch_filtered_reads = FASTQ_FASTQC_UMITOOLS_FASTP.out.reads
         ch_trim_read_count = FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_read_count
+        ch_trim_reads_merged = FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_reads_merged
 
         // Capture individual outputs for workflow outputs
         ch_fastqc_raw_html  = FASTQ_FASTQC_UMITOOLS_FASTP.out.fastqc_raw_html
@@ -433,6 +435,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     reads_cat         = ch_reads_cat
     reads_trimmed     = ch_reads_trimmed
     trim_read_count   = ch_trim_read_count
+    trim_reads_merged = ch_trim_reads_merged
     multiqc_files     = ch_multiqc_files.transpose()
 
     // Individual outputs for workflow outputs

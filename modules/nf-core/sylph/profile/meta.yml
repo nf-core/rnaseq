@@ -13,7 +13,8 @@ tools:
       documentation: https://github.com/bluenote-1577/sylph
       tool_dev_url: https://github.com/bluenote-1577/sylph
       doi: 10.1038/s41587-024-02412-y
-      licence: ["MIT"]
+      licence:
+        - "MIT"
       identifier: biotools:sylph
 input:
   - - meta:
@@ -26,14 +27,15 @@ input:
         description: |
           List of input FastQ/FASTA files of size 1 and 2 for single-end and paired-end data,
           respectively. They are automatically sketched to .sylsp/.syldb
-        ontologies: []
+        pattern: "*.{fasta,fastq,fna,fa,fq,fas,fasta.gz,fastq.gz,fna,fa.gz,fq,fas.gz}"
+        ontologies:
+          - edam: http://edamontology.org/format_1929 # FASTA
+          - edam: http://edamontology.org/format_1930 # FASTQ
   - database:
       type: file
       description: Pre-sketched *.syldb/*.sylsp files. Raw single-end fastq/fasta are
         allowed and will be automatically sketched to .sylsp/.syldb.
-      pattern: "*.{syldb,sylsp,fasta,fastq}"
-      ontologies:
-        - edam: http://edamontology.org/format_1930 # FASTQ
+      pattern: "*.{syldb,sylsp}"
 output:
   profile_out:
     - - meta:
@@ -44,7 +46,8 @@ output:
           description: Output file of species-level taxonomic profiling with abundances
             and ANIs.
           pattern: "*tsv"
-          ontologies: []
+          ontologies:
+            - edam: http://edamontology.org/format_3475 # TSV
   versions_sylph:
     - - ${task.process}:
           type: string
@@ -52,10 +55,9 @@ output:
       - sylph:
           type: string
           description: The tool name
-      - sylph -V | awk "{print \$2}":
+      - sylph -V | sed "s/sylph //g":
           type: eval
           description: The expression to obtain the version of the tool
-
 topics:
   versions:
     - - ${task.process}:
@@ -64,10 +66,9 @@ topics:
       - sylph:
           type: string
           description: The tool name
-      - sylph -V | awk "{print \$2}":
+      - sylph -V | sed "s/sylph //g":
           type: eval
           description: The expression to obtain the version of the tool
-
 authors:
   - "@jiahang1234"
   - "@sofstam"

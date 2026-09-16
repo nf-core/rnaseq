@@ -15,7 +15,7 @@
                     [
                         "UCSC_BEDCLIP",
                         "ucsc",
-                        "377"
+                        "482"
                     ]
                 ],
                 "bedgraph": [
@@ -31,16 +31,16 @@
                     [
                         "UCSC_BEDCLIP",
                         "ucsc",
-                        "377"
+                        "482"
                     ]
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2026-01-19T14:08:43.009868476"
+        "timestamp": "2026-02-25T14:52:11.627613494"
     },
     "sarscov2": {
         "content": [
@@ -58,7 +58,7 @@
                     [
                         "UCSC_BEDCLIP",
                         "ucsc",
-                        "377"
+                        "482"
                     ]
                 ],
                 "bedgraph": [
@@ -74,15 +74,15 @@
                     [
                         "UCSC_BEDCLIP",
                         "ucsc",
-                        "377"
+                        "482"
                     ]
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2026-01-19T14:08:37.884007523"
+        "timestamp": "2026-02-25T14:52:03.468757789"
     }
 }

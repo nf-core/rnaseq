@@ -13,26 +13,30 @@ components:
   - stringtie/stringtie
   - stringtie/merge
 input:
-  - bam_sorted:
+  - ch_bams:
       type: file
       description: |
-        Sorted alignment files.
-        Structure: [ val(meta), path(bam) ]
+        Sorted alignment files from short-read and long-read alignment.
+
+        Structure: [ val(meta), path(srbam), path(lrbam) ]
       pattern: "*.bam"
-  - ch_chrgtf:
-      type: file
-      description: |
-        Reference gene annotation (GTF) for guided assembly and merge.
-        Structure: [ val(meta), path(gtf) ]
-      pattern: "*.gtf"
   - ch_mode:
       type: string
       description: |
-        Mode in which to run StringTie
+        Mode in which to run StringTie.
+
+        Structure: [ val(mode) ]
       enum:
         - long-reads-assembly
         - mix-reads-assembly
         - expression-estimation
+  - ch_chrgtf:
+      type: file
+      description: |
+        Reference gene annotation (GTF) for guided assembly and merge.
+
+        Structure: [ val(meta), path(gtf) ]
+      pattern: "*.gtf"
 output:
   - stringtie_gtf:
       type: file
@@ -40,12 +44,6 @@ output:
         Merged transcript annotation produced by StringTie --merge.
         Structure: [ val(meta), path(gtf) ]
       pattern: "*.gtf"
-  - versions:
-      type: file
-      description: |
-        File containing software versions for the subworkflow components.
-        Structure: [ path(versions.yml) ]
-      pattern: "versions.yml"
 authors:
   - "@atrigila"
   - "@rannick"

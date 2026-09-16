@@ -40,16 +40,6 @@ input:
         ontologies:
           - edam: "http://edamontology.org/format_2306"
 output:
-  versions_stringtie:
-    - - ${task.process}:
-          type: string
-          description: The name of the process
-      - stringtie:
-          type: string
-          description: The name of the tool
-      - stringtie --version:
-          type: eval
-          description: The expression to obtain the version of the tool
   merged_gtf:
     - - meta:
           type: map
@@ -63,6 +53,16 @@ output:
           pattern: "${prefix}.{gtf}"
           ontologies:
             - edam: "http://edamontology.org/format_2306"
+  versions_stringtie:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - stringtie:
+          type: string
+          description: The name of the tool
+      - stringtie --version:
+          type: eval
+          description: The expression to obtain the version of the tool
 topics:
   versions:
     - - ${task.process}:

@@ -16,7 +16,7 @@ nextflow_process {
                 """
                 interleave = false
 
-                input[0] = Channel.of([
+                input[0] = channel.of([
                     [ id:'test', single_end:false ], // meta map
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true)
                 ])
@@ -26,8 +26,8 @@ nextflow_process {
         }
 
         then {
+            assert process.success
             assertAll(
-                { assert process.success },
                 { assert snapshot(process.out.fastq[0][1].collect { path(it).linesGzip[0..6] }).match("bam_fastq") },
                 { assert snapshot(process.out.interleaved).match("bam_interleaved") },
                 { assert snapshot(file(process.out.singleton[0][1]).name).match("bam_singleton") },
@@ -44,7 +44,7 @@ nextflow_process {
                 """
                 interleave = true
 
-                input[0] = Channel.of([
+                input[0] = channel.of([
                     [ id:'test', single_end:false ], // meta map
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true)
                 ])
@@ -54,8 +54,8 @@ nextflow_process {
         }
 
         then {
+            assert process.success
             assertAll(
-                { assert process.success },
                 { assert snapshot(process.out.fastq).match("bam_interleave_fastq") },
                 { assert snapshot(path(process.out.interleaved[0][1]).readLines()[0..6]).match("bam_interlinterleave_eaved") },
                 { assert snapshot(process.out.singleton).match("bam_singinterleave_leton") },
@@ -74,7 +74,7 @@ nextflow_process {
                 """
                 interleave = false
 
-                input[0] = Channel.of([
+                input[0] = channel.of([
                     [ id:'test', single_end:false ], // meta map
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true)
                 ])
@@ -84,8 +84,8 @@ nextflow_process {
         }
 
         then {
-            assertAll (
-                { assert process.success },
+            assert process.success
+            assertAll(
                 { assert snapshot(
                     process.out.fastq,
                     process.out.interleaved,
@@ -106,7 +106,7 @@ nextflow_process {
                 """
                 interleave = true
 
-                input[0] = Channel.of([
+                input[0] = channel.of([
                     [ id:'test', single_end:false ], // meta map
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true)
                 ])
@@ -116,8 +116,8 @@ nextflow_process {
         }
 
         then {
-            assertAll (
-                { assert process.success },
+            assert process.success
+            assertAll(
                 { assert snapshot(
                     process.out.fastq,
                     process.out.interleaved,

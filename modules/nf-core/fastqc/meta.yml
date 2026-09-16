@@ -106,6 +106,6 @@ containers:
       https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/46/46daf2dad0169afd2ae047c3e50ed3776259f664bf07e5e06b045dc23449e994/data
   conda:
     linux/amd64:
-      lock_file: modules/nf-core/fastqc/.conda-lock/linux_amd64-bd-5cb1a2fa2f18c7c2_1.txt
+      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-5cb1a2fa2f18c7c2_1/condalock
     linux/arm64:
-      lock_file: modules/nf-core/fastqc/.conda-lock/linux_arm64-bd-e455e32f745abe68_1.txt
+      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-e455e32f745abe68_1/condalock

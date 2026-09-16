@@ -1,0 +1,56 @@
+{
+    "star - extra_star_align_args with overlapping defaults": {
+        "content": [
+            "test.Log.final.out",
+            "test.Log.out",
+            "test.bam.bai",
+            "1c957588cfbe3b1ba280ca03c0493633",
+            "test.Log.progress.out",
+            [
+
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.flagstat:md5,1a1e818e27089d8a9349b57b0fde6eea"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.idxstats:md5,854a921ff138202e70eaee613697dd54"
+                ]
+            ],
+            "87f62341c041d2e81b4b8e783b4e3ab3",
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.stats:md5,9ab97b6ca3f331770dd97de0323f9d00"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.SJ.out.tab:md5,9864f53ee8de98e6b3dd5bf644c3650f"
+                ]
+            ]
+        ],
+        "timestamp": "2026-04-07T11:29:07.442589894",
+        "meta": {
+            "nf-test": "0.9.4",
+            "nextflow": "25.10.2"
+        }
+    }
+}

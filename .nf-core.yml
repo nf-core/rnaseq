@@ -29,9 +29,8 @@ lint:
 nf_core_version: 4.1.0
 repository_type: pipeline
 template:
-  author: "Harshil Patel, Phil Ewels, Rickard Hammar\xE9n"
-  description: RNA sequencing analysis pipeline for gene/isoform quantification and
-    extensive quality control.
+  author: "Harshil Patel, Phil Ewels, Rickard Hammarén"
+  description: RNA sequencing analysis pipeline for gene/isoform quantification and extensive quality control.
   force: false
   is_nfcore: true
   name: rnaseq

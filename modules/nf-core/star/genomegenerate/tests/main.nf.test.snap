@@ -1,0 +1,260 @@
+{
+    "fasta_gtf": {
+        "content": [
+            "[Genome, Log.out, SA, SAindex, chrLength.txt, chrName.txt, chrNameLength.txt, chrStart.txt, exonGeTrInfo.tab, exonInfo.tab, geneInfo.tab, genomeParameters.txt, sjdbInfo.txt, sjdbList.fromGTF.out.tab, sjdbList.out.tab, transcriptInfo.tab]",
+            {
+                "versions_gawk": [
+                    [
+                        "STAR_GENOMEGENERATE",
+                        "gawk",
+                        "5.1.0"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "STAR_GENOMEGENERATE",
+                        "samtools",
+                        "1.21"
+                    ]
+                ],
+                "versions_star": [
+                    [
+                        "STAR_GENOMEGENERATE",
+                        "star",
+                        "2.7.11b"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-02T14:41:49.00863479"
+    },
+    "fasta_gtf_stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test_fasta"
+                        },
+                        [
+                            "Genome:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "Log.out:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "SA:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "SAindex:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "chrLength.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "chrName.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "chrNameLength.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "chrStart.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "exonGeTrInfo.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "exonInfo.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "geneInfo.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "genomeParameters.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "sjdbInfo.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "sjdbList.fromGTF.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "sjdbList.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "transcriptInfo.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "1": [
+                    [
+                        "STAR_GENOMEGENERATE",
+                        "star",
+                        "2.7.11b"
+                    ]
+                ],
+                "2": [
+                    [
+                        "STAR_GENOMEGENERATE",
+                        "samtools",
+                        "1.21"
+                    ]
+                ],
+                "3": [
+                    [
+                        "STAR_GENOMEGENERATE",
+                        "gawk",
+                        "5.1.0"
+                    ]
+                ],
+                "index": [
+                    [
+                        {
+                            "id": "test_fasta"
+                        },
+                        [
+                            "Genome:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "Log.out:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "SA:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "SAindex:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "chrLength.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "chrName.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "chrNameLength.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "chrStart.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "exonGeTrInfo.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "exonInfo.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "geneInfo.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "genomeParameters.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "sjdbInfo.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "sjdbList.fromGTF.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "sjdbList.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "transcriptInfo.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "versions_gawk": [
+                    [
+                        "STAR_GENOMEGENERATE",
+                        "gawk",
+                        "5.1.0"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "STAR_GENOMEGENERATE",
+                        "samtools",
+                        "1.21"
+                    ]
+                ],
+                "versions_star": [
+                    [
+                        "STAR_GENOMEGENERATE",
+                        "star",
+                        "2.7.11b"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-02T14:41:59.662412926"
+    },
+    "fasta_stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test_fasta"
+                        },
+                        [
+                            "Genome:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "Log.out:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "SA:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "SAindex:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "chrLength.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "chrName.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "chrNameLength.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "chrStart.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "genomeParameters.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "1": [
+                    [
+                        "STAR_GENOMEGENERATE",
+                        "star",
+                        "2.7.11b"
+                    ]
+                ],
+                "2": [
+                    [
+                        "STAR_GENOMEGENERATE",
+                        "samtools",
+                        "1.21"
+                    ]
+                ],
+                "3": [
+                    [
+                        "STAR_GENOMEGENERATE",
+                        "gawk",
+                        "5.1.0"
+                    ]
+                ],
+                "index": [
+                    [
+                        {
+                            "id": "test_fasta"
+                        },
+                        [
+                            "Genome:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "Log.out:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "SA:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "SAindex:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "chrLength.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "chrName.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "chrNameLength.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "chrStart.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "genomeParameters.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "versions_gawk": [
+                    [
+                        "STAR_GENOMEGENERATE",
+                        "gawk",
+                        "5.1.0"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "STAR_GENOMEGENERATE",
+                        "samtools",
+                        "1.21"
+                    ]
+                ],
+                "versions_star": [
+                    [
+                        "STAR_GENOMEGENERATE",
+                        "star",
+                        "2.7.11b"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-02T14:42:05.002386149"
+    },
+    "fasta": {
+        "content": [
+            "[Genome, Log.out, SA, SAindex, chrLength.txt, chrName.txt, chrNameLength.txt, chrStart.txt, genomeParameters.txt]",
+            {
+                "versions_gawk": [
+                    [
+                        "STAR_GENOMEGENERATE",
+                        "gawk",
+                        "5.1.0"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "STAR_GENOMEGENERATE",
+                        "samtools",
+                        "1.21"
+                    ]
+                ],
+                "versions_star": [
+                    [
+                        "STAR_GENOMEGENERATE",
+                        "star",
+                        "2.7.11b"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-02T14:41:54.327031765"
+    }
+}

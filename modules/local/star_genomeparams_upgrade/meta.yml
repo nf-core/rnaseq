@@ -1,0 +1,80 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: "star_genomeparams_upgrade"
+description: |
+  Upgrade STAR 2.6.x `genomeParameters.txt` metadata into the 2.7.4a-compatible schema. The
+  on-disk binary index files (Genome, SA, SAindex, suffix array, etc.) did not change between
+  STAR 2.6.x and 2.7.4a; only the metadata schema in `genomeParameters.txt` differs. This
+  process symlinks every binary file from the input index unchanged and writes a patched copy
+  of `genomeParameters.txt` next to them, so the upgraded index can be loaded by modern STAR.
+
+  Idempotent: indices already at `versionGenome 2.7.4a` (or any tag other than `20201`) stream
+  through unmodified. Targets the AWS iGenomes STAR indices in particular, which all carry
+  `versionGenome 20201` and lack the `genomeType` / `genomeTransformType` / `genomeTransformVCF`
+  fields written by STAR 2.7.4a+.
+keywords:
+  - star
+  - igenomes
+  - rnaseq
+  - index
+  - compatibility
+tools:
+  - "gawk":
+      description: "GNU awk - used to rewrite genomeParameters.txt metadata"
+      homepage: "https://www.gnu.org/software/gawk/"
+      documentation: "https://www.gnu.org/software/gawk/manual/"
+      licence:
+        - "GPL v3"
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing index information
+          e.g. [ id:'star_index' ]
+    - index:
+        type: directory
+        description: |
+          Pre-built STAR index directory (typically a STAR 2.6.x-built iGenomes index). Must
+          contain a `genomeParameters.txt` file alongside the binary index files.
+        pattern: "*"
+        ontologies: []
+output:
+  index:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing index information
+            e.g. [ id:'star_index' ]
+      - star:
+          type: directory
+          description: |
+            Upgraded STAR index directory. Contains symlinks to every binary file from the
+            input index plus a patched `genomeParameters.txt` rewritten into the 2.7.4a schema.
+          pattern: "star"
+          ontologies: []
+  versions_gawk:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - gawk:
+          type: string
+          description: The name of the tool
+      - awk -Wversion | sed '1!d; s/.*Awk //; s/,.*//':
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - gawk:
+          type: string
+          description: The name of the tool
+      - awk -Wversion | sed '1!d; s/.*Awk //; s/,.*//':
+          type: eval
+          description: The expression to obtain the version of the tool
+authors:
+  - "@pinin4fjords"
+maintainers:
+  - "@pinin4fjords"

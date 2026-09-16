@@ -1,0 +1,88 @@
+{
+    "sarscov2 - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.clip.bedGraph:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        "UCSC_BEDCLIP",
+                        "ucsc",
+                        "377"
+                    ]
+                ],
+                "bedgraph": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.clip.bedGraph:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions_ucsc": [
+                    [
+                        "UCSC_BEDCLIP",
+                        "ucsc",
+                        "377"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-01-19T14:08:43.009868476"
+    },
+    "sarscov2": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.clip.bedGraph:md5,e02395e1f7c593b3f79563067159ebc2"
+                    ]
+                ],
+                "1": [
+                    [
+                        "UCSC_BEDCLIP",
+                        "ucsc",
+                        "377"
+                    ]
+                ],
+                "bedgraph": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.clip.bedGraph:md5,e02395e1f7c593b3f79563067159ebc2"
+                    ]
+                ],
+                "versions_ucsc": [
+                    [
+                        "UCSC_BEDCLIP",
+                        "ucsc",
+                        "377"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-01-19T14:08:37.884007523"
+    }
+}

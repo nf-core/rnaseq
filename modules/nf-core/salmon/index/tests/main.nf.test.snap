@@ -1,0 +1,59 @@
+{
+    "sarscov2 stub": {
+        "content": [
+            "[complete_ref_lens.bin, ctable.bin, ctg_offsets.bin, duplicate_clusters.tsv, info.json, mphf.bin, pos.bin, pre_indexing.log, rank.bin, refAccumLengths.bin, ref_indexing.log, reflengths.bin, refseq.bin, seq.bin, versionInfo.json]",
+            {
+                "versions_salmon": [
+                    [
+                        "SALMON_INDEX",
+                        "salmon",
+                        "1.10.3"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-02T16:08:35.725968411"
+    },
+    "sarscov2": {
+        "content": [
+            "[complete_ref_lens.bin, ctable.bin, ctg_offsets.bin, duplicate_clusters.tsv, info.json, mphf.bin, pos.bin, pre_indexing.log, rank.bin, refAccumLengths.bin, ref_indexing.log, reflengths.bin, refseq.bin, seq.bin, versionInfo.json]",
+            {
+                "versions_salmon": [
+                    [
+                        "SALMON_INDEX",
+                        "salmon",
+                        "1.10.3"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-02T16:08:25.230161687"
+    },
+    "sarscov2 transcriptome only": {
+        "content": [
+            "[complete_ref_lens.bin, ctable.bin, ctg_offsets.bin, duplicate_clusters.tsv, info.json, mphf.bin, pos.bin, pre_indexing.log, rank.bin, refAccumLengths.bin, ref_indexing.log, reflengths.bin, refseq.bin, seq.bin, versionInfo.json]",
+            {
+                "versions_salmon": [
+                    [
+                        "SALMON_INDEX",
+                        "salmon",
+                        "1.10.3"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-02T16:08:30.548863827"
+    }
+}

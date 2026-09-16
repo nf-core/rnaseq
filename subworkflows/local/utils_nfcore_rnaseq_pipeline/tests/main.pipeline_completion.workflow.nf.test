@@ -1,0 +1,39 @@
+nextflow_workflow {
+
+    name "Test Workflow PIPELINE_COMPLETION"
+    script "../main.nf"
+    workflow "PIPELINE_COMPLETION"
+
+    test("test PIPELINE_COMPLETION successfully completes") {
+
+        when {
+            params {
+                // Anchor Nextflow's report/timeline/trace/dag files (wired against
+                // params.outdir in nextflow.config) inside the nf-test sandbox;
+                // without this they land in a literal `null/pipeline_info/` dir.
+                outdir = "${outputDir}"
+            }
+            workflow {
+                """
+                input[0] = null                              // email (only used by completionEmail when set)
+                input[1] = null                              // email_on_fail (likewise)
+                input[2] = true                              // plaintext_email
+                input[3] = "${outputDir}"                    // outdir (unused in this null-email path)
+                input[4] = true                              // monochrome_logs
+                input[5] = "${outputDir}/multiqc_report.html" // multiqc_report
+                input[6] = channel.of(['test_sample', true])
+                input[7] = channel.of(['test_sample', true])
+                input[8] = channel.of(['test_sample', true])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success}
+            )
+        }
+
+    }
+
+}

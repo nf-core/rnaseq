@@ -110,9 +110,9 @@ maintainers:
 containers:
   conda:
     linux/amd64:
-      lock_file: modules/nf-core/multiqc/.conda-lock/linux_amd64-bd-c17fb751507e9dfc_1.txt
+      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-c17fb751507e9dfc_1/condalock
     linux/arm64:
-      lock_file: modules/nf-core/multiqc/.conda-lock/linux_arm64-bd-5c84a5000a226ab5_1.txt
+      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-5c84a5000a226ab5_1/condalock
   docker:
     linux/amd64:
       name: community.wave.seqera.io/library/multiqc:1.35--c17fb751507e9dfc

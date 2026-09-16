@@ -1,0 +1,253 @@
+nextflow_process {
+
+    name "Test Process SAMTOOLS_FAIDX"
+    script "../main.nf"
+    process "SAMTOOLS_FAIDX"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "samtools"
+    tag "samtools/faidx"
+    config "./nextflow.config"
+
+    test("test_samtools_faidx") {
+
+        when {
+            params {
+                module_args = ''
+            }
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
+                    []
+                ]
+                input[1] = false
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assertAll(
+                { assert  snapshot(sanitizeOutput(process.out)).match()}
+            )
+        }
+    }
+
+    test("test_samtools_faidx_bgzip") {
+
+        when {
+            params {
+                module_args = ''
+            }
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.gz', checkIfExists: true),
+                    []
+                ]
+                input[1] = false
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assertAll(
+                { assert  snapshot(sanitizeOutput(process.out)).match()}
+            )
+        }
+    }
+
+    test("test_samtools_faidx_fasta") {
+
+        when {
+            params {
+                module_args = 'MT192765.1 -o extract.fa'
+            }
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)
+                ]
+                input[1] = false
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assertAll(
+                { assert  snapshot(sanitizeOutput(process.out)).match()}
+            )
+        }
+    }
+
+    test("test_samtools_faidx_stub_fasta") {
+
+        options "-stub"
+        when {
+            params {
+                module_args = '-o extract.fa'
+            }
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)
+                ]
+                input[1] = false
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assertAll(
+                { assert  snapshot(sanitizeOutput(process.out)).match()}
+            )
+        }
+    }
+
+    test("test_samtools_faidx_stub_fai") {
+
+        options "-stub"
+        when {
+            params {
+                module_args = ''
+            }
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
+                    []
+                ]
+                input[1] = false
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assertAll(
+                { assert  snapshot(sanitizeOutput(process.out)).match()}
+            )
+        }
+    }
+
+    test("test_samtools_faidx_get_sizes") {
+
+        when {
+            params {
+                module_args = ''
+            }
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
+                    []
+                ]
+                input[1] = true
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assertAll(
+                { assert  snapshot(sanitizeOutput(process.out)).match()}
+            )
+        }
+    }
+
+    test("test_samtools_faidx_get_sizes_bgzip") {
+
+        when {
+            params {
+                module_args = ''
+            }
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.gz', checkIfExists: true),
+                    []
+                ]
+                input[1] = true
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assertAll(
+                { assert  snapshot(sanitizeOutput(process.out)).match()}
+            )
+        }
+    }
+
+    test("test_samtools_faidx_get_sizes - stub") {
+
+        options "-stub"
+
+        when {
+            params {
+                module_args = ''
+            }
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
+                    []
+                ]
+                input[1] = true
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assertAll(
+                { assert  snapshot(sanitizeOutput(process.out)).match()}
+            )
+        }
+    }
+
+    test("test_samtools_faidx_get_sizes_bgzip - stub") {
+
+        options "-stub"
+
+        when {
+            params {
+                module_args = ''
+            }
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.gz', checkIfExists: true),
+                    []
+                ]
+                input[1] = true
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assertAll(
+                { assert snapshot(sanitizeOutput(process.out)).match()}
+            )
+        }
+    }
+
+}

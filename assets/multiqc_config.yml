@@ -3,13 +3,341 @@ report_comment: >
   analysis pipeline. For information about how to interpret these results, please see the
   <a href="https://nf-co.re/rnaseq/dev/docs/output" target="_blank">documentation</a>.
 report_section_order:
+  # Important checks and failures
+  sample-status:
+    order: 5004
+  fail_trimmed_samples-module:
+    order: 5003
+  fail_mapped_samples-module:
+    order: 5002
+  # `strandedness` is the parent-section anchor; 5001 places it with the
+  # other top-level failure checks. The `strand_check_*-module` orders
+  # below control sibling order *within* that parent (composition
+  # bargraph first, summary table second), not a global position.
+  strandedness:
+    order: 5001
+  strand_check_summary-module:
+    order: 2
+  strand_check_composition-module:
+    order: 1
+  # Preprocessing and pre-alignment QC
+  fastqc_raw:
+    order: 4004
+  cutadapt:
+    order: 4003
+  fastp:
+    order: 4003
+  fastqc_trimmed:
+    order: 4002
+  bbmap:
+    order: 4001
+  bowtie2_rrna:
+    order: 4000
+  fastqc_filtered:
+    order: 3999
+  # Alignment
+  star:
+    order: 3000
+  hisat2:
+    order: 3000
+  bowtie2_alignment:
+    order: 3000
+  # Post-alignment QC
+  samtools:
+    order: 3000
+  dupradar-module:
+    order: 3000
+  featurecounts_biotype:
+    order: 3000
+  picard:
+    order: 3000
+  preseq:
+    order: 3000
+  qualimap:
+    order: 3000
+  rseqc:
+    order: 3000
+  umitools:
+    order: 3000
+  # Quantification
+  rsem:
+    order: 2000
+  salmon:
+    order: 2000
+  kallisto:
+    order: 2000
+  # Post-quantification QC
+  sample-relationships:
+    order: 1006
+  star_salmon_deseq2_pca:
+    order: 1005
+  star_salmon_deseq2_clustering:
+    order: 1004
+  salmon_deseq2_pca:
+    order: 1003
+  salmon_deseq2_clustering:
+    order: 1002
+  star_rsem_deseq2_pca:
+    order: 1001
+  star_rsem_deseq2_clustering:
+    order: 1000
+  # Summaries
   "nf-core-rnaseq-methods-description":
     order: -1000
-  software_versions:
+  "software_versions":
     order: -1001
   "nf-core-rnaseq-summary":
     order: -1002
 
 export_plots: true
-
+export_plots_timeout: 60
 disable_version_detection: true
+sample_names_replace_exact: true
+
+# Use log filename (not content) for SortMeRNA sample names.
+# SortMeRNA logs two "Reads file:" lines for paired-end data and the
+# parser picks the second (R2), giving a spurious _2 suffix.
+use_filename_as_sample_name:
+  - sortmerna
+
+# Run only these modules
+run_modules:
+  - custom_content
+  - fastqc
+  - cutadapt
+  - fastp
+  - seqkit
+  - bbmap
+  - sortmerna
+  - bowtie2
+  - star
+  - hisat2
+  - rsem
+  - umitools
+  - umicollapse
+  - salmon
+  - kallisto
+  - samtools
+  - picard
+  - preseq
+  - rseqc
+  - qualimap
+  - kraken
+  - sylphtax
+
+# Order of modules
+
+module_order:
+  - fastqc:
+      anchor: "fastqc_raw"
+      name: "FastQC (raw)"
+      info: "This section of the report shows FastQC results before adapter trimming."
+      path_filters:
+        - "*_raw*fastqc.zip"
+  - cutadapt
+  - fastp
+  - seqkit:
+      name: "SeqKit Stats (rRNA removal)"
+      info: "Read length statistics used by RiboDetector for rRNA removal."
+      path_filters:
+        - "*.rrna_removal_stats.tsv"
+  - fastqc:
+      anchor: "fastqc_trimmed"
+      name: "FastQC (trimmed)"
+      info: "This section of the report shows FastQC results after adapter trimming."
+      path_filters:
+        - "*_trimmed*fastqc.zip"
+  - bowtie2:
+      anchor: "bowtie2_rrna"
+      name: "Bowtie2 (rRNA removal)"
+      info: "This section shows Bowtie2 alignment statistics for rRNA removal. Reads were aligned against an rRNA reference to filter out ribosomal RNA contamination."
+      path_filters:
+        - "*.bowtie2_rrna.bowtie2.log"
+  - fastqc:
+      anchor: "fastqc_filtered"
+      name: "FastQC (filtered)"
+      info: "This section of the report shows FastQC results after contaminant removal (BBSplit) and/or ribosomal RNA removal."
+      path_filters:
+        - "*_filtered*fastqc.zip"
+  - bowtie2:
+      anchor: "bowtie2_alignment"
+      name: "Bowtie2 (alignment)"
+      info: "This section shows Bowtie2 alignment statistics when using Bowtie2 as the primary aligner (e.g. for prokaryotic RNA-seq)."
+      path_filters_exclude:
+        - "*.bowtie2_rrna.bowtie2.log"
+
+# Don't show % Dups in the General Stats table (we have this from Picard)
+table_columns_visible:
+  "FastQC (raw)":
+    percent_duplicates: false
+  "FastQC (trimmed)":
+    percent_duplicates: false
+  "FastQC (filtered)":
+    percent_duplicates: false
+
+# Disambiguate the General Stats table when FastQC is registered in
+# multiple stages (raw / trimmed / filtered). MultiQC namespaces the
+# data per-stage but renders all three with the same column titles, so
+# without these overrides users see three identical "Seqs", "GC", etc.
+# columns side by side.
+table_columns_name:
+  "FastQC (raw)":
+    percent_gc: "GC (raw)"
+    avg_sequence_length: "Avg len (raw)"
+    median_sequence_length: "Median len (raw)"
+    percent_fails: "Failed (raw)"
+    total_sequences: "Seqs (raw)"
+  "FastQC (trimmed)":
+    percent_gc: "GC (trim)"
+    avg_sequence_length: "Avg len (trim)"
+    median_sequence_length: "Median len (trim)"
+    percent_fails: "Failed (trim)"
+    total_sequences: "Seqs (trim)"
+  "FastQC (filtered)":
+    percent_gc: "GC (filt)"
+    avg_sequence_length: "Avg len (filt)"
+    median_sequence_length: "Median len (filt)"
+    percent_fails: "Failed (filt)"
+    total_sequences: "Seqs (filt)"
+
+extra_fn_clean_exts:
+  - ".sortmerna"
+  - ".umi_dedup"
+  - "_val"
+  - ".markdup"
+  - "_primary"
+  - ".namesorted"
+  - ".umi_extract"
+  - type: remove
+    pattern: "_raw"
+  - type: remove
+    pattern: "_trimmed"
+  - type: remove
+    pattern: "_filtered"
+
+# Customise the module search patterns to speed up execution time
+#  - Skip module sub-tools that we are not interested in
+#  - Replace file-content searching with filename pattern searching
+#  - Don't add anything that is the same as the MultiQC default
+# See https://multiqc.info/docs/#optimise-file-search-patterns for details
+sp:
+  cutadapt:
+    fn: "*trimming_report.txt"
+
+  fastp:
+    fn: "*.fastp.json"
+
+  bbmap/bbsplit:
+    fn: "*.stats.txt"
+
+  sortmerna:
+    fn: "*.sortmerna.log"
+
+  bowtie2:
+    fn: "*.bowtie2.log"
+
+  hisat2:
+    fn: "*.hisat2.summary.log"
+
+  seqkit/stats:
+    fn: "*.rrna_removal_stats.tsv"
+
+  salmon/meta:
+    fn: "meta_info.json"
+
+  preseq:
+    fn: "*.lc_extrap.txt"
+
+  samtools/stats:
+    fn: "*.stats"
+  samtools/flagstat:
+    fn: "*.flagstat"
+  samtools/idxstats:
+    fn: "*.idxstats*"
+  kraken:
+    - fn: "*.kraken2.report.txt"
+    - fn: "*.kraken2.report_bracken.txt"
+  sylphtax:
+    - fn: "*.sylphmpa"
+
+  umitools/extract:
+    fn: "*.umi_extract.log"
+  umitools/dedup:
+    fn: "*.umi_dedup*.log"
+
+  umicollapse:
+    fn: "*_UMICollapse.log"
+
+  rseqc/bam_stat:
+    fn: "*.bam_stat.txt"
+  rseqc/gene_body_coverage:
+    skip: true
+  rseqc/junction_annotation:
+    fn: "*.junction_annotation.log"
+  rseqc/read_gc:
+    skip: true
+  rseqc/read_distribution:
+    fn: "*.read_distribution.txt"
+  rseqc/infer_experiment:
+    fn: "*.infer_experiment.txt"
+  rseqc/tin:
+    fn: "*.summary.txt"
+
+  picard/markdups:
+    fn: "*.MarkDuplicates.metrics.txt"
+  picard/alignment_metrics:
+    skip: true
+  picard/basedistributionbycycle:
+    skip: true
+  picard/gcbias:
+    skip: true
+  picard/hsmetrics:
+    skip: true
+  picard/insertsize:
+    skip: true
+  picard/oxogmetrics:
+    skip: true
+  picard/pcr_metrics:
+    skip: true
+  picard/quality_by_cycle:
+    skip: true
+  picard/quality_score_distribution:
+    skip: true
+  picard/quality_yield_metrics:
+    skip: true
+  picard/rnaseqmetrics:
+    skip: true
+  picard/rrbs_metrics:
+    skip: true
+  picard/sam_file_validation:
+    skip: true
+  picard/variant_calling_metrics:
+    skip: true
+  picard/wgs_metrics:
+    skip: true
+
+fn_ignore_files:
+  - "*umi_dedup.transcriptome.sorted.log"
+
+# See https://github.com/ewels/MultiQC_TestData/blob/master/data/custom_content/with_config/table_headerconfig/multiqc_config.yaml
+custom_data:
+  fail_trimmed_samples:
+    section_name: "WARNING: Fail Trimming Check"
+    description: "List of samples that failed the minimum trimmed reads threshold
+      specified via the '--min_trimmed_reads' parameter, and hence were ignored for
+      the downstream processing steps."
+    plot_type: "table"
+    pconfig:
+      id: "fail_trimmed_samples_table"
+      title: "Samples failed trimming threshold"
+      namespace: "Samples failed trimming threshold"
+  fail_mapped_samples:
+    section_name: "WARNING: Fail Alignment Check"
+    description: "List of samples that failed the STAR minimum mapped reads threshold
+      specified via the '--min_mapped_reads' parameter, and hence were ignored for
+      the downstream processing steps."
+    plot_type: "table"
+    pconfig:
+      id: "fail_mapped_samples_table"
+      title: "Samples failed mapping threshold"
+      namespace: "Samples failed mapping threshold"

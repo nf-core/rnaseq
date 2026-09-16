@@ -1,0 +1,17 @@
+name: Nextflow strict syntax lint
+on:
+  pull_request:
+  push:
+    branches: [master, dev]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Nextflow
+        uses: nf-core/setup-nextflow@v2
+
+      - name: Nextflow strict syntax lint
+        run: nextflow lint -o concise -exclude nf-test.config .

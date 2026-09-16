@@ -1,0 +1,132 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: bam_qc_rnaseq
+description: |
+  Run post-alignment QC tools on RNA-seq BAM files including library complexity
+  estimation (Preseq), biotype QC (featureCounts), RNA-seq-specific QC metrics
+  (Qualimap), duplicate rate analysis (dupRadar), and comprehensive RSeQC analysis.
+keywords:
+  - rnaseq
+  - bam
+  - qc
+  - quality_control
+  - preseq
+  - qualimap
+  - dupradar
+  - rseqc
+  - featurecounts
+  - biotype
+components:
+  - preseq/lcextrap
+  - qualimap/rnaseq
+  - dupradar
+  - subread/featurecounts
+  - custom/multiqccustombiotype
+  - samtools/sort
+  - bam_rseqc
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false, strandedness:'reverse' ]
+  - bam:
+      type: file
+      description: Coordinate-sorted BAM file aligned to the genome
+      pattern: "*.{bam}"
+  - bai:
+      type: file
+      description: Index for the genome-aligned BAM file
+      pattern: "*.{bai}"
+  - gtf:
+      type: file
+      description: GTF annotation file
+      pattern: "*.{gtf}"
+  - gene_bed:
+      type: file
+      description: BED12 file for the reference gene model
+      pattern: "*.{bed}"
+  - fasta_fai:
+      type: file
+      description: |
+        Tuple of FASTA and FAI files for samtools sort
+        [ val(meta), path(fasta), path(fai) ]
+  - biotypes_header:
+      type: file
+      description: Header file for biotype counts MultiQC section
+      pattern: "*.{txt}"
+  - tools:
+      type: list
+      description: |
+        List of QC tools to run. Top-level tools: 'preseq', 'biotype_qc', 'qualimap',
+        'dupradar'. RSeQC modules use an 'rseqc_' prefix: 'rseqc_bam_stat',
+        'rseqc_inner_distance', 'rseqc_infer_experiment', 'rseqc_junction_annotation',
+        'rseqc_junction_saturation', 'rseqc_read_distribution', 'rseqc_read_duplication',
+        'rseqc_tin'. Pass an empty list to skip all.
+  - biotype:
+      type: string
+      description: |
+        GTF attribute for biotype grouping (e.g. "gene_type" or "gene_biotype").
+        Only used when 'biotype_qc' is in tools. Set to empty string to skip biotype QC.
+output:
+  - multiqc_files:
+      type: file
+      description: Collected MultiQC-compatible output files from all enabled tools
+  - preseq_lc_extrap:
+      type: file
+      description: Preseq library complexity extrapolation curve
+      pattern: "*.lc_extrap.txt"
+  - preseq_log:
+      type: file
+      description: Preseq log file
+      pattern: "*.log"
+  - featurecounts_counts:
+      type: file
+      description: featureCounts count matrix
+      pattern: "*.featureCounts.txt"
+  - featurecounts_summary:
+      type: file
+      description: featureCounts summary statistics
+      pattern: "*.featureCounts.txt.summary"
+  - biotype_tsv:
+      type: file
+      description: Biotype counts formatted for MultiQC bargraph
+      pattern: "*biotype_counts_mqc.tsv"
+  - biotype_rrna:
+      type: file
+      description: rRNA percentage for MultiQC general stats
+      pattern: "*biotype_counts_rrna_mqc.tsv"
+  - qualimap_results:
+      type: directory
+      description: Qualimap RNA-seq QC results directory
+  - dupradar_multiqc:
+      type: file
+      description: dupRadar MultiQC-compatible output
+      pattern: "*_mqc.txt"
+  - inferexperiment_txt:
+      type: file
+      description: RSeQC infer_experiment results (for strandedness detection)
+      pattern: "*.infer_experiment.txt"
+  - bamstat_txt:
+      type: file
+      description: RSeQC bam_stat report
+      pattern: "*.bam_stat.txt"
+  - readdistribution_txt:
+      type: file
+      description: RSeQC read_distribution report
+      pattern: "*.read_distribution.txt"
+  - tin_txt:
+      type: file
+      description: RSeQC TIN results summary
+      pattern: "*.txt"
+  - per_sample_mqc_bundle:
+      type: tuple
+      description: |
+        Per-sample MultiQC-feeding outputs (Preseq, biotype TSV, Qualimap,
+        dupRadar, and RSeQC bamstat/inferexperiment/innerdistance_freq/
+        junctionannotation_log/junctionsaturation_rscript/readdistribution/
+        readduplication_pos/tin) joined on meta.
+        Structure: [ val(meta), list(files) ]
+authors:
+  - "@pinin4fjords"
+maintainers:
+  - "@pinin4fjords"

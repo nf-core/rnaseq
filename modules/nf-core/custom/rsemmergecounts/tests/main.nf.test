@@ -1,0 +1,94 @@
+nextflow_process {
+
+    name "Test Process CUSTOM_RSEMMERGECOUNTS"
+    script "../main.nf"
+    process "CUSTOM_RSEMMERGECOUNTS"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "custom"
+    tag "custom/rsemmergecounts"
+    tag "untar"
+
+    test("saccharomyces_cerevisiae") {
+
+        setup {
+            run("UNTAR") {
+                script "../../../untar/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id: 'rsem_results' ],
+                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/rsem_results.tar.gz', checkIfExists: true)
+                    ])
+                    """
+                }
+            }
+        }
+
+        when {
+            process {
+                """
+                input[0] = UNTAR.out.untar.flatMap { meta, dir ->
+                    def files = []
+                    dir.toFile().eachFileRecurse { f ->
+                        if (f.name.endsWith('.genes.results')) {
+                            files << f.toPath()
+                        }
+                    }
+                    files
+                }.collect().map { files -> [ [ id: 'rsem_merged' ], files ] }
+                input[1] = UNTAR.out.untar.flatMap { meta, dir ->
+                    def files = []
+                    dir.toFile().eachFileRecurse { f ->
+                        if (f.name.endsWith('.isoforms.results')) {
+                            files << f.toPath()
+                        }
+                    }
+                    files
+                }.collect()
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.counts_gene,
+                    process.out.tpm_gene,
+                    process.out.counts_transcript,
+                    process.out.tpm_transcript,
+                    process.out.genes_long,
+                    process.out.isoforms_long,
+                    process.out.findAll { key, val -> key.startsWith('versions') }
+                ).match() }
+            )
+        }
+    }
+
+    test("saccharomyces_cerevisiae - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = Channel.of(
+                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
+                ).collect().map { files -> [ [ id: 'rsem_merged' ], files ] }
+                input[1] = Channel.of(
+                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
+                ).collect()
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+}

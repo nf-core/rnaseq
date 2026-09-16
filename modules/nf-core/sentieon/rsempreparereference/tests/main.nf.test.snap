@@ -1,0 +1,118 @@
+{
+    "homo_sapiens - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        "genome.fasta:md5,f315020d899597c1b57e5fe9f60f4c3e"
+                    ]
+                ],
+                "1": [
+                    "genome.transcripts.fa:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "2": [
+                    [
+                        "SENTIEON_RSEMPREPAREREFERENCE",
+                        "rsem",
+                        "1.3.1"
+                    ]
+                ],
+                "3": [
+                    [
+                        "SENTIEON_RSEMPREPAREREFERENCE",
+                        "star",
+                        "2.7.10b"
+                    ]
+                ],
+                "4": [
+                    [
+                        "SENTIEON_RSEMPREPAREREFERENCE",
+                        "sentieon",
+                        "202503.02"
+                    ]
+                ],
+                "index": [
+                    [
+                        "genome.fasta:md5,f315020d899597c1b57e5fe9f60f4c3e"
+                    ]
+                ],
+                "transcript_fasta": [
+                    "genome.transcripts.fa:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "versions_rsem": [
+                    [
+                        "SENTIEON_RSEMPREPAREREFERENCE",
+                        "rsem",
+                        "1.3.1"
+                    ]
+                ],
+                "versions_sentieon": [
+                    [
+                        "SENTIEON_RSEMPREPAREREFERENCE",
+                        "sentieon",
+                        "202503.02"
+                    ]
+                ],
+                "versions_star": [
+                    [
+                        "SENTIEON_RSEMPREPAREREFERENCE",
+                        "star",
+                        "2.7.10b"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-01-22T07:31:41.257694207"
+    },
+    "homo_sapiens": {
+        "content": [
+            [
+                [
+                    "genome.chrlist:md5,b190587cae0531f3cf25552d8aa674db",
+                    "genome.fasta:md5,f315020d899597c1b57e5fe9f60f4c3e",
+                    "genome.grp:md5,c2848a8b6d495956c11ec53efc1de67e",
+                    "genome.idx.fa:md5,050c521a2719c2ae48267c1e65218f29",
+                    "genome.n2g.idx.fa:md5,050c521a2719c2ae48267c1e65218f29",
+                    "genome.seq:md5,94da0c6b88c33e63c9a052a11f4f57c1",
+                    "genome.ti:md5,c9e4ae8d4d13a504eec2acf1b8589a66",
+                    "genome.transcripts.fa:md5,050c521a2719c2ae48267c1e65218f29"
+                ]
+            ],
+            [
+                "genome.transcripts.fa:md5,050c521a2719c2ae48267c1e65218f29"
+            ],
+            {
+                "versions_rsem": [
+                    [
+                        "SENTIEON_RSEMPREPAREREFERENCE",
+                        "rsem",
+                        "1.3.1"
+                    ]
+                ],
+                "versions_sentieon": [
+                    [
+                        "SENTIEON_RSEMPREPAREREFERENCE",
+                        "sentieon",
+                        "202503.02"
+                    ]
+                ],
+                "versions_star": [
+                    [
+                        "SENTIEON_RSEMPREPAREREFERENCE",
+                        "star",
+                        "2.7.10b"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-01-22T07:31:34.400783134"
+    }
+}

@@ -136,7 +136,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "/home/ubuntu/rnaseq-update-nfcore-modules-subworkflows/.nf-test/tests/3963ea7a03cad25a4eaca6f483d2f6cd/work/a0/e8849077dbf3c7710eb26f6f3e4a39/test.Log.progress.out"
+                    "test.Log.progress.out:md5,b2bd061d6cbaaf3d6d3b1fed547f69b8"
                 ]
             ],
             [
@@ -148,7 +148,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "/home/ubuntu/rnaseq-update-nfcore-modules-subworkflows/.nf-test/tests/3963ea7a03cad25a4eaca6f483d2f6cd/work/ba/f9a3db2df8d12243db6b8a52d8987f/test.flagstat"
+                    "test.flagstat:md5,db0e25cd0b37d3030e807846c022199e"
                 ]
             ],
             [
@@ -157,7 +157,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "/home/ubuntu/rnaseq-update-nfcore-modules-subworkflows/.nf-test/tests/3963ea7a03cad25a4eaca6f483d2f6cd/work/53/7c777ee674c6efe06884c8dcd77abb/test.idxstats"
+                    "test.idxstats:md5,107ca94dd426cc44db316f0d402307c5"
                 ]
             ],
             "db9a8324b5163b025bcc0c33e848486",
@@ -167,7 +167,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "/home/ubuntu/rnaseq-update-nfcore-modules-subworkflows/.nf-test/tests/3963ea7a03cad25a4eaca6f483d2f6cd/work/21/8c9ed93a380663d4d8bd9625c12d31/test.stats"
+                    "test.stats:md5,e76c5d99b51c31ea24b9b055d0d4f851"
                 ]
             ],
             [
@@ -176,11 +176,11 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "/home/ubuntu/rnaseq-update-nfcore-modules-subworkflows/.nf-test/tests/3963ea7a03cad25a4eaca6f483d2f6cd/work/a0/e8849077dbf3c7710eb26f6f3e4a39/test.SJ.out.tab"
+                    "test.SJ.out.tab:md5,844af19ab0fc8cd9a3f75228445aca0d"
                 ]
             ]
         ],
-        "timestamp": "2026-09-17T11:28:28.030083273",
+        "timestamp": "2026-09-17T14:09:29.274614989",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

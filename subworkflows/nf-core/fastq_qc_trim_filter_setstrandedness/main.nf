@@ -220,6 +220,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         ch_multiqc_files = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_zip
             .mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_zip)
             .mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_log)
+            .mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_json)
             .mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.umi_log)
             .mix(ch_multiqc_files)
     }

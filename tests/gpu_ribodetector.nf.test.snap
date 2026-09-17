@@ -148,7 +148,7 @@
                     "gunzip": 1.13
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": "1.23.1"
+                    "samtools": 1.24
                 },
                 "TRIMGALORE": {
                     "trimgalore": "2.3.0"
@@ -179,14 +179,12 @@
                 "trimgalore/WT_REP2_trimmed_1.fastq.gz_trimming_report.txt",
                 "trimgalore/WT_REP2_trimmed_2.fastq.gz_trimming_report.txt"
             ],
-            [
-                
-            ]
+            []
         ],
+        "timestamp": "2026-09-16T15:06:51.84233411",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.3"
-        },
-        "timestamp": "2026-04-14T11:49:55.204177"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     }
 }

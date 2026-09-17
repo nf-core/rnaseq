@@ -350,7 +350,8 @@
                     "trimgalore": {
                         "branch": "master",
                         "git_sha": "e0dce27411e04123f0fee60eb0f475262c165766",
-                        "installed_by": ["fastq_fastqc_umitools_trimgalore", "modules"]
+                        "installed_by": ["fastq_fastqc_umitools_trimgalore", "modules"],
+                        "patch": "modules/nf-core/trimgalore/trimgalore.diff"
                     },
                     "tximeta/tximport": {
                         "branch": "master",
@@ -464,12 +465,14 @@
                     "fastq_fastqc_umitools_trimgalore": {
                         "branch": "master",
                         "git_sha": "6ef220fd9252b42fb3c50348bbdbcb6246730686",
-                        "installed_by": ["fastq_qc_trim_filter_setstrandedness", "subworkflows"]
+                        "installed_by": ["fastq_qc_trim_filter_setstrandedness", "subworkflows"],
+                        "patch": "subworkflows/nf-core/fastq_fastqc_umitools_trimgalore/fastq_fastqc_umitools_trimgalore.diff"
                     },
                     "fastq_qc_trim_filter_setstrandedness": {
                         "branch": "master",
                         "git_sha": "0853b48c6477aa76c2d77386169a0d510ac817d6",
-                        "installed_by": ["subworkflows"]
+                        "installed_by": ["subworkflows"],
+                        "patch": "subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness/fastq_qc_trim_filter_setstrandedness.diff"
                     },
                     "fastq_remove_rrna": {
                         "branch": "master",

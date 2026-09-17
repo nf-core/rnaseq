@@ -1,0 +1,21 @@
+Changes in component 'nf-core/fastq_qc_trim_filter_setstrandedness'
+'subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness/meta.yml' is unchanged
+Changes in 'fastq_qc_trim_filter_setstrandedness/main.nf':
+--- subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness/main.nf
++++ subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness/main.nf
+@@ -220,6 +220,7 @@
+         ch_multiqc_files = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_zip
+             .mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_zip)
+             .mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_log)
++            .mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_json)
+             .mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.umi_log)
+             .mix(ch_multiqc_files)
+     }
+
+'subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness/tests/nextflow_salmon_fail.config' is unchanged
+'subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness/tests/main.nf.test.snap' is unchanged
+'subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness/tests/main.function.nf.test' is unchanged
+'subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness/tests/main.function.nf.test.snap' is unchanged
+'subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness/tests/nextflow.config' is unchanged
+'subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness/tests/main.nf.test' is unchanged
+************************************************************

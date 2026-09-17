@@ -57,6 +57,18 @@ output:
           pattern: "*report.txt"
           ontologies:
             - edam: "http://edamontology.org/format_2330" # Textual format
+  json:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*report.json":
+          type: file
+          description: trimgalore JSON report, consumed by MultiQC's trim_galore module
+          pattern: "*report.json"
+          ontologies:
+            - edam: "http://edamontology.org/format_3464" # JSON
   unpaired:
     - - meta:
           type: map

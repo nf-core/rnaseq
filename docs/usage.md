@@ -699,7 +699,11 @@ nextflow run nf-core/rnaseq \
     -profile prokaryotic,docker
 ```
 
-When using STAR with `-profile prokaryotic`, the pipeline automatically configures STAR to use CDS features instead of exons for both index building and alignment.
+When using STAR with `-profile prokaryotic`, the pipeline automatically configures STAR to use CDS features instead of exons for both index building and alignment. STAR's `--alignMatesGapMax` is left at its default in this mode, which permits a much larger gap between paired-end mates than a bacterial genome calls for. Bowtie2 doesn't have this problem, since its `--maxins` default (500 bp) already bounds the fragment size sensibly. If you opt into STAR for prokaryotic data, consider constraining the mate gap to match your library's insert size:
+
+```bash
+--extra_star_align_args '--alignMatesGapMax <MaxInsertSize-2*ReadLength>'
+```
 
 ##### Annotation sources
 

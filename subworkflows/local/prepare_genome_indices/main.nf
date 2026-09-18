@@ -256,16 +256,24 @@ workflow PREPARE_GENOME_INDICES {
     ch_salmon_index = channel.empty()
     if (salmon_index) {
         if (salmon_index.endsWith('.tar.gz')) {
-            ch_salmon_index = UNTAR_SALMON_INDEX ( [ [:], salmon_index ] ).untar.map { tuple -> tuple[1] }
+            ch_salmon_index = UNTAR_SALMON_INDEX ( [ [:], salmon_index ] ).untar.first()
         } else {
-            ch_salmon_index = channel.value(file(salmon_index))
+            ch_salmon_index = channel.value([ [:], file(salmon_index) ])
         }
     } else if ('salmon' in prepare_tool_indices) {
         if (ch_transcript_fasta && fasta_provided) {
-            ch_salmon_index = SALMON_INDEX(ch_fasta, ch_transcript_fasta).index
+            // genome_fasta may be an empty list (no decoys); wrap before combine() so an
+            // empty list contributes a position instead of being flattened away
+            ch_salmon_index = SALMON_INDEX(
+                ch_transcript_fasta
+                    .combine(ch_fasta.map { genome_fasta -> [genome_fasta] })
+                    .map { items -> [ [:], items[0], items[1] ] }
+            ).index.first()
         }
         else if (ch_transcript_fasta) {
-            ch_salmon_index = SALMON_INDEX([], ch_transcript_fasta).index
+            ch_salmon_index = SALMON_INDEX(
+                ch_transcript_fasta.map { item -> [ [:], item, [] ] }
+            ).index.first()
         }
     }
 
@@ -275,13 +283,13 @@ workflow PREPARE_GENOME_INDICES {
     ch_kallisto_index = channel.empty()
     if (kallisto_index) {
         if (kallisto_index.endsWith('.tar.gz')) {
-            ch_kallisto_index = UNTAR_KALLISTO_INDEX ( [ [:], kallisto_index ] ).untar
+            ch_kallisto_index = UNTAR_KALLISTO_INDEX ( [ [:], kallisto_index ] ).untar.first()
         } else {
             ch_kallisto_index = channel.value([[:], file(kallisto_index)])
         }
     } else {
         if ('kallisto' in prepare_tool_indices) {
-            ch_kallisto_index = KALLISTO_INDEX ( ch_transcript_fasta.map { item -> [ [:], item ] } ).index
+            ch_kallisto_index = KALLISTO_INDEX ( ch_transcript_fasta.map { item -> [ [:], item ] } ).index.first()
         }
     }
 
@@ -294,6 +302,6 @@ workflow PREPARE_GENOME_INDICES {
     rsem_index          = ch_rsem_index             // channel: path(rsem/index/)
     hisat2_index        = ch_hisat2_index           // channel: path(hisat2/index/)
     bowtie2_index       = ch_bowtie2_index          // channel: path(bowtie2/index/)
-    salmon_index        = ch_salmon_index           // channel: path(salmon/index/)
+    salmon_index        = ch_salmon_index           // channel: [ meta, path(salmon/index/) ]
     kallisto_index      = ch_kallisto_index         // channel: [ meta, path(kallisto/index/) ]
 }

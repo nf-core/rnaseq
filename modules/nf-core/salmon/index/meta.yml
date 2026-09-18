@@ -15,20 +15,32 @@ tools:
       licence: ["GPL-3.0-or-later"]
       identifier: biotools:salmon
 input:
-  - genome_fasta:
-      type: file
-      description: Fasta file of the reference genome
-      ontologies: []
-  - transcript_fasta:
-      type: file
-      description: Fasta file of the reference transcriptome
-      ontologies: []
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'genome' ]
+    - transcript_fasta:
+        type: file
+        description: Fasta file of the reference transcriptome
+        ontologies: []
+    - genome_fasta:
+        type: file
+        description: |
+          Fasta file of the reference genome, used to build decoy sequences.
+          Optional: pass `[]` to build a non-decoy-aware index.
+        ontologies: []
 output:
   index:
-    - salmon:
-        type: directory
-        description: Folder containing the star index files
-        pattern: "salmon"
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing reference information
+            e.g. [ id:'genome' ]
+      - salmon:
+          type: directory
+          description: Folder containing the salmon index files
+          pattern: "salmon"
   versions_salmon:
     - - ${task.process}:
           type: string

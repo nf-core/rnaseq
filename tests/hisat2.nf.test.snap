@@ -182,7 +182,7 @@
                     "rseqc": "5.0.4"
                 },
                 "SALMON_QUANT": {
-                    "salmon": "1.10.3"
+                    "salmon": "2.7.0"
                 },
                 "SAMTOOLS_FAIDX": {
                     "samtools": 1.24
@@ -1198,8 +1198,8 @@
                 "multiqc_featurecounts_biotype_plot.txt:md5,6d251bec0231afccd0682e454a3b17bc",
                 "multiqc_samtools_idxstats.txt:md5,66a8e8aecb6233f5a3521151b1ce8d49",
                 "multiqc_strand_check_composition_bargraph.txt:md5,167bf9bea99fe3651cf410b706b7abd8",
-                "multiqc_strand_check_composition_bargraph_1.txt:md5,6aa97fcc3863afb9b8e9fbe8a02b5cd1",
-                "multiqc_strand_check_summary_table.txt:md5,403d67757cb972959d07595327adee3b",
+                "multiqc_strand_check_composition_bargraph_1.txt:md5,689a17a1bdb9dca64764221d5d88908e",
+                "multiqc_strand_check_summary_table.txt:md5,626b634c1d29ff52f2cd7d6534ec967e",
                 "multiqc_trim_galore.txt:md5,de28bf4448757bdee82d588554428987",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -1214,7 +1214,7 @@
                 "trim_galore_pair_validation_table.txt:md5,b1863fde4bacc276704adcb35c80fb1c"
             ]
         ],
-        "timestamp": "2026-09-17T09:18:13.880028934",
+        "timestamp": "2026-09-18T18:14:01.308761126",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

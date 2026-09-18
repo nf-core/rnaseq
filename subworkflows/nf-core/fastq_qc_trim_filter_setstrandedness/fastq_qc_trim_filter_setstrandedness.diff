@@ -3,7 +3,7 @@ Changes in component 'nf-core/fastq_qc_trim_filter_setstrandedness'
 Changes in 'fastq_qc_trim_filter_setstrandedness/main.nf':
 --- subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness/main.nf
 +++ subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness/main.nf
-@@ -220,6 +220,7 @@
+@@ -222,6 +222,7 @@
          ch_multiqc_files = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_zip
              .mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_zip)
              .mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_log)
@@ -11,6 +11,21 @@ Changes in 'fastq_qc_trim_filter_setstrandedness/main.nf':
              .mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.umi_log)
              .mix(ch_multiqc_files)
      }
+@@ -400,13 +401,8 @@
+     )
+ 
+     FASTQ_SUBSAMPLE_FQ_SALMON.out.lib_format_counts
+-        .join(ch_strand_fastq.auto_strand, remainder: true)
++        .join(ch_strand_fastq.auto_strand)
+         .map { meta, json, reads ->
+-            if (json == null) {
+-                error("Salmon failed to produce lib_format_counts for sample '${meta.id}' " +
+-                    "which was set to 'auto' strandedness. Check that the Salmon " +
+-                    "index matches your input reads, or set strandedness explicitly in the samplesheet.")
+-            }
+             def salmon_strand_analysis = getSalmonInferredStrandedness(json, stranded_threshold, unstranded_threshold)
+             def strandedness = salmon_strand_analysis.inferred_strandedness
+             if (strandedness == 'undetermined') {
 
 'subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness/tests/nextflow_salmon_fail.config' is unchanged
 'subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness/tests/main.nf.test.snap' is unchanged

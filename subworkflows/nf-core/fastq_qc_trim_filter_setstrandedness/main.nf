@@ -51,20 +51,22 @@ def getSalmonInferredStrandedness(json_file, stranded_threshold = 0.8, unstrande
     // Parse the JSON content of the file
     def libCounts = new groovy.json.JsonSlurper().parseText(json_file.text)
 
-    // Calculate the counts for forward and reverse strand fragments
-    def forwardKeys = ['SF', 'ISF', 'MSF', 'OSF']
-    def reverseKeys = ['SR', 'ISR', 'MSR', 'OSR']
-
     // Calculate unstranded fragments (IU and U)
     // NOTE: this is here for completeness, but actually all fragments have a
     // strandedness (even if the overall library does not), so all these values
     // will be '0'. See
     // https://groups.google.com/g/sailfish-users/c/yxzBDv6NB6I
     def unstrandedKeys = ['IU', 'U', 'MU']
-
-    def forwardFragments = forwardKeys.collect { key -> libCounts[key] ?: 0 }.sum()
-    def reverseFragments = reverseKeys.collect { key -> libCounts[key] ?: 0 }.sum()
     def unstrandedFragments = unstrandedKeys.collect { key -> libCounts[key] ?: 0 }.sum()
+
+    // The per-format keys (SF, ISF, MSF, OSF, ...) are not fragment-exclusive:
+    // a fragment's candidate placements can increment both the sense and
+    // antisense variant. `strand_mapping_bias` is salmon's fragment-exclusive
+    // measure of the sense share of the resolved orientation instead.
+    def numAssignedFragments = (libCounts['num_assigned_fragments'] ?: 0) as double
+    def strandMappingBias = (libCounts['strand_mapping_bias'] ?: 0.0) as double
+    def forwardFragments = strandMappingBias * numAssignedFragments
+    def reverseFragments = (1 - strandMappingBias) * numAssignedFragments
 
     // Use shared calculation function to determine strandedness
     return calculateStrandedness(forwardFragments, reverseFragments, unstrandedFragments, stranded_threshold, unstranded_threshold)

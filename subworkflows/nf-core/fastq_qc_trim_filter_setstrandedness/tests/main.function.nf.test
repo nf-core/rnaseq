@@ -18,10 +18,8 @@ nextflow_function {
 
                 // Define the JSON contents for the test
                 def json_contents = JsonOutput.toJson([
-                    "SF": 0,
-                    "SR": 0,
-                    "ISF": 100,
-                    "ISR": 100,
+                    "strand_mapping_bias": 0.5,
+                    "num_assigned_fragments": 200,
                     "IU": 0,
                     "U": 0
                 ])
@@ -54,10 +52,8 @@ nextflow_function {
                 import groovy.json.JsonOutput
 
                 def json_contents = JsonOutput.toJson([
-                    "SF": 0,
-                    "SR": 0,
-                    "ISF": 100,
-                    "ISR": 0,
+                    "strand_mapping_bias": 1.0,
+                    "num_assigned_fragments": 100,
                     "IU": 0,
                     "U": 0
                 ])
@@ -90,10 +86,8 @@ nextflow_function {
                 import groovy.json.JsonOutput
 
                 def json_contents = JsonOutput.toJson([
-                    "SF": 0,
-                    "SR": 0,
-                    "ISF": 0,
-                    "ISR": 100,
+                    "strand_mapping_bias": 0.0,
+                    "num_assigned_fragments": 100,
                     "IU": 0,
                     "U": 0
                 ])

@@ -2,8 +2,8 @@ nextflow_workflow {
 
     name "Test Workflow FASTQ_SUBSAMPLE_FQ_SALMON"
     script "../main.nf"
-    workflow "FASTQ_SUBSAMPLE_FQ_SALMON"
     config "./nextflow.config"
+    workflow "FASTQ_SUBSAMPLE_FQ_SALMON"
     tag "subworkflows"
     tag "subworkflows_nfcore"
     tag "subworkflows/fastq_subsample_fq_salmon"
@@ -19,8 +19,11 @@ nextflow_workflow {
                 script "../../../../modules/nf-core/salmon/index/main.nf"
                 process {
                 """
-                input[0] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))        // genome_fasta
-                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/transcriptome.fasta', checkIfExists: true)) // transcriptome_fasta
+                input[0] = channel.of([
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/transcriptome.fasta', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                ])
                 """
                 }
             }
@@ -31,15 +34,15 @@ nextflow_workflow {
                 """
                 make_index = false
 
-                input[0] = Channel.of([
+                input[0] = channel.of([
                     [ id:'test', single_end:false ], // meta map
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
                 ])
-                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))        // genome_fasta
-                input[2] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/transcriptome.fasta', checkIfExists: true)) // transcriptome_fasta
-                input[3] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))          // genome_gtf
-                input[4] = SALMON_INDEX.out.index
+                input[1] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))        // genome_fasta
+                input[2] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/transcriptome.fasta', checkIfExists: true)) // transcriptome_fasta
+                input[3] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))          // genome_gtf
+                input[4] = SALMON_INDEX.out.index.map { meta, idx -> idx } // ch_index take: param is a bare path
                 input[5] = make_index
                 """
             }
@@ -72,8 +75,11 @@ nextflow_workflow {
                 script "../../../../modules/nf-core/salmon/index/main.nf"
                 process {
                 """
-                input[0] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))        // genome_fasta
-                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/transcriptome.fasta', checkIfExists: true)) // transcriptome_fasta
+                input[0] = channel.of([
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/transcriptome.fasta', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                ])
                 """
                 }
             }
@@ -84,15 +90,15 @@ nextflow_workflow {
                 """
                 make_index = false
 
-                input[0] = Channel.of([
+                input[0] = channel.of([
                     [ id:'test', single_end:false ], // meta map
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
                 ])
-                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))        // genome_fasta
-                input[2] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/transcriptome.fasta', checkIfExists: true)) // transcriptome_fasta
-                input[3] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))          // genome_gtf
-                input[4] = SALMON_INDEX.out.index
+                input[1] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))        // genome_fasta
+                input[2] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/transcriptome.fasta', checkIfExists: true)) // transcriptome_fasta
+                input[3] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))          // genome_gtf
+                input[4] = SALMON_INDEX.out.index.map { meta, idx -> idx } // ch_index take: param is a bare path
                 input[5] = make_index
                 """
             }
@@ -103,7 +109,7 @@ nextflow_workflow {
             def readlines2 = path(workflow.out.reads[0][1][1]).linesGzip
             assertAll(
                 { assert workflow.success },
-                { assert snapshot(workflow.out).match() }
+                { assert snapshot(sanitizeOutput(workflow.out)).match() }
             )
         }
     }

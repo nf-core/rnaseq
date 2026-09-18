@@ -26,7 +26,8 @@ input:
   - index:
       type: path
       description: |
-        Path to Salmon or Kallisto index in the tool-appropriate form.
+        Channel of `[ val(meta2), index ]`: Salmon or Kallisto index in the
+        tool-appropriate form.
   - transcript_fasta:
       type: file
       description: |
@@ -47,13 +48,6 @@ input:
   - pseudo_aligner:
       type: string
       description: Pseudoaligner, `kallisto` or `salmon`.
-  - alignment_mode:
-      type: boolean
-      description: |
-        If running Salmon, run in alignment mode (`true` or `false`).
-  - lib_type:
-      type: string
-      description: String to override Salmon library type.
   - kallisto_quant_fraglen:
       type: integer
       description: |

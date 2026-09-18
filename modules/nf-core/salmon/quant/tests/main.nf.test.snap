@@ -2,217 +2,514 @@
     "sarscov2 - single_end": {
         "content": [
             {
+                "json_info": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test_meta_info.json"
+                    ]
+                ],
+                "lib_format_counts": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test_lib_format_counts.json:md5,b4aad6b4e6b7ff40aa408658526ec45d"
+                    ]
+                ],
+                "results": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        [
+                            [
+                                "ambig_info.tsv",
+                                "expected_bias.gz",
+                                "fld.gz",
+                                "genemap_unmatched_txps.json",
+                                "meta_info.json",
+                                "observed_bias.gz",
+                                "observed_bias_3p.gz"
+                            ],
+                            "cmd_info.json",
+                            [
+                                "flenDist.txt"
+                            ],
+                            "lib_format_counts.json",
+                            [
+                                "salmon_quant.log"
+                            ],
+                            "quant.genes.sf",
+                            "quant.sf"
+                        ]
+                    ]
+                ],
                 "versions_salmon": [
                     [
                         "SALMON_QUANT",
                         "salmon",
-                        "1.10.3"
+                        "2.7.0"
                     ]
                 ]
-            },
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": true
-                    },
-                    "test_lib_format_counts.json:md5,c7999dfccd32c090d94e5951522eecd4"
-                ]
-            ]
+            }
         ],
+        "timestamp": "2026-09-17T10:40:41.01737003",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-01-19T14:53:59.375252"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
     },
     "sarscov2 - single_end stub": {
         "content": [
             {
+                "json_info": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test_meta_info.json"
+                    ]
+                ],
+                "lib_format_counts": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test_lib_format_counts.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "results": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        [
+                            
+                        ]
+                    ]
+                ],
                 "versions_salmon": [
                     [
                         "SALMON_QUANT",
                         "salmon",
-                        "1.10.3"
+                        "2.7.0"
                     ]
                 ]
-            },
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": true
-                    },
-                    "test_lib_format_counts.json:md5,d41d8cd98f00b204e9800998ecf8427e"
-                ]
-            ]
+            }
         ],
+        "timestamp": "2026-09-17T10:40:45.97980905",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-01-19T14:54:06.507228"
-    },
-    "sarscov2 - single_end lib type A": {
-        "content": [
-            {
-                "versions_salmon": [
-                    [
-                        "SALMON_QUANT",
-                        "salmon",
-                        "1.10.3"
-                    ]
-                ]
-            },
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": true
-                    },
-                    "test_lib_format_counts.json:md5,c7999dfccd32c090d94e5951522eecd4"
-                ]
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-01-19T14:54:15.005117"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
     },
     "sarscov2 - pair_end multiple": {
         "content": [
             {
+                "json_info": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_meta_info.json"
+                    ]
+                ],
+                "lib_format_counts": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_lib_format_counts.json:md5,2399e49b9761717e4bca87edcb134886"
+                    ]
+                ],
+                "results": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            [
+                                "ambig_info.tsv",
+                                "expected_bias.gz",
+                                "fld.gz",
+                                "genemap_unmatched_txps.json",
+                                "meta_info.json",
+                                "observed_bias.gz",
+                                "observed_bias_3p.gz"
+                            ],
+                            "cmd_info.json",
+                            [
+                                "flenDist.txt"
+                            ],
+                            "lib_format_counts.json",
+                            [
+                                "salmon_quant.log"
+                            ],
+                            "quant.genes.sf",
+                            "quant.sf"
+                        ]
+                    ]
+                ],
                 "versions_salmon": [
                     [
                         "SALMON_QUANT",
                         "salmon",
-                        "1.10.3"
+                        "2.7.0"
                     ]
                 ]
-            },
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test_lib_format_counts.json:md5,4a2ee0fac91a4a3471872808d8bd3ff8"
-                ]
-            ]
+            }
         ],
+        "timestamp": "2026-09-17T10:41:21.461814941",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-01-19T14:54:48.338822"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
     },
     "sarscov2 - pair_end multiple stub": {
         "content": [
             {
+                "json_info": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_meta_info.json"
+                    ]
+                ],
+                "lib_format_counts": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_lib_format_counts.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "results": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            
+                        ]
+                    ]
+                ],
                 "versions_salmon": [
                     [
                         "SALMON_QUANT",
                         "salmon",
-                        "1.10.3"
+                        "2.7.0"
                     ]
                 ]
-            },
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test_lib_format_counts.json:md5,d41d8cd98f00b204e9800998ecf8427e"
-                ]
-            ]
+            }
         ],
+        "timestamp": "2026-09-17T10:41:26.521726521",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-01-19T14:54:56.134603"
-    },
-    "sarscov2 - single_end lib type A stub": {
-        "content": [
-            {
-                "versions_salmon": [
-                    [
-                        "SALMON_QUANT",
-                        "salmon",
-                        "1.10.3"
-                    ]
-                ]
-            },
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": true
-                    },
-                    "test_lib_format_counts.json:md5,d41d8cd98f00b204e9800998ecf8427e"
-                ]
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-01-19T14:54:22.024404"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
     },
     "sarscov2 - pair_end": {
         "content": [
             {
+                "json_info": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_meta_info.json"
+                    ]
+                ],
+                "lib_format_counts": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_lib_format_counts.json:md5,76c300ca12c8fa42899e25249c980bf7"
+                    ]
+                ],
+                "results": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            [
+                                "ambig_info.tsv",
+                                "expected_bias.gz",
+                                "fld.gz",
+                                "genemap_unmatched_txps.json",
+                                "meta_info.json",
+                                "observed_bias.gz",
+                                "observed_bias_3p.gz"
+                            ],
+                            "cmd_info.json",
+                            [
+                                "flenDist.txt"
+                            ],
+                            "lib_format_counts.json",
+                            [
+                                "salmon_quant.log"
+                            ],
+                            "quant.genes.sf",
+                            "quant.sf"
+                        ]
+                    ]
+                ],
                 "versions_salmon": [
                     [
                         "SALMON_QUANT",
                         "salmon",
-                        "1.10.3"
+                        "2.7.0"
                     ]
                 ]
-            },
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": true
-                    },
-                    "test_lib_format_counts.json:md5,e9516e73c9fb39145513b2a41a0af95f"
-                ]
-            ]
+            }
         ],
+        "timestamp": "2026-09-17T10:41:06.115853023",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-01-19T14:54:30.967174"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    },
+    "sarscov2 - single_end multiple files": {
+        "content": [
+            {
+                "json_info": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test_meta_info.json"
+                    ]
+                ],
+                "lib_format_counts": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test_lib_format_counts.json:md5,db7aa154674893b376f31f786e515c19"
+                    ]
+                ],
+                "results": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        [
+                            [
+                                "ambig_info.tsv",
+                                "expected_bias.gz",
+                                "fld.gz",
+                                "genemap_unmatched_txps.json",
+                                "meta_info.json",
+                                "observed_bias.gz",
+                                "observed_bias_3p.gz"
+                            ],
+                            "cmd_info.json",
+                            [
+                                "flenDist.txt"
+                            ],
+                            "lib_format_counts.json",
+                            [
+                                "salmon_quant.log"
+                            ],
+                            "quant.genes.sf",
+                            "quant.sf"
+                        ]
+                    ]
+                ],
+                "versions_salmon": [
+                    [
+                        "SALMON_QUANT",
+                        "salmon",
+                        "2.7.0"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-09-17T10:40:51.033449766",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
     },
     "sarscov2 - pair_end stub": {
         "content": [
             {
+                "json_info": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_meta_info.json"
+                    ]
+                ],
+                "lib_format_counts": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_lib_format_counts.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "results": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            
+                        ]
+                    ]
+                ],
                 "versions_salmon": [
                     [
                         "SALMON_QUANT",
                         "salmon",
-                        "1.10.3"
+                        "2.7.0"
                     ]
                 ]
-            },
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": true
-                    },
-                    "test_lib_format_counts.json:md5,d41d8cd98f00b204e9800998ecf8427e"
-                ]
-            ]
+            }
         ],
+        "timestamp": "2026-09-17T10:41:11.077074589",
         "meta": {
-            "nf-test": "0.9.3",
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    },
+    "sarscov2 - single_end multiple files stub": {
+        "content": [
+            {
+                "json_info": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test_meta_info.json"
+                    ]
+                ],
+                "lib_format_counts": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test_lib_format_counts.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "results": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        [
+                            
+                        ]
+                    ]
+                ],
+                "versions_salmon": [
+                    [
+                        "SALMON_QUANT",
+                        "salmon",
+                        "2.7.0"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-09-17T10:41:16.375853755",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    },
+    "sarscov2 - single_end multiple files ext.args sets libType": {
+        "content": [
+            {
+                "json_info": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test_meta_info.json"
+                    ]
+                ],
+                "lib_format_counts": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test_lib_format_counts.json:md5,48398ca379550e300e32bf26829d42f9"
+                    ]
+                ],
+                "results": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        [
+                            [
+                                "ambig_info.tsv",
+                                "expected_bias.gz",
+                                "fld.gz",
+                                "genemap_unmatched_txps.json",
+                                "meta_info.json",
+                                "observed_bias.gz",
+                                "observed_bias_3p.gz"
+                            ],
+                            "cmd_info.json",
+                            [
+                                "flenDist.txt"
+                            ],
+                            "lib_format_counts.json",
+                            [
+                                "salmon_quant.log"
+                            ],
+                            "quant.genes.sf",
+                            "quant.sf"
+                        ]
+                    ]
+                ],
+                "versions_salmon": [
+                    [
+                        "SALMON_QUANT",
+                        "salmon",
+                        "2.7.0"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-09-17T11:28:39.065471076",
+        "meta": {
+            "nf-test": "0.9.5",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-01-19T14:54:38.572004"
+        }
     }
 }

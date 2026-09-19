@@ -22,13 +22,9 @@ nextflow_process {
         }
 
         then {
-            assertAll (
+            assertAll(
                 { assert process.success },
-                { assert snapshot(
-                    process.out.reads.collect { item -> item.collect { element -> element instanceof Map ? element : file(element).name }},
-                    process.out.log.collect { item -> item.collect { element -> element instanceof Map ? element : file(element).name }},
-                    process.out.findAll { key, val -> key.startsWith('versions') }
-                ).match() }
+                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["log"])).match() }
             )
         }
     }
@@ -69,14 +65,9 @@ nextflow_process {
         }
 
         then {
-            assertAll (
+            assertAll(
                 { assert process.success },
-                { assert snapshot(
-                    file(process.out.reads[0][1][0]).name,
-                    file(process.out.reads[0][1][1]).name,
-                    process.out.log.collect { item -> item.collect { element -> element instanceof Map ? element : file(element).name }},
-                    process.out.findAll { key, val -> key.startsWith('versions') }
-                ).match() }
+                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["log"])).match() }
             )
         }
     }

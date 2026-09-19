@@ -12,10 +12,10 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:true ], // meta map
+                input[0] = [
+                    [ id:'test', single_end:true ],
                     [ file(params.modules_testdata_base_path + 'delete_me/preseq/SRR1003759_5M_subset.mr', checkIfExists: true) ]
-                ])
+                ]
                 """
             }
         }
@@ -23,26 +23,20 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(
-                    file(process.out.log[0][1]).name,
-                    process.out.lc_extrap,
-                    process.out.findAll { key, val -> key.startsWith('versions') }
-                ).match() }
+                { assert snapshot(sanitizeOutput(process.out, unstableKeys:["log"])).match() }
             )
         }
     }
 
     test("sarscov2 - single_end - stub") {
-
         options "-stub"
-
         when {
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:true ], // meta map
+                input[0] = [
+                    [ id:'test', single_end:true ],
                     [ file(params.modules_testdata_base_path + 'delete_me/preseq/SRR1003759_5M_subset.mr', checkIfExists: true) ]
-                ])
+                ]
                 """
             }
         }
@@ -50,7 +44,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(sanitizeOutput(process.out)).match() }
             )
         }
     }
@@ -59,10 +53,10 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false ], // meta map
+                input[0] = [
+                    [ id:'test', single_end:false ],
                     [ file(params.modules_testdata_base_path + 'delete_me/preseq/SRR1003759_5M_subset.mr', checkIfExists: true) ]
-                ])
+                ]
                 """
             }
         }
@@ -70,26 +64,20 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(
-                    file(process.out.log[0][1]).name,
-                    process.out.lc_extrap,
-                    process.out.findAll { key, val -> key.startsWith('versions') }
-                ).match() }
+                { assert snapshot(sanitizeOutput(process.out, unstableKeys:["log"])).match() }
             )
         }
     }
 
     test("sarscov2 - paired_end - stub") {
-
         options "-stub"
-
         when {
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false ], // meta map
+                input[0] = [
+                    [ id:'test', single_end:false ],
                     [ file(params.modules_testdata_base_path + 'delete_me/preseq/SRR1003759_5M_subset.mr', checkIfExists: true) ]
-                ])
+                ]
                 """
             }
         }
@@ -97,7 +85,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(sanitizeOutput(process.out)).match() }
             )
         }
     }

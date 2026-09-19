@@ -68,7 +68,7 @@ workflow FASTQ_REMOVE_RRNA {
                 ch_sortmerna_fastas,
                 [[], []],
             )
-            ch_sortmerna_index = SORTMERNA_INDEX.out.index.first()
+            ch_sortmerna_index = SORTMERNA_INDEX.out.index
         }
 
         SORTMERNA(

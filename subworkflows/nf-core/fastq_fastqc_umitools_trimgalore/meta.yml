@@ -13,16 +13,14 @@ components:
   - umitools/extract
   - trimgalore
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test' ]
   - reads:
       type: file
       description: |
         List of input FastQ files of size 1 and 2 for single-end and paired-end data,
         respectively.
+
+        Structure: [ val(meta), [ path(reads) ] ]
+      pattern: "*.{fastq.gz}"
   - skip_fastqc:
       type: boolean
       description: |
@@ -50,49 +48,80 @@ input:
 output:
   - reads:
       type: file
+      description: |
+        FastQ files after optional UMI extraction and adapter trimming, filtered on
+        the minimum trimmed read count.
+
+        Structure: [ val(meta), [ path(reads) ] ]
+      pattern: "*.{fastq.gz}"
+  - fastqc_html:
+      type: file
+      description: |
+        FastQC report.
+
+        Structure: [ val(meta), [ path(html) ] ]
+      pattern: "*_{fastqc.html}"
+  - fastqc_zip:
+      type: file
+      description: |
+        FastQC report archive.
+
+        Structure: [ val(meta), [ path(zip) ] ]
+      pattern: "*_{fastqc.zip}"
+  - umi_log:
+      type: file
+      description: |
+        Logfile for umi_tools.
+
+        Structure: [ val(meta), path(log) ]
+      pattern: "*.{log}"
+  - umi_reads:
+      type: file
       description: >
         Extracted FASTQ files. | For single-end reads, pattern is \${prefix}.umi_extract.fastq.gz. |
 
 
 
-          For paired-end reads, pattern is \${prefix}.umi_extract_{1,2}.fastq.gz.
+          For paired-end reads, pattern is \${prefix}.umi_extract_{1,2}.fastq.gz. |
+
+
+
+          Structure: [ val(meta), [ path(reads) ] ]
       pattern: "*.{fastq.gz}"
-  - fastqc_html:
-      type: file
-      description: FastQC report
-      pattern: "*_{fastqc.html}"
-  - fastqc_zip:
-      type: file
-      description: FastQC report archive
-      pattern: "*_{fastqc.zip}"
-  - log:
-      type: file
-      description: Logfile for umi_tools
-      pattern: "*.{log}"
   - trim_unpaired:
       type: file
       description: |
-        FastQ files containing unpaired reads from read 1 or read 2
+        FastQ files containing unpaired reads from read 1 or read 2.
+
+        Structure: [ val(meta), [ path(reads) ] ]
       pattern: "*unpaired*.fq.gz"
   - trim_html:
       type: file
-      description: FastQC report (optional)
+      description: |
+        FastQC report (optional).
+
+        Structure: [ val(meta), [ path(html) ] ]
       pattern: "*_{fastqc.html}"
   - trim_zip:
       type: file
-      description: FastQC report archive (optional)
+      description: |
+        FastQC report archive (optional).
+
+        Structure: [ val(meta), [ path(zip) ] ]
       pattern: "*_{fastqc.zip}"
   - trim_log:
       type: file
-      description: Trim Galore! trimming report
+      description: |
+        Trim Galore! trimming report.
+
+        Structure: [ val(meta), [ path(txt) ] ]
       pattern: "*_{report.txt}"
   - trim_read_count:
       type: integer
-      description: Number of reads remaining after trimming for all input samples
-  - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
+      description: |
+        Number of reads remaining after trimming for all input samples.
+
+        Structure: [ val(meta), val(count) ]
 authors:
   - "@drpatelh"
   - "@KamilMaliszArdigen"

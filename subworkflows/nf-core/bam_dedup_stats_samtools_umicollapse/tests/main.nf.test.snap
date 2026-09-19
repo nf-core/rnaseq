@@ -6,15 +6,15 @@
                     {
                         "id": "test"
                     },
-                    "test.stats:md5,86c44e85a5523849aa2315d069dace8a"
+                    "test.stats:md5,0820fa64eb353406bbedb913ca898ba8"
                 ]
             ]
         ],
+        "timestamp": "2026-07-10T08:38:32.509121",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-03-12T12:36:14.786257"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
     },
     "test_bam_dedup_stats_samtools_umicollapse_flagstats": {
         "content": [
@@ -27,11 +27,11 @@
                 ]
             ]
         ],
+        "timestamp": "2026-02-03T09:58:09.226353172",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-03T09:58:09.226353172"
+        }
     },
     "test_bam_dedup_stats_samtools_umicollapse_idxstats": {
         "content": [
@@ -44,20 +44,20 @@
                 ]
             ]
         ],
+        "timestamp": "2026-02-03T09:58:09.233354058",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-03T09:58:09.233354058"
+        }
     },
     "test_bam_dedup_stats_samtools_umicollapse_bam": {
         "content": [
-            "b7be15ac7aae194b04bdbb56f3534495"
+            "2ba8b456c322daac5b454a84b7568ad"
         ],
+        "timestamp": "2026-02-03T09:58:09.209299524",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-03T09:58:09.209299524"
+        }
     }
 }

@@ -36,16 +36,16 @@
                     [
                         "PICARD_MARKDUPLICATES",
                         "picard",
-                        "3.4.0"
+                        "3.5.0"
                     ]
                 ]
             }
         ],
+        "timestamp": "2026-02-19T17:43:13.544887277",
         "meta": {
             "nf-test": "0.9.4",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-02-19T17:43:13.544887277"
+        }
     },
     "sarscov2 [unsorted bam] - stub": {
         "content": [
@@ -84,20 +84,22 @@
                     [
                         "PICARD_MARKDUPLICATES",
                         "picard",
-                        "3.4.0"
+                        "3.5.0"
                     ]
                 ]
             }
         ],
+        "timestamp": "2026-02-19T17:43:06.193033248",
         "meta": {
             "nf-test": "0.9.4",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-02-19T17:43:06.193033248"
+        }
     },
     "sarscov2 [unsorted bam]": {
         "content": [
-            "test.md.bam",
+            [
+                "test.md.bam:readsMD5,762e859a3d0ed1553655cde77665c940"
+            ],
             [
                 "## htsjdk.samtools.metrics.StringHeader",
                 "# MarkDuplicates --INPUT test.paired_end.bam --OUTPUT test.md.bam --METRICS_FILE test.md.metrics.txt --ASSUME_SORT_ORDER queryname --MAX_SEQUENCES_FOR_DISK_READ_ENDS_MAP 50000 --MAX_FILE_HANDLES_FOR_READ_ENDS_MAP 8000 --SORTING_COLLECTION_SIZE_RATIO 0.25 --TAG_DUPLICATE_SET_MEMBERS false --REMOVE_SEQUENCING_DUPLICATES false --TAGGING_POLICY DontTag --CLEAR_DT true --DUPLEX_UMI false --FLOW_MODE false --FLOW_DUP_STRATEGY FLOW_QUALITY_SUM_STRATEGY --FLOW_USE_END_IN_UNPAIRED_READS false --FLOW_USE_UNPAIRED_CLIPPED_END false --FLOW_UNPAIRED_END_UNCERTAINTY 0 --FLOW_UNPAIRED_START_UNCERTAINTY 0 --FLOW_SKIP_FIRST_N_FLOWS 0 --FLOW_Q_IS_KNOWN_END false --FLOW_EFFECTIVE_QUALITY_THRESHOLD 15 --ADD_PG_TAG_TO_READS true --REMOVE_DUPLICATES false --ASSUME_SORTED false --DUPLICATE_SCORING_STRATEGY SUM_OF_BASE_QUALITIES --PROGRAM_RECORD_ID MarkDuplicates --PROGRAM_GROUP_NAME MarkDuplicates --READ_NAME_REGEX <optimized capture of last three ':' separated fields as numeric values> --OPTICAL_DUPLICATE_PIXEL_DISTANCE 100 --MAX_OPTICAL_DUPLICATE_SET_SIZE 300000 --VERBOSITY INFO --QUIET false --VALIDATION_STRINGENCY STRICT --COMPRESSION_LEVEL 5 --MAX_RECORDS_IN_RAM 500000 --CREATE_INDEX false --CREATE_MD5_FILE false --help false --version false --showHidden false --USE_JDK_DEFLATER false --USE_JDK_INFLATER false",
@@ -108,20 +110,22 @@
                     [
                         "PICARD_MARKDUPLICATES",
                         "picard",
-                        "3.4.0"
+                        "3.5.0"
                     ]
                 ]
             }
         ],
+        "timestamp": "2026-08-19T18:40:56.948628",
         "meta": {
-            "nf-test": "0.9.4",
-            "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-02-19T17:42:40.574463587"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
     },
     "sarscov2 [sorted bam]": {
         "content": [
-            "test.md.bam",
+            [
+                "test.md.bam:readsMD5,894549ee3ced6b5ca2eed2563a985217"
+            ],
             [
                 "## htsjdk.samtools.metrics.StringHeader",
                 "# MarkDuplicates --INPUT test.paired_end.sorted.bam --OUTPUT test.md.bam --METRICS_FILE test.md.metrics.txt --ASSUME_SORT_ORDER queryname --MAX_SEQUENCES_FOR_DISK_READ_ENDS_MAP 50000 --MAX_FILE_HANDLES_FOR_READ_ENDS_MAP 8000 --SORTING_COLLECTION_SIZE_RATIO 0.25 --TAG_DUPLICATE_SET_MEMBERS false --REMOVE_SEQUENCING_DUPLICATES false --TAGGING_POLICY DontTag --CLEAR_DT true --DUPLEX_UMI false --FLOW_MODE false --FLOW_DUP_STRATEGY FLOW_QUALITY_SUM_STRATEGY --FLOW_USE_END_IN_UNPAIRED_READS false --FLOW_USE_UNPAIRED_CLIPPED_END false --FLOW_UNPAIRED_END_UNCERTAINTY 0 --FLOW_UNPAIRED_START_UNCERTAINTY 0 --FLOW_SKIP_FIRST_N_FLOWS 0 --FLOW_Q_IS_KNOWN_END false --FLOW_EFFECTIVE_QUALITY_THRESHOLD 15 --ADD_PG_TAG_TO_READS true --REMOVE_DUPLICATES false --ASSUME_SORTED false --DUPLICATE_SCORING_STRATEGY SUM_OF_BASE_QUALITIES --PROGRAM_RECORD_ID MarkDuplicates --PROGRAM_GROUP_NAME MarkDuplicates --READ_NAME_REGEX <optimized capture of last three ':' separated fields as numeric values> --OPTICAL_DUPLICATE_PIXEL_DISTANCE 100 --MAX_OPTICAL_DUPLICATE_SET_SIZE 300000 --VERBOSITY INFO --QUIET false --VALIDATION_STRINGENCY STRICT --COMPRESSION_LEVEL 5 --MAX_RECORDS_IN_RAM 500000 --CREATE_INDEX false --CREATE_MD5_FILE false --help false --version false --showHidden false --USE_JDK_DEFLATER false --USE_JDK_INFLATER false",
@@ -132,20 +136,22 @@
                     [
                         "PICARD_MARKDUPLICATES",
                         "picard",
-                        "3.4.0"
+                        "3.5.0"
                     ]
                 ]
             }
         ],
+        "timestamp": "2026-08-19T18:41:17.239873",
         "meta": {
-            "nf-test": "0.9.4",
-            "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-02-19T17:42:49.374645492"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
     },
     "homo_sapiens [cram]": {
         "content": [
-            "test.md.cram",
+            [
+                "test.md.cram:readsMD5,2f11e4fe3390b8ad0a1852616fd1da04"
+            ],
             [
                 "## htsjdk.samtools.metrics.StringHeader",
                 "# MarkDuplicates --INPUT test.paired_end.sorted.cram --OUTPUT test.md.cram --METRICS_FILE test.md.metrics.txt --ASSUME_SORT_ORDER queryname --REFERENCE_SEQUENCE genome.fasta --MAX_SEQUENCES_FOR_DISK_READ_ENDS_MAP 50000 --MAX_FILE_HANDLES_FOR_READ_ENDS_MAP 8000 --SORTING_COLLECTION_SIZE_RATIO 0.25 --TAG_DUPLICATE_SET_MEMBERS false --REMOVE_SEQUENCING_DUPLICATES false --TAGGING_POLICY DontTag --CLEAR_DT true --DUPLEX_UMI false --FLOW_MODE false --FLOW_DUP_STRATEGY FLOW_QUALITY_SUM_STRATEGY --FLOW_USE_END_IN_UNPAIRED_READS false --FLOW_USE_UNPAIRED_CLIPPED_END false --FLOW_UNPAIRED_END_UNCERTAINTY 0 --FLOW_UNPAIRED_START_UNCERTAINTY 0 --FLOW_SKIP_FIRST_N_FLOWS 0 --FLOW_Q_IS_KNOWN_END false --FLOW_EFFECTIVE_QUALITY_THRESHOLD 15 --ADD_PG_TAG_TO_READS true --REMOVE_DUPLICATES false --ASSUME_SORTED false --DUPLICATE_SCORING_STRATEGY SUM_OF_BASE_QUALITIES --PROGRAM_RECORD_ID MarkDuplicates --PROGRAM_GROUP_NAME MarkDuplicates --READ_NAME_REGEX <optimized capture of last three ':' separated fields as numeric values> --OPTICAL_DUPLICATE_PIXEL_DISTANCE 100 --MAX_OPTICAL_DUPLICATE_SET_SIZE 300000 --VERBOSITY INFO --QUIET false --VALIDATION_STRINGENCY STRICT --COMPRESSION_LEVEL 5 --MAX_RECORDS_IN_RAM 500000 --CREATE_INDEX false --CREATE_MD5_FILE false --help false --version false --showHidden false --USE_JDK_DEFLATER false --USE_JDK_INFLATER false",
@@ -156,16 +162,16 @@
                     [
                         "PICARD_MARKDUPLICATES",
                         "picard",
-                        "3.4.0"
+                        "3.5.0"
                     ]
                 ]
             }
         ],
+        "timestamp": "2026-08-19T18:41:41.238597",
         "meta": {
-            "nf-test": "0.9.4",
-            "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-02-19T17:42:59.07843756"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
     },
     "homo_sapiens [cram] - stub": {
         "content": [
@@ -204,15 +210,15 @@
                     [
                         "PICARD_MARKDUPLICATES",
                         "picard",
-                        "3.4.0"
+                        "3.5.0"
                     ]
                 ]
             }
         ],
+        "timestamp": "2026-02-19T17:43:20.676018462",
         "meta": {
             "nf-test": "0.9.4",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-02-19T17:43:20.676018462"
+        }
     }
 }

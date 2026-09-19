@@ -79,7 +79,7 @@ workflow RNASEQ {
     ch_rsem_index           // channel: path(rsem/index/)
     ch_hisat2_index         // channel: path(hisat2/index/)
     ch_bowtie2_index        // channel: path(bowtie2/index/) for alignment
-    ch_salmon_index         // channel: path(salmon/index/)
+    ch_salmon_index         // channel: [ meta, path(salmon/index/) ]
     ch_kallisto_index       // channel: [ meta, path(kallisto/index/) ]
     ch_bbsplit_index        // channel: path(bbsplit/index/)
     ch_ribo_db              // channel: path(sortmerna_fasta_list)
@@ -210,7 +210,7 @@ workflow RNASEQ {
         ch_fasta,                                   // ch_fasta
         ch_transcript_fasta,                        // ch_transcript_fasta
         ch_gtf,                                     // ch_gtf
-        ch_salmon_index,                            // ch_salmon_index
+        ch_salmon_index.map { _meta, index -> index }.first(), // ch_salmon_index
         ch_sortmerna_index,                         // ch_sortmerna_index
         ch_bowtie2_rrna_index,                      // ch_bowtie2_index (for rRNA removal)
         ch_bbsplit_index,                           // ch_bbsplit_index
@@ -453,14 +453,12 @@ workflow RNASEQ {
         QUANTIFY_BAM_SALMON (
             ch_samplesheet.map { item -> [ [:], item ] },
             ch_transcriptome_bam,
-            ch_transcript_fasta_placeholder,
+            channel.value([ [:], ch_transcript_fasta_placeholder ]),
             ch_transcript_fasta,
             ch_gtf,
             params.gtf_group_features,
             params.gtf_extra_attributes,
             'salmon',
-            true,
-            params.salmon_quant_libtype ?: '',
             params.kallisto_quant_fraglen,
             params.kallisto_quant_fraglen_sd,
             params.skip_quantification_merge
@@ -781,13 +779,11 @@ workflow RNASEQ {
             ch_samplesheet.map { item -> [ [:], item ] },
             ch_strand_inferred_filtered_fastq,
             ch_pseudo_index,
-            ch_transcript_fasta_placeholder,
+            channel.value(ch_transcript_fasta_placeholder),
             ch_gtf,
             params.gtf_group_features,
             params.gtf_extra_attributes,
             params.pseudo_aligner,
-            false,
-            params.salmon_quant_libtype ?: '',
             params.kallisto_quant_fraglen,
             params.kallisto_quant_fraglen_sd,
             params.skip_quantification_merge

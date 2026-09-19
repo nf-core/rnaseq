@@ -3,9 +3,9 @@ process SUBREAD_FEATURECOUNTS {
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
-    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
-        ? 'https://depot.galaxyproject.org/singularity/subread:2.0.6--he4a0461_2'
-        : 'biocontainers/subread:2.0.6--he4a0461_2'}"
+    container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
+        ? 'https://depot.galaxyproject.org/singularity/subread:2.1.1--h577a1d6_0'
+        : 'quay.io/biocontainers/subread:2.1.1--h577a1d6_0'}"
 
     input:
     tuple val(meta), path(bams), path(annotation)

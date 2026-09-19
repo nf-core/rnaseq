@@ -13,7 +13,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
+                input[0] = channel.of([
                     [ id:'transcriptome' ], // meta map
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true)
                 ])
@@ -24,8 +24,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert path(process.out.index.get(0).get(1)).exists() },
-                { assert snapshot(process.out.findAll { key, val -> key.startsWith('versions') }).match() }
+                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["index"])).match() }
             )
         }
     }
@@ -37,7 +36,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
+                input[0] = channel.of([
                     [ id:'transcriptome' ], // meta map
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true)
                 ])
@@ -48,10 +47,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(
-                    process.out.index,
-                    process.out.findAll { key, val -> key.startsWith('versions') }
-                ).match() }
+                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["index"])).match() }
             )
         }
     }

@@ -6,17 +6,17 @@
                     [
                         "SYLPH_PROFILE",
                         "sylph",
-                        "sylph 0.9.0"
+                        "0.9.0"
                     ]
                 ]
             },
             "Sample_file\tGenome_file\tTaxonomic_abundance\tSequence_abundance\tAdjusted_ANI\tEff_cov\tANI_5-95_percentile\tEff_lambda\tLambda_5-95_percentile\tMedian_cov\tMean_cov_geq1\tContainment_ind\tNaive_ANI\tkmers_reassigned\tContig_name"
         ],
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-01-19T13:53:39.426666755"
+        "timestamp": "2026-04-29T16:20:14.280171765"
     },
     "sarscov2 illumina single-end [fastq_gz]": {
         "content": [
@@ -25,17 +25,17 @@
                     [
                         "SYLPH_PROFILE",
                         "sylph",
-                        "sylph 0.9.0"
+                        "0.9.0"
                     ]
                 ]
             },
             "Sample_file\tGenome_file\tTaxonomic_abundance\tSequence_abundance\tAdjusted_ANI\tEff_cov\tANI_5-95_percentile\tEff_lambda\tLambda_5-95_percentile\tMedian_cov\tMean_cov_geq1\tContainment_ind\tNaive_ANI\tkmers_reassigned\tContig_name"
         ],
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-01-19T13:53:34.383249183"
+        "timestamp": "2026-04-29T16:20:09.29151306"
     },
     "sarscov2 illumina paired-end [fastq_gz]-stub": {
         "content": [
@@ -52,7 +52,7 @@
                     [
                         "SYLPH_PROFILE",
                         "sylph",
-                        "sylph 0.9.0"
+                        "0.9.0"
                     ]
                 ],
                 "profile_out": [
@@ -67,15 +67,15 @@
                     [
                         "SYLPH_PROFILE",
                         "sylph",
-                        "sylph 0.9.0"
+                        "0.9.0"
                     ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-01-19T13:53:44.570456167"
+        "timestamp": "2026-04-29T16:20:19.581601853"
     }
 }

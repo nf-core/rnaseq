@@ -16,11 +16,11 @@ input:
       type: boolean
       description: |
         Dump the parameters of the pipeline to a JSON file
-  - output_directory:
+  - outdir:
       type: directory
       description: Path to output dir to write JSON file to.
       pattern: "results/"
-  - check_conda_channel:
+  - check_conda_channels:
       type: boolean
       description: |
         Check if the conda channel priority is correct.

@@ -18,22 +18,18 @@ components:
 input:
   - ch_bam_bai:
       description: |
-        input BAM file
+        input BAM file and its index
         Structure: [ val(meta), path(bam), path(bai) ]
 output:
   - bam:
       description: |
         Umi deduplicated BAM/SAM file
         Structure: [ val(meta), path(bam) ]
-  - bai:
+  - index:
       description: |
-        Umi deduplicated BAM/SAM samtools index
-        Structure: [ val(meta), path(bai) ]
-  - csi:
-      description: |
-        CSI samtools index
-        Structure: [ val(meta), path(csi) ]
-  - dedupstats:
+        Umi deduplicated BAM/SAM samtools index (BAI or CSI)
+        Structure: [ val(meta), path(index) ]
+  - dedup_stats:
       description: |
         File containing umicollapse deduplication stats
         Structure: [ val(meta), path(stats) ]
@@ -49,10 +45,6 @@ output:
       description: |
         File containing samtools idxstats output
         Structure: [ val(meta), path(idxstats) ]
-  - versions:
-      description: |
-        Files containing software versions
-        Structure: [ path(versions.yml) ]
 authors:
   - "@MatthiasZepper"
 maintainers:

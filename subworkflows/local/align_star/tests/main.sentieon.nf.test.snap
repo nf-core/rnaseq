@@ -1,66 +1,4 @@
 {
-    "sentieon star - no igenomes": {
-        "content": [
-            "test.Log.final.out",
-            "test.Log.out",
-            "test.bam.bai",
-            "1e02b8e6b4a02ab58bfe4ee795aba815",
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.Log.progress.out:md5,b2bd061d6cbaaf3d6d3b1fed547f69b8"
-                ]
-            ],
-            [
-
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.flagstat:md5,db0e25cd0b37d3030e807846c022199e"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.idxstats:md5,107ca94dd426cc44db316f0d402307c5"
-                ]
-            ],
-            "db9a8324b5163b025bcc0c33e848486",
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.stats:md5,0525dc522aabf00713916cbe85c9cc81"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.SJ.out.tab:md5,844af19ab0fc8cd9a3f75228445aca0d"
-                ]
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-18T14:55:37.838654167"
-    },
     "sentieon star - no igenomes - stub": {
         "content": [
             [
@@ -180,10 +118,72 @@
                 ]
             ]
         ],
+        "timestamp": "2025-12-18T14:57:01.409253112",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-18T14:57:01.409253112"
+        }
+    },
+    "sentieon star - no igenomes": {
+        "content": [
+            "test.Log.final.out",
+            "test.Log.out",
+            "test.bam.bai",
+            "1e02b8e6b4a02ab58bfe4ee795aba815",
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.Log.progress.out:md5,b2bd061d6cbaaf3d6d3b1fed547f69b8"
+                ]
+            ],
+            [
+                
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.flagstat:md5,db0e25cd0b37d3030e807846c022199e"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.idxstats:md5,107ca94dd426cc44db316f0d402307c5"
+                ]
+            ],
+            "db9a8324b5163b025bcc0c33e848486",
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.stats:md5,e76c5d99b51c31ea24b9b055d0d4f851"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.SJ.out.tab:md5,844af19ab0fc8cd9a3f75228445aca0d"
+                ]
+            ]
+        ],
+        "timestamp": "2026-09-17T13:23:47.910926106",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     }
 }

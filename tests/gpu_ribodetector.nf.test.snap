@@ -35,13 +35,13 @@
                     "ribodetector": "0.3.3"
                 },
                 "SALMON_QUANT": {
-                    "salmon": "1.10.3"
+                    "salmon": "2.7.0"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": "1.23.1"
+                    "samtools": 1.24
                 },
                 "SEQKIT_STATS": {
-                    "seqkit": "2.9.0"
+                    "seqkit": "2.13.0"
                 },
                 "TRIMGALORE": {
                     "trimgalore": "2.3.0"
@@ -112,11 +112,11 @@
                 "trimgalore/WT_REP2_trimmed_2.fastq.gz_trimming_report.txt"
             ],
             [
-                "RAP1_IAA_30M_REP1.rrna_removal_stats.tsv:md5,47edd6f22fb2f741c983ae93470b9299",
-                "RAP1_UNINDUCED_REP1.rrna_removal_stats.tsv:md5,244a43575c0c7e8c8f1c3e521b895224",
-                "RAP1_UNINDUCED_REP2.rrna_removal_stats.tsv:md5,10423aa5ad8557645f4b0c6a4942c62c",
-                "WT_REP1.rrna_removal_stats.tsv:md5,ad50caf57b4296cfe6178952ea7b6b70",
-                "WT_REP2.rrna_removal_stats.tsv:md5,fd36293a2b539cb5b5120b449287bdba"
+                "RAP1_IAA_30M_REP1.rrna_removal_stats.tsv:md5,c2c08643cb87ea1aee98326177d5bd9d",
+                "RAP1_UNINDUCED_REP1.rrna_removal_stats.tsv:md5,e815fe0dd6c60b5e075570f1bdda914b",
+                "RAP1_UNINDUCED_REP2.rrna_removal_stats.tsv:md5,987ba2b4afee76bf5f292204bff98526",
+                "WT_REP1.rrna_removal_stats.tsv:md5,1a09c66cf857e50a269bb98c06b8292f",
+                "WT_REP2.rrna_removal_stats.tsv:md5,50e73a2d7fea8191ebc8db0bcf4421ed"
             ]
         ],
         "meta": {
@@ -148,7 +148,7 @@
                     "gunzip": 1.13
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": "1.23.1"
+                    "samtools": 1.24
                 },
                 "TRIMGALORE": {
                     "trimgalore": "2.3.0"
@@ -179,14 +179,12 @@
                 "trimgalore/WT_REP2_trimmed_1.fastq.gz_trimming_report.txt",
                 "trimgalore/WT_REP2_trimmed_2.fastq.gz_trimming_report.txt"
             ],
-            [
-                
-            ]
+            []
         ],
+        "timestamp": "2026-09-16T15:06:51.84233411",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.3"
-        },
-        "timestamp": "2026-04-14T11:49:55.204177"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     }
 }

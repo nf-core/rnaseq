@@ -7,7 +7,7 @@
             "1c957588cfbe3b1ba280ca03c0493633",
             "test.Log.progress.out",
             [
-
+                
             ],
             [
                 [
@@ -34,7 +34,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.stats:md5,9ab97b6ca3f331770dd97de0323f9d00"
+                    "test.stats:md5,200170da95807df316c7f0a44ad8c92c"
                 ]
             ],
             [
@@ -47,10 +47,10 @@
                 ]
             ]
         ],
-        "timestamp": "2026-04-07T11:29:07.442589894",
+        "timestamp": "2026-09-17T11:27:10.963996168",
         "meta": {
-            "nf-test": "0.9.4",
-            "nextflow": "25.10.2"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
         }
     }
 }

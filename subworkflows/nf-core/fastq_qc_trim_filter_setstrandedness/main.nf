@@ -51,20 +51,22 @@ def getSalmonInferredStrandedness(json_file, stranded_threshold = 0.8, unstrande
     // Parse the JSON content of the file
     def libCounts = new groovy.json.JsonSlurper().parseText(json_file.text)
 
-    // Calculate the counts for forward and reverse strand fragments
-    def forwardKeys = ['SF', 'ISF', 'MSF', 'OSF']
-    def reverseKeys = ['SR', 'ISR', 'MSR', 'OSR']
-
     // Calculate unstranded fragments (IU and U)
     // NOTE: this is here for completeness, but actually all fragments have a
     // strandedness (even if the overall library does not), so all these values
     // will be '0'. See
     // https://groups.google.com/g/sailfish-users/c/yxzBDv6NB6I
     def unstrandedKeys = ['IU', 'U', 'MU']
-
-    def forwardFragments = forwardKeys.collect { key -> libCounts[key] ?: 0 }.sum()
-    def reverseFragments = reverseKeys.collect { key -> libCounts[key] ?: 0 }.sum()
     def unstrandedFragments = unstrandedKeys.collect { key -> libCounts[key] ?: 0 }.sum()
+
+    // The per-format keys (SF, ISF, MSF, OSF, ...) are not fragment-exclusive:
+    // a fragment's candidate placements can increment both the sense and
+    // antisense variant. `strand_mapping_bias` is salmon's fragment-exclusive
+    // measure of the sense share of the resolved orientation instead.
+    def numAssignedFragments = (libCounts['num_assigned_fragments'] ?: 0) as double
+    def strandMappingBias = (libCounts['strand_mapping_bias'] ?: 0.0) as double
+    def forwardFragments = strandMappingBias * numAssignedFragments
+    def reverseFragments = (1 - strandMappingBias) * numAssignedFragments
 
     // Use shared calculation function to determine strandedness
     return calculateStrandedness(forwardFragments, reverseFragments, unstrandedFragments, stranded_threshold, unstranded_threshold)
@@ -132,6 +134,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
 
     ch_filtered_reads = channel.empty()
     ch_trim_read_count = channel.empty()
+    ch_trim_reads_merged = channel.empty()
     ch_multiqc_files = channel.empty()
     ch_lint_log_raw = channel.empty()
     ch_lint_log_trimmed = channel.empty()
@@ -219,6 +222,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         ch_multiqc_files = FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.fastqc_zip
             .mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_zip)
             .mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_log)
+            .mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.trim_json)
             .mix(FASTQ_FASTQC_UMITOOLS_TRIMGALORE.out.umi_log)
             .mix(ch_multiqc_files)
     }
@@ -240,6 +244,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         )
         ch_filtered_reads = FASTQ_FASTQC_UMITOOLS_FASTP.out.reads
         ch_trim_read_count = FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_read_count
+        ch_trim_reads_merged = FASTQ_FASTQC_UMITOOLS_FASTP.out.trim_reads_merged
 
         // Capture individual outputs for workflow outputs
         ch_fastqc_raw_html  = FASTQ_FASTQC_UMITOOLS_FASTP.out.fastqc_raw_html
@@ -433,6 +438,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     reads_cat         = ch_reads_cat
     reads_trimmed     = ch_reads_trimmed
     trim_read_count   = ch_trim_read_count
+    trim_reads_merged = ch_trim_reads_merged
     multiqc_files     = ch_multiqc_files.transpose()
 
     // Individual outputs for workflow outputs

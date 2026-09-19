@@ -1,0 +1,28 @@
+Changes in component 'nf-core/quantify_pseudo_alignment'
+'subworkflows/nf-core/quantify_pseudo_alignment/nextflow.config' is unchanged
+'subworkflows/nf-core/quantify_pseudo_alignment/meta.yml' is unchanged
+Changes in 'quantify_pseudo_alignment/main.nf':
+--- subworkflows/nf-core/quantify_pseudo_alignment/main.nf
++++ subworkflows/nf-core/quantify_pseudo_alignment/main.nf
+@@ -30,14 +30,14 @@
+     if (pseudo_aligner == 'salmon') {
+         SALMON_QUANT (
+             reads,
+-            index.combine(gtf).combine(transcript_fasta)
++            index.combine(gtf).combine(transcript_fasta).first()
+         )
+         ch_pseudo_results = SALMON_QUANT.out.results
+         ch_pseudo_multiqc = ch_pseudo_results
+     } else {
+         KALLISTO_QUANT (
+             reads,
+-            index.combine(gtf.map { g -> [ g, [] ] }),
++            index.combine(gtf.map { g -> [ g, [] ] }).first(),
+             kallisto_quant_fraglen,
+             kallisto_quant_fraglen_sd
+         )
+
+'subworkflows/nf-core/quantify_pseudo_alignment/tests/main.nf.test.snap' is unchanged
+'subworkflows/nf-core/quantify_pseudo_alignment/tests/nextflow.config' is unchanged
+'subworkflows/nf-core/quantify_pseudo_alignment/tests/main.nf.test' is unchanged
+************************************************************

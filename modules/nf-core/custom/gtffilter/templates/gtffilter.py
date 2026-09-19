@@ -29,7 +29,6 @@ import os
 import platform
 import re
 import statistics
-from typing import Optional, Set
 
 # Create a logger
 logging.basicConfig(format="%(name)s - %(asctime)s %(levelname)s: %(message)s")
@@ -57,7 +56,7 @@ def format_yaml_like(data: dict, indent: int = 0) -> str:
     return yaml_str
 
 
-def extract_fasta_seq_names(fasta_name: str) -> Set[str]:
+def extract_fasta_seq_names(fasta_name: str) -> set[str]:
     """Extracts the sequence names from a FASTA file."""
 
     is_gz = fasta_name.endswith(".gz")
@@ -80,7 +79,7 @@ def tab_delimited(file: str) -> float:
         return statistics.median(line.count("\\t") for line in data.split("\\n"))
 
 
-def filter_gtf(fasta: Optional[str], gtf_in: str, filtered_gtf_out: str, skip_transcript_id_check: bool) -> None:
+def filter_gtf(fasta: str | None, gtf_in: str, filtered_gtf_out: str, skip_transcript_id_check: bool) -> None:
     """Filter GTF file based on FASTA sequence names."""
     if tab_delimited(gtf_in) != 8:
         raise ValueError("Invalid GTF file: Expected 9 tab-separated columns.")

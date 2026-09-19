@@ -1,7 +1,7 @@
 {
     "Params: --pseudo_aligner kallisto --skip_qc --skip_alignment": {
         "content": [
-            43,
+            47,
             {
                 "BBMAP_BBSPLIT": {
                     "bbmap": 39.18
@@ -109,11 +109,31 @@
                 "fq_lint/trimmed/WT_REP1.fq_lint.txt",
                 "fq_lint/trimmed/WT_REP2.fq_lint.txt",
                 "kallisto",
+                "kallisto/RAP1_IAA_30M_REP1",
+                "kallisto/RAP1_IAA_30M_REP1/abundance.h5",
+                "kallisto/RAP1_IAA_30M_REP1/abundance.tsv",
+                "kallisto/RAP1_IAA_30M_REP1/kallisto_quant.log",
+                "kallisto/RAP1_IAA_30M_REP1/run_info.json",
                 "kallisto/RAP1_UNINDUCED_REP1",
                 "kallisto/RAP1_UNINDUCED_REP1/abundance.h5",
                 "kallisto/RAP1_UNINDUCED_REP1/abundance.tsv",
                 "kallisto/RAP1_UNINDUCED_REP1/kallisto_quant.log",
                 "kallisto/RAP1_UNINDUCED_REP1/run_info.json",
+                "kallisto/RAP1_UNINDUCED_REP2",
+                "kallisto/RAP1_UNINDUCED_REP2/abundance.h5",
+                "kallisto/RAP1_UNINDUCED_REP2/abundance.tsv",
+                "kallisto/RAP1_UNINDUCED_REP2/kallisto_quant.log",
+                "kallisto/RAP1_UNINDUCED_REP2/run_info.json",
+                "kallisto/WT_REP1",
+                "kallisto/WT_REP1/abundance.h5",
+                "kallisto/WT_REP1/abundance.tsv",
+                "kallisto/WT_REP1/kallisto_quant.log",
+                "kallisto/WT_REP1/run_info.json",
+                "kallisto/WT_REP2",
+                "kallisto/WT_REP2/abundance.h5",
+                "kallisto/WT_REP2/abundance.tsv",
+                "kallisto/WT_REP2/kallisto_quant.log",
+                "kallisto/WT_REP2/run_info.json",
                 "kallisto/kallisto.merged.gene.SummarizedExperiment.rds",
                 "kallisto/kallisto.merged.gene_counts.tsv",
                 "kallisto/kallisto.merged.gene_counts_length_scaled.tsv",
@@ -267,7 +287,7 @@
                 "trim_galore_pair_validation_table.txt:md5,b1863fde4bacc276704adcb35c80fb1c"
             ]
         ],
-        "timestamp": "2026-09-18T18:16:18.692937509",
+        "timestamp": "2026-09-18T23:20:32.29272948",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

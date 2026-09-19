@@ -1,7 +1,7 @@
 {
     "Params: --aligner star_salmon --prokaryotic": {
         "content": [
-            49,
+            50,
             {
                 "CUSTOM_GTFFILTER": {
                     "python": "3.14.5"
@@ -348,8 +348,24 @@
                 "star_salmon/SALM_REP1/logs/salmon_quant.log",
                 "star_salmon/SALM_REP1/quant.genes.sf",
                 "star_salmon/SALM_REP1/quant.sf",
+                "star_salmon/SALM_REP2",
                 "star_salmon/SALM_REP2.markdup.sorted.bam",
                 "star_salmon/SALM_REP2.markdup.sorted.bam.bai",
+                "star_salmon/SALM_REP2/aux_info",
+                "star_salmon/SALM_REP2/aux_info/ambig_info.tsv",
+                "star_salmon/SALM_REP2/aux_info/expected_bias.gz",
+                "star_salmon/SALM_REP2/aux_info/fld.gz",
+                "star_salmon/SALM_REP2/aux_info/meta_info.json",
+                "star_salmon/SALM_REP2/aux_info/observed_bias.gz",
+                "star_salmon/SALM_REP2/aux_info/observed_bias_3p.gz",
+                "star_salmon/SALM_REP2/cmd_info.json",
+                "star_salmon/SALM_REP2/libParams",
+                "star_salmon/SALM_REP2/libParams/flenDist.txt",
+                "star_salmon/SALM_REP2/lib_format_counts.json",
+                "star_salmon/SALM_REP2/logs",
+                "star_salmon/SALM_REP2/logs/salmon_quant.log",
+                "star_salmon/SALM_REP2/quant.genes.sf",
+                "star_salmon/SALM_REP2/quant.sf",
                 "star_salmon/log",
                 "star_salmon/log/SALM_REP1.Log.final.out",
                 "star_salmon/log/SALM_REP1.Log.out",
@@ -454,6 +470,12 @@
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "cmd_info.json:md5,cf6867f2243695736dc27ecf1e1413a9",
                 "lib_format_counts.json:md5,5fbfd8a5ce801c6cfa273b12b3f25159",
+                "ambig_info.tsv:md5,c9b4c9aaeee469d7a2be88f90ebdbfd5",
+                "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
+                "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
+                "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
+                "cmd_info.json:md5,8f138fdf3636cb462aad2f6a300b87b8",
+                "lib_format_counts.json:md5,033727c9c1a31a5196204029bcbf4340",
                 "SALM_REP1.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "SALM_REP2.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "SALM_REP1.infer_experiment.txt:md5,4d2a3f763c26490b3df172fb713e18ff",
@@ -462,7 +484,7 @@
                 "salmon.merged.tx2gene_augmented.tsv:md5,02c8aa14dbbbd6c4e45cf0a1b916b1ab"
             ]
         ],
-        "timestamp": "2026-09-18T21:15:56.091634237",
+        "timestamp": "2026-09-18T22:40:07.740663071",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -470,7 +492,7 @@
     },
     "Params: --aligner bowtie2_salmon --gffread_transcript_fasta (-k 200 multimapping)": {
         "content": [
-            47,
+            48,
             {
                 "BOWTIE2_ALIGN": {
                     "bowtie2": "2.5.4",
@@ -570,8 +592,24 @@
                 "bowtie2_salmon/SALM_REP1/logs/salmon_quant.log",
                 "bowtie2_salmon/SALM_REP1/quant.genes.sf",
                 "bowtie2_salmon/SALM_REP1/quant.sf",
+                "bowtie2_salmon/SALM_REP2",
                 "bowtie2_salmon/SALM_REP2.markdup.sorted.bam",
                 "bowtie2_salmon/SALM_REP2.markdup.sorted.bam.bai",
+                "bowtie2_salmon/SALM_REP2/aux_info",
+                "bowtie2_salmon/SALM_REP2/aux_info/ambig_info.tsv",
+                "bowtie2_salmon/SALM_REP2/aux_info/expected_bias.gz",
+                "bowtie2_salmon/SALM_REP2/aux_info/fld.gz",
+                "bowtie2_salmon/SALM_REP2/aux_info/meta_info.json",
+                "bowtie2_salmon/SALM_REP2/aux_info/observed_bias.gz",
+                "bowtie2_salmon/SALM_REP2/aux_info/observed_bias_3p.gz",
+                "bowtie2_salmon/SALM_REP2/cmd_info.json",
+                "bowtie2_salmon/SALM_REP2/libParams",
+                "bowtie2_salmon/SALM_REP2/libParams/flenDist.txt",
+                "bowtie2_salmon/SALM_REP2/lib_format_counts.json",
+                "bowtie2_salmon/SALM_REP2/logs",
+                "bowtie2_salmon/SALM_REP2/logs/salmon_quant.log",
+                "bowtie2_salmon/SALM_REP2/quant.genes.sf",
+                "bowtie2_salmon/SALM_REP2/quant.sf",
                 "bowtie2_salmon/log",
                 "bowtie2_salmon/log/SALM_REP1.bowtie2.log",
                 "bowtie2_salmon/log/SALM_REP2.bowtie2.log",
@@ -857,6 +895,12 @@
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "cmd_info.json:md5,0962fff365a75665606649f543aa203e",
                 "lib_format_counts.json:md5,5fbfd8a5ce801c6cfa273b12b3f25159",
+                "ambig_info.tsv:md5,c9b4c9aaeee469d7a2be88f90ebdbfd5",
+                "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
+                "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
+                "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
+                "cmd_info.json:md5,b25ef9900830f81fe25032effcf24c3d",
+                "lib_format_counts.json:md5,033727c9c1a31a5196204029bcbf4340",
                 "salmon.merged.tx2gene.tsv:md5,02c8aa14dbbbd6c4e45cf0a1b916b1ab",
                 "salmon.merged.tx2gene_augmented.tsv:md5,02c8aa14dbbbd6c4e45cf0a1b916b1ab",
                 "fastqc_raw-status-check-heatmap.txt:md5,e7e2b9dc8c77f456ad5f770fe2b8e308",
@@ -894,7 +938,7 @@
                 "trim_galore_filtered_reads_plot.txt:md5,49247a651f1c0038649c28efd32afcad"
             ]
         ],
-        "timestamp": "2026-09-18T21:18:04.769259811",
+        "timestamp": "2026-09-18T22:42:16.392320541",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -902,7 +946,7 @@
     },
     "Params: --aligner bowtie2_salmon --gffread_transcript_fasta (-k 200 multimapping) - stub": {
         "content": [
-            33,
+            34,
             {
                 "BOWTIE2_ALIGN": {
                     "bowtie2": "2.5.4",
@@ -976,6 +1020,7 @@
             [
                 "bowtie2_salmon",
                 "bowtie2_salmon/SALM_REP1",
+                "bowtie2_salmon/SALM_REP2",
                 "bowtie2_salmon/all_samples.SummarizedExperiment.rds",
                 "bowtie2_salmon/all_samples.gene_counts.tsv",
                 "bowtie2_salmon/all_samples.gene_counts_length_scaled.tsv",
@@ -1039,7 +1084,7 @@
                 "salmon.merged.tx2gene.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
-        "timestamp": "2026-09-18T21:16:50.486274528",
+        "timestamp": "2026-09-18T22:41:01.786087857",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -1047,7 +1092,7 @@
     },
     "Params: --aligner star_salmon --prokaryotic - stub": {
         "content": [
-            33,
+            34,
             {
                 "CUSTOM_GTFFILTER": {
                     "python": "3.14.5"
@@ -1146,6 +1191,7 @@
                 "pipeline_info/nf_core_rnaseq_software_mqc_versions.yml",
                 "star_salmon",
                 "star_salmon/SALM_REP1",
+                "star_salmon/SALM_REP2",
                 "star_salmon/all_samples.SummarizedExperiment.rds",
                 "star_salmon/all_samples.gene_counts.tsv",
                 "star_salmon/all_samples.gene_counts_length_scaled.tsv",
@@ -1202,7 +1248,7 @@
                 "salmon.merged.tx2gene.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
-        "timestamp": "2026-09-18T21:14:39.166046979",
+        "timestamp": "2026-09-18T22:38:49.411648635",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

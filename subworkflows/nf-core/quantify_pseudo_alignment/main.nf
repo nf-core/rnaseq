@@ -30,14 +30,14 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
     if (pseudo_aligner == 'salmon') {
         SALMON_QUANT (
             reads,
-            index.combine(gtf).combine(transcript_fasta)
+            index.combine(gtf).combine(transcript_fasta).first()
         )
         ch_pseudo_results = SALMON_QUANT.out.results
         ch_pseudo_multiqc = ch_pseudo_results
     } else {
         KALLISTO_QUANT (
             reads,
-            index.combine(gtf.map { g -> [ g, [] ] }),
+            index.combine(gtf.map { g -> [ g, [] ] }).first(),
             kallisto_quant_fraglen,
             kallisto_quant_fraglen_sd
         )

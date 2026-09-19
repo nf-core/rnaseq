@@ -802,14 +802,14 @@
                     
                 ],
                 "splicesites": [
-                    "/home/ubuntu/rnaseq-salmon-2x-migration/.nf-test/tests/953f390cef418766a7b8b1f1b671d1ec/work/29/a70ed01bf44cac92cbfe2f830152c4/genome_gfp.splice_sites.txt"
+                    "genome_gfp.splice_sites.txt:md5,4e9620ff904f32dfe6e7897a9acdc15b"
                 ],
                 "star_index": [
                     
                 ]
             }
         ],
-        "timestamp": "2026-09-18T20:47:41.861161906",
+        "timestamp": "2026-09-19T00:46:38.858038568",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

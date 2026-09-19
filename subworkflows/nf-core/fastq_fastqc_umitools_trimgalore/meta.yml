@@ -116,6 +116,13 @@ output:
 
         Structure: [ val(meta), [ path(txt) ] ]
       pattern: "*_{report.txt}"
+  - trim_json:
+      type: file
+      description: |
+        Trim Galore! JSON report, consumed by MultiQC's trim_galore module (optional).
+
+        Structure: [ val(meta), [ path(json) ] ]
+      pattern: "*report.json"
   - trim_read_count:
       type: integer
       description: |

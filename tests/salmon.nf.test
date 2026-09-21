@@ -4,6 +4,16 @@ nextflow_pipeline {
     script "../main.nf"
     tag "pipeline"
 
+    // Transcript FASTA with one deliberate exact-sequence duplicate: the real test transcriptome
+    // (needed so CUSTOM_TX2GENE's transcript-ID/GTF-attribute discovery has real IDs to match; a
+    // purely synthetic transcript set makes it fail outright) plus two short synthetic records
+    // that duplicate each other. Generated at test time rather than committed, so no binary/data
+    // fixture lives in the repo. The duplicate sequence just needs to exceed the default k-mer
+    // size (31) so Salmon indexes it at all.
+    def DUPLICATE_TRANSCRIPT_FASTA = new URL('https://raw.githubusercontent.com/nf-core/test-datasets/7f1614baeb0ddf66e60be78c3d9fa55440465ac8/reference/transcriptome.fasta').text +
+        ">PRIMARY_TX_FIXTURE\nACGTACGTACGTACGTACGTACGTACGTACGTACGTACGT\n" +
+        ">DUPLICATE_TX_FIXTURE\nACGTACGTACGTACGTACGTACGTACGTACGTACGTACGT\n"
+
     test("Params: --pseudo_aligner salmon --skip_qc --skip_alignment") {
 
         when {
@@ -165,6 +175,84 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path
                 ).match() }
+            )
+        }
+
+        cleanup {
+            // Only prune/delete on CI - keeping local VM state intact prevents
+            // cross-test launchDir wipes that break nf-test snapshot walks.
+            if (System.getenv("CI") == "true") {
+                if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                    "docker system prune -a -f --volumes".execute()
+                }
+                new File("${launchDir}").deleteDir()
+            }
+        }
+    }
+
+    test("Params: --pseudo_aligner salmon, duplicate transcript dropped by default") {
+
+        when {
+            def duplicateFasta = File.createTempFile('transcriptome_with_duplicate', '.fasta')
+            duplicateFasta.text = DUPLICATE_TRANSCRIPT_FASTA
+
+            params {
+                outdir = "$outputDir"
+                pseudo_aligner = 'salmon'
+                skip_qc = true
+                skip_alignment = true
+                salmon_index = null  // force a fresh build from transcript_fasta below, not conf/test.config's pre-built index
+                additional_fasta = null  // transcript_fasta below cannot receive additional_fasta spike-ins (#1450)
+                transcript_fasta = duplicateFasta.toString()
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                // DUPLICATE_TX_FIXTURE is an exact-sequence duplicate of PRIMARY_TX; Salmon collapses
+                // it out of the index by default, so it never reaches the merged matrix.
+                { assert !file("$outputDir/salmon/salmon.merged.transcript_counts.tsv").text.contains('DUPLICATE_TX_FIXTURE') }
+            )
+        }
+
+        cleanup {
+            // Only prune/delete on CI - keeping local VM state intact prevents
+            // cross-test launchDir wipes that break nf-test snapshot walks.
+            if (System.getenv("CI") == "true") {
+                if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                    "docker system prune -a -f --volumes".execute()
+                }
+                new File("${launchDir}").deleteDir()
+            }
+        }
+    }
+
+    test("Params: --pseudo_aligner salmon --extra_salmon_index_args --keepDuplicates retains the duplicate transcript") {
+
+        when {
+            def duplicateFasta = File.createTempFile('transcriptome_with_duplicate', '.fasta')
+            duplicateFasta.text = DUPLICATE_TRANSCRIPT_FASTA
+
+            params {
+                outdir = "$outputDir"
+                pseudo_aligner = 'salmon'
+                skip_qc = true
+                skip_alignment = true
+                salmon_index = null  // force a fresh build from transcript_fasta below, not conf/test.config's pre-built index
+                additional_fasta = null  // transcript_fasta below cannot receive additional_fasta spike-ins (#1450)
+                transcript_fasta = duplicateFasta.toString()
+                extra_salmon_index_args = '--keepDuplicates'
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                // Same fixture as the default-behaviour test above, but with --keepDuplicates passed
+                // through extra_salmon_index_args: DUPLICATE_TX_FIXTURE is retained in the index and
+                // shows up as its own row in the merged matrix.
+                { assert file("$outputDir/salmon/salmon.merged.transcript_counts.tsv").text.contains('DUPLICATE_TX_FIXTURE') }
             )
         }
 

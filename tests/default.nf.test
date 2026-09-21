@@ -28,7 +28,10 @@ nextflow_pipeline {
                     stable_path,
                     // All files with stable contents
                     stable_content
-                ).match() }
+                ).match() },
+                // StringTie's command-line header records the strandedness flag it ran with;
+                // RAP1_IAA_30M_REP1 is reverse-stranded.
+                { assert path("$outputDir/star_salmon/stringtie/RAP1_IAA_30M_REP1.transcripts.gtf").readLines()[0].contains('--rf') }
             )
         }
 

@@ -1,0 +1,20 @@
+Changes in component 'nf-core/quant_tximport_summarizedexperiment'
+Changes in 'quant_tximport_summarizedexperiment/nextflow.config':
+--- subworkflows/nf-core/quant_tximport_summarizedexperiment/nextflow.config
++++ subworkflows/nf-core/quant_tximport_summarizedexperiment/nextflow.config
+@@ -4,7 +4,7 @@
+     }
+ 
+     withName: '.*:QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT:TXIMETA_TXIMPORT' {
+-        ext.prefix = { "${quant_type}.merged" }
++        ext.prefix = { meta.id == 'all_samples' ? "${quant_type}.merged" : meta.id }
+     }
+ 
+     withName: '.*:QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT:SE_GENE_UNIFIED' {
+
+'subworkflows/nf-core/quant_tximport_summarizedexperiment/meta.yml' is unchanged
+'subworkflows/nf-core/quant_tximport_summarizedexperiment/main.nf' is unchanged
+'subworkflows/nf-core/quant_tximport_summarizedexperiment/tests/main.nf.test.snap' is unchanged
+'subworkflows/nf-core/quant_tximport_summarizedexperiment/tests/nextflow.config' is unchanged
+'subworkflows/nf-core/quant_tximport_summarizedexperiment/tests/main.nf.test' is unchanged
+************************************************************

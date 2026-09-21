@@ -10,6 +10,11 @@ tools:
         A tool designed to provide fast all-in-one preprocessing for FastQ files. This tool is developed in C++ with multithreading supported to afford high performance.
       documentation: https://github.com/OpenGene/fastp
       doi: 10.1093/bioinformatics/bty560
+      publication:
+        author: "Chen S., Zhou Y., Chen Y. & Gu J."
+        year: 2018
+        title: "fastp: an ultra-fast all-in-one FASTQ preprocessor"
+        source: "Bioinformatics"
       licence: ["MIT"]
       identifier: biotools:fastp
 input:
@@ -37,8 +42,7 @@ input:
         This can be used to use fastp for the output report only.
   - save_trimmed_fail:
       type: boolean
-      description: Specify true to save files that failed to pass trimming thresholds
-        ending in `*.fail.fastq.gz`
+      description: Specify true to save files that failed to pass trimming thresholds ending in `*.fail.fastq.gz`
   - save_merged:
       type: boolean
       description: Specify true to save all merged reads to a file ending in `*.merged.fastq.gz`
@@ -142,3 +146,27 @@ authors:
 maintainers:
   - "@drpatelh"
   - "@kevinmenden"
+containers:
+  docker:
+    linux/arm64:
+      name: community.wave.seqera.io/library/fastp:1.3.6--95b49074d3fe9875
+      build_id: bd-95b49074d3fe9875_1
+      scan_id: sc-0b07e24d0edcdef4_1
+    linux/amd64:
+      name: community.wave.seqera.io/library/fastp:1.3.6--4df8d6c11b471bde
+      build_id: bd-4df8d6c11b471bde_1
+      scan_id: sc-23500527233b592b_1
+  singularity:
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/fastp:1.3.6--63f52bbe4fa9aee1
+      build_id: bd-63f52bbe4fa9aee1_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/d0/d013aad5427d824afe472e6607ea47685ff0181f1fb09e52a179e0ec39e43e88/data
+    linux/arm64:
+      name: oras://community.wave.seqera.io/library/fastp:1.3.6--469416be288311d1
+      build_id: bd-469416be288311d1_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/42/42ea3a248c30a6eb0ab5d5ca35ce8b50aab6ca75e982d43420779214517a516b/data
+  conda:
+    linux/amd64:
+      lock_file: modules/nf-core/fastp/.conda-lock/linux_amd64-bd-4df8d6c11b471bde_1.txt
+    linux/arm64:
+      lock_file: modules/nf-core/fastp/.conda-lock/linux_arm64-bd-95b49074d3fe9875_1.txt

@@ -23,22 +23,19 @@ components:
   - rseqc/inferexperiment
   - rseqc/bamstat
 input:
-  - meta:
-      type: map
+  - bam_bai:
+      type: file
       description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - bam:
-      type: file
-      description: BAM file to calculate statistics
-      pattern: "*.{bam}"
-  - bai:
-      type: file
-      description: Index for input BAM file
-      pattern: "*.{bai}"
+        BAM file to calculate statistics on, together with its index.
+
+        Structure: [ val(meta), [ path(bam), path(bai) ] ]
+      pattern: "*.{bam,bai}"
   - bed:
       type: file
-      description: BED file for the reference gene model
+      description: |
+        BED file for the reference gene model.
+
+        Structure: [ path(bed) ]
       pattern: "*.{bed}"
   - rseqc_modules:
       type: list
@@ -150,10 +147,6 @@ output:
       type: file
       description: TXT file containing tin.py results summary
       pattern: "*.txt"
-  - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
 authors:
   - "@drpatelh"
   - "@kevinmenden"

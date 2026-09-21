@@ -57,12 +57,6 @@ input:
         - value:
             type: boolean
             description: True or False
-  - bam_csi_index:
-      description: Whether to generate CSI index
-      structure:
-        - value:
-            type: boolean
-            description: True or False
   - ch_transcriptome_bam:
       description: Channel with transcriptome BAM files
       structure:
@@ -108,28 +102,18 @@ output:
             type: file
             description: Deduplicated BAM file
             pattern: "*.bam"
-  - bai:
-      description: Channel containing indexed BAM (BAI) files
+  - index:
+      description: Channel containing the index of the deduplicated genome BAM
       structure:
         - meta:
             type: map
             description: Metadata map
-        - bai:
+        - index:
             type: file
             description: BAM index file
-            pattern: "*.bai"
-  - csi:
-      description: Channel containing CSI files (if bam_csi_index is true)
-      structure:
-        - meta:
-            type: map
-            description: Metadata map
-        - csi:
-            type: file
-            description: CSI index file
-            pattern: "*.csi"
-  - dedup_log:
-      description: Channel containing deduplication log files
+            pattern: "*.{bai,csi}"
+  - genomic_dedup_log:
+      description: Channel containing deduplication log files for the genome BAM
       structure:
         - meta:
             type: map
@@ -138,8 +122,28 @@ output:
             type: file
             description: Deduplication log file
             pattern: "*.log"
+  - transcriptomic_dedup_log:
+      description: Channel containing deduplication log files for the transcriptome BAM
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - log:
+            type: file
+            description: Deduplication log file
+            pattern: "*.log"
+  - prepare_for_rsem_log:
+      description: Channel containing the UMI-tools prepare_for_rsem log for paired-end BAM files
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - log:
+            type: file
+            description: prepare_for_rsem log file
+            pattern: "*.log"
   - stats:
-      description: Channel containing BAM statistics files
+      description: Channel containing BAM statistics files for both genome and transcriptome BAMs
       structure:
         - meta:
             type: map
@@ -149,7 +153,7 @@ output:
             description: BAM statistics file
             pattern: "*.stats"
   - flagstat:
-      description: Channel containing flagstat files
+      description: Channel containing flagstat files for both genome and transcriptome BAMs
       structure:
         - meta:
             type: map
@@ -159,7 +163,7 @@ output:
             description: Flagstat file
             pattern: "*.flagstat"
   - idxstats:
-      description: Channel containing idxstats files
+      description: Channel containing idxstats files for both genome and transcriptome BAMs
       structure:
         - meta:
             type: map
@@ -198,6 +202,103 @@ output:
             type: file
             description: Idxstats file
             pattern: "*.idxstats"
+  - tsv_edit_distance:
+      description: |
+        Channel containing the UMI-tools edit distance TSV, reporting the
+        edit distance between the UMIs at each position. Only populated when
+        umi_dedup_tool is 'umitools'.
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - tsv:
+            type: file
+            description: Edit distance TSV file
+            pattern: "*edit_distance.tsv"
+  - tsv_per_umi:
+      description: |
+        Channel containing the UMI-tools per UMI TSV, reporting UMI-level summary
+        statistics. Only populated when umi_dedup_tool is 'umitools'.
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - tsv:
+            type: file
+            description: Per UMI TSV file
+            pattern: "*per_umi.tsv"
+  - tsv_umi_per_position:
+      description: |
+        Channel containing the UMI-tools TSV tabulating the counts for unique
+        combinations of UMI and position. Only populated when umi_dedup_tool is
+        'umitools'.
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - tsv:
+            type: file
+            description: UMI per position TSV file
+            pattern: "*per_position.tsv"
+  - multiqc_files:
+      description: Channel containing files for MultiQC
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - file:
+            type: file
+            description: File for MultiQC
+  - transcriptome_bam:
+      description: Channel containing the final deduplicated transcriptome BAM files
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - bam:
+            type: file
+            description: Deduplicated transcriptome BAM file
+            pattern: "*.bam"
+  - transcriptome_dedup_bam:
+      description: Channel containing the transcriptome BAM after deduplication, before name sorting
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - bam:
+            type: file
+            description: Deduplicated transcriptome BAM file
+            pattern: "*.bam"
+  - transcriptome_sorted_bam:
+      description: Channel containing the name-sorted deduplicated transcriptome BAM
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - bam:
+            type: file
+            description: Name-sorted transcriptome BAM file
+            pattern: "*.bam"
+  - transcriptome_sorted_bam_index:
+      description: Channel containing the index of the coordinate-sorted deduplicated transcriptome BAM
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - index:
+            type: file
+            description: BAM index file
+            pattern: "*.{bai,csi}"
+  - transcriptome_filtered_bam:
+      description: Channel containing the paired-end transcriptome BAM filtered by UMI-tools prepare_for_rsem
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - bam:
+            type: file
+            description: Filtered transcriptome BAM file
+            pattern: "*.bam"
   - per_sample_mqc_bundle:
       description: |
         Per-sample MultiQC-feeding outputs (genome-side only: genomic dedup log,
@@ -210,29 +311,6 @@ output:
         - files:
             type: file
             description: List of MultiQC-relevant files for the sample
-  - multiqc_files:
-      description: Channel containing files for MultiQC
-      structure:
-        - file:
-            type: file
-            description: File for MultiQC
-  - transcriptome_bam:
-      description: Channel containing deduplicated transcriptome BAM files
-      structure:
-        - meta:
-            type: map
-            description: Metadata map
-        - bam:
-            type: file
-            description: Deduplicated transcriptome BAM file
-            pattern: "*.bam"
-  - versions:
-      description: Channel containing software versions file
-      structure:
-        - versions:
-            type: file
-            description: File containing versions of the software used
-            pattern: "versions.yml"
 
 authors:
   - "@pinin4fjords"

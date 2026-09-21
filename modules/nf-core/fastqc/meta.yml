@@ -86,26 +86,26 @@ maintainers:
   - "@ewels"
   - "@FelixKrueger"
 containers:
-  conda:
-    linux_amd64:
-      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-af7a5314d5015c29_1/condalock
-    linux_arm64:
-      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-df99cb252670875a_2/condalock
   docker:
-    linux_amd64:
-      build_id: bd-af7a5314d5015c29_1
-      name: community.wave.seqera.io/library/fastqc:0.12.1--af7a5314d5015c29
-      scanId: sc-a618548acbee5a8a_30
-    linux_arm64:
-      build_id: bd-df99cb252670875a_2
-      name: community.wave.seqera.io/library/fastqc:0.12.1--df99cb252670875a
-      scanId: sc-b5913ed5d42b22d2_18
+    linux/arm64:
+      name: community.wave.seqera.io/library/fastqc:0.12.1--e455e32f745abe68
+      build_id: bd-e455e32f745abe68_1
+      scan_id: sc-f102f736465af88c_1
+    linux/amd64:
+      name: community.wave.seqera.io/library/fastqc:0.12.1--5cb1a2fa2f18c7c2
+      build_id: bd-5cb1a2fa2f18c7c2_1
+      scan_id: sc-0c0466326b6b77d2_1
   singularity:
-    linux_amd64:
-      build_id: bd-104d26ddd9519960_1
-      name: oras://community.wave.seqera.io/library/fastqc:0.12.1--104d26ddd9519960
-      https: https://community.wave.seqera.io/v2/library/fastqc/blobs/sha256:e0c976cb2eca5fee72618a581537a4f8ea42fcae24c9b201e2e0f764fd28648a
-    linux_arm64:
-      build_id: bd-d56b505a93aef38a_1
-      name: oras://community.wave.seqera.io/library/fastqc:0.12.1--d56b505a93aef38a
-      https: https://community.wave.seqera.io/v2/library/fastqc/blobs/sha256:fd39534bf298698cbe3ee4d4a6f1e73330ec4bca44c38dd9a4d06cb5ea838017
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/fastqc:0.12.1--5c4bd442468d75dd
+      build_id: bd-5c4bd442468d75dd_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/f2/f20b021476d1d87658820f971ebecc1e8cdbde0f338eb0d9cea2b0a8fc54a54b/data
+    linux/arm64:
+      name: oras://community.wave.seqera.io/library/fastqc:0.12.1--127a87fc06499035
+      build_id: bd-127a87fc06499035_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/46/46daf2dad0169afd2ae047c3e50ed3776259f664bf07e5e06b045dc23449e994/data
+  conda:
+    linux/amd64:
+      lock_file: modules/nf-core/fastqc/.conda-lock/linux_amd64-bd-5cb1a2fa2f18c7c2_1.txt
+    linux/arm64:
+      lock_file: modules/nf-core/fastqc/.conda-lock/linux_arm64-bd-e455e32f745abe68_1.txt

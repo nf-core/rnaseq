@@ -11,21 +11,21 @@
                 "+"
             ]
         ],
+        "timestamp": "2024-02-12T18:18:30.865895",
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.04.3"
-        },
-        "timestamp": "2024-02-12T18:18:30.865895"
+        }
     },
     "bam_other": {
         "content": [
             "test_other.fastq.gz"
         ],
+        "timestamp": "2024-02-12T18:18:23.988269",
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.04.3"
-        },
-        "timestamp": "2024-02-12T18:18:23.988269"
+        }
     },
     "bam - stub": {
         "content": [
@@ -67,16 +67,16 @@
                     [
                         "SAMTOOLS_FASTQ",
                         "samtools",
-                        "1.23.1"
+                        "1.24"
                     ]
                 ]
             }
         ],
+        "timestamp": "2026-03-19T08:58:51.815096",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-03-19T08:58:51.815096"
+        }
     },
     "bam_fastq": {
         "content": [
@@ -101,21 +101,21 @@
                 ]
             ]
         ],
+        "timestamp": "2024-02-12T18:18:23.976154",
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.04.3"
-        },
-        "timestamp": "2024-02-12T18:18:23.976154"
+        }
     },
     "bam_interleave_other": {
         "content": [
             "test_other.fastq.gz"
         ],
+        "timestamp": "2024-02-12T18:18:30.87243",
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.04.3"
-        },
-        "timestamp": "2024-02-12T18:18:30.87243"
+        }
     },
     "bam_interleaved": {
         "content": [
@@ -123,11 +123,11 @@
                 
             ]
         ],
+        "timestamp": "2024-02-12T18:18:23.980431",
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.04.3"
-        },
-        "timestamp": "2024-02-12T18:18:23.980431"
+        }
     },
     "bam_singinterleave_leton": {
         "content": [
@@ -135,11 +135,11 @@
                 
             ]
         ],
+        "timestamp": "2024-02-12T18:18:30.869149",
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.04.3"
-        },
-        "timestamp": "2024-02-12T18:18:30.869149"
+        }
     },
     "bam_versions": {
         "content": [
@@ -148,16 +148,16 @@
                     [
                         "SAMTOOLS_FASTQ",
                         "samtools",
-                        "1.23.1"
+                        "1.24"
                     ]
                 ]
             }
         ],
+        "timestamp": "2026-03-19T08:58:41.34399",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-03-19T08:58:41.34399"
+        }
     },
     "bam_verinterleave_sions": {
         "content": [
@@ -166,26 +166,26 @@
                     [
                         "SAMTOOLS_FASTQ",
                         "samtools",
-                        "1.23.1"
+                        "1.24"
                     ]
                 ]
             }
         ],
+        "timestamp": "2026-03-19T08:58:46.729284",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-03-19T08:58:46.729284"
+        }
     },
     "bam_singleton": {
         "content": [
             "test_singleton.fastq.gz"
         ],
+        "timestamp": "2024-02-12T18:18:23.985165",
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.04.3"
-        },
-        "timestamp": "2024-02-12T18:18:23.985165"
+        }
     },
     "bam_interleave_fastq": {
         "content": [
@@ -193,11 +193,11 @@
                 
             ]
         ],
+        "timestamp": "2024-02-12T18:18:30.859468",
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.04.3"
-        },
-        "timestamp": "2024-02-12T18:18:30.859468"
+        }
     },
     "bam_interleave - stub": {
         "content": [
@@ -230,15 +230,15 @@
                     [
                         "SAMTOOLS_FASTQ",
                         "samtools",
-                        "1.23.1"
+                        "1.24"
                     ]
                 ]
             }
         ],
+        "timestamp": "2026-03-19T08:58:56.91914",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-03-19T08:58:56.91914"
+        }
     }
 }

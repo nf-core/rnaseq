@@ -4,4 +4,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::subread=2.0.6
+  - bioconda::subread=2.1.1

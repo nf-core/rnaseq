@@ -22,7 +22,7 @@
                     "python": "3.12.2"
                 },
                 "CUSTOM_GTFFILTER": {
-                    "python": "3.9.5"
+                    "python": "3.14.5"
                 },
                 "CUSTOM_MULTIQCCUSTOMBIOTYPE": {
                     "python": "3.12.12"
@@ -66,7 +66,7 @@
                     "gunzip": 1.13
                 },
                 "PICARD_MARKDUPLICATES": {
-                    "picard": "3.4.0"
+                    "picard": "3.5.0"
                 },
                 "QUALIMAP_RNASEQ": {
                     "qualimap": 2.3
@@ -93,28 +93,28 @@
                     "rseqc": "5.0.4"
                 },
                 "SALMON_QUANT": {
-                    "salmon": "1.10.3"
+                    "salmon": "2.7.0"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": "1.23.1"
+                    "samtools": 1.24
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": "1.23.1"
+                    "samtools": 1.24
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": "1.23.1"
+                    "samtools": 1.24
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": "1.23.1"
+                    "samtools": 1.24
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": "1.23.1"
+                    "samtools": 1.24
                 },
                 "SAMTOOLS_SORT_QUALIMAP": {
-                    "samtools": "1.23.1"
+                    "samtools": 1.24
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": "1.23.1"
+                    "samtools": 1.24
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -139,16 +139,16 @@
                     "stringtie": "3.0.3"
                 },
                 "SUBREAD_FEATURECOUNTS": {
-                    "subread": "2.0.6"
+                    "subread": "2.1.1"
                 },
                 "TXIMETA_TXIMPORT": {
                     "bioconductor-tximeta": "1.20.1"
                 },
                 "UCSC_BEDCLIP": {
-                    "ucsc": 377
+                    "ucsc": 482
                 },
                 "UCSC_BEDGRAPHTOBIGWIG": {
-                    "ucsc": 469
+                    "ucsc": 482
                 },
                 "UNTAR_SALMON_INDEX": {
                     "untar": 1.34
@@ -301,6 +301,7 @@
                 "multiqc/star_salmon/multiqc_report_data/samtools-idxstats-mapped-reads-plot_Raw_Counts.txt",
                 "multiqc/star_salmon/multiqc_report_data/samtools-stats-dp.txt",
                 "multiqc/star_salmon/multiqc_report_data/samtools_alignment_plot.txt",
+                "multiqc/star_salmon/multiqc_report_data/samtools_insert_size.txt",
                 "multiqc/star_salmon/multiqc_report_data/star_alignment_plot.txt",
                 "multiqc/star_salmon/multiqc_report_data/star_summary_table.txt",
                 "multiqc/star_salmon/multiqc_report_plots",
@@ -369,6 +370,7 @@
                 "multiqc/star_salmon/multiqc_report_plots/pdf/samtools-stats-dp.pdf",
                 "multiqc/star_salmon/multiqc_report_plots/pdf/samtools_alignment_plot-cnt.pdf",
                 "multiqc/star_salmon/multiqc_report_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/star_salmon/multiqc_report_plots/pdf/samtools_insert_size.pdf",
                 "multiqc/star_salmon/multiqc_report_plots/pdf/star_alignment_plot-cnt.pdf",
                 "multiqc/star_salmon/multiqc_report_plots/pdf/star_alignment_plot-pct.pdf",
                 "multiqc/star_salmon/multiqc_report_plots/pdf/star_salmon_deseq2_clustering.pdf",
@@ -442,6 +444,7 @@
                 "multiqc/star_salmon/multiqc_report_plots/png/samtools-stats-dp.png",
                 "multiqc/star_salmon/multiqc_report_plots/png/samtools_alignment_plot-cnt.png",
                 "multiqc/star_salmon/multiqc_report_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/star_salmon/multiqc_report_plots/png/samtools_insert_size.png",
                 "multiqc/star_salmon/multiqc_report_plots/png/star_alignment_plot-cnt.png",
                 "multiqc/star_salmon/multiqc_report_plots/png/star_alignment_plot-pct.png",
                 "multiqc/star_salmon/multiqc_report_plots/png/star_salmon_deseq2_clustering.png",
@@ -515,6 +518,7 @@
                 "multiqc/star_salmon/multiqc_report_plots/svg/samtools-stats-dp.svg",
                 "multiqc/star_salmon/multiqc_report_plots/svg/samtools_alignment_plot-cnt.svg",
                 "multiqc/star_salmon/multiqc_report_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/star_salmon/multiqc_report_plots/svg/samtools_insert_size.svg",
                 "multiqc/star_salmon/multiqc_report_plots/svg/star_alignment_plot-cnt.svg",
                 "multiqc/star_salmon/multiqc_report_plots/svg/star_alignment_plot-pct.svg",
                 "multiqc/star_salmon/multiqc_report_plots/svg/star_salmon_deseq2_clustering.svg",
@@ -531,6 +535,7 @@
                 "salmon/RAP1_IAA_30M_REP1/aux_info/ambig_info.tsv",
                 "salmon/RAP1_IAA_30M_REP1/aux_info/expected_bias.gz",
                 "salmon/RAP1_IAA_30M_REP1/aux_info/fld.gz",
+                "salmon/RAP1_IAA_30M_REP1/aux_info/genemap_unmatched_txps.json",
                 "salmon/RAP1_IAA_30M_REP1/aux_info/meta_info.json",
                 "salmon/RAP1_IAA_30M_REP1/aux_info/observed_bias.gz",
                 "salmon/RAP1_IAA_30M_REP1/aux_info/observed_bias_3p.gz",
@@ -547,6 +552,7 @@
                 "salmon/RAP1_UNINDUCED_REP1/aux_info/ambig_info.tsv",
                 "salmon/RAP1_UNINDUCED_REP1/aux_info/expected_bias.gz",
                 "salmon/RAP1_UNINDUCED_REP1/aux_info/fld.gz",
+                "salmon/RAP1_UNINDUCED_REP1/aux_info/genemap_unmatched_txps.json",
                 "salmon/RAP1_UNINDUCED_REP1/aux_info/meta_info.json",
                 "salmon/RAP1_UNINDUCED_REP1/aux_info/observed_bias.gz",
                 "salmon/RAP1_UNINDUCED_REP1/aux_info/observed_bias_3p.gz",
@@ -563,6 +569,7 @@
                 "salmon/RAP1_UNINDUCED_REP2/aux_info/ambig_info.tsv",
                 "salmon/RAP1_UNINDUCED_REP2/aux_info/expected_bias.gz",
                 "salmon/RAP1_UNINDUCED_REP2/aux_info/fld.gz",
+                "salmon/RAP1_UNINDUCED_REP2/aux_info/genemap_unmatched_txps.json",
                 "salmon/RAP1_UNINDUCED_REP2/aux_info/meta_info.json",
                 "salmon/RAP1_UNINDUCED_REP2/aux_info/observed_bias.gz",
                 "salmon/RAP1_UNINDUCED_REP2/aux_info/observed_bias_3p.gz",
@@ -579,6 +586,7 @@
                 "salmon/WT_REP1/aux_info/ambig_info.tsv",
                 "salmon/WT_REP1/aux_info/expected_bias.gz",
                 "salmon/WT_REP1/aux_info/fld.gz",
+                "salmon/WT_REP1/aux_info/genemap_unmatched_txps.json",
                 "salmon/WT_REP1/aux_info/meta_info.json",
                 "salmon/WT_REP1/aux_info/observed_bias.gz",
                 "salmon/WT_REP1/aux_info/observed_bias_3p.gz",
@@ -595,6 +603,7 @@
                 "salmon/WT_REP2/aux_info/ambig_info.tsv",
                 "salmon/WT_REP2/aux_info/expected_bias.gz",
                 "salmon/WT_REP2/aux_info/fld.gz",
+                "salmon/WT_REP2/aux_info/genemap_unmatched_txps.json",
                 "salmon/WT_REP2/aux_info/meta_info.json",
                 "salmon/WT_REP2/aux_info/observed_bias.gz",
                 "salmon/WT_REP2/aux_info/observed_bias_3p.gz",
@@ -645,6 +654,7 @@
                 "star_salmon/RAP1_IAA_30M_REP1/cmd_info.json",
                 "star_salmon/RAP1_IAA_30M_REP1/libParams",
                 "star_salmon/RAP1_IAA_30M_REP1/libParams/flenDist.txt",
+                "star_salmon/RAP1_IAA_30M_REP1/lib_format_counts.json",
                 "star_salmon/RAP1_IAA_30M_REP1/logs",
                 "star_salmon/RAP1_IAA_30M_REP1/logs/salmon_quant.log",
                 "star_salmon/RAP1_IAA_30M_REP1/quant.genes.sf",
@@ -662,6 +672,7 @@
                 "star_salmon/RAP1_UNINDUCED_REP1/cmd_info.json",
                 "star_salmon/RAP1_UNINDUCED_REP1/libParams",
                 "star_salmon/RAP1_UNINDUCED_REP1/libParams/flenDist.txt",
+                "star_salmon/RAP1_UNINDUCED_REP1/lib_format_counts.json",
                 "star_salmon/RAP1_UNINDUCED_REP1/logs",
                 "star_salmon/RAP1_UNINDUCED_REP1/logs/salmon_quant.log",
                 "star_salmon/RAP1_UNINDUCED_REP1/quant.genes.sf",
@@ -679,6 +690,7 @@
                 "star_salmon/RAP1_UNINDUCED_REP2/cmd_info.json",
                 "star_salmon/RAP1_UNINDUCED_REP2/libParams",
                 "star_salmon/RAP1_UNINDUCED_REP2/libParams/flenDist.txt",
+                "star_salmon/RAP1_UNINDUCED_REP2/lib_format_counts.json",
                 "star_salmon/RAP1_UNINDUCED_REP2/logs",
                 "star_salmon/RAP1_UNINDUCED_REP2/logs/salmon_quant.log",
                 "star_salmon/RAP1_UNINDUCED_REP2/quant.genes.sf",
@@ -696,6 +708,7 @@
                 "star_salmon/WT_REP1/cmd_info.json",
                 "star_salmon/WT_REP1/libParams",
                 "star_salmon/WT_REP1/libParams/flenDist.txt",
+                "star_salmon/WT_REP1/lib_format_counts.json",
                 "star_salmon/WT_REP1/logs",
                 "star_salmon/WT_REP1/logs/salmon_quant.log",
                 "star_salmon/WT_REP1/quant.genes.sf",
@@ -713,6 +726,7 @@
                 "star_salmon/WT_REP2/cmd_info.json",
                 "star_salmon/WT_REP2/libParams",
                 "star_salmon/WT_REP2/libParams/flenDist.txt",
+                "star_salmon/WT_REP2/lib_format_counts.json",
                 "star_salmon/WT_REP2/logs",
                 "star_salmon/WT_REP2/logs/salmon_quant.log",
                 "star_salmon/WT_REP2/quant.genes.sf",
@@ -1246,8 +1260,8 @@
                 "multiqc_featurecounts_biotype_plot.txt:md5,2fffc21e7bef2a357f5651ba64bb6cd4",
                 "multiqc_samtools_idxstats.txt:md5,adf5f32fa1485ad0f4dacdfedc7b4bbc",
                 "multiqc_strand_check_composition_bargraph.txt:md5,4b8e543d35b0830310421c2fef3c5f83",
-                "multiqc_strand_check_composition_bargraph_1.txt:md5,64429a52173bc6909f5ec0d626c89aa8",
-                "multiqc_strand_check_summary_table.txt:md5,0da92ce9e96f0ff7a1beb1b1de49602f",
+                "multiqc_strand_check_composition_bargraph_1.txt:md5,2bc286041431543942ee10a82f804f07",
+                "multiqc_strand_check_summary_table.txt:md5,b9fd02af61008f4fc297255f003faa18",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -1255,78 +1269,79 @@
                 "samtools-idxstats-mapped-reads-plot_Normalised_Counts.txt:md5,75acd04232d1804b5f960ee4c5db4722",
                 "samtools-idxstats-mapped-reads-plot_Observed_over_Expected_Counts.txt:md5,ae45731d8d4595f77e6b271004f3a070",
                 "samtools-idxstats-mapped-reads-plot_Raw_Counts.txt:md5,a557130553131c893398532377d3b525",
-                "ambig_info.tsv:md5,e099a9ec06de792219139248712f7f40",
-                "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
-                "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,138b27764a97d468418b3dac5e7f1cef",
-                "lib_format_counts.json:md5,406e1457f0f0506bd8e605a217477436",
-                "ambig_info.tsv:md5,0e0895adb376929bec8e0dd0677bf7d8",
-                "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
-                "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,87bcf1e84fc31a794e3c8f8b227d11c3",
-                "lib_format_counts.json:md5,afd2a0ddf0fd0ec4f99be898608a59db",
-                "ambig_info.tsv:md5,6ed1b46c69917d6af3f093f9503bb962",
-                "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
-                "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,ec504469f9b0e33c94f85846f1486d7f",
-                "lib_format_counts.json:md5,f7b7048fd2ac63fd792e71b85e4ed6d1",
-                "ambig_info.tsv:md5,2f4c6a5953e41252a89851a9a7c36d9b",
-                "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
-                "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,591436d401b6df6f3c6a8b16913158f4",
-                "lib_format_counts.json:md5,03f0b70a4bb428fab96c29f04f895b6f",
-                "ambig_info.tsv:md5,5fff63493bf3c223707ac90b9bb3a8f3",
-                "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
-                "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,fe66c9d876645b9260d8c2488157d4d4",
-                "lib_format_counts.json:md5,4bf135c93c37f90c493f761f2709a28b",
+                "samtools_insert_size.txt:md5,b6a270771afc6f2e1f3937902c1dd61a",
+                "ambig_info.tsv:md5,198b8d8115b81482ac52fb9806f62c50",
+                "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
+                "genemap_unmatched_txps.json:md5,7397fca3b0009816b63f4a09552678e5",
+                "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
+                "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
+                "cmd_info.json:md5,cf818b6adba396cc5353b902448cfac6",
+                "ambig_info.tsv:md5,6f86f0f6bc9965516cf7bf6407fd85f7",
+                "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
+                "genemap_unmatched_txps.json:md5,7397fca3b0009816b63f4a09552678e5",
+                "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
+                "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
+                "cmd_info.json:md5,9357c6482eab84dabd07646ed70e0476",
+                "ambig_info.tsv:md5,91ad4946c706c5051a08f3226a4b8cb2",
+                "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
+                "genemap_unmatched_txps.json:md5,7397fca3b0009816b63f4a09552678e5",
+                "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
+                "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
+                "cmd_info.json:md5,1570b3f15040392184dd793ecd62477e",
+                "ambig_info.tsv:md5,29e8b35da9cbcfa8edcab1906353458a",
+                "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
+                "genemap_unmatched_txps.json:md5,7397fca3b0009816b63f4a09552678e5",
+                "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
+                "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
+                "cmd_info.json:md5,c39a2ead5695c39d424c5f85104ef319",
+                "ambig_info.tsv:md5,71c584a337c7b412f13784893794bf98",
+                "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
+                "genemap_unmatched_txps.json:md5,7397fca3b0009816b63f4a09552678e5",
+                "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
+                "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
+                "cmd_info.json:md5,a3a440b92ff27584be4f11e146a3c59c",
                 "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
-                "salmon.merged.tx2gene_augmented.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
-                "ambig_info.tsv:md5,d1d3bd2a5617220b29a9063cb29f0578",
-                "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
-                "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,21395500c85658c70ce5fa0ac05b339a",
-                "ambig_info.tsv:md5,452bbc83465339d2467663b061400b95",
-                "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
-                "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,faf70330c73fdce087631bb06de8a12f",
-                "ambig_info.tsv:md5,f2aed38ba5251664024392bc89ae3f01",
-                "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
-                "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,563fd8191cc965524621c2afea7983ff",
-                "ambig_info.tsv:md5,8d2b5ec0c441d9e078610480d179d116",
-                "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
-                "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,867de0b90aeccb5f9627e821a973aea7",
-                "ambig_info.tsv:md5,44dad5d05b3c0c2ccb5a19a3a80333b3",
-                "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
-                "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
-                "cmd_info.json:md5,3a51e7db950cee84bed0b13e329f1934",
+                "salmon.merged.tx2gene_augmented.tsv:md5,62f1be3e94901085640179b604d879a2",
+                "ambig_info.tsv:md5,bae0614f86783ac76758db9d3fef7401",
+                "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
+                "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
+                "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
+                "cmd_info.json:md5,b876c63c31cc6e1e32b0c199e40842ce",
+                "ambig_info.tsv:md5,11d3e90b0686c2bcc41250360aa4c67d",
+                "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
+                "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
+                "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
+                "cmd_info.json:md5,f2b6d85f42ada3b2f17bbb2b6c7b55a3",
+                "ambig_info.tsv:md5,4f7e39861b0941a8aae3126216c17047",
+                "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
+                "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
+                "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
+                "cmd_info.json:md5,a43ebd41b8c288735c7816262163f02c",
+                "ambig_info.tsv:md5,5714300f3441ae61a28dbd6f7e916e34",
+                "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
+                "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
+                "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
+                "cmd_info.json:md5,d1cd2398038030227c66243995111e02",
+                "ambig_info.tsv:md5,947259ea5657e620fd9f30dcc78d3aa5",
+                "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
+                "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
+                "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
+                "cmd_info.json:md5,017e2a5451b01a3da9d2241f2ae53e79",
                 "RAP1_IAA_30M_REP1.biotype_counts_mqc.tsv:md5,bc80cee5887507179965623c3dfef4f9",
                 "RAP1_IAA_30M_REP1.biotype_counts_rrna_mqc.tsv:md5,dde2de0cb90e10d0195c726f768e9941",
-                "RAP1_IAA_30M_REP1.featureCounts.tsv:md5,efc257c3c0f9a9d7eabc0449bbbf0f10",
+                "RAP1_IAA_30M_REP1.featureCounts.tsv:md5,a994a6615156b493a1e0f702b7b3a65a",
                 "RAP1_UNINDUCED_REP1.biotype_counts_mqc.tsv:md5,2e1d531352e9ad5935308e588dbaffe7",
                 "RAP1_UNINDUCED_REP1.biotype_counts_rrna_mqc.tsv:md5,845ff9059c72bc6722a8de69776e22bb",
-                "RAP1_UNINDUCED_REP1.featureCounts.tsv:md5,9c2cec5af63193074170637b6807f3bc",
+                "RAP1_UNINDUCED_REP1.featureCounts.tsv:md5,5e24505ca2207cba6c850d06ae6b3bcc",
                 "RAP1_UNINDUCED_REP2.biotype_counts_mqc.tsv:md5,6fedc1d11bc8d558f61c4c4a6060040f",
                 "RAP1_UNINDUCED_REP2.biotype_counts_rrna_mqc.tsv:md5,6d3fa4c88c7fe61f638e4624ad5e22f0",
-                "RAP1_UNINDUCED_REP2.featureCounts.tsv:md5,6121b3a17fb3b441eb0357ec01c029bf",
+                "RAP1_UNINDUCED_REP2.featureCounts.tsv:md5,c9feeb6dd3a37815c84e62ddb145e226",
                 "WT_REP1.biotype_counts_mqc.tsv:md5,159e8125673fd75086d352ca1359d7b7",
                 "WT_REP1.biotype_counts_rrna_mqc.tsv:md5,8ef76d717492ca23764938aee8ea33a9",
-                "WT_REP1.featureCounts.tsv:md5,d55a3f4a92e22ad5f52a8f5d762e0851",
+                "WT_REP1.featureCounts.tsv:md5,d7a89eeaa43b3c9f3f16a014dc1606ac",
                 "WT_REP2.biotype_counts_mqc.tsv:md5,70bdca053da2f6f8a1aa29a5e32d2228",
                 "WT_REP2.biotype_counts_rrna_mqc.tsv:md5,12294618fe44df1e7f39348372dcb481",
-                "WT_REP2.featureCounts.tsv:md5,a1a4bfa395782a0c24303e285e156c91",
+                "WT_REP2.featureCounts.tsv:md5,f133056ddf213be39cbd0a051d5d424d",
                 "RAP1_IAA_30M_REP1.SJ.out.tab:md5,20c790387ef68e041bc4ffdcd032a22f",
                 "RAP1_UNINDUCED_REP1.SJ.out.tab:md5,ba2636236fa1d26aa72f7aff73bd41f8",
                 "RAP1_UNINDUCED_REP2.SJ.out.tab:md5,1c0458f66e4af56a56f4409c120434b3",
@@ -1361,10 +1376,10 @@
                 "i_data.ctab:md5,042075e0929819608527f05b28b063d6"
             ]
         ],
-        "timestamp": "2026-08-12T14:31:40.556566671",
+        "timestamp": "2026-09-19T00:03:46.63736021",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "25.10.4"
         }
     },
     "Params: --skip_trimming": {
@@ -2612,31 +2627,26 @@
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "cmd_info.json:md5,138b27764a97d468418b3dac5e7f1cef",
-                "lib_format_counts.json:md5,406e1457f0f0506bd8e605a217477436",
                 "ambig_info.tsv:md5,0e0895adb376929bec8e0dd0677bf7d8",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "cmd_info.json:md5,87bcf1e84fc31a794e3c8f8b227d11c3",
-                "lib_format_counts.json:md5,afd2a0ddf0fd0ec4f99be898608a59db",
                 "ambig_info.tsv:md5,6ed1b46c69917d6af3f093f9503bb962",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "cmd_info.json:md5,ec504469f9b0e33c94f85846f1486d7f",
-                "lib_format_counts.json:md5,f7b7048fd2ac63fd792e71b85e4ed6d1",
                 "ambig_info.tsv:md5,2f4c6a5953e41252a89851a9a7c36d9b",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "cmd_info.json:md5,591436d401b6df6f3c6a8b16913158f4",
-                "lib_format_counts.json:md5,03f0b70a4bb428fab96c29f04f895b6f",
                 "ambig_info.tsv:md5,5fff63493bf3c223707ac90b9bb3a8f3",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",
                 "observed_bias.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "observed_bias_3p.gz:md5,92bcd0592d22a6a58d0360fc76103e56",
                 "cmd_info.json:md5,fe66c9d876645b9260d8c2488157d4d4",
-                "lib_format_counts.json:md5,4bf135c93c37f90c493f761f2709a28b",
                 "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "ambig_info.tsv:md5,d1d3bd2a5617220b29a9063cb29f0578",
                 "expected_bias.gz:md5,3407f87245d0003e0ffbfdf6d8c04f20",

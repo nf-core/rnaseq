@@ -25,6 +25,8 @@ report_section_order:
     order: 4004
   cutadapt:
     order: 4003
+  trim_galore:
+    order: 4003
   fastp:
     order: 4003
   fastqc_trimmed:
@@ -105,6 +107,7 @@ run_modules:
   - custom_content
   - fastqc
   - cutadapt
+  - trim_galore
   - fastp
   - seqkit
   - bbmap
@@ -135,6 +138,7 @@ module_order:
       path_filters:
         - "*_raw*fastqc.zip"
   - cutadapt
+  - trim_galore
   - fastp
   - seqkit:
       name: "SeqKit Stats (rRNA removal)"

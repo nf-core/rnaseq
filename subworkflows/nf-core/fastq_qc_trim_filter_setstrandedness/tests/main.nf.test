@@ -30,7 +30,7 @@ nextflow_workflow {
                 """
                 // CAT_FASTQ input: alternating R1/R2 files [r1_a, r2_a, r1_b, r2_b, ...]
                 // Even indices -> R1 files, odd indices -> R2 files
-                input[0] = Channel.of([
+                input[0] = channel.of([
                     [ id:'test', single_end:false, strandedness:'auto' ],
                     [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
@@ -51,14 +51,14 @@ nextflow_workflow {
                 """
                 // Input channels
                 input[0] = CAT_FASTQ.out.reads
-                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)) // ch_fasta
-                input[2] = Channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)) // ch_transcript_fasta
-                input[3] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)) // ch_gtf
+                input[1] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)) // ch_fasta
+                input[2] = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)) // ch_transcript_fasta
+                input[3] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)) // ch_gtf
                 input[4] = []              // ch_salmon_index
                 input[5] = []              // ch_sortmerna_index
                 input[6] = []              // ch_bowtie2_index
                 input[7] = []              // ch_bbsplit_index
-                input[8] = Channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas
+                input[8] = channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas
 
                 // Skip options
                 input[9] = true            // skip_bbsplit
@@ -122,6 +122,7 @@ nextflow_workflow {
                 { assert pelines2.size() == 4508 },
                 { assert workflow.out.trim_read_count[0][1] == 3022 },
                 { assert sortmernaRrnaCount == 20 },  // 10 pairs = 20 individual reads (100% detection)
+                { assert path(workflow.out.trim_reads_merged[0][1]).linesGzip.size() == 3022 * 4 },  // fastp's merged overlapping read pairs, excluded from `reads`
                 { assert snapshot(
                     pelines1.join('\n').md5(),
                     pelines2.join('\n').md5(),
@@ -146,9 +147,9 @@ nextflow_workflow {
                 """
                 // Input channels
                 input[0] = CAT_FASTQ.out.reads
-                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)) // ch_fasta
-                input[2] = Channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)) // ch_transcript_fasta
-                input[3] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)) // ch_gtf
+                input[1] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)) // ch_fasta
+                input[2] = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)) // ch_transcript_fasta
+                input[3] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)) // ch_gtf
                 input[4] = []              // ch_salmon_index
                 input[5] = []              // ch_sortmerna_index
                 input[6] = []              // ch_bowtie2_index
@@ -243,14 +244,14 @@ nextflow_workflow {
                 """
                 // Input channels
                 input[0] = CAT_FASTQ.out.reads
-                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)) // ch_fasta
-                input[2] = Channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)) // ch_transcript_fasta
-                input[3] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)) // ch_gtf
+                input[1] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)) // ch_fasta
+                input[2] = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)) // ch_transcript_fasta
+                input[3] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)) // ch_gtf
                 input[4] = []              // ch_salmon_index
                 input[5] = []              // ch_sortmerna_index
                 input[6] = []              // ch_bowtie2_index
                 input[7] = []              // ch_bbsplit_index
-                input[8] = Channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas
+                input[8] = channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas
 
                 // Skip options
                 input[9] = true            // skip_bbsplit
@@ -340,14 +341,14 @@ nextflow_workflow {
                 """
                 // Input channels
                 input[0] = CAT_FASTQ.out.reads
-                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)) // ch_fasta
-                input[2] = Channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)) // ch_transcript_fasta
-                input[3] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)) // ch_gtf
+                input[1] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)) // ch_fasta
+                input[2] = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)) // ch_transcript_fasta
+                input[3] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)) // ch_gtf
                 input[4] = []              // ch_salmon_index
                 input[5] = []              // ch_sortmerna_index
                 input[6] = []              // ch_bowtie2_index
                 input[7] = []              // ch_bbsplit_index
-                input[8] = Channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas
+                input[8] = channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas
 
                 // Skip options
                 input[9] = true            // skip_bbsplit
@@ -441,16 +442,16 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = Channel.of([
+                input[0] = channel.of([
                     [ id:'test', single_end:false, strandedness:'auto' ],
                     [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true),
                     ]
                 ])
-                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
-                input[2] = Channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))
-                input[3] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
+                input[1] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
+                input[2] = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))
+                input[3] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
                 input[4] = []              // ch_salmon_index
                 input[5] = []              // ch_sortmerna_index
                 input[6] = []              // ch_bowtie2_index
@@ -507,16 +508,16 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = Channel.of([
+                input[0] = channel.of([
                     [ id:'test', single_end:false, strandedness:'auto' ],
                     [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true),
                     ]
                 ])
-                input[1] = Channel.of([]) // ch_fasta: no genome fasta supplied (e.g. pseudoalignment-only run)
-                input[2] = Channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))
-                input[3] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
+                input[1] = channel.of([]) // ch_fasta: no genome fasta supplied (e.g. pseudoalignment-only run)
+                input[2] = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))
+                input[3] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
                 input[4] = []              // ch_salmon_index
                 input[5] = []              // ch_sortmerna_index
                 input[6] = []              // ch_bowtie2_index
@@ -575,7 +576,7 @@ nextflow_workflow {
                 process {
                     """
                     // Single-end test data with synthetic rRNA reads
-                    input[0] = Channel.of([
+                    input[0] = channel.of([
                         [ id:'test_se', single_end:true, strandedness:'auto' ],
                         [
                             file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
@@ -592,14 +593,14 @@ nextflow_workflow {
                 """
                 // Input channels - wrap single file in list to match expected format
                 input[0] = CAT_FASTQ_SE.out.reads.map { meta, reads -> [meta, reads instanceof List ? reads : [reads]] }
-                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)) // ch_fasta
-                input[2] = Channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)) // ch_transcript_fasta
-                input[3] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)) // ch_gtf
+                input[1] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)) // ch_fasta
+                input[2] = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)) // ch_transcript_fasta
+                input[3] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)) // ch_gtf
                 input[4] = []              // ch_salmon_index
                 input[5] = []              // ch_sortmerna_index
                 input[6] = []              // ch_bowtie2_index
                 input[7] = []              // ch_bbsplit_index
-                input[8] = Channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas
+                input[8] = channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas
 
                 // Skip options
                 input[9] = true            // skip_bbsplit

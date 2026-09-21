@@ -344,7 +344,7 @@
                 
             ],
             [
-                "[complete_ref_lens.bin, ctable.bin, ctg_offsets.bin, duplicate_clusters.tsv, info.json, mphf.bin, pos.bin, pre_indexing.log, rank.bin, refAccumLengths.bin, ref_indexing.log, reflengths.bin, refseq.bin, seq.bin, versionInfo.json]"
+                "[duplicate_clusters.tsv, index.ctab, index.ectab, index.refinfo, index.ssi, index.ssi.mphf, index.tct, index.tdct, info.json, refseq.bin, refseq_offsets.json]"
             ],
             [
                 
@@ -356,10 +356,10 @@
                 "[Genome, Log.out, SA, SAindex, chrLength.txt, chrName.txt, chrNameLength.txt, chrStart.txt, exonGeTrInfo.tab, exonInfo.tab, geneInfo.tab, genomeParameters.txt, sjdbInfo.txt, sjdbList.fromGTF.out.tab, sjdbList.out.tab, transcriptInfo.tab]"
             ]
         ],
-        "timestamp": "2026-05-08T17:01:10.26367366",
+        "timestamp": "2026-09-18T20:53:09.905684695",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.04.3"
+            "nextflow": "25.10.4"
         }
     },
     "skip_alignment": {
@@ -780,21 +780,22 @@
                 ],
                 "salmon_index": [
                     [
-                        "complete_ref_lens.bin",
-                        "ctable.bin",
-                        "ctg_offsets.bin",
-                        "duplicate_clusters.tsv",
-                        "info.json",
-                        "mphf.bin",
-                        "pos.bin",
-                        "pre_indexing.log",
-                        "rank.bin",
-                        "refAccumLengths.bin",
-                        "ref_indexing.log",
-                        "reflengths.bin",
-                        "refseq.bin",
-                        "seq.bin",
-                        "versionInfo.json"
+                        {
+                            
+                        },
+                        [
+                            "duplicate_clusters.tsv",
+                            "index.ctab",
+                            "index.ectab",
+                            "index.refinfo",
+                            "index.ssi",
+                            "index.ssi.mphf",
+                            "index.tct",
+                            "index.tdct",
+                            "info.json",
+                            "refseq.bin",
+                            "refseq_offsets.json"
+                        ]
                     ]
                 ],
                 "sortmerna_index": [
@@ -808,10 +809,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-01T11:20:27.800046071",
+        "timestamp": "2026-09-19T00:46:38.858038568",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.08.0"
+            "nextflow": "25.10.4"
         }
     },
     "rsem_index = false - stub": {
@@ -1147,7 +1148,7 @@
     "salmon_index = false": {
         "content": [
             [
-                "[complete_ref_lens.bin, ctable.bin, ctg_offsets.bin, duplicate_clusters.tsv, info.json, mphf.bin, pos.bin, pre_indexing.log, rank.bin, refAccumLengths.bin, ref_indexing.log, reflengths.bin, refseq.bin, seq.bin, versionInfo.json]"
+                "[duplicate_clusters.tsv, index.ctab, index.ectab, index.refinfo, index.ssi, index.ssi.mphf, index.tct, index.tdct, info.json, refseq.bin, refseq_offsets.json]"
             ],
             [
                 
@@ -1171,10 +1172,10 @@
                 
             ]
         ],
-        "timestamp": "2026-05-08T16:56:13.478721365",
+        "timestamp": "2026-09-18T20:47:23.799807223",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.04.3"
+            "nextflow": "25.10.4"
         }
     },
     "rsem_index = false": {
@@ -1369,21 +1370,22 @@
                 ],
                 "salmon_index": [
                     [
-                        "complete_ref_lens.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "ctable.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "ctg_offsets.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "duplicate_clusters.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "info.json:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "mphf.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "pos.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "pre_indexing.log:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "rank.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "refAccumLengths.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "ref_indexing.log:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "reflengths.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "refseq.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "seq.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "versionInfo.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        {
+                            
+                        },
+                        [
+                            "duplicate_clusters.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "index.ctab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "index.ectab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "index.refinfo:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "index.ssi:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "index.ssi.mphf:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "index.tct:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "index.tdct:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "info.json:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "refseq.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "refseq_offsets.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
                     ]
                 ],
                 "sortmerna_index": [
@@ -1397,10 +1399,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-01T11:13:32.074159165",
+        "timestamp": "2026-09-18T20:53:25.929420237",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.08.0"
+            "nextflow": "25.10.4"
         }
     }
 }

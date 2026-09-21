@@ -9,7 +9,6 @@ import platform
 import re
 from collections import Counter, OrderedDict
 from collections.abc import Set
-from typing import Dict
 
 # Configure logging
 logging.basicConfig(format="%(name)s - %(asctime)s %(levelname)s: %(message)s")
@@ -103,7 +102,7 @@ def discover_transcript_attribute(gtf_file: str, transcripts: Set[str]) -> str:
     return attribute
 
 
-def parse_attributes(attributes_text: str) -> Dict[str, str]:
+def parse_attributes(attributes_text: str) -> dict[str, str]:
     """
     Parse the attributes column of a GTF file.
 

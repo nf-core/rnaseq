@@ -16,10 +16,10 @@ input:
       description: |
         The input channel containing the BAM/CRAM and it's index
         Structure: [ val(meta), path(bam), path(bai) ]
-  - ch_fasta:
+  - ch_fasta_fai:
       description: |
-        Reference genome fasta file
-        Structure: [ path(fasta) ]
+        Reference genome fasta file and its index
+        Structure: [ val(meta2), path(fasta), path(fai) ]
 output:
   - stats:
       description: |
@@ -33,10 +33,6 @@ output:
       description: |
         File containing samtools idxstats output
         Structure: [ val(meta), path(idxstats)]
-  - versions:
-      description: |
-        Files containing software versions
-        Structure: [ path(versions.yml) ]
 authors:
   - "@drpatelh"
 maintainers:

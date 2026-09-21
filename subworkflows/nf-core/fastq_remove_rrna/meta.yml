@@ -23,46 +23,29 @@ input:
       type: file
       description: |
         List of FastQ files of size 1 and 2 for single-end and paired-end data, respectively.
-      structure:
-        - meta:
-            type: map
-            description: Groovy Map containing sample information e.g. [ id:'test', single_end:false ]
-        - reads:
-            type: file
-            description: FastQ files
-            pattern: "*.{fq,fastq}{,.gz}"
+
+        Structure: [ val(meta), [ path(reads) ] ]
+      pattern: "*.{fq,fastq}{,.gz}"
   - ch_rrna_fastas:
       type: file
       description: |
         Channel containing one or more FASTA files with rRNA sequences for use with SortMeRNA or Bowtie2.
         Not required for RiboDetector which uses built-in models.
-      structure:
-        - fasta:
-            type: file
-            description: rRNA reference fasta files
-            pattern: "*.{fa,fasta}{,.gz}"
+
+        Structure: [ path(fasta) ]
+      pattern: "*.{fa,fasta}{,.gz}"
   - ch_sortmerna_index:
       type: directory
       description: |
         Pre-built SortMeRNA index directory. Optional - can be built on-the-fly if make_sortmerna_index is true.
-      structure:
-        - meta:
-            type: map
-            description: Metadata for the SortMeRNA index
-        - index:
-            type: directory
-            description: SortMeRNA index directory
+
+        Structure: [ val(meta), path(index) ]
   - ch_bowtie2_index:
       type: directory
       description: |
         Pre-built Bowtie2 index directory. Optional - can be built on-the-fly if make_bowtie2_index is true.
-      structure:
-        - meta:
-            type: map
-            description: Metadata for the Bowtie2 index
-        - index:
-            type: directory
-            description: Bowtie2 index directory
+
+        Structure: [ val(meta), path(index) ]
   - ribo_removal_tool:
       type: string
       description: Specifies the rRNA removal tool to use
@@ -78,26 +61,67 @@ output:
       type: file
       description: |
         FASTQ files with rRNA reads removed.
-      structure:
-        - meta:
-            type: map
-            description: Groovy Map containing sample information
-        - reads:
-            type: file
-            description: Filtered FastQ files
-            pattern: "*.{fq,fastq}{,.gz}"
+
+        Structure: [ val(meta), [ path(reads) ] ]
+      pattern: "*.{fq,fastq}{,.gz}"
   - multiqc_files:
       type: file
       description: |
         Log files from the rRNA removal tool, compatible with MultiQC.
-      structure:
-        - meta:
-            type: map
-            description: Metadata for the log files
-        - log:
-            type: file
-            description: Tool-specific log files
-            pattern: "*.log"
+
+        Structure: [ val(meta), path(log) ]
+  - sortmerna_log:
+      type: file
+      description: |
+        SortMeRNA log file, only populated when sortmerna is the rRNA removal tool.
+
+        Structure: [ val(meta), path(log) ]
+      pattern: "*.log"
+  - ribodetector_log:
+      type: file
+      description: |
+        RiboDetector log file, only populated when ribodetector is the rRNA removal tool.
+
+        Structure: [ val(meta), path(log) ]
+      pattern: "*.log"
+  - seqkit_stats:
+      type: file
+      description: |
+        SeqKit statistics used to derive the mean read length for RiboDetector, only
+        populated when ribodetector is the rRNA removal tool.
+
+        Structure: [ val(meta), path(stats) ]
+      pattern: "*.tsv"
+  - bowtie2_log:
+      type: file
+      description: |
+        Bowtie2 alignment log files, only populated when bowtie2 is the rRNA removal tool.
+
+        Structure: [ val(meta), path(log) ]
+      pattern: "*.log"
+  - bowtie2_index:
+      type: directory
+      description: |
+        Bowtie2 index built from the rRNA references, only populated when bowtie2 is the
+        rRNA removal tool and make_bowtie2_index is true.
+
+        Structure: [ val(meta), path(index) ]
+  - seqkit_prefixed:
+      type: file
+      description: |
+        rRNA reference fasta files with their filename added as a prefix to each sequence
+        header, only populated when a Bowtie2 index is built.
+
+        Structure: [ val(meta), path(fasta) ]
+      pattern: "*.{fa,fasta}{,.gz}"
+  - seqkit_converted:
+      type: file
+      description: |
+        Prefixed rRNA reference fasta files with U bases converted to T, only populated
+        when a Bowtie2 index is built.
+
+        Structure: [ val(meta), path(fasta) ]
+      pattern: "*.{fa,fasta}{,.gz}"
 authors:
   - "@pinin4fjords"
 maintainers:

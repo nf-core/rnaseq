@@ -143,7 +143,7 @@ workflow BAM_DEDUP_UMI {
     tsv_edit_distance              = ch_tsv_edit_distance // channel: [ val(meta), path(tsv) ]
     tsv_per_umi                    = ch_tsv_per_umi // channel: [ val(meta), path(tsv) ]
     tsv_umi_per_position           = ch_tsv_umi_per_position // channel: [ val(meta), path(tsv) ]
-    multiqc_files                  = ch_multiqc_files // channel: file
+    multiqc_files                  = ch_multiqc_files // channel: [ val(meta), path(file) ]
     transcriptome_bam              = ch_dedup_transcriptome_bam // channel: [ val(meta), path(bam) ] - final output
     transcriptome_dedup_bam        = UMI_DEDUP_TRANSCRIPTOME.out.bam // channel: [ val(meta), path(bam) ] - after dedup, before name sort
     transcriptome_sorted_bam       = SAMTOOLS_SORT.out.bam // channel: [ val(meta), path(bam) ] - name-sorted

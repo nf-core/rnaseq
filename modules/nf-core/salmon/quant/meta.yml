@@ -23,43 +23,49 @@ input:
     - reads:
         type: file
         description: |
-          List of input FastQ files for single-end or paired-end data.
-          Multiple single-end fastqs or pairs of paired-end fastqs are
-          handled.
+          List of input FastQ files for single-end or paired-end data, or a
+          single BAM of reads already aligned to the transcriptome (a `.bam`
+          extension switches the module into salmon's alignment mode). Pass
+          `--libType` via `ext.args` to select a specific library type;
+          salmon auto-detects it otherwise.
         ontologies: []
-  - index:
-      type: directory
-      description: Folder containing the star index files
-  - gtf:
-      type: file
-      description: GTF of the reference transcriptome
-      ontologies: []
-  - transcript_fasta:
-      type: file
-      description: Fasta file of the reference transcriptome
-      ontologies: []
-  - alignment_mode:
-      type: boolean
-      description: whether to run salmon in alignment mode
-  - lib_type:
-      type: string
-      description: |
-        Override library type inferred based on strandedness defined in meta object
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'genome' ]
+    - index:
+        type: directory
+        description: |
+          Folder containing the salmon index files. Required for reads
+          mode; pass `[]` in alignment mode.
+    - gtf:
+        type: file
+        description: GTF of the reference transcriptome
+        ontologies: []
+    - transcript_fasta:
+        type: file
+        description: |
+          Fasta file of the reference transcriptome. Required in alignment
+          mode as the `-t` reference; pass `[]` in reads mode.
+        ontologies: []
 output:
   results:
     - - meta:
-          type: directory
-          description: Folder containing the quantification results for a specific sample
-          pattern: "${prefix}"
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
       - ${prefix}:
           type: directory
           description: Folder containing the quantification results for a specific sample
           pattern: "${prefix}"
   json_info:
     - - meta:
-          type: directory
-          description: Folder containing the quantification results for a specific sample
-          pattern: "${prefix}"
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
       - "*info.json":
           type: file
           description: File containing meta information from Salmon quant
@@ -68,9 +74,10 @@ output:
             - edam: http://edamontology.org/format_3464 # JSON
   lib_format_counts:
     - - meta:
-          type: directory
-          description: Folder containing the quantification results for a specific sample
-          pattern: "${prefix}"
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
       - "*lib_format_counts.json":
           type: file
           description: File containing the library format counts

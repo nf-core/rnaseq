@@ -8,7 +8,7 @@
                         "single_end": true,
                         "strandedness": "forward"
                     },
-                    "test.featureCounts.tsv:md5,21ff44bfaa4a3d8e8b7e749078f7a201"
+                    "test.featureCounts.tsv:md5,af5abde30c52606302d64a3f960a262a"
                 ]
             ],
             [
@@ -26,16 +26,16 @@
                     [
                         "SUBREAD_FEATURECOUNTS",
                         "subread",
-                        "2.0.6"
+                        "2.1.1"
                     ]
                 ]
             }
         ],
+        "timestamp": "2026-02-26T03:28:13.8156532",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-02T14:44:54.308461465"
+            "nf-test": "0.9.4",
+            "nextflow": "25.10.4"
+        }
     },
     "sarscov2 [bam] - forward - stub": {
         "content": [
@@ -64,7 +64,7 @@
                     [
                         "SUBREAD_FEATURECOUNTS",
                         "subread",
-                        "2.0.6"
+                        "2.1.1"
                     ]
                 ],
                 "counts": [
@@ -91,16 +91,16 @@
                     [
                         "SUBREAD_FEATURECOUNTS",
                         "subread",
-                        "2.0.6"
+                        "2.1.1"
                     ]
                 ]
             }
         ],
+        "timestamp": "2026-02-26T03:28:21.127211404",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-02T14:44:59.542545235"
+            "nf-test": "0.9.4",
+            "nextflow": "25.10.4"
+        }
     },
     "sarscov2 [bam] - unstranded": {
         "content": [
@@ -111,7 +111,7 @@
                         "single_end": true,
                         "strandedness": "unstranded"
                     },
-                    "test.featureCounts.tsv:md5,9474f78d2d1d43613cbc16c10ba15047"
+                    "test.featureCounts.tsv:md5,355c22823290c40ccadeee94a21eca8b"
                 ]
             ],
             [
@@ -129,16 +129,16 @@
                     [
                         "SUBREAD_FEATURECOUNTS",
                         "subread",
-                        "2.0.6"
+                        "2.1.1"
                     ]
                 ]
             }
         ],
+        "timestamp": "2026-02-26T03:28:43.068113331",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-02T14:45:15.194324716"
+            "nf-test": "0.9.4",
+            "nextflow": "25.10.4"
+        }
     },
     "sarscov2 [bam] - reverse - stub": {
         "content": [
@@ -167,7 +167,7 @@
                     [
                         "SUBREAD_FEATURECOUNTS",
                         "subread",
-                        "2.0.6"
+                        "2.1.1"
                     ]
                 ],
                 "counts": [
@@ -194,16 +194,16 @@
                     [
                         "SUBREAD_FEATURECOUNTS",
                         "subread",
-                        "2.0.6"
+                        "2.1.1"
                     ]
                 ]
             }
         ],
+        "timestamp": "2026-02-26T03:28:35.854492757",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-02T14:45:09.979159361"
+            "nf-test": "0.9.4",
+            "nextflow": "25.10.4"
+        }
     },
     "sarscov2 [bam] - reverse": {
         "content": [
@@ -214,7 +214,7 @@
                         "single_end": true,
                         "strandedness": "reverse"
                     },
-                    "test.featureCounts.tsv:md5,7df6092fdc65ce40b71c64e0c97f95c6"
+                    "test.featureCounts.tsv:md5,e79027ec5752cfdd6e8d85bb6932294c"
                 ]
             ],
             [
@@ -232,16 +232,16 @@
                     [
                         "SUBREAD_FEATURECOUNTS",
                         "subread",
-                        "2.0.6"
+                        "2.1.1"
                     ]
                 ]
             }
         ],
+        "timestamp": "2026-02-26T03:28:28.511647205",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-02T14:45:04.836250949"
+            "nf-test": "0.9.4",
+            "nextflow": "25.10.4"
+        }
     },
     "sarscov2 [bam] - unstranded - stub": {
         "content": [
@@ -270,7 +270,7 @@
                     [
                         "SUBREAD_FEATURECOUNTS",
                         "subread",
-                        "2.0.6"
+                        "2.1.1"
                     ]
                 ],
                 "counts": [
@@ -297,15 +297,15 @@
                     [
                         "SUBREAD_FEATURECOUNTS",
                         "subread",
-                        "2.0.6"
+                        "2.1.1"
                     ]
                 ]
             }
         ],
+        "timestamp": "2026-02-26T03:28:50.377997465",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-02T14:45:20.368253962"
+            "nf-test": "0.9.4",
+            "nextflow": "25.10.4"
+        }
     }
 }

@@ -550,6 +550,12 @@
                     "description": "Extra arguments to pass to Bowtie2 alignment command in addition to defaults defined by the pipeline. Only available when using --aligner bowtie2_salmon.",
                     "fa_icon": "fas fa-plus"
                 },
+                "extra_salmon_index_args": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Extra arguments to pass to the Salmon index command in addition to defaults defined by the pipeline.",
+                    "fa_icon": "fas fa-plus"
+                },
                 "extra_salmon_quant_args": {
                     "type": "string",
                     "minLength": 1,

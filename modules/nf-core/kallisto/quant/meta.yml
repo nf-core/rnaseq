@@ -24,31 +24,36 @@ input:
         type: file
         description: |
           List of input FastQ files of size 1 and 2 for single-end and paired-end data,
-          respectively.
+          respectively. Pass `--fr-stranded` or `--rf-stranded` via `ext.args` to select
+          strandedness; kallisto is unstranded by default.
         pattern: "*.{fastq,fastq.gz}"
         ontologies:
           - edam: http://edamontology.org/format_1930 # FASTQ
   - - meta2:
         type: map
         description: |
-          Groovy Map containing sample information
-          e.g. [ id:'test', single_end:false ]
+          Groovy Map containing reference information
+          e.g. [ id:'genome' ]
     - index:
         type: file
         description: Kallisto genome index.
         pattern: "*.idx"
         ontologies: []
-  - gtf:
-      type: file
-      description: Optional gtf file for translation of transcripts into genomic coordinates.
-      pattern: "*.gtf"
-      ontologies: []
-  - chromosomes:
-      type: file
-      description: Optional tab separated file with chromosome names and lengths.
-      pattern: "*.tsv"
-      ontologies:
-        - edam: http://edamontology.org/format_3475 # TSV
+    - gtf:
+        type: file
+        description: |
+          Optional gtf file for translation of transcripts into genomic
+          coordinates. Pass `[]` to omit.
+        pattern: "*.gtf"
+        ontologies: []
+    - chromosomes:
+        type: file
+        description: |
+          Optional tab separated file with chromosome names and lengths.
+          Pass `[]` to omit.
+        pattern: "*.tsv"
+        ontologies:
+          - edam: http://edamontology.org/format_3475 # TSV
   - fragment_length:
       type: integer
       description: For single-end mode only, the estimated average fragment length.

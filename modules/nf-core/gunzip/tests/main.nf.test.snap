@@ -1,4 +1,45 @@
 {
+    "Should decompress file with extension appearing multiple times in filename - prefix": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.xyz.fa:md5,4161df271f9bfcd25d5845a1e220dbec"
+                    ]
+                ],
+                "1": [
+                    [
+                        "GUNZIP",
+                        "gunzip",
+                        "1.13"
+                    ]
+                ],
+                "gunzip": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.xyz.fa:md5,4161df271f9bfcd25d5845a1e220dbec"
+                    ]
+                ],
+                "versions_gunzip": [
+                    [
+                        "GUNZIP",
+                        "gunzip",
+                        "1.13"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-04-15T15:20:52.59447",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
     "Should run without failures - prefix - stub": {
         "content": [
             {
@@ -34,11 +75,11 @@
                 ]
             }
         ],
+        "timestamp": "2026-01-19T17:21:56.633550769",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-01-19T17:21:56.633550769"
+        }
     },
     "Should run without failures - stub": {
         "content": [
@@ -75,11 +116,11 @@
                 ]
             }
         ],
+        "timestamp": "2026-01-19T17:21:51.435621199",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-01-19T17:21:51.435621199"
+        }
     },
     "Should run without failures": {
         "content": [
@@ -116,11 +157,11 @@
                 ]
             }
         ],
+        "timestamp": "2026-01-19T17:21:40.613975821",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-01-19T17:21:40.613975821"
+        }
     },
     "Should run without failures - prefix": {
         "content": [
@@ -157,10 +198,10 @@
                 ]
             }
         ],
+        "timestamp": "2026-01-19T17:21:46.086880414",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-01-19T17:21:46.086880414"
+        }
     }
 }

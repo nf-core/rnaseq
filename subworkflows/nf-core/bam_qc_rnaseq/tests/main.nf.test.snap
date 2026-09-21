@@ -87,7 +87,7 @@
                         "single_end": false,
                         "strandedness": "reverse"
                     },
-                    "test_intercept_slope.txt:md5,dc393f346ae9f43bd5704d9c8affe351"
+                    "test_intercept_slope.txt"
                 ]
             ],
             [
@@ -98,8 +98,8 @@
                         "strandedness": "reverse"
                     },
                     [
-                        "test_dup_intercept_mqc.txt:md5,64da8d99554272a1a7501a1b52eed667",
-                        "test_duprateExpDensCurve_mqc.txt:md5,5441cfe6cf13ebd0ac26c1adae8fe131"
+                        "test_dup_intercept_mqc.txt",
+                        "test_duprateExpDensCurve_mqc.txt"
                     ]
                 ]
             ],
@@ -158,22 +158,12 @@
                     },
                     "test.seq.DupRate.xls:md5,97fc0d868448adf5f8799da0644c2df7"
                 ]
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false,
-                        "strandedness": "reverse"
-                    },
-                    "test.summary.txt:md5,0588ec890e99b20299edb759527741ca"
-                ]
             ]
         ],
-        "timestamp": "2026-04-10T14:54:48.143695956",
+        "timestamp": "2026-08-17T12:07:26.056068269",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.6"
         }
     },
     "saccharomyces_cerevisiae single-end [bam] - all modules": {
@@ -195,7 +185,7 @@
                         "single_end": true,
                         "strandedness": "reverse"
                     },
-                    "test_intercept_slope.txt:md5,0dc5b562ff54376cc1a1a7d92f218c58"
+                    "test_intercept_slope.txt"
                 ]
             ],
             [
@@ -206,8 +196,8 @@
                         "strandedness": "reverse"
                     },
                     [
-                        "test_dup_intercept_mqc.txt:md5,ef0821176e262ea24cafbd989f6550a7",
-                        "test_duprateExpDensCurve_mqc.txt:md5,3743208006d3389428b1faa741378c30"
+                        "test_dup_intercept_mqc.txt",
+                        "test_duprateExpDensCurve_mqc.txt"
                     ]
                 ]
             ],
@@ -278,10 +268,10 @@
                 ]
             ]
         ],
-        "timestamp": "2026-04-10T14:54:59.745465997",
+        "timestamp": "2026-08-17T12:10:47.323341007",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.6"
         }
     }
 }

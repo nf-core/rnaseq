@@ -1,7 +1,7 @@
 {
     "umicollapse single end test": {
         "content": [
-            "9158ea6e7a0e54819e25cbac5fbc5cc0",
+            "e1dbd5e6c9d4b9d27a24e5492ef7edca",
             {
                 "versions_umicollapse": [
                     [
@@ -20,7 +20,7 @@
     },
     "umicollapse paired tests": {
         "content": [
-            "b7be15ac7aae194b04bdbb56f3534495",
+            "2ba8b456c322daac5b454a84b7568ad",
             {
                 "versions_umicollapse": [
                     [

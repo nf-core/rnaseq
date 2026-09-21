@@ -2,22 +2,6 @@
     "BAM - stub": {
         "content": [
             {
-                "0": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.flagstat:md5,67394650dbae96d1a4fcc70484822159"
-                    ]
-                ],
-                "1": [
-                    [
-                        "SAMTOOLS_FLAGSTAT",
-                        "samtools",
-                        "1.23.1"
-                    ]
-                ],
                 "flagstat": [
                     [
                         {
@@ -31,36 +15,20 @@
                     [
                         "SAMTOOLS_FLAGSTAT",
                         "samtools",
-                        "1.23.1"
+                        "1.24"
                     ]
                 ]
             }
         ],
+        "timestamp": "2026-07-10T15:53:38.552555213",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-03-19T08:59:26.188788"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.4"
+        }
     },
     "BAM": {
         "content": [
             {
-                "0": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.flagstat:md5,4f7ffd1e6a5e85524d443209ac97d783"
-                    ]
-                ],
-                "1": [
-                    [
-                        "SAMTOOLS_FLAGSTAT",
-                        "samtools",
-                        "1.23.1"
-                    ]
-                ],
                 "flagstat": [
                     [
                         {
@@ -74,15 +42,15 @@
                     [
                         "SAMTOOLS_FLAGSTAT",
                         "samtools",
-                        "1.23.1"
+                        "1.24"
                     ]
                 ]
             }
         ],
+        "timestamp": "2026-07-10T15:53:33.931611374",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-03-19T08:59:20.212002"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.4"
+        }
     }
 }

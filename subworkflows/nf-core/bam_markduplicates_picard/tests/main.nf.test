@@ -45,7 +45,7 @@ nextflow_workflow {
                 { assert workflow.out.per_sample_mqc_bundle[0][0] == [ id:'test', single_end: false ] },
                 { assert workflow.out.per_sample_mqc_bundle[0][1].size() == 4 },
                 { assert snapshot(
-                    path(workflow.out.bam[0][1]),
+                    workflow.out.bam.collect{meta, bam_ ->  file(bam_).name + ':readsMD5,' + bam(bam_).getReadsMD5()},
                     path(workflow.out.index[0][1]),
                     path(workflow.out.flagstat[0][1]),
                     path(workflow.out.idxstats[0][1]),
@@ -74,6 +74,7 @@ nextflow_workflow {
         }
 
         then {
+            def fasta = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.fasta'
             assertAll(
                 { assert workflow.success},
                 { assert path(workflow.out.metrics.get(0).get(1)).getText().contains("0.999986") },
@@ -81,7 +82,7 @@ nextflow_workflow {
                 { assert workflow.out.per_sample_mqc_bundle[0][0] == [ id:'test' ] },
                 { assert workflow.out.per_sample_mqc_bundle[0][1].size() == 4 },
                 { assert snapshot(
-                    file(workflow.out.cram[0][1]).name,
+                    workflow.out.cram.collect{meta, cram_ ->  file(cram_).name + ':readsMD5,' + cram(cram_, fasta).getReadsMD5()},
                     path(workflow.out.index[0][1]),
                     path(workflow.out.flagstat[0][1]),
                     path(workflow.out.idxstats[0][1]),

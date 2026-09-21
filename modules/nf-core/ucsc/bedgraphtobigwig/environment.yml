@@ -4,4 +4,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::ucsc-bedgraphtobigwig=469
+  - bioconda::ucsc-bedgraphtobigwig=482

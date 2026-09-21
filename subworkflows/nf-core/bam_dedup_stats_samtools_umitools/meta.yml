@@ -36,18 +36,26 @@ output:
       description: |
         Umi deduplicated BAM/SAM file
         Structure: [ val(meta), path(bam) ]
-  - bai:
-      description: |
-        Umi deduplicated BAM/SAM samtools index
-        Structure: [ val(meta), path(bai) ]
-  - csi:
-      description: |
-        CSI samtools index
-        Structure: [ val(meta), path(csi) ]
   - deduplog:
       description: |
         UMI-tools deduplication log
         Structure: [ val(meta), path(log) ]
+  - tsv_edit_distance:
+      description: |
+        Reports the (binned) average edit distance between the UMIs at each position
+        Structure: [ val(meta), path(tsv) ]
+  - tsv_per_umi:
+      description: |
+        UMI-level summary statistics
+        Structure: [ val(meta), path(tsv) ]
+  - tsv_umi_per_position:
+      description: |
+        Tabulates the counts for unique combinations of UMI and position
+        Structure: [ val(meta), path(tsv) ]
+  - index:
+      description: |
+        Umi deduplicated BAM/SAM samtools index (BAI or CSI)
+        Structure: [ val(meta), path(bai/csi) ]
   - stats:
       description: |
         File containing samtools stats output
@@ -60,10 +68,6 @@ output:
       description: |
         File containing samtools idxstats output
         Structure: [ val(meta), path(idxstats) ]
-  - versions:
-      description: |
-        Files containing software versions
-        Structure: [ path(versions.yml) ]
 authors:
   - "@drpatelh"
   - "@KamilMaliszArdigen"

@@ -14,54 +14,63 @@ components:
   - samtools/flagstat
   - bam_stats_samtools
 input:
-  - meta:
-      type: map
+  - ch_bam:
+      type: file
       description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - bam:
-      type: file
-      description: BAM/CRAM/SAM file
+        BAM/CRAM/SAM file.
+
+        Structure: [ val(meta), path(bam) ]
       pattern: "*.{bam,cram,sam}"
-  - fasta:
+
+  - ch_fasta_fai:
       type: file
-      description: Reference genome fasta file
+      description: |
+        Reference genome fasta file and its index.
+
+        Structure: [ val(meta), path(fasta), path(fai) ]
       pattern: "*.{fasta,fa}"
-# TODO Update when we decide on a standard for subworkflow docs
+
 output:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
   - bam:
       type: file
-      description: Sorted BAM/CRAM/SAM file
+      description: |
+        Sorted BAM/CRAM/SAM file.
+
+        Structure: [ val(meta), path(bam) ]
       pattern: "*.{bam,cram,sam}"
-  - bai:
+
+  - index:
       type: file
-      description: BAM/CRAM/SAM index file
-      pattern: "*.{bai,crai,sai}"
-  - crai:
-      type: file
-      description: BAM/CRAM/SAM index file
-      pattern: "*.{bai,crai,sai}"
+      description: |
+        BAM/CRAM/SAM index file.
+
+        Structure: [ val(meta), path(index) ]
+      pattern: "*.{bai,crai,csi}"
+
   - stats:
       type: file
-      description: File containing samtools stats output
-      pattern: "*.{stats}"
+      description: |
+        File containing samtools stats output.
+
+        Structure: [ val(meta), path(stats) ]
+      pattern: "*.stats"
+
   - flagstat:
       type: file
-      description: File containing samtools flagstat output
-      pattern: "*.{flagstat}"
+      description: |
+        File containing samtools flagstat output.
+
+        Structure: [ val(meta), path(flagstat) ]
+      pattern: "*.flagstat"
+
   - idxstats:
       type: file
-      description: File containing samtools idxstats output
-      pattern: "*.{idxstats}"
-  - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
+      description: |
+        File containing samtools idxstats output.
+
+        Structure: [ val(meta), path(idxstats) ]
+      pattern: "*.idxstats"
+
 authors:
   - "@drpatelh"
   - "@ewels"

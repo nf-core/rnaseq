@@ -12,6 +12,11 @@ tools:
       homepage: https://ccb.jhu.edu/software/kraken2/
       documentation: https://github.com/DerrickWood/kraken2/wiki/Manual
       doi: 10.1186/s13059-019-1891-0
+      publication:
+        author: "Wood D.E., Lu J. & Langmead B."
+        year: 2019
+        title: "Improved metagenomic analysis with Kraken 2"
+        source: "Genome Biology"
       licence: ["MIT"]
       identifier: biotools:kraken2
 input:

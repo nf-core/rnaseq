@@ -14,16 +14,13 @@ components:
   - tximeta/tximport
   - summarizedexperiment/summarizedexperiment
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing study-level sample sheet information. e.g. [
-          id:'SRP1234' ].
   - samplesheet:
       type: file
       description: |
         Sample sheet, to be baked into the `colData` of SummarizedExperiment
         objects.
+
+        Structure: [ val(meta), path(samplesheet) ]
       pattern: "*.{csv,tsv}"
   - quant_results:
       type: file
@@ -35,6 +32,8 @@ input:
         single sample is used for transcript-to-gene mapping discovery. If
         support for mixed transcriptomes is needed in future, tx2gene would
         need to run independently per sample.
+
+        Structure: [ val(meta), path(results) ]
   - gtf:
       type: file
       description: |
@@ -63,6 +62,15 @@ output:
       description: |
         Transcript-to-gene mapping file generated from the GTF.
       pattern: "*.tx2gene.tsv"
+  - tx2gene_augmented:
+      type: file
+      description: |
+        tx2gene mapping table actually used by tximport, equal to the input
+        tx2gene with self-mappings appended for any transcripts present in the
+        quantification output but missing from the input. Use this file (not
+        `tx2gene`) to reproduce the published gene-level outputs from the
+        per-sample quantification files.
+      pattern: "*tx2gene_augmented.tsv"
   - tpm_gene:
       type: file
       description: |

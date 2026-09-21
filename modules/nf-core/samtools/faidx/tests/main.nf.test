@@ -31,7 +31,7 @@ nextflow_process {
         then {
             assert process.success
             assertAll(
-                { assert  snapshot(sanitizeOutput(process.out)).match()}
+                { assert snapshot(sanitizeOutput(process.out)).match()}
             )
         }
     }
@@ -57,7 +57,7 @@ nextflow_process {
         then {
             assert process.success
             assertAll(
-                { assert  snapshot(sanitizeOutput(process.out)).match()}
+                { assert snapshot(sanitizeOutput(process.out)).match()}
             )
         }
     }
@@ -83,14 +83,15 @@ nextflow_process {
         then {
             assert process.success
             assertAll(
-                { assert  snapshot(sanitizeOutput(process.out)).match()}
+                { assert snapshot(sanitizeOutput(process.out)).match()}
             )
         }
     }
 
-    test("test_samtools_faidx_stub_fasta") {
+    test("test_samtools_faidx_fasta - stub") {
 
         options "-stub"
+
         when {
             params {
                 module_args = '-o extract.fa'
@@ -110,14 +111,15 @@ nextflow_process {
         then {
             assert process.success
             assertAll(
-                { assert  snapshot(sanitizeOutput(process.out)).match()}
+                { assert snapshot(sanitizeOutput(process.out)).match()}
             )
         }
     }
 
-    test("test_samtools_faidx_stub_fai") {
+    test("test_samtools_faidx_fai - stub") {
 
         options "-stub"
+
         when {
             params {
                 module_args = ''
@@ -137,7 +139,7 @@ nextflow_process {
         then {
             assert process.success
             assertAll(
-                { assert  snapshot(sanitizeOutput(process.out)).match()}
+                { assert snapshot(sanitizeOutput(process.out)).match()}
             )
         }
     }
@@ -163,7 +165,7 @@ nextflow_process {
         then {
             assert process.success
             assertAll(
-                { assert  snapshot(sanitizeOutput(process.out)).match()}
+                { assert snapshot(sanitizeOutput(process.out)).match()}
             )
         }
     }
@@ -189,7 +191,7 @@ nextflow_process {
         then {
             assert process.success
             assertAll(
-                { assert  snapshot(sanitizeOutput(process.out)).match()}
+                { assert snapshot(sanitizeOutput(process.out)).match()}
             )
         }
     }
@@ -217,7 +219,7 @@ nextflow_process {
         then {
             assert process.success
             assertAll(
-                { assert  snapshot(sanitizeOutput(process.out)).match()}
+                { assert snapshot(sanitizeOutput(process.out)).match()}
             )
         }
     }
@@ -249,5 +251,4 @@ nextflow_process {
             )
         }
     }
-
 }

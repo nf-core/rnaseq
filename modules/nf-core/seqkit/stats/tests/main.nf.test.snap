@@ -2,237 +2,141 @@
     "nanopore": {
         "content": [
             {
-                "0": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test.tsv:md5,14f97a9e0414998854ead651e0e69449"
-                    ]
-                ],
-                "1": [
-                    [
-                        "SEQKIT_STATS",
-                        "seqkit",
-                        "2.9.0"
-                    ]
-                ],
                 "stats": [
                     [
                         {
                             "id": "test",
                             "single_end": true
                         },
-                        "test.tsv:md5,14f97a9e0414998854ead651e0e69449"
+                        "test.tsv:md5,388047b0263b8d0a3041d6d80b316782"
                     ]
                 ],
                 "versions_seqkit": [
                     [
                         "SEQKIT_STATS",
                         "seqkit",
-                        "2.9.0"
+                        "2.13.0"
                     ]
                 ]
             }
         ],
+        "timestamp": "2026-06-12T17:30:18.267532797",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-03T13:29:39.937621054"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
     },
     "genome_fasta": {
         "content": [
             {
-                "0": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.tsv:md5,82b33df8ec2515560b80c3d0bc64c898"
-                    ]
-                ],
-                "1": [
-                    [
-                        "SEQKIT_STATS",
-                        "seqkit",
-                        "2.9.0"
-                    ]
-                ],
                 "stats": [
                     [
                         {
                             "id": "test",
                             "single_end": false
                         },
-                        "test.tsv:md5,82b33df8ec2515560b80c3d0bc64c898"
+                        "test.tsv:md5,6f6f8b42abd183c6ab90346a311ca522"
                     ]
                 ],
                 "versions_seqkit": [
                     [
                         "SEQKIT_STATS",
                         "seqkit",
-                        "2.9.0"
+                        "2.13.0"
                     ]
                 ]
             }
         ],
+        "timestamp": "2026-06-12T17:30:22.693843391",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-03T13:29:45.268086738"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
     },
     "transcriptome_fasta": {
         "content": [
             {
-                "0": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.tsv:md5,eef67c2e2f225391836d59d5b0d6c3b7"
-                    ]
-                ],
-                "1": [
-                    [
-                        "SEQKIT_STATS",
-                        "seqkit",
-                        "2.9.0"
-                    ]
-                ],
                 "stats": [
                     [
                         {
                             "id": "test",
                             "single_end": false
                         },
-                        "test.tsv:md5,eef67c2e2f225391836d59d5b0d6c3b7"
+                        "test.tsv:md5,c79d860b2b0379810e4df3e8359fc8ed"
                     ]
                 ],
                 "versions_seqkit": [
                     [
                         "SEQKIT_STATS",
                         "seqkit",
-                        "2.9.0"
+                        "2.13.0"
                     ]
                 ]
             }
         ],
+        "timestamp": "2026-06-12T17:30:27.169227967",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-03T13:29:50.657274211"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
     },
     "single_end": {
         "content": [
             {
-                "0": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test.tsv:md5,f172827a8608b646559cc39c6ca05085"
-                    ]
-                ],
-                "1": [
-                    [
-                        "SEQKIT_STATS",
-                        "seqkit",
-                        "2.9.0"
-                    ]
-                ],
                 "stats": [
                     [
                         {
                             "id": "test",
                             "single_end": true
                         },
-                        "test.tsv:md5,f172827a8608b646559cc39c6ca05085"
+                        "test.tsv:md5,76d5ab444de880ef443f358841e44cf9"
                     ]
                 ],
                 "versions_seqkit": [
                     [
                         "SEQKIT_STATS",
                         "seqkit",
-                        "2.9.0"
+                        "2.13.0"
                     ]
                 ]
             }
         ],
+        "timestamp": "2026-06-12T17:30:09.156247735",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-03T13:29:29.264287187"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
     },
     "paired_end": {
         "content": [
             {
-                "0": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.tsv:md5,f172827a8608b646559cc39c6ca05085"
-                    ]
-                ],
-                "1": [
-                    [
-                        "SEQKIT_STATS",
-                        "seqkit",
-                        "2.9.0"
-                    ]
-                ],
                 "stats": [
                     [
                         {
                             "id": "test",
                             "single_end": false
                         },
-                        "test.tsv:md5,f172827a8608b646559cc39c6ca05085"
+                        "test.tsv:md5,2d96d9f7d85456090e138b81bf97bcd5"
                     ]
                 ],
                 "versions_seqkit": [
                     [
                         "SEQKIT_STATS",
                         "seqkit",
-                        "2.9.0"
+                        "2.13.0"
                     ]
                 ]
             }
         ],
+        "timestamp": "2026-06-12T17:35:49.824033505",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-03T13:29:34.665600897"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
     },
     "single_end - stub": {
         "content": [
             {
-                "0": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "1": [
-                    [
-                        "SEQKIT_STATS",
-                        "seqkit",
-                        "2.9.0"
-                    ]
-                ],
                 "stats": [
                     [
                         {
@@ -246,15 +150,15 @@
                     [
                         "SEQKIT_STATS",
                         "seqkit",
-                        "2.9.0"
+                        "2.13.0"
                     ]
                 ]
             }
         ],
+        "timestamp": "2026-06-12T17:30:31.558337736",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-03T13:29:55.952952629"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
     }
 }

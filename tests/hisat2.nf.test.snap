@@ -13,7 +13,7 @@
                     "python": "3.12.2"
                 },
                 "CUSTOM_GTFFILTER": {
-                    "python": "3.9.5"
+                    "python": "3.14.5"
                 },
                 "EAUTILS_GTF2BED": {
                     "perl": "5.26.2"
@@ -35,7 +35,7 @@
                     "samtools": 1.24
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": "1.23.1"
+                    "samtools": 1.24
                 },
                 "TRIMGALORE": {
                     "trimgalore": "2.3.0"
@@ -91,7 +91,7 @@
                 
             ]
         ],
-        "timestamp": "2026-04-22T17:11:20.845830751",
+        "timestamp": "2026-09-16T15:10:01.608630553",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -111,7 +111,7 @@
                     "python": "3.12.2"
                 },
                 "CUSTOM_GTFFILTER": {
-                    "python": "3.9.5"
+                    "python": "3.14.5"
                 },
                 "CUSTOM_MULTIQCCUSTOMBIOTYPE": {
                     "python": "3.12.12"
@@ -155,7 +155,7 @@
                     "samtools": 1.24
                 },
                 "PICARD_MARKDUPLICATES": {
-                    "picard": "3.4.0"
+                    "picard": "3.5.0"
                 },
                 "QUALIMAP_RNASEQ": {
                     "qualimap": 2.3
@@ -182,34 +182,34 @@
                     "rseqc": "5.0.4"
                 },
                 "SALMON_QUANT": {
-                    "salmon": "1.10.3"
+                    "salmon": "2.7.0"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": "1.23.1"
+                    "samtools": 1.24
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": "1.23.1"
+                    "samtools": 1.24
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": "1.23.1"
+                    "samtools": 1.24
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": "1.23.1"
+                    "samtools": 1.24
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": "1.23.1"
+                    "samtools": 1.24
                 },
                 "SAMTOOLS_SORT_QUALIMAP": {
-                    "samtools": "1.23.1"
+                    "samtools": 1.24
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": "1.23.1"
+                    "samtools": 1.24
                 },
                 "STRINGTIE_STRINGTIE": {
                     "stringtie": "3.0.3"
                 },
                 "SUBREAD_FEATURECOUNTS": {
-                    "subread": "2.0.6"
+                    "subread": "2.1.1"
                 },
                 "TRIMGALORE": {
                     "trimgalore": "2.3.0"
@@ -767,9 +767,6 @@
                 "multiqc/hisat2/multiqc_report_data/bbmap-bbsplit_plot.txt",
                 "multiqc/hisat2/multiqc_report_data/bbmap.txt",
                 "multiqc/hisat2/multiqc_report_data/bbsplit_stats_table.txt",
-                "multiqc/hisat2/multiqc_report_data/cutadapt_filtered_reads_plot.txt",
-                "multiqc/hisat2/multiqc_report_data/cutadapt_trimmed_sequences_plot_3_Counts.txt",
-                "multiqc/hisat2/multiqc_report_data/cutadapt_trimmed_sequences_plot_3_Obs_Exp.txt",
                 "multiqc/hisat2/multiqc_report_data/fastqc_filtered-status-check-heatmap.txt",
                 "multiqc/hisat2/multiqc_report_data/fastqc_filtered_overrepresented_sequences_plot.txt",
                 "multiqc/hisat2/multiqc_report_data/fastqc_filtered_per_base_n_content_plot.txt",
@@ -810,7 +807,6 @@
                 "multiqc/hisat2/multiqc_report_data/multiqc.log",
                 "multiqc/hisat2/multiqc_report_data/multiqc.parquet",
                 "multiqc/hisat2/multiqc_report_data/multiqc_citations.txt",
-                "multiqc/hisat2/multiqc_report_data/multiqc_cutadapt.txt",
                 "multiqc/hisat2/multiqc_report_data/multiqc_data.json",
                 "multiqc/hisat2/multiqc_report_data/multiqc_dupradar.txt",
                 "multiqc/hisat2/multiqc_report_data/multiqc_fastqc_fastqc_filtered.txt",
@@ -832,6 +828,7 @@
                 "multiqc/hisat2/multiqc_report_data/multiqc_strand_check_composition_bargraph.txt",
                 "multiqc/hisat2/multiqc_report_data/multiqc_strand_check_composition_bargraph_1.txt",
                 "multiqc/hisat2/multiqc_report_data/multiqc_strand_check_summary_table.txt",
+                "multiqc/hisat2/multiqc_report_data/multiqc_trim_galore.txt",
                 "multiqc/hisat2/multiqc_report_data/picard_MarkIlluminaAdapters_histogram.txt",
                 "multiqc/hisat2/multiqc_report_data/picard_MeanQualityByCycle_histogram.txt",
                 "multiqc/hisat2/multiqc_report_data/picard_MeanQualityByCycle_histogram_1.txt",
@@ -863,15 +860,15 @@
                 "multiqc/hisat2/multiqc_report_data/samtools-idxstats-mapped-reads-plot_Raw_Counts.txt",
                 "multiqc/hisat2/multiqc_report_data/samtools-stats-dp.txt",
                 "multiqc/hisat2/multiqc_report_data/samtools_alignment_plot.txt",
+                "multiqc/hisat2/multiqc_report_data/samtools_insert_size.txt",
+                "multiqc/hisat2/multiqc_report_data/trim_galore_adapter_length_plot.txt",
+                "multiqc/hisat2/multiqc_report_data/trim_galore_filtered_reads_plot.txt",
+                "multiqc/hisat2/multiqc_report_data/trim_galore_pair_validation_table.txt",
                 "multiqc/hisat2/multiqc_report_plots",
                 "multiqc/hisat2/multiqc_report_plots/pdf",
                 "multiqc/hisat2/multiqc_report_plots/pdf/bbmap-bbsplit_plot-cnt.pdf",
                 "multiqc/hisat2/multiqc_report_plots/pdf/bbmap-bbsplit_plot-pct.pdf",
                 "multiqc/hisat2/multiqc_report_plots/pdf/bbsplit_stats_table.pdf",
-                "multiqc/hisat2/multiqc_report_plots/pdf/cutadapt_filtered_reads_plot-cnt.pdf",
-                "multiqc/hisat2/multiqc_report_plots/pdf/cutadapt_filtered_reads_plot-pct.pdf",
-                "multiqc/hisat2/multiqc_report_plots/pdf/cutadapt_trimmed_sequences_plot_3_Counts.pdf",
-                "multiqc/hisat2/multiqc_report_plots/pdf/cutadapt_trimmed_sequences_plot_3_Obs_Exp.pdf",
                 "multiqc/hisat2/multiqc_report_plots/pdf/dupradar.pdf",
                 "multiqc/hisat2/multiqc_report_plots/pdf/fastqc_filtered-status-check-heatmap.pdf",
                 "multiqc/hisat2/multiqc_report_plots/pdf/fastqc_filtered_overrepresented_sequences_plot.pdf",
@@ -945,17 +942,18 @@
                 "multiqc/hisat2/multiqc_report_plots/pdf/samtools-stats-dp.pdf",
                 "multiqc/hisat2/multiqc_report_plots/pdf/samtools_alignment_plot-cnt.pdf",
                 "multiqc/hisat2/multiqc_report_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/hisat2/multiqc_report_plots/pdf/samtools_insert_size.pdf",
                 "multiqc/hisat2/multiqc_report_plots/pdf/strand_check_composition_bargraph_RSeQC.pdf",
                 "multiqc/hisat2/multiqc_report_plots/pdf/strand_check_composition_bargraph_Salmon.pdf",
                 "multiqc/hisat2/multiqc_report_plots/pdf/strand_check_summary_table.pdf",
+                "multiqc/hisat2/multiqc_report_plots/pdf/trim_galore_adapter_length_plot.pdf",
+                "multiqc/hisat2/multiqc_report_plots/pdf/trim_galore_filtered_reads_plot-cnt.pdf",
+                "multiqc/hisat2/multiqc_report_plots/pdf/trim_galore_filtered_reads_plot-pct.pdf",
+                "multiqc/hisat2/multiqc_report_plots/pdf/trim_galore_pair_validation_table.pdf",
                 "multiqc/hisat2/multiqc_report_plots/png",
                 "multiqc/hisat2/multiqc_report_plots/png/bbmap-bbsplit_plot-cnt.png",
                 "multiqc/hisat2/multiqc_report_plots/png/bbmap-bbsplit_plot-pct.png",
                 "multiqc/hisat2/multiqc_report_plots/png/bbsplit_stats_table.png",
-                "multiqc/hisat2/multiqc_report_plots/png/cutadapt_filtered_reads_plot-cnt.png",
-                "multiqc/hisat2/multiqc_report_plots/png/cutadapt_filtered_reads_plot-pct.png",
-                "multiqc/hisat2/multiqc_report_plots/png/cutadapt_trimmed_sequences_plot_3_Counts.png",
-                "multiqc/hisat2/multiqc_report_plots/png/cutadapt_trimmed_sequences_plot_3_Obs_Exp.png",
                 "multiqc/hisat2/multiqc_report_plots/png/dupradar.png",
                 "multiqc/hisat2/multiqc_report_plots/png/fastqc_filtered-status-check-heatmap.png",
                 "multiqc/hisat2/multiqc_report_plots/png/fastqc_filtered_overrepresented_sequences_plot.png",
@@ -1029,17 +1027,18 @@
                 "multiqc/hisat2/multiqc_report_plots/png/samtools-stats-dp.png",
                 "multiqc/hisat2/multiqc_report_plots/png/samtools_alignment_plot-cnt.png",
                 "multiqc/hisat2/multiqc_report_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/hisat2/multiqc_report_plots/png/samtools_insert_size.png",
                 "multiqc/hisat2/multiqc_report_plots/png/strand_check_composition_bargraph_RSeQC.png",
                 "multiqc/hisat2/multiqc_report_plots/png/strand_check_composition_bargraph_Salmon.png",
                 "multiqc/hisat2/multiqc_report_plots/png/strand_check_summary_table.png",
+                "multiqc/hisat2/multiqc_report_plots/png/trim_galore_adapter_length_plot.png",
+                "multiqc/hisat2/multiqc_report_plots/png/trim_galore_filtered_reads_plot-cnt.png",
+                "multiqc/hisat2/multiqc_report_plots/png/trim_galore_filtered_reads_plot-pct.png",
+                "multiqc/hisat2/multiqc_report_plots/png/trim_galore_pair_validation_table.png",
                 "multiqc/hisat2/multiqc_report_plots/svg",
                 "multiqc/hisat2/multiqc_report_plots/svg/bbmap-bbsplit_plot-cnt.svg",
                 "multiqc/hisat2/multiqc_report_plots/svg/bbmap-bbsplit_plot-pct.svg",
                 "multiqc/hisat2/multiqc_report_plots/svg/bbsplit_stats_table.svg",
-                "multiqc/hisat2/multiqc_report_plots/svg/cutadapt_filtered_reads_plot-cnt.svg",
-                "multiqc/hisat2/multiqc_report_plots/svg/cutadapt_filtered_reads_plot-pct.svg",
-                "multiqc/hisat2/multiqc_report_plots/svg/cutadapt_trimmed_sequences_plot_3_Counts.svg",
-                "multiqc/hisat2/multiqc_report_plots/svg/cutadapt_trimmed_sequences_plot_3_Obs_Exp.svg",
                 "multiqc/hisat2/multiqc_report_plots/svg/dupradar.svg",
                 "multiqc/hisat2/multiqc_report_plots/svg/fastqc_filtered-status-check-heatmap.svg",
                 "multiqc/hisat2/multiqc_report_plots/svg/fastqc_filtered_overrepresented_sequences_plot.svg",
@@ -1113,9 +1112,14 @@
                 "multiqc/hisat2/multiqc_report_plots/svg/samtools-stats-dp.svg",
                 "multiqc/hisat2/multiqc_report_plots/svg/samtools_alignment_plot-cnt.svg",
                 "multiqc/hisat2/multiqc_report_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/hisat2/multiqc_report_plots/svg/samtools_insert_size.svg",
                 "multiqc/hisat2/multiqc_report_plots/svg/strand_check_composition_bargraph_RSeQC.svg",
                 "multiqc/hisat2/multiqc_report_plots/svg/strand_check_composition_bargraph_Salmon.svg",
                 "multiqc/hisat2/multiqc_report_plots/svg/strand_check_summary_table.svg",
+                "multiqc/hisat2/multiqc_report_plots/svg/trim_galore_adapter_length_plot.svg",
+                "multiqc/hisat2/multiqc_report_plots/svg/trim_galore_filtered_reads_plot-cnt.svg",
+                "multiqc/hisat2/multiqc_report_plots/svg/trim_galore_filtered_reads_plot-pct.svg",
+                "multiqc/hisat2/multiqc_report_plots/svg/trim_galore_pair_validation_table.svg",
                 "pipeline_info",
                 "pipeline_info/nf_core_rnaseq_software_mqc_versions.yml",
                 "trimgalore",
@@ -1131,19 +1135,19 @@
             [
                 "RAP1_IAA_30M_REP1.biotype_counts_mqc.tsv:md5,cd7494b3bb12295a287f36506638f3c6",
                 "RAP1_IAA_30M_REP1.biotype_counts_rrna_mqc.tsv:md5,dde2de0cb90e10d0195c726f768e9941",
-                "RAP1_IAA_30M_REP1.featureCounts.tsv:md5,289e47b060051eb33c17e52aa0ce52cc",
+                "RAP1_IAA_30M_REP1.featureCounts.tsv:md5,719e9890544c6a281d96385a51eff248",
                 "RAP1_UNINDUCED_REP1.biotype_counts_mqc.tsv:md5,4d1820a35481f454f17a14326356253d",
                 "RAP1_UNINDUCED_REP1.biotype_counts_rrna_mqc.tsv:md5,845ff9059c72bc6722a8de69776e22bb",
-                "RAP1_UNINDUCED_REP1.featureCounts.tsv:md5,7197cd46d5f5faca1545c98d8a9e94e5",
+                "RAP1_UNINDUCED_REP1.featureCounts.tsv:md5,4c01e296ae9170a6f6f7db438a787c10",
                 "RAP1_UNINDUCED_REP2.biotype_counts_mqc.tsv:md5,3632da2126cb33391428ba0d6d10787f",
                 "RAP1_UNINDUCED_REP2.biotype_counts_rrna_mqc.tsv:md5,6d3fa4c88c7fe61f638e4624ad5e22f0",
-                "RAP1_UNINDUCED_REP2.featureCounts.tsv:md5,25bcdf648374802c46edb4cd211400ea",
+                "RAP1_UNINDUCED_REP2.featureCounts.tsv:md5,ccd1ed912a5c104d6d6d12d1c476c791",
                 "WT_REP1.biotype_counts_mqc.tsv:md5,4b2f1b065666fbe235aa72ba06142025",
                 "WT_REP1.biotype_counts_rrna_mqc.tsv:md5,8ef76d717492ca23764938aee8ea33a9",
-                "WT_REP1.featureCounts.tsv:md5,9d2ae6b7d49f885881f42ccfb2a802d4",
+                "WT_REP1.featureCounts.tsv:md5,0695e64113d6b1d92caf0a61528964bf",
                 "WT_REP2.biotype_counts_mqc.tsv:md5,994f8e87aeaa769479fcc4747ffbe6d9",
                 "WT_REP2.biotype_counts_rrna_mqc.tsv:md5,12294618fe44df1e7f39348372dcb481",
-                "WT_REP2.featureCounts.tsv:md5,947b8b919223a184bf8f8201d90ca8f6",
+                "WT_REP2.featureCounts.tsv:md5,252999e329c8ae1220ba255521d047b8",
                 "RAP1_IAA_30M_REP1.infer_experiment.txt:md5,1d4348685fa61819ff8076213d0873b3",
                 "RAP1_UNINDUCED_REP1.infer_experiment.txt:md5,3ee0f64e82f0b1ac16b5f3e2b30b024c",
                 "RAP1_UNINDUCED_REP2.infer_experiment.txt:md5,3d17628d178e5a3cc9dc03f32614bff7",
@@ -1169,9 +1173,6 @@
                 "e_data.ctab:md5,af1e56fbe20aec91b313a7923f8f0072",
                 "i2t.ctab:md5,dda3d3ccd7d4184d947c654ae73efb7b",
                 "i_data.ctab:md5,80fe14762a8f7230d516bba37b7275d1",
-                "cutadapt_filtered_reads_plot.txt:md5,6fa381627f7c1f664f3d4b2cb79cce90",
-                "cutadapt_trimmed_sequences_plot_3_Counts.txt:md5,13dfa866fd91dbb072689efe9aa83b1f",
-                "cutadapt_trimmed_sequences_plot_3_Obs_Exp.txt:md5,07145dd8dd3db654859b18eb0389046c",
                 "fastqc_raw-status-check-heatmap.txt:md5,5a89b0d8d162f6b1dbdaf39457bbc03b",
                 "fastqc_raw_adapter_content_plot.txt:md5,da0389be84cfdd189b1d045212eb2974",
                 "fastqc_raw_overrepresented_sequences_plot.txt:md5,25d88ea8a72f55e8a374ae802bc7f0b1",
@@ -1191,24 +1192,29 @@
                 "fastqc_trimmed_per_sequence_quality_scores_plot.txt:md5,0f9834cc19f76dd5c87cf8cba7435a7c",
                 "fastqc_trimmed_sequence_counts_plot.txt:md5,9fd642bdd1da354f296bb8092205608f",
                 "fastqc_trimmed_sequence_duplication_levels_plot.txt:md5,0758257b497283b1ef28171e694db6db",
-                "multiqc_citations.txt:md5,10e778ce38c7df1529be3f1c537e8131",
+                "multiqc_citations.txt:md5,30343cf789477c16afbe2a4e961bf27e",
                 "multiqc_fastqc_fastqc_raw.txt:md5,81c3c1a2575a1891a7f2a9637a0f2cc0",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,54743154d0e8858980acffeb5b6f6a97",
                 "multiqc_featurecounts_biotype_plot.txt:md5,6d251bec0231afccd0682e454a3b17bc",
                 "multiqc_samtools_idxstats.txt:md5,66a8e8aecb6233f5a3521151b1ce8d49",
                 "multiqc_strand_check_composition_bargraph.txt:md5,167bf9bea99fe3651cf410b706b7abd8",
-                "multiqc_strand_check_composition_bargraph_1.txt:md5,6aa97fcc3863afb9b8e9fbe8a02b5cd1",
-                "multiqc_strand_check_summary_table.txt:md5,403d67757cb972959d07595327adee3b",
+                "multiqc_strand_check_composition_bargraph_1.txt:md5,689a17a1bdb9dca64764221d5d88908e",
+                "multiqc_strand_check_summary_table.txt:md5,626b634c1d29ff52f2cd7d6534ec967e",
+                "multiqc_trim_galore.txt:md5,de28bf4448757bdee82d588554428987",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "rseqc_infer_experiment_plot.txt:md5,0556a013129be7d78fac4345fddbe8c5",
                 "samtools-idxstats-mapped-reads-plot_Normalised_Counts.txt:md5,75acd04232d1804b5f960ee4c5db4722",
                 "samtools-idxstats-mapped-reads-plot_Observed_over_Expected_Counts.txt:md5,3625f666cc09d0f07990716aeccd869f",
-                "samtools-idxstats-mapped-reads-plot_Raw_Counts.txt:md5,6c323b383a6506d124506405b9463d93"
+                "samtools-idxstats-mapped-reads-plot_Raw_Counts.txt:md5,6c323b383a6506d124506405b9463d93",
+                "samtools_insert_size.txt:md5,46f67748a163826063e50e09dfe41186",
+                "trim_galore_adapter_length_plot.txt:md5,1e34e26fac0fd53e9ffa49805862d547",
+                "trim_galore_filtered_reads_plot.txt:md5,2cae05863c03d6f6054280ee75df63b2",
+                "trim_galore_pair_validation_table.txt:md5,b1863fde4bacc276704adcb35c80fb1c"
             ]
         ],
-        "timestamp": "2026-04-22T17:17:55.017730677",
+        "timestamp": "2026-09-18T18:14:01.308761126",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

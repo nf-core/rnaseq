@@ -1,18 +1,17 @@
 name: preseq_lcextrap
-description: Software for predicting library complexity and genome coverage in high-throughput
-  sequencing
+description: Software for predicting library complexity and genome coverage in high-throughput sequencing
 keywords:
   - preseq
   - library
   - complexity
 tools:
   - preseq:
-      description: Software for predicting library complexity and genome coverage in
-        high-throughput sequencing
+      description: Software for predicting library complexity and genome coverage in high-throughput sequencing
       homepage: http://smithlabresearch.org/software/preseq/
       documentation: http://smithlabresearch.org/wp-content/uploads/manual.pdf
       tool_dev_url: https://github.com/smithlabcode/preseq
-      licence: ["GPL"]
+      licence:
+        - "GPL"
       identifier: biotools:preseq
 input:
   - - meta:
@@ -55,7 +54,7 @@ output:
       - preseq:
           type: string
           description: The name of the tool
-      - "preseq 2>&1 | sed -n 's/.*Version: \\(.*\\)/\\1/p'":
+      - "preseq 2>&1 | sed -n 's/Version: //p'":
           type: eval
           description: The expression to obtain the version of the tool
 
@@ -67,7 +66,7 @@ topics:
       - preseq:
           type: string
           description: The name of the tool
-      - "preseq 2>&1 | sed -n 's/.*Version: \\(.*\\)/\\1/p'":
+      - "preseq 2>&1 | sed -n 's/Version: //p'":
           type: eval
           description: The expression to obtain the version of the tool
 

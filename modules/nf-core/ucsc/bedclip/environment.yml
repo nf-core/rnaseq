@@ -4,4 +4,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::ucsc-bedclip=377
+  - bioconda::ucsc-bedclip=482

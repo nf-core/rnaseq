@@ -32,12 +32,8 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path
                 ).match() },
-                // This is the only test exercising BAM_STRINGTIE_MERGE's STRINGTIE_STRINGTIE call.
-                // Its assembled transcript IDs are thread-order-dependent, so unlike the
-                // default test's gene abundance table, its content can't be folded into the
-                // snapshot above without risking flaky mismatches; check the strandedness flag
-                // StringTie's command-line header recorded instead. RAP1_IAA_30M_REP1 is
-                // reverse-stranded.
+                // Assembled transcript IDs here are thread-order-dependent, so check the
+                // strandedness flag directly rather than snapshotting content.
                 { assert path("$outputDir/star_salmon/stringtie/RAP1_IAA_30M_REP1.denovo.transcripts.gtf").text.contains('--rf') }
             )
         }

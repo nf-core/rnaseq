@@ -17,8 +17,7 @@ nextflow_pipeline {
             def stable_path = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // stable_content: All files in ${params.outdir}/ with stable content
             def stable_content = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
-            // StringTie's own output ordering depends on thread scheduling, but the data rows
-            // are stable once sorted and stripped of its command-line comment header.
+            // Sorted and stripped of its comment header, since StringTie's line order is thread-dependent.
             def stringtie_content = { f -> path(f).readLines().findAll { !it.startsWith('#') }.sort().join('\n').md5() }
             assert workflow.success
             assertAll(
@@ -31,8 +30,6 @@ nextflow_pipeline {
                     stable_path,
                     // All files with stable contents
                     stable_content,
-                    // Gene abundance is not in stable_content because raw row order is
-                    // thread-dependent; this also catches the strandedness flag StringTie ran with
                     stringtie_content("$outputDir/star_salmon/stringtie/RAP1_IAA_30M_REP1.gene.abundance.txt")
                 ).match() }
             )

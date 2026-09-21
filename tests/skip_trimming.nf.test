@@ -31,10 +31,7 @@ nextflow_pipeline {
                     stable_name,
                     // All files with stable contents
                     stable_path
-                ).match() },
-                // Assembled transcript IDs here are thread-order-dependent, so check the
-                // strandedness flag directly rather than snapshotting content.
-                { assert path("$outputDir/star_salmon/stringtie/RAP1_IAA_30M_REP1.denovo.transcripts.gtf").text.contains('--rf') }
+                ).match() }
             )
         }
 

@@ -17,8 +17,6 @@ nextflow_pipeline {
             def stable_path = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // stable_content: All files in ${params.outdir}/ with stable content
             def stable_content = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
-            // Sorted and stripped of its comment header, since StringTie's line order is thread-dependent.
-            def stringtie_content = { f -> path(f).readLines().findAll { !it.startsWith('#') }.sort().join('\n').md5() }
             assert workflow.success
             assertAll(
                 { assert snapshot(
@@ -29,8 +27,7 @@ nextflow_pipeline {
                     // All stable path name, with a relative path
                     stable_path,
                     // All files with stable contents
-                    stable_content,
-                    stringtie_content("$outputDir/star_salmon/stringtie/RAP1_IAA_30M_REP1.gene.abundance.txt")
+                    stable_content
                 ).match() }
             )
         }

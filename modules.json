@@ -484,8 +484,7 @@
                     "quant_tximport_summarizedexperiment": {
                         "branch": "master",
                         "git_sha": "53daf6285b9fbf1164b4dcab41da6e70e1f2f721",
-                        "installed_by": ["quantify_pseudo_alignment", "quantify_rsem"],
-                        "patch": "subworkflows/nf-core/quant_tximport_summarizedexperiment/quant_tximport_summarizedexperiment.diff"
+                        "installed_by": ["quantify_pseudo_alignment", "quantify_rsem"]
                     },
                     "quantify_pseudo_alignment": {
                         "branch": "master",

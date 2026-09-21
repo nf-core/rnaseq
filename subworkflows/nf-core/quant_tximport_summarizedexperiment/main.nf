@@ -103,7 +103,7 @@ workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT {
 
         SE_TRANSCRIPT_UNIFIED (
             ch_transcript_unified,
-            TXIMETA_TXIMPORT.out.tx2gene_augmented,
+            CUSTOM_TX2GENE.out.tx2gene,
             samplesheet
         )
 

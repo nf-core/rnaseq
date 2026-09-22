@@ -3,12 +3,24 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v3.27.0dev - [unreleased<!-- TODO nf-core: replace with date on release -->]
+## [[3.27.0](https://github.com/nf-core/rnaseq/releases/tag/3.27.0)] - 2026-09-22
 
 ### Credits
 
+Special thanks to the following for their contributions to the release:
+
+- [EladH1](https://github.com/EladH1)
+- [emmanuel-tan](https://github.com/emmanuel-tan)
+- [Felix Krueger](https://github.com/FelixKrueger)
+- [Gary Burnett](https://github.com/gburnett-nvidia)
+- [Ido Tamir](https://github.com/idot)
+- [Matthias Hörtenhuber](https://github.com/mashehu)
+- [Maxime U Garcia](https://github.com/maxulysse)
+- [Phil Ewels](https://github.com/ewels)
+
 ### Enhancements and fixes
 
+- [PR #1421](https://github.com/nf-core/rnaseq/pull/1421) - Accept purely numeric sample IDs in `assets/schema_input.json` and coerce `meta.id` to `String` after `samplesheetToList` ([#1419](https://github.com/nf-core/rnaseq/issues/1419))
 - [PR #1680](https://github.com/nf-core/rnaseq/pull/1680) - Raise the Nextflow floor to 25.10.4 across `nextflow.config`, the three `nf-test*` workflow matrices, and the README/ro-crate version badges; bump `nf-schema` to 2.6.1; clear the v2-parser lint warnings in local subworkflows and resync six nf-core components carrying upstream-merged strict-syntax fixes
 - [PR #1775](https://github.com/nf-core/rnaseq/pull/1775) - Add Parabricks resource configuration guide for full-size genomes (GPU count, memory scaling, retry strategy, `--low-memory` flag)
 - [PR #1844](https://github.com/nf-core/rnaseq/pull/1844) - Bump version to 3.27.0dev after release 3.26.0; flip the MultiQC report links and RO-Crate URL/version back to dev
@@ -45,6 +57,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1923](https://github.com/nf-core/rnaseq/pull/1923) - Add `--extra_salmon_index_args`, letting users pass `--keepDuplicates` (or other Salmon index flags) without changing the pipeline default of dropping exact-sequence-duplicate transcripts ([#1259](https://github.com/nf-core/rnaseq/issues/1259))
 - [PR #1924](https://github.com/nf-core/rnaseq/pull/1924) - Restore StringTie's `--fr`/`--rf` strandedness flags, dropped by the v3 module update ([PR #1902](https://github.com/nf-core/rnaseq/pull/1902)) with no replacement
 - [PR #1925](https://github.com/nf-core/rnaseq/pull/1925) - Trigger a full nf-test run on `conf/`, `bin/` and `assets/` changes, and refresh the StringTie ballgown snapshots left stale by [PR #1924](https://github.com/nf-core/rnaseq/pull/1924)
+
+### Software dependencies
+
+| Dependency    | Old version | New version |
+| ------------- | ----------- | ----------- |
+| `hisat2`      | 2.2.1       | 2.2.3       |
+| `kallisto`    | 0.51.1      | 0.52.0      |
+| `picard`      | 3.4.0       | 3.5.0       |
+| `python`      | 3.9.5       | 3.14.5      |
+| `salmon`      | 1.10.3      | 2.7.0       |
+| `samtools`    | 1.23.1      | 1.24        |
+| `stringtie`   | 2.2.3       | 3.0.3       |
+| `subread`     | 2.0.6       | 2.1.1       |
+| `trim-galore` | 2.1.0       | 2.3.0       |
+| `ucsc-tools`  | 377/469     | 482         |
+
+`salmon` and `stringtie`'s major-version bumps measurably shift gene-level quantification on the standard test dataset (double-digit-percent TPM/FPKM swings and some detected/undetected flips for low-to-moderate expression genes), while STAR alignment and library-type inference are unaffected; overall alignment-rate-style QC metrics move by fractions of a percent. Anyone diffing exact per-gene values against a pre-3.27.0 baseline should expect this.
 
 ## [[3.26.0](https://github.com/nf-core/rnaseq/releases/tag/3.26.0)] - 2026-05-07
 

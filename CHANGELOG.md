@@ -9,13 +9,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Special thanks to the following for their contributions to the release:
 
+- [Adam Talbot](https://github.com/adamrtalbot)
+- [apeleraux](https://github.com/apeleraux)
+- [Daniel Lundin](https://github.com/erikrikarddaniel)
+- [Davide Bressan](https://github.com/DavideBrex)
+- [dawnmy](https://github.com/dawnmy)
+- [Dmytro Hlushchenko](https://github.com/CloudCurio)
 - [EladH1](https://github.com/EladH1)
 - [emmanuel-tan](https://github.com/emmanuel-tan)
+- [Evangelos Karatzas](https://github.com/vagkaratzas)
 - [Felix Krueger](https://github.com/FelixKrueger)
+- [Friederike Hanssen](https://github.com/FriederikeHanssen)
 - [Gary Burnett](https://github.com/gburnett-nvidia)
 - [Ido Tamir](https://github.com/idot)
+- [Jose Espinosa-Carrasco](https://github.com/JoseEspinosa)
+- [Joseph Longworth](https://github.com/JosephLongworth)
+- [Luisa Santus](https://github.com/luisas)
+- [Mahesh Binzer-Panchal](https://github.com/mahesh-panchal)
 - [Matthias Hörtenhuber](https://github.com/mashehu)
+- [Matthias Zepper](https://github.com/MatthiasZepper)
 - [Maxime U Garcia](https://github.com/maxulysse)
+- [murphyte](https://github.com/murphyte)
+- [mvheetve](https://github.com/mvheetve)
+- [Paolo Inglese](https://github.com/piplus2)
 - [Phil Ewels](https://github.com/ewels)
 
 ### Enhancements and fixes

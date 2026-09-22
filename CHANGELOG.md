@@ -43,6 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1919](https://github.com/nf-core/rnaseq/pull/1919) - Skip biotype QC with a warning instead of crashing when the biotype attribute is absent on the GTF rows featureCounts reads (e.g. NCBI annotations, which only set it on `gene` rows) ([#1886](https://github.com/nf-core/rnaseq/issues/1886))
 - [PR #1922](https://github.com/nf-core/rnaseq/pull/1922) - Document `--extra_star_align_args '--alignMatesGapMax <value>'` for users who opt into STAR on prokaryotic data, since STAR's default mate-gap ceiling is far larger than a bacterial genome calls for ([#1691](https://github.com/nf-core/rnaseq/issues/1691))
 - [PR #1924](https://github.com/nf-core/rnaseq/pull/1924) - Restore StringTie's `--fr`/`--rf` strandedness flags, dropped by the v3 module update ([PR #1902](https://github.com/nf-core/rnaseq/pull/1902)) with no replacement
+- [PR #1925](https://github.com/nf-core/rnaseq/pull/1925) - Trigger a full nf-test run on `conf/`, `bin/` and `assets/` changes, and refresh the StringTie ballgown snapshots left stale by [PR #1924](https://github.com/nf-core/rnaseq/pull/1924)
 
 ## [[3.26.0](https://github.com/nf-core/rnaseq/releases/tag/3.26.0)] - 2026-05-07
 

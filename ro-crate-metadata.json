@@ -385,7 +385,6 @@
             "@id": "https://orcid.org/0000-0003-2707-7940",
             "@type": "Person",
             "affiliation": "Seqera",
-            "email": "drpatelh@users.noreply.github.com",
             "name": "Harshil Patel",
             "url": "https://github.com/drpatelh"
         },
@@ -393,7 +392,6 @@
             "@id": "https://orcid.org/0000-0002-3483-8456",
             "@type": "Person",
             "affiliation": "Seqera",
-            "email": "jonathan.manning@seqera.io",
             "name": "Jonathan Manning",
             "url": "https://github.com/pinin4fjords"
         },
@@ -401,7 +399,6 @@
             "@id": "https://orcid.org/0000-0003-2827-9261",
             "@type": "Person",
             "affiliation": "Seqera",
-            "email": "max.u.garcia@gmail.com",
             "name": "Maxime U Garcia",
             "url": "https://github.com/maxulysse"
         },
@@ -409,7 +406,6 @@
             "@id": "https://orcid.org/0000-0003-4101-2502",
             "@type": "Person",
             "affiliation": "Seqera",
-            "email": "phil.ewels@seqera.io",
             "name": "Phil Ewels",
             "url": "https://github.com/ewels"
         },
@@ -417,7 +413,6 @@
             "@id": "https://orcid.org/0000-0002-6503-2180",
             "@type": "Person",
             "affiliation": "Boehringer Ingelheim",
-            "email": "apeltzer@users.noreply.github.com",
             "name": "Alexander Peltzer",
             "url": "https://github.com/apeltzer"
         },
@@ -425,7 +420,6 @@
             "@id": "https://orcid.org/0000-0001-9017-591X",
             "@type": "Person",
             "affiliation": "Scilifelab Data Centre",
-            "email": "rickard.hammaren@scilifelab.se",
             "name": "Rickard Hammar\u00e9n",
             "url": "https://github.com/Hammarn"
         },
@@ -433,7 +427,6 @@
             "@id": "https://orcid.org/0000-0003-4412-7970",
             "@type": "Person",
             "affiliation": "Seanome",
-            "email": "olga.botvinnik@gmail.com",
             "name": "Olga Botvinnik",
             "url": "https://github.com/olgabot"
         },
@@ -441,7 +434,6 @@
             "@id": "#83d293e1-5b51-41ef-b66b-3c6b3b0d9240",
             "@type": "Person",
             "affiliation": "Seqera",
-            "email": "12817534+adamrtalbot@users.noreply.github.com",
             "name": "Adam Talbot",
             "url": "https://github.com/adamrtalbot"
         },
@@ -449,7 +441,6 @@
             "@id": "https://orcid.org/0009-0001-9875-5262",
             "@type": "Person",
             "affiliation": "Seqera",
-            "email": "friederike.hanssen@seqera.io",
             "name": "Friederike Hanssen",
             "url": "https://github.com/FriederikeHanssen"
         },
@@ -457,7 +448,6 @@
             "@id": "https://orcid.org/0000-0002-8721-2350",
             "@type": "Person",
             "affiliation": "Seqera",
-            "email": "rob.syme@gmail.com",
             "name": "Robert Syme",
             "url": "https://github.com/robsyme"
         }

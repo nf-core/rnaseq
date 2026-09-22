@@ -5,3 +5,4 @@ channels:
   - bioconda
 dependencies:
   - bioconda::multiqc=1.35
+  - conda-forge::plotly=6.5.0

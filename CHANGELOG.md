@@ -74,6 +74,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1924](https://github.com/nf-core/rnaseq/pull/1924) - Restore StringTie's `--fr`/`--rf` strandedness flags, dropped by the v3 module update ([PR #1902](https://github.com/nf-core/rnaseq/pull/1902)) with no replacement
 - [PR #1925](https://github.com/nf-core/rnaseq/pull/1925) - Trigger a full nf-test run on `conf/`, `bin/` and `assets/` changes, and refresh the StringTie ballgown snapshots left stale by [PR #1924](https://github.com/nf-core/rnaseq/pull/1924)
 - [PR #1927](https://github.com/nf-core/rnaseq/pull/1927) - Bump version to 3.27.0 ahead of release, with a Salmon `--libType` config fix/dedup and an nf-test trigger fix picked up along the way
+- [PR #1929](https://github.com/nf-core/rnaseq/pull/1929) - Pin `plotly=6.5.0` in the `multiqc` module, fixing missing MultiQC flat-image plot exports under `-profile conda` caused by an unpinned `plotly` drifting to a version incompatible with bioconda's pinned `kaleido`
 
 ### Software dependencies
 

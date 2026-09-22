@@ -57,7 +57,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1923](https://github.com/nf-core/rnaseq/pull/1923) - Add `--extra_salmon_index_args`, letting users pass `--keepDuplicates` (or other Salmon index flags) without changing the pipeline default of dropping exact-sequence-duplicate transcripts ([#1259](https://github.com/nf-core/rnaseq/issues/1259))
 - [PR #1924](https://github.com/nf-core/rnaseq/pull/1924) - Restore StringTie's `--fr`/`--rf` strandedness flags, dropped by the v3 module update ([PR #1902](https://github.com/nf-core/rnaseq/pull/1902)) with no replacement
 - [PR #1925](https://github.com/nf-core/rnaseq/pull/1925) - Trigger a full nf-test run on `conf/`, `bin/` and `assets/` changes, and refresh the StringTie ballgown snapshots left stale by [PR #1924](https://github.com/nf-core/rnaseq/pull/1924)
-- [PR #1927](https://github.com/nf-core/rnaseq/pull/1927) - Bump version to 3.27.0 ahead of release; restore the invalid-`--salmon_quant_libtype`-value warning/fallback dropped by #1918's module sync
+- [PR #1927](https://github.com/nf-core/rnaseq/pull/1927) - Bump version to 3.27.0 ahead of release; restore the invalid-`--salmon_quant_libtype`-value warning/fallback dropped by #1918's module sync; deduplicate the Salmon `--libType` config logic, shared between `QUANTIFY_PSEUDO_ALIGNMENT` and its `QUANTIFY_BAM_SALMON` alias via a single selector
 
 ### Software dependencies
 

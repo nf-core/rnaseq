@@ -33,6 +33,14 @@ def getReadLengthFromSeqkitStats(stats_file) {
     return Math.round(meanAvgLen) as int
 }
 
+record FastqRemoveRrna {
+    id:               String
+    sortmerna_log:    Path?
+    ribodetector_log: Path?
+    seqkit_stats:     Path?
+    bowtie2_log:      Path?
+}
+
 workflow FASTQ_REMOVE_RRNA {
     take:
     ch_reads // channel: [ val(meta), [ reads ] ]
@@ -57,6 +65,10 @@ workflow FASTQ_REMOVE_RRNA {
     ch_seqkit_prefixed = channel.empty()
     ch_seqkit_converted = channel.empty()
 
+    // Only the selected tool's branch joins its logs onto this per-sample
+    // skeleton; the other tools' fields are left unset and become null.
+    ch_results = ch_reads.map { meta, _reads -> [meta.id, [:]] }
+
     if (ribo_removal_tool == 'sortmerna') {
         ch_sortmerna_fastas = ch_rrna_fastas
             .collect()
@@ -80,6 +92,10 @@ workflow FASTQ_REMOVE_RRNA {
         ch_filtered_reads = SORTMERNA.out.reads
         ch_sortmerna_log = SORTMERNA.out.log
         ch_multiqc_files = ch_multiqc_files.mix(SORTMERNA.out.log)
+
+        ch_results = ch_results
+            .join(SORTMERNA.out.log.map { meta, log -> [meta.id, log] }, by: [0])
+            .map { id, fields, log -> [id, fields + [sortmerna_log: log]] }
     }
     else if (ribo_removal_tool == 'ribodetector') {
         // Run seqkit stats to determine average read length
@@ -106,6 +122,11 @@ workflow FASTQ_REMOVE_RRNA {
         ch_filtered_reads = RIBODETECTOR.out.fastq
         ch_ribodetector_log = RIBODETECTOR.out.log
         ch_multiqc_files = ch_multiqc_files.mix(RIBODETECTOR.out.log)
+
+        ch_results = ch_results
+            .join(SEQKIT_STATS.out.stats.map { meta, stats -> [meta.id, stats] }, by: [0])
+            .join(RIBODETECTOR.out.log.map { meta, log -> [meta.id, log] }, by: [0])
+            .map { id, fields, stats, log -> [id, fields + [seqkit_stats: stats, ribodetector_log: log]] }
     }
     else if (ribo_removal_tool == 'bowtie2') {
         if (make_bowtie2_index) {
@@ -195,6 +216,20 @@ workflow FASTQ_REMOVE_RRNA {
         BOWTIE2_ALIGN.out.fastq
             .mix(SAMTOOLS_FASTQ_BOWTIE2.out.fastq)
             .set { ch_filtered_reads }
+
+        ch_results = ch_results
+            .join(ch_bowtie2_log.map { meta, log -> [meta.id, log] }, by: [0])
+            .map { id, fields, log -> [id, fields + [bowtie2_log: log]] }
+    }
+
+    ch_results = ch_results.map { id, fields ->
+        record(
+            id:               id,
+            sortmerna_log:    fields.sortmerna_log,
+            ribodetector_log: fields.ribodetector_log,
+            seqkit_stats:     fields.seqkit_stats,
+            bowtie2_log:      fields.bowtie2_log
+        ) as FastqRemoveRrna
     }
 
     emit:
@@ -207,4 +242,5 @@ workflow FASTQ_REMOVE_RRNA {
     bowtie2_index    = ch_bowtie2_index_out // channel: [ val(meta), [ index ] ]
     seqkit_prefixed  = ch_seqkit_prefixed // channel: [ val(meta), [ fasta ] ]
     seqkit_converted = ch_seqkit_converted // channel: [ val(meta), [ fasta ] ]
+    results          = ch_results // channel: FastqRemoveRrna
 }

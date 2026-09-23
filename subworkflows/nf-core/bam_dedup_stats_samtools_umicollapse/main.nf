@@ -6,6 +6,20 @@ include { UMICOLLAPSE        } from '../../../modules/nf-core/umicollapse/main'
 include { SAMTOOLS_INDEX     } from '../../../modules/nf-core/samtools/index/main'
 include { BAM_STATS_SAMTOOLS } from '../bam_stats_samtools/main'
 
+record SamtoolsStatsFiles {
+    stats:    Path
+    flagstat: Path
+    idxstats: Path
+}
+
+record UmicollapseDedupBam {
+    id:          String
+    bam:         Path
+    bai:         Path
+    dedup_stats: Path
+    samtools:    SamtoolsStatsFiles
+}
+
 workflow BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE {
     take:
     ch_bam_bai // channel: [ val(meta), path(bam), path(bai/csi) ]
@@ -25,6 +39,20 @@ workflow BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE {
 
     BAM_STATS_SAMTOOLS(ch_bam_bai_dedup, [[:], [], []])
 
+    ch_results = ch_bam_bai_dedup
+        .join(UMICOLLAPSE.out.log, by: [0])
+        .map { meta, bam, bai, dedup_stats -> [meta.id, bam, bai, dedup_stats] }
+        .join(BAM_STATS_SAMTOOLS.out.results.map { r -> [r.id, r] }, by: [0])
+        .map { id, bam, bai, dedup_stats, samtools ->
+            record(
+                id:          id,
+                bam:         bam,
+                bai:         bai,
+                dedup_stats: dedup_stats,
+                samtools:    record(stats: samtools.stats, flagstat: samtools.flagstat, idxstats: samtools.idxstats)
+            ) as UmicollapseDedupBam
+        }
+
     emit:
     bam         = UMICOLLAPSE.out.bam // channel: [ val(meta), path(bam) ]
     index       = SAMTOOLS_INDEX.out.index // channel: [ val(meta), path(index) ]
@@ -32,4 +60,5 @@ workflow BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE {
     stats       = BAM_STATS_SAMTOOLS.out.stats // channel: [ val(meta), path(stats) ]
     flagstat    = BAM_STATS_SAMTOOLS.out.flagstat // channel: [ val(meta), path(flagstat) ]
     idxstats    = BAM_STATS_SAMTOOLS.out.idxstats // channel: [ val(meta), path(idxstats) ]
+    results     = ch_results // channel: UmicollapseDedupBam
 }

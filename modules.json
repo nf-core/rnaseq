@@ -399,12 +399,14 @@
                     "bam_dedup_stats_samtools_umicollapse": {
                         "branch": "master",
                         "git_sha": "6ef220fd9252b42fb3c50348bbdbcb6246730686",
-                        "installed_by": ["bam_dedup_umi", "subworkflows"]
+                        "installed_by": ["bam_dedup_umi", "subworkflows"],
+                        "patch": "subworkflows/nf-core/bam_dedup_stats_samtools_umicollapse/bam_dedup_stats_samtools_umicollapse.diff"
                     },
                     "bam_dedup_stats_samtools_umitools": {
                         "branch": "master",
                         "git_sha": "6ef220fd9252b42fb3c50348bbdbcb6246730686",
-                        "installed_by": ["bam_dedup_umi", "subworkflows"]
+                        "installed_by": ["bam_dedup_umi", "subworkflows"],
+                        "patch": "subworkflows/nf-core/bam_dedup_stats_samtools_umitools/bam_dedup_stats_samtools_umitools.diff"
                     },
                     "bam_dedup_umi": {
                         "branch": "master",

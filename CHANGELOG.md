@@ -75,7 +75,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1925](https://github.com/nf-core/rnaseq/pull/1925) - Trigger a full nf-test run on `conf/`, `bin/` and `assets/` changes, and refresh the StringTie ballgown snapshots left stale by [PR #1924](https://github.com/nf-core/rnaseq/pull/1924)
 - [PR #1927](https://github.com/nf-core/rnaseq/pull/1927) - Bump version to 3.27.0 ahead of release, with a Salmon `--libType` config fix/dedup and an nf-test trigger fix picked up along the way
 - [PR #1930](https://github.com/nf-core/rnaseq/pull/1930) - Fill in `fastp`/`multiqc`/`seqkit` gaps in the Software dependencies table and add `tests/.nftignore_rustqc` to nf-test triggers, following release review
-- [PR #1936](https://github.com/nf-core/rnaseq/pull/1936) - Raise the minimum Nextflow version to `26.09.0-edge`, an interim floor pending a follow-up bump to stable 26.10 once it ships
+- [PR #1937](https://github.com/nf-core/rnaseq/pull/1937) - Raise the minimum Nextflow version to `26.09.0-edge`, an interim floor pending a follow-up bump to stable 26.10 once it ships
 
 ### Software dependencies
 

@@ -24,6 +24,9 @@ include { PREPROCESS_TRANSCRIPTS_FASTA_GENCODE } from '../../../modules/local/pr
 include { EAUTILS_GTF2BED                      } from '../../../modules/nf-core/ea-utils/gtf2bed'
 include { CUSTOM_GTFFILTER                     } from '../../../modules/nf-core/custom/gtffilter'
 
+include { taskOutputOrNull                     } from '../utils_nfcore_rnaseq_pipeline'
+include { GenomeReferences                     } from './types'
+
 workflow PREPARE_GENOME_REFERENCES {
 
     take:
@@ -231,6 +234,34 @@ workflow PREPARE_GENOME_REFERENCES {
         }
     }
 
+    //---------------------------------------------------------
+    // 10) Whole-run references record
+    //---------------------------------------------------------
+    // Each field is wrapped in a single-element list so combine() keeps one
+    // position per field, including nulls and the rrna_fastas list.
+    ch_results = ch_fasta_fai
+        .toList()
+        .map { items -> items ? [ taskOutputOrNull(items[0][1]), items[0][2] ] : [ null, null ] }
+        .combine(ch_gtf.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
+        .combine(ch_gene_bed.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
+        .combine(ch_transcript_fasta.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
+        .combine(ch_chrom_sizes.toList().map { items -> [ items[0] ] })
+        .combine(ch_rrna_fastas.toList().map { items -> [ items.collect { rrna_fasta -> taskOutputOrNull(rrna_fasta) }.findAll { rrna_fasta -> rrna_fasta != null } ?: null ] })
+        .combine(ch_kraken_db.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
+        .map { fasta_file, fai_file, gtf_file, gene_bed_file, transcript_fasta_file, chrom_sizes_file, rrna_fasta_files, kraken_db_dir ->
+            record(
+                fasta:            fasta_file,
+                fai:              fai_file,
+                gtf:              gtf_file,
+                gene_bed:         gene_bed_file,
+                transcript_fasta: transcript_fasta_file,
+                chrom_sizes:      chrom_sizes_file,
+                rrna_fastas:      rrna_fasta_files,
+                kraken_db:        kraken_db_dir
+            )
+        }
+        .map { r -> r as GenomeReferences }
+
     emit:
     fasta_fai        = ch_fasta_fai              // channel: [ meta, path(genome.fasta), path(genome.fai) ]
     gtf              = ch_gtf                    // channel: path(genome.gtf)
@@ -239,4 +270,5 @@ workflow PREPARE_GENOME_REFERENCES {
     chrom_sizes      = ch_chrom_sizes            // channel: path(genome.sizes)
     rrna_fastas      = ch_rrna_fastas            // channel: path(rrna_fastas)
     kraken_db        = ch_kraken_db              // channel: path(kraken2/db/)
+    results          = ch_results                // channel: GenomeReferences
 }

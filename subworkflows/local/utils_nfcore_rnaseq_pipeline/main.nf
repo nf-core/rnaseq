@@ -691,6 +691,15 @@ def isStarIndexLegacy() {
 }
 
 //
+// Reference and index params accept pre-built files that reach the genome
+// records untouched. Only files written by a task may be routed through the
+// output block, so anything outside the work directory is dropped to null.
+//
+def taskOutputOrNull(path) {
+    return path instanceof Path && path.startsWith(workflow.workDir) ? path : null
+}
+
+//
 // Function to generate an error if contigs in genome fasta file > 512 Mbp
 //
 def checkMaxContigSize(fai_file) {

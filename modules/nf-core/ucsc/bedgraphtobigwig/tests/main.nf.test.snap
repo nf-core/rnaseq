@@ -14,7 +14,7 @@
                     [
                         "UCSC_BEDGRAPHTOBIGWIG",
                         "ucsc",
-                        "469"
+                        "482"
                     ]
                 ],
                 "bigwig": [
@@ -29,16 +29,16 @@
                     [
                         "UCSC_BEDGRAPHTOBIGWIG",
                         "ucsc",
-                        "469"
+                        "482"
                     ]
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2026-01-19T14:08:59.289945641"
+        "timestamp": "2026-02-25T14:56:47.843203613"
     },
     "Should run without failures": {
         "content": [
@@ -55,7 +55,7 @@
                     [
                         "UCSC_BEDGRAPHTOBIGWIG",
                         "ucsc",
-                        "469"
+                        "482"
                     ]
                 ],
                 "bigwig": [
@@ -70,15 +70,15 @@
                     [
                         "UCSC_BEDGRAPHTOBIGWIG",
                         "ucsc",
-                        "469"
+                        "482"
                     ]
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2026-01-19T14:08:54.132930562"
+        "timestamp": "2026-02-25T14:56:35.886146907"
     }
 }

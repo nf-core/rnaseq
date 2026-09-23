@@ -44,7 +44,7 @@ jobs:
               enabled = true
               bot {
                 token = '${{ secrets.NFSLACK_BOT_TOKEN }}'
-                channel = 'rnaseq'
+                channel = 'rnaseq_dev'
               }
               onStart {
                 enabled = false

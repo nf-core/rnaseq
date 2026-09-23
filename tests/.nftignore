@@ -193,6 +193,7 @@ umitools/*.umi_extract.log
 */salmon/*/aux_info/fld.gz
 */salmon/*/aux_info/meta_info.json
 */salmon/*/libParams/flenDist.txt
+*/salmon/*/lib_format_counts.json
 */salmon/*/logs/salmon_quant.log
 */salmon/*/quant.genes.sf
 */salmon/*/quant.sf
@@ -209,6 +210,7 @@ umitools/*.umi_extract.log
 {salmon,star_salmon,bowtie2_salmon}/*/aux_info/fld.gz
 {salmon,star_salmon,bowtie2_salmon}/*/aux_info/meta_info.json
 {salmon,star_salmon,bowtie2_salmon}/*/libParams/flenDist.txt
+{salmon,star_salmon,bowtie2_salmon}/*/lib_format_counts.json
 {salmon,star_salmon,bowtie2_salmon}/*/logs/salmon_quant.log
 {salmon,star_salmon,bowtie2_salmon}/*/quant.genes.sf
 {salmon,star_salmon,bowtie2_salmon}/*/quant.sf
@@ -221,3 +223,4 @@ umitools/*.umi_extract.log
 {salmon,star_salmon,bowtie2_salmon}/salmon.merged.transcript_lengths.tsv
 {salmon,star_salmon,bowtie2_salmon}/salmon.merged.transcript_tpm.tsv
 {star_salmon,star_rsem,hisat2}/contaminants/kraken2/kraken_reports/*.kraken2.report.txt
+seqkit/**

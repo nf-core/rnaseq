@@ -25,7 +25,7 @@ process STAR_GENOMEPARAMS_UPGRADE {
         if [ "\$name" = "genomeParameters.txt" ]; then
             continue
         fi
-        ln -s "\$(readlink -f "\$f")" "star/\$name"
+        cp -r "\$(readlink -f "\$f")" "star/\$name"
     done
 
     awk -F'\\t' -v OFS='\\t' '
@@ -52,7 +52,7 @@ process STAR_GENOMEPARAMS_UPGRADE {
     """
     mkdir -p star
     for f in input_index/*; do
-        ln -s "\$(readlink -f "\$f")" "star/\$(basename "\$f")"
+        cp -r "\$(readlink -f "\$f")" "star/\$(basename "\$f")"
     done
     """
 }

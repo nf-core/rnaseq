@@ -18,6 +18,7 @@ workflow MULTIQC_RNASEQ {
     ch_strand_data             // channel: [ val(meta), provided, status, salmon, rseqc ] - per-sample strand classification, used for the Strandedness checks section
     ch_trim_read_count         // channel: [ val(meta), val(num_reads) ]   - for fail_trimmed section
     ch_percent_mapped_pass     // channel: [ id, percent_mapped, pass ]    - for fail_mapped section
+    aligner_display_name       // string: display name of the aligner used for the percent_mapped metric, e.g. 'STAR uniquely mapped reads' or 'Bowtie2 overall alignment rate'
     ch_fastq                   // channel: [ val(meta), [ reads ] ]
     ch_collated_versions       // channel: path(versions yaml)
     samplesheet_path           // path: pipeline input samplesheet
@@ -73,7 +74,7 @@ workflow MULTIQC_RNASEQ {
         .collectFile { id, percent_mapped, _pass ->
             [
                 "${id}_fail_mapped_samples_mqc.tsv",
-                sample_status_header.text + "Sample\tSTAR uniquely mapped reads (%)\n${id}\t${percent_mapped}\n",
+                sample_status_header.text + "Sample\t${aligner_display_name} (%)\n${id}\t${percent_mapped}\n",
             ]
         }
         .map { f -> [f.baseName.replace('_fail_mapped_samples_mqc', ''), f] }
@@ -355,7 +356,7 @@ def roundOneDecimal(v) {
 // and are dropped before emission so MultiQC renders blanks (not
 // "None") in data exports.
 //
-def strandSummaryCells(meta, provided, status, salmon, rseqc) {
+def strandSummaryCells(_meta, provided, status, salmon, rseqc) {
     [
         provided:        provided,
         salmon_inferred: salmon?.inferred_strandedness ?: '-',
@@ -375,7 +376,7 @@ def strandSummaryCells(meta, provided, status, salmon, rseqc) {
 //
 // Build the MultiQC custom-content JSON for the strandedness summary
 // table by merging a static config template (parsed from
-// assets/multiqc/strand_check_summary.yaml) with per-sample rows
+// assets/strand_check_summary.yaml) with per-sample rows
 // emitted by classifyStrand. Column order is taken from the YAML
 // header keyset so reordering columns in the asset reorders them in
 // the rendered table. Throws if a row emits a cell that is not
@@ -387,7 +388,7 @@ def strandCheckSummaryYaml(static_config, rows) {
     // Sort by sample id so the merged output is deterministic regardless of
     // which sample finished RSeQC/Salmon first, and so the rendered MultiQC
     // table has a consistent default row order.
-    def data = rows.toSorted { it[0].id }.collectEntries { row ->
+    def data = rows.toSorted { row -> row[0].id }.collectEntries { row ->
         def (meta, provided, status, salmon, rseqc) = row
         def raw = strandSummaryCells(meta, provided, status, salmon, rseqc)
         def unknown = raw.keySet() - header_keys
@@ -427,7 +428,7 @@ def strandCheckCompositionYaml(static_config, rows) {
     // Sort by sample id so the merged output is deterministic regardless of
     // which sample finished RSeQC/Salmon first, and so the rendered MultiQC
     // bargraph has a consistent default sample order.
-    rows.toSorted { it[0].id }.each { row ->
+    rows.toSorted { row -> row[0].id }.each { row ->
         def (meta, _p, _s, salmon, rseqc) = row
         if (rseqc)  rseqc_data[meta.id]  = strandCompositionMap(rseqc)
         if (salmon) salmon_data[meta.id] = strandCompositionMap(salmon)

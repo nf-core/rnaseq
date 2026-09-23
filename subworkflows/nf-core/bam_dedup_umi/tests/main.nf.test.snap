@@ -7,7 +7,7 @@
                     {
                         "id": "test"
                     },
-                    "test.umi_dedup.genome.sorted.bam.stats:md5,e2b1cc244a7e5b236ffc1d1db16dab07"
+                    "test.umi_dedup.genome.sorted.bam.stats:md5,1dd820a35cddeb92c12619d2cf3f699b"
                 ]
             ],
             [
@@ -27,11 +27,11 @@
                 ]
             ]
         ],
+        "timestamp": "2026-07-10T08:23:00.649713",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-03-19T10:09:35.352304"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
     },
     "sarscov2_bam_bai - umitools - with transcriptome bams": {
         "content": [
@@ -42,13 +42,13 @@
                     {
                         "id": "test"
                     },
-                    "test.umi_dedup.genome.sorted.bam.stats:md5,e2b1cc244a7e5b236ffc1d1db16dab07"
+                    "test.umi_dedup.genome.sorted.bam.stats:md5,1dd820a35cddeb92c12619d2cf3f699b"
                 ],
                 [
                     {
                         "id": "test"
                     },
-                    "test.umi_dedup.transcriptome.sorted.bam.stats:md5,cea5c6195b8c8dead5e7bf1672358f6b"
+                    "test.umi_dedup.transcriptome.sorted.bam.stats:md5,9f51c672c343bdb63f66a272c3a7a0f0"
                 ]
             ],
             [
@@ -80,10 +80,10 @@
                 ]
             ]
         ],
+        "timestamp": "2026-07-10T08:22:16.039324",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-03-19T10:20:43.686377"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
     }
 }

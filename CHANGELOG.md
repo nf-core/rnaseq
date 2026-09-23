@@ -3,6 +3,99 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [[3.27.0](https://github.com/nf-core/rnaseq/releases/tag/3.27.0)] - 2026-09-23
+
+### Credits
+
+Special thanks to the following for their contributions to the release:
+
+- [Adam Talbot](https://github.com/adamrtalbot)
+- [apeleraux](https://github.com/apeleraux)
+- [Daniel Lundin](https://github.com/erikrikarddaniel)
+- [Davide Bressan](https://github.com/DavideBrex)
+- [dawnmy](https://github.com/dawnmy)
+- [Dmytro Hlushchenko](https://github.com/CloudCurio)
+- [EladH1](https://github.com/EladH1)
+- [emmanuel-tan](https://github.com/emmanuel-tan)
+- [Evangelos Karatzas](https://github.com/vagkaratzas)
+- [Felix Krueger](https://github.com/FelixKrueger)
+- [Friederike Hanssen](https://github.com/FriederikeHanssen)
+- [Gary Burnett](https://github.com/gburnett-nvidia)
+- [Ido Tamir](https://github.com/idot)
+- [Jose Espinosa-Carrasco](https://github.com/JoseEspinosa)
+- [Joseph Longworth](https://github.com/JosephLongworth)
+- [Luisa Santus](https://github.com/luisas)
+- [Mahesh Binzer-Panchal](https://github.com/mahesh-panchal)
+- [Matthias Hörtenhuber](https://github.com/mashehu)
+- [Matthias Zepper](https://github.com/MatthiasZepper)
+- [Maxime U Garcia](https://github.com/maxulysse)
+- [murphyte](https://github.com/murphyte)
+- [mvheetve](https://github.com/mvheetve)
+- [Paolo Inglese](https://github.com/piplus2)
+- [Phil Ewels](https://github.com/ewels)
+
+### Enhancements and fixes
+
+- [PR #1421](https://github.com/nf-core/rnaseq/pull/1421) - Accept purely numeric sample IDs in `assets/schema_input.json` and coerce `meta.id` to `String` after `samplesheetToList` ([#1419](https://github.com/nf-core/rnaseq/issues/1419))
+- [PR #1680](https://github.com/nf-core/rnaseq/pull/1680) - Raise the Nextflow floor to 25.10.4 across `nextflow.config`, the three `nf-test*` workflow matrices, and the README/ro-crate version badges; bump `nf-schema` to 2.6.1; clear the v2-parser lint warnings in local subworkflows and resync six nf-core components carrying upstream-merged strict-syntax fixes
+- [PR #1775](https://github.com/nf-core/rnaseq/pull/1775) - Add Parabricks resource configuration guide for full-size genomes (GPU count, memory scaling, retry strategy, `--low-memory` flag)
+- [PR #1844](https://github.com/nf-core/rnaseq/pull/1844) - Bump version to 3.27.0dev after release 3.26.0; flip the MultiQC report links and RO-Crate URL/version back to dev
+- [PR #1848](https://github.com/nf-core/rnaseq/pull/1848) - Align `actions/checkout` SHA in `nf-test-arm.yml` and `nf-test-gpu.yml` with the template-derived `nf-test.yml` (`v6`) ([#1847](https://github.com/nf-core/rnaseq/issues/1847))
+- [PR #1849](https://github.com/nf-core/rnaseq/pull/1849) - Tidy-up batch addressing [#1845](https://github.com/nf-core/rnaseq/issues/1845): README/schema clarifications, `&` → `&&` in three guards, deduplicated `withName` blocks, and removal of the unmaintained `bin/fastq_dir_to_samplesheet.py` (use [nf-core/fetchngs](https://nf-co.re/fetchngs) for samplesheet generation)
+- [PR #1850](https://github.com/nf-core/rnaseq/pull/1850) - Use the active aligner's display name in the MultiQC `fail_mapped` per-sample status row, and drop the hardcoded "STAR" reference from the pipeline-completion `min_mapped_reads` warning, so Bowtie2 reports no longer mislabel the metric as STAR ([#1846](https://github.com/nf-core/rnaseq/issues/1846))
+- [PR #1851](https://github.com/nf-core/rnaseq/pull/1851) - Split `PREPARE_GENOME` into `PREPARE_GENOME_REFERENCES` (FASTA / GTF / BED / transcript FASTA / chrom.sizes / rRNA / Kraken DB) and `PREPARE_GENOME_INDICES` (per-aligner index build/load) for clearer ownership; no user-facing parameter, output, or behaviour change ([#1721](https://github.com/nf-core/rnaseq/issues/1721)).
+- [PR #1852](https://github.com/nf-core/rnaseq/pull/1852) - Flatten `workflows/rnaseq/assets/` back to top-level `assets/` so `nf-core pipelines bump-version` finds `assets/multiqc_config.yml` and updates the report-comment URLs automatically on release bumps
+- [PR #1853](https://github.com/nf-core/rnaseq/pull/1853) - Replace remaining pre-admonition `> **NB:**` / `> **Note**` / `> **Warning**` quoteblocks across `docs/usage.md`, `docs/output.md`, and `README.md` with nf-core flavored `:::note` / `:::warning` admonitions
+- [PR #1854](https://github.com/nf-core/rnaseq/pull/1854) - Switch the `SORTMERNA` ARM container in `conf/arm.config` to a Wave build from `bioconda::sortmerna=4.3.7`, retiring the last `seqera::` channel reference in the pipeline ([#1431](https://github.com/nf-core/rnaseq/issues/1431))
+- [PR #1861](https://github.com/nf-core/rnaseq/pull/1861) - Drop the outdated RiboDetector ONNX multiprocessing hang warnings from `docs/usage.md`, `docs/output.md`, and the `ribo_removal_tool` schema help text, resolved upstream in the pinned `ribodetector=0.3.3` ([#1856](https://github.com/nf-core/rnaseq/issues/1856))
+- [PR #1862](https://github.com/nf-core/rnaseq/pull/1862) - Correct the `docs/usage.md` note to state that `--extra_star_align_args` applies to `--aligner star_rsem`, since STAR runs as a standalone step and RSEM quantifies the resulting BAM ([#1857](https://github.com/nf-core/rnaseq/issues/1857))
+- [PR #1864](https://github.com/nf-core/rnaseq/pull/1864) - Bump nf-schema to 2.7.2, fixing boolean CLI parameter validation failures under Nextflow 26.x strict syntax ([#1860](https://github.com/nf-core/rnaseq/issues/1860))
+- [PR #1869](https://github.com/nf-core/rnaseq/pull/1869) - Add pipeline validation error when `--use_rustqc` and `--skip_markduplicates` are set together, since RustQC requires duplicate-marked BAM files ([#1865](https://github.com/nf-core/rnaseq/issues/1865))
+- [PR #1878](https://github.com/nf-core/rnaseq/pull/1878) - Add `trim_only` and `raw` options to `--contaminant_screening_input`: `trim_only` screens reads after adapter trimming but before BBSplit/rRNA removal, enabling detection of contaminants that a species-limited BBSplit index would otherwise discard; `raw` screens pre-trimming reads as a baseline ([#1870](https://github.com/nf-core/rnaseq/issues/1870))
+- [PR #1882](https://github.com/nf-core/rnaseq/pull/1882) - Pass `--skip-dup-check` to RustQC when `--with_umi` is set, so `--use_rustqc` works with UMI-deduplicated BAMs: UMICollapse / UMI-tools physically remove PCR duplicates, leaving no reads flagged `0x400`, so duplication QC is not applicable and RustQC's duplicate-marking check would otherwise abort the run ([#1881](https://github.com/nf-core/rnaseq/issues/1881))
+- [PR #1883](https://github.com/nf-core/rnaseq/pull/1883) - Update the `tximeta/tximport` module ([nf-core/modules#12362](https://github.com/nf-core/modules/pull/12362)): add a `jq` build dependency and set `LC_COLLATE=C` for reproducible gene-level output ordering
+- [PR #1884](https://github.com/nf-core/rnaseq/pull/1884) - Update `trimgalore` module to 2.3.0
+- [PR #1885](https://github.com/nf-core/rnaseq/pull/1885) - Bump `quant_tximport_summarizedexperiment` and `quantify_rsem` ([nf-core/modules#12377](https://github.com/nf-core/modules/pull/12377)): sort the collected per-sample inputs to `TXIMETA_TXIMPORT` and `CUSTOM_RSEMMERGECOUNTS` by staged file name, keeping their cache keys stable across `-resume` instead of following non-deterministic task-completion order ([#1879](https://github.com/nf-core/rnaseq/issues/1879))
+- [PR #1892](https://github.com/nf-core/rnaseq/pull/1892) - Support a pre-built Bowtie2 index for rRNA removal via `--bowtie2_rrna_index`, skipping on-the-fly index construction from `--ribo_database_manifest` when one is supplied ([#1731](https://github.com/nf-core/rnaseq/issues/1731))
+- [PR #1894](https://github.com/nf-core/rnaseq/pull/1894) - Important! Template update for nf-core/tools v4.0.3
+- [PR #1899](https://github.com/nf-core/rnaseq/pull/1899) - Update GPU based STAR (Parabricks rna_fq2bam) to version 4.7.1.
+- [PR #1902](https://github.com/nf-core/rnaseq/pull/1902) - Update `bam_stringtie_merge` and StringTie modules ([nf-core/modules#12661](https://github.com/nf-core/modules/pull/12661)), allowing runs where all samples fail `--min_mapped_reads` to complete with skipped-sample warnings instead of failing an empty StringTie merge ([#1901](https://github.com/nf-core/rnaseq/issues/1901))
+- [PR #1905](https://github.com/nf-core/rnaseq/pull/1905) - Give `TRIMGALORE` an explicit 4 GB memory allocation, replacing the `process_low_memory` label's 1 GB budget that paired with an 8-cpu band and OOM-killed every sample on every retry ([#1903](https://github.com/nf-core/rnaseq/issues/1903))
+- [PR #1907](https://github.com/nf-core/rnaseq/pull/1907) - Update `fastq_qc_trim_filter_setstrandedness` ([nf-core/modules#12745](https://github.com/nf-core/modules/pull/12745)), fixing a crash in Salmon auto-strandedness inference when no `--fasta` is supplied (e.g. kallisto-only pseudoalignment runs)
+- [PR #1911](https://github.com/nf-core/rnaseq/pull/1911) - Copy instead of symlink index files in `STAR_GENOMEPARAMS_UPGRADE`, fixing broken/missing index files on object-storage-backed work directories (e.g. Azure Batch via azcopy) that can't represent symlinks
+- [PR #1913](https://github.com/nf-core/rnaseq/pull/1913) - Update HISAT2 modules; add `--extra_hisat2_align_args` ([#1916](https://github.com/nf-core/rnaseq/issues/1916))
+- [PR #1914](https://github.com/nf-core/rnaseq/pull/1914) - Important! Template update for nf-core/tools v4.1.0
+- [PR #1915](https://github.com/nf-core/rnaseq/pull/1915) - Add `manifest.diagram` to `nextflow.config`, pointing at the metro map, and wire up process names for `nf-metro serve` live-progress tracking
+- [PR #1917](https://github.com/nf-core/rnaseq/pull/1917) - Update `trimgalore` module ([nf-core/modules#12978](https://github.com/nf-core/modules/pull/12978)), dropping the now-redundant `process_low_memory` label
+- [PR #1918](https://github.com/nf-core/rnaseq/pull/1918) - Update all nf-core modules and subworkflows to latest upstream
+- [PR #1919](https://github.com/nf-core/rnaseq/pull/1919) - Skip biotype QC with a warning instead of crashing when the biotype attribute is absent on the GTF rows featureCounts reads (e.g. NCBI annotations, which only set it on `gene` rows) ([#1886](https://github.com/nf-core/rnaseq/issues/1886))
+- [PR #1922](https://github.com/nf-core/rnaseq/pull/1922) - Document `--extra_star_align_args '--alignMatesGapMax <value>'` for users who opt into STAR on prokaryotic data, since STAR's default mate-gap ceiling is far larger than a bacterial genome calls for ([#1691](https://github.com/nf-core/rnaseq/issues/1691))
+- [PR #1923](https://github.com/nf-core/rnaseq/pull/1923) - Add `--extra_salmon_index_args`, letting users pass `--keepDuplicates` (or other Salmon index flags) without changing the pipeline default of dropping exact-sequence-duplicate transcripts ([#1259](https://github.com/nf-core/rnaseq/issues/1259))
+- [PR #1924](https://github.com/nf-core/rnaseq/pull/1924) - Restore StringTie's `--fr`/`--rf` strandedness flags, dropped by the v3 module update ([PR #1902](https://github.com/nf-core/rnaseq/pull/1902)) with no replacement
+- [PR #1925](https://github.com/nf-core/rnaseq/pull/1925) - Trigger a full nf-test run on `conf/`, `bin/` and `assets/` changes, and refresh the StringTie ballgown snapshots left stale by [PR #1924](https://github.com/nf-core/rnaseq/pull/1924)
+- [PR #1927](https://github.com/nf-core/rnaseq/pull/1927) - Bump version to 3.27.0 ahead of release, with a Salmon `--libType` config fix/dedup and an nf-test trigger fix picked up along the way
+- [PR #1930](https://github.com/nf-core/rnaseq/pull/1930) - Fill in `fastp`/`multiqc`/`seqkit` gaps in the Software dependencies table and add `tests/.nftignore_rustqc` to nf-test triggers, following release review
+
+### Software dependencies
+
+| Dependency    | Old version | New version |
+| ------------- | ----------- | ----------- |
+| `fastp`       | 1.0.1       | 1.3.6       |
+| `hisat2`      | 2.2.1       | 2.2.3       |
+| `kallisto`    | 0.51.1      | 0.52.0      |
+| `multiqc`     | 1.33        | 1.35        |
+| `picard`      | 3.4.0       | 3.5.0       |
+| `python`      | 3.9.5       | 3.14.5      |
+| `salmon`      | 1.10.3      | 2.7.0       |
+| `samtools`    | 1.23.1      | 1.24        |
+| `seqkit`      | 2.9.0       | 2.13.0      |
+| `stringtie`   | 2.2.3       | 3.0.3       |
+| `subread`     | 2.0.6       | 2.1.1       |
+| `trim-galore` | 2.1.0       | 2.3.0       |
+| `ucsc-tools`  | 377/469     | 482         |
+
+`salmon` and `stringtie`'s major-version bumps measurably shift gene-level quantification on the standard test dataset (double-digit-percent TPM/FPKM swings and some detected/undetected flips for low-to-moderate expression genes), while STAR alignment and library-type inference are unaffected; overall alignment-rate-style QC metrics move by fractions of a percent. Anyone diffing exact per-gene values against a pre-3.27.0 baseline should expect this.
+
 ## [[3.26.0](https://github.com/nf-core/rnaseq/releases/tag/3.26.0)] - 2026-05-07
 
 ### Credits
@@ -44,11 +137,17 @@ Special thanks to the following for their contributions to the release:
 
 ### Software dependencies
 
-| Dependency      | Old version | New version |
-| --------------- | ----------- | ----------- |
-| `trim-galore`   | 0.6.10      | 2.1.0       |
-| `gawk`          |             | 5.3.1       |
-| `STAR` (legacy) | 2.6.1d      |             |
+| Dependency                             | Old version | New version |
+| -------------------------------------- | ----------- | ----------- |
+| `trim-galore`                          | 0.6.10      | 2.1.0       |
+| `gawk`                                 |             | 5.3.1       |
+| `STAR` (legacy)                        | 2.6.1d      |             |
+| `hisat2/align`                         | 2.2.1       | 2.2.3       |
+| `samtools` (hisat2/align)              | 1.20        | 1.24        |
+| `hisat2/build`                         | 2.2.1       | 2.2.3       |
+| `samtools` (hisat2/build)              | 1.20        |             |
+| `hisat2/extractsplicesites`            | 2.2.1       | 2.2.3       |
+| `samtools` (hisat2/extractsplicesites) | 1.20        | 1.24        |
 
 `gawk` is added as a dependency of the new `STAR_GENOMEPARAMS_UPGRADE` local module. The `STAR` (legacy) row reflects removal of the parallel STAR 2.6.1d build that ran alongside the default aligner for legacy iGenomes indices; the pipeline-default STAR is unchanged.
 

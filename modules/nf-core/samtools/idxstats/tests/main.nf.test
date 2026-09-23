@@ -13,7 +13,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
+                input[0] = channel.of([
                     [ id:'test', single_end:false ], // meta map
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true)
@@ -23,8 +23,8 @@ nextflow_process {
         }
 
         then {
-            assertAll (
-                { assert process.success },
+            assert process.success
+            assertAll(
                 { assert snapshot(
                     process.out.idxstats,
                     process.out.findAll { key, val -> key.startsWith('versions') }
@@ -34,11 +34,13 @@ nextflow_process {
     }
 
     test("bam - stub") {
+
         options "-stub"
+
         when {
             process {
                 """
-                input[0] = Channel.of([
+                input[0] = channel.of([
                     [ id:'test', single_end:false ], // meta map
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true)
@@ -48,12 +50,13 @@ nextflow_process {
         }
 
         then {
-            assertAll (
-                { assert process.success },
+            assert process.success
+            assertAll(
                 { assert snapshot(
                     process.out.idxstats,
                     process.out.findAll { key, val -> key.startsWith('versions') }
                 ).match() }
             )
         }
-    }}
+    }
+}

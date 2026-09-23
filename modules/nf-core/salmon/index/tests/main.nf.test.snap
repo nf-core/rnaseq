@@ -1,59 +1,116 @@
 {
     "sarscov2 stub": {
         "content": [
-            "[complete_ref_lens.bin, ctable.bin, ctg_offsets.bin, duplicate_clusters.tsv, info.json, mphf.bin, pos.bin, pre_indexing.log, rank.bin, refAccumLengths.bin, ref_indexing.log, reflengths.bin, refseq.bin, seq.bin, versionInfo.json]",
             {
+                "index": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "duplicate_clusters.tsv",
+                            "index.ctab",
+                            "index.ectab",
+                            "index.refinfo",
+                            "index.ssi",
+                            "index.ssi.mphf",
+                            "index.tct",
+                            "index.tdct",
+                            "info.json",
+                            "refseq.bin",
+                            "refseq_offsets.json"
+                        ]
+                    ]
+                ],
                 "versions_salmon": [
                     [
                         "SALMON_INDEX",
                         "salmon",
-                        "1.10.3"
+                        "2.7.0"
                     ]
                 ]
             }
         ],
+        "timestamp": "2026-09-17T13:20:12.458306477",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-02T16:08:35.725968411"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.2"
+        }
     },
     "sarscov2": {
         "content": [
-            "[complete_ref_lens.bin, ctable.bin, ctg_offsets.bin, duplicate_clusters.tsv, info.json, mphf.bin, pos.bin, pre_indexing.log, rank.bin, refAccumLengths.bin, ref_indexing.log, reflengths.bin, refseq.bin, seq.bin, versionInfo.json]",
             {
+                "index": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "duplicate_clusters.tsv",
+                            "index.ctab",
+                            "index.ectab",
+                            "index.refinfo",
+                            "index.ssi",
+                            "index.ssi.mphf",
+                            "index.tct",
+                            "index.tdct",
+                            "info.json",
+                            "refseq.bin",
+                            "refseq_offsets.json"
+                        ]
+                    ]
+                ],
                 "versions_salmon": [
                     [
                         "SALMON_INDEX",
                         "salmon",
-                        "1.10.3"
+                        "2.7.0"
                     ]
                 ]
             }
         ],
+        "timestamp": "2026-09-17T10:38:22.293666507",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-02T16:08:25.230161687"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
     },
     "sarscov2 transcriptome only": {
         "content": [
-            "[complete_ref_lens.bin, ctable.bin, ctg_offsets.bin, duplicate_clusters.tsv, info.json, mphf.bin, pos.bin, pre_indexing.log, rank.bin, refAccumLengths.bin, ref_indexing.log, reflengths.bin, refseq.bin, seq.bin, versionInfo.json]",
             {
+                "index": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "duplicate_clusters.tsv",
+                            "index.ctab",
+                            "index.ectab",
+                            "index.refinfo",
+                            "index.ssi",
+                            "index.ssi.mphf",
+                            "index.tct",
+                            "index.tdct",
+                            "info.json",
+                            "refseq.bin",
+                            "refseq_offsets.json"
+                        ]
+                    ]
+                ],
                 "versions_salmon": [
                     [
                         "SALMON_INDEX",
                         "salmon",
-                        "1.10.3"
+                        "2.7.0"
                     ]
                 ]
             }
         ],
+        "timestamp": "2026-09-17T13:20:08.145712997",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-02T16:08:30.548863827"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.2"
+        }
     }
 }

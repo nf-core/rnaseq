@@ -25,96 +25,37 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test_lib_format_counts.json:md5,0b0e2dc090e5ad88f9a9d6dbe9c3e4a0"
+                    "test_lib_format_counts.json:md5,403fbb6ddaf6c8ed7c3613290c072015"
                 ]
             ]
         ],
+        "timestamp": "2026-09-16T13:38:55.282502431",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-02-02T17:19:36.509463"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
     },
     "homo_sapiens paired-end [fastq] - stub": {
         "content": [
             {
-                "0": [
-                    [
-                        "complete_ref_lens.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "ctable.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "ctg_offsets.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "duplicate_clusters.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "info.json:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "mphf.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "pos.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "pre_indexing.log:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "rank.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "refAccumLengths.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "ref_indexing.log:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "reflengths.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "refseq.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "seq.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "versionInfo.json:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "1": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        [
-                            "test_R1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                            "test_R2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
-                        ]
-                    ]
-                ],
-                "2": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        [
-                            
-                        ]
-                    ]
-                ],
-                "3": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test_meta_info.json:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "4": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test_lib_format_counts.json:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
                 "index": [
                     [
-                        "complete_ref_lens.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "ctable.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "ctg_offsets.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "duplicate_clusters.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "info.json:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "mphf.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "pos.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "pre_indexing.log:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "rank.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "refAccumLengths.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "ref_indexing.log:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "reflengths.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "refseq.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "seq.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "versionInfo.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        {
+                            
+                        },
+                        [
+                            "duplicate_clusters.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "index.ctab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "index.ectab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "index.refinfo:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "index.ssi:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "index.ssi.mphf:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "index.tct:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "index.tdct:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "info.json:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "refseq.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "refseq_offsets.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
                     ]
                 ],
                 "json_info": [
@@ -154,16 +95,16 @@
                             "single_end": false
                         },
                         [
-
+                            
                         ]
                     ]
                 ]
             }
         ],
+        "timestamp": "2026-09-17T10:10:50.619461968",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-02-02T17:19:51.908726"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
     }
 }

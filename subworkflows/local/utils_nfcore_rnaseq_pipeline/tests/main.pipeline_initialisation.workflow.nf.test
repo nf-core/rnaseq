@@ -24,7 +24,7 @@ nextflow_workflow {
                 skip_bbsplit        = false
                 pseudo_aligner      = 'salmon'
                 umitools_bc_pattern = 'NNNN'
-                ribo_database_manifest = "${projectDir}/workflows/rnaseq/assets/rrna-db-defaults.txt"
+                ribo_database_manifest = "${projectDir}/assets/rrna-db-defaults.txt"
             }
             workflow {
                 """

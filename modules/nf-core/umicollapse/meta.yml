@@ -79,7 +79,7 @@ output:
       - umicollapse:
           type: string
           description: The name of the tool
-      - echo ${VERSION}:
+      - 1.1.0-0:
           type: eval
           description: The expression to obtain the version of the tool
 
@@ -91,7 +91,7 @@ topics:
       - umicollapse:
           type: string
           description: The name of the tool
-      - echo ${VERSION}:
+      - 1.1.0-0:
           type: eval
           description: The expression to obtain the version of the tool
 

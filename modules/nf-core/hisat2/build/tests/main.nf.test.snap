@@ -1,54 +1,100 @@
 {
-    "Should run without failures - stub": {
+    "Should use splice sites when memory threshold is met": {
         "content": [
-            [
-                [
-                    {
-                        "id": "genome"
-                    },
-                    "hisat2"
-                ]
-            ],
             {
+                "index": [
+                    [
+                        {
+                            "id": "genome"
+                        },
+                        [
+                            "genome.1.ht2",
+                            "genome.2.ht2",
+                            "genome.3.ht2",
+                            "genome.4.ht2",
+                            "genome.5.ht2",
+                            "genome.6.ht2",
+                            "genome.7.ht2",
+                            "genome.8.ht2"
+                        ]
+                    ]
+                ],
                 "versions_hisat2": [
                     [
                         "HISAT2_BUILD",
                         "hisat2",
-                        "2.2.1"
+                        "2.2.3"
                     ]
                 ]
             }
         ],
+        "timestamp": "2026-08-31T09:49:06.542406168",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-02T15:53:37.611420605"
+            "nf-test": "0.9.5",
+            "nextflow": "26.08.0"
+        }
+    },
+    "Should run without failures - stub": {
+        "content": [
+            {
+                "index": [
+                    [
+                        {
+                            "id": "genome"
+                        },
+                        [
+                            
+                        ]
+                    ]
+                ],
+                "versions_hisat2": [
+                    [
+                        "HISAT2_BUILD",
+                        "hisat2",
+                        "2.2.3"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-08-31T09:49:00.60996498",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.08.0"
+        }
     },
     "Should run without failures": {
         "content": [
-            [
-                [
-                    {
-                        "id": "genome"
-                    },
-                    "hisat2"
-                ]
-            ],
             {
+                "index": [
+                    [
+                        {
+                            "id": "genome"
+                        },
+                        [
+                            "genome.1.ht2",
+                            "genome.2.ht2",
+                            "genome.3.ht2",
+                            "genome.4.ht2",
+                            "genome.5.ht2",
+                            "genome.6.ht2",
+                            "genome.7.ht2",
+                            "genome.8.ht2"
+                        ]
+                    ]
+                ],
                 "versions_hisat2": [
                     [
                         "HISAT2_BUILD",
                         "hisat2",
-                        "2.2.1"
+                        "2.2.3"
                     ]
                 ]
             }
         ],
+        "timestamp": "2026-08-31T09:48:54.501224106",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-02T15:53:31.34596606"
+            "nf-test": "0.9.5",
+            "nextflow": "26.08.0"
+        }
     }
 }

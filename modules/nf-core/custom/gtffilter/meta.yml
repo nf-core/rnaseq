@@ -1,15 +1,12 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
 name: "custom_gtffilter"
-description: Filter a gtf file to keep only regions that are located on a chromosome
-  represented in a given fasta file
+description: Filter a gtf file to keep only regions that are located on a chromosome represented in a given fasta file
 keywords:
   - gtf
   - fasta
   - filter
 tools:
   - "gtffilter":
-      description: "Filter a gtf file to keep only regions that are located on a chromosome
-        represented in a given fasta file"
+      description: "Filter a gtf file to keep only regions that are located on a chromosome represented in a given fasta file"
       tool_dev_url: "https://github.com/nf-core/modules/blob/master/modules/nf-core/custom/gtffilter/main.nf"
 
       identifier: ""
@@ -62,3 +59,27 @@ authors:
   - "@nictru"
 maintainers:
   - "@nictru"
+containers:
+  docker:
+    linux/amd64:
+      name: community.wave.seqera.io/library/python:3.14.5--dc8358b3c5eeb927
+      build_id: bd-dc8358b3c5eeb927_1
+      scan_id: sc-d453bf85569b853d_1
+    linux/arm64:
+      name: community.wave.seqera.io/library/python:3.14.5--bfcec33ce3c2e2f2
+      build_id: bd-bfcec33ce3c2e2f2_6
+      scan_id: sc-8b534d157943b8ec_1
+  singularity:
+    linux/arm64:
+      name: oras://community.wave.seqera.io/library/python:3.14.5--d70899bea5a8b0b3
+      build_id: bd-d70899bea5a8b0b3_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/70/70e6d8070f4e8e6fd67f3636a8460f334fb87aaf106748f2ebd215dbdfdf5856/data
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/python:3.14.5--b29a2f2e65e096bd
+      build_id: bd-b29a2f2e65e096bd_10
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/18/1841daa69f98a0b0ffcb8f545070c8350a75febb167202136eab0990131d31c0/data
+  conda:
+    linux/amd64:
+      lock_file: modules/nf-core/custom/gtffilter/.conda-lock/linux_amd64-bd-dc8358b3c5eeb927_1.txt
+    linux/arm64:
+      lock_file: modules/nf-core/custom/gtffilter/.conda-lock/linux_arm64-bd-bfcec33ce3c2e2f2_6.txt

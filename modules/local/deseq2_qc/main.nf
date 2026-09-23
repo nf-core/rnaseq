@@ -72,6 +72,8 @@ process DESEQ2_QC {
 
     mkdir size_factors
     touch size_factors/${prefix}.size_factors.RData
+    # One per-sample size_factors file per data column in $counts; the
+    # module test snaps these names so the stub must mirror real-run output.
     for i in `head $counts -n 1 | cut -f3-`;
     do
         touch size_factors/\${i}.size_factors.RData

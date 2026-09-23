@@ -3,9 +3,9 @@ process SAMTOOLS_FASTQ {
     label 'process_low'
 
     conda "${moduleDir}/environment.yml"
-    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
-        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/8c/8c5d2818c8b9f58e1fba77ce219fdaf32087ae53e857c4a496402978af26e78c/data'
-        : 'community.wave.seqera.io/library/htslib_samtools:1.23.1--5b6bb4ede7e612e5'}"
+    container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/e9/e994bf4eb3731150511a14f5706b7bdfd64df1b6d40898fff334286c027e0859/data'
+        : 'community.wave.seqera.io/library/htslib_samtools:1.24--d697cfb9dce007cd'}"
 
     input:
     tuple val(meta), path(input)
@@ -42,13 +42,14 @@ process SAMTOOLS_FASTQ {
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def output = interleave && !meta.single_end
+    def output_command = interleave && !meta.single_end
         ? "touch ${prefix}_interleaved.fastq"
         : meta.single_end
-            ? "echo | gzip > ${prefix}_1.fastq.gz && echo | gzip > ${prefix}_singleton.fastq.gz"
-            : "echo | gzip > ${prefix}_1.fastq.gz && echo | gzip > ${prefix}_2.fastq.gz && echo | gzip > ${prefix}_singleton.fastq.gz"
+            ? "echo | bgzip -c > ${prefix}_1.fastq.gz && echo | bgzip -c > ${prefix}_singleton.fastq.gz"
+            : "echo | bgzip -c > ${prefix}_1.fastq.gz && echo | bgzip -c > ${prefix}_2.fastq.gz && echo | bgzip -c > ${prefix}_singleton.fastq.gz"
+    def other_command = "echo | bgzip -c > ${prefix}_other.fastq.gz"
     """
-    ${output}
-    echo | gzip > ${prefix}_other.fastq.gz
+    ${output_command}
+    ${other_command}
     """
 }

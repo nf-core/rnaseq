@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Use the @nf-core-bot token to check out so we can push later
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           token: ${{ secrets.nf_core_bot_auth_token }}
 
@@ -32,12 +32,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.nf_core_bot_auth_token }}
 
       - name: Install Nextflow
-        uses: nf-core/setup-nextflow@b4ec1bc7c16a94435159de94a05253542fddf6ef # v3
+        uses: nf-core/setup-nextflow@893c28b667aedeba26e37f296d260ccc5bc4d914 # v3
 
       # Install and run prek
       - name: Run prek
         id: prek
-        uses: j178/prek-action@6ad80277337ad479fe43bd70701c3f7f8aa74db3 # v2
+        uses: j178/prek-action@5337cb91e0fa35a7ff31b9ca345126d8bbbcdf16 # v2
         continue-on-error: true
 
       # indication that the linting has finished

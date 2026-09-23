@@ -27,7 +27,7 @@ nextflow_process {
             assertAll(
                 { assert process.success },
                 { assert snapshot(
-                    file(process.out.bam[0][1]).name,
+                    process.out.bam.collect{meta, bam_ ->  file(bam_).name + ':readsMD5,' + bam(bam_).getReadsMD5()},
                     path(process.out.metrics.get(0).get(1)).readLines()[0..2],
                     process.out.findAll { key, val -> key.startsWith("versions") })
                 .match() }
@@ -53,7 +53,7 @@ nextflow_process {
             assertAll(
                 { assert process.success },
                 { assert snapshot(
-                    file(process.out.bam[0][1]).name,
+                    process.out.bam.collect{meta, bam_ ->  file(bam_).name + ':readsMD5,' + bam(bam_).getReadsMD5()},
                     path(process.out.metrics.get(0).get(1)).readLines()[0..2],
                     process.out.findAll { key, val -> key.startsWith("versions") })
                 .match() }
@@ -80,13 +80,14 @@ nextflow_process {
         }
 
         then {
+            def fasta = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.fasta'
             assertAll(
                 { assert process.success },
                 { assert snapshot(
-                    file(process.out.cram[0][1]).name,
+                    process.out.cram.collect{meta, cram_ ->  file(cram_).name + ':readsMD5,' + cram(cram_, fasta).getReadsMD5()},
                     path(process.out.metrics.get(0).get(1)).readLines()[0..2],
-                    process.out.findAll { key, val -> key.startsWith("versions") })
-                .match() }
+                    process.out.findAll { key, val -> key.startsWith("versions") }
+                ).match() }
             )
         }
     }

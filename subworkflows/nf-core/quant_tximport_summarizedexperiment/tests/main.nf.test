@@ -21,7 +21,7 @@ nextflow_workflow {
                 script "../../../../modules/nf-core/untar/main.nf"
                 process {
                     """
-                    input[0] = Channel.of([
+                    input[0] = channel.of([
                         [ id: 'salmon_results' ],
                         file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/salmon_results.tar.gz', checkIfExists: true)
                     ])
@@ -44,7 +44,7 @@ nextflow_workflow {
                     }
                     entries
                 }
-                input[2] = Channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
+                input[2] = channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
                 input[3] = 'gene_id'
                 input[4] = 'gene_name'
                 input[5] = 'salmon'
@@ -75,6 +75,65 @@ nextflow_workflow {
         }
     }
 
+    test("salmon - transcript absent from GTF") {
+
+        setup {
+            run("UNTAR") {
+                script "../../../../modules/nf-core/untar/main.nf"
+                process {
+                    """
+                    input[0] = channel.of([
+                        [ id: 'salmon_results' ],
+                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/salmon_results.tar.gz', checkIfExists: true)
+                    ])
+                    """
+                }
+            }
+        }
+
+        when {
+            workflow {
+                """
+                input[0] = [
+                    [ id: 'samplesheet' ],
+                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true)
+                ]
+                // Append a row for a transcript absent from the GTF to each sample's quant.sf,
+                // simulating e.g. a spike-in or a transcript_fasta sequence not derived from the
+                // GTF. Regression test for SE_TRANSCRIPT_UNIFIED failing on exactly this case.
+                // The copy keeps the original directory basename (tximport derives sample
+                // identity from it, not from meta.id) - only the parent changes.
+                input[1] = UNTAR.out.untar.flatMap { meta, dir ->
+                    def entries = []
+                    dir.toFile().eachDir { d ->
+                        def copyDir = file("\${workDir}/\${d.name}_orphan/\${d.name}")
+                        copyDir.mkdirs()
+                        file("\${copyDir}/quant.sf").text = new File(d, 'quant.sf').text + "ORPHAN_TX_FIXTURE\\t500\\t450.000\\t0.000000\\t0.000\\n"
+                        entries << [[ id: d.name ], copyDir]
+                    }
+                    entries
+                }
+                input[2] = channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
+                input[3] = 'gene_id'
+                input[4] = 'gene_name'
+                input[5] = 'salmon'
+                input[6] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                // Present in transcript-level output (with its identity self-mapping)...
+                { assert file(workflow.out.counts_transcript[0][1]).text.contains('ORPHAN_TX_FIXTURE') },
+                { assert file(workflow.out.tx2gene_augmented[0][1]).text.contains('ORPHAN_TX_FIXTURE') },
+                // ...but excluded from gene-level output, since it isn't a real gene.
+                { assert !file(workflow.out.counts_gene[0][1]).text.contains('ORPHAN_TX_FIXTURE') }
+            )
+        }
+    }
+
     test("kallisto") {
 
         setup {
@@ -82,7 +141,7 @@ nextflow_workflow {
                 script "../../../../modules/nf-core/untar/main.nf"
                 process {
                     """
-                    input[0] = Channel.of([
+                    input[0] = channel.of([
                         [ id: 'kallisto_results' ],
                         file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/kallisto_results.tar.gz', checkIfExists: true)
                     ])
@@ -105,7 +164,7 @@ nextflow_workflow {
                     }
                     entries
                 }
-                input[2] = Channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
+                input[2] = channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
                 input[3] = 'gene_id'
                 input[4] = 'gene_name'
                 input[5] = 'kallisto'
@@ -143,7 +202,7 @@ nextflow_workflow {
                 script "../../../../modules/nf-core/untar/main.nf"
                 process {
                     """
-                    input[0] = Channel.of([
+                    input[0] = channel.of([
                         [ id: 'rsem_results' ],
                         file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/rsem_results.tar.gz', checkIfExists: true)
                     ])
@@ -168,7 +227,7 @@ nextflow_workflow {
                     }
                     entries
                 }
-                input[2] = Channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
+                input[2] = channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
                 input[3] = 'gene_id'
                 input[4] = 'gene_name'
                 input[5] = 'rsem'
@@ -210,10 +269,10 @@ nextflow_workflow {
                     [ id: 'samplesheet' ],
                     file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true)
                 ]
-                input[1] = Channel.of(
+                input[1] = channel.of(
                     [[ id: 'sample1' ], file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)]
                 )
-                input[2] = Channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
+                input[2] = channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
                 input[3] = 'gene_id'
                 input[4] = 'gene_name'
                 input[5] = 'salmon'
@@ -241,10 +300,10 @@ nextflow_workflow {
                     [ id: 'samplesheet' ],
                     file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true)
                 ]
-                input[1] = Channel.of(
+                input[1] = channel.of(
                     [[ id: 'sample1' ], file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)]
                 )
-                input[2] = Channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
+                input[2] = channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
                 input[3] = 'gene_id'
                 input[4] = 'gene_name'
                 input[5] = 'kallisto'
@@ -272,10 +331,10 @@ nextflow_workflow {
                     [ id: 'samplesheet' ],
                     file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true)
                 ]
-                input[1] = Channel.of(
+                input[1] = channel.of(
                     [[ id: 'sample1' ], file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)]
                 )
-                input[2] = Channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
+                input[2] = channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
                 input[3] = 'gene_id'
                 input[4] = 'gene_name'
                 input[5] = 'rsem'

@@ -48,7 +48,7 @@ output:
       - seqkit:
           type: string
           description: The name of the tool
-      - "seqkit version | sed 's/seqkit v//'":
+      - seqkit version | sed 's/^.*v//':
           type: eval
           description: The expression to obtain the version of seqkit
 
@@ -60,7 +60,7 @@ topics:
       - seqkit:
           type: string
           description: The name of the tool
-      - "seqkit version | sed 's/seqkit v//'":
+      - seqkit version | sed 's/^.*v//':
           type: eval
           description: The expression to obtain the version of seqkit
 

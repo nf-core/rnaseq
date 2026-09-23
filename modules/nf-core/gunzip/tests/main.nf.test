@@ -89,6 +89,60 @@ nextflow_process {
 
     }
 
+    test("Should decompress file with extension appearing multiple times in filename") {
+
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+            process {
+                """
+                input[0] = Channel.of([
+                        [],
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true).copyTo('test.fa.v1.fa.gz')
+                    ]
+                )
+                """
+            }
+        }
+
+        then {
+            assertAll(
+            { assert process.success },
+            { assert file(process.out.gunzip[0][1]).name == 'test.fa.v1.fa' }
+            )
+        }
+
+    }
+
+    test("Should decompress file with extension appearing multiple times in filename - prefix") {
+
+        config './nextflow.config'
+
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+            process {
+                """
+                input[0] = Channel.of([
+                        [ id: 'test' ],
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true).copyTo('test.fa.v1.fa.gz')
+                    ]
+                )
+                """
+            }
+        }
+
+        then {
+            assertAll(
+            { assert process.success },
+            { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
     test("Should run without failures - prefix - stub") {
 
         options '-stub'

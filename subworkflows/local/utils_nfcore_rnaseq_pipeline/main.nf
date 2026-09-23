@@ -85,7 +85,8 @@ ${colors.purple}  nf-core/rnaseq ${workflow.manifest.version}${colors.reset}
         show_hidden,
         before_text,
         after_text,
-        command
+        command,
+        false
     )
 
     //
@@ -331,6 +332,10 @@ def validateInputParameters() {
         error("Parabricks (--use_parabricks_star) is not compatible with --genome. iGenomes STAR indices are built with a different STAR version than Parabricks bundles. Please supply --fasta and --gtf explicitly instead.")
     }
 
+    if (params.use_rustqc && params.skip_markduplicates) {
+        error("--use_rustqc requires duplicate-marked BAM files. Please remove --skip_markduplicates when using --use_rustqc.")
+    }
+
     if (params.with_umi && !params.skip_umi_extract) {
         if (!params.umitools_bc_pattern && !params.umitools_bc_pattern2) {
             error("UMI-tools requires a barcode pattern to extract barcodes from the reads.")
@@ -393,13 +398,16 @@ def validateInputParameters() {
 
     if (params.contaminant_screening && params.contaminant_screening_input == 'unmapped') {
         if (params.skip_alignment) {
-            error("Contaminant screening with '--contaminant_screening_input unmapped' requires alignment to be enabled. Use '--contaminant_screening_input trimmed' to screen reads before alignment.")
+            error("Contaminant screening with '--contaminant_screening_input unmapped' requires alignment to be enabled. Use '--contaminant_screening_input raw', '--contaminant_screening_input trim_only', or '--contaminant_screening_input trimmed' to screen reads before alignment.")
         }
         if (!(params.aligner in ['star_salmon', 'star_rsem', 'hisat2'])) {
-            error("Contaminant screening with '--contaminant_screening_input unmapped' is only supported with '--aligner star_salmon', '--aligner star_rsem', or '--aligner hisat2'. Use '--contaminant_screening_input trimmed' for other aligners.")
+            error("Contaminant screening with '--contaminant_screening_input unmapped' is only supported with '--aligner star_salmon', '--aligner star_rsem', or '--aligner hisat2'. Use '--contaminant_screening_input raw', '--contaminant_screening_input trim_only', or '--contaminant_screening_input trimmed' for other aligners.")
         }
     }
 
+    if (params.contaminant_screening && params.contaminant_screening_input == 'trim_only' && params.skip_trimming) {
+        error("Contaminant screening with '--contaminant_screening_input trim_only' requires trimming to be enabled. When '--skip_trimming' is set, pre- and post-trim reads are identical. Use '--contaminant_screening_input raw' to screen adapter-bearing reads.")
+    }
     // Check that Sylph database and taxonomy is provided if using Sylph
     if (params.contaminant_screening == 'sylph') {
         if (!params.sylph_db) {
@@ -712,7 +720,7 @@ def defineQcTools(params) {
 
     if (!params.skip_qc) {
         if (!params.skip_preseq)    { tools << 'preseq' }
-        if (!params.skip_biotype_qc){ tools << 'biotype_qc' }
+        if (!params.skip_biotype_qc && biotypeQcUsable(params)) { tools << 'biotype_qc' }
         if (!params.skip_qualimap)  { tools << 'qualimap' }
         if (!params.skip_dupradar)  { tools << 'dupradar' }
 
@@ -740,24 +748,44 @@ def defineQcTools(params) {
 }
 
 //
-// Function to check whether biotype field exists in GTF file
+// featureCounts requires the biotype attribute on rows matching its feature type
+// (its -t value), not merely present somewhere in the GTF. Only checked for '--gtf':
+// '--gff' is converted to GTF later by gffread, so the raw file checked here wouldn't
+// match what featureCounts actually reads.
 //
-def biotypeInGtf(gtf_file, biotype) {
+def biotypeQcUsable(params) {
+    if (!params.gtf) {
+        return true
+    }
+
+    def biotype      = params.gencode ? 'gene_type' : params.featurecounts_group_type
+    def feature_type = params.featurecounts_feature_type
+    def gtf_file     = file(params.gtf)
+
     def hits = 0
-    gtf_file.eachLine { line ->
-        def attributes = line.split('\t')[-1].split()
-        if (attributes.contains(biotype)) {
+    def countHit = { line ->
+        def fields = line.split('\t')
+        if (fields.size() > 2 && fields[2] == feature_type && fields[-1].split().contains(biotype)) {
             hits += 1
         }
     }
+    if (gtf_file.name.endsWith('.gz')) {
+        new java.util.zip.GZIPInputStream(gtf_file.newInputStream()).eachLine(countHit)
+    } else {
+        gtf_file.eachLine(countHit)
+    }
+
     if (hits) {
         return true
     } else {
+        def suggestion = params.gencode
+            ? "  '--gencode' forces this to 'gene_type'; use a GTF where it is set on '${feature_type}' rows.\n"
+            : "  Amend '--featurecounts_group_type' to change this behaviour.\n"
         log.warn "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
-            "  Biotype attribute '${biotype}' not found in the last column of the GTF file!\n\n" +
+            "  Biotype attribute '${biotype}' not found on '${feature_type}' rows of the GTF file!\n\n" +
             "  Biotype QC will be skipped to circumvent the issue below:\n" +
             "  https://github.com/nf-core/rnaseq/issues/460\n\n" +
-            "  Amend '--featurecounts_group_type' to change this behaviour.\n" +
+            suggestion +
             "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         return false
     }
@@ -878,7 +906,7 @@ def rnaseqSummary(monochrome_logs=true, pass_mapped_reads=[:], pass_trimmed_read
             log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} Please check MultiQC report: ${fail_trimmed_count}/${pass_trimmed_reads.size()} samples skipped since they failed ${params.min_trimmed_reads} trimmed read threshold.${colors.reset}-"
         }
         if (fail_mapped_count > 0) {
-            log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} Please check MultiQC report: ${fail_mapped_count}/${pass_mapped_reads.size()} samples skipped since they failed STAR ${params.min_mapped_reads}% mapped threshold.${colors.reset}-"
+            log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} Please check MultiQC report: ${fail_mapped_count}/${pass_mapped_reads.size()} samples skipped since they failed the ${params.min_mapped_reads}% mapped threshold.${colors.reset}-"
         }
         if (fail_strand_count > 0) {
             log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} Please check MultiQC report: ${fail_strand_count}/${pass_strand_check.size()} samples failed strandedness check.${colors.reset}-"

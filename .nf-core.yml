@@ -3,7 +3,6 @@ lint:
   container_configs: false
   files_exist:
     - conf/modules.config
-    - assets/multiqc_config.yml
     - conf/containers_conda_lock_files_amd64.config
     - conf/containers_conda_lock_files_arm64.config
     - conf/containers_docker_amd64.config
@@ -23,12 +22,15 @@ lint:
     - .github/workflows/branch.yml
     - .github/workflows/linting.yml
   modules_config: false
-  multiqc_config: false
   nextflow_config:
     - config_defaults:
         - params.ribo_database_manifest
   nf_test_content: false
-nf_core_version: 4.0.2
+# Held below the synced template version (4.1.0): tools 4.1.0's lint switched to
+# `nextflow config -o json`, which hits nextflow-io/nextflow#7474 on this pipeline's
+# `publishDir` list-of-maps-with-task-closure pattern. Fixed upstream but not yet in a
+# released Nextflow build (see PR #1914). Bump once a release ships the backport.
+nf_core_version: 4.0.3
 repository_type: pipeline
 template:
   author: "Harshil Patel, Phil Ewels, Rickard Hammarén"
@@ -38,4 +40,4 @@ template:
   name: rnaseq
   org: nf-core
   outdir: .
-  version: 3.26.0
+  version: 3.27.0

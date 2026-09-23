@@ -58,11 +58,11 @@
                 ]
             }
         ],
+        "timestamp": "2026-02-03T11:10:30.076183827",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-03T11:10:30.076183827"
+        }
     },
     "test_bam_stats_samtools_single_end - stub": {
         "content": [
@@ -123,11 +123,11 @@
                 ]
             }
         ],
+        "timestamp": "2026-02-03T11:10:24.379362883",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-03T11:10:24.379362883"
+        }
     },
     "test_bam_stats_samtools_paired_end_cram - stub": {
         "content": [
@@ -188,11 +188,11 @@
                 ]
             }
         ],
+        "timestamp": "2026-02-03T11:10:35.91658956",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-03T11:10:35.91658956"
+        }
     },
     "test_bam_stats_samtools_single_end": {
         "content": [
@@ -220,15 +220,15 @@
                         "id": "test",
                         "single_end": true
                     },
-                    "test.stats:md5,34c64fec90a64b28593cb50f40268622"
+                    "test.stats:md5,6583f1f142c27974ffc924b7fa734767"
                 ]
             ]
         ],
+        "timestamp": "2026-07-10T08:13:24.390328",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-03-12T12:55:15.300153"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
     },
     "test_bam_stats_samtools_paired_end": {
         "content": [
@@ -256,15 +256,15 @@
                         "id": "test",
                         "single_end": true
                     },
-                    "test.stats:md5,2f82121fc59b580a7581d50541c1a229"
+                    "test.stats:md5,c4ca9c9d1415005c80481e6fe4c95f90"
                 ]
             ]
         ],
+        "timestamp": "2026-07-10T08:13:29.123968",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-03-12T12:55:22.060547"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
     },
     "test_bam_stats_samtools_paired_end_cram": {
         "content": [
@@ -292,14 +292,14 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.stats:md5,a8700e2b0092588315d6f1dbc8d42ad9"
+                    "test.stats:md5,a2a40d6e88c35aa33d4433355f47f217"
                 ]
             ]
         ],
+        "timestamp": "2026-07-10T08:13:33.60771",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-03-12T12:55:28.997885"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
     }
 }

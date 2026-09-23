@@ -1,137 +1,67 @@
 {
-    "sarscov2 [bam] - forward strandedness + reference annotation": {
+    "long-read-assembly bam + reference annotation - long reads assembly (PacBio)": {
         "content": [
-            [
-                [
-                    {
-                        "id": "test",
-                        "strandedness": "forward"
-                    },
-                    "test.gene.abundance.txt:md5,7d8bce7f2a922e367cedccae7267c22e"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "strandedness": "forward"
-                    },
-                    [
-                        "e2t.ctab:md5,e981c0038295ae54b63cedb1083f1540",
-                        "e_data.ctab:md5,6b4cf69bc03f3f69890f972a0e8b7471",
-                        "i2t.ctab:md5,8a117c8aa4334b4c2d4711932b006fb4",
-                        "i_data.ctab:md5,be3abe09740603213f83d50dcf81427f",
-                        "t_data.ctab:md5,3b66c065da73ae0dd41cc332eff6a818"
-                    ]
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "strandedness": "forward"
-                    },
-                    "test.transcripts.gtf:md5,37154e7bda96544f24506ee902bb561d"
-                ]
-            ],
             {
+                "abundance": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.gene.abundance.txt"
+                    ]
+                ],
+                "ballgown": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        [
+                            "e2t.ctab:md5,e981c0038295ae54b63cedb1083f1540",
+                            "e_data.ctab:md5,76bc80d30c82b2f9d9f2f7fc3f2d694c",
+                            "i2t.ctab:md5,8a117c8aa4334b4c2d4711932b006fb4",
+                            "i_data.ctab:md5,be3abe09740603213f83d50dcf81427f",
+                            "t_data.ctab:md5,3b66c065da73ae0dd41cc332eff6a818"
+                        ]
+                    ]
+                ],
+                "coverage_gtf": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.coverage.gtf"
+                    ]
+                ],
+                "transcript_gtf": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.transcripts.gtf:md5,2298a8e7a1cdedcb25dcdbab2f553adb"
+                    ]
+                ],
                 "versions_stringtie": [
                     [
                         "STRINGTIE_STRINGTIE",
                         "stringtie",
-                        "2.2.3"
+                        "3.0.3"
                     ]
                 ]
             }
         ],
+        "timestamp": "2026-08-07T14:59:29.984205111",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-02T16:30:11.16528789"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
     },
-    "sarscov2 [bam] - forward strandedness": {
-        "content": [
-            [
-                [
-                    {
-                        "id": "test",
-                        "strandedness": "forward"
-                    },
-                    "test.gene.abundance.txt:md5,d6f5c8cadb8458f1df0427cf790246e3"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "strandedness": "forward"
-                    },
-                    "test.transcripts.gtf:md5,6087dfc9700a52d9e4a1ae3fcd1d1dfd"
-                ]
-            ],
-            {
-                "versions_stringtie": [
-                    [
-                        "STRINGTIE_STRINGTIE",
-                        "stringtie",
-                        "2.2.3"
-                    ]
-                ]
-            }
-        ],
-        "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-02T16:30:05.908980074"
-    },
-    "sarscov2 [bam] - forward strandedness - stub": {
+    "sarscov2 [bam] - forward strandedness - short read assembly -stub": {
         "content": [
             {
-                "0": [
-                    [
-                        {
-                            "id": "test",
-                            "strandedness": "forward"
-                        },
-                        "test.transcripts.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "1": [
-                    [
-                        {
-                            "id": "test",
-                            "strandedness": "forward"
-                        },
-                        "test.gene.abundance.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "2": [
-                    [
-                        {
-                            "id": "test",
-                            "strandedness": "forward"
-                        },
-                        "test.coverage.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "3": [
-                    [
-                        {
-                            "id": "test",
-                            "strandedness": "forward"
-                        },
-                        "test.ballgown:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "4": [
-                    [
-                        "STRINGTIE_STRINGTIE",
-                        "stringtie",
-                        "2.2.3"
-                    ]
-                ],
                 "abundance": [
                     [
                         {
@@ -142,22 +72,10 @@
                     ]
                 ],
                 "ballgown": [
-                    [
-                        {
-                            "id": "test",
-                            "strandedness": "forward"
-                        },
-                        "test.ballgown:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
+                    
                 ],
                 "coverage_gtf": [
-                    [
-                        {
-                            "id": "test",
-                            "strandedness": "forward"
-                        },
-                        "test.coverage.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
+                    
                 ],
                 "transcript_gtf": [
                     [
@@ -172,95 +90,40 @@
                     [
                         "STRINGTIE_STRINGTIE",
                         "stringtie",
-                        "2.2.3"
+                        "3.0.3"
                     ]
                 ]
             }
         ],
+        "timestamp": "2026-06-21T12:17:28.202131113",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-02T16:30:26.94909715"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
     },
-    "sarscov2 [bam] - forward strandedness + reference annotation - stub": {
+    "sarscov2 [bam] - reverse strandedness - short read assembly -stub": {
         "content": [
             {
-                "0": [
-                    [
-                        {
-                            "id": "test",
-                            "strandedness": "forward"
-                        },
-                        "test.transcripts.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "1": [
-                    [
-                        {
-                            "id": "test",
-                            "strandedness": "forward"
-                        },
-                        "test.gene.abundance.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "2": [
-                    [
-                        {
-                            "id": "test",
-                            "strandedness": "forward"
-                        },
-                        "test.coverage.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "3": [
-                    [
-                        {
-                            "id": "test",
-                            "strandedness": "forward"
-                        },
-                        "test.ballgown:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "4": [
-                    [
-                        "STRINGTIE_STRINGTIE",
-                        "stringtie",
-                        "2.2.3"
-                    ]
-                ],
                 "abundance": [
                     [
                         {
                             "id": "test",
-                            "strandedness": "forward"
+                            "strandedness": "reverse"
                         },
                         "test.gene.abundance.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "ballgown": [
-                    [
-                        {
-                            "id": "test",
-                            "strandedness": "forward"
-                        },
-                        "test.ballgown:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
+                    
                 ],
                 "coverage_gtf": [
-                    [
-                        {
-                            "id": "test",
-                            "strandedness": "forward"
-                        },
-                        "test.coverage.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
+                    
                 ],
                 "transcript_gtf": [
                     [
                         {
                             "id": "test",
-                            "strandedness": "forward"
+                            "strandedness": "reverse"
                         },
                         "test.transcripts.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
@@ -269,63 +132,140 @@
                     [
                         "STRINGTIE_STRINGTIE",
                         "stringtie",
-                        "2.2.3"
+                        "3.0.3"
                     ]
                 ]
             }
         ],
+        "timestamp": "2026-06-21T12:17:37.558713445",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-02T16:30:32.157264403"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
     },
-    "sarscov2 [bam] - reverse strandedness + reference annotation - stub": {
+    "sarscov2 [bam] - reverse strandedness + reference annotation - short read assembly": {
         "content": [
             {
-                "0": [
+                "abundance": [
                     [
                         {
                             "id": "test",
                             "strandedness": "reverse"
                         },
-                        "test.transcripts.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.gene.abundance.txt"
                     ]
                 ],
-                "1": [
+                "ballgown": [
                     [
                         {
                             "id": "test",
                             "strandedness": "reverse"
                         },
-                        "test.gene.abundance.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        [
+                            "e2t.ctab:md5,e981c0038295ae54b63cedb1083f1540",
+                            "e_data.ctab:md5,68f8aeb2047999a4ba810c21aabf1b7e",
+                            "i2t.ctab:md5,8a117c8aa4334b4c2d4711932b006fb4",
+                            "i_data.ctab:md5,be3abe09740603213f83d50dcf81427f",
+                            "t_data.ctab:md5,3b66c065da73ae0dd41cc332eff6a818"
+                        ]
                     ]
                 ],
-                "2": [
+                "coverage_gtf": [
                     [
                         {
                             "id": "test",
                             "strandedness": "reverse"
                         },
-                        "test.coverage.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.coverage.gtf"
                     ]
                 ],
-                "3": [
+                "transcript_gtf": [
                     [
                         {
                             "id": "test",
                             "strandedness": "reverse"
                         },
-                        "test.ballgown:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.transcripts.gtf:md5,4ab85927ccf858c711e827bd44271181"
                     ]
                 ],
-                "4": [
+                "versions_stringtie": [
                     [
                         "STRINGTIE_STRINGTIE",
                         "stringtie",
-                        "2.2.3"
+                        "3.0.3"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-08-07T14:58:50.479886685",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
+    },
+    "long-read-assembly bam + reference annotation - long reads assembly (ONT)": {
+        "content": [
+            {
+                "abundance": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.gene.abundance.txt"
                     ]
                 ],
+                "ballgown": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        [
+                            "e2t.ctab:md5,e981c0038295ae54b63cedb1083f1540",
+                            "e_data.ctab:md5,76bc80d30c82b2f9d9f2f7fc3f2d694c",
+                            "i2t.ctab:md5,8a117c8aa4334b4c2d4711932b006fb4",
+                            "i_data.ctab:md5,be3abe09740603213f83d50dcf81427f",
+                            "t_data.ctab:md5,3b66c065da73ae0dd41cc332eff6a818"
+                        ]
+                    ]
+                ],
+                "coverage_gtf": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.coverage.gtf"
+                    ]
+                ],
+                "transcript_gtf": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.transcripts.gtf:md5,766ca607a4add36b906a57f3fcdd5ef9"
+                    ]
+                ],
+                "versions_stringtie": [
+                    [
+                        "STRINGTIE_STRINGTIE",
+                        "stringtie",
+                        "3.0.3"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-08-07T14:59:41.609668934",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
+    },
+    "long-read-assembly bam + reference annotation - long reads assembly (PacBio) -stub": {
+        "content": [
+            {
                 "abundance": [
                     [
                         {
@@ -341,7 +281,13 @@
                             "id": "test",
                             "strandedness": "reverse"
                         },
-                        "test.ballgown:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        [
+                            "e2t.ctab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "e_data.ctab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "i2t.ctab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "i_data.ctab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "t_data.ctab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
                     ]
                 ],
                 "coverage_gtf": [
@@ -366,63 +312,104 @@
                     [
                         "STRINGTIE_STRINGTIE",
                         "stringtie",
-                        "2.2.3"
+                        "3.0.3"
                     ]
                 ]
             }
         ],
+        "timestamp": "2026-06-21T12:25:05.657842248",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-02T16:30:42.741125528"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
     },
-    "sarscov2 [bam] - reverse strandedness - stub": {
+    "sarscov2 [bam] - forward strandedness - short read assembly": {
         "content": [
             {
-                "0": [
+                "abundance": [
                     [
                         {
                             "id": "test",
-                            "strandedness": "reverse"
+                            "strandedness": "forward"
                         },
-                        "test.transcripts.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.gene.abundance.txt"
                     ]
                 ],
-                "1": [
+                "ballgown": [
+                    
+                ],
+                "coverage_gtf": [
+                    
+                ],
+                "transcript_gtf": [
                     [
                         {
                             "id": "test",
-                            "strandedness": "reverse"
+                            "strandedness": "forward"
                         },
-                        "test.gene.abundance.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.transcripts.gtf:md5,008a732fdba51f157bffa862c5a1550d"
                     ]
                 ],
-                "2": [
-                    [
-                        {
-                            "id": "test",
-                            "strandedness": "reverse"
-                        },
-                        "test.coverage.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "3": [
-                    [
-                        {
-                            "id": "test",
-                            "strandedness": "reverse"
-                        },
-                        "test.ballgown:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "4": [
+                "versions_stringtie": [
                     [
                         "STRINGTIE_STRINGTIE",
                         "stringtie",
-                        "2.2.3"
+                        "3.0.3"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-08-07T14:58:33.890342172",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
+    },
+    "sarscov2 [bam] - reverse strandedness - short read assembly": {
+        "content": [
+            {
+                "abundance": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.gene.abundance.txt"
                     ]
                 ],
+                "ballgown": [
+                    
+                ],
+                "coverage_gtf": [
+                    
+                ],
+                "transcript_gtf": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.transcripts.gtf:md5,008a732fdba51f157bffa862c5a1550d"
+                    ]
+                ],
+                "versions_stringtie": [
+                    [
+                        "STRINGTIE_STRINGTIE",
+                        "stringtie",
+                        "3.0.3"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-08-07T14:58:45.045730596",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
+    },
+    "long-read-assembly bam + reference annotation - long reads assembly (ONT) -stub": {
+        "content": [
+            {
                 "abundance": [
                     [
                         {
@@ -438,7 +425,13 @@
                             "id": "test",
                             "strandedness": "reverse"
                         },
-                        "test.ballgown:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        [
+                            "e2t.ctab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "e_data.ctab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "i2t.ctab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "i_data.ctab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "t_data.ctab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
                     ]
                 ],
                 "coverage_gtf": [
@@ -463,102 +456,435 @@
                     [
                         "STRINGTIE_STRINGTIE",
                         "stringtie",
-                        "2.2.3"
+                        "3.0.3"
                     ]
                 ]
             }
         ],
+        "timestamp": "2026-06-21T12:25:15.222052759",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-02T16:30:37.444482002"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
     },
-    "sarscov2 [bam] - reverse strandedness + reference annotation": {
+    "mix-read-assembly bam + reference annotation - mix reads assembly": {
         "content": [
-            [
-                [
-                    {
-                        "id": "test",
-                        "strandedness": "reverse"
-                    },
-                    "test.gene.abundance.txt:md5,7385b870b955dae2c2ab78a70cf05cce"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "strandedness": "reverse"
-                    },
-                    [
-                        "e2t.ctab:md5,e981c0038295ae54b63cedb1083f1540",
-                        "e_data.ctab:md5,879b6696029d19c4737b562e9d149218",
-                        "i2t.ctab:md5,8a117c8aa4334b4c2d4711932b006fb4",
-                        "i_data.ctab:md5,be3abe09740603213f83d50dcf81427f",
-                        "t_data.ctab:md5,3b66c065da73ae0dd41cc332eff6a818"
-                    ]
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "strandedness": "reverse"
-                    },
-                    "test.transcripts.gtf:md5,fbabb4e3888bbede67f11f692e484880"
-                ]
-            ],
             {
+                "abundance": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.gene.abundance.txt"
+                    ]
+                ],
+                "ballgown": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        [
+                            "e2t.ctab:md5,e981c0038295ae54b63cedb1083f1540",
+                            "e_data.ctab:md5,68f8aeb2047999a4ba810c21aabf1b7e",
+                            "i2t.ctab:md5,8a117c8aa4334b4c2d4711932b006fb4",
+                            "i_data.ctab:md5,be3abe09740603213f83d50dcf81427f",
+                            "t_data.ctab:md5,3b66c065da73ae0dd41cc332eff6a818"
+                        ]
+                    ]
+                ],
+                "coverage_gtf": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.coverage.gtf"
+                    ]
+                ],
+                "transcript_gtf": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.transcripts.gtf:md5,68356b8efb3cd23eb2eda7f0a6bc2e04"
+                    ]
+                ],
                 "versions_stringtie": [
                     [
                         "STRINGTIE_STRINGTIE",
                         "stringtie",
-                        "2.2.3"
+                        "3.0.3"
                     ]
                 ]
             }
         ],
+        "timestamp": "2026-08-07T14:59:19.058977786",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-02T16:30:21.762442003"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
     },
-    "sarscov2 [bam] - reverse strandedness": {
+    "mix-read-assembly bam + reference annotation - mix reads assembly -stub": {
         "content": [
-            [
-                [
-                    {
-                        "id": "test",
-                        "strandedness": "reverse"
-                    },
-                    "test.gene.abundance.txt:md5,d6f5c8cadb8458f1df0427cf790246e3"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "strandedness": "reverse"
-                    },
-                    "test.transcripts.gtf:md5,01d6da00a3c458420841e57427297183"
-                ]
-            ],
             {
+                "abundance": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.gene.abundance.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "ballgown": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        [
+                            "e2t.ctab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "e_data.ctab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "i2t.ctab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "i_data.ctab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "t_data.ctab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "coverage_gtf": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.coverage.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "transcript_gtf": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.transcripts.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
                 "versions_stringtie": [
                     [
                         "STRINGTIE_STRINGTIE",
                         "stringtie",
-                        "2.2.3"
+                        "3.0.3"
                     ]
                 ]
             }
         ],
+        "timestamp": "2026-06-21T12:24:56.572531129",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-02T16:30:16.466823767"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
+    },
+    "sarscov2 [bam] - reverse strandedness + reference annotation - short read assembly -stub": {
+        "content": [
+            {
+                "abundance": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.gene.abundance.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "ballgown": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        [
+                            "e2t.ctab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "e_data.ctab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "i2t.ctab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "i_data.ctab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "t_data.ctab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "coverage_gtf": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.coverage.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "transcript_gtf": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.transcripts.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions_stringtie": [
+                    [
+                        "STRINGTIE_STRINGTIE",
+                        "stringtie",
+                        "3.0.3"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-06-21T12:24:47.443582069",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
+    },
+    "sarscov2 [bam] - forward strandedness + reference annotation - short read assembly": {
+        "content": [
+            {
+                "abundance": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.gene.abundance.txt"
+                    ]
+                ],
+                "ballgown": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        [
+                            "e2t.ctab:md5,e981c0038295ae54b63cedb1083f1540",
+                            "e_data.ctab:md5,68f8aeb2047999a4ba810c21aabf1b7e",
+                            "i2t.ctab:md5,8a117c8aa4334b4c2d4711932b006fb4",
+                            "i_data.ctab:md5,be3abe09740603213f83d50dcf81427f",
+                            "t_data.ctab:md5,3b66c065da73ae0dd41cc332eff6a818"
+                        ]
+                    ]
+                ],
+                "coverage_gtf": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.coverage.gtf"
+                    ]
+                ],
+                "transcript_gtf": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.transcripts.gtf:md5,4ab85927ccf858c711e827bd44271181"
+                    ]
+                ],
+                "versions_stringtie": [
+                    [
+                        "STRINGTIE_STRINGTIE",
+                        "stringtie",
+                        "3.0.3"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-08-07T14:58:39.499684413",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
+    },
+    "sarscov2 [bam] - forward strandedness + reference annotation - short read assembly -stub": {
+        "content": [
+            {
+                "abundance": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.gene.abundance.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "ballgown": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        [
+                            "e2t.ctab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "e_data.ctab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "i2t.ctab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "i_data.ctab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "t_data.ctab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "coverage_gtf": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.coverage.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "transcript_gtf": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "forward"
+                        },
+                        "test.transcripts.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions_stringtie": [
+                    [
+                        "STRINGTIE_STRINGTIE",
+                        "stringtie",
+                        "3.0.3"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-06-21T12:24:38.442609917",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
+    },
+    "mix-read-assembly pacbio bam + reference annotation - mix reads assembly (nascent aware)": {
+        "content": [
+            {
+                "abundance": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.gene.abundance.txt"
+                    ]
+                ],
+                "ballgown": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        [
+                            "e2t.ctab:md5,e981c0038295ae54b63cedb1083f1540",
+                            "e_data.ctab:md5,68f8aeb2047999a4ba810c21aabf1b7e",
+                            "i2t.ctab:md5,8a117c8aa4334b4c2d4711932b006fb4",
+                            "i_data.ctab:md5,be3abe09740603213f83d50dcf81427f",
+                            "t_data.ctab:md5,f63ba820f57f286b3cf3631986273dc4"
+                        ]
+                    ]
+                ],
+                "coverage_gtf": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.coverage.gtf"
+                    ]
+                ],
+                "transcript_gtf": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.transcripts.gtf:md5,8300a1a9ae7d5ae4f5af8f744edcc49a"
+                    ]
+                ],
+                "versions_stringtie": [
+                    [
+                        "STRINGTIE_STRINGTIE",
+                        "stringtie",
+                        "3.0.3"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-08-07T14:59:52.907384126",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
+    },
+    "mix-read-assembly pacbio bam + reference annotation - mix reads assembly (nascent aware) -stub": {
+        "content": [
+            {
+                "abundance": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.gene.abundance.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "ballgown": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        [
+                            "e2t.ctab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "e_data.ctab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "i2t.ctab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "i_data.ctab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "t_data.ctab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "coverage_gtf": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.coverage.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "transcript_gtf": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.transcripts.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions_stringtie": [
+                    [
+                        "STRINGTIE_STRINGTIE",
+                        "stringtie",
+                        "3.0.3"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-06-21T14:28:14.49638989",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
     }
 }

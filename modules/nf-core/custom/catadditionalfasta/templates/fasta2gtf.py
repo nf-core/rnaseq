@@ -5,8 +5,8 @@
 import logging
 import os
 import platform
+from collections.abc import Iterator
 from itertools import groupby
-from typing import Iterator, Tuple
 
 
 def setup_logging() -> logging.Logger:
@@ -41,7 +41,7 @@ def format_yaml_like(data: dict, indent: int = 0) -> str:
     return yaml_str
 
 
-def parse_fasta(fasta_file: str) -> Iterator[Tuple[str, str]]:
+def parse_fasta(fasta_file: str) -> Iterator[tuple[str, str]]:
     """Parse a fasta file and yield tuples of header and sequence.
 
     Args:

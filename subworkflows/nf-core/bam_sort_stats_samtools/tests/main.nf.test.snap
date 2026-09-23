@@ -25,15 +25,15 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.stats:md5,0d0496957cd3bae8f557f2e9f6876a46"
+                    "test.stats:md5,5978c7433373bd9bec33fb2c53688ef2"
                 ]
             ]
         ],
+        "timestamp": "2026-07-10T13:50:51.540506656",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-03-19T09:55:29.570804"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.4"
+        }
     },
     "test_bam_sort_stats_samtools_paired_end": {
         "content": [
@@ -61,15 +61,15 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.stats:md5,12b526148cc9b6ffa8893903f65f19fc"
+                    "test.stats:md5,d3fd15dd1ac4596da14e9475babab12e"
                 ]
             ]
         ],
+        "timestamp": "2026-07-10T13:51:00.904735627",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-03-19T09:55:39.804101"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.4"
+        }
     },
     "test_bam_sort_stats_samtools_single_end - stub": {
         "content": [
@@ -166,11 +166,11 @@
                 ]
             }
         ],
+        "timestamp": "2026-03-12T15:01:02.797853",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-03-12T15:01:02.797853"
+        }
     },
     "test_bam_sort_stats_samtools_paired_end - stub": {
         "content": [
@@ -267,10 +267,10 @@
                 ]
             }
         ],
+        "timestamp": "2026-03-12T15:01:13.722701",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-03-12T15:01:13.722701"
+        }
     }
 }

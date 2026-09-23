@@ -18,92 +18,67 @@ components:
   - fastq_fastqc_umitools_fastp
 input:
   - ch_reads:
-      description: Channel with input FastQ files
-      structure:
-        - meta:
-            type: map
-            description: Groovy Map containing sample information e.g. [ id:'test' ]
-        - reads:
-            type: file
-            description: FastQ files
-            pattern: "*.{fq,fastq},{,.gz}"
+      type: file
+      description: |
+        Channel with input FastQ files. The meta map contains sample information,
+        e.g. [ id:'test' ].
+
+        Structure: [ val(meta), [ path(reads) ] ]
+      pattern: "*.{fq,fastq}{,.gz}"
   - ch_fasta:
-      description: Channel with genome sequence in fasta format
-      structure:
-        - meta:
-            type: map
-            description: Metadata for the fasta file
-        - fasta:
-            type: file
-            description: Genome fasta file
-            pattern: "*.{fa,fasta}"
+      type: file
+      description: |
+        Channel with genome sequence in fasta format.
+
+        Structure: [ val(meta), path(fasta) ]
+      pattern: "*.{fa,fasta}"
   - ch_transcript_fasta:
-      description: Channel with transcriptome sequence in fasta format
-      structure:
-        - meta:
-            type: map
-            description: Metadata for the transcript fasta file
-        - fasta:
-            type: file
-            description: Transcript fasta file
-            pattern: "*.{fa,fasta}"
+      type: file
+      description: |
+        Channel with transcriptome sequence in fasta format.
+
+        Structure: [ val(meta), path(fasta) ]
+      pattern: "*.{fa,fasta}"
   - ch_gtf:
-      description: Channel with features in GTF format
-      structure:
-        - meta:
-            type: map
-            description: Metadata for the GTF file
-        - gtf:
-            type: file
-            description: GTF file
-            pattern: "*.gtf"
+      type: file
+      description: |
+        Channel with features in GTF format.
+
+        Structure: [ val(meta), path(gtf) ]
+      pattern: "*.gtf"
   - ch_salmon_index:
-      description: Directory containing Salmon index
-      structure:
-        - meta:
-            type: map
-            description: Metadata for the Salmon index
-        - index:
-            type: directory
-            description: Salmon index directory
+      type: directory
+      description: |
+        Directory containing a Salmon index (optional).
+
+        Structure: [ val(meta), path(index) ]
   - ch_sortmerna_index:
-      description: Directory containing sortmerna index
-      structure:
-        - meta:
-            type: map
-            description: Metadata for the SortMeRNA index
-        - index:
-            type: directory
-            description: SortMeRNA index directory
+      type: directory
+      description: |
+        Directory containing a SortMeRNA index (optional).
+
+        Structure: [ val(meta), path(index) ]
   - ch_bowtie2_index:
-      description: Directory containing bowtie2 index for rRNA removal
-      structure:
-        - meta:
-            type: map
-            description: Metadata for the Bowtie2 index
-        - index:
-            type: directory
-            description: Bowtie2 index directory
+      type: directory
+      description: |
+        Directory containing a Bowtie2 index for rRNA removal (optional).
+
+        Structure: [ val(meta), path(index) ]
   - ch_bbsplit_index:
-      description: Path to directory or tar.gz archive for pre-built BBSplit index
-      structure:
-        - meta:
-            type: map
-            description: Metadata for the BBSplit index
-        - index:
-            type: file
-            description: BBSplit index directory or tar.gz archive
-            pattern: "{*,*.tar.gz}"
+      type: file
+      description: |
+        Path to directory or tar.gz archive for a pre-built BBSplit index (optional).
+
+        Structure: [ val(meta), path(index) ]
+      pattern: "{*,*.tar.gz}"
   - ch_rrna_fastas:
-      description: Channel containing one or more FASTA files containing rRNA sequences for use with SortMeRNA or Bowtie2
-      structure:
-        - meta:
-            type: map
-            description: Metadata for the rRNA fasta files
-        - fasta:
-            type: file
-            description: rRNA fasta files
-            pattern: "*.{fa,fasta}"
+      type: file
+      description: |
+        Channel containing one or more FASTA files containing rRNA sequences for use with
+        SortMeRNA or Bowtie2 (optional).
+
+        Structure: [ val(meta), path(fasta) ]
+      pattern: "*.{fa,fasta}"
   - skip_bbsplit:
       type: boolean
       description: Whether to skip BBSplit for removal of non-reference genome reads
@@ -155,6 +130,11 @@ input:
   - umi_discard_read:
       type: integer
       description: After UMI barcode extraction discard either R1 or R2 by setting this parameter to 1 or 2, respectively
+  - save_merged_fastq:
+      type: boolean
+      description: |
+        Pass single-library samples through cat/fastq as well, so that merged FastQ files
+        are saved even when there is nothing to merge
   - stranded_threshold:
       type: float
       min: 0.5
@@ -165,76 +145,236 @@ input:
 
 output:
   - reads:
-      description: Preprocessed fastq reads
-      structure:
-        - meta:
-            type: map
-            description: Metadata for the preprocessed reads
-        - reads:
-            type: file
-            description: Preprocessed FastQ files
-            pattern: "*.{fq,fastq},{,.gz}"
-  - multiqc_files:
-      description: MultiQC-compatible output files from tools used in preprocessing
-      structure:
-        - meta:
-            type: map
-            description: Metadata for the MultiQC files
-        - mqc:
-            type: file
-            description: MultiQC-compatible files
-            pattern: "*"
-  - trim_read_count:
-      description: Number of reads remaining after trimming for all input samples
-      structure:
-        - meta:
-            type: map
-            description: Metadata for the trim read count
-        - count:
-            type: integer
-            description: Number of reads after trimming
-  - lint_log:
-      description: Log files from FastQ linting
-      structure:
-        - meta:
-            type: map
-            description: Metadata for the lint log
-        - log:
-            type: file
-            description: FastQ lint log file
-            pattern: "*.log"
-  - fastqc_filtered_html:
-      description: FastQC report HTML files for filtered reads (after BBSplit and/or rRNA removal)
-      structure:
-        - meta:
-            type: map
-            description: Groovy Map containing sample information
-        - html:
-            type: file
-            description: FastQC report HTML file
-            pattern: "*.html"
-  - fastqc_filtered_zip:
-      description: FastQC report ZIP files for filtered reads (after BBSplit and/or rRNA removal)
-      structure:
-        - meta:
-            type: map
-            description: Groovy Map containing sample information
-        - zip:
-            type: file
-            description: FastQC report ZIP file
-            pattern: "*.zip"
-  - per_sample_mqc_bundle:
+      type: file
       description: |
-        Per-sample MultiQC-feeding outputs (FastQC raw/trim/filtered zips,
-        trim log/JSON, UMI log, BBSplit stats, SortMeRNA log, RiboDetector
-        log, SeqKit stats, Bowtie2 log) joined on meta.
-      structure:
-        - meta:
-            type: map
-            description: Groovy Map containing sample information
-        - files:
-            type: file
-            description: List of MultiQC-relevant files for the sample
+        Preprocessed FastQ reads, with the inferred strandedness added to the meta map.
+
+        Structure: [ val(meta), [ path(reads) ] ]
+      pattern: "*.{fq,fastq}{,.gz}"
+  - reads_cat:
+      type: file
+      description: |
+        Channel snapshot of reads before adapter trimming.
+
+        Structure: [ val(meta), [ path(reads) ] ]
+      pattern: "*.{fq,fastq}{,.gz}"
+  - reads_trimmed:
+      type: file
+      description: |
+        Channel snapshot of reads after adapter trimming but before BBSplit/rRNA removal.
+
+        Structure: [ val(meta), [ path(reads) ] ]
+      pattern: "*.{fq,fastq}{,.gz}"
+  - trim_read_count:
+      type: integer
+      description: |
+        Number of reads remaining after trimming for all input samples.
+
+        Structure: [ val(meta), val(count) ]
+  - trim_reads_merged:
+      type: file
+      description: |
+        fastp's merged overlapping read pairs, produced only when `trimmer == 'fastp'` and
+        `fastp_merge == true`. Empty otherwise. These reads are excluded from `reads`;
+        callers that want to use them downstream must consume this channel separately.
+
+        Structure: [ val(meta), path(reads) ]
+      pattern: "*.merged.fastq.gz"
+  - multiqc_files:
+      type: file
+      description: |
+        MultiQC-compatible output files from tools used in preprocessing, one file per item.
+
+        Structure: [ val(meta), path(mqc) ]
+  - lint_log_raw:
+      type: file
+      description: |
+        fq lint log for the raw reads, only populated when linting is not skipped.
+
+        Structure: [ val(meta), path(log) ]
+      pattern: "*.log"
+  - lint_log_trimmed:
+      type: file
+      description: |
+        fq lint log for the trimmed reads, only populated when linting and trimming are
+        both performed.
+
+        Structure: [ val(meta), path(log) ]
+      pattern: "*.log"
+  - lint_log_bbsplit:
+      type: file
+      description: |
+        fq lint log for the reads after BBSplit, only populated when linting is not skipped
+        and BBSplit is run.
+
+        Structure: [ val(meta), path(log) ]
+      pattern: "*.log"
+  - lint_log_ribo:
+      type: file
+      description: |
+        fq lint log for the reads after rRNA removal, only populated when linting is not
+        skipped and rRNA removal is run.
+
+        Structure: [ val(meta), path(log) ]
+      pattern: "*.log"
+  - fastqc_raw_html:
+      type: file
+      description: |
+        FastQC report for the raw reads.
+
+        Structure: [ val(meta), [ path(html) ] ]
+      pattern: "*_fastqc.html"
+  - fastqc_raw_zip:
+      type: file
+      description: |
+        FastQC report archive for the raw reads.
+
+        Structure: [ val(meta), [ path(zip) ] ]
+      pattern: "*_fastqc.zip"
+  - fastqc_trim_html:
+      type: file
+      description: |
+        FastQC report for the trimmed reads.
+
+        Structure: [ val(meta), [ path(html) ] ]
+      pattern: "*_fastqc.html"
+  - fastqc_trim_zip:
+      type: file
+      description: |
+        FastQC report archive for the trimmed reads.
+
+        Structure: [ val(meta), [ path(zip) ] ]
+      pattern: "*_fastqc.zip"
+  - trim_html:
+      type: file
+      description: |
+        FastP trimming report, only populated when fastp is the trimmer.
+
+        Structure: [ val(meta), path(html) ]
+      pattern: "*.fastp.html"
+  - trim_zip:
+      type: file
+      description: |
+        Trim Galore! report archive. Reserved for the trimgalore path and not currently
+        populated.
+
+        Structure: [ val(meta), [ path(zip) ] ]
+  - trim_log:
+      type: file
+      description: |
+        Trimming report from FastP or Trim Galore!, depending on the trimmer.
+
+        Structure: [ val(meta), [ path(log) ] ]
+  - trim_json:
+      type: file
+      description: |
+        FastP trimming report in JSON format, only populated when fastp is the trimmer.
+
+        Structure: [ val(meta), path(json) ]
+      pattern: "*.fastp.json"
+  - trim_unpaired:
+      type: file
+      description: |
+        FastQ files containing unpaired reads from read 1 or read 2, only populated when
+        trimgalore is the trimmer.
+
+        Structure: [ val(meta), [ path(reads) ] ]
+      pattern: "*unpaired*.fq.gz"
+  - umi_log:
+      type: file
+      description: |
+        Logfile for umi_tools extract, only populated when UMI extraction is performed.
+
+        Structure: [ val(meta), path(log) ]
+      pattern: "*.log"
+  - umi_reads:
+      type: file
+      description: |
+        UMI-extracted FastQ files, before trimming.
+
+        Structure: [ val(meta), [ path(reads) ] ]
+      pattern: "*.fastq.gz"
+  - bbsplit_stats:
+      type: file
+      description: |
+        BBSplit statistics, only populated when BBSplit is run.
+
+        Structure: [ val(meta), path(stats) ]
+      pattern: "*.txt"
+  - sortmerna_log:
+      type: file
+      description: |
+        SortMeRNA log file, only populated when sortmerna is the rRNA removal tool.
+
+        Structure: [ val(meta), path(log) ]
+      pattern: "*.log"
+  - ribodetector_log:
+      type: file
+      description: |
+        RiboDetector log file, only populated when ribodetector is the rRNA removal tool.
+
+        Structure: [ val(meta), path(log) ]
+      pattern: "*.log"
+  - seqkit_stats:
+      type: file
+      description: |
+        SeqKit statistics used to derive the mean read length for RiboDetector, only
+        populated when ribodetector is the rRNA removal tool.
+
+        Structure: [ val(meta), path(stats) ]
+      pattern: "*.tsv"
+  - bowtie2_log:
+      type: file
+      description: |
+        Bowtie2 alignment log files, only populated when bowtie2 is the rRNA removal tool.
+
+        Structure: [ val(meta), path(log) ]
+      pattern: "*.log"
+  - bowtie2_index:
+      type: directory
+      description: |
+        Bowtie2 index built from the rRNA references, only populated when bowtie2 is the
+        rRNA removal tool and make_bowtie2_index is true.
+
+        Structure: [ val(meta), path(index) ]
+  - fastqc_filtered_html:
+      type: file
+      description: |
+        FastQC report HTML files for filtered reads (after BBSplit and/or rRNA removal).
+
+        Structure: [ val(meta), [ path(html) ] ]
+      pattern: "*.html"
+  - fastqc_filtered_zip:
+      type: file
+      description: |
+        FastQC report ZIP files for filtered reads (after BBSplit and/or rRNA removal).
+
+        Structure: [ val(meta), [ path(zip) ] ]
+      pattern: "*.zip"
+  - seqkit_prefixed:
+      type: file
+      description: |
+        rRNA reference fasta files with their filename added as a prefix to each sequence
+        header, only populated when a Bowtie2 index is built.
+
+        Structure: [ val(meta), path(fasta) ]
+      pattern: "*.{fa,fasta}{,.gz}"
+  - seqkit_converted:
+      type: file
+      description: |
+        Prefixed rRNA reference fasta files with U bases converted to T, only populated
+        when a Bowtie2 index is built.
+
+        Structure: [ val(meta), path(fasta) ]
+      pattern: "*.{fa,fasta}{,.gz}"
+  - per_sample_mqc_bundle:
+      type: file
+      description: |
+        Per-sample MultiQC-feeding outputs (FastQC raw/trim/filtered zips, trim log/JSON,
+        UMI log, BBSplit stats, SortMeRNA log, RiboDetector log, SeqKit stats, Bowtie2
+        log) joined on meta.
+
+        Structure: [ val(meta), [ path(files) ] ]
 
 authors:
   - "@pinin4fjords"

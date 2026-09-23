@@ -31,6 +31,7 @@ nextflow_workflow {
                 input[6] = ""
                 input[7] = ""
                 input[8] = ""
+                input[9] = null
                 """
             }
         }
@@ -63,6 +64,7 @@ nextflow_workflow {
                 input[6] = ""
                 input[7] = ""
                 input[8] = ""
+                input[9] = null
                 """
             }
         }
@@ -95,6 +97,7 @@ nextflow_workflow {
                 input[6] = ""
                 input[7] = ""
                 input[8] = ""
+                input[9] = null
                 """
             }
         }
@@ -127,6 +130,7 @@ nextflow_workflow {
                 input[6] = ""
                 input[7] = ""
                 input[8] = ""
+                input[9] = null
                 """
             }
         }
@@ -160,6 +164,7 @@ nextflow_workflow {
                 input[6] = "Before"
                 input[7] = "After"
                 input[8] = "nextflow run test/test"
+                input[9] = null
                 """
             }
         }

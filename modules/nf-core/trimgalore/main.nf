@@ -1,12 +1,11 @@
 process TRIMGALORE {
     tag "${meta.id}"
     label 'process_medium'
-    label 'process_low_memory'
 
     conda "${moduleDir}/environment.yml"
     container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container ?
-        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/7e/7e44249e3fafe3d136ea726225551b51bca642387e16d9687b3e602207dedb20/data' :
-        'community.wave.seqera.io/library/trim-galore:2.1.0--27e6376b8f6c1872'}"
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/e0/e00369598bd6b7b34a7c83d5496c381104bf8b885c31a4b65b92e6ea2059fbb3/data' :
+        'community.wave.seqera.io/library/trim-galore:2.3.0--6a38a479b4972363'}"
 
     input:
     tuple val(meta), path(reads)
@@ -14,6 +13,7 @@ process TRIMGALORE {
     output:
     tuple val(meta), path("*{3prime,5prime,trimmed,val}{,_1,_2}.fq.gz"), emit: reads
     tuple val(meta), path("*report.txt")                               , emit: log     , optional: true
+    tuple val(meta), path("*report.json")                              , emit: json    , optional: true
     tuple val(meta), path("*unpaired{,_1,_2}.fq.gz")                   , emit: unpaired, optional: true
     tuple val(meta), path("*.html")                                    , emit: html    , optional: true
     tuple val(meta), path("*.zip")                                     , emit: zip     , optional: true
@@ -73,13 +73,16 @@ process TRIMGALORE {
     def prefix = task.ext.prefix ?: "${meta.id}"
     if (meta.single_end) {
         output_command = "echo '' | gzip > ${prefix}_trimmed.fq.gz ;"
-        output_command += "touch ${prefix}.fastq.gz_trimming_report.txt"
+        output_command += "touch ${prefix}.fastq.gz_trimming_report.txt ;"
+        output_command += "touch ${prefix}.fastq.gz_trimming_report.json"
     }
     else {
         output_command = "echo '' | gzip > ${prefix}_1_trimmed.fq.gz ;"
         output_command += "touch ${prefix}_1.fastq.gz_trimming_report.txt ;"
+        output_command += "touch ${prefix}_1.fastq.gz_trimming_report.json ;"
         output_command += "echo '' | gzip > ${prefix}_2_trimmed.fq.gz ;"
-        output_command += "touch ${prefix}_2.fastq.gz_trimming_report.txt"
+        output_command += "touch ${prefix}_2.fastq.gz_trimming_report.txt ;"
+        output_command += "touch ${prefix}_2.fastq.gz_trimming_report.json"
     }
     """
     ${output_command}

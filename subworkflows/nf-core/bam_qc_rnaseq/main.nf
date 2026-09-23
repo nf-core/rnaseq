@@ -22,7 +22,7 @@ workflow BAM_QC_RNASEQ {
     biotype // val(string) - e.g. "gene_type" or "gene_biotype"
 
     main:
-    def rseqc_modules = tools.findAll { it.startsWith('rseqc_') }.collect { it.replace('rseqc_', '') }
+    def rseqc_modules = tools.findAll { tool -> tool.startsWith('rseqc_') }.collect { tool -> tool.replace('rseqc_', '') }
 
     ch_genome_bam = ch_bam_bai.map { meta, bam, _bai -> [ meta, bam ] }
 
@@ -82,7 +82,7 @@ workflow BAM_QC_RNASEQ {
     )
 
     // Aggregate MultiQC-compatible output files
-    ch_multiqc_files = Channel.empty()
+    ch_multiqc_files = channel.empty()
         .mix(PRESEQ_LCEXTRAP.out.lc_extrap)
         .mix(CUSTOM_MULTIQCCUSTOMBIOTYPE.out.tsv)
         .mix(QUALIMAP_RNASEQ.out.results)
@@ -110,7 +110,7 @@ workflow BAM_QC_RNASEQ {
         .join(BAM_RSEQC.out.readdistribution_txt,          remainder: true)
         .join(BAM_RSEQC.out.readduplication_pos_xls,       remainder: true)
         .join(BAM_RSEQC.out.tin_txt,                       remainder: true)
-        .map { row -> [row[0], row.drop(1).findAll { it != null }.collectMany { e -> (e instanceof List) ? e : [e] }] }
+        .map { row -> [row[0], row.drop(1).findAll { f -> f != null }.collectMany { e -> (e instanceof List) ? e : [e] }] }
 
     emit:
     // Aggregated

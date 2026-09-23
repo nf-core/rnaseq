@@ -97,7 +97,7 @@
                     [
                         "PARABRICKS_RNAFQ2BAM",
                         "parabricks",
-                        "4.6.0-1"
+                        "4.7.1-1"
                     ]
                 ],
                 "2": [
@@ -342,7 +342,7 @@
                     [
                         "PARABRICKS_RNAFQ2BAM",
                         "parabricks",
-                        "4.6.0-1"
+                        "4.7.1-1"
                     ]
                 ],
                 "wig": [
@@ -358,9 +358,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-09T09:28:46.515275982"
+        "timestamp": "2026-04-17T08:08:44.920007509"
     },
     "homo_sapiens_chimeric - stub": {
         "content": [
@@ -460,7 +460,7 @@
                     [
                         "PARABRICKS_RNAFQ2BAM",
                         "parabricks",
-                        "4.6.0-1"
+                        "4.7.1-1"
                     ]
                 ],
                 "2": [
@@ -705,7 +705,7 @@
                     [
                         "PARABRICKS_RNAFQ2BAM",
                         "parabricks",
-                        "4.6.0-1"
+                        "4.7.1-1"
                     ]
                 ],
                 "wig": [
@@ -721,9 +721,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-09T09:29:54.340122816"
+        "timestamp": "2026-04-17T08:09:51.697962968"
     },
     "homo_sapiens": {
         "content": [
@@ -733,7 +733,7 @@
                     [
                         "PARABRICKS_RNAFQ2BAM",
                         "parabricks",
-                        "4.6.0-1"
+                        "4.7.1-1"
                     ]
                 ]
             },
@@ -741,9 +741,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-09T09:27:02.147122093"
+        "timestamp": "2026-04-17T08:08:34.03461553"
     },
     "homo_sapiens_chimeric": {
         "content": [
@@ -755,15 +755,15 @@
                     [
                         "PARABRICKS_RNAFQ2BAM",
                         "parabricks",
-                        "4.6.0-1"
+                        "4.7.1-1"
                     ]
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-09T09:29:44.105218347"
+        "timestamp": "2026-04-17T08:09:41.244103512"
     }
 }

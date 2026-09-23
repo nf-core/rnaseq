@@ -68,6 +68,7 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
     ch_trim_html = channel.empty()
     ch_trim_zip = channel.empty()
     ch_trim_log = channel.empty()
+    ch_trim_json = channel.empty()
     ch_trim_read_count = channel.empty()
     if (!skip_trimming) {
         TRIMGALORE(ch_trimmer_reads)
@@ -75,6 +76,7 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
         ch_trim_html = TRIMGALORE.out.html
         ch_trim_zip = TRIMGALORE.out.zip
         ch_trim_log = TRIMGALORE.out.log
+        ch_trim_json = TRIMGALORE.out.json
 
         //
         // Filter FastQ files based on minimum trimmed read count after adapter trimming
@@ -112,5 +114,6 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
     trim_html       = ch_trim_html        // channel: [ val(meta), [ html ] ]
     trim_zip        = ch_trim_zip         // channel: [ val(meta), [ zip ] ]
     trim_log        = ch_trim_log         // channel: [ val(meta), [ txt ] ]
+    trim_json       = ch_trim_json        // channel: [ val(meta), [ json ] ]
     trim_read_count = ch_trim_read_count  // channel: [ val(meta), val(count) ]
 }

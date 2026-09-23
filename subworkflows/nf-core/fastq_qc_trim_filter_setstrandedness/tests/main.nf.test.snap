@@ -1,4 +1,74 @@
 {
+    "intermediate_reads_pe_fastp_sortmerna": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false,
+                        "strandedness": "auto"
+                    },
+                    [
+                        "ffed109b6c4b5c3060502031cd0d3e34",
+                        "2d99ab920b1c5c8a662587c2c7f00b0c"
+                    ]
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false,
+                        "strandedness": "auto"
+                    },
+                    [
+                        "6cec1ab71e8e7a3cb5a3651ccdfca4cc",
+                        "cdd8f57890d22e1feaf16847907814b4"
+                    ]
+                ]
+            ]
+        ],
+        "timestamp": "2026-06-19T16:02:55.544629327",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
+    },
+    "intermediate_reads_pe_fastp_ribodetector": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false,
+                        "strandedness": "auto"
+                    },
+                    [
+                        "ffed109b6c4b5c3060502031cd0d3e34",
+                        "2d99ab920b1c5c8a662587c2c7f00b0c"
+                    ]
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false,
+                        "strandedness": "auto"
+                    },
+                    [
+                        "6cec1ab71e8e7a3cb5a3651ccdfca4cc",
+                        "cdd8f57890d22e1feaf16847907814b4"
+                    ]
+                ]
+            ]
+        ],
+        "timestamp": "2026-06-19T16:03:10.159183083",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
+    },
     "homo_sapiens paired-end [fastq] fastp sortmerna": {
         "content": [
             "427d190cd40caeff5e2bd1967a21facb",
@@ -9,11 +79,11 @@
             "test_1_fastqc.zip",
             "test_2_fastqc.zip"
         ],
+        "timestamp": "2026-02-12T09:05:53.923664771",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-12T09:05:53.923664771"
+        }
     },
     "homo_sapiens paired-end [fastq] fastp ribodetector": {
         "content": [
@@ -25,11 +95,11 @@
             "test_1_fastqc.zip",
             "test_2_fastqc.zip"
         ],
+        "timestamp": "2026-02-12T09:06:16.903127796",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-12T09:06:16.903127796"
+        }
     },
     "homo_sapiens paired-end [fastq] trimgalore sortmerna": {
         "content": [
@@ -41,11 +111,44 @@
             "test_1_fastqc.zip",
             "test_2_fastqc.zip"
         ],
+        "timestamp": "2026-02-12T09:06:33.867211398",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-12T09:06:33.867211398"
+        }
+    },
+    "intermediate_reads_se_fastp_bowtie2": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test_se",
+                        "single_end": true,
+                        "strandedness": "auto"
+                    },
+                    [
+                        "ffed109b6c4b5c3060502031cd0d3e34"
+                    ]
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test_se",
+                        "single_end": true,
+                        "strandedness": "auto"
+                    },
+                    [
+                        "12e1b4209d11758c5b2fb7137d25b177"
+                    ]
+                ]
+            ]
+        ],
+        "timestamp": "2026-06-19T16:03:50.943448586",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
     },
     "homo_sapiens paired-end [fastq] fastp bowtie2": {
         "content": [
@@ -57,11 +160,11 @@
             "test_1_fastqc.zip",
             "test_2_fastqc.zip"
         ],
+        "timestamp": "2026-02-12T09:06:51.756578633",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-12T09:06:51.756578633"
+        }
     },
     "homo_sapiens single-end [fastq] fastp bowtie2": {
         "content": [
@@ -70,10 +173,80 @@
             "test_se_fastqc.html",
             "test_se_fastqc.zip"
         ],
+        "timestamp": "2026-02-12T09:07:08.160495752",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-12T09:07:08.160495752"
+        }
+    },
+    "intermediate_reads_pe_trimgalore_sortmerna": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false,
+                        "strandedness": "auto"
+                    },
+                    [
+                        "ffed109b6c4b5c3060502031cd0d3e34",
+                        "2d99ab920b1c5c8a662587c2c7f00b0c"
+                    ]
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false,
+                        "strandedness": "auto"
+                    },
+                    [
+                        "6e0e10876e08a623089186c46e76237c",
+                        "9691a013fd8fe30c816aedf9f9e32884"
+                    ]
+                ]
+            ]
+        ],
+        "timestamp": "2026-06-19T16:03:22.222307759",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
+    },
+    "intermediate_reads_pe_fastp_bowtie2": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false,
+                        "strandedness": "auto"
+                    },
+                    [
+                        "ffed109b6c4b5c3060502031cd0d3e34",
+                        "2d99ab920b1c5c8a662587c2c7f00b0c"
+                    ]
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false,
+                        "strandedness": "auto"
+                    },
+                    [
+                        "6cec1ab71e8e7a3cb5a3651ccdfca4cc",
+                        "cdd8f57890d22e1feaf16847907814b4"
+                    ]
+                ]
+            ]
+        ],
+        "timestamp": "2026-06-19T16:03:34.579973861",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
     }
 }

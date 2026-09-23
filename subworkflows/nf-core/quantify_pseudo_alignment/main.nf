@@ -114,7 +114,7 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
             json_info:    fields.json_info,
             log:          fields.log,
             quant_merged: quant_merged
-        ) as PseudoQuantSample
+        )
     }
 
     emit:

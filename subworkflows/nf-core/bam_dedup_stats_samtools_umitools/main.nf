@@ -71,8 +71,8 @@ workflow BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS {
 
     BAM_STATS_SAMTOOLS(ch_bam_bai_dedup, [[:], [], []])
 
-    // umi_tools writes all three stats tables together, so a partial set
-    // leaves `tsv` with a null field and fails the cast.
+    // umi_tools writes all three stats tables together, so `tsv` is either
+    // complete or absent.
     ch_results = ch_bam_bai_dedup
         .join(UMITOOLS_DEDUP.out.log, by: [0])
         .join(UMITOOLS_DEDUP.out.tsv_edit_distance, by: [0], remainder: true)
@@ -92,7 +92,7 @@ workflow BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS {
                 tsv:       [edit_distance, per_umi, umi_per_position].any()
                     ? record(edit_distance: edit_distance, per_umi: per_umi, umi_per_position: umi_per_position)
                     : null
-            ) as UmitoolsDedupBam
+            )
         }
 
     emit:

@@ -252,7 +252,7 @@ workflow BAM_RSEQC {
             readdistribution:   fields.readdistribution,
             readduplication:    fields.readduplication,
             tin:                fields.tin
-        ) as Rseqc
+        )
     }
 
     emit:

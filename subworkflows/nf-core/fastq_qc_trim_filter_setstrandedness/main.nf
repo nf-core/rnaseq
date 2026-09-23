@@ -597,7 +597,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
                 bbsplit:           fields.bbsplit,
                 lint:              lint,
                 rrna:              fields.rrna
-            ) as FastqQcTrimFilterSetstrandedness
+            )
         }
 
     // `remainder: true` needed because every contributor is gated behind

@@ -56,7 +56,6 @@ workflow FASTQ_ALIGN_HISAT2 {
             )
         }
         .join(BAM_SORT_STATS_SAMTOOLS.out.results, by: 'id')
-        .map { r -> r as Hisat2Aligned }
 
     emit:
     orig_bam = HISAT2_ALIGN.out.bam // channel: [ val(meta), bam   ]

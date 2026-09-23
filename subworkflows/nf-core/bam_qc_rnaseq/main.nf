@@ -232,7 +232,7 @@ workflow BAM_QC_RNASEQ {
             qualimap:      fields.qualimap,
             dupradar:      fields.dupradar,
             rseqc:         fields.rseqc
-        ) as BamQcRnaseq
+        )
     }
 
     // Aggregate MultiQC-compatible output files

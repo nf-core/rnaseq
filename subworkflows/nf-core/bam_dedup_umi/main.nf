@@ -199,7 +199,7 @@ workflow BAM_DEDUP_UMI {
                 genome:                   record(stats: samtools.stats, flagstat: samtools.flagstat, idxstats: samtools.idxstats),
                 transcriptome:            transcriptome?.transcriptome,
                 tsv:                      tsv ? record(edit_distance: tsv.edit_distance, per_umi: tsv.per_umi, umi_per_position: tsv.umi_per_position) : null
-            ) as UmiDedupBam
+            )
         }
 
     // Collect files useful for MultiQC into one helpful emission. Don't

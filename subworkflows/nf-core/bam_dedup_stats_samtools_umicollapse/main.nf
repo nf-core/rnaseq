@@ -50,7 +50,7 @@ workflow BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE {
                 bai:         bai,
                 dedup_stats: dedup_stats,
                 samtools:    record(stats: samtools.stats, flagstat: samtools.flagstat, idxstats: samtools.idxstats)
-            ) as UmicollapseDedupBam
+            )
         }
 
     emit:

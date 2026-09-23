@@ -161,7 +161,7 @@ workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT {
                 tx2gene_augmented: tx2gene_augmented,
                 merged_gene_rds: merged_gene_rds,
                 merged_transcript_rds: merged_transcript_rds
-            ) as QuantMerged
+            )
         }
 
     emit:

@@ -44,7 +44,7 @@ workflow BAM_SORT_STATS_SAMTOOLS {
                 bam: bam,
                 bai: bai,
                 samtools: record(stats: samtools.stats, flagstat: samtools.flagstat, idxstats: samtools.idxstats)
-            ) as SortedBam
+            )
         }
 
     emit:

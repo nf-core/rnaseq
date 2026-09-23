@@ -175,7 +175,7 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
             umi:               fields.umi,
             trim:              fields.trim,
             num_trimmed_reads: fields.num_trimmed_reads
-        ) as FastqFastqcUmitoolsTrimgalore
+        )
     }
 
     emit:

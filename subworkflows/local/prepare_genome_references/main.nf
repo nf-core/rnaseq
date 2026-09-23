@@ -260,7 +260,6 @@ workflow PREPARE_GENOME_REFERENCES {
                 kraken_db:        kraken_db_dir
             )
         }
-        .map { r -> r as GenomeReferences }
 
     emit:
     fasta_fai        = ch_fasta_fai              // channel: [ meta, path(genome.fasta), path(genome.fai) ]

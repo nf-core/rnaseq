@@ -51,11 +51,11 @@ workflow BAM_STRINGTIE_MERGE {
                 abundance:      abundance,
                 coverage_gtf:   coverage_gtf,
                 ballgown:       ballgown ? [ballgown].flatten() : null
-            ) as StringtieAssembly
+            )
         }
 
     ch_merged_results = STRINGTIE_MERGE.out.merged_gtf
-        .map { meta, gtf -> record(id: meta.id, merged_gtf: gtf) as StringtieMerged }
+        .map { meta, gtf -> record(id: meta.id, merged_gtf: gtf) }
 
     emit:
     stringtie_gtf  = STRINGTIE_MERGE.out.merged_gtf // channel: [ meta, gtf ]

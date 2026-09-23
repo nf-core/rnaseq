@@ -327,7 +327,6 @@ workflow PREPARE_GENOME_INDICES {
                 bowtie2_rrna:       bowtie2_rrna
             )
         }
-        .map { r -> r as GenomeIndices }
 
     emit:
     splicesites         = ch_splicesites            // channel: path(genome.splicesites.txt)

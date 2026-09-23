@@ -52,7 +52,7 @@ workflow BAM_MARKDUPLICATES_PICARD {
                 bai: index,
                 metrics: metrics,
                 samtools: samtools ? record(stats: samtools.stats, flagstat: samtools.flagstat, idxstats: samtools.idxstats) : null
-            ) as MarkdupBam
+            )
         }
 
     ch_per_sample_mqc_bundle = BAM_STATS_SAMTOOLS.out.stats

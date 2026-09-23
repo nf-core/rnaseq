@@ -72,7 +72,6 @@ workflow ALIGN_BOWTIE2 {
             )
         }
         .join(BAM_SORT_STATS_SAMTOOLS.out.results, by: 'id')
-        .map { r -> r as Bowtie2Aligned }
 
     emit:
     orig_bam       = ch_orig_bam                          // channel: [ val(meta), bam ]

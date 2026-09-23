@@ -232,7 +232,7 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
             trim:              fields.trim,
             adapter_seq:       fields.adapter_seq,
             num_trimmed_reads: fields.num_trimmed_reads
-        ) as FastqFastqcUmitoolsFastp
+        )
     }
 
     emit:

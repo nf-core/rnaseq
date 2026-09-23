@@ -29,7 +29,7 @@ workflow BAM_STATS_SAMTOOLS {
         .join(SAMTOOLS_FLAGSTAT.out.flagstat, by: [0])
         .join(SAMTOOLS_IDXSTATS.out.idxstats, by: [0])
         .map { meta, stats, flagstat, idxstats ->
-            record(id: meta.id, stats: stats, flagstat: flagstat, idxstats: idxstats) as SamtoolsStats
+            record(id: meta.id, stats: stats, flagstat: flagstat, idxstats: idxstats)
         }
 
     emit:

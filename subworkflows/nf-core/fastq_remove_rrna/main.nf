@@ -229,7 +229,7 @@ workflow FASTQ_REMOVE_RRNA {
             ribodetector_log: fields.ribodetector_log,
             seqkit_stats:     fields.seqkit_stats,
             bowtie2_log:      fields.bowtie2_log
-        ) as FastqRemoveRrna
+        )
     }
 
     emit:

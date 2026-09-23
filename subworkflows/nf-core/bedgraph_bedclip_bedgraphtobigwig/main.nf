@@ -31,7 +31,7 @@ workflow BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG {
     ch_results = UCSC_BEDGRAPHTOBIGWIG.out.bigwig
         .join(UCSC_BEDCLIP.out.bedgraph)
         .map { meta, bigwig, clipped ->
-            record(id: meta.id, bigwig: bigwig, bedgraph: clipped) as BigwigFiles
+            record(id: meta.id, bigwig: bigwig, bedgraph: clipped)
         }
 
     emit:

@@ -176,14 +176,14 @@ workflow QUANTIFY_RSEM {
     //
     if (skip_merge) {
         ch_quant_merged = QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT.out.results
-            .map { r -> [r.id, (r + record(rsem_merge: null)) as RsemQuantMerged] }
+            .map { r -> [r.id, r + record(rsem_merge: null)] }
         ch_results = ch_sample_fields
             .join(ch_quant_merged, by: [0], failOnMismatch: true, failOnDuplicate: true)
     } else {
         ch_quant_merged = QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT.out.results
             .map { r -> [r.id, r] }
             .join(ch_rsem_merge, by: [0], failOnMismatch: true, failOnDuplicate: true)
-            .map { _id, r, rsem_merge -> (r + record(rsem_merge: rsem_merge)) as RsemQuantMerged }
+            .map { _id, r, rsem_merge -> r + record(rsem_merge: rsem_merge) }
         ch_results = ch_sample_fields.combine(ch_quant_merged)
     }
 
@@ -199,7 +199,7 @@ workflow QUANTIFY_RSEM {
             bam_genome:        fields.bam_genome,
             bam_transcript:    fields.bam_transcript,
             quant_merged:      quant_merged
-        ) as RsemQuantSample
+        )
     }
 
     emit:

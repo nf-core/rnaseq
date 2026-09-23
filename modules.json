@@ -466,12 +466,14 @@
                     "fastq_fastqc_umitools_fastp": {
                         "branch": "master",
                         "git_sha": "6ef220fd9252b42fb3c50348bbdbcb6246730686",
-                        "installed_by": ["fastq_qc_trim_filter_setstrandedness", "subworkflows"]
+                        "installed_by": ["fastq_qc_trim_filter_setstrandedness", "subworkflows"],
+                        "patch": "subworkflows/nf-core/fastq_fastqc_umitools_fastp/fastq_fastqc_umitools_fastp.diff"
                     },
                     "fastq_fastqc_umitools_trimgalore": {
                         "branch": "master",
                         "git_sha": "ea400d55ea0a63c1a0f9fd527211208b842ea15e",
-                        "installed_by": ["fastq_qc_trim_filter_setstrandedness", "subworkflows"]
+                        "installed_by": ["fastq_qc_trim_filter_setstrandedness", "subworkflows"],
+                        "patch": "subworkflows/nf-core/fastq_fastqc_umitools_trimgalore/fastq_fastqc_umitools_trimgalore.diff"
                     },
                     "fastq_qc_trim_filter_setstrandedness": {
                         "branch": "master",

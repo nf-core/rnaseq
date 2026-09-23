@@ -1,0 +1,151 @@
+Changes in component 'nf-core/fastq_fastqc_umitools_fastp'
+'subworkflows/nf-core/fastq_fastqc_umitools_fastp/meta.yml' is unchanged
+Changes in 'fastq_fastqc_umitools_fastp/main.nf':
+--- subworkflows/nf-core/fastq_fastqc_umitools_fastp/main.nf
++++ subworkflows/nf-core/fastq_fastqc_umitools_fastp/main.nf
+@@ -33,6 +33,35 @@
+     catch (Exception _ex) {
+         return ""
+     }
++}
++
++record FastpFastqc {
++    raw_html:  List<Path>
++    raw_zip:   List<Path>
++    trim_html: List<Path>?
++    trim_zip:  List<Path>?
++}
++
++record FastpTrim {
++    html:         Path
++    json:         Path
++    log:          Path
++    reads_fail:   List<Path>?
++    reads_merged: Path?
++}
++
++record UmitoolsExtractFiles {
++    log:   Path
++    reads: List<Path>
++}
++
++record FastqFastqcUmitoolsFastp {
++    id:                String
++    fastqc:            FastpFastqc?
++    umi:               UmitoolsExtractFiles?
++    trim:              FastpTrim?
++    adapter_seq:       String?
++    num_trimmed_reads: Long?
+ }
+ 
+ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
+@@ -64,12 +93,24 @@
+     // Split input channel for reads-only operations
+     reads_only = reads.map { meta, reads_files, _adapter_fasta -> [ meta, reads_files ] }
+ 
++    // Each step that runs joins its outputs onto this per-sample skeleton;
++    // groups for skipped steps are left unset and become null in the final
++    // record, so no join is ever made against an empty channel.
++    ch_results = reads_only.map { meta, _reads -> [meta.id, [:]] }
++
+     if (!skip_fastqc) {
+         FASTQC_RAW(
+             reads_only
+         )
+         fastqc_raw_html = FASTQC_RAW.out.html
+         fastqc_raw_zip = FASTQC_RAW.out.zip
++
++        ch_results = ch_results
++            .join(FASTQC_RAW.out.html.map { meta, html -> [meta.id, html] }, by: [0])
++            .join(FASTQC_RAW.out.zip.map { meta, zip -> [meta.id, zip] }, by: [0])
++            .map { id, fields, html, zip ->
++                [id, fields + [fastqc: record(raw_html: [html].flatten(), raw_zip: [zip].flatten(), trim_html: null, trim_zip: null)]]
++            }
+     }
+ 
+     trimmer_reads = reads_only
+@@ -81,6 +122,13 @@
+         trimmer_reads = UMITOOLS_EXTRACT.out.reads
+         umi_reads = UMITOOLS_EXTRACT.out.reads
+         umi_log = UMITOOLS_EXTRACT.out.log
++
++        ch_results = ch_results
++            .join(UMITOOLS_EXTRACT.out.log.map { meta, log -> [meta.id, log] }, by: [0])
++            .join(UMITOOLS_EXTRACT.out.reads.map { meta, reads_ -> [meta.id, reads_] }, by: [0])
++            .map { id, fields, log, reads_ ->
++                [id, fields + [umi: record(log: log, reads: [reads_].flatten())]]
++            }
+ 
+         // Discard R1 / R2 if required
+         if (umi_discard_read in [1, 2]) {
+@@ -133,13 +181,58 @@
+             .map { meta, json -> [meta, getFastpAdapterSequence(json)] }
+             .set { adapter_seq }
+ 
++        // FASTP.out.reads is optional, so a sample can lack a read count
++        ch_results = ch_results
++            .join(trim_json.map { meta, f -> [meta.id, f] }, by: [0])
++            .join(trim_html.map { meta, f -> [meta.id, f] }, by: [0])
++            .join(trim_log.map { meta, f -> [meta.id, f] }, by: [0])
++            .join(adapter_seq.map { meta, seq -> [meta.id, seq] }, by: [0])
++            .join(trim_reads_fail.map { meta, f -> [meta.id, f] }, by: [0], remainder: true)
++            .join(trim_reads_merged.map { meta, f -> [meta.id, f] }, by: [0], remainder: true)
++            .join(trim_read_count.map { meta, num_reads -> [meta.id, num_reads] }, by: [0], remainder: true)
++            .map { id, fields, json, html, log, seq, reads_fail, reads_merged, num_reads ->
++                def trim = record(
++                    html:         html,
++                    json:         json,
++                    log:          log,
++                    reads_fail:   reads_fail ? [reads_fail].flatten() : null,
++                    reads_merged: reads_merged
++                )
++                [id, fields + [trim: trim, adapter_seq: seq, num_trimmed_reads: num_reads != null ? num_reads as Long : null]]
++            }
++
+         if (!skip_fastqc) {
+             FASTQC_TRIM(
+                 trim_reads
+             )
+             fastqc_trim_html = FASTQC_TRIM.out.html
+             fastqc_trim_zip = FASTQC_TRIM.out.zip
++
++            // Samples below min_trimmed_reads are not passed to FASTQC_TRIM
++            ch_results = ch_results
++                .join(FASTQC_TRIM.out.html.map { meta, html -> [meta.id, html] }, by: [0], remainder: true)
++                .join(FASTQC_TRIM.out.zip.map { meta, zip -> [meta.id, zip] }, by: [0], remainder: true)
++                .map { id, fields, html, zip ->
++                    def fastqc = record(
++                        raw_html:  fields.fastqc.raw_html,
++                        raw_zip:   fields.fastqc.raw_zip,
++                        trim_html: html ? [html].flatten() : null,
++                        trim_zip:  zip ? [zip].flatten() : null
++                    )
++                    [id, fields + [fastqc: fastqc]]
++                }
+         }
++    }
++
++    ch_results = ch_results.map { id, fields ->
++        record(
++            id:                id,
++            fastqc:            fields.fastqc,
++            umi:               fields.umi,
++            trim:              fields.trim,
++            adapter_seq:       fields.adapter_seq,
++            num_trimmed_reads: fields.num_trimmed_reads
++        ) as FastqFastqcUmitoolsFastp
+     }
+ 
+     emit:
+@@ -157,4 +250,5 @@
+     trim_read_count   // channel: [ val(meta), val(count) ]
+     fastqc_trim_html  // channel: [ val(meta), [ html ] ]
+     fastqc_trim_zip   // channel: [ val(meta), [ zip ] ]
+-}
++    results           = ch_results // channel: FastqFastqcUmitoolsFastp
++}
+
+'subworkflows/nf-core/fastq_fastqc_umitools_fastp/tests/main.nf.test.snap' is unchanged
+'subworkflows/nf-core/fastq_fastqc_umitools_fastp/tests/nextflow.config' is unchanged
+'subworkflows/nf-core/fastq_fastqc_umitools_fastp/tests/main.nf.test' is unchanged
+************************************************************

@@ -151,7 +151,7 @@ workflow RNASEQ {
     //
     // Create channel from input file provided through params.input
     //
-    channel
+    def ch_input_branched = channel
         .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
         .map {
             meta, fastq_1, fastq_2, genome_bam, transcriptome_bam ->
@@ -173,7 +173,6 @@ workflow RNASEQ {
                 fastq: reads.size() > 0 && reads[0]
                     return [ meta.findAll { key, _value -> key != 'percent_mapped' }, reads ]
         }
-        .set { ch_input_branched }
 
     // Get inputs for FASTQ and BAM processing paths
 
@@ -852,8 +851,10 @@ workflow RNASEQ {
         ch_fastq.map { meta, reads -> [ meta.id, meta, reads ] }
             .join(ch_unprocessed_bams.map { meta, genome_bam, transcriptome_bam -> [ meta.id, meta, genome_bam, transcriptome_bam ] })
             .join(ch_percent_mapped)
-            .transpose()
-            .map { _id, _fastq_meta, reads, meta, genome_bam, transcriptome_bam, percent_mapped ->
+            .flatMap { _id, _fastq_meta, runs, meta, genome_bam, transcriptome_bam, percent_mapped ->
+                runs.collect { reads -> [ meta, reads, genome_bam, transcriptome_bam, percent_mapped ] }
+            }
+            .map { meta, reads, genome_bam, transcriptome_bam, percent_mapped ->
 
                 // Handle BAM paths (same for all runs of this sample)
                 def genome_bam_published = meta.has_genome_bam ?

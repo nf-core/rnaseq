@@ -84,14 +84,13 @@ workflow PREPARE_GENOME_INDICES {
         }
         else if (fasta_provided) {
             // Build it from scratch if we have FASTA
-            channel
+            def ch_bbsplit_fasta_list = channel
                 .from(file(bbsplit_fasta_list, checkIfExists: true))
                 .splitCsv() // Read in 2 column csv file: short_name,path_to_fasta
                 .flatMap { id, fafile -> [ [ 'id', id ], [ 'fasta', file(fafile, checkIfExists: true) ] ] } // Flatten entries to be able to groupTuple by a common key
                 .groupTuple()
                 .map { entry -> entry[1] } // Get rid of keys and keep grouped values
                 .collect { item -> [ item ] } // Collect entries as a list to pass as "tuple val(short_names), path(path_to_fasta)" to module
-                .set { ch_bbsplit_fasta_list }
 
             ch_bbsplit_index = BBMAP_BBSPLIT(
                 [ [:], [] ],

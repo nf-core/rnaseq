@@ -203,10 +203,10 @@
             },
             "url": [
                 "https://github.com/nf-core/rnaseq",
-                "https://nf-co.re/rnaseq/3.27.0/"
+                "https://nf-co.re/rnaseq/dev/"
             ],
             "version": [
-                "3.27.0"
+                "3.28.0dev"
             ]
         },
         {

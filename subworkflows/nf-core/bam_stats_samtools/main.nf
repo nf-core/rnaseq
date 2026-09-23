@@ -6,6 +6,13 @@ include { SAMTOOLS_STATS    } from '../../../modules/nf-core/samtools/stats/main
 include { SAMTOOLS_IDXSTATS } from '../../../modules/nf-core/samtools/idxstats/main'
 include { SAMTOOLS_FLAGSTAT } from '../../../modules/nf-core/samtools/flagstat/main'
 
+record SamtoolsStats {
+    id:       String
+    stats:    Path
+    flagstat: Path
+    idxstats: Path
+}
+
 workflow BAM_STATS_SAMTOOLS {
     take:
     ch_bam_bai // channel: [ val(meta), path(bam), path(bai) ]
@@ -18,8 +25,16 @@ workflow BAM_STATS_SAMTOOLS {
 
     SAMTOOLS_IDXSTATS(ch_bam_bai)
 
+    ch_results = SAMTOOLS_STATS.out.stats
+        .join(SAMTOOLS_FLAGSTAT.out.flagstat, by: [0])
+        .join(SAMTOOLS_IDXSTATS.out.idxstats, by: [0])
+        .map { meta, stats, flagstat, idxstats ->
+            record(id: meta.id, stats: stats, flagstat: flagstat, idxstats: idxstats) as SamtoolsStats
+        }
+
     emit:
     stats    = SAMTOOLS_STATS.out.stats // channel: [ val(meta), path(stats) ]
     flagstat = SAMTOOLS_FLAGSTAT.out.flagstat // channel: [ val(meta), path(flagstat) ]
     idxstats = SAMTOOLS_IDXSTATS.out.idxstats // channel: [ val(meta), path(idxstats) ]
+    results  = ch_results // channel: SamtoolsStats
 }

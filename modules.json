@@ -429,7 +429,8 @@
                     "bam_sort_stats_samtools": {
                         "branch": "master",
                         "git_sha": "6ef220fd9252b42fb3c50348bbdbcb6246730686",
-                        "installed_by": ["bam_dedup_umi", "fastq_align_hisat2"]
+                        "installed_by": ["bam_dedup_umi", "fastq_align_hisat2"],
+                        "patch": "subworkflows/nf-core/bam_sort_stats_samtools/bam_sort_stats_samtools.diff"
                     },
                     "bam_stats_samtools": {
                         "branch": "master",
@@ -439,7 +440,8 @@
                             "bam_dedup_stats_samtools_umitools",
                             "bam_markduplicates_picard",
                             "bam_sort_stats_samtools"
-                        ]
+                        ],
+                        "patch": "subworkflows/nf-core/bam_stats_samtools/bam_stats_samtools.diff"
                     },
                     "bam_stringtie_merge": {
                         "branch": "master",

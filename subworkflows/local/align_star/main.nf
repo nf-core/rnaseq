@@ -5,6 +5,7 @@ include { SENTIEON_STARALIGN as SENTIEON_STAR_ALIGN } from '../../../modules/nf-
 include { PARABRICKS_RNAFQ2BAM as PARABRICKS_RNA_FQ2BAM } from '../../../modules/nf-core/parabricks/rnafq2bam/main'
 include { STAR_ALIGN                                } from '../../../modules/nf-core/star/align'
 include { BAM_SORT_STATS_SAMTOOLS                   } from '../../nf-core/bam_sort_stats_samtools'
+include { StarAligned                               } from './types'
 
 
 //
@@ -73,6 +74,37 @@ workflow ALIGN_STAR {
     //
     BAM_SORT_STATS_SAMTOOLS(ch_orig_bam, fasta_fai)
 
+    // The STAR glob for the aligned BAM, the `*.tab` glob and paired-end
+    // unmapped reads can each match several files, so they are normalised to
+    // lists to give the record a stable type.
+    ch_results = ch_orig_bam
+        .join(ch_percent_mapped)
+        .join(ch_log_final)
+        .join(ch_log_out)
+        .join(ch_log_progress)
+        .join(ch_tab, remainder: true)
+        .join(ch_bam_transcript, remainder: true)
+        .join(ch_fastq, remainder: true)
+        .map { meta, orig_bam, percent_mapped, log_final, log_out, log_progress, tab, bam_transcript, fastq ->
+            record(
+                id:                meta.id,
+                meta:              meta,
+                aligner:           'star',
+                orig_bam:          [orig_bam].flatten(),
+                transcriptome_bam: bam_transcript,
+                unmapped:          fastq ? [fastq].flatten() : null,
+                percent_mapped:    percent_mapped,
+                star:              record(
+                    log_final:    log_final,
+                    log_out:      log_out,
+                    log_progress: log_progress,
+                    tab:          tab ? [tab].flatten() : null
+                )
+            )
+        }
+        .join(BAM_SORT_STATS_SAMTOOLS.out.results, by: 'id')
+        .map { r -> r as StarAligned }
+
     emit:
     orig_bam = ch_orig_bam                          // channel: [ val(meta), bam            ]
     log_final = ch_log_final                        // channel: [ val(meta), log_final      ]
@@ -88,4 +120,5 @@ workflow ALIGN_STAR {
     flagstat = BAM_SORT_STATS_SAMTOOLS.out.flagstat // channel: [ val(meta), [ flagstat ] ]
     idxstats = BAM_SORT_STATS_SAMTOOLS.out.idxstats // channel: [ val(meta), [ idxstats ] ]
     percent_mapped = ch_percent_mapped              // channel: [ val(meta), percent_mapped ]
+    results = ch_results                            // channel: StarAligned
 }

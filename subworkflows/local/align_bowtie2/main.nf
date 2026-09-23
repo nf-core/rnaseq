@@ -9,6 +9,7 @@
 
 include { BOWTIE2_ALIGN           } from '../../../modules/nf-core/bowtie2/align'
 include { BAM_SORT_STATS_SAMTOOLS } from '../../nf-core/bam_sort_stats_samtools'
+include { Bowtie2Aligned          } from './types'
 
 //
 // Function that parses and returns the alignment rate from the Bowtie2 log output
@@ -55,6 +56,24 @@ workflow ALIGN_BOWTIE2 {
     //
     BAM_SORT_STATS_SAMTOOLS(ch_orig_bam, fasta_fai)
 
+    ch_results = ch_orig_bam
+        .join(ch_percent_mapped)
+        .join(ch_log)
+        .join(BOWTIE2_ALIGN.out.fastq, remainder: true)
+        .map { meta, orig_bam, percent_mapped, log_file, fastq ->
+            record(
+                id:             meta.id,
+                meta:           meta,
+                aligner:        'bowtie2',
+                orig_bam:       orig_bam,
+                unmapped:       fastq ? [fastq].flatten() : null,
+                percent_mapped: percent_mapped,
+                bowtie2:        record(log: log_file)
+            )
+        }
+        .join(BAM_SORT_STATS_SAMTOOLS.out.results, by: 'id')
+        .map { r -> r as Bowtie2Aligned }
+
     emit:
     orig_bam       = ch_orig_bam                          // channel: [ val(meta), bam ]
     log_final      = ch_log                               // channel: [ val(meta), log ]
@@ -64,4 +83,5 @@ workflow ALIGN_BOWTIE2 {
     flagstat       = BAM_SORT_STATS_SAMTOOLS.out.flagstat // channel: [ val(meta), [ flagstat ] ]
     idxstats       = BAM_SORT_STATS_SAMTOOLS.out.idxstats // channel: [ val(meta), [ idxstats ] ]
     percent_mapped = ch_percent_mapped                    // channel: [ val(meta), percent_mapped ]
+    results        = ch_results                           // channel: Bowtie2Aligned
 }

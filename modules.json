@@ -427,7 +427,8 @@
                     "bam_rseqc": {
                         "branch": "master",
                         "git_sha": "6ef220fd9252b42fb3c50348bbdbcb6246730686",
-                        "installed_by": ["bam_qc_rnaseq", "subworkflows"]
+                        "installed_by": ["bam_qc_rnaseq", "subworkflows"],
+                        "patch": "subworkflows/nf-core/bam_rseqc/bam_rseqc.diff"
                     },
                     "bam_sort_stats_samtools": {
                         "branch": "master",

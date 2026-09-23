@@ -74,17 +74,21 @@ Special thanks to the following for their contributions to the release:
 - [PR #1924](https://github.com/nf-core/rnaseq/pull/1924) - Restore StringTie's `--fr`/`--rf` strandedness flags, dropped by the v3 module update ([PR #1902](https://github.com/nf-core/rnaseq/pull/1902)) with no replacement
 - [PR #1925](https://github.com/nf-core/rnaseq/pull/1925) - Trigger a full nf-test run on `conf/`, `bin/` and `assets/` changes, and refresh the StringTie ballgown snapshots left stale by [PR #1924](https://github.com/nf-core/rnaseq/pull/1924)
 - [PR #1927](https://github.com/nf-core/rnaseq/pull/1927) - Bump version to 3.27.0 ahead of release, with a Salmon `--libType` config fix/dedup and an nf-test trigger fix picked up along the way
+- [PR #1930](https://github.com/nf-core/rnaseq/pull/1930) - Fill in `fastp`/`multiqc`/`seqkit` gaps in the Software dependencies table and add `tests/.nftignore_rustqc` to nf-test triggers, following release review
 
 ### Software dependencies
 
 | Dependency    | Old version | New version |
 | ------------- | ----------- | ----------- |
+| `fastp`       | 1.0.1       | 1.3.6       |
 | `hisat2`      | 2.2.1       | 2.2.3       |
 | `kallisto`    | 0.51.1      | 0.52.0      |
+| `multiqc`     | 1.33        | 1.35        |
 | `picard`      | 3.4.0       | 3.5.0       |
 | `python`      | 3.9.5       | 3.14.5      |
 | `salmon`      | 1.10.3      | 2.7.0       |
 | `samtools`    | 1.23.1      | 1.24        |
+| `seqkit`      | 2.9.0       | 2.13.0      |
 | `stringtie`   | 2.2.3       | 3.0.3       |
 | `subread`     | 2.0.6       | 2.1.1       |
 | `trim-galore` | 2.1.0       | 2.3.0       |

@@ -502,12 +502,14 @@
                     "quantify_pseudo_alignment": {
                         "branch": "master",
                         "git_sha": "81b7daa6a899de586f7492dee5eef68d4419635d",
-                        "installed_by": ["subworkflows"]
+                        "installed_by": ["subworkflows"],
+                        "patch": "subworkflows/nf-core/quantify_pseudo_alignment/quantify_pseudo_alignment.diff"
                     },
                     "quantify_rsem": {
                         "branch": "master",
                         "git_sha": "6ef220fd9252b42fb3c50348bbdbcb6246730686",
-                        "installed_by": ["subworkflows"]
+                        "installed_by": ["subworkflows"],
+                        "patch": "subworkflows/nf-core/quantify_rsem/quantify_rsem.diff"
                     },
                     "utils_nextflow_pipeline": {
                         "branch": "master",

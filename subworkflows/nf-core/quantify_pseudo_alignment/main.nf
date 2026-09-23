@@ -7,6 +7,35 @@ include { KALLISTO_QUANT   } from '../../../modules/nf-core/kallisto/quant'
 
 include { QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT } from '../quant_tximport_summarizedexperiment'
 
+// Mirrors the QuantMerged record emitted by QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT.
+// nf-core tools treats every name included from a sibling subworkflow as a
+// subworkflow dependency, so the type cannot be included and is redeclared.
+record QuantMerged {
+    id:                        String
+    meta:                      Map
+    tpm_gene:                  Path
+    counts_gene:               Path
+    lengths_gene:              Path
+    counts_gene_length_scaled: Path
+    counts_gene_scaled:        Path
+    tpm_transcript:            Path
+    counts_transcript:         Path
+    lengths_transcript:        Path
+    tx2gene:                   Path
+    tx2gene_augmented:         Path
+    merged_gene_rds:           Path?
+    merged_transcript_rds:     Path?
+}
+
+record PseudoQuantSample {
+    id:           String
+    meta:         Map
+    quant_dir:    Path
+    json_info:    Path?
+    log:          Path?
+    quant_merged: QuantMerged
+}
+
 workflow QUANTIFY_PSEUDO_ALIGNMENT {
     take:
     samplesheet               // channel: [ val(meta), /path/to/samplsheet ]
@@ -34,6 +63,12 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
         )
         ch_pseudo_results = SALMON_QUANT.out.results
         ch_pseudo_multiqc = ch_pseudo_results
+
+        // Salmon writes its log inside the quant directory rather than as a
+        // discrete file, so log is null. meta_info.json is an optional output.
+        ch_sample_fields = SALMON_QUANT.out.results.map { meta, dir -> [meta.id, meta, dir] }
+            .join(SALMON_QUANT.out.json_info.map { meta, f -> [meta.id, f] }, by: [0], remainder: true)
+            .map { id, meta, dir, json_info -> [id, [meta: meta, quant_dir: dir, json_info: json_info, log: null]] }
     } else {
         KALLISTO_QUANT (
             reads,
@@ -43,6 +78,11 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
         )
         ch_pseudo_results = KALLISTO_QUANT.out.results
         ch_pseudo_multiqc = KALLISTO_QUANT.out.log
+
+        ch_sample_fields = KALLISTO_QUANT.out.results.map { meta, dir -> [meta.id, meta, dir] }
+            .join(KALLISTO_QUANT.out.json_info.map { meta, f -> [meta.id, f] }, by: [0], failOnMismatch: true, failOnDuplicate: true)
+            .join(KALLISTO_QUANT.out.log.map { meta, f -> [meta.id, f] }, by: [0], failOnMismatch: true, failOnDuplicate: true)
+            .map { id, meta, dir, json_info, log -> [id, [meta: meta, quant_dir: dir, json_info: json_info, log: log]] }
     }
 
     //
@@ -57,6 +97,25 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
         pseudo_aligner,
         skip_merge
     )
+
+    //
+    // Merging yields a single 'all_samples' QuantMerged row, which is broadcast
+    // onto every sample; under skip_merge there is one row per sample id.
+    //
+    ch_sample_results = skip_merge
+        ? ch_sample_fields.join(QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT.out.results.map { r -> [r.id, r] }, by: [0], failOnMismatch: true, failOnDuplicate: true)
+        : ch_sample_fields.combine(QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT.out.results)
+
+    ch_sample_results = ch_sample_results.map { id, fields, quant_merged ->
+        record(
+            id:           id,
+            meta:         fields.meta,
+            quant_dir:    fields.quant_dir,
+            json_info:    fields.json_info,
+            log:          fields.log,
+            quant_merged: quant_merged
+        ) as PseudoQuantSample
+    }
 
     emit:
     results                       = ch_pseudo_results                                              // channel: [ val(meta), results_dir ]
@@ -75,4 +134,6 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
 
     merged_gene_rds_unified       = QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT.out.merged_gene_rds       //    path: *.rds
     merged_transcript_rds_unified = QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT.out.merged_transcript_rds //    path: *.rds
+
+    sample_results                = ch_sample_results                                              // channel: PseudoQuantSample
 }

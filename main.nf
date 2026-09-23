@@ -116,6 +116,10 @@ workflow NFCORE_RNASEQ {
         params.hisat2_build_memory
     )
 
+    ch_genome = PREPARE_GENOME_REFERENCES.out.results
+        .combine(PREPARE_GENOME_INDICES.out.results)
+        .map { references, indices -> references + record(index: indices) }
+
     // Check if contigs in genome fasta file > 512 Mbp
     if (!params.skip_alignment && !params.bam_csi_index) {
         PREPARE_GENOME_REFERENCES
@@ -157,6 +161,7 @@ workflow NFCORE_RNASEQ {
     map_status     = RNASEQ.out.map_status     // channel: [id, boolean]
     strand_status  = RNASEQ.out.strand_status  // channel: [id, boolean]
     multiqc_report = RNASEQ.out.multiqc_report // channel: /path/to/multiqc_report.html
+    genome         = ch_genome                 // channel: GenomeReferences fields + index: GenomeIndices
 }
 
 /*

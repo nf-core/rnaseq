@@ -79,12 +79,15 @@ Special thanks to the following for their contributions to the release:
 
 | Dependency    | Old version | New version |
 | ------------- | ----------- | ----------- |
+| `fastp`       | 1.0.1       | 1.3.6       |
 | `hisat2`      | 2.2.1       | 2.2.3       |
 | `kallisto`    | 0.51.1      | 0.52.0      |
+| `multiqc`     | 1.33        | 1.35        |
 | `picard`      | 3.4.0       | 3.5.0       |
 | `python`      | 3.9.5       | 3.14.5      |
 | `salmon`      | 1.10.3      | 2.7.0       |
 | `samtools`    | 1.23.1      | 1.24        |
+| `seqkit`      | 2.9.0       | 2.13.0      |
 | `stringtie`   | 2.2.3       | 3.0.3       |
 | `subread`     | 2.0.6       | 2.1.1       |
 | `trim-galore` | 2.1.0       | 2.3.0       |

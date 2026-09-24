@@ -257,7 +257,7 @@ Changes in 'fastq_qc_trim_filter_setstrandedness/main.nf':
 +                bbsplit:           fields.bbsplit,
 +                lint:              lint,
 +                rrna:              fields.rrna
-+            ) as FastqQcTrimFilterSetstrandedness
++            )
 +        }
  
      // `remainder: true` needed because every contributor is gated behind

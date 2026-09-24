@@ -39,7 +39,7 @@ Changes in 'bam_dedup_stats_samtools_umicollapse/main.nf':
 +                bai:         bai,
 +                dedup_stats: dedup_stats,
 +                samtools:    record(stats: samtools.stats, flagstat: samtools.flagstat, idxstats: samtools.idxstats)
-+            ) as UmicollapseDedupBam
++            )
 +        }
 +
      emit:

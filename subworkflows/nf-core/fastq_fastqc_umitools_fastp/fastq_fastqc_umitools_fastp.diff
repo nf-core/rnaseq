@@ -133,7 +133,7 @@ Changes in 'fastq_fastqc_umitools_fastp/main.nf':
 +            trim:              fields.trim,
 +            adapter_seq:       fields.adapter_seq,
 +            num_trimmed_reads: fields.num_trimmed_reads
-+        ) as FastqFastqcUmitoolsFastp
++        )
      }
  
      emit:

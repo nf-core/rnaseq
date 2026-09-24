@@ -86,7 +86,7 @@ Changes in 'quantify_pseudo_alignment/main.nf':
 +            json_info:    fields.json_info,
 +            log:          fields.log,
 +            quant_merged: quant_merged
-+        ) as PseudoQuantSample
++        )
 +    }
  
      emit:

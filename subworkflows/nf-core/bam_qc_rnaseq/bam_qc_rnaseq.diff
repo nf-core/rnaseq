@@ -166,7 +166,7 @@ Changes in 'bam_qc_rnaseq/main.nf':
 +            qualimap:      fields.qualimap,
 +            dupradar:      fields.dupradar,
 +            rseqc:         fields.rseqc
-+        ) as BamQcRnaseq
++        )
 +    }
  
      // Aggregate MultiQC-compatible output files

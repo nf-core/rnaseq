@@ -107,7 +107,7 @@ Changes in 'fastq_fastqc_umitools_trimgalore/main.nf':
 +            umi:               fields.umi,
 +            trim:              fields.trim,
 +            num_trimmed_reads: fields.num_trimmed_reads
-+        ) as FastqFastqcUmitoolsTrimgalore
++        )
      }
  
      emit:

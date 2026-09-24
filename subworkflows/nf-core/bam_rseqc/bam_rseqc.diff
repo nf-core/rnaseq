@@ -187,7 +187,7 @@ Changes in 'bam_rseqc/main.nf':
 +            readdistribution:   fields.readdistribution,
 +            readduplication:    fields.readduplication,
 +            tin:                fields.tin
-+        ) as Rseqc
++        )
      }
  
      emit:

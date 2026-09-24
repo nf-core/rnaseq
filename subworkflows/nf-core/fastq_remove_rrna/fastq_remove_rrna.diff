@@ -69,7 +69,7 @@ Changes in 'fastq_remove_rrna/main.nf':
 +            ribodetector_log: fields.ribodetector_log,
 +            seqkit_stats:     fields.seqkit_stats,
 +            bowtie2_log:      fields.bowtie2_log
-+        ) as FastqRemoveRrna
++        )
      }
  
      emit:

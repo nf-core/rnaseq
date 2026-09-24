@@ -233,6 +233,62 @@ workflow {
         NFCORE_RNASEQ.out.map_status,
         NFCORE_RNASEQ.out.strand_status
     )
+
+    publish:
+    // Stage/record channels are routed here one area at a time; anything not
+    // yet listed still publishes through conf/modules/*.config publishDir.
+    contaminants     = NFCORE_RNASEQ.out.contaminants
+    stringtie        = NFCORE_RNASEQ.out.stringtie
+    stringtie_merged = NFCORE_RNASEQ.out.stringtie_merged
+    bigwig           = NFCORE_RNASEQ.out.bigwig
+}
+
+// Per-sample output prefix used by --skip_quantification_merge. Only applies
+// to records built from sample-level meta; run-level records (e.g. a
+// cross-sample merged file) are never prefixed, matching ext.publish_prefix's
+// own meta.containsKey('single_end') check in nextflow.config.
+def samplePrefix(r) { params.skip_quantification_merge ? "${r.id}/" : '' }
+def alignerDir(r)    { "${samplePrefix(r)}${params.aligner}" }
+
+output {
+    contaminants {   // record(id, meta, kraken2, bracken, sylph, sylphtax); exactly one tool branch is populated per run
+        enabled !params.skip_qc && params.contaminant_screening
+        path { s ->
+            s.kraken2?.report                      >> "${alignerDir(s)}/contaminants/kraken2/kraken_reports/"
+            s.kraken2?.classified_reads_fastq      >> (params.save_kraken_assignments ? "${alignerDir(s)}/contaminants/kraken2/kraken_reports/" : null)
+            s.kraken2?.unclassified_reads_fastq    >> (params.save_kraken_assignments ? "${alignerDir(s)}/contaminants/kraken2/kraken_reports/" : null)
+            s.kraken2?.classified_reads_assignment >> (params.save_kraken_unassigned ? "${alignerDir(s)}/contaminants/kraken2/kraken_reports/" : null)
+            s.bracken?.abundance                   >> "${alignerDir(s)}/contaminants/bracken/"
+            s.bracken?.report                      >> "${alignerDir(s)}/contaminants/bracken/"
+            s.sylph?.profile                       >> "${alignerDir(s)}/contaminants/sylph/"
+            s.sylphtax?.taxprof                    >> "${alignerDir(s)}/contaminants/sylph/"
+        }
+    }
+
+    stringtie {   // record(id, meta, transcript_gtf, abundance, coverage_gtf, ballgown, denovo: StringtieAssembly?)
+        enabled !params.skip_stringtie
+        path { s ->
+            s.transcript_gtf >> "${alignerDir(s)}/stringtie/"
+            s.abundance >> "${alignerDir(s)}/stringtie/"
+            s.coverage_gtf >> "${alignerDir(s)}/stringtie/"
+            s.ballgown >> "${alignerDir(s)}/stringtie/"
+            s.denovo?.transcript_gtf >> "${alignerDir(s)}/stringtie/"
+        }
+    }
+
+    stringtie_merged {   // record(id, merged_gtf); cross-sample, only under --stringtie_ignore_gtf, never sample-prefixed
+        enabled !params.skip_stringtie && params.stringtie_ignore_gtf
+        path { s -> s.merged_gtf >> "${params.aligner}/stringtie/" }
+    }
+
+    bigwig {   // record(id, meta, combined, forward, reverse), each BigwigFiles { bigwig, bedgraph }; bedgraph stays unrouted
+        enabled !params.skip_bigwig
+        path { s ->
+            s.combined?.bigwig >> "${alignerDir(s)}/bigwig/"
+            s.forward?.bigwig  >> "${alignerDir(s)}/bigwig/"
+            s.reverse?.bigwig  >> "${alignerDir(s)}/bigwig/"
+        }
+    }
 }
 
 /*

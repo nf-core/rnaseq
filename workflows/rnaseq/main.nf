@@ -24,6 +24,7 @@ include { BAM_DEDUP_UMI                         } from '../../subworkflows/nf-co
 
 include { checkSamplesAfterGrouping      } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { classifyStrand                 } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { getHisat2PercentMapped         } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { mapBamToPublishedPath          } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 
 /*
@@ -59,18 +60,6 @@ include { BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG as BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG
 include { QUANTIFY_PSEUDO_ALIGNMENT as QUANTIFY_BAM_SALMON } from '../../subworkflows/nf-core/quantify_pseudo_alignment'
 include { QUANTIFY_PSEUDO_ALIGNMENT                         } from '../../subworkflows/nf-core/quantify_pseudo_alignment'
 include { FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS              } from '../../subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness'
-
-def getHisat2PercentMapped(align_log) {
-    def percent_aligned = 0
-    def pattern = /Overall alignment rate:\s*([\d\.]+)%/
-    align_log.eachLine { line ->
-        def matcher = line =~ pattern
-        if (matcher) {
-            percent_aligned = matcher[0][1].toFloat()
-        }
-    }
-    return percent_aligned
-}
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

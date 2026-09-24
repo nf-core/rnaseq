@@ -252,6 +252,7 @@ workflow {
     deseq2              = NFCORE_RNASEQ.out.deseq2
     deseq2_pseudo       = NFCORE_RNASEQ.out.deseq2_pseudo
     bam_qc              = NFCORE_RNASEQ.out.bam_qc
+    multiqc             = NFCORE_RNASEQ.out.multiqc
 }
 
 // Run-level records (e.g. a cross-sample merged file) are never sample-prefixed.
@@ -262,6 +263,10 @@ def saveAlignBam(s)  { params.save_align_intermeds || params.skip_markduplicates
 def saveUmiBam(s)    { params.save_align_intermeds || params.save_umi_intermeds }
 def umiDedupToolDir(s) { params.umi_dedup_tool == 'umicollapse' ? 'umicollapse' : 'umitools' }
 def pseudoAlignerDir(r) { "${samplePrefix(r)}${params.pseudo_aligner}" }
+def multiqcDir(m) {
+    def suffix = params.skip_alignment ? '' : "/${params.aligner}"
+    m.id == 'multiqc_report' ? "multiqc${suffix}" : "${m.id}/multiqc${suffix}"
+}
 
 // The dir the surviving reads would have published to under the mechanism
 // that last touched them (rRNA removal, then BBSplit), or null if neither
@@ -560,6 +565,14 @@ output {
             s.rseqc?.innerdistance?.rscript >> "${alignerDir(s)}/rseqc/inner_distance/rscript/"
             s.rseqc?.tin?.txt >> "${alignerDir(s)}/rseqc/tin/"
             s.rseqc?.tin?.xls >> "${alignerDir(s)}/rseqc/tin/"
+        }
+    }
+
+    multiqc {   // MultiqcReport; anchor: report
+        path { m ->
+            m.report >> "${multiqcDir(m)}/"
+            m.data >> "${multiqcDir(m)}/"
+            m.plots >> "${multiqcDir(m)}/"
         }
     }
 }

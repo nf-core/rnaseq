@@ -235,18 +235,15 @@ workflow {
     )
 
     publish:
-    // Stage/record channels are routed here one area at a time; anything not
-    // yet listed still publishes through conf/modules/*.config publishDir.
+    // Routed one area at a time; unlisted channels still use conf/modules/*.config publishDir.
     contaminants     = NFCORE_RNASEQ.out.contaminants
     stringtie        = NFCORE_RNASEQ.out.stringtie
     stringtie_merged = NFCORE_RNASEQ.out.stringtie_merged
     bigwig           = NFCORE_RNASEQ.out.bigwig
+    genome           = NFCORE_RNASEQ.out.genome
 }
 
-// Per-sample output prefix used by --skip_quantification_merge. Only applies
-// to records built from sample-level meta; run-level records (e.g. a
-// cross-sample merged file) are never prefixed, matching ext.publish_prefix's
-// own meta.containsKey('single_end') check in nextflow.config.
+// Run-level records (e.g. a cross-sample merged file) are never sample-prefixed.
 def samplePrefix(r) { params.skip_quantification_merge ? "${r.id}/" : '' }
 def alignerDir(r)    { "${samplePrefix(r)}${params.aligner}" }
 
@@ -287,6 +284,38 @@ output {
             s.combined?.bigwig >> "${alignerDir(s)}/bigwig/"
             s.forward?.bigwig  >> "${alignerDir(s)}/bigwig/"
             s.reverse?.bigwig  >> "${alignerDir(s)}/bigwig/"
+        }
+    }
+
+    genome {   // GenomeReferences + index: GenomeIndices + rrna_references; never sample-prefixed
+        enabled params.save_reference
+        path { g ->
+            g.fasta >> 'genome/'
+            g.fai >> 'genome/'
+            g.gtf >> 'genome/'
+            g.gene_bed >> 'genome/'
+            g.transcript_fasta >> 'genome/'
+            g.chrom_sizes >> 'genome/'
+            g.rrna_fastas >> 'genome/'
+            g.kraken_db >> 'genome/index/'
+            g.intermediates?.gff >> 'genome/'
+            g.intermediates?.additional_fasta >> 'genome/'
+            g.intermediates?.gtf_pre_filter >> 'genome/'
+            g.intermediates?.fasta_pre_concat >> 'genome/'
+            g.intermediates?.transcript_fasta_pre_gencode >> 'genome/'
+            g.intermediates?.transcript_fasta_rsem_dir >> 'genome/'
+            g.index?.star >> 'genome/index/'
+            g.index?.rsem >> 'genome/index/'
+            g.index?.rsem_transcript_fasta >> 'genome/index/'
+            g.index?.hisat2 >> 'genome/index/'
+            g.index?.hisat2_splicesites >> 'genome/index/'
+            g.index?.bowtie2 >> 'genome/index/'
+            g.index?.salmon >> 'genome/index/'
+            g.index?.kallisto >> 'genome/index/'
+            g.index?.bbsplit >> 'genome/index/'
+            g.index?.sortmerna >> 'genome/sortmerna/'
+            g.index?.bowtie2_rrna >> 'genome/index/'
+            g.rrna_references?.bowtie2_index >> 'bowtie2_rrna/index/'
         }
     }
 }

@@ -278,6 +278,11 @@ workflow RNASEQ {
             }
     }
 
+    // *_built channels are empty unless the index was actually built as a task output here.
+    ch_preprocessing_references = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.salmon_index_built.ifEmpty(null)
+        .combine(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.sortmerna_index_built.ifEmpty(null))
+        .map { salmon_index, sortmerna_index -> record(salmon_index: salmon_index, sortmerna_index: sortmerna_index) }
+
     ch_trim_status = ch_trim_read_count
         .map {
             meta, num_reads ->
@@ -1080,6 +1085,7 @@ workflow RNASEQ {
     deseq2              = ch_deseq2              // channel: record(rdata, pca_vals, plots_pdf, sample_dists, size_factors, log), alignment-based quantifier
     deseq2_pseudo       = ch_deseq2_pseudo       // channel: record(rdata, pca_vals, plots_pdf, sample_dists, size_factors, log), pseudo-aligner
     rrna_references     = ch_rrna_references     // channel: record(bowtie2_index, seqkit_prefixed, seqkit_converted)
+    preprocessing_references = ch_preprocessing_references // channel: record(salmon_index, sortmerna_index)
     multiqc             = ch_multiqc             // channel: MultiqcReport, per sample under skip_quantification_merge
     pipeline_info       = ch_pipeline_info       // channel: record(versions)
 }

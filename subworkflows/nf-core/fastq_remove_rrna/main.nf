@@ -55,6 +55,7 @@ workflow FASTQ_REMOVE_RRNA {
     ch_seqkit_stats = channel.empty()
     ch_bowtie2_log = channel.empty()
     ch_bowtie2_index_out = channel.empty()
+    ch_sortmerna_index_out = channel.empty()
     ch_seqkit_prefixed = channel.empty()
     ch_seqkit_converted = channel.empty()
 
@@ -74,6 +75,7 @@ workflow FASTQ_REMOVE_RRNA {
                 [[], []],
             )
             ch_sortmerna_index = SORTMERNA_INDEX.out.index
+            ch_sortmerna_index_out = SORTMERNA_INDEX.out.index
         }
 
         SORTMERNA(
@@ -233,6 +235,7 @@ workflow FASTQ_REMOVE_RRNA {
     seqkit_stats     = ch_seqkit_stats // channel: [ val(meta), [ stats ] ]
     bowtie2_log      = ch_bowtie2_log // channel: [ val(meta), [ log ] ]
     bowtie2_index    = ch_bowtie2_index_out // channel: [ val(meta), [ index ] ]
+    sortmerna_index  = ch_sortmerna_index_out.map { _meta, index -> index } // channel: path(sortmerna/index/), only set when built here
     seqkit_prefixed  = ch_seqkit_prefixed // channel: [ val(meta), [ fasta ] ]
     seqkit_converted = ch_seqkit_converted // channel: [ val(meta), [ fasta ] ]
     results          = ch_results // channel: FastqRemoveRrna

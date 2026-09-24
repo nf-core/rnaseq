@@ -251,6 +251,7 @@ workflow {
     quant_merged_pseudo = NFCORE_RNASEQ.out.quant_merged_pseudo
     deseq2              = NFCORE_RNASEQ.out.deseq2
     deseq2_pseudo       = NFCORE_RNASEQ.out.deseq2_pseudo
+    bam_qc              = NFCORE_RNASEQ.out.bam_qc
 }
 
 // Run-level records (e.g. a cross-sample merged file) are never sample-prefixed.
@@ -515,6 +516,50 @@ output {
             d.sample_dists >> "${params.pseudo_aligner}/deseq2_qc/"
             d.size_factors >> "${params.pseudo_aligner}/deseq2_qc/"
             d.log >> "${params.pseudo_aligner}/deseq2_qc/"
+        }
+    }
+
+    // bam_qc_rustqc (the --use_rustqc alternative) is not routed here yet: RustQC's
+    // own saveAs closure renames some files (e.g. the biotype summary), which >>
+    // cannot do - it only chooses a directory, never a filename. Needs a decision
+    // (module-level rename vs. accepting a path/name change) before it's routed.
+    bam_qc {   // BamQcRnaseq: preseq, featurecounts, biotype, qualimap, dupradar, rseqc
+        path { s ->
+            s.preseq?.lc_extrap >> "${alignerDir(s)}/preseq/"
+            s.preseq?.log >> "${alignerDir(s)}/preseq/log/"
+            s.featurecounts?.counts >> "${alignerDir(s)}/featurecounts/"
+            s.featurecounts?.summary >> "${alignerDir(s)}/featurecounts/"
+            s.biotype?.tsv >> "${alignerDir(s)}/featurecounts/"
+            s.biotype?.rrna >> "${alignerDir(s)}/featurecounts/"
+            s.qualimap >> "${alignerDir(s)}/qualimap/"
+            s.dupradar?.scatter2d >> "${alignerDir(s)}/dupradar/scatter_plot/"
+            s.dupradar?.boxplot >> "${alignerDir(s)}/dupradar/box_plot/"
+            s.dupradar?.hist >> "${alignerDir(s)}/dupradar/histogram/"
+            s.dupradar?.dupmatrix >> "${alignerDir(s)}/dupradar/gene_data/"
+            s.dupradar?.intercept_slope >> "${alignerDir(s)}/dupradar/intercepts_slope/"
+            s.rseqc?.bamstat >> "${alignerDir(s)}/rseqc/bam_stat/"
+            s.rseqc?.inferexperiment >> "${alignerDir(s)}/rseqc/infer_experiment/"
+            s.rseqc?.junctionannotation?.pdf >> "${alignerDir(s)}/rseqc/junction_annotation/pdf/"
+            s.rseqc?.junctionannotation?.events_pdf >> "${alignerDir(s)}/rseqc/junction_annotation/pdf/"
+            s.rseqc?.junctionannotation?.bed >> "${alignerDir(s)}/rseqc/junction_annotation/bed/"
+            s.rseqc?.junctionannotation?.interact_bed >> "${alignerDir(s)}/rseqc/junction_annotation/bed/"
+            s.rseqc?.junctionannotation?.xls >> "${alignerDir(s)}/rseqc/junction_annotation/xls/"
+            s.rseqc?.junctionannotation?.log >> "${alignerDir(s)}/rseqc/junction_annotation/log/"
+            s.rseqc?.junctionannotation?.rscript >> "${alignerDir(s)}/rseqc/junction_annotation/rscript/"
+            s.rseqc?.junctionsaturation?.pdf >> "${alignerDir(s)}/rseqc/junction_saturation/pdf/"
+            s.rseqc?.junctionsaturation?.rscript >> "${alignerDir(s)}/rseqc/junction_saturation/rscript/"
+            s.rseqc?.readdistribution >> "${alignerDir(s)}/rseqc/read_distribution/"
+            s.rseqc?.readduplication?.pdf >> "${alignerDir(s)}/rseqc/read_duplication/pdf/"
+            s.rseqc?.readduplication?.seq_xls >> "${alignerDir(s)}/rseqc/read_duplication/xls/"
+            s.rseqc?.readduplication?.pos_xls >> "${alignerDir(s)}/rseqc/read_duplication/xls/"
+            s.rseqc?.readduplication?.rscript >> "${alignerDir(s)}/rseqc/read_duplication/rscript/"
+            s.rseqc?.innerdistance?.distance >> "${alignerDir(s)}/rseqc/inner_distance/txt/"
+            s.rseqc?.innerdistance?.freq >> "${alignerDir(s)}/rseqc/inner_distance/txt/"
+            s.rseqc?.innerdistance?.mean >> "${alignerDir(s)}/rseqc/inner_distance/txt/"
+            s.rseqc?.innerdistance?.pdf >> "${alignerDir(s)}/rseqc/inner_distance/pdf/"
+            s.rseqc?.innerdistance?.rscript >> "${alignerDir(s)}/rseqc/inner_distance/rscript/"
+            s.rseqc?.tin?.txt >> "${alignerDir(s)}/rseqc/tin/"
+            s.rseqc?.tin?.xls >> "${alignerDir(s)}/rseqc/tin/"
         }
     }
 }

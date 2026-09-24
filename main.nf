@@ -166,6 +166,8 @@ workflow NFCORE_RNASEQ {
     aligned        = RNASEQ.out.aligned        // channel: StarAligned | Bowtie2Aligned | Hisat2Aligned
     umi_dedup      = RNASEQ.out.umi_dedup      // channel: UmiDedupBam
     markdup        = RNASEQ.out.markdup        // channel: MarkdupBam
+    bam_qc         = RNASEQ.out.bam_qc         // channel: BamQcRnaseq
+    bam_qc_rustqc  = RNASEQ.out.bam_qc_rustqc  // channel: record(id, meta, samtools, dupradar, featurecounts, preseq, rseqc, qualimap)
 }
 
 /*

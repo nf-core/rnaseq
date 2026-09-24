@@ -121,6 +121,8 @@ workflow RNASEQ {
     ch_aligned          = channel.empty()
     ch_umi_dedup        = channel.empty()
     ch_markdup          = channel.empty()
+    ch_bam_qc           = channel.empty()
+    ch_bam_qc_rustqc    = channel.empty()
 
     // Per-sample MultiQC bundle — `.join(..., remainder: true)` chains
     // fed to MULTIQC_RNASEQ. `collapseAgg` re-keys by meta.id at the end
@@ -582,6 +584,26 @@ workflow RNASEQ {
                 ch_gtf.map { gtf -> [ [:], gtf ] },
             )
 
+            // Each output is a glob, so a single match arrives as a bare Path
+            ch_bam_qc_rustqc = RUSTQC.out.samtools
+                .join(RUSTQC.out.dupradar,      failOnMismatch: true, failOnDuplicate: true)
+                .join(RUSTQC.out.featurecounts, failOnMismatch: true, failOnDuplicate: true)
+                .join(RUSTQC.out.preseq,        failOnMismatch: true, failOnDuplicate: true)
+                .join(RUSTQC.out.rseqc,         failOnMismatch: true, failOnDuplicate: true)
+                .join(RUSTQC.out.qualimap,      failOnMismatch: true, failOnDuplicate: true)
+                .map { meta, samtools, dupradar, featurecounts, preseq, rseqc, qualimap ->
+                    record(
+                        id:            meta.id,
+                        meta:          meta,
+                        samtools:      [samtools].flatten(),
+                        dupradar:      [dupradar].flatten(),
+                        featurecounts: [featurecounts].flatten(),
+                        preseq:        [preseq].flatten(),
+                        rseqc:         [rseqc].flatten(),
+                        qualimap:      [qualimap].flatten()
+                    )
+                }
+
             // Drop non-MultiQC files. Excluding `*.featureCounts.tsv.summary`
             // keeps only the biotype summary, matching the default pipeline's
             // `featureCounts -g gene_biotype` output.
@@ -640,6 +662,7 @@ workflow RNASEQ {
             )
             ch_multiqc_files = ch_multiqc_files.mix(BAM_QC_RNASEQ.out.multiqc_files)
             ch_inferexperiment_txt = BAM_QC_RNASEQ.out.inferexperiment_txt
+            ch_bam_qc = BAM_QC_RNASEQ.out.results
 
             ch_bam_qc_rnaseq_bundle = BAM_QC_RNASEQ.out.per_sample_mqc_bundle
                 .map { meta, files -> [meta.id, files] }
@@ -903,6 +926,8 @@ workflow RNASEQ {
     aligned        = ch_aligned        // channel: StarAligned | Bowtie2Aligned | Hisat2Aligned
     umi_dedup      = ch_umi_dedup      // channel: UmiDedupBam
     markdup        = ch_markdup        // channel: MarkdupBam
+    bam_qc         = ch_bam_qc         // channel: BamQcRnaseq
+    bam_qc_rustqc  = ch_bam_qc_rustqc  // channel: record(id, meta, samtools, dupradar, featurecounts, preseq, rseqc, qualimap)
 }
 
 /*

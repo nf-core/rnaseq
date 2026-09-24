@@ -242,12 +242,14 @@ workflow {
     bigwig           = NFCORE_RNASEQ.out.bigwig
     genome           = NFCORE_RNASEQ.out.genome
     preprocessed     = NFCORE_RNASEQ.out.preprocessed
+    aligned          = NFCORE_RNASEQ.out.aligned
 }
 
 // Run-level records (e.g. a cross-sample merged file) are never sample-prefixed.
 def samplePrefix(r) { params.skip_quantification_merge ? "${r.id}/" : '' }
 def alignerDir(r)    { "${samplePrefix(r)}${params.aligner}" }
 def trimLogDir(s)    { params.trimmer == 'fastp' ? "${samplePrefix(s)}${params.trimmer}/log" : "${samplePrefix(s)}${params.trimmer}" }
+def saveAlignBam(s)  { params.save_align_intermeds || params.skip_markduplicates }
 
 // The dir the surviving reads would have published to under the mechanism
 // that last touched them (rRNA removal, then BBSplit), or null if neither
@@ -361,6 +363,25 @@ output {
             s.rrna?.bowtie2_log >> "${samplePrefix(s)}bowtie2_rrna/"
             s.reads_cat >> (params.save_merged_fastq ? "${samplePrefix(s)}fastq/" : null)
             s.reads >> readsLastStageDir(s)
+        }
+    }
+
+    aligned {   // StarAligned | Bowtie2Aligned | Hisat2Aligned; anchor: samtools.stats
+        path { s ->
+            s.samtools?.stats >> "${alignerDir(s)}/samtools_stats/"
+            s.samtools?.flagstat >> "${alignerDir(s)}/samtools_stats/"
+            s.samtools?.idxstats >> "${alignerDir(s)}/samtools_stats/"
+            s.bam >> (saveAlignBam(s) ? "${alignerDir(s)}/" : null)
+            s.bai >> (saveAlignBam(s) ? "${alignerDir(s)}/" : null)
+            s.orig_bam >> (params.save_align_intermeds ? "${alignerDir(s)}/" : null)
+            s.transcriptome_bam >> (params.save_align_intermeds ? "${alignerDir(s)}/" : null)
+            s.unmapped >> (params.save_unaligned ? "${alignerDir(s)}/unmapped/" : null)
+            s.star?.log_final >> "${alignerDir(s)}/log/"
+            s.star?.log_out >> "${alignerDir(s)}/log/"
+            s.star?.log_progress >> "${alignerDir(s)}/log/"
+            s.star?.tab >> "${alignerDir(s)}/log/"
+            s.hisat2?.summary >> "${alignerDir(s)}/log/"
+            s.bowtie2?.log >> "${alignerDir(s)}/log/"
         }
     }
 }

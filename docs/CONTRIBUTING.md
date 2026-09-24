@@ -213,6 +213,19 @@ Per-tool publishDir, ext.args, and ext.prefix settings are split into one file p
 
 Modules emit their versions onto the `versions` channel topic so the calling workflow does not have to thread a `ch_versions` through every process (PR #1689). Modules that still also declare a `path "versions.yml", emit: versions` output do so because they are templated (the `.r`/`.py` template script writes the YAML); those modules populate the topic too and don't need migrating - leave them alone.
 
+#### Per-sample result records
+
+Subworkflows that produce per-sample files also emit a `results` record (or `sample_results` where `results` was already taken by an existing channel): one value per sample carrying the process outputs as named, possibly-nested fields, instead of one channel per file. This is the substrate the pipeline is migrating onto so `main.nf`'s `output {}` block can eventually replace `publishDir` - see nf-core/rnaseq#1931 for the full design and nf-core/rnaseq#1933 for the rules a new record should follow. In short:
+
+- Keyed on `id` (`meta.id`); the top-level per-stage record also carries the original `meta` map so `ext.args`/`ext.prefix` config closures keep working.
+- Built right after the process call it wraps, from that process's own tuple outputs (`join` on shared `meta`), not derived from something built elsewhere.
+- Combined across stages with `.join(other, by: 'id')`, never `mix` + `groupTuple` - an unsized `groupTuple` waits for the channel to close and defers every downstream release to end of run.
+- Conditional stages (`if (!params.skip_x) { ... }`) join conditionally, at the workflow level. Joining a `channel.empty()` with `remainder: true` has the same end-of-run-only problem as `groupTuple`.
+- Field names are stable API: they end up in `docs/output.md` and in `index` file headers once Phase 2 lands. Reuse a module's own emit name unless it's ambiguous.
+- A `record TypeName { ... }` declaration next to the record-building code documents the expected shape, but nothing casts to it (`record(...) as TypeName`): Nextflow 26.09.0-edge's `TypeHelper.asType` corrupts any `Path` backed by a non-local filesystem (HTTP, S3, Azure, ...) when re-coercing an already-resolved `Path` through a cast, so every record in this pipeline is built as a plain, uncast `record(...)` until that's fixed upstream.
+- Nf-core-owned components under `subworkflows/nf-core/` are patched in-tree via `nf-core subworkflows patch <name>` ahead of upstreaming (see [nf-core modules and subworkflows](#nf-core-modules-and-subworkflows) above) - declare any record type the patch adds directly in that component's `main.nf`, not in a separate `types.nf`. `nf-core subworkflows patch` only captures full content for diffs against files that already exist upstream; a brand-new file gets a content-free "was created" note, so a future `nf-core subworkflows update` would silently delete it while faithfully reapplying the `include` line that references it. Local subworkflows under `subworkflows/local/` aren't managed this way, so a separate `types.nf` there is fine.
+- Not every stage has a field that's unconditionally present (an "anchor"): several tool selections are mutually exclusive at the workflow level (which aligner, which trimmer, which rRNA-removal tool, whether QC ran at all), so more than one stage record has every field genuinely nullable. Don't force one.
+
 #### `--genome` reference catalogues
 
 `--genome <key>` resolves a bundle of reference paths from the `params.genomes` map. The pipeline ships the iGenomes catalogue out of the box, but the same mechanism works with a user-authored catalogue - that is the recommended path for modern reference data, since the iGenomes annotations are stale. If you add new fields to genome map entries, make them optional and gate behaviour on their presence (see e.g. the `star_legacy` flag in `conf/igenomes.config`).

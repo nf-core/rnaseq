@@ -60,6 +60,18 @@ include { QUANTIFY_PSEUDO_ALIGNMENT as QUANTIFY_BAM_SALMON } from '../../subwork
 include { QUANTIFY_PSEUDO_ALIGNMENT                         } from '../../subworkflows/nf-core/quantify_pseudo_alignment'
 include { FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS              } from '../../subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness'
 
+def getHisat2PercentMapped(align_log) {
+    def percent_aligned = 0
+    def pattern = /(\d+\.\d+)% overall alignment rate/
+    align_log.eachLine { line ->
+        def matcher = line =~ pattern
+        if (matcher) {
+            percent_aligned = matcher[0][1].toFloat()
+        }
+    }
+    return percent_aligned
+}
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
@@ -367,6 +379,7 @@ workflow RNASEQ {
         ch_genome_bam_index    = ch_genome_bam_index.mix(FASTQ_ALIGN_HISAT2.out.index)
         ch_unprocessed_bams    = ch_genome_bam.map { meta, bam -> [ meta, bam, '' ] }
         ch_unaligned_sequences = FASTQ_ALIGN_HISAT2.out.fastq
+        ch_percent_mapped      = ch_percent_mapped.mix(FASTQ_ALIGN_HISAT2.out.summary.map { meta, log -> [ meta, getHisat2PercentMapped(log) ] })
         ch_multiqc_files = ch_multiqc_files.mix(FASTQ_ALIGN_HISAT2.out.summary)
         ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
             .join(FASTQ_ALIGN_HISAT2.out.summary.map { meta, f -> [meta.id, f] }, remainder: true)

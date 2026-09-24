@@ -156,22 +156,38 @@ workflow NFCORE_RNASEQ {
         qc_tools
     )
 
+    ch_genome = ch_genome
+        .combine(RNASEQ.out.rrna_references)
+        .map { genome, rrna_references -> genome + record(rrna_references: rrna_references) }
+
     emit:
-    trim_status    = RNASEQ.out.trim_status    // channel: [id, boolean]
-    map_status     = RNASEQ.out.map_status     // channel: [id, boolean]
-    strand_status  = RNASEQ.out.strand_status  // channel: [id, boolean]
-    multiqc_report = RNASEQ.out.multiqc_report // channel: /path/to/multiqc_report.html
-    genome         = ch_genome                 // channel: GenomeReferences fields + index: GenomeIndices
-    preprocessed   = RNASEQ.out.preprocessed   // channel: FastqQcTrimFilterSetstrandedness
-    aligned        = RNASEQ.out.aligned        // channel: StarAligned | Bowtie2Aligned | Hisat2Aligned
-    umi_dedup      = RNASEQ.out.umi_dedup      // channel: UmiDedupBam
-    markdup        = RNASEQ.out.markdup        // channel: MarkdupBam
-    bam_qc         = RNASEQ.out.bam_qc         // channel: BamQcRnaseq
-    bam_qc_rustqc  = RNASEQ.out.bam_qc_rustqc  // channel: record(id, meta, samtools, dupradar, featurecounts, preseq, rseqc, qualimap)
-    quant          = RNASEQ.out.quant          // channel: RsemQuantSample | PseudoQuantSample, alignment-based quantifier
-    quant_merged   = RNASEQ.out.quant_merged   // channel: RsemQuantMerged | QuantMerged, alignment-based quantifier
-    quant_pseudo   = RNASEQ.out.quant_pseudo   // channel: PseudoQuantSample, pseudo-aligner
+    trim_status         = RNASEQ.out.trim_status         // channel: [id, boolean]
+    map_status          = RNASEQ.out.map_status          // channel: [id, boolean]
+    strand_status       = RNASEQ.out.strand_status       // channel: [id, boolean]
+    multiqc_report      = RNASEQ.out.multiqc_report      // channel: /path/to/multiqc_report.html
+    genome              = ch_genome                      // channel: GenomeReferences fields + index: GenomeIndices + rrna_references
+
+    // Stage result records, keyed on id
+    preprocessed        = RNASEQ.out.preprocessed        // channel: FastqQcTrimFilterSetstrandedness
+    aligned             = RNASEQ.out.aligned             // channel: StarAligned | Bowtie2Aligned | Hisat2Aligned
+    umi_dedup           = RNASEQ.out.umi_dedup           // channel: UmiDedupBam
+    markdup             = RNASEQ.out.markdup             // channel: MarkdupBam
+    bam_qc              = RNASEQ.out.bam_qc              // channel: BamQcRnaseq
+    bam_qc_rustqc       = RNASEQ.out.bam_qc_rustqc       // channel: record(id, meta, samtools, dupradar, featurecounts, preseq, rseqc, qualimap)
+    quant               = RNASEQ.out.quant               // channel: RsemQuantSample | PseudoQuantSample, alignment-based quantifier
+    quant_merged        = RNASEQ.out.quant_merged        // channel: RsemQuantMerged | QuantMerged, alignment-based quantifier
+    quant_pseudo        = RNASEQ.out.quant_pseudo        // channel: PseudoQuantSample, pseudo-aligner
     quant_merged_pseudo = RNASEQ.out.quant_merged_pseudo // channel: QuantMerged, pseudo-aligner
+    contaminants        = RNASEQ.out.contaminants        // channel: record(id, meta, kraken2, bracken, sylph, sylphtax)
+    stringtie           = RNASEQ.out.stringtie           // channel: record(id, meta, transcript_gtf, abundance, coverage_gtf, ballgown, denovo: StringtieAssembly?)
+    bigwig              = RNASEQ.out.bigwig              // channel: record(id, meta, combined, forward, reverse), each BigwigFiles
+
+    // Run-level result records
+    stringtie_merged    = RNASEQ.out.stringtie_merged    // channel: StringtieMerged
+    deseq2              = RNASEQ.out.deseq2              // channel: record(rdata, pca_vals, plots_pdf, sample_dists, size_factors, log), alignment-based quantifier
+    deseq2_pseudo       = RNASEQ.out.deseq2_pseudo       // channel: record(rdata, pca_vals, plots_pdf, sample_dists, size_factors, log), pseudo-aligner
+    multiqc             = RNASEQ.out.multiqc             // channel: MultiqcReport, per sample under skip_quantification_merge
+    pipeline_info       = RNASEQ.out.pipeline_info       // channel: record(versions)
 }
 
 /*

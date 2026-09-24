@@ -476,8 +476,9 @@ workflow RNASEQ {
             ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_RSEM.out.pca_multiqc.collect().map { file -> [[:], file] })
             ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_RSEM.out.dists_multiqc.collect().map { file -> [[:], file] })
 
-            // Every output is optional and emitted once, so each becomes a nullable field
-            ch_deseq2 = DESEQ2_QC_RSEM.out.rdata.toList().map { fs -> [fs ? fs[0] : null] }
+            // RData is written whenever the task runs, so it anchors the record;
+            // the other outputs are skipped for single-sample or single-gene input
+            ch_deseq2 = DESEQ2_QC_RSEM.out.rdata
                 .combine(DESEQ2_QC_RSEM.out.pca_txt.toList().map { fs -> [fs ? fs[0] : null] })
                 .combine(DESEQ2_QC_RSEM.out.pdf.toList().map { fs -> [fs ? fs[0] : null] })
                 .combine(DESEQ2_QC_RSEM.out.dists_txt.toList().map { fs -> [fs ? fs[0] : null] })
@@ -524,8 +525,9 @@ workflow RNASEQ {
             ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_BAM_SALMON.out.pca_multiqc.collect().map { file -> [[:], file] })
             ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_BAM_SALMON.out.dists_multiqc.collect().map { file -> [[:], file] })
 
-            // Every output is optional and emitted once, so each becomes a nullable field
-            ch_deseq2 = DESEQ2_QC_BAM_SALMON.out.rdata.toList().map { fs -> [fs ? fs[0] : null] }
+            // RData is written whenever the task runs, so it anchors the record;
+            // the other outputs are skipped for single-sample or single-gene input
+            ch_deseq2 = DESEQ2_QC_BAM_SALMON.out.rdata
                 .combine(DESEQ2_QC_BAM_SALMON.out.pca_txt.toList().map { fs -> [fs ? fs[0] : null] })
                 .combine(DESEQ2_QC_BAM_SALMON.out.pdf.toList().map { fs -> [fs ? fs[0] : null] })
                 .combine(DESEQ2_QC_BAM_SALMON.out.dists_txt.toList().map { fs -> [fs ? fs[0] : null] })
@@ -982,8 +984,9 @@ workflow RNASEQ {
             ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_PSEUDO.out.pca_multiqc.collect().map { file -> [[:], file] })
             ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_PSEUDO.out.dists_multiqc.collect().map { file -> [[:], file] })
 
-            // Every output is optional and emitted once, so each becomes a nullable field
-            ch_deseq2_pseudo = DESEQ2_QC_PSEUDO.out.rdata.toList().map { fs -> [fs ? fs[0] : null] }
+            // RData is written whenever the task runs, so it anchors the record;
+            // the other outputs are skipped for single-sample or single-gene input
+            ch_deseq2_pseudo = DESEQ2_QC_PSEUDO.out.rdata
                 .combine(DESEQ2_QC_PSEUDO.out.pca_txt.toList().map { fs -> [fs ? fs[0] : null] })
                 .combine(DESEQ2_QC_PSEUDO.out.pdf.toList().map { fs -> [fs ? fs[0] : null] })
                 .combine(DESEQ2_QC_PSEUDO.out.dists_txt.toList().map { fs -> [fs ? fs[0] : null] })

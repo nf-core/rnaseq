@@ -123,6 +123,8 @@ workflow RNASEQ {
     ch_markdup          = channel.empty()
     ch_bam_qc           = channel.empty()
     ch_bam_qc_rustqc    = channel.empty()
+    ch_quant            = channel.empty()
+    ch_quant_pseudo     = channel.empty()
 
     // Per-sample MultiQC bundle — `.join(..., remainder: true)` chains
     // fed to MULTIQC_RNASEQ. `collapseAgg` re-keys by meta.id at the end
@@ -442,6 +444,7 @@ workflow RNASEQ {
             params.skip_quantification_merge
         )
         ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_RSEM.out.stat)
+        ch_quant = QUANTIFY_RSEM.out.results
         ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
             .join(QUANTIFY_RSEM.out.stat.map { meta, f -> [meta.id, f] }, remainder: true)
 
@@ -473,6 +476,8 @@ workflow RNASEQ {
             params.kallisto_quant_fraglen_sd,
             params.skip_quantification_merge
         )
+        ch_quant = QUANTIFY_BAM_SALMON.out.sample_results
+
         if (!params.skip_qc && !params.skip_deseq2_qc && !params.skip_quantification_merge) {
             DESEQ2_QC_BAM_SALMON (
                 QUANTIFY_BAM_SALMON.out.counts_gene_length_scaled.map { _meta, counts -> counts },
@@ -821,6 +826,7 @@ workflow RNASEQ {
             params.skip_quantification_merge
         )
         ch_counts_gene_length_scaled = QUANTIFY_PSEUDO_ALIGNMENT.out.counts_gene_length_scaled
+        ch_quant_pseudo = QUANTIFY_PSEUDO_ALIGNMENT.out.sample_results
         ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_PSEUDO_ALIGNMENT.out.multiqc)
         ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
             .join(QUANTIFY_PSEUDO_ALIGNMENT.out.multiqc.map { meta, f -> [meta.id, f] }, remainder: true)
@@ -835,6 +841,14 @@ workflow RNASEQ {
             ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_PSEUDO.out.dists_multiqc.collect().map { file -> [[:], file] })
         }
     }
+
+    //
+    // Every quant row nests its quantifier's quant_merged record: one shared
+    // 'all_samples' copy when merging, a per-sample one under
+    // skip_quantification_merge. Deduplicating on id covers both modes.
+    //
+    ch_quant_merged        = ch_quant.map { r -> r.quant_merged }.unique { r -> r.id }
+    ch_quant_merged_pseudo = ch_quant_pseudo.map { r -> r.quant_merged }.unique { r -> r.id }
 
     //
     // Collate and save software versions from the `versions` topic
@@ -928,6 +942,10 @@ workflow RNASEQ {
     markdup        = ch_markdup        // channel: MarkdupBam
     bam_qc         = ch_bam_qc         // channel: BamQcRnaseq
     bam_qc_rustqc  = ch_bam_qc_rustqc  // channel: record(id, meta, samtools, dupradar, featurecounts, preseq, rseqc, qualimap)
+    quant          = ch_quant          // channel: RsemQuantSample | PseudoQuantSample, alignment-based quantifier
+    quant_merged   = ch_quant_merged   // channel: RsemQuantMerged | QuantMerged, alignment-based quantifier
+    quant_pseudo   = ch_quant_pseudo   // channel: PseudoQuantSample, pseudo-aligner
+    quant_merged_pseudo = ch_quant_merged_pseudo // channel: QuantMerged, pseudo-aligner
 }
 
 /*

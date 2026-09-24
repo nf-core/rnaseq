@@ -168,6 +168,10 @@ workflow NFCORE_RNASEQ {
     markdup        = RNASEQ.out.markdup        // channel: MarkdupBam
     bam_qc         = RNASEQ.out.bam_qc         // channel: BamQcRnaseq
     bam_qc_rustqc  = RNASEQ.out.bam_qc_rustqc  // channel: record(id, meta, samtools, dupradar, featurecounts, preseq, rseqc, qualimap)
+    quant          = RNASEQ.out.quant          // channel: RsemQuantSample | PseudoQuantSample, alignment-based quantifier
+    quant_merged   = RNASEQ.out.quant_merged   // channel: RsemQuantMerged | QuantMerged, alignment-based quantifier
+    quant_pseudo   = RNASEQ.out.quant_pseudo   // channel: PseudoQuantSample, pseudo-aligner
+    quant_merged_pseudo = RNASEQ.out.quant_merged_pseudo // channel: QuantMerged, pseudo-aligner
 }
 
 /*

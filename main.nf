@@ -401,6 +401,7 @@ output {
             s.star?.tab >> "${alignerDir(s)}/log/"
             s.hisat2?.summary >> "${alignerDir(s)}/log/"
             s.bowtie2?.log >> "${alignerDir(s)}/log/"
+            s.preexisting_bai >> "${samplePrefix(s)}samtools/"
         }
     }
 

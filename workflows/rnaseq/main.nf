@@ -209,6 +209,13 @@ workflow RNASEQ {
     )
     ch_genome_bam_index = SAMTOOLS_INDEX.out.index
 
+    // Only bam-input samples ever reach this point with a genuine task
+    // output here; give each a minimal record so its index still has a home
+    // once alignment runs for the fastq-input samples in the same run.
+    ch_aligned = ch_aligned.mix(
+        SAMTOOLS_INDEX.out.index.map { meta, bai -> record(id: meta.id, meta: meta, preexisting_bai: bai) }
+    )
+
     //
     // Run RNA-seq FASTQ preprocessing subworkflow
     //

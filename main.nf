@@ -245,6 +245,12 @@ workflow {
     aligned          = NFCORE_RNASEQ.out.aligned
     umi_dedup        = NFCORE_RNASEQ.out.umi_dedup
     markdup          = NFCORE_RNASEQ.out.markdup
+    quant               = NFCORE_RNASEQ.out.quant
+    quant_merged        = NFCORE_RNASEQ.out.quant_merged
+    quant_pseudo        = NFCORE_RNASEQ.out.quant_pseudo
+    quant_merged_pseudo = NFCORE_RNASEQ.out.quant_merged_pseudo
+    deseq2              = NFCORE_RNASEQ.out.deseq2
+    deseq2_pseudo       = NFCORE_RNASEQ.out.deseq2_pseudo
 }
 
 // Run-level records (e.g. a cross-sample merged file) are never sample-prefixed.
@@ -254,6 +260,7 @@ def trimLogDir(s)    { params.trimmer == 'fastp' ? "${samplePrefix(s)}${params.t
 def saveAlignBam(s)  { params.save_align_intermeds || params.skip_markduplicates }
 def saveUmiBam(s)    { params.save_align_intermeds || params.save_umi_intermeds }
 def umiDedupToolDir(s) { params.umi_dedup_tool == 'umicollapse' ? 'umicollapse' : 'umitools' }
+def pseudoAlignerDir(r) { "${samplePrefix(r)}${params.pseudo_aligner}" }
 
 // The dir the surviving reads would have published to under the mechanism
 // that last touched them (rRNA removal, then BBSplit), or null if neither
@@ -429,6 +436,85 @@ output {
             s.samtools?.stats >> "${alignerDir(s)}/samtools_stats/"
             s.samtools?.flagstat >> "${alignerDir(s)}/samtools_stats/"
             s.samtools?.idxstats >> "${alignerDir(s)}/samtools_stats/"
+        }
+    }
+
+    quant {   // RsemQuantSample | PseudoQuantSample (bam-salmon reuses the pseudo-alignment shape)
+        path { s ->
+            s.counts_gene >> "${alignerDir(s)}/"
+            s.counts_transcript >> "${alignerDir(s)}/"
+            s.stat >> "${alignerDir(s)}/"
+            s.log >> "${alignerDir(s)}/log/"
+            s.quant_dir >> "${alignerDir(s)}/"
+        }
+    }
+
+    quant_merged {   // RsemQuantMerged | QuantMerged; never sample-prefixed except under --skip_quantification_merge
+        path { r ->
+            r.tpm_gene >> "${alignerDir(r)}/"
+            r.counts_gene >> "${alignerDir(r)}/"
+            r.lengths_gene >> "${alignerDir(r)}/"
+            r.counts_gene_length_scaled >> (params.skip_quantification_merge ? null : "${alignerDir(r)}/")
+            r.counts_gene_scaled >> "${alignerDir(r)}/"
+            r.tpm_transcript >> "${alignerDir(r)}/"
+            r.counts_transcript >> "${alignerDir(r)}/"
+            r.lengths_transcript >> "${alignerDir(r)}/"
+            r.tx2gene >> "${alignerDir(r)}/"
+            r.tx2gene_augmented >> "${alignerDir(r)}/"
+            r.merged_gene_rds >> "${alignerDir(r)}/"
+            r.merged_transcript_rds >> "${alignerDir(r)}/"
+            r.rsem_merge?.counts_gene >> "${alignerDir(r)}/rsem_merge_counts/"
+            r.rsem_merge?.tpm_gene >> "${alignerDir(r)}/rsem_merge_counts/"
+            r.rsem_merge?.counts_transcript >> "${alignerDir(r)}/rsem_merge_counts/"
+            r.rsem_merge?.tpm_transcript >> "${alignerDir(r)}/rsem_merge_counts/"
+            r.rsem_merge?.genes_long >> "${alignerDir(r)}/rsem_merge_counts/"
+            r.rsem_merge?.isoforms_long >> "${alignerDir(r)}/rsem_merge_counts/"
+        }
+    }
+
+    quant_pseudo {   // PseudoQuantSample, pseudo-aligner
+        path { s ->
+            s.quant_dir >> "${pseudoAlignerDir(s)}/"
+            s.log >> "${pseudoAlignerDir(s)}/"
+        }
+    }
+
+    quant_merged_pseudo {   // QuantMerged, pseudo-aligner
+        path { r ->
+            r.tpm_gene >> "${pseudoAlignerDir(r)}/"
+            r.counts_gene >> "${pseudoAlignerDir(r)}/"
+            r.lengths_gene >> "${pseudoAlignerDir(r)}/"
+            r.counts_gene_length_scaled >> (params.skip_quantification_merge ? null : "${pseudoAlignerDir(r)}/")
+            r.counts_gene_scaled >> "${pseudoAlignerDir(r)}/"
+            r.tpm_transcript >> "${pseudoAlignerDir(r)}/"
+            r.counts_transcript >> "${pseudoAlignerDir(r)}/"
+            r.lengths_transcript >> "${pseudoAlignerDir(r)}/"
+            r.tx2gene >> "${pseudoAlignerDir(r)}/"
+            r.tx2gene_augmented >> "${pseudoAlignerDir(r)}/"
+            r.merged_gene_rds >> "${pseudoAlignerDir(r)}/"
+            r.merged_transcript_rds >> "${pseudoAlignerDir(r)}/"
+        }
+    }
+
+    deseq2 {   // record(rdata, pca_vals, plots_pdf, sample_dists, size_factors, log); anchor: rdata; never sample-prefixed
+        path { d ->
+            d.rdata >> "${params.aligner}/deseq2_qc/"
+            d.pca_vals >> "${params.aligner}/deseq2_qc/"
+            d.plots_pdf >> "${params.aligner}/deseq2_qc/"
+            d.sample_dists >> "${params.aligner}/deseq2_qc/"
+            d.size_factors >> "${params.aligner}/deseq2_qc/"
+            d.log >> "${params.aligner}/deseq2_qc/"
+        }
+    }
+
+    deseq2_pseudo {   // same shape, pseudo-aligner; never sample-prefixed
+        path { d ->
+            d.rdata >> "${params.pseudo_aligner}/deseq2_qc/"
+            d.pca_vals >> "${params.pseudo_aligner}/deseq2_qc/"
+            d.plots_pdf >> "${params.pseudo_aligner}/deseq2_qc/"
+            d.sample_dists >> "${params.pseudo_aligner}/deseq2_qc/"
+            d.size_factors >> "${params.pseudo_aligner}/deseq2_qc/"
+            d.log >> "${params.pseudo_aligner}/deseq2_qc/"
         }
     }
 }

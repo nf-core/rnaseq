@@ -252,6 +252,7 @@ workflow {
     deseq2              = NFCORE_RNASEQ.out.deseq2
     deseq2_pseudo       = NFCORE_RNASEQ.out.deseq2_pseudo
     bam_qc              = NFCORE_RNASEQ.out.bam_qc
+    bam_qc_rustqc       = NFCORE_RNASEQ.out.bam_qc_rustqc
     multiqc             = NFCORE_RNASEQ.out.multiqc
     pipeline_info       = NFCORE_RNASEQ.out.pipeline_info
 }
@@ -525,10 +526,6 @@ output {
         }
     }
 
-    // bam_qc_rustqc (the --use_rustqc alternative) is not routed here yet: RustQC's
-    // own saveAs closure renames some files (e.g. the biotype summary), which >>
-    // cannot do - it only chooses a directory, never a filename. Needs a decision
-    // (module-level rename vs. accepting a path/name change) before it's routed.
     bam_qc {   // BamQcRnaseq: preseq, featurecounts, biotype, qualimap, dupradar, rseqc
         path { s ->
             s.preseq?.lc_extrap >> "${alignerDir(s)}/preseq/"
@@ -566,6 +563,21 @@ output {
             s.rseqc?.innerdistance?.rscript >> "${alignerDir(s)}/rseqc/inner_distance/rscript/"
             s.rseqc?.tin?.txt >> "${alignerDir(s)}/rseqc/tin/"
             s.rseqc?.tin?.xls >> "${alignerDir(s)}/rseqc/tin/"
+        }
+    }
+
+    bam_qc_rustqc {   // record(id, meta, samtools, dupradar, featurecounts, preseq, rseqc, qualimap); --use_rustqc alternative
+        // >> only chooses a directory, never renames a file, so this drops the
+        // old saveAs rename: the biotype summary keeps RustQC's native
+        // *.featureCounts.biotype.tsv.summary name (cosmetic-only difference,
+        // see PR description).
+        path { s ->
+            s.samtools >> "${alignerDir(s)}/rustqc/samtools/"
+            s.dupradar >> "${alignerDir(s)}/rustqc/dupradar/"
+            s.featurecounts >> "${alignerDir(s)}/rustqc/featurecounts/"
+            s.preseq >> "${alignerDir(s)}/rustqc/preseq/"
+            s.rseqc >> "${alignerDir(s)}/rustqc/rseqc/"
+            s.qualimap >> "${alignerDir(s)}/rustqc/qualimap/"
         }
     }
 

@@ -243,6 +243,7 @@ workflow {
     genome           = NFCORE_RNASEQ.out.genome
     preprocessed     = NFCORE_RNASEQ.out.preprocessed
     aligned          = NFCORE_RNASEQ.out.aligned
+    umi_dedup        = NFCORE_RNASEQ.out.umi_dedup
 }
 
 // Run-level records (e.g. a cross-sample merged file) are never sample-prefixed.
@@ -250,6 +251,8 @@ def samplePrefix(r) { params.skip_quantification_merge ? "${r.id}/" : '' }
 def alignerDir(r)    { "${samplePrefix(r)}${params.aligner}" }
 def trimLogDir(s)    { params.trimmer == 'fastp' ? "${samplePrefix(s)}${params.trimmer}/log" : "${samplePrefix(s)}${params.trimmer}" }
 def saveAlignBam(s)  { params.save_align_intermeds || params.skip_markduplicates }
+def saveUmiBam(s)    { params.save_align_intermeds || params.save_umi_intermeds }
+def umiDedupToolDir(s) { params.umi_dedup_tool == 'umicollapse' ? 'umicollapse' : 'umitools' }
 
 // The dir the surviving reads would have published to under the mechanism
 // that last touched them (rRNA removal, then BBSplit), or null if neither
@@ -382,6 +385,37 @@ output {
             s.star?.tab >> "${alignerDir(s)}/log/"
             s.hisat2?.summary >> "${alignerDir(s)}/log/"
             s.bowtie2?.log >> "${alignerDir(s)}/log/"
+        }
+    }
+
+    umi_dedup {   // UmiDedupBam; anchor: genome.stats
+        path { s ->
+            s.genome?.stats >> "${alignerDir(s)}/samtools_stats/"
+            s.genome?.flagstat >> "${alignerDir(s)}/samtools_stats/"
+            s.genome?.idxstats >> "${alignerDir(s)}/samtools_stats/"
+            s.bam >> (saveUmiBam(s) ? "${alignerDir(s)}/" : null)
+            s.bai >> (saveUmiBam(s) ? "${alignerDir(s)}/" : null)
+            s.genomic_dedup_log >> "${alignerDir(s)}/${umiDedupToolDir(s)}/genomic_dedup_log/"
+            s.tsv?.edit_distance >> "${alignerDir(s)}/umitools/"
+            s.tsv?.per_umi >> "${alignerDir(s)}/umitools/"
+            s.tsv?.umi_per_position >> "${alignerDir(s)}/umitools/"
+            s.transcriptome?.coord_sorted_bam >> (saveUmiBam(s) ? "${alignerDir(s)}/" : null)
+            s.transcriptome?.coord_sorted_bam_index >> (saveUmiBam(s) ? "${alignerDir(s)}/" : null)
+            s.transcriptome?.coord_sorted_samtools?.stats >> (saveUmiBam(s) ? "${alignerDir(s)}/samtools_stats/" : null)
+            s.transcriptome?.coord_sorted_samtools?.flagstat >> (saveUmiBam(s) ? "${alignerDir(s)}/samtools_stats/" : null)
+            s.transcriptome?.coord_sorted_samtools?.idxstats >> (saveUmiBam(s) ? "${alignerDir(s)}/samtools_stats/" : null)
+            s.transcriptome?.sorted_bam >> (saveUmiBam(s) ? "${alignerDir(s)}/" : null)
+            s.transcriptome?.filtered_bam >> (saveUmiBam(s) ? "${alignerDir(s)}/" : null)
+            s.prepare_for_rsem_log >> "${alignerDir(s)}/umitools/prepare_for_quantification_log/"
+            s.transcriptomic_dedup_log >> "${alignerDir(s)}/${umiDedupToolDir(s)}/transcriptomic_dedup_log/"
+            s.transcriptome?.dedup_bam >> (saveUmiBam(s) ? "${alignerDir(s)}/" : null)
+            s.transcriptome?.sorted_bam_index >> (saveUmiBam(s) ? "${alignerDir(s)}/" : null)
+            s.transcriptome?.stats >> "${alignerDir(s)}/samtools_stats/"
+            s.transcriptome?.flagstat >> "${alignerDir(s)}/samtools_stats/"
+            s.transcriptome?.idxstats >> "${alignerDir(s)}/samtools_stats/"
+            s.transcriptome?.tsv?.edit_distance >> "${alignerDir(s)}/umitools/"
+            s.transcriptome?.tsv?.per_umi >> "${alignerDir(s)}/umitools/"
+            s.transcriptome?.tsv?.umi_per_position >> "${alignerDir(s)}/umitools/"
         }
     }
 }

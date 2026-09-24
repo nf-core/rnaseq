@@ -28,7 +28,8 @@ record PreprocessedUmi {
 }
 
 record PreprocessedBbsplit {
-    stats: Path
+    stats:              Path
+    other_genome_reads: List<Path>?
 }
 
 record PreprocessedLint {

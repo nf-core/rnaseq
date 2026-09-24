@@ -241,11 +241,24 @@ workflow {
     stringtie_merged = NFCORE_RNASEQ.out.stringtie_merged
     bigwig           = NFCORE_RNASEQ.out.bigwig
     genome           = NFCORE_RNASEQ.out.genome
+    preprocessed     = NFCORE_RNASEQ.out.preprocessed
 }
 
 // Run-level records (e.g. a cross-sample merged file) are never sample-prefixed.
 def samplePrefix(r) { params.skip_quantification_merge ? "${r.id}/" : '' }
 def alignerDir(r)    { "${samplePrefix(r)}${params.aligner}" }
+def trimLogDir(s)    { params.trimmer == 'fastp' ? "${samplePrefix(s)}${params.trimmer}/log" : "${samplePrefix(s)}${params.trimmer}" }
+
+// The dir the surviving reads would have published to under the mechanism
+// that last touched them (rRNA removal, then BBSplit), or null if neither
+// ran - trimming alone never publishes preprocessed.reads on its own.
+def readsLastStageDir(s) {
+    if (s.rrna?.sortmerna_log != null)    { return params.save_non_ribo_reads ? "${samplePrefix(s)}sortmerna" : null }
+    if (s.rrna?.ribodetector_log != null) { return params.save_non_ribo_reads ? "${samplePrefix(s)}ribodetector" : null }
+    if (s.rrna?.bowtie2_log != null)      { return params.save_non_ribo_reads ? "${samplePrefix(s)}bowtie2_rrna" : null }
+    if (s.bbsplit != null)                { return params.save_bbsplit_reads ? "${samplePrefix(s)}bbsplit" : null }
+    return null
+}
 
 output {
     contaminants {   // record(id, meta, kraken2, bracken, sylph, sylphtax); exactly one tool branch is populated per run
@@ -316,6 +329,38 @@ output {
             g.index?.sortmerna >> 'genome/sortmerna/'
             g.index?.bowtie2_rrna >> 'genome/index/'
             g.rrna_references?.bowtie2_index >> 'bowtie2_rrna/index/'
+        }
+    }
+
+    preprocessed {   // FastqQcTrimFilterSetstrandedness; anchor: lint.raw (unless --skip_linting) or fastqc.raw_zip
+        path { s ->
+            s.fastqc?.raw_html >> "${samplePrefix(s)}fastqc/raw/"
+            s.fastqc?.raw_zip >> "${samplePrefix(s)}fastqc/raw/"
+            s.fastqc?.trim_html >> "${samplePrefix(s)}fastqc/trim/"
+            s.fastqc?.trim_zip >> "${samplePrefix(s)}fastqc/trim/"
+            s.fastqc?.filtered_html >> "${samplePrefix(s)}fastqc/filtered/"
+            s.fastqc?.filtered_zip >> "${samplePrefix(s)}fastqc/filtered/"
+            s.trim?.html >> "${samplePrefix(s)}${params.trimmer}/"
+            s.trim?.log >> "${trimLogDir(s)}/"
+            s.trim?.json >> "${samplePrefix(s)}${params.trimmer}/"
+            s.trim?.unpaired >> (params.save_trimmed ? "${samplePrefix(s)}${params.trimmer}/" : null)
+            s.trim?.reads_fail >> (params.save_trimmed ? "${samplePrefix(s)}${params.trimmer}/" : null)
+            s.trim?.reads_merged >> (params.save_trimmed ? "${samplePrefix(s)}${params.trimmer}/" : null)
+            s.reads_trimmed >> (!params.skip_trimming && params.save_trimmed ? "${samplePrefix(s)}${params.trimmer}/" : null)
+            s.umi?.log >> "${samplePrefix(s)}umitools/"
+            s.umi?.reads >> (params.save_umi_intermeds ? "${samplePrefix(s)}umitools/" : null)
+            s.bbsplit?.stats >> "${samplePrefix(s)}bbsplit/"
+            s.bbsplit?.other_genome_reads >> (params.save_bbsplit_reads ? "${samplePrefix(s)}bbsplit/" : null)
+            s.lint?.raw >> "${samplePrefix(s)}fq_lint/raw/"
+            s.lint?.trimmed >> "${samplePrefix(s)}fq_lint/trimmed/"
+            s.lint?.bbsplit >> "${samplePrefix(s)}fq_lint/bbsplit/"
+            s.lint?.ribo >> "${samplePrefix(s)}fq_lint/${params.ribo_removal_tool ?: 'sortmerna'}/"
+            s.rrna?.sortmerna_log >> "${samplePrefix(s)}sortmerna/"
+            s.rrna?.ribodetector_log >> "${samplePrefix(s)}ribodetector/"
+            s.rrna?.seqkit_stats >> "${samplePrefix(s)}ribodetector/"
+            s.rrna?.bowtie2_log >> "${samplePrefix(s)}bowtie2_rrna/"
+            s.reads_cat >> (params.save_merged_fastq ? "${samplePrefix(s)}fastq/" : null)
+            s.reads >> readsLastStageDir(s)
         }
     }
 }

@@ -62,7 +62,7 @@ include { FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS              } from '../../subwor
 
 def getHisat2PercentMapped(align_log) {
     def percent_aligned = 0
-    def pattern = /(\d+\.\d+)% overall alignment rate/
+    def pattern = /Overall alignment rate:\s*([\d\.]+)%/
     align_log.eachLine { line ->
         def matcher = line =~ pattern
         if (matcher) {

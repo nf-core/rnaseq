@@ -162,6 +162,10 @@ workflow NFCORE_RNASEQ {
     strand_status  = RNASEQ.out.strand_status  // channel: [id, boolean]
     multiqc_report = RNASEQ.out.multiqc_report // channel: /path/to/multiqc_report.html
     genome         = ch_genome                 // channel: GenomeReferences fields + index: GenomeIndices
+    preprocessed   = RNASEQ.out.preprocessed   // channel: FastqQcTrimFilterSetstrandedness
+    aligned        = RNASEQ.out.aligned        // channel: StarAligned | Bowtie2Aligned | Hisat2Aligned
+    umi_dedup      = RNASEQ.out.umi_dedup      // channel: UmiDedupBam
+    markdup        = RNASEQ.out.markdup        // channel: MarkdupBam
 }
 
 /*

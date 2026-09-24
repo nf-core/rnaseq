@@ -117,6 +117,11 @@ workflow RNASEQ {
     ch_percent_mapped = channel.empty()
     ch_unaligned_sequences = channel.empty()
 
+    // Stage result records, one channel per stage; empty when the stage is skipped
+    ch_aligned          = channel.empty()
+    ch_umi_dedup        = channel.empty()
+    ch_markdup          = channel.empty()
+
     // Per-sample MultiQC bundle — `.join(..., remainder: true)` chains
     // fed to MULTIQC_RNASEQ. `collapseAgg` re-keys by meta.id at the end
     // of each multi-output subworkflow aggregation; sibling outputs are
@@ -288,6 +293,7 @@ workflow RNASEQ {
         ch_unprocessed_bams              = ch_genome_bam.join(ch_transcriptome_bam)
         ch_star_log                      = ALIGN_STAR.out.log_final
         ch_unaligned_sequences           = ALIGN_STAR.out.fastq
+        ch_aligned                       = ch_aligned.mix(ALIGN_STAR.out.results)
         ch_multiqc_files                 = ch_multiqc_files.mix(ch_star_log)
         ch_mqc_per_sample_bundle         = ch_mqc_per_sample_bundle
             .join(ch_star_log.map { meta, f -> [meta.id, f] }, remainder: true)
@@ -333,6 +339,7 @@ workflow RNASEQ {
         ch_percent_mapped                = ch_percent_mapped.mix(ALIGN_BOWTIE2.out.percent_mapped)
         ch_unprocessed_bams              = ch_genome_bam.map { meta, bam -> [ meta, bam, '' ] }
         ch_bowtie2_log                   = ALIGN_BOWTIE2.out.log_final
+        ch_aligned                       = ch_aligned.mix(ALIGN_BOWTIE2.out.results)
         ch_multiqc_files                 = ch_multiqc_files.mix(ch_bowtie2_log)
         ch_mqc_per_sample_bundle         = ch_mqc_per_sample_bundle
             .join(ch_bowtie2_log.map { meta, f -> [meta.id, f] }, remainder: true)
@@ -366,6 +373,7 @@ workflow RNASEQ {
         ch_genome_bam_index    = ch_genome_bam_index.mix(FASTQ_ALIGN_HISAT2.out.index)
         ch_unprocessed_bams    = ch_genome_bam.map { meta, bam -> [ meta, bam, '' ] }
         ch_unaligned_sequences = FASTQ_ALIGN_HISAT2.out.fastq
+        ch_aligned             = ch_aligned.mix(FASTQ_ALIGN_HISAT2.out.results)
         ch_multiqc_files = ch_multiqc_files.mix(FASTQ_ALIGN_HISAT2.out.summary)
         ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
             .join(FASTQ_ALIGN_HISAT2.out.summary.map { meta, f -> [meta.id, f] }, remainder: true)
@@ -406,6 +414,7 @@ workflow RNASEQ {
         ch_genome_bam        = BAM_DEDUP_UMI.out.bam
         ch_transcriptome_bam = BAM_DEDUP_UMI.out.transcriptome_bam
         ch_genome_bam_index  = BAM_DEDUP_UMI.out.index
+        ch_umi_dedup         = BAM_DEDUP_UMI.out.results
 
         ch_multiqc_files = ch_multiqc_files
             .mix(BAM_DEDUP_UMI.out.multiqc_files)
@@ -523,6 +532,7 @@ workflow RNASEQ {
         )
         ch_genome_bam       = BAM_MARKDUPLICATES_PICARD.out.bam
         ch_genome_bam_index = BAM_MARKDUPLICATES_PICARD.out.index
+        ch_markdup          = BAM_MARKDUPLICATES_PICARD.out.results
         ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.stats)
         ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.flagstat)
         ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.idxstats)
@@ -887,6 +897,12 @@ workflow RNASEQ {
     map_status     = ch_map_status     // channel: [id, boolean]
     strand_status  = ch_strand_status  // channel: [id, boolean]
     multiqc_report = ch_multiqc_report // channel: /path/to/multiqc_report.html
+
+    // Stage result records
+    preprocessed   = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.results // channel: FastqQcTrimFilterSetstrandedness
+    aligned        = ch_aligned        // channel: StarAligned | Bowtie2Aligned | Hisat2Aligned
+    umi_dedup      = ch_umi_dedup      // channel: UmiDedupBam
+    markdup        = ch_markdup        // channel: MarkdupBam
 }
 
 /*

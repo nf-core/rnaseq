@@ -1,4 +1,4 @@
-include { SamtoolsStatsFiles } from '../../nf-core/bam_sort_stats_samtools'
+include { SamtoolsStatsFiles } from '../../nf-core/bam_stats_samtools/types'
 
 record Bowtie2Logs {
     log: Path

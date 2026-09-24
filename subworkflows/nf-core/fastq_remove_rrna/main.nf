@@ -9,6 +9,7 @@ include { SEQKIT_REPLACE as SEQKIT_REPLACE_U2T     } from '../../../modules/nf-c
 include { SEQKIT_STATS                             } from '../../../modules/nf-core/seqkit/stats'
 include { SORTMERNA                                } from '../../../modules/nf-core/sortmerna'
 include { SORTMERNA as SORTMERNA_INDEX             } from '../../../modules/nf-core/sortmerna'
+include { FastqRemoveRrna                          } from './types'
 
 //
 // Function that parses seqkit stats TSV output to extract the mean read length
@@ -31,14 +32,6 @@ def getReadLengthFromSeqkitStats(stats_file) {
     def meanAvgLen = avgLens.sum() / avgLens.size()
 
     return Math.round(meanAvgLen) as int
-}
-
-record FastqRemoveRrna {
-    id:               String
-    sortmerna_log:    Path?
-    ribodetector_log: Path?
-    seqkit_stats:     Path?
-    bowtie2_log:      Path?
 }
 
 workflow FASTQ_REMOVE_RRNA {

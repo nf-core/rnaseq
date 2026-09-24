@@ -6,35 +6,7 @@ include { SALMON_QUANT     } from '../../../modules/nf-core/salmon/quant'
 include { KALLISTO_QUANT   } from '../../../modules/nf-core/kallisto/quant'
 
 include { QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT } from '../quant_tximport_summarizedexperiment'
-
-// Mirrors the QuantMerged record emitted by QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT.
-// nf-core tools treats every name included from a sibling subworkflow as a
-// subworkflow dependency, so the type cannot be included and is redeclared.
-record QuantMerged {
-    id:                        String
-    meta:                      Map
-    tpm_gene:                  Path
-    counts_gene:               Path
-    lengths_gene:              Path
-    counts_gene_length_scaled: Path
-    counts_gene_scaled:        Path
-    tpm_transcript:            Path
-    counts_transcript:         Path
-    lengths_transcript:        Path
-    tx2gene:                   Path
-    tx2gene_augmented:         Path
-    merged_gene_rds:           Path?
-    merged_transcript_rds:     Path?
-}
-
-record PseudoQuantSample {
-    id:           String
-    meta:         Map
-    quant_dir:    Path
-    json_info:    Path?
-    log:          Path?
-    quant_merged: QuantMerged
-}
+include { PseudoQuantSample                   } from './types'
 
 workflow QUANTIFY_PSEUDO_ALIGNMENT {
     take:

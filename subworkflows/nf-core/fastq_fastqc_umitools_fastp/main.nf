@@ -5,6 +5,7 @@ include { FASTQC as FASTQC_RAW  } from '../../../modules/nf-core/fastqc/main'
 include { FASTQC as FASTQC_TRIM } from '../../../modules/nf-core/fastqc/main'
 include { UMITOOLS_EXTRACT      } from '../../../modules/nf-core/umitools/extract/main'
 include { FASTP                 } from '../../../modules/nf-core/fastp/main'
+include { FastqFastqcUmitoolsFastp } from './types'
 
 //
 // Function that parses fastp json output file to get total number of reads after trimming
@@ -33,35 +34,6 @@ def getFastpAdapterSequence(json_file) {
     catch (Exception _ex) {
         return ""
     }
-}
-
-record FastpFastqc {
-    raw_html:  List<Path>
-    raw_zip:   List<Path>
-    trim_html: List<Path>?
-    trim_zip:  List<Path>?
-}
-
-record FastpTrim {
-    html:         Path
-    json:         Path
-    log:          Path
-    reads_fail:   List<Path>?
-    reads_merged: Path?
-}
-
-record UmitoolsExtractFiles {
-    log:   Path
-    reads: List<Path>
-}
-
-record FastqFastqcUmitoolsFastp {
-    id:                String
-    fastqc:            FastpFastqc?
-    umi:               UmitoolsExtractFiles?
-    trim:              FastpTrim?
-    adapter_seq:       String?
-    num_trimmed_reads: Long?
 }
 
 workflow FASTQ_FASTQC_UMITOOLS_FASTP {

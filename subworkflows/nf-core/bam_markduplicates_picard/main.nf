@@ -5,21 +5,7 @@
 include { PICARD_MARKDUPLICATES } from '../../../modules/nf-core/picard/markduplicates/main'
 include { SAMTOOLS_INDEX        } from '../../../modules/nf-core/samtools/index/main'
 include { BAM_STATS_SAMTOOLS    } from '../bam_stats_samtools/main'
-
-record SamtoolsStatsFiles {
-    stats:    Path
-    flagstat: Path
-    idxstats: Path
-}
-
-record MarkdupBam {
-    id:       String
-    bam:      Path?
-    cram:     Path?
-    bai:      Path
-    metrics:  Path
-    samtools: SamtoolsStatsFiles?
-}
+include { MarkdupBam            } from './types'
 
 workflow BAM_MARKDUPLICATES_PICARD {
     take:

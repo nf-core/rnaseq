@@ -5,6 +5,7 @@
 include { FASTQC           } from '../../../modules/nf-core/fastqc/main'
 include { UMITOOLS_EXTRACT } from '../../../modules/nf-core/umitools/extract/main'
 include { TRIMGALORE       } from '../../../modules/nf-core/trimgalore/main'
+include { FastqFastqcUmitoolsTrimgalore } from './types'
 
 //
 // Function that parses TrimGalore log output file to get total number of reads after trimming
@@ -23,32 +24,6 @@ def getTrimGaloreReadsAfterFiltering(log_file) {
         }
     }
     return total_reads - filtered_reads
-}
-
-record TrimgaloreFastqc {
-    raw_html: List<Path>
-    raw_zip:  List<Path>
-}
-
-record TrimgaloreTrim {
-    html:     List<Path>?
-    zip:      List<Path>?
-    log:      List<Path>?
-    json:     List<Path>?
-    unpaired: List<Path>?
-}
-
-record UmitoolsExtractFiles {
-    log:   Path
-    reads: List<Path>
-}
-
-record FastqFastqcUmitoolsTrimgalore {
-    id:                String
-    fastqc:            TrimgaloreFastqc?
-    umi:               UmitoolsExtractFiles?
-    trim:              TrimgaloreTrim?
-    num_trimmed_reads: Float?
 }
 
 workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {

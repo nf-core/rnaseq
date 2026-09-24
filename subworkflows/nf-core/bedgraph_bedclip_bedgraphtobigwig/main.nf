@@ -4,12 +4,7 @@
 
 include { UCSC_BEDCLIP          } from '../../../modules/nf-core/ucsc/bedclip/main'
 include { UCSC_BEDGRAPHTOBIGWIG } from '../../../modules/nf-core/ucsc/bedgraphtobigwig/main'
-
-record BigwigFiles {
-    id:       String
-    bigwig:   Path
-    bedgraph: Path
-}
+include { BigwigFiles           } from './types'
 
 workflow BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG {
     take:

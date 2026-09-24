@@ -7,27 +7,7 @@ include { SAMTOOLS_INDEX                           } from '../../../modules/nf-c
 include { SAMTOOLS_VIEW as SAMTOOLS_VIEW_PRIMARY   } from '../../../modules/nf-core/samtools/view'
 include { SAMTOOLS_INDEX as SAMTOOLS_INDEX_PRIMARY } from '../../../modules/nf-core/samtools/index/main'
 include { BAM_STATS_SAMTOOLS                       } from '../bam_stats_samtools/main'
-
-record SamtoolsStatsFiles {
-    stats:    Path
-    flagstat: Path
-    idxstats: Path
-}
-
-record UmitoolsDedupStats {
-    edit_distance:    Path
-    per_umi:          Path
-    umi_per_position: Path
-}
-
-record UmitoolsDedupBam {
-    id:        String
-    bam:       Path
-    bai:       Path
-    dedup_log: Path
-    samtools:  SamtoolsStatsFiles
-    tsv:       UmitoolsDedupStats?
-}
+include { UmitoolsDedupBam                         } from './types'
 
 workflow BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS {
     take:

@@ -7,23 +7,7 @@ include { TXIMETA_TXIMPORT } from '../../../modules/nf-core/tximeta/tximport'
 
 include { SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT as SE_GENE_UNIFIED       } from '../../../modules/nf-core/summarizedexperiment/summarizedexperiment'
 include { SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT as SE_TRANSCRIPT_UNIFIED } from '../../../modules/nf-core/summarizedexperiment/summarizedexperiment'
-
-record QuantMerged {
-    id:                        String
-    meta:                      Map
-    tpm_gene:                  Path
-    counts_gene:               Path
-    lengths_gene:              Path
-    counts_gene_length_scaled: Path
-    counts_gene_scaled:        Path
-    tpm_transcript:            Path
-    counts_transcript:         Path
-    lengths_transcript:        Path
-    tx2gene:                   Path
-    tx2gene_augmented:         Path
-    merged_gene_rds:           Path?
-    merged_transcript_rds:     Path?
-}
+include { QuantMerged                                                        } from './types'
 
 workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT {
     take:

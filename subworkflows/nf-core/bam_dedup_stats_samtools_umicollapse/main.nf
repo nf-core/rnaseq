@@ -5,20 +5,7 @@
 include { UMICOLLAPSE        } from '../../../modules/nf-core/umicollapse/main'
 include { SAMTOOLS_INDEX     } from '../../../modules/nf-core/samtools/index/main'
 include { BAM_STATS_SAMTOOLS } from '../bam_stats_samtools/main'
-
-record SamtoolsStatsFiles {
-    stats:    Path
-    flagstat: Path
-    idxstats: Path
-}
-
-record UmicollapseDedupBam {
-    id:          String
-    bam:         Path
-    bai:         Path
-    dedup_stats: Path
-    samtools:    SamtoolsStatsFiles
-}
+include { UmicollapseDedupBam } from './types'
 
 workflow BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE {
     take:

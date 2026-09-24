@@ -5,13 +5,7 @@
 include { SAMTOOLS_STATS    } from '../../../modules/nf-core/samtools/stats/main'
 include { SAMTOOLS_IDXSTATS } from '../../../modules/nf-core/samtools/idxstats/main'
 include { SAMTOOLS_FLAGSTAT } from '../../../modules/nf-core/samtools/flagstat/main'
-
-record SamtoolsStats {
-    id:       String
-    stats:    Path
-    flagstat: Path
-    idxstats: Path
-}
+include { SamtoolsStats     } from './types'
 
 workflow BAM_STATS_SAMTOOLS {
     take:

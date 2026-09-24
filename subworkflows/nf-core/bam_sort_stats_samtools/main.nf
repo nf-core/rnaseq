@@ -5,19 +5,7 @@
 include { SAMTOOLS_SORT      } from '../../../modules/nf-core/samtools/sort/main'
 include { SAMTOOLS_INDEX     } from '../../../modules/nf-core/samtools/index/main'
 include { BAM_STATS_SAMTOOLS } from '../bam_stats_samtools/main'
-
-record SamtoolsStatsFiles {
-    stats:    Path
-    flagstat: Path
-    idxstats: Path
-}
-
-record SortedBam {
-    id:       String
-    bam:      Path
-    bai:      Path
-    samtools: SamtoolsStatsFiles
-}
+include { SortedBam          } from './types'
 
 workflow BAM_SORT_STATS_SAMTOOLS {
     take:

@@ -10,53 +10,7 @@ include { RSEQC_JUNCTIONSATURATION } from '../../../modules/nf-core/rseqc/juncti
 include { RSEQC_READDISTRIBUTION   } from '../../../modules/nf-core/rseqc/readdistribution/main'
 include { RSEQC_READDUPLICATION    } from '../../../modules/nf-core/rseqc/readduplication/main'
 include { RSEQC_TIN                } from '../../../modules/nf-core/rseqc/tin/main'
-
-record RseqcInnerDistance {
-    distance: Path
-    freq:     Path?
-    mean:     Path?
-    pdf:      Path?
-    rscript:  Path?
-}
-
-record RseqcJunctionAnnotation {
-    bed:          Path?
-    interact_bed: Path?
-    xls:          Path
-    pdf:          Path?
-    events_pdf:   Path?
-    rscript:      Path
-    log:          Path
-}
-
-record RseqcJunctionSaturation {
-    pdf:     Path
-    rscript: Path
-}
-
-record RseqcReadDuplication {
-    seq_xls: Path
-    pos_xls: Path
-    pdf:     Path
-    rscript: Path
-}
-
-record RseqcTin {
-    txt: Path
-    xls: Path
-}
-
-record Rseqc {
-    id:                 String
-    bamstat:            Path?
-    inferexperiment:    Path?
-    innerdistance:      RseqcInnerDistance?
-    junctionannotation: RseqcJunctionAnnotation?
-    junctionsaturation: RseqcJunctionSaturation?
-    readdistribution:   Path?
-    readduplication:    RseqcReadDuplication?
-    tin:                RseqcTin?
-}
+include { Rseqc                    } from './types'
 
 workflow BAM_RSEQC {
     take:

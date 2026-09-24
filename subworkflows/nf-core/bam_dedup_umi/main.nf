@@ -10,43 +10,7 @@ include { BAM_SORT_STATS_SAMTOOLS                                               
 
 include { UMITOOLS_PREPAREFORRSEM                                                                    } from '../../../modules/nf-core/umitools/prepareforrsem'
 include { SAMTOOLS_SORT                                                                              } from '../../../modules/nf-core/samtools/sort/main'
-
-record SamtoolsStatsFiles {
-    stats:    Path
-    flagstat: Path
-    idxstats: Path
-}
-
-record UmitoolsDedupStats {
-    edit_distance:    Path
-    per_umi:          Path
-    umi_per_position: Path
-}
-
-record UmiDedupTranscriptome {
-    bam:              Path
-    dedup_bam:        Path
-    sorted_bam:       Path
-    sorted_bam_index: Path
-    filtered_bam:     Path?
-    stats:            Path
-    flagstat:         Path
-    idxstats:         Path
-    tsv:              UmitoolsDedupStats?
-}
-
-record UmiDedupBam {
-    id:                       String
-    meta:                     Map
-    bam:                      Path
-    bai:                      Path
-    genomic_dedup_log:        Path
-    transcriptomic_dedup_log: Path?
-    prepare_for_rsem_log:     Path?
-    genome:                   SamtoolsStatsFiles
-    transcriptome:            UmiDedupTranscriptome?
-    tsv:                      UmitoolsDedupStats?
-}
+include { UmiDedupBam                                                                                } from './types'
 
 workflow BAM_DEDUP_UMI {
     take:

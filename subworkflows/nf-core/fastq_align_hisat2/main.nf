@@ -1,27 +1,6 @@
 include { HISAT2_ALIGN            } from '../../../modules/nf-core/hisat2/align/main'
 include { BAM_SORT_STATS_SAMTOOLS } from '../bam_sort_stats_samtools/main'
-
-record SamtoolsStatsFiles {
-    stats:    Path
-    flagstat: Path
-    idxstats: Path
-}
-
-record Hisat2Logs {
-    summary: Path
-}
-
-record Hisat2Aligned {
-    id:       String
-    meta:     Map
-    aligner:  String
-    orig_bam: Path
-    unmapped: List<Path>?
-    hisat2:   Hisat2Logs
-    bam:      Path
-    bai:      Path
-    samtools: SamtoolsStatsFiles
-}
+include { Hisat2Aligned           } from './types'
 
 workflow FASTQ_ALIGN_HISAT2 {
     take:

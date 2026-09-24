@@ -253,6 +253,7 @@ workflow {
     deseq2_pseudo       = NFCORE_RNASEQ.out.deseq2_pseudo
     bam_qc              = NFCORE_RNASEQ.out.bam_qc
     multiqc             = NFCORE_RNASEQ.out.multiqc
+    pipeline_info       = NFCORE_RNASEQ.out.pipeline_info
 }
 
 // Run-level records (e.g. a cross-sample merged file) are never sample-prefixed.
@@ -574,6 +575,12 @@ output {
             m.data >> "${multiqcDir(m)}/"
             m.plots >> "${multiqcDir(m)}/"
         }
+    }
+
+    pipeline_info {   // record(versions); anchor: versions. Needs VM verification:
+                       // collectFile() without storeDir must produce a task-output
+                       // path for >> to route (nextflow-io/nextflow#7667).
+        path { p -> p.versions >> 'pipeline_info/' }
     }
 }
 

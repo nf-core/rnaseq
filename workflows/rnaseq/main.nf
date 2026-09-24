@@ -968,7 +968,7 @@ workflow RNASEQ {
     //
     ch_collated_versions = softwareVersionsToYAML(topic_versions.versions_file)
         .mix(topic_versions_string)
-        .collectFile(storeDir: "${params.outdir}/pipeline_info", name: 'nf_core_rnaseq_software_mqc_versions.yml', sort: true, newLine: true)
+        .collectFile(name: 'nf_core_rnaseq_software_mqc_versions.yml', sort: true, newLine: true)
 
     ch_pipeline_info = ch_collated_versions.map { versions -> record(versions: versions) }
 

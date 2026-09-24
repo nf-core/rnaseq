@@ -209,6 +209,13 @@ workflow RNASEQ {
     )
     ch_genome_bam_index = SAMTOOLS_INDEX.out.index
 
+    // Only bam-input samples ever reach this point with a genuine task
+    // output here; give each a minimal record so its index still has a home
+    // once alignment runs for the fastq-input samples in the same run.
+    ch_aligned = ch_aligned.mix(
+        SAMTOOLS_INDEX.out.index.map { meta, bai -> record(id: meta.id, meta: meta, preexisting_bai: bai) }
+    )
+
     //
     // Run RNA-seq FASTQ preprocessing subworkflow
     //
@@ -968,7 +975,7 @@ workflow RNASEQ {
     //
     ch_collated_versions = softwareVersionsToYAML(topic_versions.versions_file)
         .mix(topic_versions_string)
-        .collectFile(storeDir: "${params.outdir}/pipeline_info", name: 'nf_core_rnaseq_software_mqc_versions.yml', sort: true, newLine: true)
+        .collectFile(name: 'nf_core_rnaseq_software_mqc_versions.yml', sort: true, newLine: true)
 
     ch_pipeline_info = ch_collated_versions.map { versions -> record(versions: versions) }
 

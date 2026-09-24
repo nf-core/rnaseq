@@ -147,6 +147,8 @@ workflow PREPARE_GENOME_INDICES {
     // 4) STAR index (e.g. for 'star_salmon') -> needs FASTA if built
     //----------------------------------------------------
     ch_star_index = channel.empty()
+    // Publishable form; for a legacy index this is the raw untarred index, not the upgraded copy STAR_ALIGN uses.
+    ch_star_index_publish = channel.empty()
     if (prepare_tool_indices.intersect(['star_salmon', 'star_rsem'])) {
         if (use_parabricks_star && fasta_provided) {
             // Parabricks needs its own STAR index built with its bundled STAR version
@@ -154,6 +156,7 @@ workflow PREPARE_GENOME_INDICES {
                 ch_fasta.map { item -> [ [:], item ] },
                 ch_gtf.map   { item -> [ [:], item ] }
             ).index.map { tuple -> tuple[1] }
+            ch_star_index_publish = ch_star_index
         } else if (star_index) {
             // Pre-built STAR index supplied by the user. When star_index_legacy is set
             // (genomes-map opt-in for indices built with STAR 2.6.x, e.g. AWS iGenomes),
@@ -163,15 +166,17 @@ workflow PREPARE_GENOME_INDICES {
             def ch_star_raw = star_index.endsWith('.tar.gz')
                 ? UNTAR_STAR_INDEX([ [:], file(star_index, checkIfExists: true) ]).untar
                 : channel.value([ [:], file(star_index, checkIfExists: true) ])
+            ch_star_index_publish = ch_star_raw.map { tuple -> tuple[1] }
             ch_star_index = star_index_legacy
                 ? STAR_GENOMEPARAMS_UPGRADE(ch_star_raw).index.map { tuple -> tuple[1] }
-                : ch_star_raw.map { tuple -> tuple[1] }
+                : ch_star_index_publish
         }
         else if (fasta_provided) {
             ch_star_index = STAR_GENOMEGENERATE(
                 ch_fasta.map { item -> [ [:], item ] },
                 ch_gtf.map { item -> [ [:], item ] }
             ).index.map { tuple -> tuple[1] }
+            ch_star_index_publish = ch_star_index
         }
     }
 
@@ -179,6 +184,8 @@ workflow PREPARE_GENOME_INDICES {
     // 5) RSEM index -> needs FASTA & GTF if built
     //------------------------------------------------
     ch_rsem_index = channel.empty()
+    // Incidental *transcripts.fa the index step also emits; unused, still published under --save_reference.
+    ch_rsem_transcript_fasta = channel.empty()
     if ('star_rsem' in prepare_tool_indices) {
         if (rsem_index) {
             if (rsem_index.endsWith('.tar.gz')) {
@@ -190,9 +197,13 @@ workflow PREPARE_GENOME_INDICES {
         else if (fasta_provided) {
 
             if(use_sentieon_star){
-                ch_rsem_index = SENTIEON_RSEM_PREPAREREFERENCE_GENOME(ch_fasta, ch_gtf).index
+                SENTIEON_RSEM_PREPAREREFERENCE_GENOME(ch_fasta, ch_gtf)
+                ch_rsem_index            = SENTIEON_RSEM_PREPAREREFERENCE_GENOME.out.index
+                ch_rsem_transcript_fasta = SENTIEON_RSEM_PREPAREREFERENCE_GENOME.out.transcript_fasta
             }else{
-                ch_rsem_index = RSEM_PREPAREREFERENCE_GENOME(ch_fasta, ch_gtf).index
+                RSEM_PREPAREREFERENCE_GENOME(ch_fasta, ch_gtf)
+                ch_rsem_index            = RSEM_PREPAREREFERENCE_GENOME.out.index
+                ch_rsem_transcript_fasta = RSEM_PREPAREREFERENCE_GENOME.out.transcript_fasta
             }
 
         }
@@ -301,10 +312,11 @@ workflow PREPARE_GENOME_INDICES {
     // Each field is wrapped in a single-element list so combine() keeps one
     // position per field, including nulls. The sortmerna channel carries a bare
     // path from UNTAR but a [ meta, path ] tuple otherwise.
-    ch_results = ch_star_index
+    ch_results = ch_star_index_publish
         .toList()
         .map { items -> [ taskOutputOrNull(items[0]) ] }
         .combine(ch_rsem_index.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
+        .combine(ch_rsem_transcript_fasta.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
         .combine(ch_hisat2_index.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
         .combine(ch_splicesites.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
         .combine(ch_bowtie2_index.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
@@ -313,18 +325,19 @@ workflow PREPARE_GENOME_INDICES {
         .combine(ch_bbsplit_index.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
         .combine(ch_sortmerna_index.toList().map { items -> [ taskOutputOrNull(items[0] instanceof List ? items[0][1] : items[0]) ] })
         .combine(ch_bowtie2_rrna_index.toList().map { items -> [ items ? taskOutputOrNull(items[0][1]) : null ] })
-        .map { star, rsem, hisat2, hisat2_splicesites, bowtie2, salmon, kallisto, bbsplit, sortmerna, bowtie2_rrna ->
+        .map { star, rsem, rsem_transcript_fasta, hisat2, hisat2_splicesites, bowtie2, salmon, kallisto, bbsplit, sortmerna, bowtie2_rrna ->
             record(
-                star:               star,
-                rsem:               rsem,
-                hisat2:             hisat2,
-                hisat2_splicesites: hisat2_splicesites,
-                bowtie2:            bowtie2,
-                salmon:             salmon,
-                kallisto:           kallisto,
-                bbsplit:            bbsplit,
-                sortmerna:          sortmerna,
-                bowtie2_rrna:       bowtie2_rrna
+                star:                  star,
+                rsem:                  rsem,
+                rsem_transcript_fasta: rsem_transcript_fasta,
+                hisat2:                hisat2,
+                hisat2_splicesites:    hisat2_splicesites,
+                bowtie2:               bowtie2,
+                salmon:                salmon,
+                kallisto:              kallisto,
+                bbsplit:               bbsplit,
+                sortmerna:             sortmerna,
+                bowtie2_rrna:          bowtie2_rrna
             )
         }
 

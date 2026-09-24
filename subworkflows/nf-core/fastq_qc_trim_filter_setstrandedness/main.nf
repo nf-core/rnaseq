@@ -373,9 +373,18 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         ch_bbsplit_stats = BBMAP_BBSPLIT.out.stats
         ch_multiqc_files = ch_multiqc_files.mix(BBMAP_BBSPLIT.out.stats)
 
+        // all_fastq includes the primary reads too; keep only the rest for publishing.
+        ch_bbsplit_other_reads = BBMAP_BBSPLIT.out.all_fastq
+            .join(BBMAP_BBSPLIT.out.primary_fastq)
+            .map { meta, all, primary ->
+                def primary_names = [primary].flatten()*.name
+                [meta, [all].flatten().findAll { f -> !(f.name in primary_names) }]
+            }
+
         ch_results = ch_results
             .join(ch_bbsplit_stats.map { meta, stats -> [meta.id, stats] }, by: [0], remainder: true)
-            .map { id, fields, stats -> [id, fields + [bbsplit: stats != null ? record(stats: stats) : null]] }
+            .join(ch_bbsplit_other_reads.map { meta, other -> [meta.id, other] }, by: [0], remainder: true)
+            .map { id, fields, stats, other_reads -> [id, fields + [bbsplit: stats != null ? record(stats: stats, other_genome_reads: other_reads) : null]] }
 
         if (!skip_linting) {
             FQ_LINT_AFTER_BBSPLIT(

@@ -260,9 +260,9 @@ workflow {
 def samplePrefix(r) { params.skip_quantification_merge ? "${r.id}/" : '' }
 def alignerDir(r)    { "${samplePrefix(r)}${params.aligner}" }
 def trimLogDir(s)    { params.trimmer == 'fastp' ? "${samplePrefix(s)}${params.trimmer}/log" : "${samplePrefix(s)}${params.trimmer}" }
-def saveAlignBam(s)  { params.save_align_intermeds || params.skip_markduplicates }
-def saveUmiBam(s)    { params.save_align_intermeds || params.save_umi_intermeds }
-def umiDedupToolDir(s) { params.umi_dedup_tool == 'umicollapse' ? 'umicollapse' : 'umitools' }
+def saveAlignBam(_s)  { params.save_align_intermeds || params.skip_markduplicates }
+def saveUmiBam(_s)    { params.save_align_intermeds || params.save_umi_intermeds }
+def umiDedupToolDir(_s) { params.umi_dedup_tool == 'umicollapse' ? 'umicollapse' : 'umitools' }
 def pseudoAlignerDir(r) { "${samplePrefix(r)}${params.pseudo_aligner}" }
 def multiqcDir(m) {
     def suffix = params.skip_alignment ? '' : "/${params.aligner}"

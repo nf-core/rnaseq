@@ -1264,7 +1264,7 @@
                 "WT_REP2.umi_extract_2.fastq.gz:md5,067ff23f8d1307ad241cd70bc186b5c1"
             ]
         ],
-        "timestamp": "2026-09-24T08:45:31.623528447",
+        "timestamp": "2026-09-24T09:28:56.548546426",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -2568,7 +2568,7 @@
                 "WT_REP2.umi_extract_2.fastq.gz:md5,067ff23f8d1307ad241cd70bc186b5c1"
             ]
         ],
-        "timestamp": "2026-09-24T08:41:08.623726014",
+        "timestamp": "2026-09-24T09:25:49.761336677",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

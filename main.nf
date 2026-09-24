@@ -363,7 +363,7 @@ output {
             s.fastqc?.filtered_zip >> "${samplePrefix(s)}fastqc/filtered/"
             s.trim?.html >> "${samplePrefix(s)}${params.trimmer}/"
             s.trim?.log >> "${trimLogDir(s)}/"
-            s.trim?.json >> "${samplePrefix(s)}${params.trimmer}/"
+            s.trim?.json >> (params.trimmer == 'fastp' ? "${samplePrefix(s)}${params.trimmer}/" : null)
             s.trim?.unpaired >> (params.save_trimmed ? "${samplePrefix(s)}${params.trimmer}/" : null)
             s.trim?.reads_fail >> (params.save_trimmed ? "${samplePrefix(s)}${params.trimmer}/" : null)
             s.trim?.reads_merged >> (params.save_trimmed ? "${samplePrefix(s)}${params.trimmer}/" : null)

@@ -25,6 +25,7 @@ include { BAM_DEDUP_UMI                         } from '../../subworkflows/nf-co
 include { checkSamplesAfterGrouping      } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { classifyStrand                 } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { mapBamToPublishedPath          } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { buildDeseq2Record              } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -476,24 +477,7 @@ workflow RNASEQ {
             ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_RSEM.out.pca_multiqc.collect().map { file -> [[:], file] })
             ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_RSEM.out.dists_multiqc.collect().map { file -> [[:], file] })
 
-            // RData is written whenever the task runs, so it anchors the record;
-            // the other outputs are skipped for single-sample or single-gene input
-            ch_deseq2 = DESEQ2_QC_RSEM.out.rdata
-                .combine(DESEQ2_QC_RSEM.out.pca_txt.toList().map { fs -> [fs ? fs[0] : null] })
-                .combine(DESEQ2_QC_RSEM.out.pdf.toList().map { fs -> [fs ? fs[0] : null] })
-                .combine(DESEQ2_QC_RSEM.out.dists_txt.toList().map { fs -> [fs ? fs[0] : null] })
-                .combine(DESEQ2_QC_RSEM.out.size_factors.toList().map { fs -> [fs ? fs[0] : null] })
-                .combine(DESEQ2_QC_RSEM.out.log.toList().map { fs -> [fs ? fs[0] : null] })
-                .map { rdata, pca_vals, plots_pdf, sample_dists, size_factors, log ->
-                    record(
-                        rdata:        rdata,
-                        pca_vals:     pca_vals,
-                        plots_pdf:    plots_pdf,
-                        sample_dists: sample_dists,
-                        size_factors: size_factors,
-                        log:          log
-                    )
-                }
+            ch_deseq2 = buildDeseq2Record(DESEQ2_QC_RSEM.out.rdata, DESEQ2_QC_RSEM.out.pca_txt, DESEQ2_QC_RSEM.out.pdf, DESEQ2_QC_RSEM.out.dists_txt, DESEQ2_QC_RSEM.out.size_factors, DESEQ2_QC_RSEM.out.log)
         }
 
     } else if (params.aligner in ['star_salmon', 'bowtie2_salmon']) {
@@ -525,24 +509,7 @@ workflow RNASEQ {
             ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_BAM_SALMON.out.pca_multiqc.collect().map { file -> [[:], file] })
             ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_BAM_SALMON.out.dists_multiqc.collect().map { file -> [[:], file] })
 
-            // RData is written whenever the task runs, so it anchors the record;
-            // the other outputs are skipped for single-sample or single-gene input
-            ch_deseq2 = DESEQ2_QC_BAM_SALMON.out.rdata
-                .combine(DESEQ2_QC_BAM_SALMON.out.pca_txt.toList().map { fs -> [fs ? fs[0] : null] })
-                .combine(DESEQ2_QC_BAM_SALMON.out.pdf.toList().map { fs -> [fs ? fs[0] : null] })
-                .combine(DESEQ2_QC_BAM_SALMON.out.dists_txt.toList().map { fs -> [fs ? fs[0] : null] })
-                .combine(DESEQ2_QC_BAM_SALMON.out.size_factors.toList().map { fs -> [fs ? fs[0] : null] })
-                .combine(DESEQ2_QC_BAM_SALMON.out.log.toList().map { fs -> [fs ? fs[0] : null] })
-                .map { rdata, pca_vals, plots_pdf, sample_dists, size_factors, log ->
-                    record(
-                        rdata:        rdata,
-                        pca_vals:     pca_vals,
-                        plots_pdf:    plots_pdf,
-                        sample_dists: sample_dists,
-                        size_factors: size_factors,
-                        log:          log
-                    )
-                }
+            ch_deseq2 = buildDeseq2Record(DESEQ2_QC_BAM_SALMON.out.rdata, DESEQ2_QC_BAM_SALMON.out.pca_txt, DESEQ2_QC_BAM_SALMON.out.pdf, DESEQ2_QC_BAM_SALMON.out.dists_txt, DESEQ2_QC_BAM_SALMON.out.size_factors, DESEQ2_QC_BAM_SALMON.out.log)
         }
     }
 
@@ -984,24 +951,7 @@ workflow RNASEQ {
             ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_PSEUDO.out.pca_multiqc.collect().map { file -> [[:], file] })
             ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_PSEUDO.out.dists_multiqc.collect().map { file -> [[:], file] })
 
-            // RData is written whenever the task runs, so it anchors the record;
-            // the other outputs are skipped for single-sample or single-gene input
-            ch_deseq2_pseudo = DESEQ2_QC_PSEUDO.out.rdata
-                .combine(DESEQ2_QC_PSEUDO.out.pca_txt.toList().map { fs -> [fs ? fs[0] : null] })
-                .combine(DESEQ2_QC_PSEUDO.out.pdf.toList().map { fs -> [fs ? fs[0] : null] })
-                .combine(DESEQ2_QC_PSEUDO.out.dists_txt.toList().map { fs -> [fs ? fs[0] : null] })
-                .combine(DESEQ2_QC_PSEUDO.out.size_factors.toList().map { fs -> [fs ? fs[0] : null] })
-                .combine(DESEQ2_QC_PSEUDO.out.log.toList().map { fs -> [fs ? fs[0] : null] })
-                .map { rdata, pca_vals, plots_pdf, sample_dists, size_factors, log ->
-                    record(
-                        rdata:        rdata,
-                        pca_vals:     pca_vals,
-                        plots_pdf:    plots_pdf,
-                        sample_dists: sample_dists,
-                        size_factors: size_factors,
-                        log:          log
-                    )
-                }
+            ch_deseq2_pseudo = buildDeseq2Record(DESEQ2_QC_PSEUDO.out.rdata, DESEQ2_QC_PSEUDO.out.pca_txt, DESEQ2_QC_PSEUDO.out.pdf, DESEQ2_QC_PSEUDO.out.dists_txt, DESEQ2_QC_PSEUDO.out.size_factors, DESEQ2_QC_PSEUDO.out.log)
         }
     }
 

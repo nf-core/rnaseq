@@ -244,6 +244,7 @@ workflow {
     preprocessed     = NFCORE_RNASEQ.out.preprocessed
     aligned          = NFCORE_RNASEQ.out.aligned
     umi_dedup        = NFCORE_RNASEQ.out.umi_dedup
+    markdup          = NFCORE_RNASEQ.out.markdup
 }
 
 // Run-level records (e.g. a cross-sample merged file) are never sample-prefixed.
@@ -416,6 +417,18 @@ output {
             s.transcriptome?.tsv?.edit_distance >> "${alignerDir(s)}/umitools/"
             s.transcriptome?.tsv?.per_umi >> "${alignerDir(s)}/umitools/"
             s.transcriptome?.tsv?.umi_per_position >> "${alignerDir(s)}/umitools/"
+        }
+    }
+
+    markdup {   // MarkdupBam; anchor: metrics
+        path { s ->
+            s.metrics >> "${alignerDir(s)}/picard_metrics/"
+            s.bam >> "${alignerDir(s)}/"
+            s.cram >> "${alignerDir(s)}/"
+            s.bai >> "${alignerDir(s)}/"
+            s.samtools?.stats >> "${alignerDir(s)}/samtools_stats/"
+            s.samtools?.flagstat >> "${alignerDir(s)}/samtools_stats/"
+            s.samtools?.idxstats >> "${alignerDir(s)}/samtools_stats/"
         }
     }
 }

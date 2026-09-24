@@ -26,6 +26,9 @@ include { SENTIEON_RSEMPREPAREREFERENCE as SENTIEON_RSEM_PREPAREREFERENCE_GENOME
 
 include { STAR_GENOMEPARAMS_UPGRADE         } from '../../../modules/local/star_genomeparams_upgrade'
 
+include { taskOutputOrNull                  } from '../utils_nfcore_rnaseq_pipeline'
+include { GenomeIndices                     } from './types'
+
 workflow PREPARE_GENOME_INDICES {
 
     take:
@@ -84,14 +87,13 @@ workflow PREPARE_GENOME_INDICES {
         }
         else if (fasta_provided) {
             // Build it from scratch if we have FASTA
-            channel
+            def ch_bbsplit_fasta_list = channel
                 .from(file(bbsplit_fasta_list, checkIfExists: true))
                 .splitCsv() // Read in 2 column csv file: short_name,path_to_fasta
                 .flatMap { id, fafile -> [ [ 'id', id ], [ 'fasta', file(fafile, checkIfExists: true) ] ] } // Flatten entries to be able to groupTuple by a common key
                 .groupTuple()
                 .map { entry -> entry[1] } // Get rid of keys and keep grouped values
                 .collect { item -> [ item ] } // Collect entries as a list to pass as "tuple val(short_names), path(path_to_fasta)" to module
-                .set { ch_bbsplit_fasta_list }
 
             ch_bbsplit_index = BBMAP_BBSPLIT(
                 [ [:], [] ],
@@ -293,6 +295,39 @@ workflow PREPARE_GENOME_INDICES {
         }
     }
 
+    //--------------------------------------------------
+    // 10) Whole-run indices record
+    //--------------------------------------------------
+    // Each field is wrapped in a single-element list so combine() keeps one
+    // position per field, including nulls. The sortmerna channel carries a bare
+    // path from UNTAR but a [ meta, path ] tuple otherwise.
+    ch_results = ch_star_index
+        .toList()
+        .map { items -> [ taskOutputOrNull(items[0]) ] }
+        .combine(ch_rsem_index.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
+        .combine(ch_hisat2_index.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
+        .combine(ch_splicesites.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
+        .combine(ch_bowtie2_index.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
+        .combine(ch_salmon_index.toList().map { items -> [ items ? taskOutputOrNull(items[0][1]) : null ] })
+        .combine(ch_kallisto_index.toList().map { items -> [ items ? taskOutputOrNull(items[0][1]) : null ] })
+        .combine(ch_bbsplit_index.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
+        .combine(ch_sortmerna_index.toList().map { items -> [ taskOutputOrNull(items[0] instanceof List ? items[0][1] : items[0]) ] })
+        .combine(ch_bowtie2_rrna_index.toList().map { items -> [ items ? taskOutputOrNull(items[0][1]) : null ] })
+        .map { star, rsem, hisat2, hisat2_splicesites, bowtie2, salmon, kallisto, bbsplit, sortmerna, bowtie2_rrna ->
+            record(
+                star:               star,
+                rsem:               rsem,
+                hisat2:             hisat2,
+                hisat2_splicesites: hisat2_splicesites,
+                bowtie2:            bowtie2,
+                salmon:             salmon,
+                kallisto:           kallisto,
+                bbsplit:            bbsplit,
+                sortmerna:          sortmerna,
+                bowtie2_rrna:       bowtie2_rrna
+            )
+        }
+
     emit:
     splicesites         = ch_splicesites            // channel: path(genome.splicesites.txt)
     bbsplit_index       = ch_bbsplit_index          // channel: path(bbsplit/index/)
@@ -304,4 +339,5 @@ workflow PREPARE_GENOME_INDICES {
     bowtie2_index       = ch_bowtie2_index          // channel: path(bowtie2/index/)
     salmon_index        = ch_salmon_index           // channel: [ meta, path(salmon/index/) ]
     kallisto_index      = ch_kallisto_index         // channel: [ meta, path(kallisto/index/) ]
+    results             = ch_results                // channel: GenomeIndices
 }

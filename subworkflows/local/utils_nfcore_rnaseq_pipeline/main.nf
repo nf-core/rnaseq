@@ -691,6 +691,15 @@ def isStarIndexLegacy() {
 }
 
 //
+// Reference and index params accept pre-built files that reach the genome
+// records untouched. Only files written by a task may be routed through the
+// output block, so anything outside the work directory is dropped to null.
+//
+def taskOutputOrNull(path) {
+    return path instanceof Path && path.startsWith(workflow.workDir) ? path : null
+}
+
+//
 // Function to generate an error if contigs in genome fasta file > 512 Mbp
 //
 def checkMaxContigSize(fai_file) {
@@ -879,6 +888,30 @@ def mapBamToPublishedPath(bam_path, sample_id, aligner, outdir) {
 
     // Fallback to original filename
     return "${base_dir}/${filename}"
+}
+
+//
+// Function to build the DESeq2 QC record from the DESEQ2_QC process outputs.
+// RData is written whenever the task runs, so it anchors the record; the
+// other outputs are skipped for single-sample or single-gene input.
+//
+def buildDeseq2Record(ch_rdata, ch_pca_txt, ch_pdf, ch_dists_txt, ch_size_factors, ch_log) {
+    return ch_rdata
+        .combine(ch_pca_txt.toList().map { fs -> [fs ? fs[0] : null] })
+        .combine(ch_pdf.toList().map { fs -> [fs ? fs[0] : null] })
+        .combine(ch_dists_txt.toList().map { fs -> [fs ? fs[0] : null] })
+        .combine(ch_size_factors.toList().map { fs -> [fs ? fs[0] : null] })
+        .combine(ch_log.toList().map { fs -> [fs ? fs[0] : null] })
+        .map { rdata, pca_vals, plots_pdf, sample_dists, size_factors, log ->
+            record(
+                rdata:        rdata,
+                pca_vals:     pca_vals,
+                plots_pdf:    plots_pdf,
+                sample_dists: sample_dists,
+                size_factors: size_factors,
+                log:          log
+            )
+        }
 }
 
 //

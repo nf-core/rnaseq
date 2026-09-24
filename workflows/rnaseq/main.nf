@@ -25,6 +25,7 @@ include { BAM_DEDUP_UMI                         } from '../../subworkflows/nf-co
 include { checkSamplesAfterGrouping      } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { classifyStrand                 } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { mapBamToPublishedPath          } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { buildDeseq2Record              } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -117,6 +118,22 @@ workflow RNASEQ {
     ch_percent_mapped = channel.empty()
     ch_unaligned_sequences = channel.empty()
 
+    // Stage result records, one channel per stage; empty when the stage is skipped
+    ch_aligned          = channel.empty()
+    ch_umi_dedup        = channel.empty()
+    ch_markdup          = channel.empty()
+    ch_bam_qc           = channel.empty()
+    ch_bam_qc_rustqc    = channel.empty()
+    ch_quant            = channel.empty()
+    ch_quant_pseudo     = channel.empty()
+    ch_deseq2           = channel.empty()
+    ch_deseq2_pseudo    = channel.empty()
+    ch_contaminants     = channel.empty()
+    ch_stringtie        = channel.empty()
+    ch_stringtie_merged = channel.empty()
+    ch_bigwig           = channel.empty()
+    ch_multiqc          = channel.empty()
+
     // Per-sample MultiQC bundle — `.join(..., remainder: true)` chains
     // fed to MULTIQC_RNASEQ. `collapseAgg` re-keys by meta.id at the end
     // of each multi-output subworkflow aggregation; sibling outputs are
@@ -151,7 +168,7 @@ workflow RNASEQ {
     //
     // Create channel from input file provided through params.input
     //
-    channel
+    def ch_input_branched = channel
         .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
         .map {
             meta, fastq_1, fastq_2, genome_bam, transcriptome_bam ->
@@ -173,7 +190,6 @@ workflow RNASEQ {
                 fastq: reads.size() > 0 && reads[0]
                     return [ meta.findAll { key, _value -> key != 'percent_mapped' }, reads ]
         }
-        .set { ch_input_branched }
 
     // Get inputs for FASTQ and BAM processing paths
 
@@ -242,6 +258,18 @@ workflow RNASEQ {
     ch_reads_trimmed                  = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.reads_trimmed
     ch_trim_read_count                = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.trim_read_count
 
+    // Run-level rRNA references, built by FASTQ_REMOVE_RRNA from the rRNA
+    // FASTAs only when no bowtie2 rRNA index was supplied
+    ch_rrna_references = channel.value(record(bowtie2_index: null, seqkit_prefixed: null, seqkit_converted: null))
+    if (make_bowtie2_index) {
+        ch_rrna_references = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.bowtie2_index.map { _meta, index -> index }
+            .combine(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.seqkit_prefixed.map { _meta, f -> f }.toSortedList { a, b -> a.name <=> b.name }.map { fs -> [fs] })
+            .combine(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.seqkit_converted.map { _meta, f -> f }.toSortedList { a, b -> a.name <=> b.name }.map { fs -> [fs] })
+            .map { index, prefixed, converted ->
+                record(bowtie2_index: index, seqkit_prefixed: prefixed, seqkit_converted: converted)
+            }
+    }
+
     ch_trim_status = ch_trim_read_count
         .map {
             meta, num_reads ->
@@ -289,6 +317,7 @@ workflow RNASEQ {
         ch_unprocessed_bams              = ch_genome_bam.join(ch_transcriptome_bam)
         ch_star_log                      = ALIGN_STAR.out.log_final
         ch_unaligned_sequences           = ALIGN_STAR.out.fastq
+        ch_aligned                       = ch_aligned.mix(ALIGN_STAR.out.results)
         ch_multiqc_files                 = ch_multiqc_files.mix(ch_star_log)
         ch_mqc_per_sample_bundle         = ch_mqc_per_sample_bundle
             .join(ch_star_log.map { meta, f -> [meta.id, f] }, remainder: true)
@@ -334,6 +363,7 @@ workflow RNASEQ {
         ch_percent_mapped                = ch_percent_mapped.mix(ALIGN_BOWTIE2.out.percent_mapped)
         ch_unprocessed_bams              = ch_genome_bam.map { meta, bam -> [ meta, bam, '' ] }
         ch_bowtie2_log                   = ALIGN_BOWTIE2.out.log_final
+        ch_aligned                       = ch_aligned.mix(ALIGN_BOWTIE2.out.results)
         ch_multiqc_files                 = ch_multiqc_files.mix(ch_bowtie2_log)
         ch_mqc_per_sample_bundle         = ch_mqc_per_sample_bundle
             .join(ch_bowtie2_log.map { meta, f -> [meta.id, f] }, remainder: true)
@@ -367,6 +397,7 @@ workflow RNASEQ {
         ch_genome_bam_index    = ch_genome_bam_index.mix(FASTQ_ALIGN_HISAT2.out.index)
         ch_unprocessed_bams    = ch_genome_bam.map { meta, bam -> [ meta, bam, '' ] }
         ch_unaligned_sequences = FASTQ_ALIGN_HISAT2.out.fastq
+        ch_aligned             = ch_aligned.mix(FASTQ_ALIGN_HISAT2.out.results)
         ch_multiqc_files = ch_multiqc_files.mix(FASTQ_ALIGN_HISAT2.out.summary)
         ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
             .join(FASTQ_ALIGN_HISAT2.out.summary.map { meta, f -> [meta.id, f] }, remainder: true)
@@ -407,6 +438,7 @@ workflow RNASEQ {
         ch_genome_bam        = BAM_DEDUP_UMI.out.bam
         ch_transcriptome_bam = BAM_DEDUP_UMI.out.transcriptome_bam
         ch_genome_bam_index  = BAM_DEDUP_UMI.out.index
+        ch_umi_dedup         = BAM_DEDUP_UMI.out.results
 
         ch_multiqc_files = ch_multiqc_files
             .mix(BAM_DEDUP_UMI.out.multiqc_files)
@@ -432,6 +464,7 @@ workflow RNASEQ {
             params.skip_quantification_merge
         )
         ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_RSEM.out.stat)
+        ch_quant = QUANTIFY_RSEM.out.results
         ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
             .join(QUANTIFY_RSEM.out.stat.map { meta, f -> [meta.id, f] }, remainder: true)
 
@@ -443,6 +476,8 @@ workflow RNASEQ {
             )
             ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_RSEM.out.pca_multiqc.collect().map { file -> [[:], file] })
             ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_RSEM.out.dists_multiqc.collect().map { file -> [[:], file] })
+
+            ch_deseq2 = buildDeseq2Record(DESEQ2_QC_RSEM.out.rdata, DESEQ2_QC_RSEM.out.pca_txt, DESEQ2_QC_RSEM.out.pdf, DESEQ2_QC_RSEM.out.dists_txt, DESEQ2_QC_RSEM.out.size_factors, DESEQ2_QC_RSEM.out.log)
         }
 
     } else if (params.aligner in ['star_salmon', 'bowtie2_salmon']) {
@@ -463,6 +498,8 @@ workflow RNASEQ {
             params.kallisto_quant_fraglen_sd,
             params.skip_quantification_merge
         )
+        ch_quant = QUANTIFY_BAM_SALMON.out.sample_results
+
         if (!params.skip_qc && !params.skip_deseq2_qc && !params.skip_quantification_merge) {
             DESEQ2_QC_BAM_SALMON (
                 QUANTIFY_BAM_SALMON.out.counts_gene_length_scaled.map { _meta, counts -> counts },
@@ -471,6 +508,8 @@ workflow RNASEQ {
             )
             ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_BAM_SALMON.out.pca_multiqc.collect().map { file -> [[:], file] })
             ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_BAM_SALMON.out.dists_multiqc.collect().map { file -> [[:], file] })
+
+            ch_deseq2 = buildDeseq2Record(DESEQ2_QC_BAM_SALMON.out.rdata, DESEQ2_QC_BAM_SALMON.out.pca_txt, DESEQ2_QC_BAM_SALMON.out.pdf, DESEQ2_QC_BAM_SALMON.out.dists_txt, DESEQ2_QC_BAM_SALMON.out.size_factors, DESEQ2_QC_BAM_SALMON.out.log)
         }
     }
 
@@ -524,6 +563,7 @@ workflow RNASEQ {
         )
         ch_genome_bam       = BAM_MARKDUPLICATES_PICARD.out.bam
         ch_genome_bam_index = BAM_MARKDUPLICATES_PICARD.out.index
+        ch_markdup          = BAM_MARKDUPLICATES_PICARD.out.results
         ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.stats)
         ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.flagstat)
         ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.idxstats)
@@ -545,6 +585,7 @@ workflow RNASEQ {
                 ch_gtf.map { gtf -> [ [:], gtf ] }
             )
             ch_stringtie_gtf = BAM_STRINGTIE_MERGE.out.stringtie_gtf.map { _meta, gtf -> gtf }
+            ch_stringtie_merged = BAM_STRINGTIE_MERGE.out.merged_results
         } else {
             ch_stringtie_gtf = ch_gtf
         }
@@ -553,6 +594,29 @@ workflow RNASEQ {
             channel.value('expression-estimation'),
             ch_stringtie_gtf
         )
+
+        ch_stringtie = STRINGTIE_STRINGTIE.out.transcript_gtf
+            .join(STRINGTIE_STRINGTIE.out.abundance, failOnMismatch: true, failOnDuplicate: true)
+            .join(STRINGTIE_STRINGTIE.out.coverage_gtf, remainder: true)
+            .join(STRINGTIE_STRINGTIE.out.ballgown, remainder: true)
+            .map { meta, transcript_gtf, abundance, coverage_gtf, ballgown ->
+                record(
+                    id:             meta.id,
+                    meta:           meta,
+                    transcript_gtf: transcript_gtf,
+                    abundance:      abundance,
+                    coverage_gtf:   coverage_gtf,
+                    ballgown:       ballgown != null ? [ballgown].flatten() : null
+                )
+            }
+
+        // Per-sample de novo assemblies that fed the merged GTF
+        if (params.stringtie_ignore_gtf) {
+            ch_stringtie = ch_stringtie
+                .join(BAM_STRINGTIE_MERGE.out.results.map { r -> record(id: r.id, denovo: r) }, by: 'id')
+        } else {
+            ch_stringtie = ch_stringtie.map { r -> r + record(denovo: null) }
+        }
     }
 
     //
@@ -572,6 +636,26 @@ workflow RNASEQ {
                 ch_genome_bam.join(ch_genome_bam_index, by: [0]),
                 ch_gtf.map { gtf -> [ [:], gtf ] },
             )
+
+            // Each output is a glob, so a single match arrives as a bare Path
+            ch_bam_qc_rustqc = RUSTQC.out.samtools
+                .join(RUSTQC.out.dupradar,      failOnMismatch: true, failOnDuplicate: true)
+                .join(RUSTQC.out.featurecounts, failOnMismatch: true, failOnDuplicate: true)
+                .join(RUSTQC.out.preseq,        failOnMismatch: true, failOnDuplicate: true)
+                .join(RUSTQC.out.rseqc,         failOnMismatch: true, failOnDuplicate: true)
+                .join(RUSTQC.out.qualimap,      failOnMismatch: true, failOnDuplicate: true)
+                .map { meta, samtools, dupradar, featurecounts, preseq, rseqc, qualimap ->
+                    record(
+                        id:            meta.id,
+                        meta:          meta,
+                        samtools:      [samtools].flatten(),
+                        dupradar:      [dupradar].flatten(),
+                        featurecounts: [featurecounts].flatten(),
+                        preseq:        [preseq].flatten(),
+                        rseqc:         [rseqc].flatten(),
+                        qualimap:      [qualimap].flatten()
+                    )
+                }
 
             // Drop non-MultiQC files. Excluding `*.featureCounts.tsv.summary`
             // keeps only the biotype summary, matching the default pipeline's
@@ -631,6 +715,7 @@ workflow RNASEQ {
             )
             ch_multiqc_files = ch_multiqc_files.mix(BAM_QC_RNASEQ.out.multiqc_files)
             ch_inferexperiment_txt = BAM_QC_RNASEQ.out.inferexperiment_txt
+            ch_bam_qc = BAM_QC_RNASEQ.out.results
 
             ch_bam_qc_rnaseq_bundle = BAM_QC_RNASEQ.out.per_sample_mqc_bundle
                 .map { meta, files -> [meta.id, files] }
@@ -707,6 +792,28 @@ workflow RNASEQ {
             BEDTOOLS_GENOMECOV_COMBINED.out.genomecov,
             ch_chrom_sizes
         )
+
+        // Every sample gets a combined track; only stranded ones get forward/reverse
+        ch_bigwig_combined = ch_genomecov_input.map { meta, _bam, _scale -> [meta.id, meta] }
+            .join(BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_COMBINED.out.results.map { r -> [r.id, r] }, failOnMismatch: true, failOnDuplicate: true)
+            .branch { _id, meta, _combined ->
+                stranded: meta.strandedness in ['forward', 'reverse']
+                unstranded: true
+            }
+
+        ch_bigwig = ch_bigwig_combined.stranded
+            .join(BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD.out.results.map { r -> [r.id, r] }, failOnMismatch: true, failOnDuplicate: true)
+            .join(BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE.out.results.map { r -> [r.id, r] }, failOnMismatch: true, failOnDuplicate: true)
+            .mix(ch_bigwig_combined.unstranded.map { id, meta, combined -> [id, meta, combined, null, null] })
+            .map { id, meta, combined, forward, reverse ->
+                record(
+                    id:       id,
+                    meta:     meta,
+                    combined: combined,
+                    forward:  forward,
+                    reverse:  reverse
+                )
+            }
     }
 
     if (!params.skip_qc) {
@@ -721,6 +828,9 @@ workflow RNASEQ {
                     ? ch_reads_cat
                     : ch_unaligned_sequences
 
+        // Per-sample [id, fields] accumulated from whichever screening tool ran
+        ch_contaminant_fields = channel.empty()
+
         if (params.contaminant_screening in ['kraken2', 'kraken2_bracken'] ) {
             KRAKEN2 (
                 ch_contaminant_sequences,
@@ -729,6 +839,19 @@ workflow RNASEQ {
                 params.save_kraken_unassigned
             )
             ch_kraken_reports = KRAKEN2.out.report
+
+            ch_contaminant_fields = KRAKEN2.out.report.map { meta, report -> [meta.id, [meta: meta, kraken2_report: report]] }
+            if (params.save_kraken_assignments) {
+                ch_contaminant_fields = ch_contaminant_fields
+                    .join(KRAKEN2.out.classified_reads_fastq.map { meta, f -> [meta.id, f] }, remainder: true)
+                    .join(KRAKEN2.out.unclassified_reads_fastq.map { meta, f -> [meta.id, f] }, remainder: true)
+                    .map { id, fields, classified, unclassified -> [id, fields + [kraken2_classified: classified, kraken2_unclassified: unclassified]] }
+            }
+            if (params.save_kraken_unassigned) {
+                ch_contaminant_fields = ch_contaminant_fields
+                    .join(KRAKEN2.out.classified_reads_assignment.map { meta, f -> [meta.id, f] }, remainder: true)
+                    .map { id, fields, assignment -> [id, fields + [kraken2_assignment: assignment]] }
+            }
 
             if (params.contaminant_screening == 'kraken2') {
                 ch_multiqc_files = ch_multiqc_files.mix(KRAKEN2.out.report)
@@ -740,6 +863,10 @@ workflow RNASEQ {
                     ch_kraken_db
                 )
                 ch_multiqc_files = ch_multiqc_files.mix(BRACKEN.out.txt)
+                ch_contaminant_fields = ch_contaminant_fields
+                    .join(BRACKEN.out.reports.map { meta, f -> [meta.id, f] }, failOnMismatch: true, failOnDuplicate: true)
+                    .join(BRACKEN.out.txt.map { meta, f -> [meta.id, f] }, failOnMismatch: true, failOnDuplicate: true)
+                    .map { id, fields, abundance, report -> [id, fields + [bracken_abundance: abundance, bracken_report: report]] }
                 ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
                     .join(BRACKEN.out.txt.map { meta, f -> [meta.id, f] }, remainder: true)
             }
@@ -761,6 +888,27 @@ workflow RNASEQ {
             ch_multiqc_files = ch_multiqc_files.mix(SYLPHTAX_TAXPROF.out.taxprof_output)
             ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
                 .join(SYLPHTAX_TAXPROF.out.taxprof_output.map { meta, f -> [meta.id, f] }, remainder: true)
+
+            // Every profile is published, but empty ones never reach SYLPHTAX_TAXPROF
+            ch_contaminant_fields = SYLPH_PROFILE.out.profile_out.map { meta, profile -> [meta.id, [meta: meta, sylph_profile: profile]] }
+                .join(SYLPHTAX_TAXPROF.out.taxprof_output.map { meta, f -> [meta.id, f] }, remainder: true)
+                .map { id, fields, taxprof -> [id, fields + [sylphtax_taxprof: taxprof]] }
+        }
+
+        ch_contaminants = ch_contaminant_fields.map { id, fields ->
+            record(
+                id:       id,
+                meta:     fields.meta,
+                kraken2:  fields.kraken2_report != null ? record(
+                    report:                      fields.kraken2_report,
+                    classified_reads_fastq:      fields.kraken2_classified,
+                    unclassified_reads_fastq:    fields.kraken2_unclassified,
+                    classified_reads_assignment: fields.kraken2_assignment
+                ) : null,
+                bracken:  fields.bracken_report != null ? record(abundance: fields.bracken_abundance, report: fields.bracken_report) : null,
+                sylph:    fields.sylph_profile != null ? record(profile: fields.sylph_profile) : null,
+                sylphtax: fields.sylphtax_taxprof != null ? record(taxprof: fields.sylphtax_taxprof) : null
+            )
         }
     }
 
@@ -789,6 +937,7 @@ workflow RNASEQ {
             params.skip_quantification_merge
         )
         ch_counts_gene_length_scaled = QUANTIFY_PSEUDO_ALIGNMENT.out.counts_gene_length_scaled
+        ch_quant_pseudo = QUANTIFY_PSEUDO_ALIGNMENT.out.sample_results
         ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_PSEUDO_ALIGNMENT.out.multiqc)
         ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
             .join(QUANTIFY_PSEUDO_ALIGNMENT.out.multiqc.map { meta, f -> [meta.id, f] }, remainder: true)
@@ -801,8 +950,18 @@ workflow RNASEQ {
             )
             ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_PSEUDO.out.pca_multiqc.collect().map { file -> [[:], file] })
             ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_PSEUDO.out.dists_multiqc.collect().map { file -> [[:], file] })
+
+            ch_deseq2_pseudo = buildDeseq2Record(DESEQ2_QC_PSEUDO.out.rdata, DESEQ2_QC_PSEUDO.out.pca_txt, DESEQ2_QC_PSEUDO.out.pdf, DESEQ2_QC_PSEUDO.out.dists_txt, DESEQ2_QC_PSEUDO.out.size_factors, DESEQ2_QC_PSEUDO.out.log)
         }
     }
+
+    //
+    // Every quant row nests its quantifier's quant_merged record: one shared
+    // 'all_samples' copy when merging, a per-sample one under
+    // skip_quantification_merge. Deduplicating on id covers both modes.
+    //
+    ch_quant_merged        = ch_quant.map { r -> r.quant_merged }.unique { r -> r.id }
+    ch_quant_merged_pseudo = ch_quant_pseudo.map { r -> r.quant_merged }.unique { r -> r.id }
 
     //
     // Collate and save software versions from the `versions` topic
@@ -810,6 +969,8 @@ workflow RNASEQ {
     ch_collated_versions = softwareVersionsToYAML(topic_versions.versions_file)
         .mix(topic_versions_string)
         .collectFile(storeDir: "${params.outdir}/pipeline_info", name: 'nf_core_rnaseq_software_mqc_versions.yml', sort: true, newLine: true)
+
+    ch_pipeline_info = ch_collated_versions.map { versions -> record(versions: versions) }
 
     //
     // SUBWORKFLOW: MultiQC
@@ -841,6 +1002,7 @@ workflow RNASEQ {
             params.skip_quantification_merge
         )
         ch_multiqc_report = MULTIQC_RNASEQ.out.report
+        ch_multiqc        = MULTIQC_RNASEQ.out.results
     }
 
     //
@@ -852,8 +1014,10 @@ workflow RNASEQ {
         ch_fastq.map { meta, reads -> [ meta.id, meta, reads ] }
             .join(ch_unprocessed_bams.map { meta, genome_bam, transcriptome_bam -> [ meta.id, meta, genome_bam, transcriptome_bam ] })
             .join(ch_percent_mapped)
-            .transpose()
-            .map { _id, _fastq_meta, reads, meta, genome_bam, transcriptome_bam, percent_mapped ->
+            .flatMap { _id, _fastq_meta, runs, meta, genome_bam, transcriptome_bam, percent_mapped ->
+                runs.collect { reads -> [ meta, reads, genome_bam, transcriptome_bam, percent_mapped ] }
+            }
+            .map { meta, reads, genome_bam, transcriptome_bam, percent_mapped ->
 
                 // Handle BAM paths (same for all runs of this sample)
                 def genome_bam_published = meta.has_genome_bam ?
@@ -882,10 +1046,33 @@ workflow RNASEQ {
     }
 
     emit:
-    trim_status    = ch_trim_status    // channel: [id, boolean]
-    map_status     = ch_map_status     // channel: [id, boolean]
-    strand_status  = ch_strand_status  // channel: [id, boolean]
-    multiqc_report = ch_multiqc_report // channel: /path/to/multiqc_report.html
+    trim_status         = ch_trim_status         // channel: [id, boolean]
+    map_status          = ch_map_status          // channel: [id, boolean]
+    strand_status       = ch_strand_status       // channel: [id, boolean]
+    multiqc_report      = ch_multiqc_report      // channel: /path/to/multiqc_report.html
+
+    // Stage result records, keyed on id
+    preprocessed        = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.results // channel: FastqQcTrimFilterSetstrandedness
+    aligned             = ch_aligned             // channel: StarAligned | Bowtie2Aligned | Hisat2Aligned
+    umi_dedup           = ch_umi_dedup           // channel: UmiDedupBam
+    markdup             = ch_markdup             // channel: MarkdupBam
+    bam_qc              = ch_bam_qc              // channel: BamQcRnaseq
+    bam_qc_rustqc       = ch_bam_qc_rustqc       // channel: record(id, meta, samtools, dupradar, featurecounts, preseq, rseqc, qualimap)
+    quant               = ch_quant               // channel: RsemQuantSample | PseudoQuantSample, alignment-based quantifier
+    quant_merged        = ch_quant_merged        // channel: RsemQuantMerged | QuantMerged, alignment-based quantifier
+    quant_pseudo        = ch_quant_pseudo        // channel: PseudoQuantSample, pseudo-aligner
+    quant_merged_pseudo = ch_quant_merged_pseudo // channel: QuantMerged, pseudo-aligner
+    contaminants        = ch_contaminants        // channel: record(id, meta, kraken2, bracken, sylph, sylphtax)
+    stringtie           = ch_stringtie           // channel: record(id, meta, transcript_gtf, abundance, coverage_gtf, ballgown, denovo: StringtieAssembly?)
+    bigwig              = ch_bigwig              // channel: record(id, meta, combined, forward, reverse), each BigwigFiles
+
+    // Run-level result records
+    stringtie_merged    = ch_stringtie_merged    // channel: StringtieMerged
+    deseq2              = ch_deseq2              // channel: record(rdata, pca_vals, plots_pdf, sample_dists, size_factors, log), alignment-based quantifier
+    deseq2_pseudo       = ch_deseq2_pseudo       // channel: record(rdata, pca_vals, plots_pdf, sample_dists, size_factors, log), pseudo-aligner
+    rrna_references     = ch_rrna_references     // channel: record(bowtie2_index, seqkit_prefixed, seqkit_converted)
+    multiqc             = ch_multiqc             // channel: MultiqcReport, per sample under skip_quantification_merge
+    pipeline_info       = ch_pipeline_info       // channel: record(versions)
 }
 
 /*

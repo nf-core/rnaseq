@@ -9,6 +9,7 @@ include { SUBREAD_FEATURECOUNTS           } from '../../../modules/nf-core/subre
 include { CUSTOM_MULTIQCCUSTOMBIOTYPE     } from '../../../modules/nf-core/custom/multiqccustombiotype/main'
 include { SAMTOOLS_SORT as SAMTOOLS_SORT_QUALIMAP } from '../../../modules/nf-core/samtools/sort/main'
 include { BAM_RSEQC                       } from '../bam_rseqc/main'
+include { BamQcRnaseq                     } from './types'
 
 workflow BAM_QC_RNASEQ {
 
@@ -80,6 +81,76 @@ workflow BAM_QC_RNASEQ {
         ch_gene_bed,
         rseqc_modules
     )
+
+    // Each tool group that ran joins onto this per-sample skeleton; groups
+    // that were skipped are left unset and become null, so no join is made
+    // against a channel that is empty by construction.
+    ch_results = ch_bam_bai.map { meta, _bam, _bai -> [meta.id, [:]] }
+
+    if ('preseq' in tools) {
+        // Remainder join: preseq can fail on low-duplication BAMs, and callers
+        // may set errorStrategy 'ignore' rather than lose the sample.
+        ch_results = ch_results
+            .join(
+                PRESEQ_LCEXTRAP.out.lc_extrap
+                    .join(PRESEQ_LCEXTRAP.out.log, by: [0])
+                    .map { meta, lc_extrap, log -> [meta.id, record(lc_extrap: lc_extrap, log: log)] },
+                by: [0], remainder: true
+            )
+            .map { id, fields, preseq -> [id, fields + [preseq: preseq]] }
+    }
+
+    if ('biotype_qc' in tools && biotype) {
+        ch_results = ch_results
+            .join(SUBREAD_FEATURECOUNTS.out.counts.map { meta, f -> [meta.id, f] }, by: [0])
+            .join(SUBREAD_FEATURECOUNTS.out.summary.map { meta, f -> [meta.id, f] }, by: [0])
+            .join(CUSTOM_MULTIQCCUSTOMBIOTYPE.out.tsv.map { meta, f -> [meta.id, f] }, by: [0])
+            .join(CUSTOM_MULTIQCCUSTOMBIOTYPE.out.rrna.map { meta, f -> [meta.id, f] }, by: [0])
+            .map { id, fields, counts, summary, tsv, rrna ->
+                [id, fields + [
+                    featurecounts: record(counts: counts, summary: summary),
+                    biotype:       record(tsv: tsv, rrna: rrna)
+                ]]
+            }
+    }
+
+    if ('qualimap' in tools) {
+        ch_results = ch_results
+            .join(QUALIMAP_RNASEQ.out.results.map { meta, dir -> [meta.id, dir] }, by: [0])
+            .map { id, fields, dir -> [id, fields + [qualimap: dir]] }
+    }
+
+    // dupRadar writes two *_mqc.txt files per sample
+    if ('dupradar' in tools) {
+        ch_results = ch_results
+            .join(DUPRADAR.out.scatter2d.map { meta, f -> [meta.id, f] }, by: [0])
+            .join(DUPRADAR.out.boxplot.map { meta, f -> [meta.id, f] }, by: [0])
+            .join(DUPRADAR.out.hist.map { meta, f -> [meta.id, f] }, by: [0])
+            .join(DUPRADAR.out.dupmatrix.map { meta, f -> [meta.id, f] }, by: [0])
+            .join(DUPRADAR.out.intercept_slope.map { meta, f -> [meta.id, f] }, by: [0])
+            .join(DUPRADAR.out.multiqc.map { meta, f -> [meta.id, f] }, by: [0])
+            .map { id, fields, scatter2d, boxplot, hist, dupmatrix, intercept_slope, multiqc ->
+                [id, fields + [dupradar: record(scatter2d: scatter2d, boxplot: boxplot, hist: hist, dupmatrix: dupmatrix, intercept_slope: intercept_slope, multiqc: [multiqc].flatten())]]
+            }
+    }
+
+    if (rseqc_modules.size() > 0) {
+        ch_results = ch_results
+            .join(BAM_RSEQC.out.results.map { r -> [r.id, r] }, by: [0])
+            .map { id, fields, rseqc -> [id, fields + [rseqc: rseqc]] }
+    }
+
+    ch_results = ch_results.map { id, fields ->
+        record(
+            id:            id,
+            preseq:        fields.preseq,
+            featurecounts: fields.featurecounts,
+            biotype:       fields.biotype,
+            qualimap:      fields.qualimap,
+            dupradar:      fields.dupradar,
+            rseqc:         fields.rseqc
+        )
+    }
 
     // Aggregate MultiQC-compatible output files
     ch_multiqc_files = channel.empty()
@@ -165,5 +236,6 @@ workflow BAM_QC_RNASEQ {
     readduplication_rscript         = BAM_RSEQC.out.readduplication_rscript         // channel: [ val(meta), path(r) ]
     tin_txt                         = BAM_RSEQC.out.tin_txt                         // channel: [ val(meta), path(txt) ]
     per_sample_mqc_bundle           = ch_per_sample_mqc_bundle                      // channel: [ val(meta), list(files) ]
+    results                         = ch_results                                    // channel: BamQcRnaseq
 
 }

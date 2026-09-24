@@ -98,6 +98,18 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success },
+                { assert workflow.out.results.collect { r -> r.collectEntries { k, v -> [ k, v ? file(v).name : null ] } } == [[
+                    bbsplit:            'bbsplit_index',
+                    bowtie2:            null,
+                    bowtie2_rrna:       null,
+                    hisat2:             null,
+                    hisat2_splicesites: null,
+                    kallisto:           null,
+                    rsem:               null,
+                    salmon:             null,
+                    sortmerna:          null,
+                    star:               'star'
+                ]] },
                 { assert snapshot(
                     workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
@@ -1569,7 +1581,7 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success },
-                { assert snapshot(sanitizeOutput(workflow.out, unstableKeys: ['bbsplit_index', 'hisat2_index', 'salmon_index'])).match() }
+                { assert snapshot(sanitizeOutput(workflow.out, unstableKeys: ['bbsplit_index', 'hisat2_index', 'salmon_index'], ignoreKeys: ['results'])).match() }
             )
         }
 
@@ -2467,6 +2479,18 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success },
+                { assert workflow.out.results.collect { r -> r.collectEntries { k, v -> [ k, v ? file(v).name : null ] } } == [[
+                    bbsplit:            'bbsplit_index',
+                    bowtie2:            null,
+                    bowtie2_rrna:       null,
+                    hisat2:             null,
+                    hisat2_splicesites: null,
+                    kallisto:           null,
+                    rsem:               null,
+                    salmon:             null,
+                    sortmerna:          null,
+                    star:               'star'
+                ]] },
                 { assert snapshot(
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },

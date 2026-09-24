@@ -792,6 +792,21 @@ def biotypeQcUsable(params) {
 }
 
 //
+// Function that parses HISAT2's summary log to get the overall percent mapped
+//
+def getHisat2PercentMapped(align_log) {
+    def percent_aligned = 0
+    def pattern = /Overall alignment rate:\s*([\d\.]+)%/
+    align_log.eachLine { line ->
+        def matcher = line =~ pattern
+        if (matcher) {
+            percent_aligned = matcher[0][1].toFloat()
+        }
+    }
+    return percent_aligned
+}
+
+//
 // Function that parses RSeQC infer_experiment output file to get inferred strandedness
 //
 def getInferexperimentStrandedness(inferexperiment_file, stranded_threshold = 0.8, unstranded_threshold = 0.1) {

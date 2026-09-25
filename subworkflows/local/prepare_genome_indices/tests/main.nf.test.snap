@@ -980,6 +980,18 @@
             "nextflow": "25.04.3"
         }
     },
+    "any_auto_strandedness = true builds a Salmon index without pseudo-alignment": {
+        "content": [
+            [
+                "[duplicate_clusters.tsv, index.ctab, index.ectab, index.refinfo, index.ssi, index.ssi.mphf, index.tct, index.tdct, info.json, refseq.bin, refseq_offsets.json]"
+            ]
+        ],
+        "timestamp": "2026-09-25T15:49:57.620975366",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
     "skip_bbsplit": {
         "content": [
             [
@@ -1308,6 +1320,18 @@
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.04.3"
+        }
+    },
+    "any_auto_strandedness = true builds a Salmon index without pseudo-alignment - stub": {
+        "content": [
+            [
+                "[duplicate_clusters.tsv, index.ctab, index.ectab, index.refinfo, index.ssi, index.ssi.mphf, index.tct, index.tdct, info.json, refseq.bin, refseq_offsets.json]"
+            ]
+        ],
+        "timestamp": "2026-09-25T16:43:09.699084",
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.4"
         }
     },
     "skip_gtf_filter = true": {

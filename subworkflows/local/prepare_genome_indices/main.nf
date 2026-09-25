@@ -55,6 +55,7 @@ workflow PREPARE_GENOME_INDICES {
     use_parabricks_star      // boolean: whether to use parabricks STAR version
     star_index_legacy        // boolean: whether the supplied star_index was built with STAR 2.6.x and needs genomeParameters.txt upgraded to the 2.7.4a metadata schema
     hisat2_build_memory      // val: memory threshold for HISAT2 index building with splice sites
+    any_auto_strandedness    // boolean: whether any sample in the input samplesheet declares strandedness 'auto', requiring a Salmon index for strandedness inference
 
     main:
     ch_fasta = ch_fasta_fai.map { _meta, fasta_file, _fai -> fasta_file }
@@ -251,6 +252,10 @@ workflow PREPARE_GENOME_INDICES {
 
     //------------------------------------------------------
     // 8) Salmon index -> can skip genome if transcript_fasta is enough
+    //    Also built here (not just for 'salmon' in prepare_tool_indices) when
+    //    any sample needs strandedness 'auto' inferred, since that also relies
+    //    on a Salmon index - keeps the build on the main indexing path instead
+    //    of duplicating it in per-sample preprocessing.
     //------------------------------------------------------
 
     ch_salmon_index = channel.empty()
@@ -260,7 +265,7 @@ workflow PREPARE_GENOME_INDICES {
         } else {
             ch_salmon_index = channel.value([ [:], file(salmon_index) ])
         }
-    } else if ('salmon' in prepare_tool_indices) {
+    } else if ('salmon' in prepare_tool_indices || any_auto_strandedness) {
         if (ch_transcript_fasta && fasta_provided) {
             // genome_fasta may be an empty list (no decoys); wrap before combine() so an
             // empty list contributes a position instead of being flattened away

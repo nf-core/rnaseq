@@ -560,11 +560,11 @@ output {
             s.tsv?.edit_distance >> "${alignerDir(s)}/umitools/"
             s.tsv?.per_umi >> "${alignerDir(s)}/umitools/"
             s.tsv?.umi_per_position >> "${alignerDir(s)}/umitools/"
-            s.transcriptome?.coord_sorted_bam >> (saveUmiBam(s) ? "${alignerDir(s)}/" : null)
-            s.transcriptome?.coord_sorted_bam_index >> (saveUmiBam(s) ? "${alignerDir(s)}/" : null)
-            s.transcriptome?.coord_sorted_samtools?.stats >> (saveUmiBam(s) ? "${alignerDir(s)}/samtools_stats/" : null)
-            s.transcriptome?.coord_sorted_samtools?.flagstat >> (saveUmiBam(s) ? "${alignerDir(s)}/samtools_stats/" : null)
-            s.transcriptome?.coord_sorted_samtools?.idxstats >> (saveUmiBam(s) ? "${alignerDir(s)}/samtools_stats/" : null)
+            s.transcriptome?.coord_sorted_bam >> (saveAlignBam(s) ? "${alignerDir(s)}/" : null)
+            s.transcriptome?.coord_sorted_bam_index >> (saveAlignBam(s) ? "${alignerDir(s)}/" : null)
+            s.transcriptome?.coord_sorted_samtools?.stats >> (saveAlignBam(s) ? "${alignerDir(s)}/samtools_stats/" : null)
+            s.transcriptome?.coord_sorted_samtools?.flagstat >> (saveAlignBam(s) ? "${alignerDir(s)}/samtools_stats/" : null)
+            s.transcriptome?.coord_sorted_samtools?.idxstats >> (saveAlignBam(s) ? "${alignerDir(s)}/samtools_stats/" : null)
             s.transcriptome?.sorted_bam >> (saveUmiBam(s) ? "${alignerDir(s)}/" : null)
             s.transcriptome?.filtered_bam >> (saveUmiBam(s) ? "${alignerDir(s)}/" : null)
             s.prepare_for_rsem_log >> "${alignerDir(s)}/umitools/prepare_for_quantification_log/"
@@ -643,7 +643,7 @@ output {
             r.tpm_transcript >> "${pseudoAlignerDir(r)}/"
             r.counts_transcript >> "${pseudoAlignerDir(r)}/"
             r.lengths_transcript >> "${pseudoAlignerDir(r)}/"
-            r.tx2gene >> "${pseudoAlignerDir(r)}/"
+            r.tx2gene >> "${params.pseudo_aligner}/"
             r.tx2gene_augmented >> "${pseudoAlignerDir(r)}/"
             r.merged_gene_rds >> "${pseudoAlignerDir(r)}/"
             r.merged_transcript_rds >> "${pseudoAlignerDir(r)}/"

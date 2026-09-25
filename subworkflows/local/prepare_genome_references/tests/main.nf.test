@@ -50,12 +50,13 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success },
-                { assert workflow.out.results.collect { r -> r.collectEntries { k, v -> [ k, v ? file(v).name : null ] } } == [[
+                { assert workflow.out.results.collect { r -> r.collectEntries { k, v -> [ k, v instanceof Map ? v.collectEntries { k2, v2 -> [ k2, v2 ? file(v2).name : null ] } : (v ? file(v).name : null) ] } } == [[
                     chrom_sizes:      'genome_gfp.fasta.sizes',
                     fai:              'genome_gfp.fasta.fai',
                     fasta:            'genome_gfp.fasta',
                     gene_bed:         'genome_gfp.bed',
                     gtf:              'genome_gfp.gtf',
+                    intermediates:    [additional_fasta: null, fasta_pre_concat: null, gff: null, gtf_pre_filter: null, transcript_fasta_pre_gencode: null, transcript_fasta_rsem_dir: null],
                     kraken_db:        null,
                     rrna_fastas:      null,
                     transcript_fasta: null
@@ -1424,12 +1425,13 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success },
-                { assert workflow.out.results.collect { r -> r.collectEntries { k, v -> [ k, v ? file(v).name : null ] } } == [[
+                { assert workflow.out.results.collect { r -> r.collectEntries { k, v -> [ k, v instanceof Map ? v.collectEntries { k2, v2 -> [ k2, v2 ? file(v2).name : null ] } : (v ? file(v).name : null) ] } } == [[
                     chrom_sizes:      'genome_gfp.fasta.sizes',
                     fai:              'genome_gfp.fasta.fai',
                     fasta:            'genome_gfp.fasta',
                     gene_bed:         'genome_gfp.bed',
                     gtf:              'genome_gfp.gtf',
+                    intermediates:    [additional_fasta: null, fasta_pre_concat: null, gff: null, gtf_pre_filter: null, transcript_fasta_pre_gencode: null, transcript_fasta_rsem_dir: null],
                     kraken_db:        null,
                     rrna_fastas:      null,
                     transcript_fasta: null

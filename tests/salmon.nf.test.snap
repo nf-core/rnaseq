@@ -302,6 +302,7 @@
                 "RAP1_IAA_30M_REP1/salmon/RAP1_IAA_30M_REP1/logs/salmon_quant.log",
                 "RAP1_IAA_30M_REP1/salmon/RAP1_IAA_30M_REP1/quant.genes.sf",
                 "RAP1_IAA_30M_REP1/salmon/RAP1_IAA_30M_REP1/quant.sf",
+                "RAP1_IAA_30M_REP1/salmon/salmon.merged.tx2gene.tsv",
                 "RAP1_IAA_30M_REP1/trimgalore",
                 "RAP1_IAA_30M_REP1/trimgalore/RAP1_IAA_30M_REP1_trimmed_1.fastq.gz_trimming_report.txt",
                 "RAP1_IAA_30M_REP1/trimgalore/RAP1_IAA_30M_REP1_trimmed_2.fastq.gz_trimming_report.txt",
@@ -535,6 +536,7 @@
                 "RAP1_UNINDUCED_REP1/salmon/RAP1_UNINDUCED_REP1/logs/salmon_quant.log",
                 "RAP1_UNINDUCED_REP1/salmon/RAP1_UNINDUCED_REP1/quant.genes.sf",
                 "RAP1_UNINDUCED_REP1/salmon/RAP1_UNINDUCED_REP1/quant.sf",
+                "RAP1_UNINDUCED_REP1/salmon/salmon.merged.tx2gene.tsv",
                 "RAP1_UNINDUCED_REP1/trimgalore",
                 "RAP1_UNINDUCED_REP1/trimgalore/RAP1_UNINDUCED_REP1_trimmed.fastq.gz_trimming_report.txt",
                 "RAP1_UNINDUCED_REP2",
@@ -767,6 +769,7 @@
                 "RAP1_UNINDUCED_REP2/salmon/RAP1_UNINDUCED_REP2/logs/salmon_quant.log",
                 "RAP1_UNINDUCED_REP2/salmon/RAP1_UNINDUCED_REP2/quant.genes.sf",
                 "RAP1_UNINDUCED_REP2/salmon/RAP1_UNINDUCED_REP2/quant.sf",
+                "RAP1_UNINDUCED_REP2/salmon/salmon.merged.tx2gene.tsv",
                 "RAP1_UNINDUCED_REP2/trimgalore",
                 "RAP1_UNINDUCED_REP2/trimgalore/RAP1_UNINDUCED_REP2_trimmed.fastq.gz_trimming_report.txt",
                 "WT_REP1",
@@ -1009,6 +1012,7 @@
                 "WT_REP1/salmon/WT_REP1/logs/salmon_quant.log",
                 "WT_REP1/salmon/WT_REP1/quant.genes.sf",
                 "WT_REP1/salmon/WT_REP1/quant.sf",
+                "WT_REP1/salmon/salmon.merged.tx2gene.tsv",
                 "WT_REP1/trimgalore",
                 "WT_REP1/trimgalore/WT_REP1_trimmed_1.fastq.gz_trimming_report.txt",
                 "WT_REP1/trimgalore/WT_REP1_trimmed_2.fastq.gz_trimming_report.txt",
@@ -1252,13 +1256,12 @@
                 "WT_REP2/salmon/WT_REP2/logs/salmon_quant.log",
                 "WT_REP2/salmon/WT_REP2/quant.genes.sf",
                 "WT_REP2/salmon/WT_REP2/quant.sf",
+                "WT_REP2/salmon/salmon.merged.tx2gene.tsv",
                 "WT_REP2/trimgalore",
                 "WT_REP2/trimgalore/WT_REP2_trimmed_1.fastq.gz_trimming_report.txt",
                 "WT_REP2/trimgalore/WT_REP2_trimmed_2.fastq.gz_trimming_report.txt",
                 "pipeline_info",
-                "pipeline_info/nf_core_rnaseq_software_mqc_versions.yml",
-                "salmon",
-                "salmon/salmon.merged.tx2gene.tsv"
+                "pipeline_info/nf_core_rnaseq_software_mqc_versions.yml"
             ],
             [
                 "fastqc_raw-status-check-heatmap.txt:md5,79477fe38c3e8d8aed27ddcd05aa3a83",
@@ -1294,6 +1297,7 @@
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "cmd_info.json:md5,cf818b6adba396cc5353b902448cfac6",
+                "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "fastqc_raw-status-check-heatmap.txt:md5,5c47c0b22da01c8655371c19f3a978dd",
                 "fastqc_raw_adapter_content_plot.txt:md5,7bbf284e617eb0249a53c3730816e876",
                 "fastqc_raw_overrepresented_sequences_plot.txt:md5,9011aefe6c8160b3e0e61b17a2918da8",
@@ -1326,6 +1330,7 @@
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "cmd_info.json:md5,9357c6482eab84dabd07646ed70e0476",
+                "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "fastqc_raw-status-check-heatmap.txt:md5,9ba2649b6aee17190979addc85d24121",
                 "fastqc_raw_adapter_content_plot.txt:md5,1d81e0a10ea24a5836c3d23b661487c8",
                 "fastqc_raw_overrepresented_sequences_plot.txt:md5,c9b878c5b06d31a9f9749d683e2f0c27",
@@ -1358,6 +1363,7 @@
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "cmd_info.json:md5,1570b3f15040392184dd793ecd62477e",
+                "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "fastqc_raw-status-check-heatmap.txt:md5,20bcc23374bcbedabf6614be76728428",
                 "fastqc_raw_adapter_content_plot.txt:md5,97c1a192e4e442911c3023e1b0c30b4a",
                 "fastqc_raw_overrepresented_sequences_plot.txt:md5,d2d1b657f478d50d5e0010222f131526",
@@ -1391,6 +1397,7 @@
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "cmd_info.json:md5,c39a2ead5695c39d424c5f85104ef319",
+                "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "fastqc_raw-status-check-heatmap.txt:md5,e4f1b7799ed1ecae58603dec185ea75c",
                 "fastqc_raw_adapter_content_plot.txt:md5,d5f7e635fbb59d9d36bea8f5879b41a7",
                 "fastqc_raw_overrepresented_sequences_plot.txt:md5,1a254765d14578b0f4f5cb87068440b5",
@@ -1427,10 +1434,10 @@
                 "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
             ]
         ],
-        "timestamp": "2026-09-19T20:40:37.127864259",
+        "timestamp": "2026-09-25T16:02:01.793789934",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.09.0"
         }
     },
     "Params: --pseudo_aligner salmon --skip_qc --skip_alignment": {

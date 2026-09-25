@@ -31,6 +31,8 @@ pipeline_info/*.{html,json,txt,yml}
 bowtie2_rrna/*.bowtie2.log
 bowtie2_salmon/*.bowtie2.log
 bowtie2_salmon/log/*.bowtie2.log
+# Index builds embed run dates and paths, and binaries differ across architectures
+genome/index/**
 ribodetector/*.log
 # BAM columns hold absolute published paths, which embed each run's output directory
 samplesheets/samplesheet_with_bams.csv

@@ -102,7 +102,7 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -213,7 +213,7 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }

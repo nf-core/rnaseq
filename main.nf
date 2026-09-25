@@ -627,8 +627,9 @@ output {
 
     quant_pseudo {   // PseudoQuantSample, pseudo-aligner
         path { s ->
+            // s.log (kallisto only; always null for salmon) lives inside
+            // quant_dir already and is not routed separately.
             s.quant_dir >> "${pseudoAlignerDir(s)}/"
-            s.log >> "${pseudoAlignerDir(s)}/"
         }
     }
 

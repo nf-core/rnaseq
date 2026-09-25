@@ -1,100 +1,5 @@
 {
-    "Params: default - stub": {
-        "content": [
-            27,
-            {
-                "BBMAP_BBSPLIT": {
-                    "bbmap": 39.18
-                },
-                "CAT_FASTQ": {
-                    "cat": 9.5
-                },
-                "CUSTOM_CATADDITIONALFASTA": {
-                    "python": "3.12.2"
-                },
-                "CUSTOM_GTFFILTER": {
-                    "python": "3.14.5"
-                },
-                "EAUTILS_GTF2BED": {
-                    "perl": "5.26.2"
-                },
-                "FASTQC": {
-                    "fastqc": "0.12.1"
-                },
-                "FQ_LINT": {
-                    "fq": "0.12.0"
-                },
-                "GUNZIP_ADDITIONAL_FASTA": {
-                    "gunzip": 1.13
-                },
-                "GUNZIP_GTF": {
-                    "gunzip": 1.13
-                },
-                "SAMTOOLS_FAIDX": {
-                    "samtools": 1.24
-                },
-                "STAR_GENOMEGENERATE": {
-                    "gawk": "5.1.0",
-                    "samtools": 1.21,
-                    "star": "2.7.11b"
-                },
-                "TRIMGALORE": {
-                    "trimgalore": "2.3.0"
-                },
-                "UNTAR_SALMON_INDEX": {
-                    "untar": 1.34
-                }
-            },
-            [
-                "fastqc",
-                "fastqc/raw",
-                "fastqc/raw/RAP1_IAA_30M_REP1_raw.html",
-                "fastqc/raw/RAP1_IAA_30M_REP1_raw.zip",
-                "fastqc/raw/RAP1_UNINDUCED_REP1_raw.html",
-                "fastqc/raw/RAP1_UNINDUCED_REP1_raw.zip",
-                "fastqc/raw/RAP1_UNINDUCED_REP2_raw.html",
-                "fastqc/raw/RAP1_UNINDUCED_REP2_raw.zip",
-                "fastqc/raw/WT_REP1_raw.html",
-                "fastqc/raw/WT_REP1_raw.zip",
-                "fastqc/raw/WT_REP2_raw.html",
-                "fastqc/raw/WT_REP2_raw.zip",
-                "fq_lint",
-                "fq_lint/raw",
-                "fq_lint/raw/RAP1_IAA_30M_REP1.fq_lint.txt",
-                "fq_lint/raw/RAP1_UNINDUCED_REP1.fq_lint.txt",
-                "fq_lint/raw/RAP1_UNINDUCED_REP2.fq_lint.txt",
-                "fq_lint/raw/WT_REP1.fq_lint.txt",
-                "fq_lint/raw/WT_REP2.fq_lint.txt",
-                "multiqc",
-                "multiqc/star_salmon",
-                "multiqc/star_salmon/multiqc_data",
-                "multiqc/star_salmon/multiqc_data/.stub",
-                "multiqc/star_salmon/multiqc_plots",
-                "multiqc/star_salmon/multiqc_plots/.stub",
-                "multiqc/star_salmon/multiqc_report.html",
-                "pipeline_info",
-                "pipeline_info/nf_core_rnaseq_software_mqc_versions.yml",
-                "trimgalore",
-                "trimgalore/RAP1_IAA_30M_REP1_trimmed_1.fastq.gz_trimming_report.txt",
-                "trimgalore/RAP1_IAA_30M_REP1_trimmed_2.fastq.gz_trimming_report.txt",
-                "trimgalore/RAP1_UNINDUCED_REP1_trimmed.fastq.gz_trimming_report.txt",
-                "trimgalore/RAP1_UNINDUCED_REP2_trimmed.fastq.gz_trimming_report.txt",
-                "trimgalore/WT_REP1_trimmed_1.fastq.gz_trimming_report.txt",
-                "trimgalore/WT_REP1_trimmed_2.fastq.gz_trimming_report.txt",
-                "trimgalore/WT_REP2_trimmed_1.fastq.gz_trimming_report.txt",
-                "trimgalore/WT_REP2_trimmed_2.fastq.gz_trimming_report.txt"
-            ],
-            [
-                
-            ]
-        ],
-        "timestamp": "2026-09-16T15:01:13.667581465",
-        "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
-        }
-    },
-    "Params: default": {
+    "Params: --save_align_intermeds": {
         "content": [
             234,
             {
@@ -821,10 +726,16 @@
                 "salmon/salmon.merged.transcript_tpm.tsv",
                 "salmon/salmon.merged.tx2gene.tsv",
                 "salmon/salmon.merged.tx2gene_augmented.tsv",
+                "samplesheets",
+                "samplesheets/samplesheet_with_bams.csv",
                 "star_salmon",
                 "star_salmon/RAP1_IAA_30M_REP1",
+                "star_salmon/RAP1_IAA_30M_REP1.Aligned.out.bam",
+                "star_salmon/RAP1_IAA_30M_REP1.Aligned.toTranscriptome.out.bam",
                 "star_salmon/RAP1_IAA_30M_REP1.markdup.sorted.bam",
                 "star_salmon/RAP1_IAA_30M_REP1.markdup.sorted.bam.bai",
+                "star_salmon/RAP1_IAA_30M_REP1.sorted.bam",
+                "star_salmon/RAP1_IAA_30M_REP1.sorted.bam.bai",
                 "star_salmon/RAP1_IAA_30M_REP1/aux_info",
                 "star_salmon/RAP1_IAA_30M_REP1/aux_info/ambig_info.tsv",
                 "star_salmon/RAP1_IAA_30M_REP1/aux_info/expected_bias.gz",
@@ -841,8 +752,12 @@
                 "star_salmon/RAP1_IAA_30M_REP1/quant.genes.sf",
                 "star_salmon/RAP1_IAA_30M_REP1/quant.sf",
                 "star_salmon/RAP1_UNINDUCED_REP1",
+                "star_salmon/RAP1_UNINDUCED_REP1.Aligned.out.bam",
+                "star_salmon/RAP1_UNINDUCED_REP1.Aligned.toTranscriptome.out.bam",
                 "star_salmon/RAP1_UNINDUCED_REP1.markdup.sorted.bam",
                 "star_salmon/RAP1_UNINDUCED_REP1.markdup.sorted.bam.bai",
+                "star_salmon/RAP1_UNINDUCED_REP1.sorted.bam",
+                "star_salmon/RAP1_UNINDUCED_REP1.sorted.bam.bai",
                 "star_salmon/RAP1_UNINDUCED_REP1/aux_info",
                 "star_salmon/RAP1_UNINDUCED_REP1/aux_info/ambig_info.tsv",
                 "star_salmon/RAP1_UNINDUCED_REP1/aux_info/expected_bias.gz",
@@ -859,8 +774,12 @@
                 "star_salmon/RAP1_UNINDUCED_REP1/quant.genes.sf",
                 "star_salmon/RAP1_UNINDUCED_REP1/quant.sf",
                 "star_salmon/RAP1_UNINDUCED_REP2",
+                "star_salmon/RAP1_UNINDUCED_REP2.Aligned.out.bam",
+                "star_salmon/RAP1_UNINDUCED_REP2.Aligned.toTranscriptome.out.bam",
                 "star_salmon/RAP1_UNINDUCED_REP2.markdup.sorted.bam",
                 "star_salmon/RAP1_UNINDUCED_REP2.markdup.sorted.bam.bai",
+                "star_salmon/RAP1_UNINDUCED_REP2.sorted.bam",
+                "star_salmon/RAP1_UNINDUCED_REP2.sorted.bam.bai",
                 "star_salmon/RAP1_UNINDUCED_REP2/aux_info",
                 "star_salmon/RAP1_UNINDUCED_REP2/aux_info/ambig_info.tsv",
                 "star_salmon/RAP1_UNINDUCED_REP2/aux_info/expected_bias.gz",
@@ -877,8 +796,12 @@
                 "star_salmon/RAP1_UNINDUCED_REP2/quant.genes.sf",
                 "star_salmon/RAP1_UNINDUCED_REP2/quant.sf",
                 "star_salmon/WT_REP1",
+                "star_salmon/WT_REP1.Aligned.out.bam",
+                "star_salmon/WT_REP1.Aligned.toTranscriptome.out.bam",
                 "star_salmon/WT_REP1.markdup.sorted.bam",
                 "star_salmon/WT_REP1.markdup.sorted.bam.bai",
+                "star_salmon/WT_REP1.sorted.bam",
+                "star_salmon/WT_REP1.sorted.bam.bai",
                 "star_salmon/WT_REP1/aux_info",
                 "star_salmon/WT_REP1/aux_info/ambig_info.tsv",
                 "star_salmon/WT_REP1/aux_info/expected_bias.gz",
@@ -895,8 +818,12 @@
                 "star_salmon/WT_REP1/quant.genes.sf",
                 "star_salmon/WT_REP1/quant.sf",
                 "star_salmon/WT_REP2",
+                "star_salmon/WT_REP2.Aligned.out.bam",
+                "star_salmon/WT_REP2.Aligned.toTranscriptome.out.bam",
                 "star_salmon/WT_REP2.markdup.sorted.bam",
                 "star_salmon/WT_REP2.markdup.sorted.bam.bai",
+                "star_salmon/WT_REP2.sorted.bam",
+                "star_salmon/WT_REP2.sorted.bam.bai",
                 "star_salmon/WT_REP2/aux_info",
                 "star_salmon/WT_REP2/aux_info/ambig_info.tsv",
                 "star_salmon/WT_REP2/aux_info/expected_bias.gz",
@@ -1574,10 +1501,10 @@
                 "i_data.ctab:md5,041edee3193df311f621c09f4991892b"
             ]
         ],
-        "timestamp": "2026-09-18T23:10:33.413127595",
+        "timestamp": "2026-09-25T13:43:23.87781361",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.09.0"
         }
     }
 }

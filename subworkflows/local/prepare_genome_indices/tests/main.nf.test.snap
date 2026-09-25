@@ -1378,6 +1378,7 @@
                         "hisat2_splicesites": "genome_gfp.splice_sites.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                         "kallisto": null,
                         "rsem": null,
+                        "rsem_transcript_fasta": null,
                         "salmon": [
                             "duplicate_clusters.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "index.ctab:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -1429,7 +1430,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-23T16:22:58.131395",
+        "timestamp": "2026-09-25T15:17:21.352069973",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.0"

@@ -198,15 +198,11 @@ workflow RNASEQ {
     // Run RNA-seq FASTQ preprocessing subworkflow
     //
 
-    // Salmon indexing (for pseudo-alignment and/or strandedness inference) and
-    // SortMeRNA indexing are both handled centrally by PREPARE_GENOME_INDICES,
-    // which builds or loads ch_salmon_index / ch_sortmerna_index whenever
-    // either is needed - the subworkflows below never have to build their own.
+    // PREPARE_GENOME_INDICES already builds/loads ch_salmon_index and
+    // ch_sortmerna_index whenever needed, so these never rebuild here.
     def make_salmon_index    = false
     def make_sortmerna_index = false
-
-    // Bowtie2 rRNA index building still lives here; PREPARE_GENOME_INDICES only
-    // untars a user-supplied index for this path.
+    // Bowtie2 rRNA index building still happens here, not in PREPARE_GENOME_INDICES.
     def make_bowtie2_index = !params.bowtie2_rrna_index && params.remove_ribo_rna && params.ribo_removal_tool == 'bowtie2'
 
     FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS (

@@ -226,8 +226,7 @@ def getGenomeAttribute(attribute) {
 }
 
 //
-// Check whether any sample in the input samplesheet declares strandedness
-// 'auto', which requires a Salmon index for strandedness inference
+// Check whether any sample declares strandedness 'auto'
 //
 
 def anySampleAutoStrandedness() {

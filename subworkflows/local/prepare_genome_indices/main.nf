@@ -251,11 +251,8 @@ workflow PREPARE_GENOME_INDICES {
     }
 
     //------------------------------------------------------
-    // 8) Salmon index -> can skip genome if transcript_fasta is enough
-    //    Also built here (not just for 'salmon' in prepare_tool_indices) when
-    //    any sample needs strandedness 'auto' inferred, since that also relies
-    //    on a Salmon index - keeps the build on the main indexing path instead
-    //    of duplicating it in per-sample preprocessing.
+    // 8) Salmon index -> can skip genome if transcript_fasta is enough;
+    //    also triggered when any sample needs strandedness 'auto' inferred
     //------------------------------------------------------
 
     ch_salmon_index = channel.empty()

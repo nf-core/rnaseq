@@ -55,6 +55,7 @@ workflow PREPARE_GENOME_INDICES {
     use_parabricks_star      // boolean: whether to use parabricks STAR version
     star_index_legacy        // boolean: whether the supplied star_index was built with STAR 2.6.x and needs genomeParameters.txt upgraded to the 2.7.4a metadata schema
     hisat2_build_memory      // val: memory threshold for HISAT2 index building with splice sites
+    any_auto_strandedness    // boolean: whether any sample in the input samplesheet declares strandedness 'auto', requiring a Salmon index for strandedness inference
 
     main:
     ch_fasta = ch_fasta_fai.map { _meta, fasta_file, _fai -> fasta_file }
@@ -68,6 +69,7 @@ workflow PREPARE_GENOME_INDICES {
     if (ribo_removal_tool == 'bowtie2' && bowtie2_rrna_index)    { prepare_tool_indices << 'bowtie2_rrna' } // If no index is provided, this subworkflow does not need to build an index as that is handled by the fastq_remove_rrna subworkflow.
     if ((!skip_alignment && aligner) || aligner == 'star_rsem')  { prepare_tool_indices << aligner }
     if (!skip_pseudo_alignment && pseudo_aligner)                { prepare_tool_indices << pseudo_aligner }
+    if (any_auto_strandedness)                                   { prepare_tool_indices << 'salmon' } // needed to infer strandedness even without --pseudo_aligner salmon
 
     //---------------------------------------------------------
     // 2) BBSplit index: uses FASTA only if we generate from scratch

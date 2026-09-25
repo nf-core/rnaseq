@@ -198,13 +198,8 @@ workflow RNASEQ {
     // Run RNA-seq FASTQ preprocessing subworkflow
     //
 
-    // The subworkflow only has to do Salmon indexing if it discovers 'auto'
-    // samples, and if we haven't already made one elsewhere
-    salmon_index_available = params.salmon_index || (!params.skip_pseudo_alignment && params.pseudo_aligner == 'salmon')
-
-    // Determine if we need to build rRNA removal indexes
-    def make_sortmerna_index = !params.sortmerna_index && params.remove_ribo_rna && params.ribo_removal_tool == 'sortmerna'
-    def make_bowtie2_index   = !params.bowtie2_rrna_index && params.remove_ribo_rna && params.ribo_removal_tool == 'bowtie2'
+    // Bowtie2 rRNA index building still happens here, not in PREPARE_GENOME_INDICES.
+    def make_bowtie2_index = !params.bowtie2_rrna_index && params.remove_ribo_rna && params.ribo_removal_tool == 'bowtie2'
 
     FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS (
         ch_fastq,                                   // ch_reads
@@ -221,8 +216,8 @@ workflow RNASEQ {
         params.skip_trimming,                       // skip_trimming
         params.skip_umi_extract,                    // skip_umi_extract
         params.skip_linting,                        // skip_linting
-        !salmon_index_available,                    // make_salmon_index
-        make_sortmerna_index,                       // make_sortmerna_index
+        false,                                      // make_salmon_index (PREPARE_GENOME_INDICES already builds/loads this)
+        false,                                      // make_sortmerna_index (PREPARE_GENOME_INDICES already builds/loads this)
         make_bowtie2_index,                         // make_bowtie2_index
         params.trimmer,                             // trimmer
         params.min_trimmed_reads,                   // min_trimmed_reads

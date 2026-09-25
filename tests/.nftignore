@@ -32,6 +32,7 @@ bowtie2_rrna/*.bowtie2.log
 bowtie2_salmon/*.bowtie2.log
 bowtie2_salmon/log/*.bowtie2.log
 ribodetector/*.log
+# BAM columns hold absolute published paths, which embed each run's output directory
 samplesheets/samplesheet_with_bams.csv
 sortmerna/*.sortmerna.log
 star_rsem/*.stat/*.{cnt,model,theta}

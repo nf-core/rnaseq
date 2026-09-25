@@ -1,5 +1,5 @@
 // Documentation only: nothing casts a record(...) to these types (nextflow-io/nextflow#7680 corrupts remote Path fields on cast).
-// Superseded or incidental reference files, still published under --save_reference.
+// Superseded or incidental reference files, published under --save_reference alongside the final references.
 record GenomeIntermediates {
     gff:                          Path?
     additional_fasta:             Path?

@@ -112,15 +112,15 @@ nextflow_workflow {
                     star:                  'star'
                 ]] },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.sortmerna_index,
                     workflow.out.bowtie2_rrna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -226,14 +226,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -339,14 +339,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -452,14 +452,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -565,14 +565,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -678,14 +678,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -791,14 +791,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -904,14 +904,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -1017,14 +1017,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -1130,14 +1130,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -1243,14 +1243,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -1356,14 +1356,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -1469,14 +1469,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -1687,14 +1687,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -1800,14 +1800,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -1913,14 +1913,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -2026,14 +2026,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -2139,14 +2139,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -2252,14 +2252,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -2365,14 +2365,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -2494,14 +2494,14 @@ nextflow_workflow {
                     star:                  'star'
                 ]] },
                 { assert snapshot(
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.sortmerna_index,
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -2610,14 +2610,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.sortmerna_index,
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -2726,14 +2726,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.sortmerna_index,
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -2946,14 +2946,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.sortmerna_index,
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -3062,14 +3062,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.sortmerna_index,
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -3178,14 +3178,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.sortmerna_index,
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -3294,14 +3294,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.sortmerna_index,
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -3410,14 +3410,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.sortmerna_index,
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -3526,14 +3526,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.sortmerna_index,
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -3642,14 +3642,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.sortmerna_index,
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -3758,14 +3758,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.sortmerna_index,
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -3874,14 +3874,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.sortmerna_index,
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -4098,14 +4098,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.sortmerna_index,
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -4214,14 +4214,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.sortmerna_index,
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -4330,14 +4330,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.sortmerna_index,
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -4446,14 +4446,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.sortmerna_index,
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -4666,14 +4666,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.sortmerna_index,
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -4782,14 +4782,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.collect { meta, path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.sortmerna_index,
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.collect { path -> file(path).listDirectory().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }

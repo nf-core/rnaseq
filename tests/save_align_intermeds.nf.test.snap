@@ -1427,7 +1427,6 @@
                 "cmd_info.json:md5,a3a440b92ff27584be4f11e146a3c59c",
                 "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "salmon.merged.tx2gene_augmented.tsv:md5,62f1be3e94901085640179b604d879a2",
-                "samplesheet_with_bams.csv:md5,3243d27968ee5f49a6dad407ece6dd3a",
                 "ambig_info.tsv:md5,ac2f5f026ff28629f6ef24c2d63caa12",
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
@@ -1502,7 +1501,7 @@
                 "i_data.ctab:md5,041edee3193df311f621c09f4991892b"
             ]
         ],
-        "timestamp": "2026-09-25T09:08:21.320580806",
+        "timestamp": "2026-09-25T13:43:23.87781361",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.0"

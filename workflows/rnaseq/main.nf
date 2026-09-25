@@ -25,7 +25,6 @@ include { BAM_DEDUP_UMI                         } from '../../subworkflows/nf-co
 include { checkSamplesAfterGrouping      } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { classifyStrand                 } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { getHisat2PercentMapped         } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
-include { mapBamToPublishedPath          } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { buildDeseq2Record              } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 
 /*
@@ -327,7 +326,6 @@ workflow RNASEQ {
         ch_genome_bam_index              = ch_genome_bam_index.mix(ALIGN_STAR.out.index)
         ch_transcriptome_bam             = ch_transcriptome_bam.mix(ALIGN_STAR.out.bam_transcript)
         ch_percent_mapped                = ch_percent_mapped.mix(ALIGN_STAR.out.percent_mapped)
-        ch_unprocessed_bams              = ch_genome_bam.join(ch_transcriptome_bam)
         ch_star_log                      = ALIGN_STAR.out.log_final
         ch_unaligned_sequences           = ALIGN_STAR.out.fastq
         ch_aligned                       = ch_aligned.mix(ALIGN_STAR.out.results)
@@ -374,7 +372,6 @@ workflow RNASEQ {
         ch_genome_bam_index              = ch_genome_bam_index.mix(ALIGN_BOWTIE2.out.index)
         ch_transcriptome_bam             = ch_transcriptome_bam.mix(ALIGN_BOWTIE2.out.orig_bam)
         ch_percent_mapped                = ch_percent_mapped.mix(ALIGN_BOWTIE2.out.percent_mapped)
-        ch_unprocessed_bams              = ch_genome_bam.map { meta, bam -> [ meta, bam, '' ] }
         ch_bowtie2_log                   = ALIGN_BOWTIE2.out.log_final
         ch_aligned                       = ch_aligned.mix(ALIGN_BOWTIE2.out.results)
         ch_multiqc_files                 = ch_multiqc_files.mix(ch_bowtie2_log)
@@ -408,7 +405,6 @@ workflow RNASEQ {
         )
         ch_genome_bam          = ch_genome_bam.mix(FASTQ_ALIGN_HISAT2.out.bam)
         ch_genome_bam_index    = ch_genome_bam_index.mix(FASTQ_ALIGN_HISAT2.out.index)
-        ch_unprocessed_bams    = ch_genome_bam.map { meta, bam -> [ meta, bam, '' ] }
         ch_unaligned_sequences = FASTQ_ALIGN_HISAT2.out.fastq
         ch_aligned             = ch_aligned.mix(FASTQ_ALIGN_HISAT2.out.results)
         ch_percent_mapped      = ch_percent_mapped.mix(FASTQ_ALIGN_HISAT2.out.summary.map { meta, log -> [ meta, getHisat2PercentMapped(log) ] })
@@ -1019,51 +1015,13 @@ workflow RNASEQ {
         ch_multiqc        = MULTIQC_RNASEQ.out.results
     }
 
-    //
-    // Generate samplesheet with BAM paths for future runs
-    //
-
-    if (!params.skip_alignment && params.save_align_intermeds) {
-        // Create channel with original input info and BAM paths
-        ch_fastq.map { meta, reads -> [ meta.id, meta, reads ] }
-            .join(ch_unprocessed_bams.map { meta, genome_bam, transcriptome_bam -> [ meta.id, meta, genome_bam, transcriptome_bam ] })
-            .join(ch_percent_mapped)
-            .flatMap { _id, _fastq_meta, runs, meta, genome_bam, transcriptome_bam, percent_mapped ->
-                runs.collect { reads -> [ meta, reads, genome_bam, transcriptome_bam, percent_mapped ] }
-            }
-            .map { meta, reads, genome_bam, transcriptome_bam, percent_mapped ->
-
-                // Handle BAM paths (same for all runs of this sample)
-                def genome_bam_published = meta.has_genome_bam ?
-                    (meta.original_genome_bam ?: '') :
-                    mapBamToPublishedPath(genome_bam, meta.id, params.aligner, params.outdir)
-
-                def transcriptome_bam_published = meta.has_transcriptome_bam ?
-                    (meta.original_transcriptome_bam ?: '') :
-                    mapBamToPublishedPath(transcriptome_bam, meta.id, params.aligner, params.outdir)
-
-                def fastq_1 = reads[0].toUriString()
-                def fastq_2 = reads.size() > 1 ? reads[1].toUriString() : ''
-                def mapped = percent_mapped != null ? percent_mapped : ''
-
-                def seq_platform = meta.seq_platform ?: params.seq_platform ?: ''
-                def seq_center = meta.seq_center ?: params.seq_center ?: ''
-
-                return "${meta.id},${fastq_1},${fastq_2},${meta.strandedness},${seq_platform},${seq_center},${genome_bam_published},${mapped},${transcriptome_bam_published}"
-            }
-            .collectFile(
-                name: 'samplesheet_with_bams.csv',
-                storeDir: "${params.outdir}/samplesheets",
-                newLine: true,
-                seed: 'sample,fastq_1,fastq_2,strandedness,seq_platform,seq_center,genome_bam,percent_mapped,transcriptome_bam'
-            )
-    }
-
     emit:
     trim_status         = ch_trim_status         // channel: [id, boolean]
     map_status          = ch_map_status          // channel: [id, boolean]
     strand_status       = ch_strand_status       // channel: [id, boolean]
     multiqc_report      = ch_multiqc_report      // channel: /path/to/multiqc_report.html
+    reads               = ch_fastq               // channel: [ meta, [ [fastq_1, fastq_2?], ... ] ], one entry per sequencing run of a sample
+    percent_mapped      = ch_percent_mapped      // channel: [ id, Float? ]
 
     // Stage result records, keyed on id
     preprocessed        = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.results // channel: FastqQcTrimFilterSetstrandedness

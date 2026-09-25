@@ -180,6 +180,31 @@ workflow NFCORE_RNASEQ {
         }
         .filter { r -> r.target != null }
 
+    // samplesheet_with_bams.csv rows: one per sequencing run of a sample.
+    // Filtered to samples that actually went through alignment here (excludes
+    // the BAM-input passthrough placeholder record, which carries no orig_bam).
+    ch_samplesheet_rows = RNASEQ.out.aligned
+        .filter { r -> r.orig_bam != null }
+        .map { r -> [r.id, r] }
+        .join(RNASEQ.out.reads.map { meta, runs -> [meta.id, meta, runs] })
+        .join(RNASEQ.out.percent_mapped)
+        .flatMap { sample_id, r, meta, runs, percent_mapped ->
+            runs.collect { run ->
+                record(
+                    id:                sample_id,   // routing only, dropped from the CSV by the explicit header list below
+                    sample:            sample_id,
+                    fastq_1:           run[0],
+                    fastq_2:           run.size() > 1 ? run[1] : null,
+                    strandedness:      meta.strandedness,
+                    seq_platform:      meta.seq_platform ?: params.seq_platform,
+                    seq_center:        meta.seq_center ?: params.seq_center,
+                    genome_bam:        singleBam(r.orig_bam),
+                    percent_mapped:    percent_mapped,
+                    transcriptome_bam: r.transcriptome_bam
+                )
+            }
+        }
+
     emit:
     trim_status         = RNASEQ.out.trim_status         // channel: [id, boolean]
     map_status          = RNASEQ.out.map_status          // channel: [id, boolean]
@@ -198,6 +223,7 @@ workflow NFCORE_RNASEQ {
     markdup             = RNASEQ.out.markdup             // channel: MarkdupBam
     bam_qc              = RNASEQ.out.bam_qc              // channel: BamQcRnaseq
     bam_qc_rustqc       = ch_bam_qc_rustqc_files         // channel: record(id, file, target), one entry per RustQC output file
+    samplesheet         = ch_samplesheet_rows            // channel: record(id, sample, fastq_1, fastq_2, strandedness, seq_platform, seq_center, genome_bam, percent_mapped, transcriptome_bam), one entry per sequencing run
     quant               = RNASEQ.out.quant               // channel: RsemQuantSample | PseudoQuantSample, alignment-based quantifier
     quant_merged        = RNASEQ.out.quant_merged        // channel: RsemQuantMerged | QuantMerged, alignment-based quantifier
     quant_pseudo        = RNASEQ.out.quant_pseudo        // channel: PseudoQuantSample, pseudo-aligner
@@ -259,7 +285,6 @@ workflow {
     )
 
     publish:
-    // Routed one area at a time; unlisted channels still use conf/modules/*.config publishDir.
     contaminants     = NFCORE_RNASEQ.out.contaminants
     stringtie        = NFCORE_RNASEQ.out.stringtie
     stringtie_merged = NFCORE_RNASEQ.out.stringtie_merged
@@ -273,6 +298,7 @@ workflow {
     aligned          = NFCORE_RNASEQ.out.aligned
     umi_dedup        = NFCORE_RNASEQ.out.umi_dedup
     markdup          = NFCORE_RNASEQ.out.markdup
+    samplesheet      = NFCORE_RNASEQ.out.samplesheet
     quant               = NFCORE_RNASEQ.out.quant
     quant_merged        = NFCORE_RNASEQ.out.quant_merged
     quant_pseudo        = NFCORE_RNASEQ.out.quant_pseudo
@@ -293,9 +319,26 @@ def saveAlignBam(_s)  { params.save_align_intermeds || params.skip_markduplicate
 def saveUmiBam(_s)    { params.save_align_intermeds || params.save_umi_intermeds }
 def umiDedupToolDir(_s) { params.umi_dedup_tool == 'umicollapse' ? 'umicollapse' : 'umitools' }
 def pseudoAlignerDir(r) { "${samplePrefix(r)}${params.pseudo_aligner}" }
+
+// StarAligned.orig_bam is List<Path> (defensive flatten() of a glob output that
+// may resolve to a single Path); Bowtie2Aligned and Hisat2Aligned declare a plain Path.
+def singleBam(b) { b instanceof List ? b[0] : b }
 def multiqcDir(m) {
     def suffix = params.skip_alignment ? '' : "/${params.aligner}"
     m.id == 'multiqc_report' ? "multiqc${suffix}" : "${m.id}/multiqc${suffix}"
+}
+
+// True whenever at least one field of a `preprocessed` record is guaranteed
+// non-null: the disjunction of the conditions on the `preprocessed` path
+// closure's `>>` lines. Mirrors the skip/enable args passed into
+// FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS in workflows/rnaseq/main.nf.
+def preprocessedPublishes() {
+    !(params.skip_fastqc || params.skip_qc) ||
+    !params.skip_trimming ||
+    params.with_umi ||
+    (!params.skip_bbsplit && params.fasta) ||
+    params.remove_ribo_rna ||
+    params.save_merged_fastq
 }
 
 // The dir the surviving reads would have published to under the mechanism
@@ -316,7 +359,7 @@ def rustqcRelPath(id, category, file) {
     path.substring(path.lastIndexOf(marker) + marker.length())
 }
 
-// Reproduces dev's RustQC publishDir saveAs relayout for one output file.
+// Computes the per-tool destination directory for one RustQC output file.
 def rustqcTarget(r, category, file) {
     def dir = "${alignerDir(r)}/rustqc"
     def base = file.name
@@ -428,7 +471,8 @@ output {
         }
     }
 
-    preprocessed {   // FastqQcTrimFilterSetstrandedness; anchor: fastqc.raw_zip
+    preprocessed {   // FastqQcTrimFilterSetstrandedness; no single anchor field survives every skip combination
+        enabled preprocessedPublishes()
         path { s ->
             s.fastqc?.raw_html >> "${samplePrefix(s)}fastqc/raw/"
             s.fastqc?.raw_zip >> "${samplePrefix(s)}fastqc/raw/"
@@ -457,19 +501,19 @@ output {
     }
 
     // One target per FQ_LINT stage: same basename, avoids the >> collision (nextflow-io/nextflow#6617).
-    lint_raw {   // record(id, file)
+    lint_raw {   // record(id, file); file is guaranteed non-null, ch_lint_raw filters out nulls before this target
         path { s -> s.file >> "${samplePrefix(s)}fq_lint/raw/" }
     }
 
-    lint_trimmed {   // record(id, file)
+    lint_trimmed {   // record(id, file); file is guaranteed non-null, ch_lint_trimmed filters out nulls before this target
         path { s -> s.file >> "${samplePrefix(s)}fq_lint/trimmed/" }
     }
 
-    lint_bbsplit {   // record(id, file)
+    lint_bbsplit {   // record(id, file); file is guaranteed non-null, ch_lint_bbsplit filters out nulls before this target
         path { s -> s.file >> "${samplePrefix(s)}fq_lint/bbsplit/" }
     }
 
-    lint_ribo {   // record(id, file)
+    lint_ribo {   // record(id, file); file is guaranteed non-null, ch_lint_ribo filters out nulls before this target
         path { s -> s.file >> "${samplePrefix(s)}fq_lint/${params.ribo_removal_tool ?: 'sortmerna'}/" }
     }
 
@@ -490,6 +534,18 @@ output {
             s.hisat2?.summary >> "${alignerDir(s)}/log/"
             s.bowtie2?.log >> "${alignerDir(s)}/log/"
             s.preexisting_bai >> "${samplePrefix(s)}samtools/"
+        }
+    }
+
+    samplesheet {   // record(id, sample, fastq_1, fastq_2, strandedness, seq_platform, seq_center, genome_bam, percent_mapped, transcriptome_bam)
+        enabled params.save_align_intermeds && !params.skip_alignment
+        path { r ->
+            r.genome_bam >> "${alignerDir(r)}/"
+            r.transcriptome_bam >> "${alignerDir(r)}/"
+        }
+        index {
+            path 'samplesheets/samplesheet_with_bams.csv'
+            header 'sample', 'fastq_1', 'fastq_2', 'strandedness', 'seq_platform', 'seq_center', 'genome_bam', 'percent_mapped', 'transcriptome_bam'
         }
     }
 
@@ -616,6 +672,7 @@ output {
     }
 
     bam_qc {   // BamQcRnaseq: preseq, featurecounts, biotype, qualimap, dupradar, rseqc
+        enabled defineQcTools(params).size() > 0   // same check that decides whether any of these tools ran
         path { s ->
             s.preseq?.lc_extrap >> "${alignerDir(s)}/preseq/"
             s.preseq?.log >> "${alignerDir(s)}/preseq/log/"
@@ -655,7 +712,7 @@ output {
         }
     }
 
-    bam_qc_rustqc {   // record(id, file, target); --use_rustqc alternative, one entry per output file, target precomputed by rustqcTarget()
+    bam_qc_rustqc {   // record(id, file, target); --use_rustqc alternative, one entry per output file, target precomputed by rustqcTarget(); ch_bam_qc_rustqc_files filters out entries with a null target before this target
         path { s -> s.file >> s.target }
     }
 
@@ -667,9 +724,7 @@ output {
         }
     }
 
-    pipeline_info {   // record(versions); anchor: versions. Needs VM verification:
-                       // collectFile() without storeDir must produce a task-output
-                       // path for >> to route (nextflow-io/nextflow#7667).
+    pipeline_info {   // record(versions); anchor: versions
         path { p -> p.versions >> 'pipeline_info/' }
     }
 }

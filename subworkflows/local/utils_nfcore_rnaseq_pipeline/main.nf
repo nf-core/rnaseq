@@ -876,36 +876,6 @@ def classifyStrand(meta, strand_log, stranded_threshold, unstranded_threshold) {
 
 
 //
-// Function to map work directory BAM paths to published paths
-//
-def mapBamToPublishedPath(bam_path, sample_id, aligner, outdir) {
-    if (!bam_path) return ''
-
-    def filename = file(bam_path).getName()
-    def base_dir = "${outdir}/${aligner}"
-
-    // Map based on aligner type and filename patterns
-    if (aligner == 'star_salmon') {
-        if (filename.contains('Aligned.out.bam')) {
-            return "${base_dir}/${sample_id}.Aligned.out.bam"
-        } else if (filename.contains('toTranscriptome')) {
-            return "${base_dir}/${sample_id}.Aligned.toTranscriptome.out.bam"
-        }
-    } else if (aligner == 'star_rsem') {
-        if (filename.contains('genome.bam')) {
-            return "${base_dir}/${sample_id}.STAR.genome.bam"
-        } else if (filename.contains('transcript.bam')) {
-            return "${base_dir}/${sample_id}.transcript.bam"
-        }
-    } else if (aligner == 'hisat2') {
-        return "${base_dir}/${sample_id}.bam"
-    }
-
-    // Fallback to original filename
-    return "${base_dir}/${filename}"
-}
-
-//
 // Function to build the DESeq2 QC record from the DESEQ2_QC process outputs.
 // RData is written whenever the task runs, so it anchors the record; the
 // other outputs are skipped for single-sample or single-gene input.

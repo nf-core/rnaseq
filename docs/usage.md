@@ -156,10 +156,14 @@ The `--skip_alignment` flag tells the pipeline to skip alignment, and in this si
 The `samplesheet_with_bams.csv` will look like:
 
 ```csv
-sample,fastq_1,fastq_2,strandedness,seq_platform,seq_center,genome_bam,percent_mapped,transcriptome_bam
-SAMPLE1,/path/sample1_R1.fastq.gz,/path/sample1_R2.fastq.gz,forward,ILLUMINA,,results/star_salmon/SAMPLE1.markdup.sorted.bam,85.2,results/star_salmon/SAMPLE1.Aligned.toTranscriptome.out.bam
-SAMPLE2,/path/sample2_R1.fastq.gz,,reverse,ILLUMINA,,results/star_salmon/SAMPLE2.sorted.bam,92.1,results/star_salmon/SAMPLE2.Aligned.toTranscriptome.out.bam
+"sample","fastq_1","fastq_2","strandedness","seq_platform","seq_center","genome_bam","percent_mapped","transcriptome_bam"
+"SAMPLE1","/path/sample1_R1.fastq.gz","/path/sample1_R2.fastq.gz","forward","ILLUMINA","","results/star_salmon/SAMPLE1.markdup.sorted.bam","85.2","results/star_salmon/SAMPLE1.Aligned.toTranscriptome.out.bam"
+"SAMPLE2","/path/sample2_R1.fastq.gz","","reverse","ILLUMINA","","results/star_salmon/SAMPLE2.sorted.bam","92.1","results/star_salmon/SAMPLE2.Aligned.toTranscriptome.out.bam"
 ```
+
+:::note
+Every field is quoted. It is still a valid samplesheet for `--input`: nf-schema's CSV parser handles quoted fields.
+:::
 
 #### Important limitations
 
@@ -945,6 +949,17 @@ To further assist in reproducibility, you can use share and reuse [parameter fil
 
 > [!TIP]
 > If you wish to share such profile (such as upload as supplementary material for academic publications), make sure to NOT include cluster specific paths to files, nor institutional specific profiles.
+
+## Customising output locations
+
+The pipeline publishes its results through Nextflow's [workflow output definition](https://www.nextflow.io/docs/latest/workflow.html#publishing-outputs) (an `output {}` block in `main.nf`), not through per-process `publishDir` directives. This changes how output locations can be customised:
+
+- `--outdir` (or the equivalent `-output-dir` Nextflow option) sets the base directory results are published under, same as before.
+- `--publish_dir_mode` still controls whether files are copied, symlinked, moved, etc; it now maps onto Nextflow's `workflow.output.mode` setting.
+- The various `--save_*` flags (`--save_align_intermeds`, `--save_reference`, `--save_trimmed`, and so on) still control which intermediate files get published, exactly as before.
+- Nextflow's `workflow.output.overwrite` setting controls whether a rerun into the same `--outdir` overwrites existing files.
+
+A `process.withName:<NAME>.publishDir` override in a custom config no longer has any effect: publishing decisions live entirely in the `output {}` block in `main.nf`, keyed on the named result channels (`aligned`, `quant_merged`, `multiqc`, and so on), not on individual process names.
 
 ## Core Nextflow arguments
 

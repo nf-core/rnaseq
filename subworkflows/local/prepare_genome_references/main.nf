@@ -117,6 +117,7 @@ workflow PREPARE_GENOME_REFERENCES {
     ch_add_fasta = channel.empty()
     ch_additional_fasta_uncompressed = channel.empty()
     ch_fasta_pre_concat = channel.empty()
+    ch_gtf_pre_concat   = channel.empty()
     if (fasta_provided && additional_fasta) {
         if (additional_fasta.endsWith('.gz')) {
             ch_add_fasta = GUNZIP_ADDITIONAL_FASTA([ [:], file(additional_fasta, checkIfExists: true) ]).gunzip.map { tuple -> tuple[1] }
@@ -126,6 +127,8 @@ workflow PREPARE_GENOME_REFERENCES {
         }
 
         ch_fasta_pre_concat = ch_fasta
+        // Without a filter step the pre-concat GTF is the pre-filter GTF; record it once.
+        ch_gtf_pre_concat   = filter_gtf_needed ? ch_gtf : channel.empty()
         ch_gtf_pre_filter   = ch_gtf_pre_filter ?: ch_gtf
 
         CUSTOM_CATADDITIONALFASTA(
@@ -271,10 +274,11 @@ workflow PREPARE_GENOME_REFERENCES {
         .combine(ch_additional_fasta_uncompressed.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
         .combine(ch_gtf_pre_filter.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
         .combine(ch_fasta_pre_concat.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
+        .combine(ch_gtf_pre_concat.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
         .combine(ch_transcript_fasta_pre_gencode.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
         .combine(ch_transcript_fasta_rsem_dir.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
         .map { fasta_file, fai_file, gtf_file, gene_bed_file, transcript_fasta_file, chrom_sizes_file, rrna_fasta_files, kraken_db_dir,
-               gff_file, additional_fasta_file, gtf_pre_filter_file, fasta_pre_concat_file, transcript_fasta_pre_gencode_file, transcript_fasta_rsem_dir_file ->
+               gff_file, additional_fasta_file, gtf_pre_filter_file, fasta_pre_concat_file, gtf_pre_concat_file, transcript_fasta_pre_gencode_file, transcript_fasta_rsem_dir_file ->
             record(
                 fasta:            fasta_file,
                 fai:              fai_file,
@@ -289,6 +293,7 @@ workflow PREPARE_GENOME_REFERENCES {
                     additional_fasta:             additional_fasta_file,
                     gtf_pre_filter:               gtf_pre_filter_file,
                     fasta_pre_concat:             fasta_pre_concat_file,
+                    gtf_pre_concat:               gtf_pre_concat_file,
                     transcript_fasta_pre_gencode: transcript_fasta_pre_gencode_file,
                     transcript_fasta_rsem_dir:    transcript_fasta_rsem_dir_file
                 )

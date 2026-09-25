@@ -100,6 +100,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert workflow.out.results.collect { r -> r.collectEntries { k, v -> [ k, v ? file(v).name : null ] } } == [[
                     bbsplit:               'bbsplit_index',
+                    bbsplit_log:           'genome_transcriptome.log',
                     bowtie2:               null,
                     bowtie2_rrna:          null,
                     hisat2:                null,
@@ -2482,6 +2483,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert workflow.out.results.collect { r -> r.collectEntries { k, v -> [ k, v ? file(v).name : null ] } } == [[
                     bbsplit:               'bbsplit_index',
+                    bbsplit_log:           'genome_transcriptome.log',
                     bowtie2:               null,
                     bowtie2_rrna:          null,
                     hisat2:                null,

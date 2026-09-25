@@ -168,10 +168,13 @@ workflow NFCORE_RNASEQ {
     ch_lint_bbsplit = RNASEQ.out.preprocessed.map { r -> record(id: r.id, file: r.lint?.bbsplit) }.filter { s -> s.file != null }
     ch_lint_ribo    = RNASEQ.out.preprocessed.map { r -> record(id: r.id, file: r.lint?.ribo) }.filter { s -> s.file != null }
 
-    // Split out of quant_merged: CUSTOM_RSEMMERGECOUNTS and tximport both write rsem.merged.* basenames, which collide under >> (nextflow-io/nextflow#6617).
+    // CUSTOM_RSEMMERGECOUNTS and tximport both write rsem.merged.* basenames. A target publishes every
+    // file in its records and >> keys the rename on basename (nextflow-io/nextflow#6617), so the
+    // quant_merged records must not carry rsem_merge at all; it gets its own target.
     ch_quant_rsem_merge = RNASEQ.out.quant_merged
         .filter { r -> r.rsem_merge != null }
         .map { r -> record(id: r.id, rsem_merge: r.rsem_merge) }
+    ch_quant_merged = RNASEQ.out.quant_merged.map { r -> r + record(rsem_merge: null) }
 
     // Flattened to one file per record so each can carry its own precomputed rename-form >> target.
     ch_bam_qc_rustqc_files = RNASEQ.out.bam_qc_rustqc
@@ -185,7 +188,8 @@ workflow NFCORE_RNASEQ {
         }
         .filter { r -> r.target != null }
 
-    // samplesheet_with_bams.csv rows: one per sequencing run of a sample.
+    // samplesheet_with_bams.csv rows: one per sequencing run of a sample. genome_bam is the
+    // coordinate-sorted BAM; bowtie2_salmon aligns to the transcriptome, so its unsorted bowtie2 BAM is the transcriptome_bam.
     // Filtered to samples that actually went through alignment here (excludes
     // the BAM-input passthrough placeholder record, which carries no orig_bam).
     ch_samplesheet_rows = RNASEQ.out.aligned
@@ -202,9 +206,9 @@ workflow NFCORE_RNASEQ {
                     strandedness:      meta.strandedness,
                     seq_platform:      meta.seq_platform ?: params.seq_platform,
                     seq_center:        meta.seq_center ?: params.seq_center,
-                    genome_bam:        singleBam(r.orig_bam),
+                    genome_bam:        r.bam,
                     percent_mapped:    percent_mapped,
-                    transcriptome_bam: r.transcriptome_bam
+                    transcriptome_bam: params.aligner == 'bowtie2_salmon' ? r.orig_bam : r.transcriptome_bam
                 )
             }
         }
@@ -229,7 +233,7 @@ workflow NFCORE_RNASEQ {
     bam_qc_rustqc       = ch_bam_qc_rustqc_files         // channel: record(id, file, target), one entry per RustQC output file
     samplesheet         = ch_samplesheet_rows            // channel: record(sample, fastq_1, fastq_2, strandedness, seq_platform, seq_center, genome_bam, percent_mapped, transcriptome_bam), one entry per sequencing run
     quant               = RNASEQ.out.quant               // channel: RsemQuantSample | PseudoQuantSample, alignment-based quantifier
-    quant_merged        = RNASEQ.out.quant_merged        // channel: RsemQuantMerged | QuantMerged, alignment-based quantifier
+    quant_merged        = ch_quant_merged                // channel: RsemQuantMerged | QuantMerged with rsem_merge null, alignment-based quantifier
     quant_rsem_merge    = ch_quant_rsem_merge            // channel: record(id, rsem_merge: RsemMerge), CUSTOM_RSEMMERGECOUNTS outputs
     quant_pseudo        = RNASEQ.out.quant_pseudo        // channel: PseudoQuantSample, pseudo-aligner
     quant_merged_pseudo = RNASEQ.out.quant_merged_pseudo // channel: QuantMerged, pseudo-aligner
@@ -326,9 +330,6 @@ def saveUmiBam(_s)    { params.save_align_intermeds || params.save_umi_intermeds
 def umiDedupToolDir(_s) { params.umi_dedup_tool == 'umicollapse' ? 'umicollapse' : 'umitools' }
 def pseudoAlignerDir(r) { "${samplePrefix(r)}${params.pseudo_aligner}" }
 
-// StarAligned.orig_bam is List<Path> (defensive flatten() of a glob output that
-// may resolve to a single Path); Bowtie2Aligned and Hisat2Aligned declare a plain Path.
-def singleBam(b) { b instanceof List ? b[0] : b }
 def multiqcDir(m) {
     def suffix = params.skip_alignment ? '' : "/${params.aligner}"
     m.id == 'multiqc_report' ? "multiqc${suffix}" : "${m.id}/multiqc${suffix}"
@@ -458,6 +459,7 @@ output {
             g.intermediates?.additional_fasta >> 'genome/'
             g.intermediates?.gtf_pre_filter >> 'genome/'
             g.intermediates?.fasta_pre_concat >> 'genome/'
+            g.intermediates?.gtf_pre_concat >> 'genome/'
             g.intermediates?.transcript_fasta_pre_gencode >> 'genome/'
             g.intermediates?.transcript_fasta_rsem_dir >> 'genome/'
             g.index?.star >> 'genome/index/'
@@ -469,6 +471,7 @@ output {
             g.index?.salmon >> 'genome/index/'
             g.index?.kallisto >> 'genome/index/'
             g.index?.bbsplit >> 'genome/index/'
+            g.index?.bbsplit_log >> 'genome/index/'
             g.index?.sortmerna >> 'genome/sortmerna/'
             g.index?.bowtie2_rrna >> 'genome/index/'
             g.rrna_references?.bowtie2_index >> 'bowtie2_rrna/index/'

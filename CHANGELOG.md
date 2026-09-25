@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1938](https://github.com/nf-core/rnaseq/pull/1938) - Bump version to 3.28.0dev after release 3.27.0; flip the MultiQC report links and RO-Crate URL/version back to dev
 - [PR #1942](https://github.com/nf-core/rnaseq/pull/1942) - Fix `--with_umi` transcriptome-side samtools stats silently colliding with genome-side stats, caused by a broad `withName` wildcard in `conf/modules/alignment.config` also matching the `BAM_DEDUP_UMI` subworkflow
 - [PR #1943](https://github.com/nf-core/rnaseq/pull/1943) - Apply `--min_mapped_reads` filtering to HISAT2 alignments
-- [#1931](https://github.com/nf-core/rnaseq/issues/1931) - Migrate publishing to Nextflow's workflow output syntax; `process.withName:<NAME>.publishDir` overrides in custom configs no longer have any effect (breaking change), and `samplesheets/samplesheet_with_bams.csv` is now fully double-quoted CSV
+- [#1931](https://github.com/nf-core/rnaseq/issues/1931) - Migrate publishing to Nextflow's workflow output syntax; `process.withName:<NAME>.publishDir` overrides in custom configs no longer have any effect (breaking change), `samplesheets/samplesheet_with_bams.csv` is now fully double-quoted CSV, and output directories are created only when a file is published into them (no empty directories)
 
 ## [[3.27.0](https://github.com/nf-core/rnaseq/releases/tag/3.27.0)] - 2026-09-23
 

@@ -8,7 +8,7 @@ This document describes the output produced by the pipeline. Most of the plots a
 nextflow run nf-core/rnaseq -profile test_full,<docker/singularity/institute>
 ```
 
-The directories listed below will be created in the results directory after the pipeline has finished. All paths are relative to the top-level results directory.
+The directories listed below will be created in the results directory after the pipeline has finished. All paths are relative to the top-level results directory. The pipeline creates an output directory only when it publishes a file into it, so a directory that would hold no files is not created.
 
 :::tip
 Many of the BAM files produced by this pipeline can be reused as input for future runs with `--skip_alignment`. This is particularly useful for reprocessing data or running downstream analysis steps without repeating computationally expensive alignment. See the [usage documentation](https://nf-co.re/rnaseq/usage#bam-input-for-reprocessing-workflow) for details on using BAM files as input.

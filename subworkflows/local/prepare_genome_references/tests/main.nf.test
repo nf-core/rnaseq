@@ -56,7 +56,7 @@ nextflow_workflow {
                     fasta:            'genome_gfp.fasta',
                     gene_bed:         'genome_gfp.bed',
                     gtf:              'genome_gfp.gtf',
-                    intermediates:    [additional_fasta: null, fasta_pre_concat: null, gff: null, gtf_pre_concat: null, gtf_pre_filter: null, transcript_fasta_pre_gencode: null, transcript_fasta_rsem_dir: null],
+                    intermediates:    [additional_fasta: null, fasta_pre_concat: null, gff: null, gtf_pre_concat: 'genes_with_empty_tid.filtered.gtf', gtf_pre_filter: null, transcript_fasta_pre_gencode: null, transcript_fasta_rsem_dir: null],
                     kraken_db:        null,
                     rrna_fastas:      null,
                     transcript_fasta: null
@@ -1431,7 +1431,7 @@ nextflow_workflow {
                     fasta:            'genome_gfp.fasta',
                     gene_bed:         'genome_gfp.bed',
                     gtf:              'genome_gfp.gtf',
-                    intermediates:    [additional_fasta: null, fasta_pre_concat: null, gff: null, gtf_pre_concat: null, gtf_pre_filter: null, transcript_fasta_pre_gencode: null, transcript_fasta_rsem_dir: null],
+                    intermediates:    [additional_fasta: null, fasta_pre_concat: null, gff: null, gtf_pre_concat: 'genes_with_empty_tid.filtered.gtf', gtf_pre_filter: null, transcript_fasta_pre_gencode: null, transcript_fasta_rsem_dir: null],
                     kraken_db:        null,
                     rrna_fastas:      null,
                     transcript_fasta: null

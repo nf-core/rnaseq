@@ -69,6 +69,7 @@ workflow PREPARE_GENOME_INDICES {
     if (ribo_removal_tool == 'bowtie2' && bowtie2_rrna_index)    { prepare_tool_indices << 'bowtie2_rrna' } // If no index is provided, this subworkflow does not need to build an index as that is handled by the fastq_remove_rrna subworkflow.
     if ((!skip_alignment && aligner) || aligner == 'star_rsem')  { prepare_tool_indices << aligner }
     if (!skip_pseudo_alignment && pseudo_aligner)                { prepare_tool_indices << pseudo_aligner }
+    if (any_auto_strandedness)                                   { prepare_tool_indices << 'salmon' } // needed to infer strandedness even without --pseudo_aligner salmon
 
     //---------------------------------------------------------
     // 2) BBSplit index: uses FASTA only if we generate from scratch
@@ -251,8 +252,7 @@ workflow PREPARE_GENOME_INDICES {
     }
 
     //------------------------------------------------------
-    // 8) Salmon index -> can skip genome if transcript_fasta is enough;
-    //    also triggered when any sample needs strandedness 'auto' inferred
+    // 8) Salmon index -> can skip genome if transcript_fasta is enough
     //------------------------------------------------------
 
     ch_salmon_index = channel.empty()
@@ -262,7 +262,7 @@ workflow PREPARE_GENOME_INDICES {
         } else {
             ch_salmon_index = channel.value([ [:], file(salmon_index) ])
         }
-    } else if ('salmon' in prepare_tool_indices || any_auto_strandedness) {
+    } else if ('salmon' in prepare_tool_indices) {
         if (ch_transcript_fasta && fasta_provided) {
             // genome_fasta may be an empty list (no decoys); wrap before combine() so an
             // empty list contributes a position instead of being flattened away

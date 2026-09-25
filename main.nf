@@ -176,6 +176,9 @@ workflow NFCORE_RNASEQ {
         .map { r -> record(id: r.id, rsem_merge: r.rsem_merge) }
     ch_quant_merged = RNASEQ.out.quant_merged.map { r -> r + record(rsem_merge: null) }
 
+    // The prepared rRNA FASTAs publish whether or not --save_reference is set, so they cannot ride the genome target.
+    ch_rrna_seqkit = RNASEQ.out.rrna_references.filter { r -> r.seqkit_prefixed || r.seqkit_converted }
+
     // Flattened to one file per record so each can carry its own precomputed rename-form >> target.
     ch_bam_qc_rustqc_files = RNASEQ.out.bam_qc_rustqc
         .flatMap { s ->
@@ -219,6 +222,7 @@ workflow NFCORE_RNASEQ {
     strand_status       = RNASEQ.out.strand_status       // channel: [id, boolean]
     multiqc_report      = RNASEQ.out.multiqc_report      // channel: /path/to/multiqc_report.html
     genome              = ch_genome                      // channel: GenomeReferences fields + index: GenomeIndices + rrna_references + preprocessing_references
+    rrna_seqkit         = ch_rrna_seqkit                 // channel: record(bowtie2_index, seqkit_prefixed, seqkit_converted), only when the bowtie2 rRNA index is built
 
     // Stage result records, keyed on id
     preprocessed        = RNASEQ.out.preprocessed        // channel: FastqQcTrimFilterSetstrandedness
@@ -299,6 +303,7 @@ workflow {
     stringtie_merged = NFCORE_RNASEQ.out.stringtie_merged
     bigwig           = NFCORE_RNASEQ.out.bigwig
     genome           = NFCORE_RNASEQ.out.genome
+    rrna_seqkit      = NFCORE_RNASEQ.out.rrna_seqkit
     preprocessed     = NFCORE_RNASEQ.out.preprocessed
     lint_raw         = NFCORE_RNASEQ.out.lint_raw
     lint_trimmed     = NFCORE_RNASEQ.out.lint_trimmed
@@ -477,6 +482,13 @@ output {
             g.rrna_references?.bowtie2_index >> 'bowtie2_rrna/index/'
             g.preprocessing_references?.salmon_index >> 'genome/index/'
             g.preprocessing_references?.sortmerna_index >> 'genome/sortmerna/'
+        }
+    }
+
+    rrna_seqkit {   // record(bowtie2_index, seqkit_prefixed, seqkit_converted); ch_rrna_seqkit guarantees at least one FASTA list is non-empty
+        path { r ->
+            r.seqkit_prefixed >> 'seqkit/'
+            r.seqkit_converted >> 'seqkit/'
         }
     }
 

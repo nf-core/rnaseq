@@ -168,6 +168,11 @@ workflow NFCORE_RNASEQ {
     ch_lint_bbsplit = RNASEQ.out.preprocessed.map { r -> record(id: r.id, file: r.lint?.bbsplit) }.filter { s -> s.file != null }
     ch_lint_ribo    = RNASEQ.out.preprocessed.map { r -> record(id: r.id, file: r.lint?.ribo) }.filter { s -> s.file != null }
 
+    // Split out of quant_merged: CUSTOM_RSEMMERGECOUNTS and tximport both write rsem.merged.* basenames, which collide under >> (nextflow-io/nextflow#6617).
+    ch_quant_rsem_merge = RNASEQ.out.quant_merged
+        .filter { r -> r.rsem_merge != null }
+        .map { r -> record(id: r.id, rsem_merge: r.rsem_merge) }
+
     // Flattened to one file per record so each can carry its own precomputed rename-form >> target.
     ch_bam_qc_rustqc_files = RNASEQ.out.bam_qc_rustqc
         .flatMap { s ->
@@ -191,7 +196,6 @@ workflow NFCORE_RNASEQ {
         .flatMap { sample_id, r, meta, runs, percent_mapped ->
             runs.collect { run ->
                 record(
-                    id:                sample_id,   // routing only, dropped from the CSV by the explicit header list below
                     sample:            sample_id,
                     fastq_1:           run[0],
                     fastq_2:           run.size() > 1 ? run[1] : null,
@@ -223,9 +227,10 @@ workflow NFCORE_RNASEQ {
     markdup             = RNASEQ.out.markdup             // channel: MarkdupBam
     bam_qc              = RNASEQ.out.bam_qc              // channel: BamQcRnaseq
     bam_qc_rustqc       = ch_bam_qc_rustqc_files         // channel: record(id, file, target), one entry per RustQC output file
-    samplesheet         = ch_samplesheet_rows            // channel: record(id, sample, fastq_1, fastq_2, strandedness, seq_platform, seq_center, genome_bam, percent_mapped, transcriptome_bam), one entry per sequencing run
+    samplesheet         = ch_samplesheet_rows            // channel: record(sample, fastq_1, fastq_2, strandedness, seq_platform, seq_center, genome_bam, percent_mapped, transcriptome_bam), one entry per sequencing run
     quant               = RNASEQ.out.quant               // channel: RsemQuantSample | PseudoQuantSample, alignment-based quantifier
     quant_merged        = RNASEQ.out.quant_merged        // channel: RsemQuantMerged | QuantMerged, alignment-based quantifier
+    quant_rsem_merge    = ch_quant_rsem_merge            // channel: record(id, rsem_merge: RsemMerge), CUSTOM_RSEMMERGECOUNTS outputs
     quant_pseudo        = RNASEQ.out.quant_pseudo        // channel: PseudoQuantSample, pseudo-aligner
     quant_merged_pseudo = RNASEQ.out.quant_merged_pseudo // channel: QuantMerged, pseudo-aligner
     contaminants        = RNASEQ.out.contaminants        // channel: record(id, meta, kraken2, bracken, sylph, sylphtax)
@@ -301,6 +306,7 @@ workflow {
     samplesheet      = NFCORE_RNASEQ.out.samplesheet
     quant               = NFCORE_RNASEQ.out.quant
     quant_merged        = NFCORE_RNASEQ.out.quant_merged
+    quant_rsem_merge    = NFCORE_RNASEQ.out.quant_rsem_merge
     quant_pseudo        = NFCORE_RNASEQ.out.quant_pseudo
     quant_merged_pseudo = NFCORE_RNASEQ.out.quant_merged_pseudo
     deseq2              = NFCORE_RNASEQ.out.deseq2
@@ -537,15 +543,15 @@ output {
         }
     }
 
-    samplesheet {   // record(id, sample, fastq_1, fastq_2, strandedness, seq_platform, seq_center, genome_bam, percent_mapped, transcriptome_bam)
+    samplesheet {   // record(sample, fastq_1, fastq_2, strandedness, seq_platform, seq_center, genome_bam, percent_mapped, transcriptome_bam); field order is the CSV column order
         enabled params.save_align_intermeds && !params.skip_alignment
         path { r ->
-            r.genome_bam >> "${alignerDir(r)}/"
-            r.transcriptome_bam >> "${alignerDir(r)}/"
+            r.genome_bam >> "${params.skip_quantification_merge ? "${r.sample}/" : ''}${params.aligner}/"
+            r.transcriptome_bam >> "${params.skip_quantification_merge ? "${r.sample}/" : ''}${params.aligner}/"
         }
         index {
             path 'samplesheets/samplesheet_with_bams.csv'
-            header 'sample', 'fastq_1', 'fastq_2', 'strandedness', 'seq_platform', 'seq_center', 'genome_bam', 'percent_mapped', 'transcriptome_bam'
+            header true
         }
     }
 
@@ -560,11 +566,11 @@ output {
             s.tsv?.edit_distance >> "${alignerDir(s)}/umitools/"
             s.tsv?.per_umi >> "${alignerDir(s)}/umitools/"
             s.tsv?.umi_per_position >> "${alignerDir(s)}/umitools/"
-            s.transcriptome?.coord_sorted_bam >> (saveAlignBam(s) ? "${alignerDir(s)}/" : null)
-            s.transcriptome?.coord_sorted_bam_index >> (saveAlignBam(s) ? "${alignerDir(s)}/" : null)
-            s.transcriptome?.coord_sorted_samtools?.stats >> (saveAlignBam(s) ? "${alignerDir(s)}/samtools_stats/" : null)
-            s.transcriptome?.coord_sorted_samtools?.flagstat >> (saveAlignBam(s) ? "${alignerDir(s)}/samtools_stats/" : null)
-            s.transcriptome?.coord_sorted_samtools?.idxstats >> (saveAlignBam(s) ? "${alignerDir(s)}/samtools_stats/" : null)
+            s.transcriptome?.coord_sorted_bam >> (saveUmiBam(s) ? "${alignerDir(s)}/" : null)
+            s.transcriptome?.coord_sorted_bam_index >> (saveUmiBam(s) ? "${alignerDir(s)}/" : null)
+            s.transcriptome?.coord_sorted_samtools?.stats >> (saveUmiBam(s) ? "${alignerDir(s)}/samtools_stats/" : null)
+            s.transcriptome?.coord_sorted_samtools?.flagstat >> (saveUmiBam(s) ? "${alignerDir(s)}/samtools_stats/" : null)
+            s.transcriptome?.coord_sorted_samtools?.idxstats >> (saveUmiBam(s) ? "${alignerDir(s)}/samtools_stats/" : null)
             s.transcriptome?.sorted_bam >> (saveUmiBam(s) ? "${alignerDir(s)}/" : null)
             s.transcriptome?.filtered_bam >> (saveUmiBam(s) ? "${alignerDir(s)}/" : null)
             s.prepare_for_rsem_log >> "${alignerDir(s)}/umitools/prepare_for_quantification_log/"
@@ -616,12 +622,17 @@ output {
             r.tx2gene_augmented >> "${alignerDir(r)}/"
             r.merged_gene_rds >> "${alignerDir(r)}/"
             r.merged_transcript_rds >> "${alignerDir(r)}/"
-            r.rsem_merge?.counts_gene >> "${alignerDir(r)}/rsem_merge_counts/"
-            r.rsem_merge?.tpm_gene >> "${alignerDir(r)}/rsem_merge_counts/"
-            r.rsem_merge?.counts_transcript >> "${alignerDir(r)}/rsem_merge_counts/"
-            r.rsem_merge?.tpm_transcript >> "${alignerDir(r)}/rsem_merge_counts/"
-            r.rsem_merge?.genes_long >> "${alignerDir(r)}/rsem_merge_counts/"
-            r.rsem_merge?.isoforms_long >> "${alignerDir(r)}/rsem_merge_counts/"
+        }
+    }
+
+    quant_rsem_merge {   // record(id, rsem_merge: RsemMerge); rsem_merge is guaranteed non-null, ch_quant_rsem_merge filters out nulls before this target
+        path { r ->
+            r.rsem_merge.counts_gene >> "${alignerDir(r)}/rsem_merge_counts/"
+            r.rsem_merge.tpm_gene >> "${alignerDir(r)}/rsem_merge_counts/"
+            r.rsem_merge.counts_transcript >> "${alignerDir(r)}/rsem_merge_counts/"
+            r.rsem_merge.tpm_transcript >> "${alignerDir(r)}/rsem_merge_counts/"
+            r.rsem_merge.genes_long >> "${alignerDir(r)}/rsem_merge_counts/"
+            r.rsem_merge.isoforms_long >> "${alignerDir(r)}/rsem_merge_counts/"
         }
     }
 

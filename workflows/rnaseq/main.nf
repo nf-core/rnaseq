@@ -198,10 +198,6 @@ workflow RNASEQ {
     // Run RNA-seq FASTQ preprocessing subworkflow
     //
 
-    // PREPARE_GENOME_INDICES already builds/loads ch_salmon_index and
-    // ch_sortmerna_index whenever needed, so these never rebuild here.
-    def make_salmon_index    = false
-    def make_sortmerna_index = false
     // Bowtie2 rRNA index building still happens here, not in PREPARE_GENOME_INDICES.
     def make_bowtie2_index = !params.bowtie2_rrna_index && params.remove_ribo_rna && params.ribo_removal_tool == 'bowtie2'
 
@@ -220,8 +216,8 @@ workflow RNASEQ {
         params.skip_trimming,                       // skip_trimming
         params.skip_umi_extract,                    // skip_umi_extract
         params.skip_linting,                        // skip_linting
-        make_salmon_index,                          // make_salmon_index
-        make_sortmerna_index,                       // make_sortmerna_index
+        false,                                      // make_salmon_index (PREPARE_GENOME_INDICES already builds/loads this)
+        false,                                      // make_sortmerna_index (PREPARE_GENOME_INDICES already builds/loads this)
         make_bowtie2_index,                         // make_bowtie2_index
         params.trimmer,                             // trimmer
         params.min_trimmed_reads,                   // min_trimmed_reads

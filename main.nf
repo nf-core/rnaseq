@@ -191,7 +191,8 @@ workflow NFCORE_RNASEQ {
         }
         .filter { r -> r.target != null }
 
-    // samplesheet_with_bams.csv rows: one per sequencing run of a sample. genome_bam is the
+    // samplesheet_with_bams.csv rows: one per sequencing run of a sample, with the aligned record's
+    // meta so an inferred strandedness replaces 'auto'. genome_bam is the
     // coordinate-sorted BAM; bowtie2_salmon aligns to the transcriptome, so its unsorted bowtie2 BAM is the transcriptome_bam.
     // Filtered to samples that actually went through alignment here (excludes
     // the BAM-input passthrough placeholder record, which carries no orig_bam).
@@ -200,15 +201,15 @@ workflow NFCORE_RNASEQ {
         .map { r -> [r.id, r] }
         .join(RNASEQ.out.reads.map { meta, runs -> [meta.id, meta, runs] })
         .join(RNASEQ.out.percent_mapped)
-        .flatMap { sample_id, r, meta, runs, percent_mapped ->
+        .flatMap { sample_id, r, _meta, runs, percent_mapped ->
             runs.collect { run ->
                 record(
                     sample:            sample_id,
                     fastq_1:           run[0],
                     fastq_2:           run.size() > 1 ? run[1] : null,
-                    strandedness:      meta.strandedness,
-                    seq_platform:      meta.seq_platform ?: params.seq_platform,
-                    seq_center:        meta.seq_center ?: params.seq_center,
+                    strandedness:      r.meta.strandedness,
+                    seq_platform:      r.meta.seq_platform ?: params.seq_platform,
+                    seq_center:        r.meta.seq_center ?: params.seq_center,
                     genome_bam:        r.bam,
                     percent_mapped:    percent_mapped,
                     transcriptome_bam: params.aligner == 'bowtie2_salmon' ? r.orig_bam : r.transcriptome_bam

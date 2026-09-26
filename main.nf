@@ -159,8 +159,11 @@ workflow NFCORE_RNASEQ {
     ch_genome = ch_genome
         .combine(RNASEQ.out.rrna_references)
         .map { genome, rrna_references -> genome + record(rrna_references: rrna_references) }
-        .combine(RNASEQ.out.preprocessing_references)
-        .map { genome, preprocessing_references -> genome + record(preprocessing_references: preprocessing_references) }
+
+    // Indexes built inside preprocessing share their directory name with the genome-level ones
+    // (`idx`, `salmon`), so they cannot ride the genome target (nextflow-io/nextflow#6617).
+    ch_genome_preprocessing = RNASEQ.out.preprocessing_references
+        .filter { r -> r.salmon_index != null || r.sortmerna_index != null }
 
     // Same-basename fields split out per stage to avoid a >> rename-key collision (nextflow-io/nextflow#6617).
     ch_lint_raw     = RNASEQ.out.preprocessed.map { r -> record(id: r.id, file: r.lint?.raw) }.filter { s -> s.file != null }
@@ -222,7 +225,8 @@ workflow NFCORE_RNASEQ {
     map_status          = RNASEQ.out.map_status          // channel: [id, boolean]
     strand_status       = RNASEQ.out.strand_status       // channel: [id, boolean]
     multiqc_report      = RNASEQ.out.multiqc_report      // channel: /path/to/multiqc_report.html
-    genome              = ch_genome                      // channel: GenomeReferences fields + index: GenomeIndices + rrna_references + preprocessing_references
+    genome              = ch_genome                      // channel: GenomeReferences fields + index: GenomeIndices + rrna_references
+    genome_preprocessing = ch_genome_preprocessing       // channel: record(salmon_index, sortmerna_index), only when preprocessing built at least one
     rrna_seqkit         = ch_rrna_seqkit                 // channel: record(bowtie2_index, seqkit_prefixed, seqkit_converted), only when the bowtie2 rRNA index is built
 
     // Stage result records, keyed on id
@@ -304,6 +308,7 @@ workflow {
     stringtie_merged = NFCORE_RNASEQ.out.stringtie_merged
     bigwig           = NFCORE_RNASEQ.out.bigwig
     genome           = NFCORE_RNASEQ.out.genome
+    genome_preprocessing = NFCORE_RNASEQ.out.genome_preprocessing
     rrna_seqkit      = NFCORE_RNASEQ.out.rrna_seqkit
     preprocessed     = NFCORE_RNASEQ.out.preprocessed
     lint_raw         = NFCORE_RNASEQ.out.lint_raw
@@ -354,14 +359,14 @@ def preprocessedPublishes() {
     params.save_merged_fastq
 }
 
-// The dir the surviving reads would have published to under the mechanism
-// that last touched them (rRNA removal, then BBSplit), or null if neither
-// ran - trimming alone never publishes preprocessed.reads on its own.
-def readsLastStageDir(s) {
-    if (s.rrna?.sortmerna_log != null)    { return params.save_non_ribo_reads ? "${samplePrefix(s)}sortmerna" : null }
-    if (s.rrna?.ribodetector_log != null) { return params.save_non_ribo_reads ? "${samplePrefix(s)}ribodetector" : null }
-    if (s.rrna?.bowtie2_log != null)      { return params.save_non_ribo_reads ? "${samplePrefix(s)}bowtie2_rrna" : null }
-    if (s.bbsplit != null)                { return params.save_bbsplit_reads ? "${samplePrefix(s)}bbsplit" : null }
+// Directory for preprocessed.reads when rRNA removal produced them, or null.
+// Trimmed, UMI-extracted and BBSplit reads publish from their own fields.
+def rrnaFilteredReadsDir(s) {
+    if (!params.save_non_ribo_reads)      { return null }
+    if (s.rrna?.sortmerna_log != null)    { return "${samplePrefix(s)}sortmerna/" }
+    if (s.rrna?.ribodetector_log != null) { return "${samplePrefix(s)}ribodetector/" }
+    // Only the single-end --un-gz FASTQs are published; paired-end reads rebuilt by SAMTOOLS_FASTQ_BOWTIE2 are not.
+    if (s.rrna?.bowtie2_log != null)      { return s.meta.single_end ? "${samplePrefix(s)}bowtie2_rrna/" : null }
     return null
 }
 
@@ -450,7 +455,7 @@ output {
         }
     }
 
-    genome {   // GenomeReferences + index: GenomeIndices + rrna_references + preprocessing_references; never sample-prefixed
+    genome {   // GenomeReferences + index: GenomeIndices + rrna_references; never sample-prefixed
         enabled params.save_reference
         path { g ->
             g.fasta >> 'genome/'
@@ -481,8 +486,14 @@ output {
             g.index?.sortmerna >> 'genome/sortmerna/'
             g.index?.bowtie2_rrna >> 'genome/index/'
             g.rrna_references?.bowtie2_index >> 'bowtie2_rrna/index/'
-            g.preprocessing_references?.salmon_index >> 'genome/index/'
-            g.preprocessing_references?.sortmerna_index >> 'genome/sortmerna/'
+        }
+    }
+
+    genome_preprocessing {   // record(salmon_index, sortmerna_index); ch_genome_preprocessing guarantees at least one is non-null
+        enabled params.save_reference
+        path { p ->
+            p.salmon_index >> 'genome/index/'
+            p.sortmerna_index >> 'genome/sortmerna/'
         }
     }
 
@@ -512,13 +523,14 @@ output {
             s.umi?.log >> "${samplePrefix(s)}umitools/"
             s.umi?.reads >> (params.save_umi_intermeds ? "${samplePrefix(s)}umitools/" : null)
             s.bbsplit?.stats >> "${samplePrefix(s)}bbsplit/"
+            s.bbsplit?.primary_reads >> (params.save_bbsplit_reads ? "${samplePrefix(s)}bbsplit/" : null)
             s.bbsplit?.other_genome_reads >> (params.save_bbsplit_reads ? "${samplePrefix(s)}bbsplit/" : null)
             s.rrna?.sortmerna_log >> "${samplePrefix(s)}sortmerna/"
             s.rrna?.ribodetector_log >> "${samplePrefix(s)}ribodetector/"
             s.rrna?.seqkit_stats >> "${samplePrefix(s)}ribodetector/"
             s.rrna?.bowtie2_log >> "${samplePrefix(s)}bowtie2_rrna/"
             s.reads_cat >> (params.save_merged_fastq ? "${samplePrefix(s)}fastq/" : null)
-            s.reads >> readsLastStageDir(s)
+            s.reads >> rrnaFilteredReadsDir(s)
         }
     }
 
@@ -634,7 +646,7 @@ output {
             r.tpm_transcript >> "${alignerDir(r)}/"
             r.counts_transcript >> "${alignerDir(r)}/"
             r.lengths_transcript >> "${alignerDir(r)}/"
-            r.tx2gene >> "${alignerDir(r)}/"
+            r.tx2gene >> "${params.aligner}/"
             r.tx2gene_augmented >> "${alignerDir(r)}/"
             r.merged_gene_rds >> "${alignerDir(r)}/"
             r.merged_transcript_rds >> "${alignerDir(r)}/"

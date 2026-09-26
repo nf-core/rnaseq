@@ -31,7 +31,11 @@ pipeline_info/*.{html,json,txt,yml}
 bowtie2_rrna/*.bowtie2.log
 bowtie2_salmon/*.bowtie2.log
 bowtie2_salmon/log/*.bowtie2.log
+# Index builds embed run dates and paths, and binaries differ across architectures
+genome/index/**
 ribodetector/*.log
+# BAM columns hold absolute published paths, which embed each run's output directory
+samplesheets/samplesheet_with_bams.csv
 sortmerna/*.sortmerna.log
 star_rsem/*.stat/*.{cnt,model,theta}
 star_rsem/*.{genes,isoforms}.results
@@ -224,3 +228,38 @@ umitools/*.umi_extract.log
 {salmon,star_salmon,bowtie2_salmon}/salmon.merged.transcript_tpm.tsv
 {star_salmon,star_rsem,hisat2}/contaminants/kraken2/kraken_reports/*.kraken2.report.txt
 seqkit/**
+# Saved intermediate reads: read order, and for BBSplit and SortMeRNA some read assignments, vary between runs
+{hisat2,star_rsem,star_salmon,bowtie2_salmon}/unmapped/*.fastq.gz
+bbsplit/*_primary*.fastq.gz
+sortmerna/*.non_rRNA.fastq.gz
+bowtie2_rrna/*.fastq.gz
+# Per-sample alignment outputs (skip_quantification_merge mode), mirroring the top-level patterns above
+**/*_multiqc_report_data/multiqc_picard_dups.txt
+**/*_multiqc_report_data/multiqc_samtools_{flagstat,stats}.txt
+**/*_multiqc_report_data/multiqc_star.txt
+**/*_multiqc_report_data/picard_MeanQualityByCycle_histogram_1.txt
+**/*_multiqc_report_data/picard_deduplication.txt
+**/*_multiqc_report_data/samtools-flagstat-pct-table.txt
+**/*_multiqc_report_data/samtools-flagstat-table.txt
+**/*_multiqc_report_data/samtools-stats-dp.txt
+**/*_multiqc_report_data/samtools_alignment_plot.txt
+**/*_multiqc_report_data/star_alignment_plot.txt
+**/*_multiqc_report_data/star_summary_table.txt
+*/star_{salmon,rsem}/log/*.Log.{final.out,out,progress.out}
+*/{hisat2,star_rsem,star_salmon,bowtie2_salmon}/*.{bam,bam.bai}
+*/{hisat2,star_rsem,star_salmon,bowtie2_salmon}/picard_metrics/*.metrics.txt
+*/{hisat2,star_rsem,star_salmon,bowtie2_salmon}/samtools_stats/*.bam.{flagstat,idxstats,stats}
+*/{salmon,star_salmon,bowtie2_salmon}/*/aux_info/fld.gz
+*/{salmon,star_salmon,bowtie2_salmon}/*/aux_info/meta_info.json
+*/{salmon,star_salmon,bowtie2_salmon}/*/libParams/flenDist.txt
+*/{salmon,star_salmon,bowtie2_salmon}/*/lib_format_counts.json
+*/{salmon,star_salmon,bowtie2_salmon}/*/logs/salmon_quant.log
+*/{salmon,star_salmon,bowtie2_salmon}/*/quant.genes.sf
+*/{salmon,star_salmon,bowtie2_salmon}/*/quant.sf
+*/{salmon,star_salmon,bowtie2_salmon}/salmon.merged.gene_counts.tsv
+*/{salmon,star_salmon,bowtie2_salmon}/salmon.merged.gene_counts_scaled.tsv
+*/{salmon,star_salmon,bowtie2_salmon}/salmon.merged.gene_lengths.tsv
+*/{salmon,star_salmon,bowtie2_salmon}/salmon.merged.gene_tpm.tsv
+*/{salmon,star_salmon,bowtie2_salmon}/salmon.merged.transcript_counts.tsv
+*/{salmon,star_salmon,bowtie2_salmon}/salmon.merged.transcript_lengths.tsv
+*/{salmon,star_salmon,bowtie2_salmon}/salmon.merged.transcript_tpm.tsv

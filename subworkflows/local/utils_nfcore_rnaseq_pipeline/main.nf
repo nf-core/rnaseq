@@ -691,6 +691,15 @@ def isStarIndexLegacy() {
 }
 
 //
+// Reference and index params accept pre-built files that reach the genome
+// records untouched. Only files written by a task may be routed through the
+// output block, so anything outside the work directory is dropped to null.
+//
+def taskOutputOrNull(path) {
+    return path instanceof Path && path.startsWith(workflow.workDir) ? path : null
+}
+
+//
 // Function to generate an error if contigs in genome fasta file > 512 Mbp
 //
 def checkMaxContigSize(fai_file) {
@@ -867,33 +876,27 @@ def classifyStrand(meta, strand_log, stranded_threshold, unstranded_threshold) {
 
 
 //
-// Function to map work directory BAM paths to published paths
+// Function to build the DESeq2 QC record from the DESEQ2_QC process outputs.
+// RData is written whenever the task runs, so it anchors the record; the
+// other outputs are skipped for single-sample or single-gene input.
 //
-def mapBamToPublishedPath(bam_path, sample_id, aligner, outdir) {
-    if (!bam_path) return ''
-
-    def filename = file(bam_path).getName()
-    def base_dir = "${outdir}/${aligner}"
-
-    // Map based on aligner type and filename patterns
-    if (aligner == 'star_salmon') {
-        if (filename.contains('Aligned.out.bam')) {
-            return "${base_dir}/${sample_id}.Aligned.out.bam"
-        } else if (filename.contains('toTranscriptome')) {
-            return "${base_dir}/${sample_id}.Aligned.toTranscriptome.out.bam"
+def buildDeseq2Record(ch_rdata, ch_pca_txt, ch_pdf, ch_dists_txt, ch_size_factors, ch_log) {
+    return ch_rdata
+        .combine(ch_pca_txt.toList().map { fs -> [fs ? fs[0] : null] })
+        .combine(ch_pdf.toList().map { fs -> [fs ? fs[0] : null] })
+        .combine(ch_dists_txt.toList().map { fs -> [fs ? fs[0] : null] })
+        .combine(ch_size_factors.toList().map { fs -> [fs ? fs[0] : null] })
+        .combine(ch_log.toList().map { fs -> [fs ? fs[0] : null] })
+        .map { rdata, pca_vals, plots_pdf, sample_dists, size_factors, log ->
+            record(
+                rdata:        rdata,
+                pca_vals:     pca_vals,
+                plots_pdf:    plots_pdf,
+                sample_dists: sample_dists,
+                size_factors: size_factors,
+                log:          log
+            )
         }
-    } else if (aligner == 'star_rsem') {
-        if (filename.contains('genome.bam')) {
-            return "${base_dir}/${sample_id}.STAR.genome.bam"
-        } else if (filename.contains('transcript.bam')) {
-            return "${base_dir}/${sample_id}.transcript.bam"
-        }
-    } else if (aligner == 'hisat2') {
-        return "${base_dir}/${sample_id}.bam"
-    }
-
-    // Fallback to original filename
-    return "${base_dir}/${filename}"
 }
 
 //

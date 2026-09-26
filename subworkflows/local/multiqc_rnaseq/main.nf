@@ -243,8 +243,26 @@ workflow MULTIQC_RNASEQ {
 
     MULTIQC(ch_multiqc_input)
 
+    //
+    // One record per MULTIQC task: a single 'multiqc_report' row when
+    // merged, or one per sample under skip_quantification_merge.
+    //
+    ch_results = MULTIQC.out.report.map { meta, report -> [meta.id, meta, report] }
+        .join(MULTIQC.out.data.map { meta, data -> [meta.id, data] }, failOnMismatch: true, failOnDuplicate: true)
+        .join(MULTIQC.out.plots.map { meta, plots -> [meta.id, plots] }, remainder: true)
+        .map { id, meta, report, data, plots ->
+            record(
+                id:     id,
+                meta:   meta,
+                report: report,
+                data:   data,
+                plots:  plots
+            )
+        }
+
     emit:
-    report = MULTIQC.out.report.map { _meta, report -> report }
+    report  = MULTIQC.out.report.map { _meta, report -> report }
+    results = ch_results // channel: MultiqcReport
 }
 
 

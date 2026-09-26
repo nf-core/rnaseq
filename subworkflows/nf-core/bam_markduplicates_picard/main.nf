@@ -5,6 +5,7 @@
 include { PICARD_MARKDUPLICATES } from '../../../modules/nf-core/picard/markduplicates/main'
 include { SAMTOOLS_INDEX        } from '../../../modules/nf-core/samtools/index/main'
 include { BAM_STATS_SAMTOOLS    } from '../bam_stats_samtools/main'
+include { MarkdupBam            } from './types'
 
 workflow BAM_MARKDUPLICATES_PICARD {
     take:
@@ -22,6 +23,24 @@ workflow BAM_MARKDUPLICATES_PICARD {
 
     BAM_STATS_SAMTOOLS(ch_reads_index, ch_fasta_fai)
 
+    // Picard writes exactly one of bam/cram per sample, matching the input format.
+    // BAM_STATS_SAMTOOLS may be disabled by the caller via ext.when, so samtools is a remainder join.
+    ch_results = PICARD_MARKDUPLICATES.out.bam.map { meta, bam -> [meta.id, bam, null] }
+        .mix(PICARD_MARKDUPLICATES.out.cram.map { meta, cram -> [meta.id, null, cram] })
+        .join(SAMTOOLS_INDEX.out.index.map { meta, index -> [meta.id, index] }, by: [0])
+        .join(PICARD_MARKDUPLICATES.out.metrics.map { meta, metrics -> [meta.id, metrics] }, by: [0])
+        .join(BAM_STATS_SAMTOOLS.out.results.map { r -> [r.id, r] }, by: [0], remainder: true)
+        .map { id, bam, cram, index, metrics, samtools ->
+            record(
+                id: id,
+                bam: bam,
+                cram: cram,
+                bai: index,
+                metrics: metrics,
+                samtools: samtools ? record(stats: samtools.stats, flagstat: samtools.flagstat, idxstats: samtools.idxstats) : null
+            )
+        }
+
     ch_per_sample_mqc_bundle = BAM_STATS_SAMTOOLS.out.stats
         .join(BAM_STATS_SAMTOOLS.out.flagstat,   remainder: true)
         .join(BAM_STATS_SAMTOOLS.out.idxstats,   remainder: true)
@@ -37,4 +56,5 @@ workflow BAM_MARKDUPLICATES_PICARD {
     flagstat              = BAM_STATS_SAMTOOLS.out.flagstat // channel: [ val(meta), path(flagstat) ]
     idxstats              = BAM_STATS_SAMTOOLS.out.idxstats // channel: [ val(meta), path(idxstats) ]
     per_sample_mqc_bundle = ch_per_sample_mqc_bundle // channel: [ val(meta), list(files) ]
+    results               = ch_results // channel: MarkdupBam
 }

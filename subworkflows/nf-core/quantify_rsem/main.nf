@@ -7,6 +7,7 @@ include { CUSTOM_RSEMMERGECOUNTS             } from '../../../modules/nf-core/cu
 include { SENTIEON_RSEMCALCULATEEXPRESSION   } from '../../../modules/nf-core/sentieon/rsemcalculateexpression'
 
 include { QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT } from '../quant_tximport_summarizedexperiment'
+include { RsemQuantSample                     } from './types'
 
 workflow QUANTIFY_RSEM {
     take:
@@ -38,6 +39,27 @@ workflow QUANTIFY_RSEM {
     ch_stat              = ch_rsem_out.out.stat
     ch_logs              = ch_rsem_out.out.logs
 
+    // The log and BAMs are optional module outputs, the BAMs depending on ext.args.
+    ch_sample_fields = ch_counts_gene.map { meta, f -> [meta.id, meta, f] }
+        .join(ch_counts_transcript.map { meta, f -> [meta.id, f] }, by: [0], failOnMismatch: true, failOnDuplicate: true)
+        .join(ch_stat.map { meta, f -> [meta.id, f] }, by: [0], failOnMismatch: true, failOnDuplicate: true)
+        .join(ch_logs.map { meta, f -> [meta.id, f] }, by: [0], remainder: true)
+        .join(ch_rsem_out.out.bam_star.map { meta, f -> [meta.id, f] }, by: [0], remainder: true)
+        .join(ch_rsem_out.out.bam_genome.map { meta, f -> [meta.id, f] }, by: [0], remainder: true)
+        .join(ch_rsem_out.out.bam_transcript.map { meta, f -> [meta.id, f] }, by: [0], remainder: true)
+        .map { id, meta, counts_gene, counts_transcript, stat, log, bam_star, bam_genome, bam_transcript ->
+            [id, [
+                meta:              meta,
+                counts_gene:       counts_gene,
+                counts_transcript: counts_transcript,
+                stat:              stat,
+                log:               log,
+                bam_star:          bam_star,
+                bam_genome:        bam_genome,
+                bam_transcript:    bam_transcript
+            ]]
+        }
+
     //
     // Merge counts across samples (only when not skipping merge)
     //
@@ -47,6 +69,7 @@ workflow QUANTIFY_RSEM {
     ch_merged_tpm_transcript    = channel.empty()
     ch_merged_genes_long        = channel.empty()
     ch_merged_isoforms_long     = channel.empty()
+    ch_rsem_merge               = channel.empty()
 
     if (!skip_merge) {
         //
@@ -71,6 +94,23 @@ workflow QUANTIFY_RSEM {
         ch_merged_tpm_transcript    = CUSTOM_RSEMMERGECOUNTS.out.tpm_transcript
         ch_merged_genes_long        = CUSTOM_RSEMMERGECOUNTS.out.genes_long
         ch_merged_isoforms_long     = CUSTOM_RSEMMERGECOUNTS.out.isoforms_long
+
+        ch_rsem_merge = ch_merged_counts_gene.map { meta, f -> [meta.id, f] }
+            .join(ch_merged_tpm_gene.map { meta, f -> [meta.id, f] }, by: [0], failOnMismatch: true, failOnDuplicate: true)
+            .join(ch_merged_counts_transcript.map { meta, f -> [meta.id, f] }, by: [0], failOnMismatch: true, failOnDuplicate: true)
+            .join(ch_merged_tpm_transcript.map { meta, f -> [meta.id, f] }, by: [0], failOnMismatch: true, failOnDuplicate: true)
+            .join(ch_merged_genes_long.map { meta, f -> [meta.id, f] }, by: [0], failOnMismatch: true, failOnDuplicate: true)
+            .join(ch_merged_isoforms_long.map { meta, f -> [meta.id, f] }, by: [0], failOnMismatch: true, failOnDuplicate: true)
+            .map { id, counts_gene, tpm_gene, counts_transcript, tpm_transcript, genes_long, isoforms_long ->
+                [id, record(
+                    counts_gene:       counts_gene,
+                    tpm_gene:          tpm_gene,
+                    counts_transcript: counts_transcript,
+                    tpm_transcript:    tpm_transcript,
+                    genes_long:        genes_long,
+                    isoforms_long:     isoforms_long
+                )]
+            }
     }
 
     //
@@ -85,6 +125,40 @@ workflow QUANTIFY_RSEM {
         'rsem',
         skip_merge
     )
+
+    //
+    // Merging yields a single 'all_samples' row from both tximport and
+    // CUSTOM_RSEMMERGECOUNTS, joined on that id and broadcast onto every
+    // sample. Under skip_merge tximport runs per sample and there is no
+    // RSEM merge.
+    //
+    if (skip_merge) {
+        ch_quant_merged = QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT.out.results
+            .map { r -> [r.id, r + record(rsem_merge: null)] }
+        ch_results = ch_sample_fields
+            .join(ch_quant_merged, by: [0], failOnMismatch: true, failOnDuplicate: true)
+    } else {
+        ch_quant_merged = QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT.out.results
+            .map { r -> [r.id, r] }
+            .join(ch_rsem_merge, by: [0], failOnMismatch: true, failOnDuplicate: true)
+            .map { _id, r, rsem_merge -> r + record(rsem_merge: rsem_merge) }
+        ch_results = ch_sample_fields.combine(ch_quant_merged)
+    }
+
+    ch_results = ch_results.map { id, fields, quant_merged ->
+        record(
+            id:                id,
+            meta:              fields.meta,
+            counts_gene:       fields.counts_gene,
+            counts_transcript: fields.counts_transcript,
+            stat:              fields.stat,
+            log:               fields.log,
+            bam_star:          fields.bam_star,
+            bam_genome:        fields.bam_genome,
+            bam_transcript:    fields.bam_transcript,
+            quant_merged:      quant_merged
+        )
+    }
 
     emit:
     // Per-sample outputs
@@ -117,4 +191,7 @@ workflow QUANTIFY_RSEM {
 
     // tx2gene
     tx2gene                   = QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT.out.tx2gene                      //    path: *tx2gene.tsv
+
+    // Per-sample record
+    results                   = ch_results                                                           // channel: RsemQuantSample
 }

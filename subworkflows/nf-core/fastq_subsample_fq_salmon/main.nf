@@ -23,6 +23,7 @@ workflow FASTQ_SUBSAMPLE_FQ_SALMON {
     //
     // Create Salmon index if required
     //
+    ch_index_built = channel.empty()
     if (make_index) {
         // genome_fasta may be an empty list (no decoys); wrap before combine() so an
         // empty list contributes a position instead of being flattened away
@@ -32,6 +33,7 @@ workflow FASTQ_SUBSAMPLE_FQ_SALMON {
             .set { ch_index_input }
 
         ch_index = SALMON_INDEX ( ch_index_input ).index
+        ch_index_built = ch_index
     }
     else {
         ch_index = ch_index.map { index -> [ [:], index ] }
@@ -49,6 +51,7 @@ workflow FASTQ_SUBSAMPLE_FQ_SALMON {
 
     emit:
     index             = ch_index                           // channel: [ val(meta), index ]
+    index_built       = ch_index_built.map { _meta, index -> index } // channel: path(salmon/index/), only set when built here
 
     reads             = FQ_SUBSAMPLE.out.fastq             // channel: [ val(meta), fastq ]
 

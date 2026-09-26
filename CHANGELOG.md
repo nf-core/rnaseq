@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1938](https://github.com/nf-core/rnaseq/pull/1938) - Bump version to 3.28.0dev after release 3.27.0; flip the MultiQC report links and RO-Crate URL/version back to dev
 - [PR #1942](https://github.com/nf-core/rnaseq/pull/1942) - Fix `--with_umi` transcriptome-side samtools stats silently colliding with genome-side stats, caused by a broad `withName` wildcard in `conf/modules/alignment.config` also matching the `BAM_DEDUP_UMI` subworkflow
 - [PR #1943](https://github.com/nf-core/rnaseq/pull/1943) - Apply `--min_mapped_reads` filtering to HISAT2 alignments
+- [#1931](https://github.com/nf-core/rnaseq/issues/1931) - Migrate publishing to Nextflow's workflow output syntax; `process.withName:<NAME>.publishDir` overrides in custom configs no longer have any effect (breaking change), `samplesheets/samplesheet_with_bams.csv` is now fully double-quoted CSV, and output directories are created only when a file is published into them (no empty directories)
 
 ## [[3.27.0](https://github.com/nf-core/rnaseq/releases/tag/3.27.0)] - 2026-09-23
 
@@ -85,6 +86,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1925](https://github.com/nf-core/rnaseq/pull/1925) - Trigger a full nf-test run on `conf/`, `bin/` and `assets/` changes, and refresh the StringTie ballgown snapshots left stale by [PR #1924](https://github.com/nf-core/rnaseq/pull/1924)
 - [PR #1927](https://github.com/nf-core/rnaseq/pull/1927) - Bump version to 3.27.0 ahead of release, with a Salmon `--libType` config fix/dedup and an nf-test trigger fix picked up along the way
 - [PR #1930](https://github.com/nf-core/rnaseq/pull/1930) - Fill in `fastp`/`multiqc`/`seqkit` gaps in the Software dependencies table and add `tests/.nftignore_rustqc` to nf-test triggers, following release review
+- [PR #1939](https://github.com/nf-core/rnaseq/pull/1939) - Workflow-outputs migration phase 1: per-sample result records on every subworkflow, `strict-syntax` hygiene including removal of the deprecated `manifest.defaultBranch`, minimum Nextflow version raised to `26.09.0-edge`; no user-visible output change (see [#1931](https://github.com/nf-core/rnaseq/issues/1931), [#1933](https://github.com/nf-core/rnaseq/issues/1933))
 
 ### Software dependencies
 

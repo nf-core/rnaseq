@@ -168,6 +168,17 @@ workflow NFCORE_RNASEQ {
     ch_lint_bbsplit = RNASEQ.out.preprocessed.map { r -> record(id: r.id, file: r.lint?.bbsplit) }.filter { s -> s.file != null }
     ch_lint_ribo    = RNASEQ.out.preprocessed.map { r -> record(id: r.id, file: r.lint?.ribo) }.filter { s -> s.file != null }
 
+    // CUSTOM_RSEMMERGECOUNTS and tximport both write rsem.merged.* basenames. A target publishes every
+    // file in its records and >> keys the rename on basename (nextflow-io/nextflow#6617), so the
+    // quant_merged records must not carry rsem_merge at all; it gets its own target.
+    ch_quant_rsem_merge = RNASEQ.out.quant_merged
+        .filter { r -> r.rsem_merge != null }
+        .map { r -> record(id: r.id, rsem_merge: r.rsem_merge) }
+    ch_quant_merged = RNASEQ.out.quant_merged.map { r -> r + record(rsem_merge: null) }
+
+    // The prepared rRNA FASTAs publish whether or not --save_reference is set, so they cannot ride the genome target.
+    ch_rrna_seqkit = RNASEQ.out.rrna_references.filter { r -> r.seqkit_prefixed || r.seqkit_converted }
+
     // Flattened to one file per record so each can carry its own precomputed rename-form >> target.
     ch_bam_qc_rustqc_files = RNASEQ.out.bam_qc_rustqc
         .flatMap { s ->
@@ -180,7 +191,9 @@ workflow NFCORE_RNASEQ {
         }
         .filter { r -> r.target != null }
 
-    // samplesheet_with_bams.csv rows: one per sequencing run of a sample.
+    // samplesheet_with_bams.csv rows: one per sequencing run of a sample, with the aligned record's
+    // meta so an inferred strandedness replaces 'auto'. genome_bam is the
+    // coordinate-sorted BAM; bowtie2_salmon aligns to the transcriptome, so its unsorted bowtie2 BAM is the transcriptome_bam.
     // Filtered to samples that actually went through alignment here (excludes
     // the BAM-input passthrough placeholder record, which carries no orig_bam).
     ch_samplesheet_rows = RNASEQ.out.aligned
@@ -188,19 +201,18 @@ workflow NFCORE_RNASEQ {
         .map { r -> [r.id, r] }
         .join(RNASEQ.out.reads.map { meta, runs -> [meta.id, meta, runs] })
         .join(RNASEQ.out.percent_mapped)
-        .flatMap { sample_id, r, meta, runs, percent_mapped ->
+        .flatMap { sample_id, r, _meta, runs, percent_mapped ->
             runs.collect { run ->
                 record(
-                    id:                sample_id,   // routing only, dropped from the CSV by the explicit header list below
                     sample:            sample_id,
                     fastq_1:           run[0],
                     fastq_2:           run.size() > 1 ? run[1] : null,
-                    strandedness:      meta.strandedness,
-                    seq_platform:      meta.seq_platform ?: params.seq_platform,
-                    seq_center:        meta.seq_center ?: params.seq_center,
-                    genome_bam:        singleBam(r.orig_bam),
+                    strandedness:      r.meta.strandedness,
+                    seq_platform:      r.meta.seq_platform ?: params.seq_platform,
+                    seq_center:        r.meta.seq_center ?: params.seq_center,
+                    genome_bam:        r.bam,
                     percent_mapped:    percent_mapped,
-                    transcriptome_bam: r.transcriptome_bam
+                    transcriptome_bam: params.aligner == 'bowtie2_salmon' ? r.orig_bam : r.transcriptome_bam
                 )
             }
         }
@@ -211,6 +223,7 @@ workflow NFCORE_RNASEQ {
     strand_status       = RNASEQ.out.strand_status       // channel: [id, boolean]
     multiqc_report      = RNASEQ.out.multiqc_report      // channel: /path/to/multiqc_report.html
     genome              = ch_genome                      // channel: GenomeReferences fields + index: GenomeIndices + rrna_references + preprocessing_references
+    rrna_seqkit         = ch_rrna_seqkit                 // channel: record(bowtie2_index, seqkit_prefixed, seqkit_converted), only when the bowtie2 rRNA index is built
 
     // Stage result records, keyed on id
     preprocessed        = RNASEQ.out.preprocessed        // channel: FastqQcTrimFilterSetstrandedness
@@ -223,9 +236,10 @@ workflow NFCORE_RNASEQ {
     markdup             = RNASEQ.out.markdup             // channel: MarkdupBam
     bam_qc              = RNASEQ.out.bam_qc              // channel: BamQcRnaseq
     bam_qc_rustqc       = ch_bam_qc_rustqc_files         // channel: record(id, file, target), one entry per RustQC output file
-    samplesheet         = ch_samplesheet_rows            // channel: record(id, sample, fastq_1, fastq_2, strandedness, seq_platform, seq_center, genome_bam, percent_mapped, transcriptome_bam), one entry per sequencing run
+    samplesheet         = ch_samplesheet_rows            // channel: record(sample, fastq_1, fastq_2, strandedness, seq_platform, seq_center, genome_bam, percent_mapped, transcriptome_bam), one entry per sequencing run
     quant               = RNASEQ.out.quant               // channel: RsemQuantSample | PseudoQuantSample, alignment-based quantifier
-    quant_merged        = RNASEQ.out.quant_merged        // channel: RsemQuantMerged | QuantMerged, alignment-based quantifier
+    quant_merged        = ch_quant_merged                // channel: RsemQuantMerged | QuantMerged with rsem_merge null, alignment-based quantifier
+    quant_rsem_merge    = ch_quant_rsem_merge            // channel: record(id, rsem_merge: RsemMerge), CUSTOM_RSEMMERGECOUNTS outputs
     quant_pseudo        = RNASEQ.out.quant_pseudo        // channel: PseudoQuantSample, pseudo-aligner
     quant_merged_pseudo = RNASEQ.out.quant_merged_pseudo // channel: QuantMerged, pseudo-aligner
     contaminants        = RNASEQ.out.contaminants        // channel: record(id, meta, kraken2, bracken, sylph, sylphtax)
@@ -290,6 +304,7 @@ workflow {
     stringtie_merged = NFCORE_RNASEQ.out.stringtie_merged
     bigwig           = NFCORE_RNASEQ.out.bigwig
     genome           = NFCORE_RNASEQ.out.genome
+    rrna_seqkit      = NFCORE_RNASEQ.out.rrna_seqkit
     preprocessed     = NFCORE_RNASEQ.out.preprocessed
     lint_raw         = NFCORE_RNASEQ.out.lint_raw
     lint_trimmed     = NFCORE_RNASEQ.out.lint_trimmed
@@ -301,6 +316,7 @@ workflow {
     samplesheet      = NFCORE_RNASEQ.out.samplesheet
     quant               = NFCORE_RNASEQ.out.quant
     quant_merged        = NFCORE_RNASEQ.out.quant_merged
+    quant_rsem_merge    = NFCORE_RNASEQ.out.quant_rsem_merge
     quant_pseudo        = NFCORE_RNASEQ.out.quant_pseudo
     quant_merged_pseudo = NFCORE_RNASEQ.out.quant_merged_pseudo
     deseq2              = NFCORE_RNASEQ.out.deseq2
@@ -320,9 +336,6 @@ def saveUmiBam(_s)    { params.save_align_intermeds || params.save_umi_intermeds
 def umiDedupToolDir(_s) { params.umi_dedup_tool == 'umicollapse' ? 'umicollapse' : 'umitools' }
 def pseudoAlignerDir(r) { "${samplePrefix(r)}${params.pseudo_aligner}" }
 
-// StarAligned.orig_bam is List<Path> (defensive flatten() of a glob output that
-// may resolve to a single Path); Bowtie2Aligned and Hisat2Aligned declare a plain Path.
-def singleBam(b) { b instanceof List ? b[0] : b }
 def multiqcDir(m) {
     def suffix = params.skip_alignment ? '' : "/${params.aligner}"
     m.id == 'multiqc_report' ? "multiqc${suffix}" : "${m.id}/multiqc${suffix}"
@@ -452,6 +465,7 @@ output {
             g.intermediates?.additional_fasta >> 'genome/'
             g.intermediates?.gtf_pre_filter >> 'genome/'
             g.intermediates?.fasta_pre_concat >> 'genome/'
+            g.intermediates?.gtf_pre_concat >> 'genome/'
             g.intermediates?.transcript_fasta_pre_gencode >> 'genome/'
             g.intermediates?.transcript_fasta_rsem_dir >> 'genome/'
             g.index?.star >> 'genome/index/'
@@ -463,11 +477,19 @@ output {
             g.index?.salmon >> 'genome/index/'
             g.index?.kallisto >> 'genome/index/'
             g.index?.bbsplit >> 'genome/index/'
+            g.index?.bbsplit_log >> 'genome/index/'
             g.index?.sortmerna >> 'genome/sortmerna/'
             g.index?.bowtie2_rrna >> 'genome/index/'
             g.rrna_references?.bowtie2_index >> 'bowtie2_rrna/index/'
             g.preprocessing_references?.salmon_index >> 'genome/index/'
             g.preprocessing_references?.sortmerna_index >> 'genome/sortmerna/'
+        }
+    }
+
+    rrna_seqkit {   // record(bowtie2_index, seqkit_prefixed, seqkit_converted); ch_rrna_seqkit guarantees at least one FASTA list is non-empty
+        path { r ->
+            r.seqkit_prefixed >> 'seqkit/'
+            r.seqkit_converted >> 'seqkit/'
         }
     }
 
@@ -537,15 +559,15 @@ output {
         }
     }
 
-    samplesheet {   // record(id, sample, fastq_1, fastq_2, strandedness, seq_platform, seq_center, genome_bam, percent_mapped, transcriptome_bam)
+    samplesheet {   // record(sample, fastq_1, fastq_2, strandedness, seq_platform, seq_center, genome_bam, percent_mapped, transcriptome_bam); field order is the CSV column order
         enabled params.save_align_intermeds && !params.skip_alignment
         path { r ->
-            r.genome_bam >> "${alignerDir(r)}/"
-            r.transcriptome_bam >> "${alignerDir(r)}/"
+            r.genome_bam >> "${params.skip_quantification_merge ? "${r.sample}/" : ''}${params.aligner}/"
+            r.transcriptome_bam >> "${params.skip_quantification_merge ? "${r.sample}/" : ''}${params.aligner}/"
         }
         index {
             path 'samplesheets/samplesheet_with_bams.csv'
-            header 'sample', 'fastq_1', 'fastq_2', 'strandedness', 'seq_platform', 'seq_center', 'genome_bam', 'percent_mapped', 'transcriptome_bam'
+            header true
         }
     }
 
@@ -560,11 +582,11 @@ output {
             s.tsv?.edit_distance >> "${alignerDir(s)}/umitools/"
             s.tsv?.per_umi >> "${alignerDir(s)}/umitools/"
             s.tsv?.umi_per_position >> "${alignerDir(s)}/umitools/"
-            s.transcriptome?.coord_sorted_bam >> (saveAlignBam(s) ? "${alignerDir(s)}/" : null)
-            s.transcriptome?.coord_sorted_bam_index >> (saveAlignBam(s) ? "${alignerDir(s)}/" : null)
-            s.transcriptome?.coord_sorted_samtools?.stats >> (saveAlignBam(s) ? "${alignerDir(s)}/samtools_stats/" : null)
-            s.transcriptome?.coord_sorted_samtools?.flagstat >> (saveAlignBam(s) ? "${alignerDir(s)}/samtools_stats/" : null)
-            s.transcriptome?.coord_sorted_samtools?.idxstats >> (saveAlignBam(s) ? "${alignerDir(s)}/samtools_stats/" : null)
+            s.transcriptome?.coord_sorted_bam >> (saveUmiBam(s) ? "${alignerDir(s)}/" : null)
+            s.transcriptome?.coord_sorted_bam_index >> (saveUmiBam(s) ? "${alignerDir(s)}/" : null)
+            s.transcriptome?.coord_sorted_samtools?.stats >> (saveUmiBam(s) ? "${alignerDir(s)}/samtools_stats/" : null)
+            s.transcriptome?.coord_sorted_samtools?.flagstat >> (saveUmiBam(s) ? "${alignerDir(s)}/samtools_stats/" : null)
+            s.transcriptome?.coord_sorted_samtools?.idxstats >> (saveUmiBam(s) ? "${alignerDir(s)}/samtools_stats/" : null)
             s.transcriptome?.sorted_bam >> (saveUmiBam(s) ? "${alignerDir(s)}/" : null)
             s.transcriptome?.filtered_bam >> (saveUmiBam(s) ? "${alignerDir(s)}/" : null)
             s.prepare_for_rsem_log >> "${alignerDir(s)}/umitools/prepare_for_quantification_log/"
@@ -616,12 +638,17 @@ output {
             r.tx2gene_augmented >> "${alignerDir(r)}/"
             r.merged_gene_rds >> "${alignerDir(r)}/"
             r.merged_transcript_rds >> "${alignerDir(r)}/"
-            r.rsem_merge?.counts_gene >> "${alignerDir(r)}/rsem_merge_counts/"
-            r.rsem_merge?.tpm_gene >> "${alignerDir(r)}/rsem_merge_counts/"
-            r.rsem_merge?.counts_transcript >> "${alignerDir(r)}/rsem_merge_counts/"
-            r.rsem_merge?.tpm_transcript >> "${alignerDir(r)}/rsem_merge_counts/"
-            r.rsem_merge?.genes_long >> "${alignerDir(r)}/rsem_merge_counts/"
-            r.rsem_merge?.isoforms_long >> "${alignerDir(r)}/rsem_merge_counts/"
+        }
+    }
+
+    quant_rsem_merge {   // record(id, rsem_merge: RsemMerge); rsem_merge is guaranteed non-null, ch_quant_rsem_merge filters out nulls before this target
+        path { r ->
+            r.rsem_merge.counts_gene >> "${alignerDir(r)}/rsem_merge_counts/"
+            r.rsem_merge.tpm_gene >> "${alignerDir(r)}/rsem_merge_counts/"
+            r.rsem_merge.counts_transcript >> "${alignerDir(r)}/rsem_merge_counts/"
+            r.rsem_merge.tpm_transcript >> "${alignerDir(r)}/rsem_merge_counts/"
+            r.rsem_merge.genes_long >> "${alignerDir(r)}/rsem_merge_counts/"
+            r.rsem_merge.isoforms_long >> "${alignerDir(r)}/rsem_merge_counts/"
         }
     }
 

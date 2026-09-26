@@ -162,7 +162,7 @@ The `samplesheet_with_bams.csv` will look like:
 ```
 
 :::note
-Every field is quoted. It is still a valid samplesheet for `--input`: nf-schema's CSV parser handles quoted fields.
+Every field is quoted, because Nextflow's workflow output index writer quotes all CSV values. The file is a valid samplesheet for `--input`: nf-schema's CSV parser handles quoted fields.
 :::
 
 #### Important limitations

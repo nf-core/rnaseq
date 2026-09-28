@@ -488,9 +488,9 @@ output {
             s.transcriptomic_dedup_log >> "${samplePrefix(s)}${params.aligner}/${params.umi_dedup_tool}/transcriptomic_dedup_log/"
             s.transcriptome?.dedup_bam >> (saveFile('umi_bam') ? "${samplePrefix(s)}${params.aligner}/" : null)
             s.transcriptome?.sorted_bam_index >> (saveFile('umi_bam') ? "${samplePrefix(s)}${params.aligner}/" : null)
-            s.transcriptome?.stats >> "${samplePrefix(s)}${params.aligner}/samtools_stats/"
-            s.transcriptome?.flagstat >> "${samplePrefix(s)}${params.aligner}/samtools_stats/"
-            s.transcriptome?.idxstats >> "${samplePrefix(s)}${params.aligner}/samtools_stats/"
+            s.transcriptome?.samtools?.stats >> "${samplePrefix(s)}${params.aligner}/samtools_stats/"
+            s.transcriptome?.samtools?.flagstat >> "${samplePrefix(s)}${params.aligner}/samtools_stats/"
+            s.transcriptome?.samtools?.idxstats >> "${samplePrefix(s)}${params.aligner}/samtools_stats/"
             s.transcriptome?.tsv?.edit_distance >> "${samplePrefix(s)}${params.aligner}/umitools/"
             s.transcriptome?.tsv?.per_umi >> "${samplePrefix(s)}${params.aligner}/umitools/"
             s.transcriptome?.tsv?.umi_per_position >> "${samplePrefix(s)}${params.aligner}/umitools/"

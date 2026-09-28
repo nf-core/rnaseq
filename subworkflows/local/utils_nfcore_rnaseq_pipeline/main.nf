@@ -699,6 +699,12 @@ def taskOutputOrNull(path) {
     return path instanceof Path && path.startsWith(workflow.workDir) ? path : null
 }
 
+// Collapses a toList()'d single-optional-task channel into a one-element list,
+// for combine()-ing an optional field into a whole-run record.
+def firstTaskOutputOrNull(items) {
+    return [ taskOutputOrNull(items[0]) ]
+}
+
 //
 // Function to generate an error if contigs in genome fasta file > 512 Mbp
 //

@@ -25,6 +25,7 @@ include { EAUTILS_GTF2BED                      } from '../../../modules/nf-core/
 include { CUSTOM_GTFFILTER                     } from '../../../modules/nf-core/custom/gtffilter'
 
 include { taskOutputOrNull                     } from '../utils_nfcore_rnaseq_pipeline'
+include { firstTaskOutputOrNull                 } from '../utils_nfcore_rnaseq_pipeline'
 include { GenomeReferences                     } from './types'
 
 workflow PREPARE_GENOME_REFERENCES {
@@ -264,19 +265,19 @@ workflow PREPARE_GENOME_REFERENCES {
     ch_results = ch_fasta_fai
         .toList()
         .map { items -> items ? [ taskOutputOrNull(items[0][1]), items[0][2] ] : [ null, null ] }
-        .combine(ch_gtf.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
-        .combine(ch_gene_bed.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
-        .combine(ch_transcript_fasta.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
+        .combine(ch_gtf.toList().map { firstTaskOutputOrNull(it) })
+        .combine(ch_gene_bed.toList().map { firstTaskOutputOrNull(it) })
+        .combine(ch_transcript_fasta.toList().map { firstTaskOutputOrNull(it) })
         .combine(ch_chrom_sizes.toList().map { items -> [ items[0] ] })
         .combine(ch_rrna_fastas.toList().map { items -> [ items.collect { rrna_fasta -> taskOutputOrNull(rrna_fasta) }.findAll { rrna_fasta -> rrna_fasta != null } ?: null ] })
-        .combine(ch_kraken_db.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
-        .combine(ch_gff_uncompressed.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
-        .combine(ch_additional_fasta_uncompressed.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
-        .combine(ch_gtf_pre_filter.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
-        .combine(ch_fasta_pre_concat.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
-        .combine(ch_gtf_pre_concat.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
-        .combine(ch_transcript_fasta_pre_gencode.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
-        .combine(ch_transcript_fasta_rsem_dir.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
+        .combine(ch_kraken_db.toList().map { firstTaskOutputOrNull(it) })
+        .combine(ch_gff_uncompressed.toList().map { firstTaskOutputOrNull(it) })
+        .combine(ch_additional_fasta_uncompressed.toList().map { firstTaskOutputOrNull(it) })
+        .combine(ch_gtf_pre_filter.toList().map { firstTaskOutputOrNull(it) })
+        .combine(ch_fasta_pre_concat.toList().map { firstTaskOutputOrNull(it) })
+        .combine(ch_gtf_pre_concat.toList().map { firstTaskOutputOrNull(it) })
+        .combine(ch_transcript_fasta_pre_gencode.toList().map { firstTaskOutputOrNull(it) })
+        .combine(ch_transcript_fasta_rsem_dir.toList().map { firstTaskOutputOrNull(it) })
         .map { fasta_file, fai_file, gtf_file, gene_bed_file, transcript_fasta_file, chrom_sizes_file, rrna_fasta_files, kraken_db_dir,
                gff_file, additional_fasta_file, gtf_pre_filter_file, fasta_pre_concat_file, gtf_pre_concat_file, transcript_fasta_pre_gencode_file, transcript_fasta_rsem_dir_file ->
             record(

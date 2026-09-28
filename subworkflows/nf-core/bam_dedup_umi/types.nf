@@ -8,9 +8,7 @@ record UmiDedupTranscriptome {
     sorted_bam:             Path
     sorted_bam_index:       Path
     filtered_bam:           Path?
-    stats:                  Path
-    flagstat:               Path
-    idxstats:               Path
+    samtools:               SamtoolsStatsFiles
     tsv:                    UmitoolsDedupStats?
     // Coordinate-sorted, pre-dedup form (built once, before the umitools/umicollapse branch).
     coord_sorted_bam:       Path?

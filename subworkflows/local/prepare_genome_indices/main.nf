@@ -27,6 +27,7 @@ include { SENTIEON_RSEMPREPAREREFERENCE as SENTIEON_RSEM_PREPAREREFERENCE_GENOME
 include { STAR_GENOMEPARAMS_UPGRADE         } from '../../../modules/local/star_genomeparams_upgrade'
 
 include { taskOutputOrNull                  } from '../utils_nfcore_rnaseq_pipeline'
+include { firstTaskOutputOrNull              } from '../utils_nfcore_rnaseq_pipeline'
 include { GenomeIndices                     } from './types'
 
 workflow PREPARE_GENOME_INDICES {
@@ -319,16 +320,16 @@ workflow PREPARE_GENOME_INDICES {
     // path from UNTAR but a [ meta, path ] tuple otherwise.
     ch_results = ch_star_index_publish
         .toList()
-        .map { items -> [ taskOutputOrNull(items[0]) ] }
-        .combine(ch_rsem_index.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
-        .combine(ch_rsem_transcript_fasta.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
-        .combine(ch_hisat2_index.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
-        .combine(ch_splicesites.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
-        .combine(ch_bowtie2_index.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
+        .map { firstTaskOutputOrNull(it) }
+        .combine(ch_rsem_index.toList().map { firstTaskOutputOrNull(it) })
+        .combine(ch_rsem_transcript_fasta.toList().map { firstTaskOutputOrNull(it) })
+        .combine(ch_hisat2_index.toList().map { firstTaskOutputOrNull(it) })
+        .combine(ch_splicesites.toList().map { firstTaskOutputOrNull(it) })
+        .combine(ch_bowtie2_index.toList().map { firstTaskOutputOrNull(it) })
         .combine(ch_salmon_index.toList().map { items -> [ items ? taskOutputOrNull(items[0][1]) : null ] })
         .combine(ch_kallisto_index.toList().map { items -> [ items ? taskOutputOrNull(items[0][1]) : null ] })
-        .combine(ch_bbsplit_index.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
-        .combine(ch_bbsplit_log.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
+        .combine(ch_bbsplit_index.toList().map { firstTaskOutputOrNull(it) })
+        .combine(ch_bbsplit_log.toList().map { firstTaskOutputOrNull(it) })
         .combine(ch_sortmerna_index.toList().map { items -> [ taskOutputOrNull(items[0] instanceof List ? items[0][1] : items[0]) ] })
         .combine(ch_bowtie2_rrna_index.toList().map { items -> [ items ? taskOutputOrNull(items[0][1]) : null ] })
         .map { star, rsem, rsem_transcript_fasta, hisat2, hisat2_splicesites, bowtie2, salmon, kallisto, bbsplit, bbsplit_log, sortmerna, bowtie2_rrna ->

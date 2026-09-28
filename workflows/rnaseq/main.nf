@@ -24,7 +24,6 @@ include { BAM_DEDUP_UMI                         } from '../../subworkflows/nf-co
 
 include { checkSamplesAfterGrouping      } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { classifyStrand                 } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
-include { getHisat2PercentMapped         } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { mapBamToPublishedPath          } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 
 /*
@@ -152,7 +151,7 @@ workflow RNASEQ {
     //
     // Create channel from input file provided through params.input
     //
-    channel
+    def ch_input_branched = channel
         .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
         .map {
             meta, fastq_1, fastq_2, genome_bam, transcriptome_bam ->
@@ -174,7 +173,6 @@ workflow RNASEQ {
                 fastq: reads.size() > 0 && reads[0]
                     return [ meta.findAll { key, _value -> key != 'percent_mapped' }, reads ]
         }
-        .set { ch_input_branched }
 
     // Get inputs for FASTQ and BAM processing paths
 
@@ -198,8 +196,13 @@ workflow RNASEQ {
     // Run RNA-seq FASTQ preprocessing subworkflow
     //
 
-    // Bowtie2 rRNA index building still happens here, not in PREPARE_GENOME_INDICES.
-    def make_bowtie2_index = !params.bowtie2_rrna_index && params.remove_ribo_rna && params.ribo_removal_tool == 'bowtie2'
+    // The subworkflow only has to do Salmon indexing if it discovers 'auto'
+    // samples, and if we haven't already made one elsewhere
+    salmon_index_available = params.salmon_index || (!params.skip_pseudo_alignment && params.pseudo_aligner == 'salmon')
+
+    // Determine if we need to build rRNA removal indexes
+    def make_sortmerna_index = !params.sortmerna_index && params.remove_ribo_rna && params.ribo_removal_tool == 'sortmerna'
+    def make_bowtie2_index   = !params.bowtie2_rrna_index && params.remove_ribo_rna && params.ribo_removal_tool == 'bowtie2'
 
     FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS (
         ch_fastq,                                   // ch_reads
@@ -216,8 +219,8 @@ workflow RNASEQ {
         params.skip_trimming,                       // skip_trimming
         params.skip_umi_extract,                    // skip_umi_extract
         params.skip_linting,                        // skip_linting
-        false,                                      // make_salmon_index (PREPARE_GENOME_INDICES already builds/loads this)
-        false,                                      // make_sortmerna_index (PREPARE_GENOME_INDICES already builds/loads this)
+        !salmon_index_available,                    // make_salmon_index
+        make_sortmerna_index,                       // make_sortmerna_index
         make_bowtie2_index,                         // make_bowtie2_index
         params.trimmer,                             // trimmer
         params.min_trimmed_reads,                   // min_trimmed_reads
@@ -363,7 +366,6 @@ workflow RNASEQ {
         ch_genome_bam_index    = ch_genome_bam_index.mix(FASTQ_ALIGN_HISAT2.out.index)
         ch_unprocessed_bams    = ch_genome_bam.map { meta, bam -> [ meta, bam, '' ] }
         ch_unaligned_sequences = FASTQ_ALIGN_HISAT2.out.fastq
-        ch_percent_mapped      = ch_percent_mapped.mix(FASTQ_ALIGN_HISAT2.out.summary.map { meta, log -> [ meta, getHisat2PercentMapped(log) ] })
         ch_multiqc_files = ch_multiqc_files.mix(FASTQ_ALIGN_HISAT2.out.summary)
         ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
             .join(FASTQ_ALIGN_HISAT2.out.summary.map { meta, f -> [meta.id, f] }, remainder: true)
@@ -849,8 +851,10 @@ workflow RNASEQ {
         ch_fastq.map { meta, reads -> [ meta.id, meta, reads ] }
             .join(ch_unprocessed_bams.map { meta, genome_bam, transcriptome_bam -> [ meta.id, meta, genome_bam, transcriptome_bam ] })
             .join(ch_percent_mapped)
-            .transpose()
-            .map { _id, _fastq_meta, reads, meta, genome_bam, transcriptome_bam, percent_mapped ->
+            .flatMap { _id, _fastq_meta, runs, meta, genome_bam, transcriptome_bam, percent_mapped ->
+                runs.collect { reads -> [ meta, reads, genome_bam, transcriptome_bam, percent_mapped ] }
+            }
+            .map { meta, reads, genome_bam, transcriptome_bam, percent_mapped ->
 
                 // Handle BAM paths (same for all runs of this sample)
                 def genome_bam_published = meta.has_genome_bam ?

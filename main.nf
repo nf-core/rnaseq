@@ -36,7 +36,6 @@ params.bowtie2_index    = getGenomeAttribute('bowtie2')
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { samplesheetToList          } from 'plugin/nf-schema'
 include { RNASEQ                     } from './workflows/rnaseq'
 include { PREPARE_GENOME_REFERENCES  } from './subworkflows/local/prepare_genome_references'
 include { PREPARE_GENOME_INDICES     } from './subworkflows/local/prepare_genome_indices'
@@ -114,8 +113,7 @@ workflow NFCORE_RNASEQ {
         params.use_sentieon_star,
         params.use_parabricks_star,
         isStarIndexLegacy() ?: false,
-        params.hisat2_build_memory,
-        anySampleAutoStrandedness()
+        params.hisat2_build_memory
     )
 
     // Check if contigs in genome fasta file > 512 Mbp
@@ -223,15 +221,6 @@ def getGenomeAttribute(attribute) {
         }
     }
     return null
-}
-
-//
-// Check whether any sample declares strandedness 'auto'
-//
-
-def anySampleAutoStrandedness() {
-    samplesheetToList(params.input, "${projectDir}/assets/schema_input.json")
-        .any { meta, _fastq_1, _fastq_2, _genome_bam, _transcriptome_bam -> meta.strandedness == 'auto' }
 }
 
 /*

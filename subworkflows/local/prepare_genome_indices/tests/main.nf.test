@@ -91,7 +91,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -206,7 +205,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -320,7 +318,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -434,7 +431,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -548,7 +544,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -662,7 +657,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -679,113 +673,6 @@ nextflow_workflow {
                     workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
                     workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
-                ).match() }
-            )
-        }
-
-        cleanup {
-            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
-                "docker system prune -a -f --volumes".execute()
-            }
-            new File("${launchDir}").deleteDir()
-        }
-    }
-
-    test("any_auto_strandedness = true builds a Salmon index without pseudo-alignment") {
-
-        setup {
-            run("PREPARE_GENOME_REFERENCES") {
-                script "../../prepare_genome_references/main.nf"
-                workflow {
-                    """
-                    gencode                  = false
-                    featurecounts_group_type = 'gene_biotype'
-                    aligner                  = 'star_salmon'
-                    pseudo_aligner           = null
-                    skip_gtf_filter          = false
-                    skip_bbsplit             = false
-                    ribo_removal_tool        = null
-                    skip_alignment           = false
-                    skip_pseudo_alignment    = true
-                    use_sentieon_star        = false
-                    use_parabricks_star      = false
-
-                    input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
-                    input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
-                    input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
-                    input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
-                    input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
-                    input[5]  = null
-                    input[6]  = null
-                    input[7]  = null  // kraken_db
-                    input[8]  = gencode
-                    input[9]  = false
-                    input[10] = featurecounts_group_type
-                    input[11] = aligner
-                    input[12] = pseudo_aligner
-                    input[13] = skip_gtf_filter
-                    input[14] = ribo_removal_tool
-                    input[15] = skip_alignment
-                    input[16] = skip_pseudo_alignment
-                    input[17] = use_sentieon_star
-                    input[18] = null  // contaminant_screening
-                    input[19] = false  // prokaryotic
-                    """
-                }
-            }
-        }
-
-        when {
-            workflow {
-                """
-                gencode                  = false
-                featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon'
-                pseudo_aligner           = null
-                skip_gtf_filter          = false
-                skip_bbsplit             = false
-                ribo_removal_tool        = null
-                skip_alignment           = false
-                skip_pseudo_alignment    = true
-                use_sentieon_star        = false
-                use_parabricks_star      = false
-
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
-                input[4]  = true  // fasta_provided
-                input[5]  = null
-                input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
-                input[7]  = null
-                input[8]  = file(params.pipelines_testdata_base_path + 'reference/rsem.tar.gz', checkIfExists: true)
-                input[9]  = false
-                input[10] = null
-                input[11] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
-                input[12] = null
-                input[13] = null
-                input[14] = null
-                input[15] = null
-                input[16] = aligner
-                input[17] = pseudo_aligner
-                input[18] = skip_bbsplit
-                input[19] = ribo_removal_tool
-                input[20] = skip_alignment
-                input[21] = skip_pseudo_alignment
-                input[22] = use_sentieon_star
-                input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
-                input[25] = params.hisat2_build_memory
-                input[26] = true  // any_auto_strandedness
-                """
-            }
-        }
-
-        then {
-            assertAll(
-                { assert workflow.success },
-                { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -883,7 +770,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -997,7 +883,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -1111,7 +996,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -1225,7 +1109,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -1339,7 +1222,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -1453,7 +1335,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -1567,7 +1448,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -1682,7 +1562,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -1787,7 +1666,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -1901,7 +1779,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -2015,7 +1892,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -2129,7 +2005,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -2243,7 +2118,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -2357,7 +2231,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -2471,7 +2344,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -2588,7 +2460,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -2705,7 +2576,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -2822,7 +2692,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -2939,7 +2808,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -3044,7 +2912,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -3161,7 +3028,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -3178,116 +3044,6 @@ nextflow_workflow {
                     workflow.out.sortmerna_index,
                     workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
-                ).match() }
-            )
-        }
-
-        cleanup {
-            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
-                "docker system prune -a -f --volumes".execute()
-            }
-            new File("${launchDir}").deleteDir()
-        }
-    }
-
-    test("any_auto_strandedness = true builds a Salmon index without pseudo-alignment - stub") {
-
-        options "-stub"
-
-        setup {
-            run("PREPARE_GENOME_REFERENCES") {
-                script "../../prepare_genome_references/main.nf"
-                options "-stub"
-                workflow {
-                    """
-                    gencode                  = false
-                    featurecounts_group_type = 'gene_biotype'
-                    aligner                  = 'star_salmon'
-                    pseudo_aligner           = null
-                    skip_gtf_filter          = false
-                    skip_bbsplit             = false
-                    ribo_removal_tool        = null
-                    skip_alignment           = false
-                    skip_pseudo_alignment    = true
-                    use_sentieon_star        = false
-                    use_parabricks_star      = false
-
-                    input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
-                    input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
-                    input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
-                    input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
-                    input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
-                    input[5]  = null
-                    input[6]  = null
-                    input[7]  = null  // kraken_db
-                    input[8]  = gencode
-                    input[9]  = false
-                    input[10] = featurecounts_group_type
-                    input[11] = aligner
-                    input[12] = pseudo_aligner
-                    input[13] = skip_gtf_filter
-                    input[14] = ribo_removal_tool
-                    input[15] = skip_alignment
-                    input[16] = skip_pseudo_alignment
-                    input[17] = use_sentieon_star
-                    input[18] = null  // contaminant_screening
-                    input[19] = false  // prokaryotic
-                    """
-                }
-            }
-        }
-
-        when {
-            workflow {
-                """
-                gencode                  = false
-                featurecounts_group_type = 'gene_biotype'
-                aligner                  = 'star_salmon'
-                pseudo_aligner           = null
-                skip_gtf_filter          = false
-                skip_bbsplit             = false
-                ribo_removal_tool        = null
-                skip_alignment           = false
-                skip_pseudo_alignment    = true
-                use_sentieon_star        = false
-                use_parabricks_star      = false
-
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
-                input[4]  = true  // fasta_provided
-                input[5]  = null
-                input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
-                input[7]  = null
-                input[8]  = file(params.pipelines_testdata_base_path + 'reference/rsem.tar.gz', checkIfExists: true)
-                input[9]  = false
-                input[10] = null
-                input[11] = file(params.pipelines_testdata_base_path + 'reference/hisat2.tar.gz', checkIfExists: true)
-                input[12] = null
-                input[13] = null
-                input[14] = null
-                input[15] = null
-                input[16] = aligner
-                input[17] = pseudo_aligner
-                input[18] = skip_bbsplit
-                input[19] = ribo_removal_tool
-                input[20] = skip_alignment
-                input[21] = skip_pseudo_alignment
-                input[22] = use_sentieon_star
-                input[23] = use_parabricks_star
-                input[24] = false  // star_index_legacy
-                input[25] = params.hisat2_build_memory
-                input[26] = true  // any_auto_strandedness
-                """
-            }
-        }
-
-        then {
-            assertAll(
-                { assert workflow.success },
-                { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -3388,7 +3144,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -3505,7 +3260,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -3622,7 +3376,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -3739,7 +3492,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -3856,7 +3608,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -3973,7 +3724,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -4090,7 +3840,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -4208,7 +3957,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -4316,7 +4064,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -4433,7 +4180,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -4550,7 +4296,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -4667,7 +4412,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -4784,7 +4528,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -4889,7 +4632,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -5006,7 +4748,6 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
                 """
             }
         }

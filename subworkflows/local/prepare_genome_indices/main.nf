@@ -184,7 +184,7 @@ workflow PREPARE_GENOME_INDICES {
     // 5) RSEM index -> needs FASTA & GTF if built
     //------------------------------------------------
     ch_rsem_index = channel.empty()
-    // Incidental *transcripts.fa the index step also emits; unused, still published under --save_reference.
+    // Incidental *transcripts.fa the index step also emits; unused by the pipeline, published under --save_reference.
     ch_rsem_transcript_fasta = channel.empty()
     if ('star_rsem' in prepare_tool_indices) {
         if (rsem_index) {

@@ -1,3 +1,4 @@
+// Documentation only: nothing casts a record(...) to these types (nextflow-io/nextflow#7680 corrupts remote Path fields on cast).
 include { FastqRemoveRrna } from '../fastq_remove_rrna/types'
 
 // TrimGalore and fastp report the same kinds of file with different

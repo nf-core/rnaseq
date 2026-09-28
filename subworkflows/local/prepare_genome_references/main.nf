@@ -194,12 +194,12 @@ workflow PREPARE_GENOME_REFERENCES {
             // Build transcripts from genome if we have it
             SENTIEON_MAKE_TRANSCRIPTS_FASTA(ch_fasta, ch_gtf)
             ch_transcript_fasta          = SENTIEON_MAKE_TRANSCRIPTS_FASTA.out.transcript_fasta
-            ch_transcript_fasta_rsem_dir = SENTIEON_MAKE_TRANSCRIPTS_FASTA.out.index // incidental, unused, still published
+            ch_transcript_fasta_rsem_dir = SENTIEON_MAKE_TRANSCRIPTS_FASTA.out.index // unused here; published via the genome record's transcript_fasta_rsem_dir field
         } else {
             // Build transcripts from genome if we have it
             MAKE_TRANSCRIPTS_FASTA(ch_fasta, ch_gtf)
             ch_transcript_fasta          = MAKE_TRANSCRIPTS_FASTA.out.transcript_fasta
-            ch_transcript_fasta_rsem_dir = MAKE_TRANSCRIPTS_FASTA.out.index // incidental, unused, still published
+            ch_transcript_fasta_rsem_dir = MAKE_TRANSCRIPTS_FASTA.out.index // unused here; published via the genome record's transcript_fasta_rsem_dir field
         }
 
     }

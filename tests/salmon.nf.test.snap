@@ -1427,10 +1427,10 @@
                 "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
             ]
         ],
-        "timestamp": "2026-09-19T20:40:37.127864259",
+        "timestamp": "2026-09-25T16:47:50.956779656",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.09.0"
         }
     },
     "Params: --pseudo_aligner salmon --skip_qc --skip_alignment": {
@@ -1858,7 +1858,6 @@
                 "RAP1_IAA_30M_REP1/fastqc/raw",
                 "RAP1_IAA_30M_REP1/fastqc/raw/RAP1_IAA_30M_REP1_raw.html",
                 "RAP1_IAA_30M_REP1/fastqc/raw/RAP1_IAA_30M_REP1_raw.zip",
-                "RAP1_IAA_30M_REP1/fastqc/trim",
                 "RAP1_IAA_30M_REP1/fq_lint",
                 "RAP1_IAA_30M_REP1/fq_lint/raw",
                 "RAP1_IAA_30M_REP1/fq_lint/raw/RAP1_IAA_30M_REP1.fq_lint.txt",
@@ -1876,7 +1875,6 @@
                 "RAP1_UNINDUCED_REP1/fastqc/raw",
                 "RAP1_UNINDUCED_REP1/fastqc/raw/RAP1_UNINDUCED_REP1_raw.html",
                 "RAP1_UNINDUCED_REP1/fastqc/raw/RAP1_UNINDUCED_REP1_raw.zip",
-                "RAP1_UNINDUCED_REP1/fastqc/trim",
                 "RAP1_UNINDUCED_REP1/fq_lint",
                 "RAP1_UNINDUCED_REP1/fq_lint/raw",
                 "RAP1_UNINDUCED_REP1/fq_lint/raw/RAP1_UNINDUCED_REP1.fq_lint.txt",
@@ -1893,7 +1891,6 @@
                 "RAP1_UNINDUCED_REP2/fastqc/raw",
                 "RAP1_UNINDUCED_REP2/fastqc/raw/RAP1_UNINDUCED_REP2_raw.html",
                 "RAP1_UNINDUCED_REP2/fastqc/raw/RAP1_UNINDUCED_REP2_raw.zip",
-                "RAP1_UNINDUCED_REP2/fastqc/trim",
                 "RAP1_UNINDUCED_REP2/fq_lint",
                 "RAP1_UNINDUCED_REP2/fq_lint/raw",
                 "RAP1_UNINDUCED_REP2/fq_lint/raw/RAP1_UNINDUCED_REP2.fq_lint.txt",
@@ -1910,7 +1907,6 @@
                 "WT_REP1/fastqc/raw",
                 "WT_REP1/fastqc/raw/WT_REP1_raw.html",
                 "WT_REP1/fastqc/raw/WT_REP1_raw.zip",
-                "WT_REP1/fastqc/trim",
                 "WT_REP1/fq_lint",
                 "WT_REP1/fq_lint/raw",
                 "WT_REP1/fq_lint/raw/WT_REP1.fq_lint.txt",
@@ -1928,7 +1924,6 @@
                 "WT_REP2/fastqc/raw",
                 "WT_REP2/fastqc/raw/WT_REP2_raw.html",
                 "WT_REP2/fastqc/raw/WT_REP2_raw.zip",
-                "WT_REP2/fastqc/trim",
                 "WT_REP2/fq_lint",
                 "WT_REP2/fq_lint/raw",
                 "WT_REP2/fq_lint/raw/WT_REP2.fq_lint.txt",
@@ -2007,8 +2002,6 @@
                 }
             },
             [
-                "fastqc",
-                "fastqc/trim",
                 "fq_lint",
                 "fq_lint/raw",
                 "fq_lint/raw/RAP1_IAA_30M_REP1.fq_lint.txt",

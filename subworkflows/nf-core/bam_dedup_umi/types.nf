@@ -2,15 +2,19 @@ include { SamtoolsStatsFiles } from '../bam_stats_samtools/types'
 include { UmitoolsDedupStats } from '../bam_dedup_stats_samtools_umitools/types'
 
 record UmiDedupTranscriptome {
-    bam:              Path
-    dedup_bam:        Path
-    sorted_bam:       Path
-    sorted_bam_index: Path
-    filtered_bam:     Path?
-    stats:            Path
-    flagstat:         Path
-    idxstats:         Path
-    tsv:              UmitoolsDedupStats?
+    bam:                    Path
+    dedup_bam:              Path
+    sorted_bam:             Path
+    sorted_bam_index:       Path
+    filtered_bam:           Path?
+    stats:                  Path
+    flagstat:               Path
+    idxstats:               Path
+    tsv:                    UmitoolsDedupStats?
+    // Coordinate-sorted, pre-dedup form (built once, before the umitools/umicollapse branch).
+    coord_sorted_bam:       Path?
+    coord_sorted_bam_index: Path?
+    coord_sorted_samtools:  SamtoolsStatsFiles?
 }
 
 record UmiDedupBam {

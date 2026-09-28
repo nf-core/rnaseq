@@ -70,6 +70,7 @@ workflow BAM_DEDUP_UMI {
         ch_transcript_fasta_fai,
     )
     ch_sorted_transcriptome_bam = BAM_SORT_STATS_SAMTOOLS.out.bam.join(BAM_SORT_STATS_SAMTOOLS.out.index)
+    ch_coord_sorted_transcriptome = BAM_SORT_STATS_SAMTOOLS.out.results.map { r -> [r.id, r] }
 
     // 2. Transcriptome BAM deduplication
     if (umi_dedup_tool == "umicollapse") {
@@ -126,22 +127,26 @@ workflow BAM_DEDUP_UMI {
         .join(ch_dedup_transcriptome_bam.map { meta, bam -> [meta.id, bam] }, by: [0])
         .join(UMITOOLS_PREPAREFORRSEM.out.bam.map { meta, bam -> [meta.id, bam] }, by: [0], remainder: true)
         .join(UMITOOLS_PREPAREFORRSEM.out.log.map { meta, log -> [meta.id, log] }, by: [0], remainder: true)
-        .map { id, dedup_bam, bai, dedup_log, samtools, tsv, sorted_bam, bam, filtered_bam, rsem_log ->
+        .join(ch_coord_sorted_transcriptome, by: [0], remainder: true)
+        .map { id, dedup_bam, bai, dedup_log, samtools, tsv, sorted_bam, bam, filtered_bam, rsem_log, coord_sorted ->
             [
                 id,
                 record(
                     dedup_log:     dedup_log,
                     rsem_log:      rsem_log,
                     transcriptome: record(
-                        bam:              bam,
-                        dedup_bam:        dedup_bam,
-                        sorted_bam:       sorted_bam,
-                        sorted_bam_index: bai,
-                        filtered_bam:     filtered_bam,
-                        stats:            samtools.stats,
-                        flagstat:         samtools.flagstat,
-                        idxstats:         samtools.idxstats,
-                        tsv:              tsv ? record(edit_distance: tsv.edit_distance, per_umi: tsv.per_umi, umi_per_position: tsv.umi_per_position) : null
+                        bam:                    bam,
+                        dedup_bam:              dedup_bam,
+                        sorted_bam:             sorted_bam,
+                        sorted_bam_index:       bai,
+                        filtered_bam:           filtered_bam,
+                        stats:                  samtools.stats,
+                        flagstat:               samtools.flagstat,
+                        idxstats:               samtools.idxstats,
+                        tsv:                    tsv ? record(edit_distance: tsv.edit_distance, per_umi: tsv.per_umi, umi_per_position: tsv.umi_per_position) : null,
+                        coord_sorted_bam:       coord_sorted?.bam,
+                        coord_sorted_bam_index: coord_sorted?.bai,
+                        coord_sorted_samtools:  coord_sorted?.samtools
                     )
                 )
             ]

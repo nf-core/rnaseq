@@ -56,6 +56,7 @@ workflow PREPARE_GENOME_REFERENCES {
     // 1) Uncompress GTF or GFF -> GTF
     //---------------------------
     ch_gtf = channel.empty()
+    ch_gff_uncompressed = channel.empty()
     if (gtf) {
         if (gtf.endsWith('.gz')) {
             ch_gtf      = GUNZIP_GTF ([ [:], file(gtf, checkIfExists: true) ]).gunzip.map { tuple -> tuple[1] }
@@ -65,12 +66,15 @@ workflow PREPARE_GENOME_REFERENCES {
     } else if (gff) {
         def ch_gff
         if (gff.endsWith('.gz')) {
-            ch_gff      = GUNZIP_GFF ([ [:], file(gff, checkIfExists: true) ]).gunzip
+            ch_gff              = GUNZIP_GFF ([ [:], file(gff, checkIfExists: true) ]).gunzip
+            ch_gff_uncompressed = ch_gff.map { tuple -> tuple[1] }
         } else {
             ch_gff = channel.value(file(gff, checkIfExists: true)).map { item -> [ [:], item ] }
         }
         ch_gtf      = GFFREAD(ch_gff, []).gtf.map { tuple -> tuple[1] }
     }
+    // Set below, once, at the first step that supersedes ch_gtf (if any).
+    ch_gtf_pre_filter = null
 
     //-------------------------------------
     // 2) Check if we actually have a FASTA
@@ -97,6 +101,7 @@ workflow PREPARE_GENOME_REFERENCES {
     ) && !skip_gtf_filter
 
     if (filter_gtf_needed) {
+        ch_gtf_pre_filter = ch_gtf
         CUSTOM_GTFFILTER(
             ch_gtf.map { item -> [ [id: item.baseName + '.filtered'], item ] },
             fasta_provided
@@ -110,12 +115,18 @@ workflow PREPARE_GENOME_REFERENCES {
     // 4) Concatenate additional FASTA (if both are given)
     //---------------------------------------------------
     ch_add_fasta = channel.empty()
+    ch_additional_fasta_uncompressed = channel.empty()
+    ch_fasta_pre_concat = channel.empty()
     if (fasta_provided && additional_fasta) {
         if (additional_fasta.endsWith('.gz')) {
             ch_add_fasta = GUNZIP_ADDITIONAL_FASTA([ [:], file(additional_fasta, checkIfExists: true) ]).gunzip.map { tuple -> tuple[1] }
+            ch_additional_fasta_uncompressed = ch_add_fasta
         } else {
             ch_add_fasta = channel.value(file(additional_fasta, checkIfExists: true))
         }
+
+        ch_fasta_pre_concat = ch_fasta
+        ch_gtf_pre_filter   = ch_gtf_pre_filter ?: ch_gtf
 
         CUSTOM_CATADDITIONALFASTA(
             ch_fasta.combine(ch_gtf).map { fasta_file, gtf_file -> [ [id: 'genome_transcriptome'], fasta_file, gtf_file ] },
@@ -125,6 +136,7 @@ workflow PREPARE_GENOME_REFERENCES {
         ch_fasta    = CUSTOM_CATADDITIONALFASTA.out.fasta.map { tuple -> tuple[1] }.first()
         ch_gtf      = CUSTOM_CATADDITIONALFASTA.out.gtf.map { tuple -> tuple[1] }.first()
     }
+    ch_gtf_pre_filter = ch_gtf_pre_filter ?: channel.empty()
 
     //------------------------------------------------------
     // 5) Uncompress gene BED or create from GTF if not given
@@ -154,6 +166,8 @@ workflow PREPARE_GENOME_REFERENCES {
     //    - If not provided but have genome+GTF, create from them
     //----------------------------------------------------------------------
     ch_transcript_fasta = channel.empty()
+    ch_transcript_fasta_pre_gencode = channel.empty()
+    ch_transcript_fasta_rsem_dir = channel.empty()
     if (transcript_fasta) {
         // Use user-provided transcript FASTA
         if (transcript_fasta.endsWith('.gz')) {
@@ -162,6 +176,7 @@ workflow PREPARE_GENOME_REFERENCES {
             ch_transcript_fasta = channel.value(file(transcript_fasta, checkIfExists: true))
         }
         if (gencode) {
+            ch_transcript_fasta_pre_gencode = ch_transcript_fasta
             PREPROCESS_TRANSCRIPTS_FASTA_GENCODE(ch_transcript_fasta)
             ch_transcript_fasta = PREPROCESS_TRANSCRIPTS_FASTA_GENCODE.out.fasta
         }
@@ -177,10 +192,14 @@ workflow PREPARE_GENOME_REFERENCES {
             ch_transcript_fasta = GFFREAD_TRANSCRIPTS.out.gffread_fasta.map { _meta, fasta_file -> fasta_file }
         } else if (use_sentieon_star) {
             // Build transcripts from genome if we have it
-            ch_transcript_fasta = SENTIEON_MAKE_TRANSCRIPTS_FASTA(ch_fasta, ch_gtf).transcript_fasta
+            SENTIEON_MAKE_TRANSCRIPTS_FASTA(ch_fasta, ch_gtf)
+            ch_transcript_fasta          = SENTIEON_MAKE_TRANSCRIPTS_FASTA.out.transcript_fasta
+            ch_transcript_fasta_rsem_dir = SENTIEON_MAKE_TRANSCRIPTS_FASTA.out.index // incidental, unused, still published
         } else {
             // Build transcripts from genome if we have it
-            ch_transcript_fasta = MAKE_TRANSCRIPTS_FASTA(ch_fasta, ch_gtf).transcript_fasta
+            MAKE_TRANSCRIPTS_FASTA(ch_fasta, ch_gtf)
+            ch_transcript_fasta          = MAKE_TRANSCRIPTS_FASTA.out.transcript_fasta
+            ch_transcript_fasta_rsem_dir = MAKE_TRANSCRIPTS_FASTA.out.index // incidental, unused, still published
         }
 
     }
@@ -248,7 +267,14 @@ workflow PREPARE_GENOME_REFERENCES {
         .combine(ch_chrom_sizes.toList().map { items -> [ items[0] ] })
         .combine(ch_rrna_fastas.toList().map { items -> [ items.collect { rrna_fasta -> taskOutputOrNull(rrna_fasta) }.findAll { rrna_fasta -> rrna_fasta != null } ?: null ] })
         .combine(ch_kraken_db.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
-        .map { fasta_file, fai_file, gtf_file, gene_bed_file, transcript_fasta_file, chrom_sizes_file, rrna_fasta_files, kraken_db_dir ->
+        .combine(ch_gff_uncompressed.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
+        .combine(ch_additional_fasta_uncompressed.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
+        .combine(ch_gtf_pre_filter.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
+        .combine(ch_fasta_pre_concat.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
+        .combine(ch_transcript_fasta_pre_gencode.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
+        .combine(ch_transcript_fasta_rsem_dir.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
+        .map { fasta_file, fai_file, gtf_file, gene_bed_file, transcript_fasta_file, chrom_sizes_file, rrna_fasta_files, kraken_db_dir,
+               gff_file, additional_fasta_file, gtf_pre_filter_file, fasta_pre_concat_file, transcript_fasta_pre_gencode_file, transcript_fasta_rsem_dir_file ->
             record(
                 fasta:            fasta_file,
                 fai:              fai_file,
@@ -257,7 +283,15 @@ workflow PREPARE_GENOME_REFERENCES {
                 transcript_fasta: transcript_fasta_file,
                 chrom_sizes:      chrom_sizes_file,
                 rrna_fastas:      rrna_fasta_files,
-                kraken_db:        kraken_db_dir
+                kraken_db:        kraken_db_dir,
+                intermediates:    record(
+                    gff:                          gff_file,
+                    additional_fasta:             additional_fasta_file,
+                    gtf_pre_filter:               gtf_pre_filter_file,
+                    fasta_pre_concat:             fasta_pre_concat_file,
+                    transcript_fasta_pre_gencode: transcript_fasta_pre_gencode_file,
+                    transcript_fasta_rsem_dir:    transcript_fasta_rsem_dir_file
+                )
             )
         }
 

@@ -320,16 +320,16 @@ workflow PREPARE_GENOME_INDICES {
     // path from UNTAR but a [ meta, path ] tuple otherwise.
     ch_results = ch_star_index_publish
         .toList()
-        .map { firstTaskOutputOrNull(it) }
-        .combine(ch_rsem_index.toList().map { firstTaskOutputOrNull(it) })
-        .combine(ch_rsem_transcript_fasta.toList().map { firstTaskOutputOrNull(it) })
-        .combine(ch_hisat2_index.toList().map { firstTaskOutputOrNull(it) })
-        .combine(ch_splicesites.toList().map { firstTaskOutputOrNull(it) })
-        .combine(ch_bowtie2_index.toList().map { firstTaskOutputOrNull(it) })
+        .map { items -> firstTaskOutputOrNull(items) }
+        .combine(ch_rsem_index.toList().map { items -> firstTaskOutputOrNull(items) })
+        .combine(ch_rsem_transcript_fasta.toList().map { items -> firstTaskOutputOrNull(items) })
+        .combine(ch_hisat2_index.toList().map { items -> firstTaskOutputOrNull(items) })
+        .combine(ch_splicesites.toList().map { items -> firstTaskOutputOrNull(items) })
+        .combine(ch_bowtie2_index.toList().map { items -> firstTaskOutputOrNull(items) })
         .combine(ch_salmon_index.toList().map { items -> [ items ? taskOutputOrNull(items[0][1]) : null ] })
         .combine(ch_kallisto_index.toList().map { items -> [ items ? taskOutputOrNull(items[0][1]) : null ] })
-        .combine(ch_bbsplit_index.toList().map { firstTaskOutputOrNull(it) })
-        .combine(ch_bbsplit_log.toList().map { firstTaskOutputOrNull(it) })
+        .combine(ch_bbsplit_index.toList().map { items -> firstTaskOutputOrNull(items) })
+        .combine(ch_bbsplit_log.toList().map { items -> firstTaskOutputOrNull(items) })
         .combine(ch_sortmerna_index.toList().map { items -> [ taskOutputOrNull(items[0] instanceof List ? items[0][1] : items[0]) ] })
         .combine(ch_bowtie2_rrna_index.toList().map { items -> [ items ? taskOutputOrNull(items[0][1]) : null ] })
         .map { star, rsem, rsem_transcript_fasta, hisat2, hisat2_splicesites, bowtie2, salmon, kallisto, bbsplit, bbsplit_log, sortmerna, bowtie2_rrna ->

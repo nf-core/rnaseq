@@ -900,53 +900,41 @@ def buildDeseq2Record(ch_rdata, ch_pca_txt, ch_pdf, ch_dists_txt, ch_size_factor
 }
 
 //
-// Publish-path helpers for the `output {}` block
+// Generic helpers for the `output {}` block
 //
 
+// Per-sample directory prefix for per-record outputs under --skip_quantification_merge.
 // Run-level records (e.g. a cross-sample merged file) are never sample-prefixed.
 def samplePrefix(r) { params.skip_quantification_merge ? "${r.id}/" : '' }
-def alignerDir(r)    { "${samplePrefix(r)}${params.aligner}" }
-def trimLogDir(s)    { params.trimmer == 'fastp' ? "${samplePrefix(s)}${params.trimmer}/log" : "${samplePrefix(s)}${params.trimmer}" }
-def saveAlignBam(_s)  { params.save_align_intermeds || params.skip_markduplicates }
-def saveUmiBam(_s)    { params.save_align_intermeds || params.save_umi_intermeds }
-def umiDedupToolDir(_s) { params.umi_dedup_tool == 'umicollapse' ? 'umicollapse' : 'umitools' }
-def pseudoAlignerDir(r) { "${samplePrefix(r)}${params.pseudo_aligner}" }
 
-def multiqcDir(m) {
-    def suffix = params.skip_alignment ? '' : "/${params.aligner}"
-    m.id == 'multiqc_report' ? "multiqc${suffix}" : "${m.id}/multiqc${suffix}"
+// Named per-field publish conditions that combine params or depend on the record.
+// Single-param conditions stay inline at the call site.
+def saveFile(key, r = null) {
+    if (key == 'align_bam')      { return params.save_align_intermeds || params.skip_markduplicates }
+    if (key == 'umi_bam')        { return params.save_align_intermeds || params.save_umi_intermeds }
+    if (key == 'non_ribo_reads') { return params.remove_ribo_rna && params.save_non_ribo_reads && (params.ribo_removal_tool != 'bowtie2' || r.meta.single_end) }
+    error("saveFile: unknown key '${key}'")
 }
 
-// True whenever at least one field of a `preprocessed` record is guaranteed
-// non-null: the disjunction of the conditions on the `preprocessed` path
-// closure's `>>` lines. Mirrors the skip/enable args passed into
-// FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS in workflows/rnaseq/main.nf.
-def preprocessedPublishes() {
-    !(params.skip_fastqc || params.skip_qc) ||
-    !params.skip_trimming ||
-    (params.with_umi && !params.skip_umi_extract) ||
-    (!params.skip_bbsplit && params.fasta) ||
-    params.remove_ribo_rna ||
-    params.save_merged_fastq
+// Whole-output publish switch for outputs whose `enabled` isn't a single param expression.
+// Guards outputs whose `>>` targets can all be null, which crashes publishing
+// (https://github.com/nextflow-io/nextflow/issues/7669, fixed after 26.09.1-edge).
+def outputEnabled(name) {
+    if (name == 'preprocessed') {
+        // Disjunction of the `preprocessed` path closure's `>>` conditions.
+        return !(params.skip_fastqc || params.skip_qc) ||
+            !params.skip_trimming ||
+            (params.with_umi && !params.skip_umi_extract) ||
+            (!params.skip_bbsplit && params.fasta) ||
+            params.remove_ribo_rna ||
+            params.save_merged_fastq
+    }
+    error("outputEnabled: unknown output '${name}'")
 }
 
-// Directory for preprocessed.reads when rRNA removal produced them, or null.
-// Trimmed, UMI-extracted and BBSplit reads publish from their own fields.
-def rrnaFilteredReadsDir(s) {
-    if (!params.save_non_ribo_reads)      { return null }
-    if (s.rrna?.sortmerna_log != null)    { return "${samplePrefix(s)}sortmerna/" }
-    if (s.rrna?.ribodetector_log != null) { return "${samplePrefix(s)}ribodetector/" }
-    // Only the single-end --un-gz FASTQs are published; paired-end reads rebuilt by SAMTOOLS_FASTQ_BOWTIE2 are not.
-    if (s.rrna?.bowtie2_log != null)      { return s.meta.single_end ? "${samplePrefix(s)}bowtie2_rrna/" : null }
-    return null
-}
-
-// Published location of a BAM from the `aligned` output, for samplesheet_with_bams.csv.
-def publishedBamPath(bam, sample_id) {
-    if (!bam) { return null }
-    def prefix = params.skip_quantification_merge ? "${sample_id}/" : ''
-    "${params.outdir}/${prefix}${params.aligner}/${bam.name}"
-}
+//
+// RustQC output-path helpers
+//
 
 // Path of a RustQC output file below the task work directory's <prefix>/<category>/ directory.
 def rustqcRelPath(category, file) {

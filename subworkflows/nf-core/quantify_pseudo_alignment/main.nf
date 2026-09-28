@@ -70,28 +70,23 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
         skip_merge
     )
 
-    //
-    // Merging yields a single 'all_samples' QuantMerged row, which is broadcast
-    // onto every sample; under skip_merge there is one row per sample id.
-    //
-    ch_sample_results = skip_merge
-        ? ch_sample_fields.join(QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT.out.results.map { r -> [r.id, r] }, by: [0], failOnMismatch: true, failOnDuplicate: true)
-        : ch_sample_fields.combine(QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT.out.results)
-
-    ch_sample_results = ch_sample_results.map { id, fields, quant_merged ->
+    ch_sample_results = ch_sample_fields.map { id, fields ->
         record(
-            id:           id,
-            meta:         fields.meta,
-            quant_dir:    fields.quant_dir,
-            json_info:    fields.json_info,
-            log:          fields.log,
-            quant_merged: quant_merged
+            id:        id,
+            meta:      fields.meta,
+            quant_dir: fields.quant_dir,
+            json_info: fields.json_info,
+            log:       fields.log
         )
     }
 
     emit:
     results                       = ch_pseudo_results                                              // channel: [ val(meta), results_dir ]
     multiqc                       = ch_pseudo_multiqc                                              // channel: [ val(meta), files_for_multiqc ]
+
+    // Merged quantification: a single row when merging, one per sample under skip_merge
+    quant_merged                  = QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT.out.results                // channel: QuantMerged
+
     tx2gene                       = QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT.out.tx2gene                // channel: [ val(meta), tx2gene.tsv ]
     tx2gene_augmented             = QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT.out.tx2gene_augmented      // channel: [ val(meta), tx2gene_augmented.tsv ]
 

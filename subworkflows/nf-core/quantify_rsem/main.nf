@@ -126,26 +126,7 @@ workflow QUANTIFY_RSEM {
         skip_merge
     )
 
-    //
-    // Merging yields a single 'all_samples' row from both tximport and
-    // CUSTOM_RSEMMERGECOUNTS, joined on that id and broadcast onto every
-    // sample. Under skip_merge tximport runs per sample and there is no
-    // RSEM merge.
-    //
-    if (skip_merge) {
-        ch_quant_merged = QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT.out.results
-            .map { r -> [r.id, r + record(rsem_merge: null)] }
-        ch_results = ch_sample_fields
-            .join(ch_quant_merged, by: [0], failOnMismatch: true, failOnDuplicate: true)
-    } else {
-        ch_quant_merged = QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT.out.results
-            .map { r -> [r.id, r] }
-            .join(ch_rsem_merge, by: [0], failOnMismatch: true, failOnDuplicate: true)
-            .map { _id, r, rsem_merge -> r + record(rsem_merge: rsem_merge) }
-        ch_results = ch_sample_fields.combine(ch_quant_merged)
-    }
-
-    ch_results = ch_results.map { id, fields, quant_merged ->
+    ch_results = ch_sample_fields.map { id, fields ->
         record(
             id:                id,
             meta:              fields.meta,
@@ -155,10 +136,12 @@ workflow QUANTIFY_RSEM {
             log:               fields.log,
             bam_star:          fields.bam_star,
             bam_genome:        fields.bam_genome,
-            bam_transcript:    fields.bam_transcript,
-            quant_merged:      quant_merged
+            bam_transcript:    fields.bam_transcript
         )
     }
+
+    // record(id, rsem_merge: RsemMerge); empty channel under skip_merge.
+    ch_rsem_merge = ch_rsem_merge.map { id, r -> record(id: id, rsem_merge: r) }
 
     emit:
     // Per-sample outputs
@@ -194,4 +177,10 @@ workflow QUANTIFY_RSEM {
 
     // Per-sample record
     results                   = ch_results                                                           // channel: RsemQuantSample
+
+    // Merged quantification: a single row when merging, one per sample under skip_merge
+    quant_merged              = QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT.out.results                      // channel: QuantMerged
+
+    // RSEM merge counts, keyed by id; empty channel under skip_merge
+    rsem_merge                = ch_rsem_merge                                                        // channel: record(id, rsem_merge: RsemMerge)
 }

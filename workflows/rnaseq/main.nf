@@ -26,6 +26,7 @@ include { checkSamplesAfterGrouping      } from '../../subworkflows/local/utils_
 include { classifyStrand                 } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { getHisat2PercentMapped         } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { buildDeseq2Record              } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { rustqcTarget                   } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -119,20 +120,23 @@ workflow RNASEQ {
     ch_unaligned_sequences = channel.empty()
 
     // Stage result records, one channel per stage; empty when the stage is skipped
-    ch_aligned          = channel.empty()
-    ch_umi_dedup        = channel.empty()
-    ch_markdup          = channel.empty()
-    ch_bam_qc           = channel.empty()
-    ch_bam_qc_rustqc    = channel.empty()
-    ch_quant            = channel.empty()
-    ch_quant_pseudo     = channel.empty()
-    ch_deseq2           = channel.empty()
-    ch_deseq2_pseudo    = channel.empty()
-    ch_contaminants     = channel.empty()
-    ch_stringtie        = channel.empty()
-    ch_stringtie_merged = channel.empty()
-    ch_bigwig           = channel.empty()
-    ch_multiqc          = channel.empty()
+    ch_aligned             = channel.empty()
+    ch_umi_dedup           = channel.empty()
+    ch_markdup             = channel.empty()
+    ch_bam_qc              = channel.empty()
+    ch_bam_qc_rustqc       = channel.empty()
+    ch_quant               = channel.empty()
+    ch_quant_pseudo        = channel.empty()
+    ch_quant_merged        = channel.empty()
+    ch_quant_rsem_merge    = channel.empty()
+    ch_quant_merged_pseudo = channel.empty()
+    ch_deseq2              = channel.empty()
+    ch_deseq2_pseudo       = channel.empty()
+    ch_contaminants        = channel.empty()
+    ch_stringtie           = channel.empty()
+    ch_stringtie_merged    = channel.empty()
+    ch_bigwig              = channel.empty()
+    ch_multiqc             = channel.empty()
 
     // Per-sample MultiQC bundle — `.join(..., remainder: true)` chains
     // fed to MULTIQC_RNASEQ. `collapseAgg` re-keys by meta.id at the end
@@ -209,24 +213,12 @@ workflow RNASEQ {
     )
     ch_genome_bam_index = SAMTOOLS_INDEX.out.index
 
-    // Only bam-input samples ever reach this point with a genuine task
-    // output here; give each a minimal record so its index still has a home
-    // once alignment runs for the fastq-input samples in the same run.
-    ch_aligned = ch_aligned.mix(
-        SAMTOOLS_INDEX.out.index.map { meta, bai -> record(id: meta.id, meta: meta, preexisting_bai: bai) }
-    )
-
     //
     // Run RNA-seq FASTQ preprocessing subworkflow
     //
 
-    // The subworkflow only has to do Salmon indexing if it discovers 'auto'
-    // samples, and if we haven't already made one elsewhere
-    salmon_index_available = params.salmon_index || (!params.skip_pseudo_alignment && params.pseudo_aligner == 'salmon')
-
-    // Determine if we need to build rRNA removal indexes
-    def make_sortmerna_index = !params.sortmerna_index && params.remove_ribo_rna && params.ribo_removal_tool == 'sortmerna'
-    def make_bowtie2_index   = !params.bowtie2_rrna_index && params.remove_ribo_rna && params.ribo_removal_tool == 'bowtie2'
+    // Bowtie2 rRNA index building still happens here, not in PREPARE_GENOME_INDICES.
+    def make_bowtie2_index = !params.bowtie2_rrna_index && params.remove_ribo_rna && params.ribo_removal_tool == 'bowtie2'
 
     FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS (
         ch_fastq,                                   // ch_reads
@@ -243,8 +235,8 @@ workflow RNASEQ {
         params.skip_trimming,                       // skip_trimming
         params.skip_umi_extract,                    // skip_umi_extract
         params.skip_linting,                        // skip_linting
-        !salmon_index_available,                    // make_salmon_index
-        make_sortmerna_index,                       // make_sortmerna_index
+        false,                                      // make_salmon_index (PREPARE_GENOME_INDICES already builds/loads this)
+        false,                                      // make_sortmerna_index (PREPARE_GENOME_INDICES already builds/loads this)
         make_bowtie2_index,                         // make_bowtie2_index
         params.trimmer,                             // trimmer
         params.min_trimmed_reads,                   // min_trimmed_reads
@@ -276,11 +268,6 @@ workflow RNASEQ {
                 record(bowtie2_index: index, seqkit_prefixed: prefixed, seqkit_converted: converted)
             }
     }
-
-    // *_built channels are empty unless the index was actually built as a task output here.
-    ch_preprocessing_references = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.salmon_index_built.ifEmpty(null)
-        .combine(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.sortmerna_index_built.ifEmpty(null))
-        .map { salmon_index, sortmerna_index -> record(salmon_index: salmon_index, sortmerna_index: sortmerna_index) }
 
     ch_trim_status = ch_trim_read_count
         .map {
@@ -475,6 +462,8 @@ workflow RNASEQ {
         )
         ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_RSEM.out.stat)
         ch_quant = QUANTIFY_RSEM.out.results
+        ch_quant_merged = QUANTIFY_RSEM.out.quant_merged
+        ch_quant_rsem_merge = QUANTIFY_RSEM.out.rsem_merge
         ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
             .join(QUANTIFY_RSEM.out.stat.map { meta, f -> [meta.id, f] }, remainder: true)
 
@@ -509,6 +498,7 @@ workflow RNASEQ {
             params.skip_quantification_merge
         )
         ch_quant = QUANTIFY_BAM_SALMON.out.sample_results
+        ch_quant_merged = QUANTIFY_BAM_SALMON.out.quant_merged
 
         if (!params.skip_qc && !params.skip_deseq2_qc && !params.skip_quantification_merge) {
             DESEQ2_QC_BAM_SALMON (
@@ -647,25 +637,23 @@ workflow RNASEQ {
                 ch_gtf.map { gtf -> [ [:], gtf ] },
             )
 
-            // Each output is a glob, so a single match arrives as a bare Path
+            // Each output is a glob, so a single match arrives as a bare Path.
+            // Flattened to one file per record so each can carry its own precomputed rename-form >> target.
             ch_bam_qc_rustqc = RUSTQC.out.samtools
                 .join(RUSTQC.out.dupradar,      failOnMismatch: true, failOnDuplicate: true)
                 .join(RUSTQC.out.featurecounts, failOnMismatch: true, failOnDuplicate: true)
                 .join(RUSTQC.out.preseq,        failOnMismatch: true, failOnDuplicate: true)
                 .join(RUSTQC.out.rseqc,         failOnMismatch: true, failOnDuplicate: true)
                 .join(RUSTQC.out.qualimap,      failOnMismatch: true, failOnDuplicate: true)
-                .map { meta, samtools, dupradar, featurecounts, preseq, rseqc, qualimap ->
-                    record(
-                        id:            meta.id,
-                        meta:          meta,
-                        samtools:      [samtools].flatten(),
-                        dupradar:      [dupradar].flatten(),
-                        featurecounts: [featurecounts].flatten(),
-                        preseq:        [preseq].flatten(),
-                        rseqc:         [rseqc].flatten(),
-                        qualimap:      [qualimap].flatten()
-                    )
+                .flatMap { meta, samtools, dupradar, featurecounts, preseq, rseqc, qualimap ->
+                    [samtools].flatten().collect      { f -> record(id: meta.id, file: f, target: rustqcTarget(meta, 'samtools', f)) } +
+                    [dupradar].flatten().collect      { f -> record(id: meta.id, file: f, target: rustqcTarget(meta, 'dupradar', f)) } +
+                    [featurecounts].flatten().collect { f -> record(id: meta.id, file: f, target: rustqcTarget(meta, 'featurecounts', f)) } +
+                    [preseq].flatten().collect        { f -> record(id: meta.id, file: f, target: rustqcTarget(meta, 'preseq', f)) } +
+                    [rseqc].flatten().collect         { f -> record(id: meta.id, file: f, target: rustqcTarget(meta, 'rseqc', f)) } +
+                    [qualimap].flatten().collect      { f -> record(id: meta.id, file: f, target: rustqcTarget(meta, 'qualimap', f)) }
                 }
+                .filter { r -> r.target != null }
 
             // Drop non-MultiQC files. Excluding `*.featureCounts.tsv.summary`
             // keeps only the biotype summary, matching the default pipeline's
@@ -948,6 +936,7 @@ workflow RNASEQ {
         )
         ch_counts_gene_length_scaled = QUANTIFY_PSEUDO_ALIGNMENT.out.counts_gene_length_scaled
         ch_quant_pseudo = QUANTIFY_PSEUDO_ALIGNMENT.out.sample_results
+        ch_quant_merged_pseudo = QUANTIFY_PSEUDO_ALIGNMENT.out.quant_merged
         ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_PSEUDO_ALIGNMENT.out.multiqc)
         ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
             .join(QUANTIFY_PSEUDO_ALIGNMENT.out.multiqc.map { meta, f -> [meta.id, f] }, remainder: true)
@@ -964,14 +953,6 @@ workflow RNASEQ {
             ch_deseq2_pseudo = buildDeseq2Record(DESEQ2_QC_PSEUDO.out.rdata, DESEQ2_QC_PSEUDO.out.pca_txt, DESEQ2_QC_PSEUDO.out.pdf, DESEQ2_QC_PSEUDO.out.dists_txt, DESEQ2_QC_PSEUDO.out.size_factors, DESEQ2_QC_PSEUDO.out.log)
         }
     }
-
-    //
-    // Every quant row nests its quantifier's quant_merged record: one shared
-    // 'all_samples' copy when merging, a per-sample one under
-    // skip_quantification_merge. Deduplicating on id covers both modes.
-    //
-    ch_quant_merged        = ch_quant.map { r -> r.quant_merged }.unique { r -> r.id }
-    ch_quant_merged_pseudo = ch_quant_pseudo.map { r -> r.quant_merged }.unique { r -> r.id }
 
     //
     // Collate and save software versions from the `versions` topic
@@ -1029,9 +1010,10 @@ workflow RNASEQ {
     umi_dedup           = ch_umi_dedup           // channel: UmiDedupBam
     markdup             = ch_markdup             // channel: MarkdupBam
     bam_qc              = ch_bam_qc              // channel: BamQcRnaseq
-    bam_qc_rustqc       = ch_bam_qc_rustqc       // channel: record(id, meta, samtools, dupradar, featurecounts, preseq, rseqc, qualimap)
+    bam_qc_rustqc       = ch_bam_qc_rustqc       // channel: record(id, file, target), one entry per RustQC output file with a non-null target
     quant               = ch_quant               // channel: RsemQuantSample | PseudoQuantSample, alignment-based quantifier
-    quant_merged        = ch_quant_merged        // channel: RsemQuantMerged | QuantMerged, alignment-based quantifier
+    quant_merged        = ch_quant_merged        // channel: QuantMerged, alignment-based quantifier
+    quant_rsem_merge    = ch_quant_rsem_merge    // channel: record(id, rsem_merge: RsemMerge), CUSTOM_RSEMMERGECOUNTS outputs; empty unless --aligner star_rsem
     quant_pseudo        = ch_quant_pseudo        // channel: PseudoQuantSample, pseudo-aligner
     quant_merged_pseudo = ch_quant_merged_pseudo // channel: QuantMerged, pseudo-aligner
     contaminants        = ch_contaminants        // channel: record(id, meta, kraken2, bracken, sylph, sylphtax)
@@ -1043,7 +1025,6 @@ workflow RNASEQ {
     deseq2              = ch_deseq2              // channel: record(rdata, pca_vals, plots_pdf, sample_dists, size_factors, log), alignment-based quantifier
     deseq2_pseudo       = ch_deseq2_pseudo       // channel: record(rdata, pca_vals, plots_pdf, sample_dists, size_factors, log), pseudo-aligner
     rrna_references     = ch_rrna_references     // channel: record(bowtie2_index, seqkit_prefixed, seqkit_converted)
-    preprocessing_references = ch_preprocessing_references // channel: record(salmon_index, sortmerna_index)
     multiqc             = ch_multiqc             // channel: MultiqcReport, per sample under skip_quantification_merge
     pipeline_info       = ch_pipeline_info       // channel: record(versions)
 }

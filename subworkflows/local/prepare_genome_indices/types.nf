@@ -9,6 +9,7 @@ record GenomeIndices {
     salmon:                Path?
     kallisto:              Path?
     bbsplit:               Path?
+    bbsplit_log:           Path?
     sortmerna:             Path?
     bowtie2_rrna:          Path?
 }

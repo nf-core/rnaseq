@@ -5,6 +5,7 @@ record GenomeIntermediates {
     additional_fasta:             Path?
     gtf_pre_filter:               Path?
     fasta_pre_concat:             Path?
+    gtf_pre_concat:               Path?
     transcript_fasta_pre_gencode: Path?
     transcript_fasta_rsem_dir:    Path?
 }

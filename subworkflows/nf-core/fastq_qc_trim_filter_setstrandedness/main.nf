@@ -386,7 +386,8 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         ch_results = ch_results
             .join(ch_bbsplit_stats.map { meta, stats -> [meta.id, stats] }, by: [0], remainder: true)
             .join(ch_bbsplit_other_reads.map { meta, other -> [meta.id, other] }, by: [0], remainder: true)
-            .map { id, fields, stats, other_reads -> [id, fields + [bbsplit: stats != null ? record(stats: stats, other_genome_reads: other_reads) : null]] }
+            .join(BBMAP_BBSPLIT.out.primary_fastq.map { meta, primary -> [meta.id, [primary].flatten()] }, by: [0], remainder: true)
+            .map { id, fields, stats, other_reads, primary_reads -> [id, fields + [bbsplit: stats != null ? record(stats: stats, primary_reads: primary_reads, other_genome_reads: other_reads) : null]] }
 
         if (!skip_linting) {
             FQ_LINT_AFTER_BBSPLIT(

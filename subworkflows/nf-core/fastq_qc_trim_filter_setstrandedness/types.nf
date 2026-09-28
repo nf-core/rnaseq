@@ -30,6 +30,7 @@ record PreprocessedUmi {
 
 record PreprocessedBbsplit {
     stats:              Path
+    primary_reads:      List<Path>?
     other_genome_reads: List<Path>?
 }
 

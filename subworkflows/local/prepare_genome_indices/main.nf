@@ -76,6 +76,7 @@ workflow PREPARE_GENOME_INDICES {
     // 2) BBSplit index: uses FASTA only if we generate from scratch
     //---------------------------------------------------------
     ch_bbsplit_index = channel.empty()
+    ch_bbsplit_log   = channel.empty()
     if ('bbsplit' in prepare_tool_indices) {
         if (bbsplit_index) {
             // Use user-provided bbsplit index
@@ -95,13 +96,15 @@ workflow PREPARE_GENOME_INDICES {
                 .map { entry -> entry[1] } // Get rid of keys and keep grouped values
                 .collect { item -> [ item ] } // Collect entries as a list to pass as "tuple val(short_names), path(path_to_fasta)" to module
 
-            ch_bbsplit_index = BBMAP_BBSPLIT(
+            BBMAP_BBSPLIT(
                 [ [:], [] ],
                 [],
                 ch_fasta,
                 ch_bbsplit_fasta_list,
                 true
-            ).index
+            )
+            ch_bbsplit_index = BBMAP_BBSPLIT.out.index
+            ch_bbsplit_log   = BBMAP_BBSPLIT.out.log.map { _meta, log -> log }
         }
         // else: no FASTA and no user-provided index -> remains empty
     }
@@ -323,9 +326,10 @@ workflow PREPARE_GENOME_INDICES {
         .combine(ch_salmon_index.toList().map { items -> [ items ? taskOutputOrNull(items[0][1]) : null ] })
         .combine(ch_kallisto_index.toList().map { items -> [ items ? taskOutputOrNull(items[0][1]) : null ] })
         .combine(ch_bbsplit_index.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
+        .combine(ch_bbsplit_log.toList().map { items -> [ taskOutputOrNull(items[0]) ] })
         .combine(ch_sortmerna_index.toList().map { items -> [ taskOutputOrNull(items[0] instanceof List ? items[0][1] : items[0]) ] })
         .combine(ch_bowtie2_rrna_index.toList().map { items -> [ items ? taskOutputOrNull(items[0][1]) : null ] })
-        .map { star, rsem, rsem_transcript_fasta, hisat2, hisat2_splicesites, bowtie2, salmon, kallisto, bbsplit, sortmerna, bowtie2_rrna ->
+        .map { star, rsem, rsem_transcript_fasta, hisat2, hisat2_splicesites, bowtie2, salmon, kallisto, bbsplit, bbsplit_log, sortmerna, bowtie2_rrna ->
             record(
                 star:                  star,
                 rsem:                  rsem,
@@ -336,6 +340,7 @@ workflow PREPARE_GENOME_INDICES {
                 salmon:                salmon,
                 kallisto:              kallisto,
                 bbsplit:               bbsplit,
+                bbsplit_log:           bbsplit_log,
                 sortmerna:             sortmerna,
                 bowtie2_rrna:          bowtie2_rrna
             )

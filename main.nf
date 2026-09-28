@@ -44,6 +44,18 @@ include { PIPELINE_COMPLETION        } from './subworkflows/local/utils_nfcore_r
 include { checkMaxContigSize         } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { defineQcTools              } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { isStarIndexLegacy          } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { samplePrefix               } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { alignerDir                 } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { trimLogDir                 } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { saveAlignBam               } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { saveUmiBam                 } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { umiDedupToolDir            } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { pseudoAlignerDir           } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { multiqcDir                 } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { preprocessedPublishes      } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { rrnaFilteredReadsDir       } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { publishedBamPath           } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { rustqcTarget               } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -197,6 +209,8 @@ workflow NFCORE_RNASEQ {
     // samplesheet_with_bams.csv rows: one per sequencing run of a sample, with the aligned record's
     // meta so an inferred strandedness replaces 'auto'. genome_bam is the
     // coordinate-sorted BAM; bowtie2_salmon aligns to the transcriptome, so its unsorted bowtie2 BAM is the transcriptome_bam.
+    // The BAMs are published by the `aligned` output, so the row carries their published location
+    // as a string; routing the Paths through `samplesheet` too would copy each file twice.
     // Filtered to samples that actually went through alignment here (excludes
     // the BAM-input passthrough placeholder record, which carries no orig_bam).
     ch_samplesheet_rows = RNASEQ.out.aligned
@@ -213,9 +227,9 @@ workflow NFCORE_RNASEQ {
                     strandedness:      r.meta.strandedness,
                     seq_platform:      r.meta.seq_platform ?: params.seq_platform,
                     seq_center:        r.meta.seq_center ?: params.seq_center,
-                    genome_bam:        r.bam,
+                    genome_bam:        publishedBamPath(r.bam, sample_id),
                     percent_mapped:    percent_mapped,
-                    transcriptome_bam: params.aligner == 'bowtie2_salmon' ? r.orig_bam : r.transcriptome_bam
+                    transcriptome_bam: publishedBamPath(params.aligner == 'bowtie2_salmon' ? r.orig_bam : r.transcriptome_bam, sample_id)
                 )
             }
         }
@@ -330,89 +344,6 @@ workflow {
     bam_qc_rustqc       = NFCORE_RNASEQ.out.bam_qc_rustqc
     multiqc             = NFCORE_RNASEQ.out.multiqc
     pipeline_info       = NFCORE_RNASEQ.out.pipeline_info
-}
-
-// Run-level records (e.g. a cross-sample merged file) are never sample-prefixed.
-def samplePrefix(r) { params.skip_quantification_merge ? "${r.id}/" : '' }
-def alignerDir(r)    { "${samplePrefix(r)}${params.aligner}" }
-def trimLogDir(s)    { params.trimmer == 'fastp' ? "${samplePrefix(s)}${params.trimmer}/log" : "${samplePrefix(s)}${params.trimmer}" }
-def saveAlignBam(_s)  { params.save_align_intermeds || params.skip_markduplicates }
-def saveUmiBam(_s)    { params.save_align_intermeds || params.save_umi_intermeds }
-def umiDedupToolDir(_s) { params.umi_dedup_tool == 'umicollapse' ? 'umicollapse' : 'umitools' }
-def pseudoAlignerDir(r) { "${samplePrefix(r)}${params.pseudo_aligner}" }
-
-def multiqcDir(m) {
-    def suffix = params.skip_alignment ? '' : "/${params.aligner}"
-    m.id == 'multiqc_report' ? "multiqc${suffix}" : "${m.id}/multiqc${suffix}"
-}
-
-// True whenever at least one field of a `preprocessed` record is guaranteed
-// non-null: the disjunction of the conditions on the `preprocessed` path
-// closure's `>>` lines. Mirrors the skip/enable args passed into
-// FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS in workflows/rnaseq/main.nf.
-def preprocessedPublishes() {
-    !(params.skip_fastqc || params.skip_qc) ||
-    !params.skip_trimming ||
-    params.with_umi ||
-    (!params.skip_bbsplit && params.fasta) ||
-    params.remove_ribo_rna ||
-    params.save_merged_fastq
-}
-
-// Directory for preprocessed.reads when rRNA removal produced them, or null.
-// Trimmed, UMI-extracted and BBSplit reads publish from their own fields.
-def rrnaFilteredReadsDir(s) {
-    if (!params.save_non_ribo_reads)      { return null }
-    if (s.rrna?.sortmerna_log != null)    { return "${samplePrefix(s)}sortmerna/" }
-    if (s.rrna?.ribodetector_log != null) { return "${samplePrefix(s)}ribodetector/" }
-    // Only the single-end --un-gz FASTQs are published; paired-end reads rebuilt by SAMTOOLS_FASTQ_BOWTIE2 are not.
-    if (s.rrna?.bowtie2_log != null)      { return s.meta.single_end ? "${samplePrefix(s)}bowtie2_rrna/" : null }
-    return null
-}
-
-// Path of a RustQC output file below its <id>/<category>/ task directory.
-def rustqcRelPath(id, category, file) {
-    def marker = "${id}/${category}/"
-    def path = file.toString()
-    path.substring(path.lastIndexOf(marker) + marker.length())
-}
-
-// Computes the per-tool destination directory for one RustQC output file.
-def rustqcTarget(r, category, file) {
-    def dir = "${alignerDir(r)}/rustqc"
-    def base = file.name
-    if (category == 'samtools')     { return "${dir}/samtools_stats/${base}" }
-    if (category == 'preseq')       { return "${dir}/preseq/${base}" }
-    if (category == 'dupradar') {
-        if (base.contains('Boxplot'))                                { return "${dir}/dupradar/box_plot/${base}" }
-        if (base.contains('ExpDens') && !base.contains('Curve_mqc')) { return "${dir}/dupradar/scatter_plot/${base}" }
-        if (base.contains('expressionHist'))                        { return "${dir}/dupradar/histogram/${base}" }
-        if (base.contains('dupMatrix'))                              { return "${dir}/dupradar/gene_data/${base}" }
-        if (base.contains('intercept_slope'))                        { return "${dir}/dupradar/intercepts_slope/${base}" }
-        return "${dir}/dupradar/${base}"
-    }
-    if (category == 'featurecounts') {
-        if (base.endsWith('.featureCounts.biotype.tsv.summary')) { return "${dir}/featurecounts/${base.replace('.biotype.tsv.summary', '.tsv.summary')}" }
-        if (base.endsWith('.featureCounts.tsv.summary'))         { return null }
-        return "${dir}/featurecounts/${base}"
-    }
-    if (category == 'rseqc') {
-        def relPath = rustqcRelPath(r.id, category, file)
-        def tool = relPath.tokenize('/')[0]
-        if (tool in ['junction_annotation', 'junction_saturation', 'inner_distance', 'read_duplication']) {
-            if (base.endsWith('.r'))                                { return "${dir}/rseqc/${tool}/rscript/${base}" }
-            if (base.endsWith('.png') || base.endsWith('.svg'))     { return "${dir}/rseqc/${tool}/plot/${base}" }
-            if (base.endsWith('.xls'))                              { return "${dir}/rseqc/${tool}/xls/${base}" }
-            if (base.endsWith('.bed'))                              { return "${dir}/rseqc/${tool}/bed/${base}" }
-            if (base.endsWith('.junction_annotation.log'))          { return "${dir}/rseqc/${tool}/log/${base}" }
-            if (base.endsWith('.txt'))                              { return "${dir}/rseqc/${tool}/txt/${base}" }
-        }
-        return "${dir}/rseqc/${relPath}"
-    }
-    if (category == 'qualimap') {
-        return "${dir}/qualimap/${r.id}/${rustqcRelPath(r.id, category, file)}"
-    }
-    return null
 }
 
 output {
@@ -573,10 +504,6 @@ output {
 
     samplesheet {   // record(sample, fastq_1, fastq_2, strandedness, seq_platform, seq_center, genome_bam, percent_mapped, transcriptome_bam); field order is the CSV column order
         enabled params.save_align_intermeds && !params.skip_alignment
-        path { r ->
-            r.genome_bam >> "${params.skip_quantification_merge ? "${r.sample}/" : ''}${params.aligner}/"
-            r.transcriptome_bam >> "${params.skip_quantification_merge ? "${r.sample}/" : ''}${params.aligner}/"
-        }
         index {
             path 'samplesheets/samplesheet_with_bams.csv'
             header true

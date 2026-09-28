@@ -942,13 +942,16 @@ def outputEnabled(name) {
 // RustQC output-path helpers
 //
 
-// Path of a RustQC output file below the task work directory's <prefix>/<category>/ directory.
+// Path of a RustQC output file below its task-local <prefix>/<category>/ directory,
+// found by anchoring on the category name rather than assuming a fixed work-directory depth.
 def rustqcRelPath(category, file) {
-    def parts = workflow.workDir.relativize(file).toString().tokenize('/')
-    if (parts.size() < 5 || parts[3] != category) {
+    def marker = "/${category}/"
+    def path = file.toString()
+    def idx = path.lastIndexOf(marker)
+    if (idx < 0) {
         error("Unexpected RustQC output path for category '${category}': ${file}")
     }
-    parts[4..-1].join('/')
+    path.substring(idx + marker.length())
 }
 
 // Computes the per-tool destination directory for one RustQC output file.

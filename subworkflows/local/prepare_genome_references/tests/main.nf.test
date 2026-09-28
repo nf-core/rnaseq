@@ -50,6 +50,16 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success },
+                { assert workflow.out.results.collect { r -> r.collectEntries { k, v -> [ k, v ? file(v).name : null ] } } == [[
+                    chrom_sizes:      'genome_gfp.fasta.sizes',
+                    fai:              'genome_gfp.fasta.fai',
+                    fasta:            'genome_gfp.fasta',
+                    gene_bed:         'genome_gfp.bed',
+                    gtf:              'genome_gfp.gtf',
+                    kraken_db:        null,
+                    rrna_fastas:      null,
+                    transcript_fasta: null
+                ]] },
                 { assert snapshot(
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
@@ -1414,6 +1424,16 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success },
+                { assert workflow.out.results.collect { r -> r.collectEntries { k, v -> [ k, v ? file(v).name : null ] } } == [[
+                    chrom_sizes:      'genome_gfp.fasta.sizes',
+                    fai:              'genome_gfp.fasta.fai',
+                    fasta:            'genome_gfp.fasta',
+                    gene_bed:         'genome_gfp.bed',
+                    gtf:              'genome_gfp.gtf',
+                    kraken_db:        null,
+                    rrna_fastas:      null,
+                    transcript_fasta: null
+                ]] },
                 { assert snapshot(
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },

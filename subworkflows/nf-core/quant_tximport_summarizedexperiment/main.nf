@@ -7,6 +7,7 @@ include { TXIMETA_TXIMPORT } from '../../../modules/nf-core/tximeta/tximport'
 
 include { SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT as SE_GENE_UNIFIED       } from '../../../modules/nf-core/summarizedexperiment/summarizedexperiment'
 include { SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT as SE_TRANSCRIPT_UNIFIED } from '../../../modules/nf-core/summarizedexperiment/summarizedexperiment'
+include { QuantMerged                                                        } from './types'
 
 workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT {
     take:
@@ -111,6 +112,42 @@ workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT {
         ch_merged_transcript_rds = SE_TRANSCRIPT_UNIFIED.out.rds
     }
 
+    //
+    // One record per TXIMETA_TXIMPORT row: a single 'all_samples' row when
+    // merging, or one per sample under skip_merge. The SE outputs only exist
+    // when merging, hence the remainder joins.
+    //
+    ch_results = TXIMETA_TXIMPORT.out.counts_gene.map { meta, f -> [meta.id, meta, f] }
+        .join(TXIMETA_TXIMPORT.out.tpm_gene.map { meta, f -> [meta.id, f] }, failOnMismatch: true, failOnDuplicate: true)
+        .join(TXIMETA_TXIMPORT.out.lengths_gene.map { meta, f -> [meta.id, f] }, failOnMismatch: true, failOnDuplicate: true)
+        .join(TXIMETA_TXIMPORT.out.counts_gene_length_scaled.map { meta, f -> [meta.id, f] }, failOnMismatch: true, failOnDuplicate: true)
+        .join(TXIMETA_TXIMPORT.out.counts_gene_scaled.map { meta, f -> [meta.id, f] }, failOnMismatch: true, failOnDuplicate: true)
+        .join(TXIMETA_TXIMPORT.out.tpm_transcript.map { meta, f -> [meta.id, f] }, failOnMismatch: true, failOnDuplicate: true)
+        .join(TXIMETA_TXIMPORT.out.counts_transcript.map { meta, f -> [meta.id, f] }, failOnMismatch: true, failOnDuplicate: true)
+        .join(TXIMETA_TXIMPORT.out.lengths_transcript.map { meta, f -> [meta.id, f] }, failOnMismatch: true, failOnDuplicate: true)
+        .join(TXIMETA_TXIMPORT.out.tx2gene_augmented.map { meta, f -> [meta.id, f] }, failOnMismatch: true, failOnDuplicate: true)
+        .join(ch_merged_gene_rds.map { meta, f -> [meta.id, f] }, remainder: true)
+        .join(ch_merged_transcript_rds.map { meta, f -> [meta.id, f] }, remainder: true)
+        .combine(CUSTOM_TX2GENE.out.tx2gene.map { _meta, f -> f })
+        .map { id, meta, counts_gene, tpm_gene, lengths_gene, counts_gene_length_scaled, counts_gene_scaled, tpm_transcript, counts_transcript, lengths_transcript, tx2gene_augmented, merged_gene_rds, merged_transcript_rds, tx2gene ->
+            record(
+                id: id,
+                meta: meta,
+                tpm_gene: tpm_gene,
+                counts_gene: counts_gene,
+                lengths_gene: lengths_gene,
+                counts_gene_length_scaled: counts_gene_length_scaled,
+                counts_gene_scaled: counts_gene_scaled,
+                tpm_transcript: tpm_transcript,
+                counts_transcript: counts_transcript,
+                lengths_transcript: lengths_transcript,
+                tx2gene: tx2gene,
+                tx2gene_augmented: tx2gene_augmented,
+                merged_gene_rds: merged_gene_rds,
+                merged_transcript_rds: merged_transcript_rds
+            )
+        }
+
     emit:
     tx2gene                   = CUSTOM_TX2GENE.out.tx2gene                     // channel: [ val(meta), tx2gene.tsv ]
     tx2gene_augmented         = TXIMETA_TXIMPORT.out.tx2gene_augmented         // channel: [ val(meta), tx2gene_augmented.tsv ]
@@ -126,4 +163,6 @@ workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT {
 
     merged_gene_rds           = ch_merged_gene_rds                             //    path: *.rds
     merged_transcript_rds     = ch_merged_transcript_rds                       //    path: *.rds
+
+    results                   = ch_results                                     // channel: QuantMerged
 }

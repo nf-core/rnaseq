@@ -1,5 +1,6 @@
 include { HISAT2_ALIGN            } from '../../../modules/nf-core/hisat2/align/main'
 include { BAM_SORT_STATS_SAMTOOLS } from '../bam_sort_stats_samtools/main'
+include { Hisat2Aligned           } from './types'
 
 workflow FASTQ_ALIGN_HISAT2 {
     take:
@@ -20,6 +21,21 @@ workflow FASTQ_ALIGN_HISAT2 {
     //
     BAM_SORT_STATS_SAMTOOLS(HISAT2_ALIGN.out.bam, ch_fasta_fai)
 
+    ch_results = HISAT2_ALIGN.out.bam
+        .join(HISAT2_ALIGN.out.summary)
+        .join(HISAT2_ALIGN.out.fastq, remainder: true)
+        .map { meta, orig_bam, summary, fastq ->
+            record(
+                id:       meta.id,
+                meta:     meta,
+                aligner:  'hisat2',
+                orig_bam: orig_bam,
+                unmapped: fastq ? [fastq].flatten() : null,
+                hisat2:   record(summary: summary)
+            )
+        }
+        .join(BAM_SORT_STATS_SAMTOOLS.out.results, by: 'id')
+
     emit:
     orig_bam = HISAT2_ALIGN.out.bam // channel: [ val(meta), bam   ]
     summary  = HISAT2_ALIGN.out.summary // channel: [ val(meta), log   ]
@@ -29,4 +45,5 @@ workflow FASTQ_ALIGN_HISAT2 {
     stats    = BAM_SORT_STATS_SAMTOOLS.out.stats // channel: [ val(meta), [ stats ] ]
     flagstat = BAM_SORT_STATS_SAMTOOLS.out.flagstat // channel: [ val(meta), [ flagstat ] ]
     idxstats = BAM_SORT_STATS_SAMTOOLS.out.idxstats // channel: [ val(meta), [ idxstats ] ]
+    results  = ch_results // channel: Hisat2Aligned
 }

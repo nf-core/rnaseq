@@ -1365,6 +1365,36 @@
                 "kallisto_index": [
                     
                 ],
+                "results": [
+                    {
+                        "bbsplit": [
+                            
+                        ],
+                        "bowtie2": null,
+                        "bowtie2_rrna": null,
+                        "hisat2": [
+                            
+                        ],
+                        "hisat2_splicesites": "genome_gfp.splice_sites.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "kallisto": null,
+                        "rsem": null,
+                        "salmon": [
+                            "duplicate_clusters.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "index.ctab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "index.ectab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "index.refinfo:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "index.ssi:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "index.ssi.mphf:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "index.tct:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "index.tdct:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "info.json:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "refseq.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "refseq_offsets.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ],
+                        "sortmerna": null,
+                        "star": null
+                    }
+                ],
                 "rsem_index": [
                     
                 ],
@@ -1399,10 +1429,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-18T20:53:25.929420237",
+        "timestamp": "2026-09-23T16:22:58.131395",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.09.0"
         }
     }
 }

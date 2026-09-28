@@ -159,6 +159,8 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     ch_ribodetector_log   = channel.empty()
     ch_seqkit_stats       = channel.empty()
     ch_bowtie2_log        = channel.empty()
+    ch_sortmerna_index_built = channel.empty()
+    ch_salmon_index_built    = channel.empty()
     ch_seqkit_prefixed    = channel.empty()
     ch_seqkit_converted   = channel.empty()
     ch_fastqc_filtered_html = channel.empty()
@@ -419,6 +421,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         ch_seqkit_stats     = FASTQ_REMOVE_RRNA.out.seqkit_stats
         ch_bowtie2_log      = FASTQ_REMOVE_RRNA.out.bowtie2_log
         ch_bowtie2_index    = FASTQ_REMOVE_RRNA.out.bowtie2_index
+        ch_sortmerna_index_built = FASTQ_REMOVE_RRNA.out.sortmerna_index
         ch_seqkit_prefixed  = FASTQ_REMOVE_RRNA.out.seqkit_prefixed
         ch_seqkit_converted = FASTQ_REMOVE_RRNA.out.seqkit_converted
         ch_multiqc_files = ch_multiqc_files.mix(FASTQ_REMOVE_RRNA.out.multiqc_files)
@@ -486,6 +489,8 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         ch_salmon_index,
         make_salmon_index,
     )
+
+    ch_salmon_index_built = FASTQ_SUBSAMPLE_FQ_SALMON.out.index_built
 
     FASTQ_SUBSAMPLE_FQ_SALMON.out.lib_format_counts
         .join(ch_strand_fastq.auto_strand, remainder: true)
@@ -592,6 +597,8 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     seqkit_stats     = ch_seqkit_stats
     bowtie2_log      = ch_bowtie2_log
     bowtie2_index    = ch_bowtie2_index
+    sortmerna_index_built = ch_sortmerna_index_built
+    salmon_index_built    = ch_salmon_index_built
     fastqc_filtered_html = ch_fastqc_filtered_html
     fastqc_filtered_zip  = ch_fastqc_filtered_zip
     seqkit_prefixed  = ch_seqkit_prefixed

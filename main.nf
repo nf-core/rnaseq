@@ -159,21 +159,45 @@ workflow NFCORE_RNASEQ {
     ch_genome = ch_genome
         .combine(RNASEQ.out.rrna_references)
         .map { genome, rrna_references -> genome + record(rrna_references: rrna_references) }
+        .combine(RNASEQ.out.preprocessing_references)
+        .map { genome, preprocessing_references -> genome + record(preprocessing_references: preprocessing_references) }
+
+    // Same-basename fields split out per stage to avoid a >> rename-key collision (nextflow-io/nextflow#6617).
+    ch_lint_raw     = RNASEQ.out.preprocessed.map { r -> record(id: r.id, file: r.lint?.raw) }.filter { s -> s.file != null }
+    ch_lint_trimmed = RNASEQ.out.preprocessed.map { r -> record(id: r.id, file: r.lint?.trimmed) }.filter { s -> s.file != null }
+    ch_lint_bbsplit = RNASEQ.out.preprocessed.map { r -> record(id: r.id, file: r.lint?.bbsplit) }.filter { s -> s.file != null }
+    ch_lint_ribo    = RNASEQ.out.preprocessed.map { r -> record(id: r.id, file: r.lint?.ribo) }.filter { s -> s.file != null }
+
+    // Flattened to one file per record so each can carry its own precomputed rename-form >> target.
+    ch_bam_qc_rustqc_files = RNASEQ.out.bam_qc_rustqc
+        .flatMap { s ->
+            (s.samtools ?: []).collect      { f -> record(id: s.id, file: f, target: rustqcTarget(s, 'samtools', f)) } +
+            (s.dupradar ?: []).collect      { f -> record(id: s.id, file: f, target: rustqcTarget(s, 'dupradar', f)) } +
+            (s.featurecounts ?: []).collect { f -> record(id: s.id, file: f, target: rustqcTarget(s, 'featurecounts', f)) } +
+            (s.preseq ?: []).collect        { f -> record(id: s.id, file: f, target: rustqcTarget(s, 'preseq', f)) } +
+            (s.rseqc ?: []).collect         { f -> record(id: s.id, file: f, target: rustqcTarget(s, 'rseqc', f)) } +
+            (s.qualimap ?: []).collect      { f -> record(id: s.id, file: f, target: rustqcTarget(s, 'qualimap', f)) }
+        }
+        .filter { r -> r.target != null }
 
     emit:
     trim_status         = RNASEQ.out.trim_status         // channel: [id, boolean]
     map_status          = RNASEQ.out.map_status          // channel: [id, boolean]
     strand_status       = RNASEQ.out.strand_status       // channel: [id, boolean]
     multiqc_report      = RNASEQ.out.multiqc_report      // channel: /path/to/multiqc_report.html
-    genome              = ch_genome                      // channel: GenomeReferences fields + index: GenomeIndices + rrna_references
+    genome              = ch_genome                      // channel: GenomeReferences fields + index: GenomeIndices + rrna_references + preprocessing_references
 
     // Stage result records, keyed on id
     preprocessed        = RNASEQ.out.preprocessed        // channel: FastqQcTrimFilterSetstrandedness
+    lint_raw            = ch_lint_raw                    // channel: record(id, file), FQ_LINT on raw reads
+    lint_trimmed        = ch_lint_trimmed                // channel: record(id, file), FQ_LINT on trimmed reads
+    lint_bbsplit        = ch_lint_bbsplit                // channel: record(id, file), FQ_LINT on BBSplit-filtered reads
+    lint_ribo           = ch_lint_ribo                   // channel: record(id, file), FQ_LINT on rRNA-removed reads
     aligned             = RNASEQ.out.aligned             // channel: StarAligned | Bowtie2Aligned | Hisat2Aligned
     umi_dedup           = RNASEQ.out.umi_dedup           // channel: UmiDedupBam
     markdup             = RNASEQ.out.markdup             // channel: MarkdupBam
     bam_qc              = RNASEQ.out.bam_qc              // channel: BamQcRnaseq
-    bam_qc_rustqc       = RNASEQ.out.bam_qc_rustqc       // channel: record(id, meta, samtools, dupradar, featurecounts, preseq, rseqc, qualimap)
+    bam_qc_rustqc       = ch_bam_qc_rustqc_files         // channel: record(id, file, target), one entry per RustQC output file
     quant               = RNASEQ.out.quant               // channel: RsemQuantSample | PseudoQuantSample, alignment-based quantifier
     quant_merged        = RNASEQ.out.quant_merged        // channel: RsemQuantMerged | QuantMerged, alignment-based quantifier
     quant_pseudo        = RNASEQ.out.quant_pseudo        // channel: PseudoQuantSample, pseudo-aligner
@@ -242,6 +266,10 @@ workflow {
     bigwig           = NFCORE_RNASEQ.out.bigwig
     genome           = NFCORE_RNASEQ.out.genome
     preprocessed     = NFCORE_RNASEQ.out.preprocessed
+    lint_raw         = NFCORE_RNASEQ.out.lint_raw
+    lint_trimmed     = NFCORE_RNASEQ.out.lint_trimmed
+    lint_bbsplit     = NFCORE_RNASEQ.out.lint_bbsplit
+    lint_ribo        = NFCORE_RNASEQ.out.lint_ribo
     aligned          = NFCORE_RNASEQ.out.aligned
     umi_dedup        = NFCORE_RNASEQ.out.umi_dedup
     markdup          = NFCORE_RNASEQ.out.markdup
@@ -278,6 +306,51 @@ def readsLastStageDir(s) {
     if (s.rrna?.ribodetector_log != null) { return params.save_non_ribo_reads ? "${samplePrefix(s)}ribodetector" : null }
     if (s.rrna?.bowtie2_log != null)      { return params.save_non_ribo_reads ? "${samplePrefix(s)}bowtie2_rrna" : null }
     if (s.bbsplit != null)                { return params.save_bbsplit_reads ? "${samplePrefix(s)}bbsplit" : null }
+    return null
+}
+
+// Path of a RustQC output file below its <id>/<category>/ task directory.
+def rustqcRelPath(id, category, file) {
+    def marker = "${id}/${category}/"
+    def path = file.toString()
+    path.substring(path.lastIndexOf(marker) + marker.length())
+}
+
+// Reproduces dev's RustQC publishDir saveAs relayout for one output file.
+def rustqcTarget(r, category, file) {
+    def dir = "${alignerDir(r)}/rustqc"
+    def base = file.name
+    if (category == 'samtools')     { return "${dir}/samtools_stats/${base}" }
+    if (category == 'preseq')       { return "${dir}/preseq/${base}" }
+    if (category == 'dupradar') {
+        if (base.contains('Boxplot'))                                { return "${dir}/dupradar/box_plot/${base}" }
+        if (base.contains('ExpDens') && !base.contains('Curve_mqc')) { return "${dir}/dupradar/scatter_plot/${base}" }
+        if (base.contains('expressionHist'))                        { return "${dir}/dupradar/histogram/${base}" }
+        if (base.contains('dupMatrix'))                              { return "${dir}/dupradar/gene_data/${base}" }
+        if (base.contains('intercept_slope'))                        { return "${dir}/dupradar/intercepts_slope/${base}" }
+        return "${dir}/dupradar/${base}"
+    }
+    if (category == 'featurecounts') {
+        if (base.endsWith('.featureCounts.biotype.tsv.summary')) { return "${dir}/featurecounts/${base.replace('.biotype.tsv.summary', '.tsv.summary')}" }
+        if (base.endsWith('.featureCounts.tsv.summary'))         { return null }
+        return "${dir}/featurecounts/${base}"
+    }
+    if (category == 'rseqc') {
+        def relPath = rustqcRelPath(r.id, category, file)
+        def tool = relPath.tokenize('/')[0]
+        if (tool in ['junction_annotation', 'junction_saturation', 'inner_distance', 'read_duplication']) {
+            if (base.endsWith('.r'))                                { return "${dir}/rseqc/${tool}/rscript/${base}" }
+            if (base.endsWith('.png') || base.endsWith('.svg'))     { return "${dir}/rseqc/${tool}/plot/${base}" }
+            if (base.endsWith('.xls'))                              { return "${dir}/rseqc/${tool}/xls/${base}" }
+            if (base.endsWith('.bed'))                              { return "${dir}/rseqc/${tool}/bed/${base}" }
+            if (base.endsWith('.junction_annotation.log'))          { return "${dir}/rseqc/${tool}/log/${base}" }
+            if (base.endsWith('.txt'))                              { return "${dir}/rseqc/${tool}/txt/${base}" }
+        }
+        return "${dir}/rseqc/${relPath}"
+    }
+    if (category == 'qualimap') {
+        return "${dir}/qualimap/${r.id}/${rustqcRelPath(r.id, category, file)}"
+    }
     return null
 }
 
@@ -321,7 +394,7 @@ output {
         }
     }
 
-    genome {   // GenomeReferences + index: GenomeIndices + rrna_references; never sample-prefixed
+    genome {   // GenomeReferences + index: GenomeIndices + rrna_references + preprocessing_references; never sample-prefixed
         enabled params.save_reference
         path { g ->
             g.fasta >> 'genome/'
@@ -350,10 +423,12 @@ output {
             g.index?.sortmerna >> 'genome/sortmerna/'
             g.index?.bowtie2_rrna >> 'genome/index/'
             g.rrna_references?.bowtie2_index >> 'bowtie2_rrna/index/'
+            g.preprocessing_references?.salmon_index >> 'genome/index/'
+            g.preprocessing_references?.sortmerna_index >> 'genome/sortmerna/'
         }
     }
 
-    preprocessed {   // FastqQcTrimFilterSetstrandedness; anchor: lint.raw (unless --skip_linting) or fastqc.raw_zip
+    preprocessed {   // FastqQcTrimFilterSetstrandedness; anchor: fastqc.raw_zip
         path { s ->
             s.fastqc?.raw_html >> "${samplePrefix(s)}fastqc/raw/"
             s.fastqc?.raw_zip >> "${samplePrefix(s)}fastqc/raw/"
@@ -372,10 +447,6 @@ output {
             s.umi?.reads >> (params.save_umi_intermeds ? "${samplePrefix(s)}umitools/" : null)
             s.bbsplit?.stats >> "${samplePrefix(s)}bbsplit/"
             s.bbsplit?.other_genome_reads >> (params.save_bbsplit_reads ? "${samplePrefix(s)}bbsplit/" : null)
-            s.lint?.raw >> "${samplePrefix(s)}fq_lint/raw/"
-            s.lint?.trimmed >> "${samplePrefix(s)}fq_lint/trimmed/"
-            s.lint?.bbsplit >> "${samplePrefix(s)}fq_lint/bbsplit/"
-            s.lint?.ribo >> "${samplePrefix(s)}fq_lint/${params.ribo_removal_tool ?: 'sortmerna'}/"
             s.rrna?.sortmerna_log >> "${samplePrefix(s)}sortmerna/"
             s.rrna?.ribodetector_log >> "${samplePrefix(s)}ribodetector/"
             s.rrna?.seqkit_stats >> "${samplePrefix(s)}ribodetector/"
@@ -383,6 +454,23 @@ output {
             s.reads_cat >> (params.save_merged_fastq ? "${samplePrefix(s)}fastq/" : null)
             s.reads >> readsLastStageDir(s)
         }
+    }
+
+    // One target per FQ_LINT stage: same basename, avoids the >> collision (nextflow-io/nextflow#6617).
+    lint_raw {   // record(id, file)
+        path { s -> s.file >> "${samplePrefix(s)}fq_lint/raw/" }
+    }
+
+    lint_trimmed {   // record(id, file)
+        path { s -> s.file >> "${samplePrefix(s)}fq_lint/trimmed/" }
+    }
+
+    lint_bbsplit {   // record(id, file)
+        path { s -> s.file >> "${samplePrefix(s)}fq_lint/bbsplit/" }
+    }
+
+    lint_ribo {   // record(id, file)
+        path { s -> s.file >> "${samplePrefix(s)}fq_lint/${params.ribo_removal_tool ?: 'sortmerna'}/" }
     }
 
     aligned {   // StarAligned | Bowtie2Aligned | Hisat2Aligned; anchor: samtools.stats
@@ -567,19 +655,8 @@ output {
         }
     }
 
-    bam_qc_rustqc {   // record(id, meta, samtools, dupradar, featurecounts, preseq, rseqc, qualimap); --use_rustqc alternative
-        // >> only chooses a directory, never renames a file, so this drops the
-        // old saveAs rename: the biotype summary keeps RustQC's native
-        // *.featureCounts.biotype.tsv.summary name (cosmetic-only difference,
-        // see PR description).
-        path { s ->
-            s.samtools >> "${alignerDir(s)}/rustqc/samtools/"
-            s.dupradar >> "${alignerDir(s)}/rustqc/dupradar/"
-            s.featurecounts >> "${alignerDir(s)}/rustqc/featurecounts/"
-            s.preseq >> "${alignerDir(s)}/rustqc/preseq/"
-            s.rseqc >> "${alignerDir(s)}/rustqc/rseqc/"
-            s.qualimap >> "${alignerDir(s)}/rustqc/qualimap/"
-        }
+    bam_qc_rustqc {   // record(id, file, target); --use_rustqc alternative, one entry per output file, target precomputed by rustqcTarget()
+        path { s -> s.file >> s.target }
     }
 
     multiqc {   // MultiqcReport; anchor: report

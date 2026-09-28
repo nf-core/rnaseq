@@ -94,6 +94,7 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
+                input[26] = false  // any_auto_strandedness
                 """
             }
         }
@@ -205,6 +206,7 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
+                input[26] = false  // any_auto_strandedness
                 """
             }
         }

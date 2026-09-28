@@ -91,7 +91,7 @@
     },
     "Params: --remove_ribo_rna": {
         "content": [
-            125,
+            124,
             {
                 "BBMAP_BBSPLIT": {
                     "bbmap": 39.18
@@ -794,7 +794,7 @@
                 "salmon.merged.tx2gene_augmented.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
             ]
         ],
-        "timestamp": "2026-09-18T23:29:56.980728507",
+        "timestamp": "2026-09-25T16:06:58.222378051",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -887,7 +887,7 @@
     },
     "Params: --remove_ribo_rna - stub": {
         "content": [
-            25,
+            24,
             {
                 "BBMAP_BBSPLIT": {
                     "bbmap": 39.18
@@ -967,7 +967,7 @@
                 
             ]
         ],
-        "timestamp": "2026-09-16T15:31:23.201282214",
+        "timestamp": "2026-09-25T16:23:41.180071961",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

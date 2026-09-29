@@ -47,8 +47,6 @@ include { defineQcTools              } from './subworkflows/local/utils_nfcore_r
 include { isStarIndexLegacy          } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { samplePrefix               } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { alignedDir                 } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
-include { saveFile                   } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
-include { outputEnabled              } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -316,25 +314,29 @@ output {
     contaminants {   // record(id, meta, kraken2, bracken, sylph, sylphtax); exactly one tool branch is populated per run
         enabled !params.skip_qc && params.contaminant_screening
         path { s ->
-            s.kraken2?.report                      >> "${samplePrefix(s)}${params.aligner}/contaminants/kraken2/kraken_reports/"
-            s.kraken2?.classified_reads_fastq      >> (params.save_kraken_assignments ? "${samplePrefix(s)}${params.aligner}/contaminants/kraken2/kraken_reports/" : null)
-            s.kraken2?.unclassified_reads_fastq    >> (params.save_kraken_assignments ? "${samplePrefix(s)}${params.aligner}/contaminants/kraken2/kraken_reports/" : null)
-            s.kraken2?.classified_reads_assignment >> (params.save_kraken_unassigned ? "${samplePrefix(s)}${params.aligner}/contaminants/kraken2/kraken_reports/" : null)
-            s.bracken?.abundance                   >> "${samplePrefix(s)}${params.aligner}/contaminants/bracken/"
-            s.bracken?.report                      >> "${samplePrefix(s)}${params.aligner}/contaminants/bracken/"
-            s.sylph?.profile                       >> "${samplePrefix(s)}${params.aligner}/contaminants/sylph/"
-            s.sylphtax?.taxprof                    >> "${samplePrefix(s)}${params.aligner}/contaminants/sylph/"
+            def dir     = "${alignedDir(s)}contaminants/"
+            def kraken  = "${dir}kraken2/kraken_reports/"
+            def bracken = "${dir}bracken/"
+            def sylph   = "${dir}sylph/"
+            [
+                (s.kraken2?.report):                         kraken,
+                (s.kraken2?.classified_reads_fastq):         params.save_kraken_assignments ? kraken : null,
+                (s.kraken2?.unclassified_reads_fastq):       params.save_kraken_assignments ? kraken : null,
+                (s.kraken2?.classified_reads_assignment):    params.save_kraken_unassigned ? kraken : null,
+                ([s.bracken?.abundance, s.bracken?.report]): bracken,
+                ([s.sylph?.profile, s.sylphtax?.taxprof]):   sylph,
+            ]
         }
     }
 
     stringtie {   // record(id, meta, transcript_gtf, abundance, coverage_gtf, ballgown, denovo: StringtieAssembly?)
         enabled !params.skip_stringtie
         path { s ->
-            s.transcript_gtf >> "${samplePrefix(s)}${params.aligner}/stringtie/"
-            s.abundance >> "${samplePrefix(s)}${params.aligner}/stringtie/"
-            s.coverage_gtf >> "${samplePrefix(s)}${params.aligner}/stringtie/"
-            s.ballgown >> "${samplePrefix(s)}${params.aligner}/stringtie/"
-            s.denovo?.transcript_gtf >> "${samplePrefix(s)}${params.aligner}/stringtie/"
+            def dir = "${alignedDir(s)}stringtie/"
+            [
+                ([s.transcript_gtf, s.abundance, s.coverage_gtf, s.denovo?.transcript_gtf]): dir,
+                (s.ballgown):                                                                dir,
+            ]
         }
     }
 
@@ -346,9 +348,7 @@ output {
     bigwig {   // record(id, meta, combined, forward, reverse), each BigwigFiles { bigwig, bedgraph }; bedgraph stays unrouted
         enabled !params.skip_bigwig
         path { s ->
-            s.combined?.bigwig >> "${samplePrefix(s)}${params.aligner}/bigwig/"
-            s.forward?.bigwig  >> "${samplePrefix(s)}${params.aligner}/bigwig/"
-            s.reverse?.bigwig  >> "${samplePrefix(s)}${params.aligner}/bigwig/"
+            [([s.combined?.bigwig, s.forward?.bigwig, s.reverse?.bigwig]): "${alignedDir(s)}bigwig/"]
         }
     }
 
@@ -380,34 +380,40 @@ output {
     }
 
     preprocessed {   // FastqQcTrimFilterSetstrandedness; no single anchor field survives every skip combination
-        // A new conditional `>>` line below needs its guard added to outputEnabled('preprocessed') too.
-        enabled outputEnabled('preprocessed')
         path { s ->
-            s.fastqc?.raw_html >> "${samplePrefix(s)}fastqc/raw/"
-            s.fastqc?.raw_zip >> "${samplePrefix(s)}fastqc/raw/"
-            s.fastqc?.trim_html >> "${samplePrefix(s)}fastqc/trim/"
-            s.fastqc?.trim_zip >> "${samplePrefix(s)}fastqc/trim/"
-            s.fastqc?.filtered_html >> "${samplePrefix(s)}fastqc/filtered/"
-            s.fastqc?.filtered_zip >> "${samplePrefix(s)}fastqc/filtered/"
-            s.trim?.html >> "${samplePrefix(s)}${params.trimmer}/"
-            s.trim?.log >> "${samplePrefix(s)}${params.trimmer == 'fastp' ? 'fastp/log/' : "${params.trimmer}/"}"
-            s.trim?.json >> (params.trimmer == 'fastp' ? "${samplePrefix(s)}${params.trimmer}/" : null)
-            s.trim?.unpaired >> (params.save_trimmed ? "${samplePrefix(s)}${params.trimmer}/" : null)
-            s.trim?.reads_fail >> (params.save_trimmed ? "${samplePrefix(s)}${params.trimmer}/" : null)
-            s.trim?.reads_merged >> (params.save_trimmed ? "${samplePrefix(s)}${params.trimmer}/" : null)
-            s.reads_trimmed >> (!params.skip_trimming && params.save_trimmed ? "${samplePrefix(s)}${params.trimmer}/" : null)
-            s.umi?.log >> "${samplePrefix(s)}umitools/"
-            s.umi?.reads >> (params.save_umi_intermeds ? "${samplePrefix(s)}umitools/" : null)
-            s.bbsplit?.stats >> "${samplePrefix(s)}bbsplit/"
-            s.bbsplit?.primary_reads >> (params.save_bbsplit_reads ? "${samplePrefix(s)}bbsplit/" : null)
-            s.bbsplit?.other_genome_reads >> (params.save_bbsplit_reads ? "${samplePrefix(s)}bbsplit/" : null)
-            s.rrna?.sortmerna_log >> "${samplePrefix(s)}sortmerna/"
-            s.rrna?.ribodetector_log >> "${samplePrefix(s)}ribodetector/"
-            s.rrna?.seqkit_stats >> "${samplePrefix(s)}ribodetector/"
-            s.rrna?.bowtie2_log >> "${samplePrefix(s)}bowtie2_rrna/"
-            s.reads_cat >> (params.save_merged_fastq ? "${samplePrefix(s)}fastq/" : null)
+            def sp      = samplePrefix(s)
+            def fastqc  = "${sp}fastqc/"
+            def trimDir = "${sp}${params.trimmer}/"
+            def riboDir = "${sp}${params.ribo_removal_tool == 'bowtie2' ? 'bowtie2_rrna' : params.ribo_removal_tool}/"
             // Only the single-end --un-gz FASTQs are published; paired-end reads rebuilt by SAMTOOLS_FASTQ_BOWTIE2 are not.
-            s.reads >> (saveFile('non_ribo_reads', s) ? "${samplePrefix(s)}${params.ribo_removal_tool == 'bowtie2' ? 'bowtie2_rrna' : params.ribo_removal_tool}/" : null)
+            def saveNonRibo = params.remove_ribo_rna && params.save_non_ribo_reads && (params.ribo_removal_tool != 'bowtie2' || s.meta.single_end)
+            [
+                // `reads` can be the same files as `reads_cat` or `reads_trimmed`. A later entry for the same files
+                // replaces an earlier one even when its target is null, so `reads` must stay first.
+                (s.reads):                       saveNonRibo ? riboDir : null,
+                (s.reads_cat):                   params.save_merged_fastq ? "${sp}fastq/" : null,
+                (s.reads_trimmed):               !params.skip_trimming && params.save_trimmed ? trimDir : null,
+                (s.fastqc?.raw_html):            "${fastqc}raw/",
+                (s.fastqc?.raw_zip):             "${fastqc}raw/",
+                (s.fastqc?.trim_html):           "${fastqc}trim/",
+                (s.fastqc?.trim_zip):            "${fastqc}trim/",
+                (s.fastqc?.filtered_html):       "${fastqc}filtered/",
+                (s.fastqc?.filtered_zip):        "${fastqc}filtered/",
+                (s.trim?.html):                  trimDir,
+                (s.trim?.log):                   params.trimmer == 'fastp' ? "${trimDir}log/" : trimDir,
+                (s.trim?.json):                  params.trimmer == 'fastp' ? trimDir : null,
+                (s.trim?.unpaired):              params.save_trimmed ? trimDir : null,
+                (s.trim?.reads_fail):            params.save_trimmed ? trimDir : null,
+                (s.trim?.reads_merged):          params.save_trimmed ? trimDir : null,
+                (s.umi?.log):                    "${sp}umitools/",
+                (s.umi?.reads):                  params.save_umi_intermeds ? "${sp}umitools/" : null,
+                (s.bbsplit?.stats):              "${sp}bbsplit/",
+                (s.bbsplit?.primary_reads):      params.save_bbsplit_reads ? "${sp}bbsplit/" : null,
+                (s.bbsplit?.other_genome_reads): params.save_bbsplit_reads ? "${sp}bbsplit/" : null,
+                (s.rrna?.sortmerna_log):         "${sp}sortmerna/",
+                ([s.rrna?.ribodetector_log, s.rrna?.seqkit_stats]): "${sp}ribodetector/",
+                (s.rrna?.bowtie2_log):           "${sp}bowtie2_rrna/",
+            ]
         }
     }
 
@@ -430,20 +436,17 @@ output {
 
     aligned {   // StarAligned | Bowtie2Aligned | Hisat2Aligned; anchor: samtools.stats
         path { s ->
-            s.samtools?.stats >> "${alignedDir(s)}samtools_stats/"
-            s.samtools?.flagstat >> "${alignedDir(s)}samtools_stats/"
-            s.samtools?.idxstats >> "${alignedDir(s)}samtools_stats/"
-            s.bam >> (saveFile('align_bam') ? alignedDir(s) : null)
-            s.bai >> (saveFile('align_bam') ? alignedDir(s) : null)
-            s.orig_bam >> (params.save_align_intermeds ? alignedDir(s) : null)
-            s.transcriptome_bam >> (params.save_align_intermeds ? alignedDir(s) : null)
-            s.unmapped >> (params.save_unaligned ? "${alignedDir(s)}unmapped/" : null)
-            s.star?.log_final >> "${alignedDir(s)}log/"
-            s.star?.log_out >> "${alignedDir(s)}log/"
-            s.star?.log_progress >> "${alignedDir(s)}log/"
-            s.star?.tab >> "${alignedDir(s)}log/"
-            s.hisat2?.summary >> "${alignedDir(s)}log/"
-            s.bowtie2?.log >> "${alignedDir(s)}log/"
+            def dir     = alignedDir(s)
+            def saveBam = params.save_align_intermeds || params.skip_markduplicates
+            [
+                ([s.samtools?.stats, s.samtools?.flagstat, s.samtools?.idxstats]): "${dir}samtools_stats/",
+                ([s.bam, s.bai]):                                                   saveBam ? dir : null,
+                (s.orig_bam):                                                       params.save_align_intermeds ? dir : null,
+                (s.transcriptome_bam):                                              params.save_align_intermeds ? dir : null,
+                (s.unmapped):                                                       params.save_unaligned ? "${dir}unmapped/" : null,
+                ([s.star?.log_final, s.star?.log_out, s.star?.log_progress, s.hisat2?.summary, s.bowtie2?.log]): "${dir}log/",
+                (s.star?.tab):                                                      "${dir}log/",
+            ]
         }
     }
 
@@ -457,83 +460,69 @@ output {
 
     umi_dedup {   // UmiDedupBam; anchor: genome.stats
         path { s ->
-            s.genome?.stats >> "${samplePrefix(s)}${params.aligner}/samtools_stats/"
-            s.genome?.flagstat >> "${samplePrefix(s)}${params.aligner}/samtools_stats/"
-            s.genome?.idxstats >> "${samplePrefix(s)}${params.aligner}/samtools_stats/"
-            s.bam >> (saveFile('umi_bam') ? "${samplePrefix(s)}${params.aligner}/" : null)
-            s.bai >> (saveFile('umi_bam') ? "${samplePrefix(s)}${params.aligner}/" : null)
-            s.genomic_dedup_log >> "${samplePrefix(s)}${params.aligner}/${params.umi_dedup_tool}/genomic_dedup_log/"
-            s.tsv?.edit_distance >> "${samplePrefix(s)}${params.aligner}/umitools/"
-            s.tsv?.per_umi >> "${samplePrefix(s)}${params.aligner}/umitools/"
-            s.tsv?.umi_per_position >> "${samplePrefix(s)}${params.aligner}/umitools/"
-            s.transcriptome?.coord_sorted_bam >> (saveFile('umi_bam') ? "${samplePrefix(s)}${params.aligner}/" : null)
-            s.transcriptome?.coord_sorted_bam_index >> (saveFile('umi_bam') ? "${samplePrefix(s)}${params.aligner}/" : null)
-            s.transcriptome?.coord_sorted_samtools?.stats >> (saveFile('umi_bam') ? "${samplePrefix(s)}${params.aligner}/samtools_stats/" : null)
-            s.transcriptome?.coord_sorted_samtools?.flagstat >> (saveFile('umi_bam') ? "${samplePrefix(s)}${params.aligner}/samtools_stats/" : null)
-            s.transcriptome?.coord_sorted_samtools?.idxstats >> (saveFile('umi_bam') ? "${samplePrefix(s)}${params.aligner}/samtools_stats/" : null)
-            s.transcriptome?.sorted_bam >> (saveFile('umi_bam') ? "${samplePrefix(s)}${params.aligner}/" : null)
-            s.transcriptome?.filtered_bam >> (saveFile('umi_bam') ? "${samplePrefix(s)}${params.aligner}/" : null)
-            s.prepare_for_rsem_log >> "${samplePrefix(s)}${params.aligner}/umitools/prepare_for_quantification_log/"
-            s.transcriptomic_dedup_log >> "${samplePrefix(s)}${params.aligner}/${params.umi_dedup_tool}/transcriptomic_dedup_log/"
-            s.transcriptome?.dedup_bam >> (saveFile('umi_bam') ? "${samplePrefix(s)}${params.aligner}/" : null)
-            s.transcriptome?.sorted_bam_index >> (saveFile('umi_bam') ? "${samplePrefix(s)}${params.aligner}/" : null)
-            s.transcriptome?.samtools?.stats >> "${samplePrefix(s)}${params.aligner}/samtools_stats/"
-            s.transcriptome?.samtools?.flagstat >> "${samplePrefix(s)}${params.aligner}/samtools_stats/"
-            s.transcriptome?.samtools?.idxstats >> "${samplePrefix(s)}${params.aligner}/samtools_stats/"
-            s.transcriptome?.tsv?.edit_distance >> "${samplePrefix(s)}${params.aligner}/umitools/"
-            s.transcriptome?.tsv?.per_umi >> "${samplePrefix(s)}${params.aligner}/umitools/"
-            s.transcriptome?.tsv?.umi_per_position >> "${samplePrefix(s)}${params.aligner}/umitools/"
+            def dir      = alignedDir(s)
+            def stats    = "${dir}samtools_stats/"
+            def umitools = "${dir}umitools/"
+            def saveBam  = params.save_align_intermeds || params.save_umi_intermeds
+            def t        = s.transcriptome
+            [
+                ([s.genome?.stats, s.genome?.flagstat, s.genome?.idxstats,
+                  t?.samtools?.stats, t?.samtools?.flagstat, t?.samtools?.idxstats]): stats,
+                ([s.bam, s.bai, t?.coord_sorted_bam, t?.coord_sorted_bam_index,
+                  t?.sorted_bam, t?.sorted_bam_index, t?.filtered_bam, t?.dedup_bam]): saveBam ? dir : null,
+                ([t?.coord_sorted_samtools?.stats, t?.coord_sorted_samtools?.flagstat,
+                  t?.coord_sorted_samtools?.idxstats]): saveBam ? stats : null,
+                ([s.tsv?.edit_distance, s.tsv?.per_umi, s.tsv?.umi_per_position,
+                  t?.tsv?.edit_distance, t?.tsv?.per_umi, t?.tsv?.umi_per_position]): umitools,
+                (s.prepare_for_rsem_log):        "${umitools}prepare_for_quantification_log/",
+                (s.genomic_dedup_log):           "${dir}${params.umi_dedup_tool}/genomic_dedup_log/",
+                (s.transcriptomic_dedup_log):    "${dir}${params.umi_dedup_tool}/transcriptomic_dedup_log/",
+            ]
         }
     }
 
     markdup {   // MarkdupBam; anchor: metrics
         path { s ->
-            s.metrics >> "${samplePrefix(s)}${params.aligner}/picard_metrics/"
-            s.bam >> "${samplePrefix(s)}${params.aligner}/"
-            s.cram >> "${samplePrefix(s)}${params.aligner}/"
-            s.bai >> "${samplePrefix(s)}${params.aligner}/"
-            s.samtools?.stats >> "${samplePrefix(s)}${params.aligner}/samtools_stats/"
-            s.samtools?.flagstat >> "${samplePrefix(s)}${params.aligner}/samtools_stats/"
-            s.samtools?.idxstats >> "${samplePrefix(s)}${params.aligner}/samtools_stats/"
+            def dir = alignedDir(s)
+            [
+                ([s.bam, s.cram, s.bai]):                                           dir,
+                (s.metrics):                                                        "${dir}picard_metrics/",
+                ([s.samtools?.stats, s.samtools?.flagstat, s.samtools?.idxstats]): "${dir}samtools_stats/",
+            ]
         }
     }
 
     quant {   // RsemQuantSample | PseudoQuantSample (bam-salmon reuses the pseudo-alignment shape)
         path { s ->
-            s.counts_gene >> "${samplePrefix(s)}${params.aligner}/"
-            s.counts_transcript >> "${samplePrefix(s)}${params.aligner}/"
-            s.stat >> "${samplePrefix(s)}${params.aligner}/"
-            s.log >> "${samplePrefix(s)}${params.aligner}/log/"
-            s.quant_dir >> "${samplePrefix(s)}${params.aligner}/"
+            def dir = alignedDir(s)
+            [
+                ([s.counts_gene, s.counts_transcript, s.stat, s.quant_dir]): dir,
+                (s.log):                                                     "${dir}log/",
+            ]
         }
     }
 
     quant_merged {   // QuantMerged; never sample-prefixed except under --skip_quantification_merge
         path { r ->
-            r.tpm_gene >> "${samplePrefix(r)}${params.aligner}/"
-            r.counts_gene >> "${samplePrefix(r)}${params.aligner}/"
-            r.lengths_gene >> "${samplePrefix(r)}${params.aligner}/"
-            r.counts_gene_length_scaled >> (params.skip_quantification_merge ? null : "${params.aligner}/")
-            r.counts_gene_scaled >> "${samplePrefix(r)}${params.aligner}/"
-            r.tpm_transcript >> "${samplePrefix(r)}${params.aligner}/"
-            r.counts_transcript >> "${samplePrefix(r)}${params.aligner}/"
-            r.lengths_transcript >> "${samplePrefix(r)}${params.aligner}/"
-            r.tx2gene >> "${params.aligner}/"
-            r.tx2gene_augmented >> "${samplePrefix(r)}${params.aligner}/"
-            r.merged_gene_rds >> "${samplePrefix(r)}${params.aligner}/"
-            r.merged_transcript_rds >> "${samplePrefix(r)}${params.aligner}/"
+            def top = "${params.aligner}/"
+            def dir = "${samplePrefix(r)}${top}"
+            [
+                ([r.tpm_gene, r.counts_gene, r.lengths_gene, r.counts_gene_scaled,
+                  r.tpm_transcript, r.counts_transcript, r.lengths_transcript,
+                  r.tx2gene_augmented, r.merged_gene_rds, r.merged_transcript_rds]): dir,
+                (r.counts_gene_length_scaled): params.skip_quantification_merge ? null : top,
+                (r.tx2gene):                   top,
+            ]
         }
     }
 
     // CUSTOM_RSEMMERGECOUNTS and tximport both write rsem.merged.* basenames, so they need separate targets (nextflow-io/nextflow#6617).
     quant_rsem_merge {   // record(id, rsem_merge: RsemMerge); empty channel unless --aligner star_rsem, rsem_merge is always non-null in every record it carries
         path { r ->
-            r.rsem_merge.counts_gene >> "${samplePrefix(r)}${params.aligner}/rsem_merge_counts/"
-            r.rsem_merge.tpm_gene >> "${samplePrefix(r)}${params.aligner}/rsem_merge_counts/"
-            r.rsem_merge.counts_transcript >> "${samplePrefix(r)}${params.aligner}/rsem_merge_counts/"
-            r.rsem_merge.tpm_transcript >> "${samplePrefix(r)}${params.aligner}/rsem_merge_counts/"
-            r.rsem_merge.genes_long >> "${samplePrefix(r)}${params.aligner}/rsem_merge_counts/"
-            r.rsem_merge.isoforms_long >> "${samplePrefix(r)}${params.aligner}/rsem_merge_counts/"
+            def m = r.rsem_merge
+            [
+                ([m.counts_gene, m.tpm_gene, m.counts_transcript, m.tpm_transcript, m.genes_long, m.isoforms_long]): "${alignedDir(r)}rsem_merge_counts/",
+            ]
         }
     }
 
@@ -547,81 +536,65 @@ output {
 
     quant_merged_pseudo {   // QuantMerged, pseudo-aligner
         path { r ->
-            r.tpm_gene >> "${samplePrefix(r)}${params.pseudo_aligner}/"
-            r.counts_gene >> "${samplePrefix(r)}${params.pseudo_aligner}/"
-            r.lengths_gene >> "${samplePrefix(r)}${params.pseudo_aligner}/"
-            r.counts_gene_length_scaled >> (params.skip_quantification_merge ? null : "${params.pseudo_aligner}/")
-            r.counts_gene_scaled >> "${samplePrefix(r)}${params.pseudo_aligner}/"
-            r.tpm_transcript >> "${samplePrefix(r)}${params.pseudo_aligner}/"
-            r.counts_transcript >> "${samplePrefix(r)}${params.pseudo_aligner}/"
-            r.lengths_transcript >> "${samplePrefix(r)}${params.pseudo_aligner}/"
-            r.tx2gene >> "${params.pseudo_aligner}/"
-            r.tx2gene_augmented >> "${samplePrefix(r)}${params.pseudo_aligner}/"
-            r.merged_gene_rds >> "${samplePrefix(r)}${params.pseudo_aligner}/"
-            r.merged_transcript_rds >> "${samplePrefix(r)}${params.pseudo_aligner}/"
+            def top = "${params.pseudo_aligner}/"
+            def dir = "${samplePrefix(r)}${top}"
+            [
+                ([r.tpm_gene, r.counts_gene, r.lengths_gene, r.counts_gene_scaled,
+                  r.tpm_transcript, r.counts_transcript, r.lengths_transcript,
+                  r.tx2gene_augmented, r.merged_gene_rds, r.merged_transcript_rds]): dir,
+                (r.counts_gene_length_scaled): params.skip_quantification_merge ? null : top,
+                (r.tx2gene):                   top,
+            ]
         }
     }
 
     deseq2 {   // record(rdata, pca_vals, plots_pdf, sample_dists, size_factors, log); anchor: rdata; never sample-prefixed
         path { d ->
-            d.rdata >> "${params.aligner}/deseq2_qc/"
-            d.pca_vals >> "${params.aligner}/deseq2_qc/"
-            d.plots_pdf >> "${params.aligner}/deseq2_qc/"
-            d.sample_dists >> "${params.aligner}/deseq2_qc/"
-            d.size_factors >> "${params.aligner}/deseq2_qc/"
-            d.log >> "${params.aligner}/deseq2_qc/"
+            [([d.rdata, d.pca_vals, d.plots_pdf, d.sample_dists, d.size_factors, d.log]): "${params.aligner}/deseq2_qc/"]
         }
     }
 
     deseq2_pseudo {   // same shape, pseudo-aligner; never sample-prefixed
         path { d ->
-            d.rdata >> "${params.pseudo_aligner}/deseq2_qc/"
-            d.pca_vals >> "${params.pseudo_aligner}/deseq2_qc/"
-            d.plots_pdf >> "${params.pseudo_aligner}/deseq2_qc/"
-            d.sample_dists >> "${params.pseudo_aligner}/deseq2_qc/"
-            d.size_factors >> "${params.pseudo_aligner}/deseq2_qc/"
-            d.log >> "${params.pseudo_aligner}/deseq2_qc/"
+            [([d.rdata, d.pca_vals, d.plots_pdf, d.sample_dists, d.size_factors, d.log]): "${params.pseudo_aligner}/deseq2_qc/"]
         }
     }
 
     bam_qc {   // BamQcRnaseq: preseq, featurecounts, biotype, qualimap, dupradar, rseqc
         enabled defineQcTools(params).size() > 0   // same check that decides whether any of these tools ran
         path { s ->
-            s.preseq?.lc_extrap >> "${samplePrefix(s)}${params.aligner}/preseq/"
-            s.preseq?.log >> "${samplePrefix(s)}${params.aligner}/preseq/log/"
-            s.featurecounts?.counts >> "${samplePrefix(s)}${params.aligner}/featurecounts/"
-            s.featurecounts?.summary >> "${samplePrefix(s)}${params.aligner}/featurecounts/"
-            s.biotype?.tsv >> "${samplePrefix(s)}${params.aligner}/featurecounts/"
-            s.biotype?.rrna >> "${samplePrefix(s)}${params.aligner}/featurecounts/"
-            s.qualimap >> "${samplePrefix(s)}${params.aligner}/qualimap/"
-            s.dupradar?.scatter2d >> "${samplePrefix(s)}${params.aligner}/dupradar/scatter_plot/"
-            s.dupradar?.boxplot >> "${samplePrefix(s)}${params.aligner}/dupradar/box_plot/"
-            s.dupradar?.hist >> "${samplePrefix(s)}${params.aligner}/dupradar/histogram/"
-            s.dupradar?.dupmatrix >> "${samplePrefix(s)}${params.aligner}/dupradar/gene_data/"
-            s.dupradar?.intercept_slope >> "${samplePrefix(s)}${params.aligner}/dupradar/intercepts_slope/"
-            s.rseqc?.bamstat >> "${samplePrefix(s)}${params.aligner}/rseqc/bam_stat/"
-            s.rseqc?.inferexperiment >> "${samplePrefix(s)}${params.aligner}/rseqc/infer_experiment/"
-            s.rseqc?.junctionannotation?.pdf >> "${samplePrefix(s)}${params.aligner}/rseqc/junction_annotation/pdf/"
-            s.rseqc?.junctionannotation?.events_pdf >> "${samplePrefix(s)}${params.aligner}/rseqc/junction_annotation/pdf/"
-            s.rseqc?.junctionannotation?.bed >> "${samplePrefix(s)}${params.aligner}/rseqc/junction_annotation/bed/"
-            s.rseqc?.junctionannotation?.interact_bed >> "${samplePrefix(s)}${params.aligner}/rseqc/junction_annotation/bed/"
-            s.rseqc?.junctionannotation?.xls >> "${samplePrefix(s)}${params.aligner}/rseqc/junction_annotation/xls/"
-            s.rseqc?.junctionannotation?.log >> "${samplePrefix(s)}${params.aligner}/rseqc/junction_annotation/log/"
-            s.rseqc?.junctionannotation?.rscript >> "${samplePrefix(s)}${params.aligner}/rseqc/junction_annotation/rscript/"
-            s.rseqc?.junctionsaturation?.pdf >> "${samplePrefix(s)}${params.aligner}/rseqc/junction_saturation/pdf/"
-            s.rseqc?.junctionsaturation?.rscript >> "${samplePrefix(s)}${params.aligner}/rseqc/junction_saturation/rscript/"
-            s.rseqc?.readdistribution >> "${samplePrefix(s)}${params.aligner}/rseqc/read_distribution/"
-            s.rseqc?.readduplication?.pdf >> "${samplePrefix(s)}${params.aligner}/rseqc/read_duplication/pdf/"
-            s.rseqc?.readduplication?.seq_xls >> "${samplePrefix(s)}${params.aligner}/rseqc/read_duplication/xls/"
-            s.rseqc?.readduplication?.pos_xls >> "${samplePrefix(s)}${params.aligner}/rseqc/read_duplication/xls/"
-            s.rseqc?.readduplication?.rscript >> "${samplePrefix(s)}${params.aligner}/rseqc/read_duplication/rscript/"
-            s.rseqc?.innerdistance?.distance >> "${samplePrefix(s)}${params.aligner}/rseqc/inner_distance/txt/"
-            s.rseqc?.innerdistance?.freq >> "${samplePrefix(s)}${params.aligner}/rseqc/inner_distance/txt/"
-            s.rseqc?.innerdistance?.mean >> "${samplePrefix(s)}${params.aligner}/rseqc/inner_distance/txt/"
-            s.rseqc?.innerdistance?.pdf >> "${samplePrefix(s)}${params.aligner}/rseqc/inner_distance/pdf/"
-            s.rseqc?.innerdistance?.rscript >> "${samplePrefix(s)}${params.aligner}/rseqc/inner_distance/rscript/"
-            s.rseqc?.tin?.txt >> "${samplePrefix(s)}${params.aligner}/rseqc/tin/"
-            s.rseqc?.tin?.xls >> "${samplePrefix(s)}${params.aligner}/rseqc/tin/"
+            def dir   = alignedDir(s)
+            def dup   = "${dir}dupradar/"
+            def rseqc = "${dir}rseqc/"
+            def rq    = s.rseqc
+            [
+                (s.preseq?.lc_extrap):          "${dir}preseq/",
+                (s.preseq?.log):                "${dir}preseq/log/",
+                ([s.featurecounts?.counts, s.featurecounts?.summary, s.biotype?.tsv, s.biotype?.rrna]): "${dir}featurecounts/",
+                (s.qualimap):                   "${dir}qualimap/",
+                (s.dupradar?.scatter2d):        "${dup}scatter_plot/",
+                (s.dupradar?.boxplot):          "${dup}box_plot/",
+                (s.dupradar?.hist):             "${dup}histogram/",
+                (s.dupradar?.dupmatrix):        "${dup}gene_data/",
+                (s.dupradar?.intercept_slope):  "${dup}intercepts_slope/",
+                (rq?.bamstat):                  "${rseqc}bam_stat/",
+                (rq?.inferexperiment):          "${rseqc}infer_experiment/",
+                ([rq?.junctionannotation?.pdf, rq?.junctionannotation?.events_pdf]):  "${rseqc}junction_annotation/pdf/",
+                ([rq?.junctionannotation?.bed, rq?.junctionannotation?.interact_bed]): "${rseqc}junction_annotation/bed/",
+                (rq?.junctionannotation?.xls):     "${rseqc}junction_annotation/xls/",
+                (rq?.junctionannotation?.log):     "${rseqc}junction_annotation/log/",
+                (rq?.junctionannotation?.rscript): "${rseqc}junction_annotation/rscript/",
+                (rq?.junctionsaturation?.pdf):     "${rseqc}junction_saturation/pdf/",
+                (rq?.junctionsaturation?.rscript): "${rseqc}junction_saturation/rscript/",
+                (rq?.readdistribution):            "${rseqc}read_distribution/",
+                (rq?.readduplication?.pdf):        "${rseqc}read_duplication/pdf/",
+                ([rq?.readduplication?.seq_xls, rq?.readduplication?.pos_xls]): "${rseqc}read_duplication/xls/",
+                (rq?.readduplication?.rscript):    "${rseqc}read_duplication/rscript/",
+                ([rq?.innerdistance?.distance, rq?.innerdistance?.freq, rq?.innerdistance?.mean]): "${rseqc}inner_distance/txt/",
+                (rq?.innerdistance?.pdf):          "${rseqc}inner_distance/pdf/",
+                (rq?.innerdistance?.rscript):      "${rseqc}inner_distance/rscript/",
+                ([rq?.tin?.txt, rq?.tin?.xls]):    "${rseqc}tin/",
+            ]
         }
     }
 
@@ -631,9 +604,7 @@ output {
 
     multiqc {   // MultiqcReport; anchor: report
         path { m ->
-            m.report >> "${samplePrefix(m)}multiqc${params.skip_alignment ? '' : "/${params.aligner}"}/"
-            m.data >> "${samplePrefix(m)}multiqc${params.skip_alignment ? '' : "/${params.aligner}"}/"
-            m.plots >> "${samplePrefix(m)}multiqc${params.skip_alignment ? '' : "/${params.aligner}"}/"
+            [([m.report, m.data, m.plots]): "${samplePrefix(m)}multiqc${params.skip_alignment ? '' : "/${params.aligner}"}/"]
         }
     }
 

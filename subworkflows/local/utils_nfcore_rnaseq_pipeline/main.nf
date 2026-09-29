@@ -913,6 +913,10 @@ def buildDeseq2Record(ch_rdata, ch_pca_txt, ch_pdf, ch_dists_txt, ch_size_factor
 // Run-level records (e.g. a cross-sample merged file) are never sample-prefixed.
 def samplePrefix(r) { params.skip_quantification_merge ? "${r.id}/" : '' }
 
+// Directory the aligned BAM/BAI/transcriptome BAM publish to. Shared with the
+// samplesheet's reconstructed genome_bam/transcriptome_bam paths (main.nf) so the two can't drift.
+def alignedDir(r) { "${samplePrefix(r)}${params.aligner}/" }
+
 // Named per-field publish conditions that combine params or depend on the record.
 // Single-param conditions stay inline at the call site.
 def saveFile(key, r = null) {

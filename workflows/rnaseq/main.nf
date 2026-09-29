@@ -676,6 +676,9 @@ workflow RNASEQ {
                     .flatMap { meta, files -> files.collect { f -> [meta, f] } }
             )
 
+            // All six inputs are keyed on the same per-sample meta.id from the single
+            // RUSTQC task per sample, so remainder: true only guards against a category
+            // filtering out every file for a sample, not a genuine key mismatch.
             ch_rustqc_bundle = ch_rustqc_dupradar
                 .join(ch_rustqc_feature,  remainder: true)
                 .join(ch_rustqc_preseq,   remainder: true)

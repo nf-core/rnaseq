@@ -46,6 +46,7 @@ include { checkMaxContigSize         } from './subworkflows/local/utils_nfcore_r
 include { defineQcTools              } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { isStarIndexLegacy          } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { samplePrefix               } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { alignedDir                 } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { saveFile                   } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { outputEnabled              } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 
@@ -193,9 +194,9 @@ workflow NFCORE_RNASEQ {
                 strandedness:      r.meta.strandedness,
                 seq_platform:      r.meta.seq_platform ?: params.seq_platform,
                 seq_center:        r.meta.seq_center ?: params.seq_center,
-                genome_bam:        r.bam ? "${params.outdir}/${samplePrefix(r)}${params.aligner}/${r.bam.name}" : null,
+                genome_bam:        r.bam ? "${params.outdir}/${alignedDir(r)}${r.bam.name}" : null,
                 percent_mapped:    percent_mapped,
-                transcriptome_bam: transcriptome_bam ? "${params.outdir}/${samplePrefix(r)}${params.aligner}/${transcriptome_bam.name}" : null
+                transcriptome_bam: transcriptome_bam ? "${params.outdir}/${alignedDir(r)}${transcriptome_bam.name}" : null
             )
         }
 
@@ -391,6 +392,7 @@ output {
     }
 
     preprocessed {   // FastqQcTrimFilterSetstrandedness; no single anchor field survives every skip combination
+        // A new conditional `>>` line below needs its guard added to outputEnabled('preprocessed') too.
         enabled outputEnabled('preprocessed')
         path { s ->
             s.fastqc?.raw_html >> "${samplePrefix(s)}fastqc/raw/"
@@ -440,20 +442,20 @@ output {
 
     aligned {   // StarAligned | Bowtie2Aligned | Hisat2Aligned; anchor: samtools.stats
         path { s ->
-            s.samtools?.stats >> "${samplePrefix(s)}${params.aligner}/samtools_stats/"
-            s.samtools?.flagstat >> "${samplePrefix(s)}${params.aligner}/samtools_stats/"
-            s.samtools?.idxstats >> "${samplePrefix(s)}${params.aligner}/samtools_stats/"
-            s.bam >> (saveFile('align_bam') ? "${samplePrefix(s)}${params.aligner}/" : null)
-            s.bai >> (saveFile('align_bam') ? "${samplePrefix(s)}${params.aligner}/" : null)
-            s.orig_bam >> (params.save_align_intermeds ? "${samplePrefix(s)}${params.aligner}/" : null)
-            s.transcriptome_bam >> (params.save_align_intermeds ? "${samplePrefix(s)}${params.aligner}/" : null)
-            s.unmapped >> (params.save_unaligned ? "${samplePrefix(s)}${params.aligner}/unmapped/" : null)
-            s.star?.log_final >> "${samplePrefix(s)}${params.aligner}/log/"
-            s.star?.log_out >> "${samplePrefix(s)}${params.aligner}/log/"
-            s.star?.log_progress >> "${samplePrefix(s)}${params.aligner}/log/"
-            s.star?.tab >> "${samplePrefix(s)}${params.aligner}/log/"
-            s.hisat2?.summary >> "${samplePrefix(s)}${params.aligner}/log/"
-            s.bowtie2?.log >> "${samplePrefix(s)}${params.aligner}/log/"
+            s.samtools?.stats >> "${alignedDir(s)}samtools_stats/"
+            s.samtools?.flagstat >> "${alignedDir(s)}samtools_stats/"
+            s.samtools?.idxstats >> "${alignedDir(s)}samtools_stats/"
+            s.bam >> (saveFile('align_bam') ? alignedDir(s) : null)
+            s.bai >> (saveFile('align_bam') ? alignedDir(s) : null)
+            s.orig_bam >> (params.save_align_intermeds ? alignedDir(s) : null)
+            s.transcriptome_bam >> (params.save_align_intermeds ? alignedDir(s) : null)
+            s.unmapped >> (params.save_unaligned ? "${alignedDir(s)}unmapped/" : null)
+            s.star?.log_final >> "${alignedDir(s)}log/"
+            s.star?.log_out >> "${alignedDir(s)}log/"
+            s.star?.log_progress >> "${alignedDir(s)}log/"
+            s.star?.tab >> "${alignedDir(s)}log/"
+            s.hisat2?.summary >> "${alignedDir(s)}log/"
+            s.bowtie2?.log >> "${alignedDir(s)}log/"
         }
     }
 

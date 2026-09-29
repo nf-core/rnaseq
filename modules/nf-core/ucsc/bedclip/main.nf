@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process UCSC_BEDCLIP {
     tag "$meta.id"
     label 'process_medium'
@@ -8,15 +10,15 @@ process UCSC_BEDCLIP {
         'quay.io/biocontainers/ucsc-bedclip:482--h0b57e2e_0' }"
 
     input:
-    tuple val(meta), path(bedgraph)
-    path  sizes
+    tuple(meta: Map, bedgraph: Path)
+    sizes: Path
 
     output:
-    tuple val(meta), path("*.bedGraph"), emit: bedgraph
-    tuple val("${task.process}"), val('ucsc'), val('482'), topic: versions, emit: versions_ucsc
+    tuple(meta, file("*.bedGraph"))
+
+    topic:
     // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
-    when:
-    task.ext.when == null || task.ext.when
+    tuple(task.process, 'ucsc', '482') >> 'versions'
 
     script:
     def args = task.ext.args ?: ''

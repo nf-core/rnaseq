@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process UCSC_BEDGRAPHTOBIGWIG {
     tag "$meta.id"
     label 'process_single'
@@ -8,15 +10,15 @@ process UCSC_BEDGRAPHTOBIGWIG {
         'quay.io/biocontainers/ucsc-bedgraphtobigwig:482--hdc0a859_0' }"
 
     input:
-    tuple val(meta), path(bedgraph)
-    path  sizes
+    tuple(meta: Map, bedgraph: Path)
+    sizes: Path
 
     output:
-    tuple val(meta), path("*.bigWig"), emit: bigwig
-    tuple val("${task.process}"), val('ucsc'), val('482'), topic: versions, emit: versions_ucsc
+    tuple(meta, file("*.bigWig"))
+
+    topic:
     // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
-    when:
-    task.ext.when == null || task.ext.when
+    tuple(task.process, 'ucsc', '482') >> 'versions'
 
     script:
     def args = task.ext.args ?: ''

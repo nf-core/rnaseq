@@ -21,16 +21,16 @@ workflow BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG {
     //
     // Convert bedGraph to bigWig
     //
-    UCSC_BEDGRAPHTOBIGWIG ( UCSC_BEDCLIP.out.bedgraph, sizes )
+    UCSC_BEDGRAPHTOBIGWIG ( UCSC_BEDCLIP.out, sizes )
 
-    ch_results = UCSC_BEDGRAPHTOBIGWIG.out.bigwig
-        .join(UCSC_BEDCLIP.out.bedgraph)
+    ch_results = UCSC_BEDGRAPHTOBIGWIG.out
+        .join(UCSC_BEDCLIP.out)
         .map { meta, bigwig, clipped ->
             record(id: meta.id, bigwig: bigwig, bedgraph: clipped)
         }
 
     emit:
-    bigwig   = UCSC_BEDGRAPHTOBIGWIG.out.bigwig // channel: [ val(meta), [ bigwig ] ]
-    bedgraph = UCSC_BEDCLIP.out.bedgraph        // channel: [ val(meta), [ bedgraph ] ]
+    bigwig   = UCSC_BEDGRAPHTOBIGWIG.out // channel: [ val(meta), [ bigwig ] ]
+    bedgraph = UCSC_BEDCLIP.out        // channel: [ val(meta), [ bedgraph ] ]
     results  = ch_results                       // channel: BigwigFiles
 }

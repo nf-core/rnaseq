@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process SEQKIT_STATS {
     tag "${meta.id}"
     label 'process_low'
@@ -8,14 +10,13 @@ process SEQKIT_STATS {
         : 'community.wave.seqera.io/library/seqkit:2.13.0--05c0a96bf9fb2751'}"
 
     input:
-    tuple val(meta), path(reads)
+    tuple(meta: Map, reads: List<Path>)
 
     output:
-    tuple val(meta), path("*.tsv"), emit: stats
-    tuple val("${task.process}"), val('seqkit'), eval("seqkit version | sed 's/^.*v//'"), emit: versions_seqkit, topic: versions
+    tuple(meta, file("*.tsv"))
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'seqkit', eval("seqkit version | sed 's/^.*v//'")) >> 'versions'
 
     script:
     def args = task.ext.args ?: '--all'
@@ -25,7 +26,7 @@ process SEQKIT_STATS {
         --tabular \\
         --threads ${task.cpus} \\
         ${args} \\
-        ${reads} > '${prefix}.tsv'
+        ${reads.join(' ')} > '${prefix}.tsv'
     """
 
     stub:

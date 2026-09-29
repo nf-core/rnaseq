@@ -20,6 +20,13 @@
                         "test.clip.bedGraph:md5,e02395e1f7c593b3f79563067159ebc2"
                     ]
                 ],
+                "2": [
+                    {
+                        "bedgraph": "test.clip.bedGraph:md5,e02395e1f7c593b3f79563067159ebc2",
+                        "bigwig": "test.bigWig:md5,910ecc7f57e3bbd5fac5a8edba4f615d",
+                        "id": "test"
+                    }
+                ],
                 "bedgraph": [
                     [
                         {
@@ -37,14 +44,21 @@
                         },
                         "test.bigWig:md5,910ecc7f57e3bbd5fac5a8edba4f615d"
                     ]
+                ],
+                "results": [
+                    {
+                        "bedgraph": "test.clip.bedGraph:md5,e02395e1f7c593b3f79563067159ebc2",
+                        "bigwig": "test.bigWig:md5,910ecc7f57e3bbd5fac5a8edba4f615d",
+                        "id": "test"
+                    }
                 ]
             }
         ],
+        "timestamp": "2026-09-29T21:05:57.743857169",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-01-19T15:37:58.66559"
+            "nf-test": "0.9.5",
+            "nextflow": "26.09.1"
+        }
     },
     "sarscov2 [bedgraph] [genome_sizes] - stub": {
         "content": [
@@ -67,6 +81,13 @@
                         "test.clip.bedGraph:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
+                "2": [
+                    {
+                        "bedgraph": "test.clip.bedGraph:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "bigwig": "test.bigWig:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "id": "test"
+                    }
+                ],
                 "bedgraph": [
                     [
                         {
@@ -84,13 +105,20 @@
                         },
                         "test.bigWig:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
+                ],
+                "results": [
+                    {
+                        "bedgraph": "test.clip.bedGraph:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "bigwig": "test.bigWig:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "id": "test"
+                    }
                 ]
             }
         ],
+        "timestamp": "2026-09-29T21:06:09.666885043",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-01-19T15:38:05.023743"
+            "nf-test": "0.9.5",
+            "nextflow": "26.09.1"
+        }
     }
 }

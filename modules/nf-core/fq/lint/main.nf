@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process FQ_LINT {
     tag "$meta.id"
     label 'process_low'
@@ -8,14 +10,13 @@ process FQ_LINT {
         'quay.io/biocontainers/fq:0.12.0--h9ee0642_0' }"
 
     input:
-    tuple val(meta), path(fastq, arity: '1..2')
+    tuple(meta: Map, fastq: List<Path>)
 
     output:
-    tuple val(meta), path("*.fq_lint.txt"), emit: lint
-    tuple val("${task.process}"), val('fq'), eval("fq lint --version | sed 's/fq-lint //; s/ .*//'"), emit: versions_fq, topic: versions
+    tuple(meta, file("*.fq_lint.txt"))
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'fq', eval("fq lint --version | sed 's/fq-lint //; s/ .*//'")) >> 'versions'
 
     script:
     def args   = task.ext.args ?: ''
@@ -23,7 +24,7 @@ process FQ_LINT {
     """
     fq lint \\
         $args \\
-        $fastq > ${prefix}.fq_lint.txt
+        ${fastq.join(' ')} > ${prefix}.fq_lint.txt
     """
 
     stub:

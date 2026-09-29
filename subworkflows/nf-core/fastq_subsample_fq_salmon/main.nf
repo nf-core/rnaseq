@@ -47,13 +47,13 @@ workflow FASTQ_SUBSAMPLE_FQ_SALMON {
     //
     // Pseudo-alignment with Salmon
     //
-    SALMON_QUANT ( FQ_SUBSAMPLE.out.fastq, ch_index.combine(ch_gtf_transcript_fasta).first() )
+    SALMON_QUANT ( FQ_SUBSAMPLE.out, ch_index.combine(ch_gtf_transcript_fasta).first() )
 
     emit:
     index             = ch_index                           // channel: [ val(meta), index ]
     index_built       = ch_index_built.map { _meta, index -> index } // channel: path(salmon/index/), only set when built here
 
-    reads             = FQ_SUBSAMPLE.out.fastq             // channel: [ val(meta), fastq ]
+    reads             = FQ_SUBSAMPLE.out             // channel: [ val(meta), fastq ]
 
     results           = SALMON_QUANT.out.results           // channel: [ val(meta), results_dir ]
     json_info         = SALMON_QUANT.out.json_info         // channel: [ val(meta), json_info

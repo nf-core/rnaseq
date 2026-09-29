@@ -27,10 +27,10 @@ nextflow_process {
         then {
             assertAll (
                 { assert process.success },
-                { assert process.out.lint.get(0).get(1) ==~ ".*/test.fq_lint.txt" },
-                { assert path(process.out.lint.get(0).get(1)).getText().contains("fq-lint start") },
-                { assert path(process.out.lint.get(0).get(1)).getText().contains("read 100 records") },
-                { assert path(process.out.lint.get(0).get(1)).getText().contains("fq-lint end") },
+                { assert process.out[0][0][1] ==~ ".*/test.fq_lint.txt" },
+                { assert path(process.out[0][0][1]).getText().contains("fq-lint start") },
+                { assert path(process.out[0][0][1]).getText().contains("read 100 records") },
+                { assert path(process.out[0][0][1]).getText().contains("fq-lint end") },
             )
         }
 
@@ -80,10 +80,7 @@ nextflow_process {
         then {
             assertAll (
                 { assert !process.success },
-                { assert snapshot(
-                    process.out.lint,
-                    process.out.findAll { key, val -> key.startsWith('versions') }
-                ).match() },
+                { assert snapshot(process.out).match() },
             )
         }
 

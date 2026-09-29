@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process BEDTOOLS_GENOMECOV {
     tag "${meta.id}"
     label 'process_single'
@@ -8,17 +10,16 @@ process BEDTOOLS_GENOMECOV {
         : 'community.wave.seqera.io/library/bedtools_coreutils:a623c13f66d5262b'}"
 
     input:
-    tuple val(meta), path(intervals), val(scale)
-    path sizes
-    val extension
-    val sort
+    tuple(meta: Map, intervals: Path, scale: Float)
+    sizes: Path?
+    extension: String
+    sort: Boolean
 
     output:
-    tuple val(meta), path("*.${extension}"), emit: genomecov
-    tuple val("${task.process}"), val('bedtools'), eval("bedtools --version | sed -e 's/bedtools v//g'"), topic: versions, emit: versions_bedtools
+    tuple(meta, file("*.${extension}"))
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'bedtools', eval("bedtools --version | sed -e 's/bedtools v//g'")) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''

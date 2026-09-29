@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process CAT_FASTQ {
     tag "${meta.id}"
     label 'process_single'
@@ -8,33 +10,33 @@ process CAT_FASTQ {
         : 'community.wave.seqera.io/library/coreutils_grep_gzip_lbzip2_pruned:838ba80435a629f8'}"
 
     input:
-    tuple val(meta), path(reads, stageAs: "input*/*")
+    tuple(meta: Map, reads: List<Path>)
+
+    stage:
+    stageAs reads, 'input*/*'
 
     output:
-    tuple val(meta), path("*.merged.fastq.gz"), emit: reads
-    tuple val("${task.process}"), val("cat"), eval("cat --version 2>&1 | head -n 1 | sed 's/^.*coreutils) //; s/ .*\$//'"), emit: versions_cat, topic: versions
+    tuple(meta, files("*.merged.fastq.gz").toSorted { f -> f.name })
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, "cat", eval("cat --version 2>&1 | head -n 1 | sed 's/^.*coreutils) //; s/ .*\$//'")) >> 'versions'
 
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def readList = reads instanceof List ? reads.collect { item -> item.toString() } : [reads.toString()]
-    def compress = readList[0]?.endsWith('.gz') ? '' : '| gzip'
+    def compress = reads[0].name.endsWith('.gz') ? '' : '| gzip'
     if (meta.single_end) {
-        if (readList.size >= 1) {
+        if (reads.size() >= 1) {
             """
-            cat ${readList.join(' ')} ${compress} > ${prefix}.merged.fastq.gz
+            cat ${reads.join(' ')} ${compress} > ${prefix}.merged.fastq.gz
             """
         } else {
             error("Could not find any FASTQ files to concatenate in the process input")
         }
     }
     else {
-        if (readList.size >= 2) {
-            def read1 = []
-            def read2 = []
-            readList.eachWithIndex { v, ix -> (ix & 1 ? read2 : read1) << v }
+        if (reads.size() >= 2) {
+            def read1 = reads.withIndex().findAll { _read, ix -> ix % 2 == 0 }.collect { read, _ix -> read }
+            def read2 = reads.withIndex().findAll { _read, ix -> ix % 2 == 1 }.collect { read, _ix -> read }
             """
             cat ${read1.join(' ')} ${compress} > ${prefix}_1.merged.fastq.gz
             cat ${read2.join(' ')} ${compress} > ${prefix}_2.merged.fastq.gz
@@ -46,9 +48,8 @@ process CAT_FASTQ {
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def readList = reads instanceof List ? reads.collect { item -> item.toString() } : [reads.toString()]
     if (meta.single_end) {
-        if (readList.size >= 1) {
+        if (reads.size() >= 1) {
             """
             echo '' | gzip > ${prefix}.merged.fastq.gz
             """
@@ -57,7 +58,7 @@ process CAT_FASTQ {
         }
     }
     else {
-        if (readList.size >= 2) {
+        if (reads.size() >= 2) {
             """
             echo '' | gzip > ${prefix}_1.merged.fastq.gz
             echo '' | gzip > ${prefix}_2.merged.fastq.gz

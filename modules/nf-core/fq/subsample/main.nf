@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process FQ_SUBSAMPLE {
     tag "$meta.id"
     label 'process_single'
@@ -8,14 +10,13 @@ process FQ_SUBSAMPLE {
         'quay.io/biocontainers/fq:0.12.0--h9ee0642_0' }"
 
     input:
-    tuple val(meta), path(fastq)
+    tuple(meta: Map, fastq: List<Path>)
 
     output:
-    tuple val(meta), path("*.fastq.gz"), emit: fastq
-    tuple val("${task.process}"), val('fq'), eval("fq subsample --version | sed 's/fq-subsample //; s/ .*//'"), emit: versions_fq, topic: versions
+    tuple(meta, files("*.fastq.gz").toSorted { f -> f.name })
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'fq', eval("fq subsample --version | sed 's/fq-subsample //; s/ .*//'")) >> 'versions'
 
     script:
     /* args requires:
@@ -29,8 +30,9 @@ process FQ_SUBSAMPLE {
         error "FQ/SUBSAMPLE requires --probability (-p) or --record-count (-n) specified in task.ext.args!"
     }
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def n_fastq = fastq instanceof List ? fastq.size() : 1
-    log.debug "FQ/SUBSAMPLE found ${n_fastq} FASTQ files"
+    def n_fastq = fastq.size()
+    def fastq1_output = ''
+    def fastq2_output = ''
     if ( n_fastq == 1 ){
         fastq1_output = "--r1-dst ${prefix}.fastq.gz"
         fastq2_output = ""
@@ -43,7 +45,7 @@ process FQ_SUBSAMPLE {
     """
     fq subsample \\
         $args \\
-        $fastq \\
+        ${fastq.join(' ')} \\
         $fastq1_output \\
         $fastq2_output
     """

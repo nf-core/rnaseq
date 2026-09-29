@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process SEQKIT_REPLACE {
     tag "${meta.id}"
     label 'process_low'
@@ -8,15 +10,14 @@ process SEQKIT_REPLACE {
         : 'community.wave.seqera.io/library/seqkit:2.13.0--05c0a96bf9fb2751'}"
 
     input:
-    tuple val(meta), path(fastx)
-    val out_ext
+    tuple(meta: Map, fastx: Path)
+    out_ext: String
 
     output:
-    tuple val(meta), path("*.fast*"), emit: fastx
-    tuple val("${task.process}"), val('seqkit'), eval("seqkit version | sed 's/^.*v//'"), emit: versions_seqkit, topic: versions
+    tuple(meta, file("*.fast*"))
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'seqkit', eval("seqkit version | sed 's/^.*v//'")) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''

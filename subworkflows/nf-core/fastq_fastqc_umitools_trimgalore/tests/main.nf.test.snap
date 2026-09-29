@@ -11,7 +11,9 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        [
+                            "test.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
                     ]
                 ],
                 "10": [
@@ -23,13 +25,47 @@
                         0
                     ]
                 ],
+                "11": [
+                    {
+                        "fastqc": {
+                            "raw_html": [
+                                "test.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            ],
+                            "raw_zip": [
+                                "test.zip:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            ]
+                        },
+                        "id": "test",
+                        "num_trimmed_reads": 0.0,
+                        "trim": {
+                            "html": null,
+                            "json": [
+                                "test.fastq.gz_trimming_report.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            ],
+                            "log": [
+                                "test.fastq.gz_trimming_report.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            ],
+                            "unpaired": null,
+                            "zip": null
+                        },
+                        "umi": {
+                            "log": "test.umi_extract.log:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "reads": [
+                                "test.umi_extract_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                                "test.umi_extract_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                            ]
+                        }
+                    }
+                ],
                 "2": [
                     [
                         {
                             "id": "test",
                             "single_end": false
                         },
-                        "test.zip:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        [
+                            "test.zip:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
                     ]
                 ],
                 "3": [
@@ -68,7 +104,9 @@
                             "id": "test",
                             "single_end": true
                         },
-                        "test.fastq.gz_trimming_report.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        [
+                            "test.fastq.gz_trimming_report.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
                     ]
                 ],
                 "9": [
@@ -77,7 +115,9 @@
                             "id": "test",
                             "single_end": true
                         },
-                        "test.fastq.gz_trimming_report.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        [
+                            "test.fastq.gz_trimming_report.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
                     ]
                 ],
                 "fastqc_html": [
@@ -86,7 +126,9 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        [
+                            "test.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
                     ]
                 ],
                 "fastqc_zip": [
@@ -95,11 +137,45 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.zip:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        [
+                            "test.zip:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
                     ]
                 ],
                 "reads": [
                     
+                ],
+                "results": [
+                    {
+                        "fastqc": {
+                            "raw_html": [
+                                "test.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            ],
+                            "raw_zip": [
+                                "test.zip:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            ]
+                        },
+                        "id": "test",
+                        "num_trimmed_reads": 0.0,
+                        "trim": {
+                            "html": null,
+                            "json": [
+                                "test.fastq.gz_trimming_report.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            ],
+                            "log": [
+                                "test.fastq.gz_trimming_report.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            ],
+                            "unpaired": null,
+                            "zip": null
+                        },
+                        "umi": {
+                            "log": "test.umi_extract.log:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "reads": [
+                                "test.umi_extract_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                                "test.umi_extract_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                            ]
+                        }
+                    }
                 ],
                 "trim_html": [
                     
@@ -110,7 +186,9 @@
                             "id": "test",
                             "single_end": true
                         },
-                        "test.fastq.gz_trimming_report.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        [
+                            "test.fastq.gz_trimming_report.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
                     ]
                 ],
                 "trim_log": [
@@ -119,7 +197,9 @@
                             "id": "test",
                             "single_end": true
                         },
-                        "test.fastq.gz_trimming_report.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        [
+                            "test.fastq.gz_trimming_report.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
                     ]
                 ],
                 "trim_read_count": [
@@ -160,10 +240,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-19T15:21:16.371660447",
+        "timestamp": "2026-09-29T21:12:20.50652571",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.09.1"
         }
     },
     "test paired end read without UMI - stub": {
@@ -178,7 +258,9 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        [
+                            "test.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
                     ]
                 ],
                 "10": [
@@ -190,13 +272,43 @@
                         0
                     ]
                 ],
+                "11": [
+                    {
+                        "fastqc": {
+                            "raw_html": [
+                                "test.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            ],
+                            "raw_zip": [
+                                "test.zip:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            ]
+                        },
+                        "id": "test",
+                        "num_trimmed_reads": 0.0,
+                        "trim": {
+                            "html": null,
+                            "json": [
+                                "test_1.fastq.gz_trimming_report.json:md5,d41d8cd98f00b204e9800998ecf8427e",
+                                "test_2.fastq.gz_trimming_report.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            ],
+                            "log": [
+                                "test_1.fastq.gz_trimming_report.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                                "test_2.fastq.gz_trimming_report.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            ],
+                            "unpaired": null,
+                            "zip": null
+                        },
+                        "umi": null
+                    }
+                ],
                 "2": [
                     [
                         {
                             "id": "test",
                             "single_end": false
                         },
-                        "test.zip:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        [
+                            "test.zip:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
                     ]
                 ],
                 "3": [
@@ -244,7 +356,9 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        [
+                            "test.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
                     ]
                 ],
                 "fastqc_zip": [
@@ -253,11 +367,41 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.zip:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        [
+                            "test.zip:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
                     ]
                 ],
                 "reads": [
                     
+                ],
+                "results": [
+                    {
+                        "fastqc": {
+                            "raw_html": [
+                                "test.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            ],
+                            "raw_zip": [
+                                "test.zip:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            ]
+                        },
+                        "id": "test",
+                        "num_trimmed_reads": 0.0,
+                        "trim": {
+                            "html": null,
+                            "json": [
+                                "test_1.fastq.gz_trimming_report.json:md5,d41d8cd98f00b204e9800998ecf8427e",
+                                "test_2.fastq.gz_trimming_report.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            ],
+                            "log": [
+                                "test_1.fastq.gz_trimming_report.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                                "test_2.fastq.gz_trimming_report.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            ],
+                            "unpaired": null,
+                            "zip": null
+                        },
+                        "umi": null
+                    }
                 ],
                 "trim_html": [
                     
@@ -309,10 +453,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-19T15:21:21.49210821",
+        "timestamp": "2026-09-29T21:12:31.581801922",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.09.1"
         }
     },
     "test paired end read without UMI": {
@@ -356,7 +500,9 @@
                         "id": "test",
                         "single_end": true
                     },
-                    "test_trimmed.fq.gz:md5,faae784affdd7d84e2fa9da9e9425229"
+                    [
+                        "test_trimmed.fq.gz:md5,faae784affdd7d84e2fa9da9e9425229"
+                    ]
                 ]
             ],
             [
@@ -372,10 +518,10 @@
                 
             ]
         ],
-        "timestamp": "2026-02-03T13:21:01.887880112",
+        "timestamp": "2026-09-29T21:10:59.287347969",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nf-test": "0.9.5",
+            "nextflow": "26.09.1"
         }
     },
     "test paired end read with UMI": {
@@ -386,7 +532,9 @@
                         "id": "test",
                         "single_end": true
                     },
-                    "test_trimmed.fq.gz:md5,9c58b78ac2c7b5ce9ca6b090eee1d39c"
+                    [
+                        "test_trimmed.fq.gz:md5,9c58b78ac2c7b5ce9ca6b090eee1d39c"
+                    ]
                 ]
             ],
             [
@@ -402,10 +550,10 @@
                 
             ]
         ],
-        "timestamp": "2026-02-03T13:21:13.989761245",
+        "timestamp": "2026-09-29T21:11:15.336294113",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nf-test": "0.9.5",
+            "nextflow": "26.09.1"
         }
     },
     "test skip all steps": {
@@ -435,7 +583,9 @@
                             "id": "test",
                             "single_end": true
                         },
-                        "test.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        [
+                            "test.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
                     ]
                 ],
                 "10": [
@@ -447,13 +597,46 @@
                         0
                     ]
                 ],
+                "11": [
+                    {
+                        "fastqc": {
+                            "raw_html": [
+                                "test.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            ],
+                            "raw_zip": [
+                                "test.zip:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            ]
+                        },
+                        "id": "test",
+                        "num_trimmed_reads": 0.0,
+                        "trim": {
+                            "html": null,
+                            "json": [
+                                "test.fastq.gz_trimming_report.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            ],
+                            "log": [
+                                "test.fastq.gz_trimming_report.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            ],
+                            "unpaired": null,
+                            "zip": null
+                        },
+                        "umi": {
+                            "log": "test.umi_extract.log:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "reads": [
+                                "test.umi_extract.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                            ]
+                        }
+                    }
+                ],
                 "2": [
                     [
                         {
                             "id": "test",
                             "single_end": true
                         },
-                        "test.zip:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        [
+                            "test.zip:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
                     ]
                 ],
                 "3": [
@@ -489,7 +672,9 @@
                             "id": "test",
                             "single_end": true
                         },
-                        "test.fastq.gz_trimming_report.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        [
+                            "test.fastq.gz_trimming_report.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
                     ]
                 ],
                 "9": [
@@ -498,7 +683,9 @@
                             "id": "test",
                             "single_end": true
                         },
-                        "test.fastq.gz_trimming_report.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        [
+                            "test.fastq.gz_trimming_report.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
                     ]
                 ],
                 "fastqc_html": [
@@ -507,7 +694,9 @@
                             "id": "test",
                             "single_end": true
                         },
-                        "test.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        [
+                            "test.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
                     ]
                 ],
                 "fastqc_zip": [
@@ -516,11 +705,44 @@
                             "id": "test",
                             "single_end": true
                         },
-                        "test.zip:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        [
+                            "test.zip:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
                     ]
                 ],
                 "reads": [
                     
+                ],
+                "results": [
+                    {
+                        "fastqc": {
+                            "raw_html": [
+                                "test.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            ],
+                            "raw_zip": [
+                                "test.zip:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            ]
+                        },
+                        "id": "test",
+                        "num_trimmed_reads": 0.0,
+                        "trim": {
+                            "html": null,
+                            "json": [
+                                "test.fastq.gz_trimming_report.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            ],
+                            "log": [
+                                "test.fastq.gz_trimming_report.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            ],
+                            "unpaired": null,
+                            "zip": null
+                        },
+                        "umi": {
+                            "log": "test.umi_extract.log:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "reads": [
+                                "test.umi_extract.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                            ]
+                        }
+                    }
                 ],
                 "trim_html": [
                     
@@ -531,7 +753,9 @@
                             "id": "test",
                             "single_end": true
                         },
-                        "test.fastq.gz_trimming_report.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        [
+                            "test.fastq.gz_trimming_report.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
                     ]
                 ],
                 "trim_log": [
@@ -540,7 +764,9 @@
                             "id": "test",
                             "single_end": true
                         },
-                        "test.fastq.gz_trimming_report.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        [
+                            "test.fastq.gz_trimming_report.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
                     ]
                 ],
                 "trim_read_count": [
@@ -578,10 +804,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-19T15:21:09.935124951",
+        "timestamp": "2026-09-29T21:12:07.348383124",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.09.1"
         }
     },
     "test paired end read without UMI - hardtrim5 (no trim log)": {

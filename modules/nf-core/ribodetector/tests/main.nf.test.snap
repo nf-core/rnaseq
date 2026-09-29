@@ -8322,109 +8322,37 @@
                 "SRR5665260.1.9969886/2",
                 "SRR5665260.1.998745/2",
                 "SRR5665260.1.998901/2"
-            ],
-            {
-                "versions_cuda": [
-                    [
-                        "RIBODETECTOR",
-                        "cuda",
-                        "no CUDA available"
-                    ]
-                ],
-                "versions_ribodetector": [
-                    [
-                        "RIBODETECTOR",
-                        "ribodetector",
-                        "0.3.3"
-                    ]
-                ]
-            }
+            ]
         ],
-        "timestamp": "2026-04-14T11:11:46.109723883",
+        "timestamp": "2026-09-29T18:03:28.889265506",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.09.1"
         }
     },
     "ribodetector - stub rnaseq PE input": {
         "content": [
             {
                 "0": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        [
+                    {
+                        "fastq": [
                             "test.nonrna.1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
                             "test.nonrna.2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
-                        ]
-                    ]
-                ],
-                "1": [
-                    [
-                        {
+                        ],
+                        "id": "test",
+                        "log": "test.log:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "meta": {
                             "id": "test",
                             "single_end": false
-                        },
-                        "test.log:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "2": [
-                    [
-                        "RIBODETECTOR",
-                        "ribodetector",
-                        "0.3.3"
-                    ]
-                ],
-                "3": [
-                    [
-                        "RIBODETECTOR",
-                        "cuda",
-                        "no CUDA available"
-                    ]
-                ],
-                "fastq": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        [
-                            "test.nonrna.1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                            "test.nonrna.2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
-                        ]
-                    ]
-                ],
-                "log": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.log:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "versions_cuda": [
-                    [
-                        "RIBODETECTOR",
-                        "cuda",
-                        "no CUDA available"
-                    ]
-                ],
-                "versions_ribodetector": [
-                    [
-                        "RIBODETECTOR",
-                        "ribodetector",
-                        "0.3.3"
-                    ]
+                        }
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-04-14T11:11:53.692394926",
+        "timestamp": "2026-09-29T17:49:17.580956624",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.09.1"
         }
     }
 }

@@ -178,9 +178,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     //
     // MODULE: Concatenate FastQ files from same sample if required
     //
-    CAT_FASTQ(
-        ch_fastq.multiple
-    ).reads.mix(ch_fastq.single).set { ch_filtered_reads }
+    CAT_FASTQ(ch_fastq.multiple).mix(ch_fastq.single).set { ch_filtered_reads }
 
     //
     // MODULE: Lint FastQ files
@@ -190,8 +188,8 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         FQ_LINT(
             ch_filtered_reads
         )
-        ch_lint_log_raw = FQ_LINT.out.lint
-        ch_filtered_reads = ch_filtered_reads.join(FQ_LINT.out.lint.map { meta, _lint -> meta })
+        ch_lint_log_raw = FQ_LINT.out
+        ch_filtered_reads = ch_filtered_reads.join(FQ_LINT.out.map { meta, _lint -> meta })
     }
 
     ch_reads_cat = ch_filtered_reads
@@ -266,7 +264,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     //
     if (trimmer == 'fastp') {
         FASTQ_FASTQC_UMITOOLS_FASTP(
-            ch_filtered_reads.map { meta, reads -> tuple(meta, reads, []) }, // Add empty adapter sequence
+            ch_filtered_reads.map { meta, reads -> tuple(meta, reads, null) }, // No adapter fasta
             skip_fastqc,
             with_umi,
             skip_umi_extract,
@@ -344,8 +342,8 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         FQ_LINT_AFTER_TRIMMING(
             ch_filtered_reads
         )
-        ch_lint_log_trimmed = FQ_LINT_AFTER_TRIMMING.out.lint
-        ch_filtered_reads = ch_filtered_reads.join(FQ_LINT_AFTER_TRIMMING.out.lint.map { meta, _lint -> meta })
+        ch_lint_log_trimmed = FQ_LINT_AFTER_TRIMMING.out
+        ch_filtered_reads = ch_filtered_reads.join(FQ_LINT_AFTER_TRIMMING.out.map { meta, _lint -> meta })
 
         ch_results = ch_results
             .join(ch_lint_log_trimmed.map { meta, lint -> [meta.id, lint] }, by: [0], remainder: true)
@@ -365,36 +363,35 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         BBMAP_BBSPLIT(
             ch_filtered_reads,
             ch_bbsplit_index,
-            [],
+            null,
             [[], []],
             false,
         )
 
-        BBMAP_BBSPLIT.out.primary_fastq.set { ch_filtered_reads }
+        ch_filtered_reads = BBMAP_BBSPLIT.out.filter { r -> r.primary_reads }.map { r -> [r.meta, r.primary_reads] }
 
-        ch_bbsplit_stats = BBMAP_BBSPLIT.out.stats
-        ch_multiqc_files = ch_multiqc_files.mix(BBMAP_BBSPLIT.out.stats)
-
-        // all_fastq includes the primary reads too; keep only the rest for publishing.
-        ch_bbsplit_other_reads = BBMAP_BBSPLIT.out.all_fastq
-            .join(BBMAP_BBSPLIT.out.primary_fastq)
-            .map { meta, all, primary ->
-                def primary_names = [primary].flatten()*.name
-                [meta, [all].flatten().findAll { f -> !(f.name in primary_names) }]
-            }
+        ch_bbsplit_stats = BBMAP_BBSPLIT.out.filter { r -> r.stats }.map { r -> [r.meta, r.stats] }
+        ch_multiqc_files = ch_multiqc_files.mix(ch_bbsplit_stats)
 
         ch_results = ch_results
-            .join(ch_bbsplit_stats.map { meta, stats -> [meta.id, stats] }, by: [0], remainder: true)
-            .join(ch_bbsplit_other_reads.map { meta, other -> [meta.id, other] }, by: [0], remainder: true)
-            .join(BBMAP_BBSPLIT.out.primary_fastq.map { meta, primary -> [meta.id, [primary].flatten()] }, by: [0], remainder: true)
-            .map { id, fields, stats, other_reads, primary_reads -> [id, fields + [bbsplit: stats != null ? record(stats: stats, primary_reads: primary_reads, other_genome_reads: other_reads) : null]] }
+            .join(BBMAP_BBSPLIT.out.filter { r -> r.stats }.map { r -> [r.id, r] }, by: [0], remainder: true)
+            .map { id, fields, r ->
+                def bbsplit = r
+                    ? record(
+                        stats:              r.stats,
+                        primary_reads:      r.primary_reads ?: null,
+                        other_genome_reads: r.primary_reads ? r.other_genome_reads : null
+                    )
+                    : null
+                [id, fields + [bbsplit: bbsplit]]
+            }
 
         if (!skip_linting) {
             FQ_LINT_AFTER_BBSPLIT(
                 ch_filtered_reads
             )
-            ch_lint_log_bbsplit = FQ_LINT_AFTER_BBSPLIT.out.lint
-            ch_filtered_reads = ch_filtered_reads.join(FQ_LINT_AFTER_BBSPLIT.out.lint.map { meta, _lint -> meta })
+            ch_lint_log_bbsplit = FQ_LINT_AFTER_BBSPLIT.out
+            ch_filtered_reads = ch_filtered_reads.join(FQ_LINT_AFTER_BBSPLIT.out.map { meta, _lint -> meta })
 
             ch_results = ch_results
                 .join(ch_lint_log_bbsplit.map { meta, lint -> [meta.id, lint] }, by: [0], remainder: true)
@@ -435,8 +432,8 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
             FQ_LINT_AFTER_RIBO_REMOVAL(
                 ch_filtered_reads
             )
-            ch_lint_log_ribo = FQ_LINT_AFTER_RIBO_REMOVAL.out.lint
-            ch_filtered_reads = ch_filtered_reads.join(FQ_LINT_AFTER_RIBO_REMOVAL.out.lint.map { meta, _lint -> meta })
+            ch_lint_log_ribo = FQ_LINT_AFTER_RIBO_REMOVAL.out
+            ch_filtered_reads = ch_filtered_reads.join(FQ_LINT_AFTER_RIBO_REMOVAL.out.map { meta, _lint -> meta })
 
             ch_results = ch_results
                 .join(ch_lint_log_ribo.map { meta, lint -> [meta.id, lint] }, by: [0], remainder: true)
@@ -451,14 +448,13 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         FASTQC_FILTERED(
             ch_filtered_reads
         )
-        ch_fastqc_filtered_html = FASTQC_FILTERED.out.html
-        ch_fastqc_filtered_zip  = FASTQC_FILTERED.out.zip
-        ch_multiqc_files = ch_multiqc_files.mix(FASTQC_FILTERED.out.zip)
+        ch_fastqc_filtered_html = FASTQC_FILTERED.out.map { r -> [r.meta, r.html] }
+        ch_fastqc_filtered_zip  = FASTQC_FILTERED.out.map { r -> [r.meta, r.zip] }
+        ch_multiqc_files = ch_multiqc_files.mix(ch_fastqc_filtered_zip)
 
         ch_results = ch_results
-            .join(FASTQC_FILTERED.out.html.map { meta, html -> [meta.id, [html].flatten()] }, by: [0], remainder: true)
-            .join(FASTQC_FILTERED.out.zip.map { meta, zip -> [meta.id, [zip].flatten()] }, by: [0], remainder: true)
-            .map { id, fields, html, zip -> [id, fields + [fastqc_filtered_html: html, fastqc_filtered_zip: zip]] }
+            .join(FASTQC_FILTERED.out.map { r -> [r.id, r] }, by: [0], remainder: true)
+            .map { id, fields, r -> [id, fields + [fastqc_filtered_html: r?.html, fastqc_filtered_zip: r?.zip]] }
     }
 
     // Branch FastQ channels if 'auto' specified to infer strandedness

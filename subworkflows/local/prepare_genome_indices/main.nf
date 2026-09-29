@@ -100,13 +100,13 @@ workflow PREPARE_GENOME_INDICES {
 
             BBMAP_BBSPLIT(
                 [ [:], [] ],
-                [],
+                null,
                 ch_fasta,
                 ch_bbsplit_fasta_list,
                 true
             )
-            ch_bbsplit_index = BBMAP_BBSPLIT.out.index
-            ch_bbsplit_log   = BBMAP_BBSPLIT.out.log.map { _meta, log -> log }
+            ch_bbsplit_index = BBMAP_BBSPLIT.out.map { r -> r.index }
+            ch_bbsplit_log   = BBMAP_BBSPLIT.out.map { r -> r.log }
         }
         // else: no FASTA and no user-provided index -> remains empty
     }
@@ -127,11 +127,11 @@ workflow PREPARE_GENOME_INDICES {
         } else {
             // Build new SortMeRNA index from the rRNA references
             SORTMERNA_INDEX(
-                channel.of([ [], [] ]),
-                ch_rrna_fastas.collect().map { refs -> [ 'rrna_refs', refs ] },
-                channel.of([ [], [] ])
+                channel.of([ [:], [] ]),
+                ch_rrna_fastas.collect().map { refs -> [ [id: 'rrna_refs'], refs ] },
+                channel.of([ [:], null ])
             )
-            ch_sortmerna_index = SORTMERNA_INDEX.out.index.first()
+            ch_sortmerna_index = SORTMERNA_INDEX.out.map { r -> [ [id: 'rrna_refs'], r.index ] }.first()
         }
     }
 

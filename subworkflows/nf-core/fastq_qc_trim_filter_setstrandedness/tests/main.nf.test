@@ -50,7 +50,7 @@ nextflow_workflow {
             workflow {
                 """
                 // Input channels
-                input[0] = CAT_FASTQ.out.reads
+                input[0] = CAT_FASTQ.out
                 input[1] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)) // ch_fasta
                 input[2] = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)) // ch_transcript_fasta
                 input[3] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)) // ch_gtf
@@ -146,7 +146,7 @@ nextflow_workflow {
             workflow {
                 """
                 // Input channels
-                input[0] = CAT_FASTQ.out.reads
+                input[0] = CAT_FASTQ.out
                 input[1] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)) // ch_fasta
                 input[2] = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)) // ch_transcript_fasta
                 input[3] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)) // ch_gtf
@@ -243,7 +243,7 @@ nextflow_workflow {
             workflow {
                 """
                 // Input channels
-                input[0] = CAT_FASTQ.out.reads
+                input[0] = CAT_FASTQ.out
                 input[1] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)) // ch_fasta
                 input[2] = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)) // ch_transcript_fasta
                 input[3] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)) // ch_gtf
@@ -340,7 +340,7 @@ nextflow_workflow {
             workflow {
                 """
                 // Input channels
-                input[0] = CAT_FASTQ.out.reads
+                input[0] = CAT_FASTQ.out
                 input[1] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)) // ch_fasta
                 input[2] = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)) // ch_transcript_fasta
                 input[3] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)) // ch_gtf

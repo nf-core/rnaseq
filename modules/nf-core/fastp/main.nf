@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process FASTP {
     tag "$meta.id"
     label 'process_medium'
@@ -8,35 +10,38 @@ process FASTP {
 :         'community.wave.seqera.io/library/fastp:1.3.6--4df8d6c11b471bde' }"
 
     input:
-    tuple val(meta), path(reads), path(adapter_fasta)
-    val   discard_trimmed_pass
-    val   save_trimmed_fail
-    val   save_merged
+    tuple(meta: Map, reads: List<Path>, adapter_fasta: Path?)
+    discard_trimmed_pass: Boolean
+    save_trimmed_fail: Boolean
+    save_merged: Boolean
 
     output:
-    tuple val(meta), path('*.fastp.fastq.gz') , optional:true, emit: reads
-    tuple val(meta), path('*.json')           , emit: json
-    tuple val(meta), path('*.html')           , emit: html
-    tuple val(meta), path('*.log')            , emit: log
-    tuple val(meta), path('*.fail.fastq.gz')  , optional:true, emit: reads_fail
-    tuple val(meta), path('*.merged.fastq.gz'), optional:true, emit: reads_merged
-    tuple val("${task.process}"), val('fastp'), eval('fastp --version 2>&1 | sed -e "s/fastp //g"'), emit: versions_fastp, topic: versions
+    record(
+        id:           meta.id,
+        meta:         meta,
+        reads:        files('*.fastp.fastq.gz', optional: true).toSorted { f -> f.name },
+        json:         file('*.json'),
+        html:         file('*.html'),
+        log:          file('*.log'),
+        reads_fail:   files('*.fail.fastq.gz', optional: true).toSorted { f -> f.name },
+        reads_merged: file('*.merged.fastq.gz', optional: true)
+    )
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'fastp', eval('fastp --version 2>&1 | sed -e "s/fastp //g"')) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def adapter_list = adapter_fasta ? "--adapter_fasta ${adapter_fasta}" : ""
     def fail_fastq = save_trimmed_fail && meta.single_end ? "--failed_out ${prefix}.fail.fastq.gz" : save_trimmed_fail && !meta.single_end ? "--failed_out ${prefix}.paired.fail.fastq.gz --unpaired1 ${prefix}_R1.fail.fastq.gz --unpaired2 ${prefix}_R2.fail.fastq.gz" : ''
-    def out_fq1 = discard_trimmed_pass ?: ( meta.single_end ? "--out1 ${prefix}.fastp.fastq.gz" : "--out1 ${prefix}_R1.fastp.fastq.gz" )
-    def out_fq2 = discard_trimmed_pass ?: "--out2 ${prefix}_R2.fastp.fastq.gz"
+    def out_fq1 = discard_trimmed_pass ? 'true' : ( meta.single_end ? "--out1 ${prefix}.fastp.fastq.gz" : "--out1 ${prefix}_R1.fastp.fastq.gz" )
+    def out_fq2 = discard_trimmed_pass ? 'true' : "--out2 ${prefix}_R2.fastp.fastq.gz"
     // Added soft-links to original fastqs for consistent naming in MultiQC
     // Use single ended for interleaved. Add --interleaved_in in config.
     if ( task.ext.args?.contains('--interleaved_in') ) {
         """
-        [ ! -f  ${prefix}.fastq.gz ] && ln -sf $reads ${prefix}.fastq.gz
+        [ ! -f  ${prefix}.fastq.gz ] && ln -sf ${reads[0]} ${prefix}.fastq.gz
 
         fastp \\
             --stdout \\
@@ -52,7 +57,7 @@ process FASTP {
         """
     } else if (meta.single_end) {
         """
-        [ ! -f  ${prefix}.fastq.gz ] && ln -sf $reads ${prefix}.fastq.gz
+        [ ! -f  ${prefix}.fastq.gz ] && ln -sf ${reads[0]} ${prefix}.fastq.gz
 
         fastp \\
             --in1 ${prefix}.fastq.gz \\

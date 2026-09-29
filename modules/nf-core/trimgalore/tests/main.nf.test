@@ -22,13 +22,13 @@ nextflow_process {
         }
 
         then {
+            def tg = process.out[0][0]
             assertAll (
                 { assert process.success },
                 { assert snapshot(
-                    process.out.reads,
-                    process.out.json,
-                    path(process.out.log[0][1]).readLines().dropWhile { !it.startsWith("=== Summary") }.join('\n').md5(),
-                    process.out.findAll { key, val -> key.startsWith("versions") }
+                    tg.reads,
+                    tg.json,
+                    path(tg.log[0]).readLines().dropWhile { !it.startsWith("=== Summary") }.join('\n').md5()
                 ).match() }
             )
         }
@@ -50,14 +50,14 @@ nextflow_process {
         }
 
         then {
+            def tg = process.out[0][0]
             assertAll (
                 { assert process.success },
                 { assert snapshot(
-                    process.out.reads,
-                    process.out.json,
-                    path(process.out.log[0][1][0]).readLines().dropWhile { !it.startsWith("=== Summary") }.join('\n').md5(),
-                    path(process.out.log[0][1][1]).readLines().dropWhile { !it.startsWith("=== Summary") }.join('\n').md5(),
-                    process.out.findAll { key, val -> key.startsWith("versions") }
+                    tg.reads,
+                    tg.json,
+                    path(tg.log[0]).readLines().dropWhile { !it.startsWith("=== Summary") }.join('\n').md5(),
+                    path(tg.log[1]).readLines().dropWhile { !it.startsWith("=== Summary") }.join('\n').md5()
                 ).match() }
             )
         }
@@ -85,15 +85,15 @@ nextflow_process {
         }
 
         then {
+            def tg = process.out[0][0]
             assertAll (
                 { assert process.success },
                 { assert snapshot(
-                    process.out.reads,
-                    process.out.unpaired,
-                    process.out.json,
-                    path(process.out.log[0][1][0]).readLines().dropWhile { !it.startsWith("=== Summary") }.join('\n').md5(),
-                    path(process.out.log[0][1][1]).readLines().dropWhile { !it.startsWith("=== Summary") }.join('\n').md5(),
-                    process.out.findAll { key, val -> key.startsWith("versions") }
+                    tg.reads,
+                    tg.unpaired,
+                    tg.json,
+                    path(tg.log[0]).readLines().dropWhile { !it.startsWith("=== Summary") }.join('\n').md5(),
+                    path(tg.log[1]).readLines().dropWhile { !it.startsWith("=== Summary") }.join('\n').md5()
                 ).match() }
             )
         }
@@ -115,13 +115,13 @@ nextflow_process {
         }
 
         then {
+            def tg = process.out[0][0]
             assertAll (
                 { assert process.success },
                 { assert snapshot(
-                    process.out.reads,
-                    process.out.log,
-                    process.out.json,
-                    process.out.findAll { key, val -> key.startsWith("versions") }
+                    tg.reads,
+                    tg.log,
+                    tg.json
                 ).match() }
             )
         }
@@ -145,13 +145,13 @@ nextflow_process {
         }
 
         then {
+            def tg = process.out[0][0]
             assertAll (
                 { assert process.success },
                 { assert snapshot(
-                    process.out.reads,
-                    process.out.log,
-                    process.out.json,
-                    process.out.findAll { key, val -> key.startsWith("versions") }
+                    tg.reads,
+                    tg.log,
+                    tg.json
                 ).match() }
             )
         }

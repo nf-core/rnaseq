@@ -46,14 +46,13 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
     ch_fastqc_zip = channel.empty()
     if (!skip_fastqc) {
         FASTQC(reads)
-        ch_fastqc_html = FASTQC.out.html
-        ch_fastqc_zip = FASTQC.out.zip
+        ch_fastqc_html = FASTQC.out.map { r -> [r.meta, r.html] }
+        ch_fastqc_zip = FASTQC.out.map { r -> [r.meta, r.zip] }
 
         ch_results = ch_results
-            .join(FASTQC.out.html.map { meta, html -> [meta.id, html] }, by: [0])
-            .join(FASTQC.out.zip.map { meta, zip -> [meta.id, zip] }, by: [0])
-            .map { id, fields, html, zip ->
-                [id, fields + [fastqc: record(raw_html: [html].flatten(), raw_zip: [zip].flatten())]]
+            .join(FASTQC.out.map { r -> [r.id, r] }, by: [0])
+            .map { id, fields, r ->
+                [id, fields + [fastqc: record(raw_html: r.html, raw_zip: r.zip)]]
             }
     }
 
@@ -62,7 +61,8 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
     ch_umi_reads = channel.empty()
     if (with_umi && !skip_umi_extract) {
         UMITOOLS_EXTRACT(reads)
-        ch_trimmer_reads = UMITOOLS_EXTRACT.out.reads
+        // Typed processes read a lone Path as its name components, so wrap single-end reads in a list
+        ch_trimmer_reads = UMITOOLS_EXTRACT.out.reads.map { meta, reads_ -> [meta, [reads_].flatten()] }
         ch_umi_reads = UMITOOLS_EXTRACT.out.reads
         ch_umi_log = UMITOOLS_EXTRACT.out.log
 
@@ -77,7 +77,7 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
         if (umi_discard_read in [1, 2]) {
             UMITOOLS_EXTRACT.out.reads
                 .map { meta, reads_ ->
-                    meta.single_end ? [meta, reads_] : [meta + ['single_end': true], reads_[umi_discard_read % 2]]
+                    meta.single_end ? [meta, [reads_].flatten()] : [meta + ['single_end': true], [reads_[umi_discard_read % 2]]]
                 }
                 .set { ch_trimmer_reads }
         }
@@ -92,52 +92,44 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
     ch_trim_read_count = channel.empty()
     if (!skip_trimming) {
         TRIMGALORE(ch_trimmer_reads)
-        ch_trim_unpaired = TRIMGALORE.out.unpaired
-        ch_trim_html = TRIMGALORE.out.html
-        ch_trim_zip = TRIMGALORE.out.zip
-        ch_trim_log = TRIMGALORE.out.log
-        ch_trim_json = TRIMGALORE.out.json
+
+        // TrimGalore reports and unpaired reads are all optional outputs
+        ch_trim_unpaired = TRIMGALORE.out.filter { r -> r.unpaired }.map { r -> [r.meta, r.unpaired] }
+        ch_trim_html = TRIMGALORE.out.filter { r -> r.html }.map { r -> [r.meta, r.html] }
+        ch_trim_zip = TRIMGALORE.out.filter { r -> r.zip }.map { r -> [r.meta, r.zip] }
+        ch_trim_log = TRIMGALORE.out.filter { r -> r.log }.map { r -> [r.meta, r.log] }
+        ch_trim_json = TRIMGALORE.out.filter { r -> r.json }.map { r -> [r.meta, r.json] }
 
         //
         // Filter FastQ files based on minimum trimmed read count after adapter trimming
         //
-        TRIMGALORE.out.reads
-            .join(ch_trim_log, remainder: true)
-            .map { meta, reads_, trim_log ->
-                if (trim_log) {
-                    def num_reads = getTrimGaloreReadsAfterFiltering(meta.single_end ? trim_log : trim_log[-1])
-                    [meta, reads_, num_reads]
-                }
-                else {
-                    [meta, reads_, min_trimmed_reads.toFloat() + 1]
-                }
+        TRIMGALORE.out
+            .map { r ->
+                def num_reads = r.log
+                    ? getTrimGaloreReadsAfterFiltering(r.log[-1])
+                    : min_trimmed_reads.toFloat() + 1
+                [r, num_reads]
             }
-            .set { ch_num_trimmed_reads }
+            .set { ch_trimmed }
 
-        ch_num_trimmed_reads
-            .filter { _meta, _reads, num_reads -> num_reads >= min_trimmed_reads.toFloat() }
-            .map { meta, reads_, _num_reads -> [meta, reads_] }
+        ch_trimmed
+            .filter { _r, num_reads -> num_reads >= min_trimmed_reads.toFloat() }
+            .map { r, _num_reads -> [r.meta, r.reads] }
             .set { ch_trim_reads }
 
-        ch_num_trimmed_reads
-            .map { meta, _reads, num_reads -> [meta, num_reads] }
+        ch_trimmed
+            .map { r, num_reads -> [r.meta, num_reads] }
             .set { ch_trim_read_count }
 
-        // TrimGalore reports and unpaired reads are all optional module outputs
         ch_results = ch_results
-            .join(ch_trim_read_count.map { meta, num_reads -> [meta.id, num_reads] }, by: [0])
-            .join(ch_trim_html.map { meta, f -> [meta.id, f] }, by: [0], remainder: true)
-            .join(ch_trim_zip.map { meta, f -> [meta.id, f] }, by: [0], remainder: true)
-            .join(ch_trim_log.map { meta, f -> [meta.id, f] }, by: [0], remainder: true)
-            .join(ch_trim_json.map { meta, f -> [meta.id, f] }, by: [0], remainder: true)
-            .join(ch_trim_unpaired.map { meta, f -> [meta.id, f] }, by: [0], remainder: true)
-            .map { id, fields, num_reads, html, zip, log, json, unpaired ->
+            .join(ch_trimmed.map { r, num_reads -> [r.id, r, num_reads] }, by: [0])
+            .map { id, fields, r, num_reads ->
                 def trim = record(
-                    html:     html ? [html].flatten() : null,
-                    zip:      zip ? [zip].flatten() : null,
-                    log:      log ? [log].flatten() : null,
-                    json:     json ? [json].flatten() : null,
-                    unpaired: unpaired ? [unpaired].flatten() : null
+                    html:     r.html ?: null,
+                    zip:      r.zip ?: null,
+                    log:      r.log ?: null,
+                    json:     r.json ?: null,
+                    unpaired: r.unpaired ?: null
                 )
                 [id, fields + [trim: trim, num_trimmed_reads: num_reads as Float]]
             }

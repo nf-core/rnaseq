@@ -22,15 +22,16 @@ nextflow_process {
         }
 
         then {
+            def qc = process.out[0][0]
             assertAll (
                 { assert process.success },
                 // NOTE The report contains the date inside it, which means that the md5sum is stable per day, but not longer than that. So you can't md5sum it.
                 // looks like this: <div id="header_filename">Mon 2 Oct 2023<br/>test.gz</div>
                 // https://github.com/nf-core/modules/pull/3903#issuecomment-1743620039
-                { assert process.out.html[0][1] ==~ ".*/test_fastqc.html" },
-                { assert process.out.zip[0][1] ==~ ".*/test_fastqc.zip" },
-                { assert path(process.out.html[0][1]).text.contains("<tr><td>File type</td><td>Conventional base calls</td></tr>") },
-                { assert snapshot(sanitizeOutput(process.out).findAll { key, val -> key != 'html' && key != 'zip' }).match() }
+                { assert qc.html[0] ==~ ".*/test_fastqc.html" },
+                { assert qc.zip[0] ==~ ".*/test_fastqc.zip" },
+                { assert path(qc.html[0]).text.contains("<tr><td>File type</td><td>Conventional base calls</td></tr>") },
+                { assert snapshot(qc.meta, qc.html.collect { f -> file(f).name }, qc.zip.collect { f -> file(f).name }).match() }
             )
         }
     }
@@ -50,15 +51,16 @@ nextflow_process {
         }
 
         then {
+            def qc = process.out[0][0]
             assertAll (
                 { assert process.success },
-                { assert process.out.html[0][1][0] ==~ ".*/test_1_fastqc.html" },
-                { assert process.out.html[0][1][1] ==~ ".*/test_2_fastqc.html" },
-                { assert process.out.zip[0][1][0] ==~ ".*/test_1_fastqc.zip" },
-                { assert process.out.zip[0][1][1] ==~ ".*/test_2_fastqc.zip" },
-                { assert path(process.out.html[0][1][0]).text.contains("<tr><td>File type</td><td>Conventional base calls</td></tr>") },
-                { assert path(process.out.html[0][1][1]).text.contains("<tr><td>File type</td><td>Conventional base calls</td></tr>") },
-                { assert snapshot(sanitizeOutput(process.out).findAll { key, val -> key != 'html' && key != 'zip' }).match() }
+                { assert qc.html[0] ==~ ".*/test_1_fastqc.html" },
+                { assert qc.html[1] ==~ ".*/test_2_fastqc.html" },
+                { assert qc.zip[0] ==~ ".*/test_1_fastqc.zip" },
+                { assert qc.zip[1] ==~ ".*/test_2_fastqc.zip" },
+                { assert path(qc.html[0]).text.contains("<tr><td>File type</td><td>Conventional base calls</td></tr>") },
+                { assert path(qc.html[1]).text.contains("<tr><td>File type</td><td>Conventional base calls</td></tr>") },
+                { assert snapshot(qc.meta, qc.html.collect { f -> file(f).name }, qc.zip.collect { f -> file(f).name }).match() }
             )
         }
     }
@@ -70,19 +72,20 @@ nextflow_process {
                 """
                 input[0] = Channel.of([
                     [id: 'test', single_end: false], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_interleaved.fastq.gz', checkIfExists: true)
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_interleaved.fastq.gz', checkIfExists: true) ]
                 ])
             """
             }
         }
 
         then {
+            def qc = process.out[0][0]
             assertAll (
                 { assert process.success },
-                { assert process.out.html[0][1] ==~ ".*/test_fastqc.html" },
-                { assert process.out.zip[0][1] ==~ ".*/test_fastqc.zip" },
-                { assert path(process.out.html[0][1]).text.contains("<tr><td>File type</td><td>Conventional base calls</td></tr>") },
-                { assert snapshot(sanitizeOutput(process.out).findAll { key, val -> key != 'html' && key != 'zip' }).match() }
+                { assert qc.html[0] ==~ ".*/test_fastqc.html" },
+                { assert qc.zip[0] ==~ ".*/test_fastqc.zip" },
+                { assert path(qc.html[0]).text.contains("<tr><td>File type</td><td>Conventional base calls</td></tr>") },
+                { assert snapshot(qc.meta, qc.html.collect { f -> file(f).name }, qc.zip.collect { f -> file(f).name }).match() }
             )
         }
     }
@@ -94,19 +97,20 @@ nextflow_process {
                 """
                 input[0] = Channel.of([
                     [id: 'test', single_end: false], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true)
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true) ]
                 ])
                 """
             }
         }
 
         then {
+            def qc = process.out[0][0]
             assertAll (
                 { assert process.success },
-                { assert process.out.html[0][1] ==~ ".*/test_fastqc.html" },
-                { assert process.out.zip[0][1] ==~ ".*/test_fastqc.zip" },
-                { assert path(process.out.html[0][1]).text.contains("<tr><td>File type</td><td>Conventional base calls</td></tr>") },
-                { assert snapshot(sanitizeOutput(process.out).findAll { key, val -> key != 'html' && key != 'zip' }).match() }
+                { assert qc.html[0] ==~ ".*/test_fastqc.html" },
+                { assert qc.zip[0] ==~ ".*/test_fastqc.zip" },
+                { assert path(qc.html[0]).text.contains("<tr><td>File type</td><td>Conventional base calls</td></tr>") },
+                { assert snapshot(qc.meta, qc.html.collect { f -> file(f).name }, qc.zip.collect { f -> file(f).name }).match() }
             )
         }
     }
@@ -128,21 +132,22 @@ nextflow_process {
         }
 
         then {
+            def qc = process.out[0][0]
             assertAll (
                 { assert process.success },
-                { assert process.out.html[0][1][0] ==~ ".*/test_1_fastqc.html" },
-                { assert process.out.html[0][1][1] ==~ ".*/test_2_fastqc.html" },
-                { assert process.out.html[0][1][2] ==~ ".*/test_3_fastqc.html" },
-                { assert process.out.html[0][1][3] ==~ ".*/test_4_fastqc.html" },
-                { assert process.out.zip[0][1][0] ==~ ".*/test_1_fastqc.zip" },
-                { assert process.out.zip[0][1][1] ==~ ".*/test_2_fastqc.zip" },
-                { assert process.out.zip[0][1][2] ==~ ".*/test_3_fastqc.zip" },
-                { assert process.out.zip[0][1][3] ==~ ".*/test_4_fastqc.zip" },
-                { assert path(process.out.html[0][1][0]).text.contains("<tr><td>File type</td><td>Conventional base calls</td></tr>") },
-                { assert path(process.out.html[0][1][1]).text.contains("<tr><td>File type</td><td>Conventional base calls</td></tr>") },
-                { assert path(process.out.html[0][1][2]).text.contains("<tr><td>File type</td><td>Conventional base calls</td></tr>") },
-                { assert path(process.out.html[0][1][3]).text.contains("<tr><td>File type</td><td>Conventional base calls</td></tr>") },
-                { assert snapshot(sanitizeOutput(process.out).findAll { key, val -> key != 'html' && key != 'zip' }).match() }
+                { assert qc.html[0] ==~ ".*/test_1_fastqc.html" },
+                { assert qc.html[1] ==~ ".*/test_2_fastqc.html" },
+                { assert qc.html[2] ==~ ".*/test_3_fastqc.html" },
+                { assert qc.html[3] ==~ ".*/test_4_fastqc.html" },
+                { assert qc.zip[0] ==~ ".*/test_1_fastqc.zip" },
+                { assert qc.zip[1] ==~ ".*/test_2_fastqc.zip" },
+                { assert qc.zip[2] ==~ ".*/test_3_fastqc.zip" },
+                { assert qc.zip[3] ==~ ".*/test_4_fastqc.zip" },
+                { assert path(qc.html[0]).text.contains("<tr><td>File type</td><td>Conventional base calls</td></tr>") },
+                { assert path(qc.html[1]).text.contains("<tr><td>File type</td><td>Conventional base calls</td></tr>") },
+                { assert path(qc.html[2]).text.contains("<tr><td>File type</td><td>Conventional base calls</td></tr>") },
+                { assert path(qc.html[3]).text.contains("<tr><td>File type</td><td>Conventional base calls</td></tr>") },
+                { assert snapshot(qc.meta, qc.html.collect { f -> file(f).name }, qc.zip.collect { f -> file(f).name }).match() }
             )
         }
     }
@@ -154,19 +159,20 @@ nextflow_process {
                 """
                 input[0] = Channel.of([
                     [ id:'mysample', single_end:true ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
                 ])
                 """
             }
         }
 
         then {
+            def qc = process.out[0][0]
             assertAll (
                 { assert process.success },
-                { assert process.out.html[0][1] ==~ ".*/mysample_fastqc.html" },
-                { assert process.out.zip[0][1] ==~ ".*/mysample_fastqc.zip" },
-                { assert path(process.out.html[0][1]).text.contains("<tr><td>File type</td><td>Conventional base calls</td></tr>") },
-                { assert snapshot(sanitizeOutput(process.out).findAll { key, val -> key != 'html' && key != 'zip' }).match() }
+                { assert qc.html[0] ==~ ".*/mysample_fastqc.html" },
+                { assert qc.zip[0] ==~ ".*/mysample_fastqc.zip" },
+                { assert path(qc.html[0]).text.contains("<tr><td>File type</td><td>Conventional base calls</td></tr>") },
+                { assert snapshot(qc.meta, qc.html.collect { f -> file(f).name }, qc.zip.collect { f -> file(f).name }).match() }
             )
         }
     }
@@ -224,7 +230,7 @@ nextflow_process {
                 """
                 input[0] = Channel.of([
                     [id: 'test', single_end: false], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_interleaved.fastq.gz', checkIfExists: true)
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_interleaved.fastq.gz', checkIfExists: true) ]
                 ])
             """
             }
@@ -246,7 +252,7 @@ nextflow_process {
                 """
                 input[0] = Channel.of([
                     [id: 'test', single_end: false], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true)
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true) ]
                 ])
                 """
             }
@@ -293,7 +299,7 @@ nextflow_process {
                 """
                 input[0] = Channel.of([
                     [ id:'mysample', single_end:true ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
                 ])
                 """
             }

@@ -38,7 +38,7 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success},
-                { assert path(workflow.out.fastqc_html[0][1]).text.contains("<tr><td>File type</td><td>Conventional base calls</td></tr>") },
+                { assert path(workflow.out.fastqc_html[0][1][0]).text.contains("<tr><td>File type</td><td>Conventional base calls</td></tr>") },
                 { assert snapshot(
                     workflow.out.reads,
                     workflow.out.trim_read_count,

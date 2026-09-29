@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process RIBODETECTOR {
 	tag "$meta.id"
 	label 'process_medium'
@@ -8,29 +10,32 @@ process RIBODETECTOR {
         (task.accelerator ? 'community.wave.seqera.io/library/ribodetector_pytorch-gpu_cuda-version:fa9183da731515ea' : 'community.wave.seqera.io/library/ribodetector:0.3.3--ad3d7071e408b502') }"
 
 	input:
-	tuple val(meta), path(fastq)
-	val length
+	tuple(meta: Map, fastq: List<Path>)
+	length: Integer
 
 	output:
-	tuple val(meta), path("*.nonrna*.fastq.gz"), emit: fastq
-	tuple val(meta), path("*.log")             , emit: log
-	tuple val("${task.process}"), val('ribodetector'), eval('ribodetector --version | sed "s/ribodetector //"'), emit: versions_ribodetector, topic: versions
-	tuple val("${task.process}"), val('cuda'), eval('python -c "import torch; print(torch.version.cuda or \'no CUDA available\')"'), emit: versions_cuda, topic: versions
+	record(
+		id:    meta.id,
+		meta:  meta,
+		fastq: files('*.nonrna*.fastq.gz').toSorted { f -> f.name },
+		log:   file('*.log')
+	)
 
-	when:
-	task.ext.when == null || task.ext.when
+	topic:
+	tuple(task.process, 'ribodetector', eval('ribodetector --version | sed "s/ribodetector //"')) >> 'versions'
+	tuple(task.process, 'cuda', eval('python -c "import torch; print(torch.version.cuda or \'no CUDA available\')"')) >> 'versions'
 
 	script:
 	def args = task.ext.args ?: ''
 	def prefix = task.ext.prefix ?: "${meta.id}"
-	ribodetector_bin = task.accelerator ? "ribodetector" : "ribodetector_cpu"
-	ribodetector_mem = task.accelerator ? "-m ${task.memory.toGiga()}" : ""
-	output = meta.single_end ? "${prefix}.nonrna.fastq.gz" : "${prefix}.nonrna.1.fastq.gz ${prefix}.nonrna.2.fastq.gz"
+	def ribodetector_bin = task.accelerator ? "ribodetector" : "ribodetector_cpu"
+	def ribodetector_mem = task.accelerator ? "-m ${task.memory.toGiga()}" : ""
+	def out_files = meta.single_end ? "${prefix}.nonrna.fastq.gz" : "${prefix}.nonrna.1.fastq.gz ${prefix}.nonrna.2.fastq.gz"
 
 	"""
 	${ribodetector_bin} \\
-		-i ${fastq} \\
-		-o ${output} \\
+		-i ${fastq.join(' ')} \\
+		-o ${out_files} \\
 		-l ${length} \\
 		-t ${task.cpus} \\
 		--log ${prefix}.log \\

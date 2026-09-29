@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process TRIMGALORE {
     tag "${meta.id}"
     label 'process_medium'
@@ -8,19 +10,22 @@ process TRIMGALORE {
         'community.wave.seqera.io/library/trim-galore:2.3.0--6a38a479b4972363'}"
 
     input:
-    tuple val(meta), path(reads)
+    tuple(meta: Map, reads: List<Path>)
 
     output:
-    tuple val(meta), path("*{3prime,5prime,trimmed,val}{,_1,_2}.fq.gz"), emit: reads
-    tuple val(meta), path("*report.txt")                               , emit: log     , optional: true
-    tuple val(meta), path("*report.json")                              , emit: json    , optional: true
-    tuple val(meta), path("*unpaired{,_1,_2}.fq.gz")                   , emit: unpaired, optional: true
-    tuple val(meta), path("*.html")                                    , emit: html    , optional: true
-    tuple val(meta), path("*.zip")                                     , emit: zip     , optional: true
-    tuple val("${task.process}"), val("trimgalore"), eval('trim_galore --version | grep -Eo "[0-9]+(\\.[0-9]+)+"'), topic: versions, emit: versions_trimgalore
+    record(
+        id:       meta.id,
+        meta:     meta,
+        reads:    files("*{3prime,5prime,trimmed,val}{,_1,_2}.fq.gz").toSorted { f -> f.name },
+        log:      files("*report.txt", optional: true).toSorted { f -> f.name },
+        json:     files("*report.json", optional: true).toSorted { f -> f.name },
+        unpaired: files("*unpaired{,_1,_2}.fq.gz", optional: true).toSorted { f -> f.name },
+        html:     files("*.html", optional: true).toSorted { f -> f.name },
+        zip:      files("*.zip", optional: true).toSorted { f -> f.name }
+    )
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, "trimgalore", eval('trim_galore --version | grep -Eo "[0-9]+(\\.[0-9]+)+"')) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''
@@ -44,10 +49,9 @@ process TRIMGALORE {
     // Added soft-links to original fastqs for consistent naming in MultiQC
     def prefix = task.ext.prefix ?: "${meta.id}"
     if (meta.single_end) {
-        def args_list = args.split("\\s(?=--)").toList()
-        args_list.removeAll { arg -> arg.toLowerCase().contains('_r2 ') }
+        def args_list = args.replaceAll('\\s(?=--)', '\u0001').tokenize('\u0001').findAll { arg -> !arg.toLowerCase().contains('_r2 ') }
         """
-        [ ! -f  ${prefix}.fastq.gz ] && ln -s ${reads} ${prefix}.fastq.gz
+        [ ! -f  ${prefix}.fastq.gz ] && ln -s ${reads[0]} ${prefix}.fastq.gz
         trim_galore \\
             ${args_list.join(' ')} \\
             --cores ${cores} \\
@@ -71,6 +75,7 @@ process TRIMGALORE {
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def output_command = ''
     if (meta.single_end) {
         output_command = "echo '' | gzip > ${prefix}_trimmed.fq.gz ;"
         output_command += "touch ${prefix}.fastq.gz_trimming_report.txt ;"

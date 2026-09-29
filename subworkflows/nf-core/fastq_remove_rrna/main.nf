@@ -173,8 +173,8 @@ workflow FASTQ_REMOVE_RRNA {
             false,    // sort_bam - not needed
         )
 
-        ch_bowtie2_log = BOWTIE2_ALIGN.out.log
-        ch_multiqc_files = ch_multiqc_files.mix(BOWTIE2_ALIGN.out.log)
+        ch_bowtie2_log = BOWTIE2_ALIGN.out.map { r -> [r.meta, r.bowtie2.log] }
+        ch_multiqc_files = ch_multiqc_files.mix(ch_bowtie2_log)
 
         // For paired-end reads: bowtie2's --un-conc-gz outputs pairs that didn't
         // align concordantly, which INCLUDES pairs where one mate aligned.
@@ -187,13 +187,14 @@ workflow FASTQ_REMOVE_RRNA {
             false,    // sort_bam - not needed
         )
 
-        ch_bowtie2_log = ch_bowtie2_log.mix(BOWTIE2_ALIGN_PE.out.log)
-        ch_multiqc_files = ch_multiqc_files.mix(BOWTIE2_ALIGN_PE.out.log)
+        ch_bowtie2_pe_log = BOWTIE2_ALIGN_PE.out.map { r -> [r.meta, r.bowtie2.log] }
+        ch_bowtie2_log = ch_bowtie2_log.mix(ch_bowtie2_pe_log)
+        ch_multiqc_files = ch_multiqc_files.mix(ch_bowtie2_pe_log)
 
         // Filter BAM for read pairs where BOTH mates are unmapped (flag 12 = 4 + 8)
         // This removes any pair where at least one mate aligned to rRNA
         SAMTOOLS_VIEW_BOWTIE2(
-            BOWTIE2_ALIGN_PE.out.bam.map { meta, bam_file -> [meta, bam_file, []] },
+            BOWTIE2_ALIGN_PE.out.filter { r -> r.orig_bam }.map { r -> [r.meta, r.orig_bam, []] },
             [[], [], []], // No reference fasta
             [[], []],     // No qname file
             [[], []],     // No bed file
@@ -208,7 +209,7 @@ workflow FASTQ_REMOVE_RRNA {
         )
 
         // Combine single-end and paired-end results
-        BOWTIE2_ALIGN.out.fastq
+        BOWTIE2_ALIGN.out.filter { r -> r.unmapped }.map { r -> [r.meta, r.unmapped] }
             .mix(SAMTOOLS_FASTQ_BOWTIE2.out.fastq)
             .set { ch_filtered_reads }
 

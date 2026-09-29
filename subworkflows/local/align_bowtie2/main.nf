@@ -45,8 +45,9 @@ workflow ALIGN_BOWTIE2 {
         false           // sort_bam - we'll sort with samtools for consistency
     )
 
-    ch_orig_bam = BOWTIE2_ALIGN.out.bam
-    ch_log = BOWTIE2_ALIGN.out.log
+    ch_bowtie2 = BOWTIE2_ALIGN.out.filter { r -> r.orig_bam }
+    ch_orig_bam = ch_bowtie2.map { r -> [ r.meta, r.orig_bam ] }
+    ch_log = BOWTIE2_ALIGN.out.map { r -> [ r.meta, r.bowtie2.log ] }
 
     // Parse alignment rate from log
     ch_percent_mapped = ch_log.map { meta, log_file -> [ meta, getBowtie2PercentMapped(log_file) ] }
@@ -56,21 +57,8 @@ workflow ALIGN_BOWTIE2 {
     //
     BAM_SORT_STATS_SAMTOOLS(ch_orig_bam, fasta_fai)
 
-    ch_results = ch_orig_bam
-        .join(ch_percent_mapped)
-        .join(ch_log)
-        .join(BOWTIE2_ALIGN.out.fastq, remainder: true)
-        .map { meta, orig_bam, percent_mapped, log_file, fastq ->
-            record(
-                id:             meta.id,
-                meta:           meta,
-                aligner:        'bowtie2',
-                orig_bam:       orig_bam,
-                unmapped:       fastq ? [fastq].flatten() : null,
-                percent_mapped: percent_mapped,
-                bowtie2:        record(log: log_file)
-            )
-        }
+    ch_results = ch_bowtie2
+        .map { r -> r + record(aligner: 'bowtie2', percent_mapped: getBowtie2PercentMapped(r.bowtie2.log)) }
         .join(BAM_SORT_STATS_SAMTOOLS.out.results, by: 'id')
 
     emit:

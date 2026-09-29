@@ -45,17 +45,17 @@ nextflow_process {
         }
 
         then {
+            def aln = process.out[0][0]
             assertAll (
                 { assert process.success },
                 { assert snapshot(
                     // Conda and docker version of bowtie2 produce different
                     // hashes. Therefore, testing whether file exists and bam
                     // statistics.
-                    file(process.out.bam[0][1]).name,
-                    bam(process.out.bam[0][1], stringency: "silent").getStatistics(exclude:["sorted"]),
-                    process.out.log,
-                    process.out.fastq,
-                    process.out.findAll { key, val -> key.startsWith('versions') }
+                    file(aln.orig_bam).name,
+                    bam(aln.orig_bam, stringency: "silent").getStatistics(exclude:["sorted"]),
+                    aln.bowtie2.log,
+                    aln.unmapped,
                 ).match() }
             )
         }
@@ -98,14 +98,14 @@ nextflow_process {
         }
 
         then {
+            def aln = process.out[0][0]
             assertAll (
                 { assert process.success },
                 { assert snapshot(
-                    file(process.out.sam[0][1]).name,
-                    bam(process.out.sam[0][1], stringency: "silent").getStatistics(exclude:["sorted"]),
-                    process.out.log,
-                    process.out.fastq,
-                    process.out.findAll { key, val -> key.startsWith('versions') }
+                    file(aln.sam).name,
+                    bam(aln.sam, stringency: "silent").getStatistics(exclude:["sorted"]),
+                    aln.bowtie2.log,
+                    aln.unmapped,
                 ).match() }
             )
         }
@@ -148,14 +148,14 @@ nextflow_process {
         }
 
         then {
+            def aln = process.out[0][0]
             assertAll (
                 { assert process.success },
                 { assert snapshot(
-                    file(process.out.sam[0][1]).name,
-                    bam(process.out.sam[0][1], stringency: "silent").getStatistics(exclude:["sorted"]),
-                    process.out.log,
-                    process.out.fastq,
-                    process.out.findAll { key, val -> key.startsWith('versions') }
+                    file(aln.sam).name,
+                    bam(aln.sam, stringency: "silent").getStatistics(exclude:["sorted"]),
+                    aln.bowtie2.log,
+                    aln.unmapped,
                 ).match() }
             )
         }
@@ -198,17 +198,17 @@ nextflow_process {
         }
 
         then {
+            def aln = process.out[0][0]
             assertAll (
                 { assert process.success },
                 { assert snapshot(
                     // Conda and docker version of bowtie2 produce different
                     // hashes. Therefore, testing whether file exists and bam
                     // statistics.
-                    file(process.out.bam[0][1]).name,
-                    bam(process.out.bam[0][1], stringency: "silent").getStatistics(exclude:["sorted"]),
-                    process.out.log,
-                    process.out.fastq,
-                    process.out.findAll { key, val -> key.startsWith('versions') }
+                    file(aln.orig_bam).name,
+                    bam(aln.orig_bam, stringency: "silent").getStatistics(exclude:["sorted"]),
+                    aln.bowtie2.log,
+                    aln.unmapped,
                 ).match() }
             )
         }
@@ -254,17 +254,17 @@ nextflow_process {
         }
 
         then {
+            def aln = process.out[0][0]
             assertAll (
                 { assert process.success },
                 { assert snapshot(
                     // Conda and docker version of bowtie2 produce different
                     // hashes. Therefore, testing whether file exists and bam
                     // statistics.
-                    file(process.out.bam[0][1]).name,
-                    bam(process.out.bam[0][1], stringency: "silent").getStatistics(exclude:["sorted"]),
-                    process.out.log,
-                    process.out.fastq,
-                    process.out.findAll { key, val -> key.startsWith('versions') }
+                    file(aln.orig_bam).name,
+                    bam(aln.orig_bam, stringency: "silent").getStatistics(exclude:["sorted"]),
+                    aln.bowtie2.log,
+                    aln.unmapped,
                 ).match() }
             )
         }
@@ -310,17 +310,17 @@ nextflow_process {
         }
 
         then {
+            def aln = process.out[0][0]
             assertAll (
                 { assert process.success },
                 { assert snapshot(
                     // Conda and docker version of bowtie2 produce different
                     // hashes. Therefore, testing whether file exists and bam
                     // statistics.
-                    file(process.out.bam[0][1]).name,
-                    bam(process.out.bam[0][1], stringency: "silent").getStatistics(exclude:["sorted"]),
-                    process.out.log,
-                    process.out.fastq,
-                    process.out.findAll { key, val -> key.startsWith('versions') }
+                    file(aln.orig_bam).name,
+                    bam(aln.orig_bam, stringency: "silent").getStatistics(exclude:["sorted"]),
+                    aln.bowtie2.log,
+                    aln.unmapped,
                 ).match() }
             )
         }
@@ -363,17 +363,17 @@ nextflow_process {
         }
 
         then {
+            def aln = process.out[0][0]
             assertAll (
                 { assert process.success },
                 { assert snapshot(
                     // Conda and docker version of bowtie2 produce different
                     // hashes. Therefore, testing whether file exists and bam
                     // statistics.
-                    file(process.out.bam[0][1]).name,
-                    bam(process.out.bam[0][1], stringency: "silent").getStatistics(exclude:["sorted"]),
-                    process.out.log,
-                    process.out.fastq,
-                    process.out.findAll { key, val -> key.startsWith('versions') }
+                    file(aln.orig_bam).name,
+                    bam(aln.orig_bam, stringency: "silent").getStatistics(exclude:["sorted"]),
+                    aln.bowtie2.log,
+                    aln.unmapped,
                 ).match() }
             )
         }
@@ -419,17 +419,17 @@ nextflow_process {
         }
 
         then {
+            def aln = process.out[0][0]
             assertAll (
                 { assert process.success },
                 { assert snapshot(
                     // Conda and docker version of bowtie2 produce different
                     // hashes. Therefore, testing whether file exists and bam
                     // statistics.
-                    file(process.out.bam[0][1]).name,
-                    bam(process.out.bam[0][1], stringency: "silent").getStatistics(exclude:["sorted"]),
-                    process.out.log,
-                    process.out.fastq,
-                    process.out.findAll { key, val -> key.startsWith('versions') }
+                    file(aln.orig_bam).name,
+                    bam(aln.orig_bam, stringency: "silent").getStatistics(exclude:["sorted"]),
+                    aln.bowtie2.log,
+                    aln.unmapped,
                 ).match() }
             )
         }
@@ -478,13 +478,13 @@ nextflow_process {
         }
 
         then {
+            def aln = process.out[0][0]
             assertAll (
                 { assert process.success },
                 { assert snapshot(
-                    file(process.out.cram[0][1]).name,
-                    file(process.out.crai[0][1]).name,
-                    cram(process.out.cram[0][1], process.out.cram[0][0].fasta ).getStatistics(exclude:["sorted"]),
-                    process.out.findAll { key, val -> key.startsWith('versions') }
+                    file(aln.cram).name,
+                    file(aln.crai).name,
+                    cram(aln.cram, aln.meta.fasta ).getStatistics(exclude:["sorted"]),
                 ).match() }
             )
         }
@@ -530,14 +530,14 @@ nextflow_process {
         }
 
         then {
+            def aln = process.out[0][0]
             assertAll (
                 { assert process.success },
                 { assert snapshot(
-                    file(process.out.bam[0][1]).name,
-                    file(process.out.csi[0][1]).name,
-                    file(process.out.log[0][1]).name,
-                    process.out.fastq,
-                    process.out.findAll { key, val -> key.startsWith('versions') }
+                    file(aln.orig_bam).name,
+                    file(aln.csi).name,
+                    file(aln.bowtie2.log).name,
+                    aln.unmapped,
                 ).match() }
             )
         }
@@ -580,14 +580,14 @@ nextflow_process {
         }
 
         then {
+            def aln = process.out[0][0]
             assertAll (
                 { assert process.success },
                 { assert snapshot(
-                    file(process.out.bam[0][1]).name,
-                    file(process.out.csi[0][1]).name,
-                    file(process.out.log[0][1]).name,
-                    process.out.fastq,
-                    process.out.findAll { key, val -> key.startsWith('versions') }
+                    file(aln.orig_bam).name,
+                    file(aln.csi).name,
+                    file(aln.bowtie2.log).name,
+                    aln.unmapped,
                 ).match() }
             )
         }

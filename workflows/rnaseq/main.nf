@@ -25,7 +25,6 @@ include { BAM_DEDUP_UMI                         } from '../../subworkflows/nf-co
 include { checkSamplesAfterGrouping      } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { classifyStrand                 } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { getHisat2PercentMapped         } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
-include { buildDeseq2Record              } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { rustqcTarget                   } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 
 /*
@@ -473,10 +472,9 @@ workflow RNASEQ {
                 ch_pca_header_multiqc,
                 ch_clustering_header_multiqc
             )
-            ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_RSEM.out.pca_multiqc.collect().map { file -> [[:], file] })
-            ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_RSEM.out.dists_multiqc.collect().map { file -> [[:], file] })
-
-            ch_deseq2 = buildDeseq2Record(DESEQ2_QC_RSEM.out.rdata, DESEQ2_QC_RSEM.out.pca_txt, DESEQ2_QC_RSEM.out.pdf, DESEQ2_QC_RSEM.out.dists_txt, DESEQ2_QC_RSEM.out.size_factors, DESEQ2_QC_RSEM.out.log)
+            ch_deseq2 = DESEQ2_QC_RSEM.out
+            ch_multiqc_files = ch_multiqc_files.mix(ch_deseq2.filter { r -> r.pca_multiqc != null }.map { r -> r.pca_multiqc }.collect().map { file -> [[:], file] })
+            ch_multiqc_files = ch_multiqc_files.mix(ch_deseq2.filter { r -> r.dists_multiqc != null }.map { r -> r.dists_multiqc }.collect().map { file -> [[:], file] })
         }
 
     } else if (params.aligner in ['star_salmon', 'bowtie2_salmon']) {
@@ -506,10 +504,9 @@ workflow RNASEQ {
                 ch_pca_header_multiqc,
                 ch_clustering_header_multiqc
             )
-            ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_BAM_SALMON.out.pca_multiqc.collect().map { file -> [[:], file] })
-            ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_BAM_SALMON.out.dists_multiqc.collect().map { file -> [[:], file] })
-
-            ch_deseq2 = buildDeseq2Record(DESEQ2_QC_BAM_SALMON.out.rdata, DESEQ2_QC_BAM_SALMON.out.pca_txt, DESEQ2_QC_BAM_SALMON.out.pdf, DESEQ2_QC_BAM_SALMON.out.dists_txt, DESEQ2_QC_BAM_SALMON.out.size_factors, DESEQ2_QC_BAM_SALMON.out.log)
+            ch_deseq2 = DESEQ2_QC_BAM_SALMON.out
+            ch_multiqc_files = ch_multiqc_files.mix(ch_deseq2.filter { r -> r.pca_multiqc != null }.map { r -> r.pca_multiqc }.collect().map { file -> [[:], file] })
+            ch_multiqc_files = ch_multiqc_files.mix(ch_deseq2.filter { r -> r.dists_multiqc != null }.map { r -> r.dists_multiqc }.collect().map { file -> [[:], file] })
         }
     }
 
@@ -945,10 +942,9 @@ workflow RNASEQ {
                 ch_pca_header_multiqc,
                 ch_clustering_header_multiqc
             )
-            ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_PSEUDO.out.pca_multiqc.collect().map { file -> [[:], file] })
-            ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_PSEUDO.out.dists_multiqc.collect().map { file -> [[:], file] })
-
-            ch_deseq2_pseudo = buildDeseq2Record(DESEQ2_QC_PSEUDO.out.rdata, DESEQ2_QC_PSEUDO.out.pca_txt, DESEQ2_QC_PSEUDO.out.pdf, DESEQ2_QC_PSEUDO.out.dists_txt, DESEQ2_QC_PSEUDO.out.size_factors, DESEQ2_QC_PSEUDO.out.log)
+            ch_deseq2_pseudo = DESEQ2_QC_PSEUDO.out
+            ch_multiqc_files = ch_multiqc_files.mix(ch_deseq2_pseudo.filter { r -> r.pca_multiqc != null }.map { r -> r.pca_multiqc }.collect().map { file -> [[:], file] })
+            ch_multiqc_files = ch_multiqc_files.mix(ch_deseq2_pseudo.filter { r -> r.dists_multiqc != null }.map { r -> r.dists_multiqc }.collect().map { file -> [[:], file] })
         }
     }
 

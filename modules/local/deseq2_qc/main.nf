@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process DESEQ2_QC {
     label "process_medium"
 
@@ -9,31 +11,32 @@ process DESEQ2_QC {
         'community.wave.seqera.io/library/r-base_r-optparse_r-ggplot2_r-rcolorbrewer_pruned:9e75394d0bc21987' }"
 
     input:
-    path counts
-    path pca_header_multiqc
-    path clustering_header_multiqc
+    counts: Path
+    pca_header_multiqc: Path
+    clustering_header_multiqc: Path
 
     output:
-    path "*.pdf"                , optional:true, emit: pdf
-    path "*.RData"              , optional:true, emit: rdata
-    path "*pca.vals.txt"        , optional:true, emit: pca_txt
-    path "*pca.vals_mqc.tsv"    , optional:true, emit: pca_multiqc
-    path "*sample.dists.txt"    , optional:true, emit: dists_txt
-    path "*sample.dists_mqc.tsv", optional:true, emit: dists_multiqc
-    path "*.log"                , optional:true, emit: log
-    path "size_factors"         , optional:true, emit: size_factors
-    tuple val("${task.process}"), val('r-base'), eval("Rscript -e 'cat(as.character(getRversion()))'"), emit: versions_r_base, topic: versions
-    tuple val("${task.process}"), val('bioconductor-deseq2'), eval("Rscript -e \"library(DESeq2); cat(as.character(packageVersion('DESeq2')))\""), emit: versions_deseq2, topic: versions
+    record(
+        rdata:         file('*.RData',               optional: true),
+        pca_vals:      file('*pca.vals.txt',         optional: true),
+        plots_pdf:     file('*.pdf',                 optional: true),
+        sample_dists:  file('*sample.dists.txt',     optional: true),
+        size_factors:  file('size_factors',          optional: true),
+        log:           file('*.log',                 optional: true),
+        pca_multiqc:   file('*pca.vals_mqc.tsv',     optional: true),
+        dists_multiqc: file('*sample.dists_mqc.tsv', optional: true)
+    )
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'r-base', eval("Rscript -e 'cat(as.character(getRversion()))'")) >> 'versions'
+    tuple(task.process, 'bioconductor-deseq2', eval("Rscript -e \"library(DESeq2); cat(as.character(packageVersion('DESeq2')))\"")) >> 'versions'
 
     script:
     def args  = task.ext.args  ?: ''
     def args2 = task.ext.args2 ?: ''
     def label_lower = args2.toLowerCase()
     def label_upper = args2.toUpperCase()
-    prefix = task.ext.prefix ?: "deseq2"
+    def prefix = task.ext.prefix ?: "deseq2"
     """
     deseq2_qc.r \\
         --count_file $counts \\
@@ -60,7 +63,7 @@ process DESEQ2_QC {
     stub:
     def args2 = task.ext.args2 ?: ''
     def label_lower = args2.toLowerCase()
-    prefix = task.ext.prefix ?: "deseq2"
+    def prefix = task.ext.prefix ?: "deseq2"
     """
     touch ${label_lower}.pca.vals_mqc.tsv
     touch ${label_lower}.sample.dists_mqc.tsv

@@ -576,35 +576,22 @@ workflow RNASEQ {
     if (!params.skip_stringtie) {
         if (params.stringtie_ignore_gtf) {
             BAM_STRINGTIE_MERGE(
-                ch_genome_bam.map { meta, bam -> [meta, bam, []] },
+                ch_genome_bam.map { meta, bam -> [meta, bam, null] },
                 channel.value([]),
                 ch_gtf.map { gtf -> [ [:], gtf ] }
             )
-            ch_stringtie_gtf = BAM_STRINGTIE_MERGE.out.stringtie_gtf.map { _meta, gtf -> gtf }
             ch_stringtie_merged = BAM_STRINGTIE_MERGE.out.merged_results
+            ch_stringtie_gtf = ch_stringtie_merged.map { r -> r.merged_gtf }
         } else {
             ch_stringtie_gtf = ch_gtf
         }
         STRINGTIE_STRINGTIE(
-            ch_genome_bam.map { meta, bam -> [meta, bam, []] },
-            channel.value('expression-estimation'),
+            ch_genome_bam.map { meta, bam -> [meta, bam, null] },
+            channel.value(['expression-estimation']),
             ch_stringtie_gtf
         )
 
-        ch_stringtie = STRINGTIE_STRINGTIE.out.transcript_gtf
-            .join(STRINGTIE_STRINGTIE.out.abundance, failOnMismatch: true, failOnDuplicate: true)
-            .join(STRINGTIE_STRINGTIE.out.coverage_gtf, remainder: true)
-            .join(STRINGTIE_STRINGTIE.out.ballgown, remainder: true)
-            .map { meta, transcript_gtf, abundance, coverage_gtf, ballgown ->
-                record(
-                    id:             meta.id,
-                    meta:           meta,
-                    transcript_gtf: transcript_gtf,
-                    abundance:      abundance,
-                    coverage_gtf:   coverage_gtf,
-                    ballgown:       ballgown != null ? [ballgown].flatten() : null
-                )
-            }
+        ch_stringtie = STRINGTIE_STRINGTIE.out.map { r -> r + record(id: r.meta.id) }
 
         // Per-sample de novo assemblies that fed the merged GTF
         if (params.stringtie_ignore_gtf) {

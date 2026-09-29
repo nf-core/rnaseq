@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process STRINGTIE_STRINGTIE {
     tag "${meta.id}"
     label 'process_medium'
@@ -8,24 +10,27 @@ process STRINGTIE_STRINGTIE {
         'community.wave.seqera.io/library/stringtie:3.0.3--e8043d00caecd051' }"
 
     input:
-    tuple val(meta), path(srbam), path(lrbam)
-    val(mode)
-    path(annotation_gtf)
+    tuple(meta: Map, srbam: Path?, lrbam: Path?)
+    mode: List<String>
+    annotation_gtf: Path?
 
     output:
-    tuple val(meta), path("${prefix}.transcripts.gtf")   , emit: transcript_gtf
-    tuple val(meta), path("${prefix}.gene.abundance.txt"), emit: abundance
-    tuple val(meta), path("${prefix}.coverage.gtf")      , optional: true, emit: coverage_gtf
-    tuple val(meta), path("${prefix}.ballgown/*.ctab")   , optional: true, emit: ballgown
-    tuple val("${task.process}"), val('stringtie'), eval('stringtie --version'), emit: versions_stringtie, topic: versions
+    record(
+        id:             meta.id,
+        meta:           meta,
+        transcript_gtf: file("${task.ext.prefix ?: meta.id}.transcripts.gtf"),
+        abundance:      file("${task.ext.prefix ?: meta.id}.gene.abundance.txt"),
+        coverage_gtf:   file("${task.ext.prefix ?: meta.id}.coverage.gtf", optional: true),
+        ballgown:       files("${task.ext.prefix ?: meta.id}.ballgown/*.ctab", optional: true)
+    )
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'stringtie', eval('stringtie --version')) >> 'versions'
 
     script:
     def args      = task.ext.args ?: ''
     def args2     = task.ext.args2 ?: ''
-    prefix        = task.ext.prefix ?: "${meta.id}"
+    def prefix    = task.ext.prefix ?: "${meta.id}"
     def reference = annotation_gtf ? "-G $annotation_gtf" : ""
     def ballgown  = annotation_gtf ? "-b ${prefix}.ballgown" : ""
     def coverage  = annotation_gtf ? "-C ${prefix}.coverage.gtf" : ""
@@ -39,8 +44,7 @@ process STRINGTIE_STRINGTIE {
     def run_mode = ''
     if (mode) {
         def valid_modes = ['expression-estimation', 'long-reads-assembly', 'mix-reads-assembly', 'nascent-aware-assembly']
-        def modes = (mode instanceof List) ? mode :
-                    (mode instanceof String) ? mode.toString().split(',').collect { x -> x.trim() } : []
+        def modes = mode
         modes.each { m ->
             if (!(m in valid_modes)) {
                 error "Invalid mode: ${m}. Valid options are: ${valid_modes.join(', ')}"
@@ -64,10 +68,10 @@ process STRINGTIE_STRINGTIE {
             mode_flags += (lrbam && !srbam) ? ['-L', '-e'] : ['-e']
         }
         if (modes.contains('long-reads-assembly') && !modes.contains('expression-estimation')) {
-            mode_flags += '-L'
+            mode_flags += ['-L']
         }
         if (modes.contains('mix-reads-assembly')) {
-            mode_flags += '--mix'
+            mode_flags += ['--mix']
         }
         if (modes.contains('nascent-aware-assembly')) {
             mode_flags += ['-N', '--nasc']
@@ -93,7 +97,7 @@ process STRINGTIE_STRINGTIE {
     """
 
     stub:
-    prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.id}"
     def has_annotation = annotation_gtf ? true : false
 
     """

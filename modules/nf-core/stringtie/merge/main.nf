@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process STRINGTIE_MERGE {
     tag "${meta.id}"
     label 'process_medium'
@@ -9,24 +11,26 @@ process STRINGTIE_MERGE {
         'community.wave.seqera.io/library/stringtie:3.0.3--e8043d00caecd051' }"
 
     input:
-    tuple val(meta), path(gtf)
-    tuple val(meta2), path(annotation_gtf)
+    tuple(meta: Map, gtf: List<Path>)
+    tuple(meta2: Map, annotation_gtf: Path?)
 
     output:
-    tuple val(meta), path("${prefix}.gtf"), emit: merged_gtf
-    tuple val("${task.process}"), val('stringtie'), eval('stringtie --version'), emit: versions_stringtie, topic: versions
+    record(
+        id:         meta.id,
+        merged_gtf: file("${task.ext.prefix ?: meta.id}.gtf")
+    )
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'stringtie', eval('stringtie --version')) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''
-    prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.id}"
     def reference = annotation_gtf ? "-G ${annotation_gtf}" : ""
     """
     stringtie \\
         --merge \\
-        ${gtf} \\
+        ${gtf.join(' ')} \\
         ${reference} \\
         -o ${prefix}.gtf \\
         -p ${task.cpus} \\
@@ -34,7 +38,7 @@ process STRINGTIE_MERGE {
     """
 
     stub:
-    prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.id}"
     """
     touch ${prefix}.gtf
     """

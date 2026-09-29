@@ -4226,7 +4226,8 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success },
-                { assert snapshot(sanitizeOutput(workflow.out)).match() }
+                { assert snapshot(sanitizeOutput(workflow.out, ignoreKeys: ['indices'])).match("output") },
+                { assert snapshot(workflow.out.indices.sort { a, b -> a.kind <=> b.kind }).match("indices") }
             )
         }
 

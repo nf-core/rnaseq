@@ -17,17 +17,14 @@ nextflow_process {
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
                     ]
                 ]
-                input[1] = file(params.modules_testdata_base_path +'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                input[1] = [file(params.modules_testdata_base_path +'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
                 """
             }
         }
 
         then {
             assert process.success
-            assert snapshot(
-                process.out.findAll { key, val -> key.startsWith("versions") },
-                file(process.out.profile_out[0][1]).readLines()[0]
-            ).match()
+            assert snapshot(file(process.out[0][0][1]).readLines()[0]).match()
         }
     }
 
@@ -41,17 +38,14 @@ nextflow_process {
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                     ]
                 ]
-                input[1] = file(params.modules_testdata_base_path +'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                input[1] = [file(params.modules_testdata_base_path +'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
                 """
             }
         }
 
         then {
             assert process.success
-            assert snapshot(
-                process.out.findAll { key, val -> key.startsWith("versions") },
-                file(process.out.profile_out[0][1]).readLines()[0]
-            ).match()
+            assert snapshot(file(process.out[0][0][1]).readLines()[0]).match()
         }
     }
 
@@ -67,14 +61,14 @@ nextflow_process {
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                     ]
                 ]
-                input[1] = file(params.modules_testdata_base_path +'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                input[1] = [file(params.modules_testdata_base_path +'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
                 """
             }
         }
 
         then {
             assert process.success
-            assert snapshot(process.out).match()
+            assert snapshot(process.out[0]).match()
         }
     }
 }

@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process SYLPHTAX_TAXPROF {
     tag "${meta.id}"
     label 'process_medium'
@@ -8,15 +10,14 @@ process SYLPHTAX_TAXPROF {
         : 'quay.io/biocontainers/sylph-tax:1.9.0--pyhdfd78af_0'}"
 
     input:
-    tuple val(meta), path(sylph_results)
-    path taxonomy
+    tuple(meta: Map, sylph_results: Path)
+    taxonomy: List<Path>
 
     output:
-    tuple val(meta), path("*.sylphmpa"), emit: taxprof_output
-    tuple val("${task.process}"), val('sylph-tax'), eval("sylph-tax --version 2>&1 | tail -1"), emit: versions_sylphtax, topic: versions
+    tuple(meta, file('*.sylphmpa'))
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'sylph-tax', eval("sylph-tax --version 2>&1 | tail -1")) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''
@@ -28,7 +29,7 @@ process SYLPHTAX_TAXPROF {
         taxprof \\
         ${sylph_results} \\
         ${args} \\
-        -t ${taxonomy}
+        -t ${taxonomy.join(' ')}
 
     mv *.sylphmpa ${prefix}.sylphmpa
     """

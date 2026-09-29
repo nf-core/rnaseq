@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process BRACKEN_BRACKEN {
     tag "$meta.id"
     label 'process_low'
@@ -8,37 +10,35 @@ process BRACKEN_BRACKEN {
         'community.wave.seqera.io/library/bracken:3.1--22a4e66ce04c5e01' }"
 
     input:
-    tuple val(meta), path(kraken_report)
-    path database
+    tuple(meta: Map, kraken_report: Path)
+    database: Path
 
     output:
-    tuple val(meta), path(bracken_report)        , emit: reports
-    tuple val(meta), path(bracken_kraken_style_report), emit: txt
-    tuple val("${task.process}"), val('bracken'), eval('bracken -v | cut -f2 -d"v"'), topic: versions, emit: versions_bracken
+    record(
+        meta:      meta,
+        abundance: file("${task.ext.prefix ?: meta.id}.tsv"),
+        report:    file("${task.ext.prefix ?: meta.id}.kraken2.report_bracken.txt")
+    )
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'bracken', eval('bracken -v | cut -f2 -d"v"')) >> 'versions'
 
     script:
     def args = task.ext.args ?: ""
     def prefix = task.ext.prefix ?: "${meta.id}"
-    bracken_report = "${prefix}.tsv"
-    bracken_kraken_style_report = "${prefix}.kraken2.report_bracken.txt"
     """
     bracken \\
         ${args} \\
         -d '${database}' \\
         -i '${kraken_report}' \\
-        -o '${bracken_report}' \\
-        -w '${bracken_kraken_style_report}'
+        -o '${prefix}.tsv' \\
+        -w '${prefix}.kraken2.report_bracken.txt'
     """
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
-    bracken_report = "${prefix}.tsv"
-    bracken_kraken_style_report = "${prefix}.kraken2.report_bracken.txt"
     """
     touch ${prefix}.tsv
-    touch ${bracken_kraken_style_report}
+    touch ${prefix}.kraken2.report_bracken.txt
     """
 }

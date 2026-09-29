@@ -794,13 +794,12 @@ workflow RNASEQ {
                     ch_kraken_reports,
                     ch_kraken_db
                 )
-                ch_multiqc_files = ch_multiqc_files.mix(BRACKEN.out.txt)
+                ch_multiqc_files = ch_multiqc_files.mix(BRACKEN.out.map { r -> [r.meta, r.report] })
                 ch_contaminant_fields = ch_contaminant_fields
-                    .join(BRACKEN.out.reports.map { meta, f -> [meta.id, f] }, failOnMismatch: true, failOnDuplicate: true)
-                    .join(BRACKEN.out.txt.map { meta, f -> [meta.id, f] }, failOnMismatch: true, failOnDuplicate: true)
-                    .map { id, fields, abundance, report -> [id, fields + [bracken_abundance: abundance, bracken_report: report]] }
+                    .join(BRACKEN.out.map { r -> [r.meta.id, r] }, failOnMismatch: true, failOnDuplicate: true)
+                    .map { id, fields, bracken -> [id, fields + [bracken: bracken]] }
                 ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
-                    .join(BRACKEN.out.txt.map { meta, f -> [meta.id, f] }, remainder: true)
+                    .join(BRACKEN.out.map { r -> [r.meta.id, r.report] }, remainder: true)
             }
         } else if (params.contaminant_screening == 'sylph') {
             def sylph_databases = params.sylph_db ? params.sylph_db.split(',').collect{ path -> file(path.trim()) } : []
@@ -809,7 +808,7 @@ workflow RNASEQ {
                 ch_contaminant_sequences,
                 ch_sylph_databases
             )
-            ch_sylph_profile = SYLPH_PROFILE.out.profile_out.filter{ tuple -> !tuple[1].isEmpty() }
+            ch_sylph_profile = SYLPH_PROFILE.out.filter{ tuple -> !tuple[1].isEmpty() }
 
             def sylph_taxonomies = params.sylph_taxonomy ? params.sylph_taxonomy.split(',').collect{ path -> file(path.trim()) } : []
             ch_sylph_taxonomies = channel.value(sylph_taxonomies)
@@ -817,13 +816,13 @@ workflow RNASEQ {
                 ch_sylph_profile,
                 ch_sylph_taxonomies
             )
-            ch_multiqc_files = ch_multiqc_files.mix(SYLPHTAX_TAXPROF.out.taxprof_output)
+            ch_multiqc_files = ch_multiqc_files.mix(SYLPHTAX_TAXPROF.out)
             ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
-                .join(SYLPHTAX_TAXPROF.out.taxprof_output.map { meta, f -> [meta.id, f] }, remainder: true)
+                .join(SYLPHTAX_TAXPROF.out.map { meta, f -> [meta.id, f] }, remainder: true)
 
             // Every profile is published, but empty ones never reach SYLPHTAX_TAXPROF
-            ch_contaminant_fields = SYLPH_PROFILE.out.profile_out.map { meta, profile -> [meta.id, [meta: meta, sylph_profile: profile]] }
-                .join(SYLPHTAX_TAXPROF.out.taxprof_output.map { meta, f -> [meta.id, f] }, remainder: true)
+            ch_contaminant_fields = SYLPH_PROFILE.out.map { meta, profile -> [meta.id, [meta: meta, sylph_profile: profile]] }
+                .join(SYLPHTAX_TAXPROF.out.map { meta, f -> [meta.id, f] }, remainder: true)
                 .map { id, fields, taxprof -> [id, fields + [sylphtax_taxprof: taxprof]] }
         }
 
@@ -832,7 +831,7 @@ workflow RNASEQ {
                 id:       id,
                 meta:     fields.meta,
                 kraken2:  fields.kraken2,
-                bracken:  fields.bracken_report != null ? record(abundance: fields.bracken_abundance, report: fields.bracken_report) : null,
+                bracken:  fields.bracken,
                 sylph:    fields.sylph_profile != null ? record(profile: fields.sylph_profile) : null,
                 sylphtax: fields.sylphtax_taxprof != null ? record(taxprof: fields.sylphtax_taxprof) : null
             )

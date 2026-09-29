@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process SYLPH_PROFILE {
     tag "${meta.id}"
     label 'process_high'
@@ -8,25 +10,24 @@ process SYLPH_PROFILE {
         : 'quay.io/biocontainers/sylph:0.9.0--ha6fb395_0'}"
 
     input:
-    tuple val(meta), path(reads)
-    path database
+    tuple(meta: Map, reads: List<Path>)
+    database: List<Path>
 
     output:
-    tuple val(meta), path('*.tsv'), emit: profile_out
-    tuple val("${task.process}"), val('sylph'), eval('sylph -V | sed "s/sylph //g"'), topic: versions, emit: versions_sylph
+    tuple(meta, file('*.tsv'))
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'sylph', eval('sylph -V | sed "s/sylph //g"')) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def input = meta.single_end ? "-r ${reads}" : "-1 ${reads[0]} -2 ${reads[1]}"
+    def input = meta.single_end ? "-r ${reads[0]}" : "-1 ${reads[0]} -2 ${reads[1]}"
     """
     sylph profile \\
         -t ${task.cpus} \\
         ${args} \\
-        ${database}\\
+        ${database.join(' ')} \\
         ${input} \\
         -o ${prefix}.tsv
     """

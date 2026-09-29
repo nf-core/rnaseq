@@ -183,21 +183,20 @@ workflow NFCORE_RNASEQ {
         .map { r -> [r.id, r] }
         .join(RNASEQ.out.reads.map { meta, runs -> [meta.id, meta, runs] })
         .join(RNASEQ.out.percent_mapped)
-        .flatMap { sample_id, r, _meta, runs, percent_mapped ->
+        .transpose(by: 3) // one row per sequencing run: replicates sample_id/r/_meta/percent_mapped across each entry in runs
+        .map { sample_id, r, _meta, run, percent_mapped ->
             def transcriptome_bam = params.aligner == 'bowtie2_salmon' ? r.orig_bam : r.transcriptome_bam
-            runs.collect { run ->
-                record(
-                    sample:            sample_id,
-                    fastq_1:           run[0],
-                    fastq_2:           run.size() > 1 ? run[1] : null,
-                    strandedness:      r.meta.strandedness,
-                    seq_platform:      r.meta.seq_platform ?: params.seq_platform,
-                    seq_center:        r.meta.seq_center ?: params.seq_center,
-                    genome_bam:        r.bam ? "${params.outdir}/${samplePrefix(r)}${params.aligner}/${r.bam.name}" : null,
-                    percent_mapped:    percent_mapped,
-                    transcriptome_bam: transcriptome_bam ? "${params.outdir}/${samplePrefix(r)}${params.aligner}/${transcriptome_bam.name}" : null
-                )
-            }
+            record(
+                sample:            sample_id,
+                fastq_1:           run[0],
+                fastq_2:           run.size() > 1 ? run[1] : null,
+                strandedness:      r.meta.strandedness,
+                seq_platform:      r.meta.seq_platform ?: params.seq_platform,
+                seq_center:        r.meta.seq_center ?: params.seq_center,
+                genome_bam:        r.bam ? "${params.outdir}/${samplePrefix(r)}${params.aligner}/${r.bam.name}" : null,
+                percent_mapped:    percent_mapped,
+                transcriptome_bam: transcriptome_bam ? "${params.outdir}/${samplePrefix(r)}${params.aligner}/${transcriptome_bam.name}" : null
+            )
         }
 
     emit:

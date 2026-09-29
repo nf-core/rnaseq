@@ -638,21 +638,16 @@ workflow RNASEQ {
             )
 
             // Each output is a glob, so a single match arrives as a bare Path.
-            // Flattened to one file per record so each can carry its own precomputed rename-form >> target.
-            ch_bam_qc_rustqc = RUSTQC.out.samtools
-                .join(RUSTQC.out.dupradar,      failOnMismatch: true, failOnDuplicate: true)
-                .join(RUSTQC.out.featurecounts, failOnMismatch: true, failOnDuplicate: true)
-                .join(RUSTQC.out.preseq,        failOnMismatch: true, failOnDuplicate: true)
-                .join(RUSTQC.out.rseqc,         failOnMismatch: true, failOnDuplicate: true)
-                .join(RUSTQC.out.qualimap,      failOnMismatch: true, failOnDuplicate: true)
-                .flatMap { meta, samtools, dupradar, featurecounts, preseq, rseqc, qualimap ->
-                    [samtools].flatten().collect      { f -> record(id: meta.id, file: f, target: rustqcTarget(meta, 'samtools', f)) } +
-                    [dupradar].flatten().collect      { f -> record(id: meta.id, file: f, target: rustqcTarget(meta, 'dupradar', f)) } +
-                    [featurecounts].flatten().collect { f -> record(id: meta.id, file: f, target: rustqcTarget(meta, 'featurecounts', f)) } +
-                    [preseq].flatten().collect        { f -> record(id: meta.id, file: f, target: rustqcTarget(meta, 'preseq', f)) } +
-                    [rseqc].flatten().collect         { f -> record(id: meta.id, file: f, target: rustqcTarget(meta, 'rseqc', f)) } +
-                    [qualimap].flatten().collect      { f -> record(id: meta.id, file: f, target: rustqcTarget(meta, 'qualimap', f)) }
-                }
+            // Category travels alongside meta/files through one shared transpose,
+            // so each file ends up in its own record with a precomputed >> target.
+            ch_bam_qc_rustqc = RUSTQC.out.samtools.map { meta, files -> [meta, 'samtools', [files].flatten()] }
+                .mix(RUSTQC.out.dupradar.map      { meta, files -> [meta, 'dupradar', [files].flatten()] })
+                .mix(RUSTQC.out.featurecounts.map { meta, files -> [meta, 'featurecounts', [files].flatten()] })
+                .mix(RUSTQC.out.preseq.map        { meta, files -> [meta, 'preseq', [files].flatten()] })
+                .mix(RUSTQC.out.rseqc.map         { meta, files -> [meta, 'rseqc', [files].flatten()] })
+                .mix(RUSTQC.out.qualimap.map      { meta, files -> [meta, 'qualimap', [files].flatten()] })
+                .transpose(by: 2)
+                .map { meta, category, f -> record(id: meta.id, file: f, target: rustqcTarget(meta, category, f)) }
                 .filter { r -> r.target != null }
 
             // Drop non-MultiQC files. Excluding `*.featureCounts.tsv.summary`

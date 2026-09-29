@@ -49,6 +49,8 @@ workflow BAM_QC_RNASEQ {
         ch_featurecounts_counts,
         ch_biotypes_header
     )
+    ch_biotype_tsv  = CUSTOM_MULTIQCCUSTOMBIOTYPE.out.map { r -> [r.meta, r.tsv] }
+    ch_biotype_rrna = CUSTOM_MULTIQCCUSTOMBIOTYPE.out.map { r -> [r.meta, r.rrna] }
 
     //
     // MODULE: Qualimap (name-sorted BAM via samtools sort)
@@ -105,12 +107,11 @@ workflow BAM_QC_RNASEQ {
     if ('biotype_qc' in tools && biotype) {
         ch_results = ch_results
             .join(SUBREAD_FEATURECOUNTS.out.map { r -> [r.meta.id, r] }, by: [0])
-            .join(CUSTOM_MULTIQCCUSTOMBIOTYPE.out.tsv.map { meta, f -> [meta.id, f] }, by: [0])
-            .join(CUSTOM_MULTIQCCUSTOMBIOTYPE.out.rrna.map { meta, f -> [meta.id, f] }, by: [0])
-            .map { id, fields, featurecounts, tsv, rrna ->
+            .join(CUSTOM_MULTIQCCUSTOMBIOTYPE.out.map { r -> [r.meta.id, record(tsv: r.tsv, rrna: r.rrna)] }, by: [0])
+            .map { id, fields, featurecounts, biotype_files ->
                 [id, fields + [
                     featurecounts: featurecounts,
-                    biotype:       record(tsv: tsv, rrna: rrna)
+                    biotype:       biotype_files
                 ]]
             }
     }
@@ -148,7 +149,7 @@ workflow BAM_QC_RNASEQ {
     // Aggregate MultiQC-compatible output files
     ch_multiqc_files = channel.empty()
         .mix(ch_preseq_lc_extrap)
-        .mix(CUSTOM_MULTIQCCUSTOMBIOTYPE.out.tsv)
+        .mix(ch_biotype_tsv)
         .mix(QUALIMAP_RNASEQ.out)
         .mix(ch_dupradar_multiqc)
         .mix(BAM_RSEQC.out.bamstat_txt)
@@ -163,7 +164,7 @@ workflow BAM_QC_RNASEQ {
     // `remainder: true` needed because every contributor is gated behind
     // `tools` / `rseqc_modules`.
     ch_per_sample_mqc_bundle = ch_preseq_lc_extrap
-        .join(CUSTOM_MULTIQCCUSTOMBIOTYPE.out.tsv,         remainder: true)
+        .join(ch_biotype_tsv,                              remainder: true)
         .join(QUALIMAP_RNASEQ.out,                         remainder: true)
         .join(ch_dupradar_multiqc,                         remainder: true)
         .join(BAM_RSEQC.out.bamstat_txt,                   remainder: true)
@@ -187,8 +188,8 @@ workflow BAM_QC_RNASEQ {
     // Biotype QC
     featurecounts_counts  = ch_featurecounts_counts     // channel: [ val(meta), path(txt) ]
     featurecounts_summary = ch_featurecounts_summary    // channel: [ val(meta), path(txt) ]
-    biotype_tsv           = CUSTOM_MULTIQCCUSTOMBIOTYPE.out.tsv  // channel: [ val(meta), path(tsv) ]
-    biotype_rrna          = CUSTOM_MULTIQCCUSTOMBIOTYPE.out.rrna // channel: [ val(meta), path(tsv) ]
+    biotype_tsv           = ch_biotype_tsv              // channel: [ val(meta), path(tsv) ]
+    biotype_rrna          = ch_biotype_rrna             // channel: [ val(meta), path(tsv) ]
 
     // Qualimap
     qualimap_results = QUALIMAP_RNASEQ.out // channel: [ val(meta), path(dir) ]

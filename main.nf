@@ -122,10 +122,6 @@ workflow NFCORE_RNASEQ {
         anySampleAutoStrandedness()
     )
 
-    ch_genome = PREPARE_GENOME_REFERENCES.out.results
-        .combine(PREPARE_GENOME_INDICES.out.results)
-        .map { references, indices -> references + record(index: indices) }
-
     // Check if contigs in genome fasta file > 512 Mbp
     if (!params.skip_alignment && !params.bam_csi_index) {
         PREPARE_GENOME_REFERENCES
@@ -162,9 +158,9 @@ workflow NFCORE_RNASEQ {
         qc_tools
     )
 
-    ch_genome = ch_genome
-        .combine(RNASEQ.out.rrna_references)
-        .map { genome, rrna_references -> genome + record(rrna_references: rrna_references) }
+    // Matches current behavior: no task-workdir guard, so a user-supplied
+    // --bowtie2_rrna_index is republished here exactly as it is today.
+    ch_rrna_bowtie2_index = RNASEQ.out.rrna_references.map { r -> r.bowtie2_index }
 
     // Same-basename fields split out per stage to avoid a >> rename-key collision (nextflow-io/nextflow#6617).
     ch_lint_raw     = RNASEQ.out.preprocessed.map { r -> record(id: r.id, file: r.lint?.raw) }.filter { s -> s.file != null }
@@ -205,7 +201,10 @@ workflow NFCORE_RNASEQ {
     map_status          = RNASEQ.out.map_status          // channel: [id, boolean]
     strand_status       = RNASEQ.out.strand_status       // channel: [id, boolean]
     multiqc_report      = RNASEQ.out.multiqc_report      // channel: /path/to/multiqc_report.html
-    genome              = ch_genome                      // channel: GenomeReferences fields + index: GenomeIndices + rrna_references
+    genome_references   = PREPARE_GENOME_REFERENCES.out.references     // channel: GenomeArtifact, one record per top-level reference file actually built or supplied
+    genome_intermediates = PREPARE_GENOME_REFERENCES.out.intermediates // channel: GenomeArtifact, one record per superseded/incidental reference file
+    genome_indices      = PREPARE_GENOME_INDICES.out.indices           // channel: GenomeArtifact, one record per index/log actually built or supplied
+    rrna_bowtie2_index  = ch_rrna_bowtie2_index                        // channel: path(bowtie2_rrna/index/), only when the bowtie2 rRNA index is built
     rrna_seqkit         = ch_rrna_seqkit                 // channel: record(bowtie2_index, seqkit_prefixed, seqkit_converted), only when the bowtie2 rRNA index is built
 
     // Stage result records, keyed on id
@@ -286,7 +285,10 @@ workflow {
     stringtie        = NFCORE_RNASEQ.out.stringtie
     stringtie_merged = NFCORE_RNASEQ.out.stringtie_merged
     bigwig           = NFCORE_RNASEQ.out.bigwig
-    genome           = NFCORE_RNASEQ.out.genome
+    genome_references    = NFCORE_RNASEQ.out.genome_references
+    genome_intermediates = NFCORE_RNASEQ.out.genome_intermediates
+    genome_indices       = NFCORE_RNASEQ.out.genome_indices
+    rrna_bowtie2_index   = NFCORE_RNASEQ.out.rrna_bowtie2_index
     rrna_seqkit      = NFCORE_RNASEQ.out.rrna_seqkit
     preprocessed     = NFCORE_RNASEQ.out.preprocessed
     lint_raw         = NFCORE_RNASEQ.out.lint_raw
@@ -350,38 +352,24 @@ output {
         }
     }
 
-    genome {   // GenomeReferences + index: GenomeIndices + rrna_references; never sample-prefixed
+    genome_references {   // GenomeArtifact stream, one record per top-level reference file; never sample-prefixed
         enabled params.save_reference
-        path { g ->
-            g.fasta >> 'genome/'
-            g.fai >> 'genome/'
-            g.gtf >> 'genome/'
-            g.gene_bed >> 'genome/'
-            g.transcript_fasta >> 'genome/'
-            g.chrom_sizes >> 'genome/'
-            g.rrna_fastas >> 'genome/'
-            g.kraken_db >> 'genome/index/'
-            g.intermediates?.gff >> 'genome/'
-            g.intermediates?.additional_fasta >> 'genome/'
-            g.intermediates?.gtf_pre_filter >> 'genome/'
-            g.intermediates?.fasta_pre_concat >> 'genome/'
-            g.intermediates?.gtf_pre_concat >> 'genome/'
-            g.intermediates?.transcript_fasta_pre_gencode >> 'genome/'
-            g.intermediates?.transcript_fasta_rsem_dir >> 'genome/'
-            g.index?.star >> 'genome/index/'
-            g.index?.rsem >> 'genome/index/'
-            g.index?.rsem_transcript_fasta >> 'genome/index/'
-            g.index?.hisat2 >> 'genome/index/'
-            g.index?.hisat2_splicesites >> 'genome/index/'
-            g.index?.bowtie2 >> 'genome/index/'
-            g.index?.salmon >> 'genome/index/'
-            g.index?.kallisto >> 'genome/index/'
-            g.index?.bbsplit >> 'genome/index/'
-            g.index?.bbsplit_log >> 'genome/index/'
-            g.index?.sortmerna >> 'genome/sortmerna/'
-            g.index?.bowtie2_rrna >> 'genome/index/'
-            g.rrna_references?.bowtie2_index >> 'bowtie2_rrna/index/'
-        }
+        path { r -> r.file >> (r.kind == 'kraken_db' ? 'genome/index/' : 'genome/') }
+    }
+
+    genome_intermediates {   // GenomeArtifact stream, one record per superseded/incidental reference file; never sample-prefixed
+        enabled params.save_reference
+        path { r -> r.file >> 'genome/' }
+    }
+
+    genome_indices {   // GenomeArtifact stream, one record per index/log; never sample-prefixed
+        enabled params.save_reference
+        path { r -> r.file >> (r.kind == 'sortmerna' ? 'genome/sortmerna/' : 'genome/index/') }
+    }
+
+    rrna_bowtie2_index {   // path(bowtie2_rrna/index/); never sample-prefixed
+        enabled params.save_reference
+        path { p -> p >> 'bowtie2_rrna/index/' }
     }
 
     rrna_seqkit {   // record(bowtie2_index, seqkit_prefixed, seqkit_converted); ch_rrna_seqkit guarantees at least one FASTA list is non-empty

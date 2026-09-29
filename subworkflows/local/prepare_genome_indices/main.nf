@@ -27,8 +27,7 @@ include { SENTIEON_RSEMPREPAREREFERENCE as SENTIEON_RSEM_PREPAREREFERENCE_GENOME
 include { STAR_GENOMEPARAMS_UPGRADE         } from '../../../modules/local/star_genomeparams_upgrade'
 
 include { taskOutputOrNull                  } from '../utils_nfcore_rnaseq_pipeline'
-include { firstTaskOutputOrNull              } from '../utils_nfcore_rnaseq_pipeline'
-include { GenomeIndices                     } from './types'
+include { GenomeArtifact                     } from '../utils_nfcore_rnaseq_pipeline/types'
 
 workflow PREPARE_GENOME_INDICES {
 
@@ -313,41 +312,25 @@ workflow PREPARE_GENOME_INDICES {
     }
 
     //--------------------------------------------------
-    // 10) Whole-run indices record
+    // 10) Streamed index artifacts, one record per producer
     //--------------------------------------------------
-    // Each field is wrapped in a single-element list so combine() keeps one
-    // position per field, including nulls. The sortmerna channel carries a bare
-    // path from UNTAR but a [ meta, path ] tuple otherwise.
-    ch_results = ch_star_index_publish
-        .toList()
-        .map { items -> firstTaskOutputOrNull(items) }
-        .combine(ch_rsem_index.toList().map { items -> firstTaskOutputOrNull(items) })
-        .combine(ch_rsem_transcript_fasta.toList().map { items -> firstTaskOutputOrNull(items) })
-        .combine(ch_hisat2_index.toList().map { items -> firstTaskOutputOrNull(items) })
-        .combine(ch_splicesites.toList().map { items -> firstTaskOutputOrNull(items) })
-        .combine(ch_bowtie2_index.toList().map { items -> firstTaskOutputOrNull(items) })
-        .combine(ch_salmon_index.toList().map { items -> [ items ? taskOutputOrNull(items[0][1]) : null ] })
-        .combine(ch_kallisto_index.toList().map { items -> [ items ? taskOutputOrNull(items[0][1]) : null ] })
-        .combine(ch_bbsplit_index.toList().map { items -> firstTaskOutputOrNull(items) })
-        .combine(ch_bbsplit_log.toList().map { items -> firstTaskOutputOrNull(items) })
-        .combine(ch_sortmerna_index.toList().map { items -> [ taskOutputOrNull(items[0] instanceof List ? items[0][1] : items[0]) ] })
-        .combine(ch_bowtie2_rrna_index.toList().map { items -> [ items ? taskOutputOrNull(items[0][1]) : null ] })
-        .map { star, rsem, rsem_transcript_fasta, hisat2, hisat2_splicesites, bowtie2, salmon, kallisto, bbsplit, bbsplit_log, sortmerna, bowtie2_rrna ->
-            record(
-                star:                  star,
-                rsem:                  rsem,
-                rsem_transcript_fasta: rsem_transcript_fasta,
-                hisat2:                hisat2,
-                hisat2_splicesites:    hisat2_splicesites,
-                bowtie2:               bowtie2,
-                salmon:                salmon,
-                kallisto:              kallisto,
-                bbsplit:               bbsplit,
-                bbsplit_log:           bbsplit_log,
-                sortmerna:             sortmerna,
-                bowtie2_rrna:          bowtie2_rrna
-            )
-        }
+    // Each index is an independent, optionally user-supplied producer with no shared
+    // key, so they stream as tagged records via mix() rather than fusing into one row.
+    // The sortmerna channel carries a bare path from UNTAR but a [ meta, path ] tuple
+    // otherwise; salmon/kallisto/bowtie2_rrna are always [ meta, path ].
+    ch_indices = ch_star_index_publish.map { p -> record(kind: 'star', file: p) }
+        .mix(ch_rsem_index.map              { p -> record(kind: 'rsem', file: p) })
+        .mix(ch_rsem_transcript_fasta.map   { p -> record(kind: 'rsem_transcript_fasta', file: p) })
+        .mix(ch_hisat2_index.map            { p -> record(kind: 'hisat2', file: p) })
+        .mix(ch_splicesites.map             { p -> record(kind: 'hisat2_splicesites', file: p) })
+        .mix(ch_bowtie2_index.map           { p -> record(kind: 'bowtie2', file: p) })
+        .mix(ch_salmon_index.map            { tuple -> record(kind: 'salmon', file: tuple[1]) })
+        .mix(ch_kallisto_index.map          { tuple -> record(kind: 'kallisto', file: tuple[1]) })
+        .mix(ch_bbsplit_index.map           { p -> record(kind: 'bbsplit', file: p) })
+        .mix(ch_bbsplit_log.map             { p -> record(kind: 'bbsplit_log', file: p) })
+        .mix(ch_sortmerna_index.map         { p -> record(kind: 'sortmerna', file: p instanceof List ? p[1] : p) })
+        .mix(ch_bowtie2_rrna_index.map      { tuple -> record(kind: 'bowtie2_rrna', file: tuple[1]) })
+        .filter { r -> taskOutputOrNull(r.file) }
 
     emit:
     splicesites         = ch_splicesites            // channel: path(genome.splicesites.txt)
@@ -360,5 +343,5 @@ workflow PREPARE_GENOME_INDICES {
     bowtie2_index       = ch_bowtie2_index          // channel: path(bowtie2/index/)
     salmon_index        = ch_salmon_index           // channel: [ meta, path(salmon/index/) ]
     kallisto_index      = ch_kallisto_index         // channel: [ meta, path(kallisto/index/) ]
-    results             = ch_results                // channel: GenomeIndices
+    indices             = ch_indices                // channel: GenomeArtifact, one record per index/log actually built or supplied
 }

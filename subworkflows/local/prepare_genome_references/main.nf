@@ -25,8 +25,7 @@ include { EAUTILS_GTF2BED                      } from '../../../modules/nf-core/
 include { CUSTOM_GTFFILTER                     } from '../../../modules/nf-core/custom/gtffilter'
 
 include { taskOutputOrNull                     } from '../utils_nfcore_rnaseq_pipeline'
-include { firstTaskOutputOrNull                 } from '../utils_nfcore_rnaseq_pipeline'
-include { GenomeReferences                     } from './types'
+include { GenomeArtifact                       } from '../utils_nfcore_rnaseq_pipeline/types'
 
 workflow PREPARE_GENOME_REFERENCES {
 
@@ -258,48 +257,28 @@ workflow PREPARE_GENOME_REFERENCES {
     }
 
     //---------------------------------------------------------
-    // 10) Whole-run references record
+    // 10) Streamed reference/intermediate artifacts, one record per producer
     //---------------------------------------------------------
-    // Each field is wrapped in a single-element list so combine() keeps one
-    // position per field, including nulls and the rrna_fastas list.
-    ch_results = ch_fasta_fai
-        .toList()
-        .map { items -> items ? [ taskOutputOrNull(items[0][1]), items[0][2] ] : [ null, null ] }
-        .combine(ch_gtf.toList().map { items -> firstTaskOutputOrNull(items) })
-        .combine(ch_gene_bed.toList().map { items -> firstTaskOutputOrNull(items) })
-        .combine(ch_transcript_fasta.toList().map { items -> firstTaskOutputOrNull(items) })
-        .combine(ch_chrom_sizes.toList().map { items -> [ items[0] ] })
-        .combine(ch_rrna_fastas.toList().map { items -> [ items.collect { rrna_fasta -> taskOutputOrNull(rrna_fasta) }.findAll { rrna_fasta -> rrna_fasta != null } ?: null ] })
-        .combine(ch_kraken_db.toList().map { items -> firstTaskOutputOrNull(items) })
-        .combine(ch_gff_uncompressed.toList().map { items -> firstTaskOutputOrNull(items) })
-        .combine(ch_additional_fasta_uncompressed.toList().map { items -> firstTaskOutputOrNull(items) })
-        .combine(ch_gtf_pre_filter.toList().map { items -> firstTaskOutputOrNull(items) })
-        .combine(ch_fasta_pre_concat.toList().map { items -> firstTaskOutputOrNull(items) })
-        .combine(ch_gtf_pre_concat.toList().map { items -> firstTaskOutputOrNull(items) })
-        .combine(ch_transcript_fasta_pre_gencode.toList().map { items -> firstTaskOutputOrNull(items) })
-        .combine(ch_transcript_fasta_rsem_dir.toList().map { items -> firstTaskOutputOrNull(items) })
-        .map { fasta_file, fai_file, gtf_file, gene_bed_file, transcript_fasta_file, chrom_sizes_file, rrna_fasta_files, kraken_db_dir,
-               gff_file, additional_fasta_file, gtf_pre_filter_file, fasta_pre_concat_file, gtf_pre_concat_file, transcript_fasta_pre_gencode_file, transcript_fasta_rsem_dir_file ->
-            record(
-                fasta:            fasta_file,
-                fai:              fai_file,
-                gtf:              gtf_file,
-                gene_bed:         gene_bed_file,
-                transcript_fasta: transcript_fasta_file,
-                chrom_sizes:      chrom_sizes_file,
-                rrna_fastas:      rrna_fasta_files,
-                kraken_db:        kraken_db_dir,
-                intermediates:    record(
-                    gff:                          gff_file,
-                    additional_fasta:             additional_fasta_file,
-                    gtf_pre_filter:               gtf_pre_filter_file,
-                    fasta_pre_concat:             fasta_pre_concat_file,
-                    gtf_pre_concat:               gtf_pre_concat_file,
-                    transcript_fasta_pre_gencode: transcript_fasta_pre_gencode_file,
-                    transcript_fasta_rsem_dir:    transcript_fasta_rsem_dir_file
-                )
-            )
-        }
+    // Each field is an independent, optionally user-supplied producer with no shared
+    // key, so they stream as tagged records via mix() rather than fusing into one row.
+    ch_references = ch_fasta_fai.map    { _meta, fasta_file, _fai -> record(kind: 'fasta', file: fasta_file) }
+        .mix(ch_fasta_fai.map           { _meta, _fasta, fai_file -> record(kind: 'fai', file: fai_file) })
+        .mix(ch_gtf.map                 { p -> record(kind: 'gtf', file: p) })
+        .mix(ch_gene_bed.map            { p -> record(kind: 'gene_bed', file: p) })
+        .mix(ch_transcript_fasta.map    { p -> record(kind: 'transcript_fasta', file: p) })
+        .mix(ch_chrom_sizes.map         { p -> record(kind: 'chrom_sizes', file: p) })
+        .mix(ch_rrna_fastas.flatMap     { fs -> fs.collect { f -> record(kind: 'rrna_fasta', file: f) } })
+        .mix(ch_kraken_db.map           { p -> record(kind: 'kraken_db', file: p) })
+        .filter { r -> taskOutputOrNull(r.file) }
+
+    ch_intermediates = ch_gff_uncompressed.map              { f -> record(kind: 'gff', file: f) }
+        .mix(ch_additional_fasta_uncompressed.map           { f -> record(kind: 'additional_fasta', file: f) })
+        .mix(ch_gtf_pre_filter.map                          { f -> record(kind: 'gtf_pre_filter', file: f) })
+        .mix(ch_fasta_pre_concat.map                        { f -> record(kind: 'fasta_pre_concat', file: f) })
+        .mix(ch_gtf_pre_concat.map                          { f -> record(kind: 'gtf_pre_concat', file: f) })
+        .mix(ch_transcript_fasta_pre_gencode.map            { f -> record(kind: 'tx_pre_gencode', file: f) })
+        .mix(ch_transcript_fasta_rsem_dir.map               { f -> record(kind: 'tx_rsem_dir', file: f) })
+        .filter { r -> taskOutputOrNull(r.file) }
 
     emit:
     fasta_fai        = ch_fasta_fai              // channel: [ meta, path(genome.fasta), path(genome.fai) ]
@@ -309,5 +288,6 @@ workflow PREPARE_GENOME_REFERENCES {
     chrom_sizes      = ch_chrom_sizes            // channel: path(genome.sizes)
     rrna_fastas      = ch_rrna_fastas            // channel: path(rrna_fastas)
     kraken_db        = ch_kraken_db              // channel: path(kraken2/db/)
-    results          = ch_results                // channel: GenomeReferences
+    references       = ch_references             // channel: GenomeArtifact, one record per top-level reference file actually built or supplied
+    intermediates    = ch_intermediates          // channel: GenomeArtifact, one record per superseded/incidental reference file
 }

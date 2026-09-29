@@ -1695,7 +1695,7 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success },
-                { assert snapshot(sanitizeOutput(workflow.out, unstableKeys: ['bbsplit_index', 'hisat2_index', 'salmon_index'], ignoreKeys: ['results'])).match() }
+                { assert snapshot(sanitizeOutput(workflow.out, unstableKeys: ['bbsplit_index', 'hisat2_index', 'salmon_index'], ignoreKeys: ['indices'])).match() }
             )
         }
 

@@ -1386,25 +1386,29 @@
                         
                     ]
                 ],
-                "kallisto_index": [
-                    
-                ],
-                "results": [
+                "indices": [
                     {
-                        "bbsplit": [
+                        "file": "genome_gfp.splice_sites.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "kind": "hisat2_splicesites"
+                    },
+                    {
+                        "file": [
                             
                         ],
-                        "bbsplit_log": "genome_transcriptome.log:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "bowtie2": null,
-                        "bowtie2_rrna": null,
-                        "hisat2": [
+                        "kind": "hisat2"
+                    },
+                    {
+                        "file": [
                             
                         ],
-                        "hisat2_splicesites": "genome_gfp.splice_sites.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "kallisto": null,
-                        "rsem": null,
-                        "rsem_transcript_fasta": null,
-                        "salmon": [
+                        "kind": "bbsplit"
+                    },
+                    {
+                        "file": "genome_transcriptome.log:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "kind": "bbsplit_log"
+                    },
+                    {
+                        "file": [
                             "duplicate_clusters.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "index.ctab:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "index.ectab:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -1417,9 +1421,11 @@
                             "refseq.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "refseq_offsets.json:md5,d41d8cd98f00b204e9800998ecf8427e"
                         ],
-                        "sortmerna": null,
-                        "star": null
+                        "kind": "salmon"
                     }
+                ],
+                "kallisto_index": [
+                    
                 ],
                 "rsem_index": [
                     
@@ -1455,10 +1461,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-25T15:17:21.352069973",
+        "timestamp": "2026-09-29T14:08:41.859424688",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.09.0"
+            "nextflow": "26.09.1"
         }
     }
 }

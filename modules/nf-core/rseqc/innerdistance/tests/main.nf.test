@@ -25,15 +25,16 @@ nextflow_process {
         }
 
         then {
+            def r = process.out[0][0]
             assertAll(
                 { assert process.success },
                 { assert snapshot(
-                    file(process.out.pdf[0][1]).name,
-                    process.out.distance,
-                    process.out.freq,
-                    process.out.mean,
-                    process.out.rscript,
-                    process.out.versions_rseqc
+                    file(r.pdf).name,
+                    r.meta,
+                    r.distance,
+                    r.freq,
+                    r.mean,
+                    r.rscript
                 ).match() }
             )
         }
@@ -57,10 +58,10 @@ nextflow_process {
         }
 
         then {
+            def r = process.out[0][0]
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out).match() },
-                { assert snapshot(process.out.versions_rseqc).match("versions") }
+                { assert snapshot(r.meta, r.distance, r.freq, r.mean, r.pdf, r.rscript).match() }
             )
         }
     }

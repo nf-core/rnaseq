@@ -35,7 +35,7 @@ workflow BAM_RSEQC {
 
     if ('bam_stat' in rseqc_modules) {
         RSEQC_BAMSTAT(bam)
-        bamstat_txt = RSEQC_BAMSTAT.out.txt
+        bamstat_txt = RSEQC_BAMSTAT.out
         ch_results = ch_results
             .join(bamstat_txt.map { meta, txt -> [meta.id, txt] }, by: [0])
             .map { id, fields, txt -> [id, fields + [bamstat: txt]] }
@@ -53,23 +53,16 @@ workflow BAM_RSEQC {
 
     if ('inner_distance' in rseqc_modules) {
         RSEQC_INNERDISTANCE(bam, bed)
-        innerdistance_distance = RSEQC_INNERDISTANCE.out.distance
-        innerdistance_freq     = RSEQC_INNERDISTANCE.out.freq
-        innerdistance_mean     = RSEQC_INNERDISTANCE.out.mean
-        innerdistance_pdf      = RSEQC_INNERDISTANCE.out.pdf
-        innerdistance_rscript  = RSEQC_INNERDISTANCE.out.rscript
+        innerdistance_distance = RSEQC_INNERDISTANCE.out.map { r -> [r.meta, r.distance] }
+        innerdistance_freq     = RSEQC_INNERDISTANCE.out.filter { r -> r.freq }.map { r -> [r.meta, r.freq] }
+        innerdistance_mean     = RSEQC_INNERDISTANCE.out.filter { r -> r.mean }.map { r -> [r.meta, r.mean] }
+        innerdistance_pdf      = RSEQC_INNERDISTANCE.out.filter { r -> r.pdf }.map { r -> [r.meta, r.pdf] }
+        innerdistance_rscript  = RSEQC_INNERDISTANCE.out.filter { r -> r.rscript }.map { r -> [r.meta, r.rscript] }
         innerdistance_all      = innerdistance_distance.mix(innerdistance_freq, innerdistance_mean, innerdistance_pdf, innerdistance_rscript)
 
-        // Single-end samples only produce the distance file
         ch_results = ch_results
-            .join(innerdistance_distance.map { meta, f -> [meta.id, f] }, by: [0])
-            .join(innerdistance_freq.map { meta, f -> [meta.id, f] }, by: [0], remainder: true)
-            .join(innerdistance_mean.map { meta, f -> [meta.id, f] }, by: [0], remainder: true)
-            .join(innerdistance_pdf.map { meta, f -> [meta.id, f] }, by: [0], remainder: true)
-            .join(innerdistance_rscript.map { meta, f -> [meta.id, f] }, by: [0], remainder: true)
-            .map { id, fields, distance, freq, mean, pdf, rscript ->
-                [id, fields + [innerdistance: record(distance: distance, freq: freq, mean: mean, pdf: pdf, rscript: rscript)]]
-            }
+            .join(RSEQC_INNERDISTANCE.out.map { r -> [r.meta.id, r] }, by: [0])
+            .map { id, fields, r -> [id, fields + [innerdistance: r]] }
     }
 
     //
@@ -78,7 +71,7 @@ workflow BAM_RSEQC {
     inferexperiment_txt = channel.empty()
     if ('infer_experiment' in rseqc_modules) {
         RSEQC_INFEREXPERIMENT(bam, bed)
-        inferexperiment_txt = RSEQC_INFEREXPERIMENT.out.txt
+        inferexperiment_txt = RSEQC_INFEREXPERIMENT.out
         ch_results = ch_results
             .join(inferexperiment_txt.map { meta, txt -> [meta.id, txt] }, by: [0])
             .map { id, fields, txt -> [id, fields + [inferexperiment: txt]] }
@@ -98,26 +91,18 @@ workflow BAM_RSEQC {
 
     if ('junction_annotation' in rseqc_modules) {
         RSEQC_JUNCTIONANNOTATION(bam, bed)
-        junctionannotation_bed          = RSEQC_JUNCTIONANNOTATION.out.bed
-        junctionannotation_interact_bed = RSEQC_JUNCTIONANNOTATION.out.interact_bed
-        junctionannotation_xls          = RSEQC_JUNCTIONANNOTATION.out.xls
-        junctionannotation_pdf          = RSEQC_JUNCTIONANNOTATION.out.pdf
-        junctionannotation_events_pdf   = RSEQC_JUNCTIONANNOTATION.out.events_pdf
-        junctionannotation_rscript      = RSEQC_JUNCTIONANNOTATION.out.rscript
-        junctionannotation_log          = RSEQC_JUNCTIONANNOTATION.out.log
+        junctionannotation_bed          = RSEQC_JUNCTIONANNOTATION.out.filter { r -> r.bed }.map { r -> [r.meta, r.bed] }
+        junctionannotation_interact_bed = RSEQC_JUNCTIONANNOTATION.out.filter { r -> r.interact_bed }.map { r -> [r.meta, r.interact_bed] }
+        junctionannotation_xls          = RSEQC_JUNCTIONANNOTATION.out.map { r -> [r.meta, r.xls] }
+        junctionannotation_pdf          = RSEQC_JUNCTIONANNOTATION.out.filter { r -> r.pdf }.map { r -> [r.meta, r.pdf] }
+        junctionannotation_events_pdf   = RSEQC_JUNCTIONANNOTATION.out.filter { r -> r.events_pdf }.map { r -> [r.meta, r.events_pdf] }
+        junctionannotation_rscript      = RSEQC_JUNCTIONANNOTATION.out.map { r -> [r.meta, r.rscript] }
+        junctionannotation_log          = RSEQC_JUNCTIONANNOTATION.out.map { r -> [r.meta, r.log] }
         junctionannotation_all          = junctionannotation_bed.mix(junctionannotation_interact_bed, junctionannotation_xls, junctionannotation_pdf, junctionannotation_events_pdf, junctionannotation_rscript, junctionannotation_log)
 
         ch_results = ch_results
-            .join(junctionannotation_xls.map { meta, f -> [meta.id, f] }, by: [0])
-            .join(junctionannotation_rscript.map { meta, f -> [meta.id, f] }, by: [0])
-            .join(junctionannotation_log.map { meta, f -> [meta.id, f] }, by: [0])
-            .join(junctionannotation_bed.map { meta, f -> [meta.id, f] }, by: [0], remainder: true)
-            .join(junctionannotation_interact_bed.map { meta, f -> [meta.id, f] }, by: [0], remainder: true)
-            .join(junctionannotation_pdf.map { meta, f -> [meta.id, f] }, by: [0], remainder: true)
-            .join(junctionannotation_events_pdf.map { meta, f -> [meta.id, f] }, by: [0], remainder: true)
-            .map { id, fields, xls, rscript, log, bed_file, interact_bed, pdf, events_pdf ->
-                [id, fields + [junctionannotation: record(bed: bed_file, interact_bed: interact_bed, xls: xls, pdf: pdf, events_pdf: events_pdf, rscript: rscript, log: log)]]
-            }
+            .join(RSEQC_JUNCTIONANNOTATION.out.map { r -> [r.meta.id, r] }, by: [0])
+            .map { id, fields, r -> [id, fields + [junctionannotation: r]] }
     }
 
     //
@@ -129,16 +114,13 @@ workflow BAM_RSEQC {
 
     if ('junction_saturation' in rseqc_modules) {
         RSEQC_JUNCTIONSATURATION(bam, bed)
-        junctionsaturation_pdf     = RSEQC_JUNCTIONSATURATION.out.pdf
-        junctionsaturation_rscript = RSEQC_JUNCTIONSATURATION.out.rscript
+        junctionsaturation_pdf     = RSEQC_JUNCTIONSATURATION.out.map { r -> [r.meta, r.pdf] }
+        junctionsaturation_rscript = RSEQC_JUNCTIONSATURATION.out.map { r -> [r.meta, r.rscript] }
         junctionsaturation_all     = junctionsaturation_pdf.mix(junctionsaturation_rscript)
 
         ch_results = ch_results
-            .join(junctionsaturation_pdf.map { meta, f -> [meta.id, f] }, by: [0])
-            .join(junctionsaturation_rscript.map { meta, f -> [meta.id, f] }, by: [0])
-            .map { id, fields, pdf, rscript ->
-                [id, fields + [junctionsaturation: record(pdf: pdf, rscript: rscript)]]
-            }
+            .join(RSEQC_JUNCTIONSATURATION.out.map { r -> [r.meta.id, r] }, by: [0])
+            .map { id, fields, r -> [id, fields + [junctionsaturation: r]] }
     }
 
     //
@@ -148,7 +130,7 @@ workflow BAM_RSEQC {
 
     if ('read_distribution' in rseqc_modules) {
         RSEQC_READDISTRIBUTION(bam, bed)
-        readdistribution_txt = RSEQC_READDISTRIBUTION.out.txt
+        readdistribution_txt = RSEQC_READDISTRIBUTION.out
         ch_results = ch_results
             .join(readdistribution_txt.map { meta, txt -> [meta.id, txt] }, by: [0])
             .map { id, fields, txt -> [id, fields + [readdistribution: txt]] }
@@ -165,20 +147,15 @@ workflow BAM_RSEQC {
 
     if ('read_duplication' in rseqc_modules) {
         RSEQC_READDUPLICATION(bam )
-        readduplication_seq_xls = RSEQC_READDUPLICATION.out.seq_xls
-        readduplication_pos_xls = RSEQC_READDUPLICATION.out.pos_xls
-        readduplication_pdf     = RSEQC_READDUPLICATION.out.pdf
-        readduplication_rscript = RSEQC_READDUPLICATION.out.rscript
+        readduplication_seq_xls = RSEQC_READDUPLICATION.out.map { r -> [r.meta, r.seq_xls] }
+        readduplication_pos_xls = RSEQC_READDUPLICATION.out.map { r -> [r.meta, r.pos_xls] }
+        readduplication_pdf     = RSEQC_READDUPLICATION.out.map { r -> [r.meta, r.pdf] }
+        readduplication_rscript = RSEQC_READDUPLICATION.out.map { r -> [r.meta, r.rscript] }
         readduplication_all     = readduplication_seq_xls.mix(readduplication_pos_xls, readduplication_pdf, readduplication_rscript)
 
         ch_results = ch_results
-            .join(readduplication_seq_xls.map { meta, f -> [meta.id, f] }, by: [0])
-            .join(readduplication_pos_xls.map { meta, f -> [meta.id, f] }, by: [0])
-            .join(readduplication_pdf.map { meta, f -> [meta.id, f] }, by: [0])
-            .join(readduplication_rscript.map { meta, f -> [meta.id, f] }, by: [0])
-            .map { id, fields, seq_xls, pos_xls, pdf, rscript ->
-                [id, fields + [readduplication: record(seq_xls: seq_xls, pos_xls: pos_xls, pdf: pdf, rscript: rscript)]]
-            }
+            .join(RSEQC_READDUPLICATION.out.map { r -> [r.meta.id, r] }, by: [0])
+            .map { id, fields, r -> [id, fields + [readduplication: r]] }
     }
 
     //
@@ -188,11 +165,10 @@ workflow BAM_RSEQC {
 
     if ('tin' in rseqc_modules) {
         RSEQC_TIN(bam, bed)
-        tin_txt      = RSEQC_TIN.out.txt
+        tin_txt = RSEQC_TIN.out.map { r -> [r.meta, r.txt] }
         ch_results = ch_results
-            .join(tin_txt.map { meta, txt -> [meta.id, txt] }, by: [0])
-            .join(RSEQC_TIN.out.xls.map { meta, xls -> [meta.id, xls] }, by: [0])
-            .map { id, fields, txt, xls -> [id, fields + [tin: record(txt: txt, xls: xls)]] }
+            .join(RSEQC_TIN.out.map { r -> [r.meta.id, r] }, by: [0])
+            .map { id, fields, r -> [id, fields + [tin: r]] }
     }
 
     ch_results = ch_results.map { id, fields ->

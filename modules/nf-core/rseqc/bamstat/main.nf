@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process RSEQC_BAMSTAT {
     tag "$meta.id"
     label 'process_medium'
@@ -8,14 +10,13 @@ process RSEQC_BAMSTAT {
         'community.wave.seqera.io/library/rseqc_r-base:2e29d2dfda9cef15' }"
 
     input:
-    tuple val(meta), path(bam), path(bai)
+    tuple(meta: Map, bam: Path, bai: Path)
 
     output:
-    tuple val(meta), path("*.bam_stat.txt"), emit: txt
-    tuple val("${task.process}"), val('rseqc'), eval('bam_stat.py --version | sed "s/bam_stat.py //"'), emit: versions_rseqc, topic: versions
+    tuple(meta, file("*.bam_stat.txt"))
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'rseqc', eval('bam_stat.py --version | sed "s/bam_stat.py //"')) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''

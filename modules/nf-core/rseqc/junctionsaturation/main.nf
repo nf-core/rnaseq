@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process RSEQC_JUNCTIONSATURATION {
     tag "$meta.id"
     label 'process_medium'
@@ -8,16 +10,18 @@ process RSEQC_JUNCTIONSATURATION {
         'community.wave.seqera.io/library/rseqc_r-base:2e29d2dfda9cef15' }"
 
     input:
-    tuple val(meta), path(bam), path(bai)
-    path  bed
+    tuple(meta: Map, bam: Path, bai: Path)
+    bed: Path
 
     output:
-    tuple val(meta), path("*.pdf"), emit: pdf
-    tuple val(meta), path("*.r")  , emit: rscript
-    tuple val("${task.process}"), val('rseqc'), eval('junction_saturation.py --version | sed "s/junction_saturation.py //"'), emit: versions_rseqc, topic: versions
+    record(
+        meta:    meta,
+        pdf:     file("*.pdf"),
+        rscript: file("*.r")
+    )
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'rseqc', eval('junction_saturation.py --version | sed "s/junction_saturation.py //"')) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''

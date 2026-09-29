@@ -25,16 +25,14 @@ nextflow_process {
         }
 
         then {
+            def r = process.out[0][0]
             assertAll(
                 { assert process.success },
-                { assert process.out.pdf.size() == 0 || file(process.out.pdf[0][1]).name.endsWith('.pdf') },
-                { assert process.out.events_pdf.size() == 0 || file(process.out.events_pdf[0][1]).name.endsWith('.pdf') },
-                { assert process.out.xls.size() == 0 || file(process.out.xls[0][1]).name.endsWith('.xls') },
-                { assert process.out.rscript.size() == 0 || file(process.out.rscript[0][1]).name.endsWith('.r') },
-                { assert snapshot(
-                    process.out.log,
-                    process.out.versions_rseqc
-                ).match() }
+                { assert r.pdf == null || file(r.pdf).name.endsWith('.pdf') },
+                { assert r.events_pdf == null || file(r.events_pdf).name.endsWith('.pdf') },
+                { assert file(r.xls).name.endsWith('.xls') },
+                { assert file(r.rscript).name.endsWith('.r') },
+                { assert snapshot(r.meta, r.log).match() }
             )
         }
     }
@@ -57,10 +55,10 @@ nextflow_process {
         }
 
         then {
+            def r = process.out[0][0]
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out).match() },
-                { assert snapshot(process.out.versions_rseqc).match("versions") }
+                { assert snapshot(r.meta, r.bed, r.interact_bed, r.xls, r.pdf, r.events_pdf, r.rscript, r.log).match() }
             )
         }
     }

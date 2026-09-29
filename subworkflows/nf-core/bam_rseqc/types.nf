@@ -1,5 +1,6 @@
 // Documentation only: nothing casts a record(...) to these types (nextflow-io/nextflow#7680 corrupts remote Path fields on cast).
 record RseqcInnerDistance {
+    meta:     Map
     distance: Path
     freq:     Path?
     mean:     Path?
@@ -8,6 +9,7 @@ record RseqcInnerDistance {
 }
 
 record RseqcJunctionAnnotation {
+    meta:         Map
     bed:          Path?
     interact_bed: Path?
     xls:          Path
@@ -18,11 +20,13 @@ record RseqcJunctionAnnotation {
 }
 
 record RseqcJunctionSaturation {
+    meta:    Map
     pdf:     Path
     rscript: Path
 }
 
 record RseqcReadDuplication {
+    meta:    Map
     seq_xls: Path
     pos_xls: Path
     pdf:     Path
@@ -30,8 +34,9 @@ record RseqcReadDuplication {
 }
 
 record RseqcTin {
-    txt: Path
-    xls: Path
+    meta: Map
+    txt:  Path
+    xls:  Path
 }
 
 record Rseqc {

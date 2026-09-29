@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process RSEQC_JUNCTIONANNOTATION {
     tag "$meta.id"
     label 'process_medium'
@@ -8,21 +10,23 @@ process RSEQC_JUNCTIONANNOTATION {
         'community.wave.seqera.io/library/rseqc_r-base:2e29d2dfda9cef15' }"
 
     input:
-    tuple val(meta), path(bam), path(bai)
-    path  bed
+    tuple(meta: Map, bam: Path, bai: Path)
+    bed: Path
 
     output:
-    tuple val(meta), path("*.xls")         , emit: xls
-    tuple val(meta), path("*.r")           , emit: rscript
-    tuple val(meta), path("*.log")         , emit: log
-    tuple val(meta), path("*.junction.bed"), optional:true, emit: bed
-    tuple val(meta), path("*.Interact.bed"), optional:true, emit: interact_bed
-    tuple val(meta), path("*junction.pdf") , optional:true, emit: pdf
-    tuple val(meta), path("*events.pdf")   , optional:true, emit: events_pdf
-    tuple val("${task.process}"), val('rseqc'), eval('junction_annotation.py --version | sed "s/junction_annotation.py //"'), emit: versions_rseqc, topic: versions
+    record(
+        meta:         meta,
+        bed:          file("*.junction.bed", optional: true),
+        interact_bed: file("*.Interact.bed", optional: true),
+        xls:          file("*.xls"),
+        pdf:          file("*junction.pdf", optional: true),
+        events_pdf:   file("*events.pdf", optional: true),
+        rscript:      file("*.r"),
+        log:          file("*.log")
+    )
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'rseqc', eval('junction_annotation.py --version | sed "s/junction_annotation.py //"')) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''

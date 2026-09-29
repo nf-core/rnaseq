@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process RSEQC_READDUPLICATION {
     tag "$meta.id"
     label 'process_medium'
@@ -8,17 +10,19 @@ process RSEQC_READDUPLICATION {
         'community.wave.seqera.io/library/rseqc_r-base:2e29d2dfda9cef15' }"
 
     input:
-    tuple val(meta), path(bam), path(bai)
+    tuple(meta: Map, bam: Path, bai: Path)
 
     output:
-    tuple val(meta), path("*seq.DupRate.xls"), emit: seq_xls
-    tuple val(meta), path("*pos.DupRate.xls"), emit: pos_xls
-    tuple val(meta), path("*.pdf")           , emit: pdf
-    tuple val(meta), path("*.r")             , emit: rscript
-    tuple val("${task.process}"), val('rseqc'), eval('read_duplication.py --version | sed "s/read_duplication.py //"'), emit: versions_rseqc, topic: versions
+    record(
+        meta:    meta,
+        seq_xls: file("*seq.DupRate.xls"),
+        pos_xls: file("*pos.DupRate.xls"),
+        pdf:     file("*.pdf"),
+        rscript: file("*.r")
+    )
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'rseqc', eval('read_duplication.py --version | sed "s/read_duplication.py //"')) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''

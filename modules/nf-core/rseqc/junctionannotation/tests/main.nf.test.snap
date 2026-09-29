@@ -9,186 +9,44 @@
                 ]
             ]
         ],
+        "timestamp": "2025-12-16T11:12:52.934637398",
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-16T11:12:52.934637398"
+        }
     },
     "sarscov2 - paired end [bam] - stub": {
         "content": [
             {
-                "0": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.junction.xls:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "1": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.junction_plot.r:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "2": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.junction_annotation.log:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "3": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.junction.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "4": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.Interact.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "5": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.junction.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "6": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.events.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "7": [
-                    [
-                        "RSEQC_JUNCTIONANNOTATION",
-                        "rseqc",
-                        "5.0.4"
-                    ]
-                ],
-                "bed": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.junction.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "events_pdf": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.events.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "interact_bed": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.Interact.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "log": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.junction_annotation.log:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "pdf": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.junction.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "rscript": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.junction_plot.r:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "versions_rseqc": [
-                    [
-                        "RSEQC_JUNCTIONANNOTATION",
-                        "rseqc",
-                        "5.0.4"
-                    ]
-                ],
-                "xls": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.junction.xls:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ]
-            }
+                "id": "test",
+                "single_end": false
+            },
+            "test.junction.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
+            "test.Interact.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
+            "test.junction.xls:md5,d41d8cd98f00b204e9800998ecf8427e",
+            "test.junction.pdf:md5,d41d8cd98f00b204e9800998ecf8427e",
+            "test.events.pdf:md5,d41d8cd98f00b204e9800998ecf8427e",
+            "test.junction_plot.r:md5,d41d8cd98f00b204e9800998ecf8427e",
+            "test.junction_annotation.log:md5,d41d8cd98f00b204e9800998ecf8427e"
         ],
+        "timestamp": "2026-09-29T17:29:24.142117223",
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-10T15:03:34.433311514"
+            "nf-test": "0.9.5",
+            "nextflow": "26.09.1"
+        }
     },
     "sarscov2 - paired end [bam]": {
         "content": [
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.junction_annotation.log:md5,d75e0f5d62fada8aa9449991b209554c"
-                ]
-            ],
-            [
-                [
-                    "RSEQC_JUNCTIONANNOTATION",
-                    "rseqc",
-                    "5.0.4"
-                ]
-            ]
+            {
+                "id": "test",
+                "single_end": false
+            },
+            "test.junction_annotation.log:md5,d75e0f5d62fada8aa9449991b209554c"
         ],
+        "timestamp": "2026-09-29T17:29:09.206414662",
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-16T11:12:46.525058132"
+            "nf-test": "0.9.5",
+            "nextflow": "26.09.1"
+        }
     }
 }

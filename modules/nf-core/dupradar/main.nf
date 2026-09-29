@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process DUPRADAR {
     tag "$meta.id"
     label 'process_long'
@@ -8,21 +10,23 @@ process DUPRADAR {
         'community.wave.seqera.io/library/bioconductor-dupradar:1.38.0--831da16eb40a64ab' }"
 
     input:
-    tuple val(meta), path(bam)
-    tuple val(meta2), path(gtf)
+    tuple(meta: Map, bam: Path)
+    tuple(meta2: Map, gtf: Path)
 
     output:
-    tuple val(meta), path("*_duprateExpDens.pdf")   , emit: scatter2d
-    tuple val(meta), path("*_duprateExpBoxplot.pdf"), emit: boxplot
-    tuple val(meta), path("*_expressionHist.pdf")   , emit: hist
-    tuple val(meta), path("*_dupMatrix.txt")        , emit: dupmatrix
-    tuple val(meta), path("*_intercept_slope.txt")  , emit: intercept_slope
-    tuple val(meta), path("*_mqc.txt")              , emit: multiqc
-    tuple val(meta), path("*.R_sessionInfo.log")    , emit: session_info
-    path "versions.yml"                             , emit: versions, topic: versions
+    record(
+        meta:            meta,
+        scatter2d:       file("*_duprateExpDens.pdf"),
+        boxplot:         file("*_duprateExpBoxplot.pdf"),
+        hist:            file("*_expressionHist.pdf"),
+        dupmatrix:       file("*_dupMatrix.txt"),
+        intercept_slope: file("*_intercept_slope.txt"),
+        multiqc:         files("*_mqc.txt", optional: true).toSorted { f -> f.name },
+        session_info:    file("*.R_sessionInfo.log")
+    )
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    file('versions.yml') >> 'versions'
 
     script:
     template 'dupradar.r'

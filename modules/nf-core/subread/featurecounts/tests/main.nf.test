@@ -24,12 +24,13 @@ nextflow_process {
         }
 
         then {
+            def r = process.out[0][0]
             assertAll(
                 { assert process.success },
                 { assert snapshot(
-                    process.out.counts,
-                    process.out.summary,
-                    process.out.findAll { key, val -> key.startsWith('versions') }
+                    r.meta,
+                    r.counts,
+                    r.summary
                 ).match() }
             )
         }
@@ -52,9 +53,10 @@ nextflow_process {
         }
 
         then {
+            def r = process.out[0][0]
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(r.meta, r.counts, r.summary).match() }
             )
         }
     }
@@ -74,12 +76,13 @@ nextflow_process {
         }
 
         then {
+            def r = process.out[0][0]
             assertAll(
                 { assert process.success },
                 { assert snapshot(
-                    process.out.counts,
-                    process.out.summary,
-                    process.out.findAll { key, val -> key.startsWith('versions') }
+                    r.meta,
+                    r.counts,
+                    r.summary
                 ).match() }
             )
         }
@@ -102,9 +105,10 @@ nextflow_process {
         }
 
         then {
+            def r = process.out[0][0]
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(r.meta, r.counts, r.summary).match() }
             )
         }
     }
@@ -124,12 +128,13 @@ nextflow_process {
         }
 
         then {
+            def r = process.out[0][0]
             assertAll(
                 { assert process.success },
                 { assert snapshot(
-                    process.out.counts,
-                    process.out.summary,
-                    process.out.findAll { key, val -> key.startsWith('versions') }
+                    r.meta,
+                    r.counts,
+                    r.summary
                 ).match() }
             )
         }
@@ -152,9 +157,10 @@ nextflow_process {
         }
 
         then {
+            def r = process.out[0][0]
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(r.meta, r.counts, r.summary).match() }
             )
         }
     }

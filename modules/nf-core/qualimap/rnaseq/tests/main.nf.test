@@ -19,16 +19,17 @@ nextflow_process {
                 ]
                 input[1] = [
                     [ id:'test_fasta_gtf' ],
-                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
                 ]
                 """
             }
         }
 
         then {
+            def q = process.out[0][0]
             assertAll (
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out, unstableKeys:["results"])).match() }
+                { assert snapshot(q[0], file(q[1]).name).match() }
             )
         }
     }
@@ -46,16 +47,17 @@ nextflow_process {
                 ]
                 input[1] = [
                     [ id:'test_fasta_gtf' ],
-                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
                 ]
                 """
             }
         }
 
         then {
+            def q = process.out[0][0]
             assertAll (
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out)).match() }
+                { assert snapshot(q[0], file(q[1]).name).match() }
             )
         }
     }

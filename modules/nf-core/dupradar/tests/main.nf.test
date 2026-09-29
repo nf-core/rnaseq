@@ -28,18 +28,18 @@ nextflow_process {
         }
 
         then {
+            def r = process.out[0][0]
             assertAll(
                 { assert process.success },
                 { assert snapshot(
-                    file(process.out.boxplot[0][1]).name,
-                    file(process.out.hist[0][1]).name,
-                    file(process.out.scatter2d[0][1]).name,
-                    process.out.dupmatrix,
-                    process.out.intercept_slopt,
-                    process.out.multiqc,
-                    path(process.out.versions.get(0)).yaml,
+                    file(r.boxplot).name,
+                    file(r.hist).name,
+                    file(r.scatter2d).name,
+                    r.meta,
+                    r.dupmatrix,
+                    r.intercept_slope,
+                    r.multiqc
                 ).match() },
-                { assert snapshot(path(process.out.versions.get(0)).yaml).match("versions") },
             )
         }
     }
@@ -66,9 +66,10 @@ nextflow_process {
         }
 
         then {
+            def r = process.out[0][0]
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(r.meta, r.scatter2d, r.boxplot, r.hist, r.dupmatrix, r.intercept_slope, r.multiqc, r.session_info).match() }
             )
         }
     }
@@ -93,16 +94,17 @@ nextflow_process {
         }
 
         then {
+            def r = process.out[0][0]
             assertAll(
                 { assert process.success },
                 { assert snapshot(
-                    file(process.out.boxplot[0][1]).name,
-                    file(process.out.hist[0][1]).name,
-                    file(process.out.scatter2d[0][1]).name,
-                    process.out.dupmatrix,
-                    process.out.intercept_slopt,
-                    process.out.multiqc,
-                    path(process.out.versions.get(0)).yaml,
+                    file(r.boxplot).name,
+                    file(r.hist).name,
+                    file(r.scatter2d).name,
+                    r.meta,
+                    r.dupmatrix,
+                    r.intercept_slope,
+                    r.multiqc
                 ).match() },
             )
         }
@@ -130,9 +132,10 @@ nextflow_process {
         }
 
         then {
+            def r = process.out[0][0]
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(r.meta, r.scatter2d, r.boxplot, r.hist, r.dupmatrix, r.intercept_slope, r.multiqc, r.session_info).match() }
             )
         }
     }

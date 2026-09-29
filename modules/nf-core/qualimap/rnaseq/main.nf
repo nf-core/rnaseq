@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process QUALIMAP_RNASEQ {
     tag "$meta.id"
     label 'process_medium'
@@ -8,21 +10,20 @@ process QUALIMAP_RNASEQ {
         'quay.io/biocontainers/qualimap:2.3--hdfd78af_0' }"
 
     input:
-    tuple val(meta), path(bam)
-    tuple val(meta2), path(gtf)
+    tuple(meta: Map, bam: Path)
+    tuple(meta2: Map, gtf: Path)
 
     output:
-    tuple val(meta), path("${prefix}"), emit: results
-    tuple val("${task.process}"), val('qualimap'), eval("qualimap -h | sed -n 's/^QualiMap v.//p'"), topic: versions, emit: versions_qualimap
+    tuple(meta, file("${task.ext.prefix ?: meta.id}"))
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'qualimap', eval("qualimap -h | sed -n 's/^QualiMap v.//p'")) >> 'versions'
 
     script:
     def args = task.ext.args   ?: ''
-    prefix   = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.id}"
     def paired_end = meta.single_end ? '' : '-pe'
-    def memory = (task.memory.mega*0.8).intValue() + 'M'
+    def memory = "${(task.memory.toMega() * 0.8).intValue()}M"
 
     """
     unset DISPLAY
@@ -39,7 +40,7 @@ process QUALIMAP_RNASEQ {
     """
 
     stub:
-    prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.id}"
     """
     mkdir ${prefix}
     """

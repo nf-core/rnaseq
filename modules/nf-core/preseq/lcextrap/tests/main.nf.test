@@ -14,16 +14,17 @@ nextflow_process {
                 """
                 input[0] = [
                     [ id:'test', single_end:true ],
-                    [ file(params.modules_testdata_base_path + 'delete_me/preseq/SRR1003759_5M_subset.mr', checkIfExists: true) ]
+                    file(params.modules_testdata_base_path + 'delete_me/preseq/SRR1003759_5M_subset.mr', checkIfExists: true)
                 ]
                 """
             }
         }
 
         then {
+            def r = process.out[0][0]
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out, unstableKeys:["log"])).match() }
+                { assert snapshot(r.meta, r.lc_extrap, file(r.log).name).match() }
             )
         }
     }
@@ -35,16 +36,17 @@ nextflow_process {
                 """
                 input[0] = [
                     [ id:'test', single_end:true ],
-                    [ file(params.modules_testdata_base_path + 'delete_me/preseq/SRR1003759_5M_subset.mr', checkIfExists: true) ]
+                    file(params.modules_testdata_base_path + 'delete_me/preseq/SRR1003759_5M_subset.mr', checkIfExists: true)
                 ]
                 """
             }
         }
 
         then {
+            def r = process.out[0][0]
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out)).match() }
+                { assert snapshot(r.meta, r.lc_extrap, r.log).match() }
             )
         }
     }
@@ -55,16 +57,17 @@ nextflow_process {
                 """
                 input[0] = [
                     [ id:'test', single_end:false ],
-                    [ file(params.modules_testdata_base_path + 'delete_me/preseq/SRR1003759_5M_subset.mr', checkIfExists: true) ]
+                    file(params.modules_testdata_base_path + 'delete_me/preseq/SRR1003759_5M_subset.mr', checkIfExists: true)
                 ]
                 """
             }
         }
 
         then {
+            def r = process.out[0][0]
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out, unstableKeys:["log"])).match() }
+                { assert snapshot(r.meta, r.lc_extrap, file(r.log).name).match() }
             )
         }
     }
@@ -76,16 +79,17 @@ nextflow_process {
                 """
                 input[0] = [
                     [ id:'test', single_end:false ],
-                    [ file(params.modules_testdata_base_path + 'delete_me/preseq/SRR1003759_5M_subset.mr', checkIfExists: true) ]
+                    file(params.modules_testdata_base_path + 'delete_me/preseq/SRR1003759_5M_subset.mr', checkIfExists: true)
                 ]
                 """
             }
         }
 
         then {
+            def r = process.out[0][0]
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out)).match() }
+                { assert snapshot(r.meta, r.lc_extrap, r.log).match() }
             )
         }
     }

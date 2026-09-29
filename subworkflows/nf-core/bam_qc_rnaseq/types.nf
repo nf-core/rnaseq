@@ -2,11 +2,13 @@
 include { Rseqc } from '../bam_rseqc/types'
 
 record BamQcPreseq {
+    meta:      Map
     lc_extrap: Path
     log:       Path
 }
 
 record BamQcFeaturecounts {
+    meta:    Map
     counts:  Path
     summary: Path
 }
@@ -17,6 +19,7 @@ record BamQcBiotype {
 }
 
 record BamQcDupradar {
+    meta:            Map
     scatter2d:       Path
     boxplot:         Path
     hist:            Path

@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process SUBREAD_FEATURECOUNTS {
     tag "${meta.id}"
     label 'process_medium'
@@ -8,15 +10,17 @@ process SUBREAD_FEATURECOUNTS {
         : 'quay.io/biocontainers/subread:2.1.1--h577a1d6_0'}"
 
     input:
-    tuple val(meta), path(bams), path(annotation)
+    tuple(meta: Map, bams: List<Path>, annotation: Path)
 
     output:
-    tuple val(meta), path("*featureCounts.tsv"), emit: counts
-    tuple val(meta), path("*featureCounts.tsv.summary"), emit: summary
-    tuple val("${task.process}"), val('subread'), eval("featureCounts -v 2>&1 | sed 's/featureCounts v//'"), emit: versions_subread, topic: versions
+    record(
+        meta:    meta,
+        counts:  file("*featureCounts.tsv"),
+        summary: file("*featureCounts.tsv.summary")
+    )
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'subread', eval("featureCounts -v 2>&1 | sed 's/featureCounts v//'")) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''

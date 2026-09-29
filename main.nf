@@ -45,8 +45,6 @@ include { PIPELINE_COMPLETION        } from './subworkflows/local/utils_nfcore_r
 include { checkMaxContigSize         } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { defineQcTools              } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { isStarIndexLegacy          } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
-include { samplePrefix               } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
-include { alignedDir                 } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { saveFile                   } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { outputEnabled              } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 
@@ -311,6 +309,14 @@ workflow {
     multiqc             = NFCORE_RNASEQ.out.multiqc
     pipeline_info       = NFCORE_RNASEQ.out.pipeline_info
 }
+
+// Per-sample directory prefix for per-record outputs under --skip_quantification_merge.
+// Run-level records (e.g. a cross-sample merged file) are never sample-prefixed.
+def samplePrefix(r) { params.skip_quantification_merge ? "${r.id}/" : '' }
+
+// Directory the aligned BAM/BAI/transcriptome BAM publish to. Also used to rebuild the
+// samplesheet's genome_bam/transcriptome_bam paths in the entry workflow, so the two can't drift.
+def alignedDir(r) { "${samplePrefix(r)}${params.aligner}/" }
 
 output {
     contaminants {   // record(id, meta, kraken2, bracken, sylph, sylphtax); exactly one tool branch is populated per run

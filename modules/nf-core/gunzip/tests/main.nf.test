@@ -16,7 +16,7 @@ nextflow_process {
             process {
                 """
                 input[0] = Channel.of([
-                        [],
+                        [:],
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
                     ]
                 )
@@ -27,7 +27,7 @@ nextflow_process {
         then {
             assertAll(
             { assert process.success },
-            { assert snapshot(process.out).match() }
+            { assert snapshot(process.out[0]).match() }
             )
         }
 
@@ -55,7 +55,7 @@ nextflow_process {
         then {
             assertAll(
             { assert process.success },
-            { assert snapshot(process.out).match() }
+            { assert snapshot(process.out[0]).match() }
             )
         }
 
@@ -72,7 +72,7 @@ nextflow_process {
             process {
                 """
                 input[0] = Channel.of([
-                        [],
+                        [:],
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
                     ]
                 )
@@ -83,7 +83,7 @@ nextflow_process {
         then {
             assertAll(
             { assert process.success },
-            { assert snapshot(process.out).match() }
+            { assert snapshot(process.out[0]).match() }
             )
         }
 
@@ -98,7 +98,7 @@ nextflow_process {
             process {
                 """
                 input[0] = Channel.of([
-                        [],
+                        [:],
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true).copyTo('test.fa.v1.fa.gz')
                     ]
                 )
@@ -109,7 +109,7 @@ nextflow_process {
         then {
             assertAll(
             { assert process.success },
-            { assert file(process.out.gunzip[0][1]).name == 'test.fa.v1.fa' }
+            { assert file(process.out[0][0][1]).name == 'test.fa.v1.fa' }
             )
         }
 
@@ -137,7 +137,7 @@ nextflow_process {
         then {
             assertAll(
             { assert process.success },
-            { assert snapshot(process.out).match() }
+            { assert snapshot(process.out[0]).match() }
             )
         }
 
@@ -166,7 +166,7 @@ nextflow_process {
         then {
             assertAll(
             { assert process.success },
-            { assert snapshot(process.out).match() }
+            { assert snapshot(process.out[0]).match() }
             )
         }
 

@@ -31,12 +31,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(
-                    process.out.fasta,
-                    process.out.gtf,
-                    process.out.versions,
-                    path(process.out.versions[0]).yaml
-                ).match() }
+                { assert snapshot(process.out[0][0]).match() }
             )
         }
     }
@@ -65,10 +60,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(
-                    sanitizeOutput(process.out),
-                    path(process.out.versions[0]).yaml
-                ).match() }
+                { assert snapshot(process.out[0][0]).match() }
             )
         }
     }

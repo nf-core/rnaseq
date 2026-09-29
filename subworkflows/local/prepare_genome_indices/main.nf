@@ -83,7 +83,7 @@ workflow PREPARE_GENOME_INDICES {
         if (bbsplit_index) {
             // Use user-provided bbsplit index
             if (bbsplit_index.endsWith('.tar.gz')) {
-                ch_bbsplit_index = UNTAR_BBSPLIT_INDEX ([ [:], file(bbsplit_index, checkIfExists: true) ]).untar.map { tuple -> tuple[1] }
+                ch_bbsplit_index = UNTAR_BBSPLIT_INDEX ([ [:], file(bbsplit_index, checkIfExists: true) ]).map { tuple -> tuple[1] }
             } else {
                 ch_bbsplit_index = channel.value(file(bbsplit_index, checkIfExists: true))
             }
@@ -120,7 +120,7 @@ workflow PREPARE_GENOME_INDICES {
     if ('sortmerna' in prepare_tool_indices) {
         if (sortmerna_index) {
             if (sortmerna_index.endsWith('.tar.gz')) {
-                ch_sortmerna_index = UNTAR_SORTMERNA_INDEX ([ [:], file(sortmerna_index, checkIfExists: true) ]).untar.map { tuple -> tuple[1] }
+                ch_sortmerna_index = UNTAR_SORTMERNA_INDEX ([ [:], file(sortmerna_index, checkIfExists: true) ]).map { tuple -> tuple[1] }
             } else {
                 ch_sortmerna_index = channel.value([ [:], file(sortmerna_index, checkIfExists: true) ])
             }
@@ -141,7 +141,7 @@ workflow PREPARE_GENOME_INDICES {
     ch_bowtie2_rrna_index = channel.empty()
     if ('bowtie2_rrna' in prepare_tool_indices) {
         if (bowtie2_rrna_index.endsWith('.tar.gz')) {
-            ch_bowtie2_rrna_index = UNTAR_BOWTIE2_RRNA_INDEX ([ [:], file(bowtie2_rrna_index, checkIfExists: true) ]).untar.first()
+            ch_bowtie2_rrna_index = UNTAR_BOWTIE2_RRNA_INDEX ([ [:], file(bowtie2_rrna_index, checkIfExists: true) ]).first()
         } else {
             ch_bowtie2_rrna_index = channel.value([ [:], file(bowtie2_rrna_index, checkIfExists: true) ])
         }
@@ -169,7 +169,7 @@ workflow PREPARE_GENOME_INDICES {
             // add the genomeType / genomeTransformType / genomeTransformVCF fields that
             // STAR 2.7.4a+ requires. Modern indices skip the adapter entirely.
             def ch_star_raw = star_index.endsWith('.tar.gz')
-                ? UNTAR_STAR_INDEX([ [:], file(star_index, checkIfExists: true) ]).untar
+                ? UNTAR_STAR_INDEX([ [:], file(star_index, checkIfExists: true) ])
                 : channel.value([ [:], file(star_index, checkIfExists: true) ])
             ch_star_index_publish = ch_star_raw.map { tuple -> tuple[1] }
             ch_star_index = star_index_legacy
@@ -194,7 +194,7 @@ workflow PREPARE_GENOME_INDICES {
     if ('star_rsem' in prepare_tool_indices) {
         if (rsem_index) {
             if (rsem_index.endsWith('.tar.gz')) {
-                ch_rsem_index = UNTAR_RSEM_INDEX ([ [:], file(rsem_index, checkIfExists: true) ]).untar.map { tuple -> tuple[1] }
+                ch_rsem_index = UNTAR_RSEM_INDEX ([ [:], file(rsem_index, checkIfExists: true) ]).map { tuple -> tuple[1] }
             } else {
                 ch_rsem_index = channel.value(file(rsem_index, checkIfExists: true))
             }
@@ -230,7 +230,7 @@ workflow PREPARE_GENOME_INDICES {
         // the index
         if (hisat2_index) {
             if (hisat2_index.endsWith('.tar.gz')) {
-                ch_hisat2_index = UNTAR_HISAT2_INDEX ([ [:], file(hisat2_index, checkIfExists: true) ]).untar.map { tuple -> tuple[1] }
+                ch_hisat2_index = UNTAR_HISAT2_INDEX ([ [:], file(hisat2_index, checkIfExists: true) ]).map { tuple -> tuple[1] }
             } else {
                 ch_hisat2_index = channel.value(file(hisat2_index, checkIfExists: true))
             }
@@ -253,7 +253,7 @@ workflow PREPARE_GENOME_INDICES {
     if ('bowtie2_salmon' in prepare_tool_indices) {
         if (bowtie2_index) {
             if (bowtie2_index.endsWith('.tar.gz')) {
-                ch_bowtie2_index = UNTAR_BOWTIE2_INDEX ([ [:], file(bowtie2_index, checkIfExists: true) ]).untar.map { _meta, index -> index }
+                ch_bowtie2_index = UNTAR_BOWTIE2_INDEX ([ [:], file(bowtie2_index, checkIfExists: true) ]).map { _meta, index -> index }
             } else {
                 ch_bowtie2_index = channel.value(file(bowtie2_index, checkIfExists: true))
             }
@@ -274,7 +274,7 @@ workflow PREPARE_GENOME_INDICES {
     ch_salmon_index = channel.empty()
     if (salmon_index) {
         if (salmon_index.endsWith('.tar.gz')) {
-            ch_salmon_index = UNTAR_SALMON_INDEX ( [ [:], salmon_index ] ).untar.first()
+            ch_salmon_index = UNTAR_SALMON_INDEX ( [ [:], file(salmon_index) ] ).first()
         } else {
             ch_salmon_index = channel.value([ [:], file(salmon_index) ])
         }
@@ -301,7 +301,7 @@ workflow PREPARE_GENOME_INDICES {
     ch_kallisto_index = channel.empty()
     if (kallisto_index) {
         if (kallisto_index.endsWith('.tar.gz')) {
-            ch_kallisto_index = UNTAR_KALLISTO_INDEX ( [ [:], kallisto_index ] ).untar.first()
+            ch_kallisto_index = UNTAR_KALLISTO_INDEX ( [ [:], file(kallisto_index) ] ).first()
         } else {
             ch_kallisto_index = channel.value([[:], file(kallisto_index)])
         }

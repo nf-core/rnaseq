@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process CUSTOM_GTFFILTER {
     tag "$meta.id"
     label 'process_single'
@@ -8,30 +10,21 @@ process CUSTOM_GTFFILTER {
 :         'community.wave.seqera.io/library/python:3.14.5--dc8358b3c5eeb927' }"
 
     input:
-    tuple val(meta), path(gtf)
-    tuple val(meta2), path(fasta)
+    tuple(meta: Map, gtf: Path)
+    tuple(meta2: Map, fasta: Path?)
 
     output:
-    tuple val(meta), path("${prefix}.${suffix}"), emit: gtf
-    path "versions.yml"                         , emit: versions, topic: versions
+    tuple(meta, file("${task.ext.prefix ?: meta.id}.gtf${gtf.extension == 'gz' ? '.gz' : ''}"))
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    file('versions.yml') >> 'versions'
 
     script:
-    prefix = task.ext.prefix ?: "${meta.id}"
-    suffix = "gtf" + (gtf.extension == 'gz' ? '.gz' : '')
-    args   = task.ext.args ?: ''
-
-    """
-    echo $args
-    """
-
     template 'gtffilter.py'
 
     stub:
-    prefix = task.ext.prefix ?: "${meta.id}"
-    suffix = "gtf" + (gtf.extension == 'gz' ? '.gz' : '')
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def suffix = "gtf" + (gtf.extension == 'gz' ? '.gz' : '')
     """
     touch ${prefix}.${suffix}
 

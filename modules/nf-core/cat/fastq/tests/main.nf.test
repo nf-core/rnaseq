@@ -120,7 +120,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = GUNZIP.out.gunzip
+                input[0] = GUNZIP.out
                     .toSortedList { a, b -> a[0].id <=> b[0].id }
                     .map { items -> [[ id: 'test', single_end: true ], items.collect { it[1] }] }
                 """
@@ -156,7 +156,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = GUNZIP.out.gunzip
+                input[0] = GUNZIP.out
                     .toSortedList { a, b -> a[0].id <=> b[0].id }
                     .map { items -> [[ id: 'test', single_end: false ], items.collect { it[1] }] }
                 """

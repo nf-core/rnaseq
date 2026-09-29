@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process EAUTILS_GTF2BED {
     tag "$meta.id"
     label 'process_low'
@@ -8,27 +10,19 @@ process EAUTILS_GTF2BED {
         'quay.io/biocontainers/perl:5.26.2' }"
 
     input:
-    tuple val(meta), path(gtf)
+    tuple(meta: Map, gtf: Path)
 
     output:
-    tuple val(meta), path("${prefix}.bed") , emit: bed
-    path "versions.yml"                    , emit: versions, topic: versions
+    tuple(meta, file("${task.ext.prefix ?: meta.id}.bed"))
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    file('versions.yml') >> 'versions'
 
     script:
-    prefix = task.ext.prefix ?: "${meta.id}"
-    args   = task.ext.args ?: ''
-
-    """
-    echo $args
-    """
-
     template 'gtf2bed.pl'
 
     stub:
-    prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.id}"
     """
     touch ${prefix}.bed
 

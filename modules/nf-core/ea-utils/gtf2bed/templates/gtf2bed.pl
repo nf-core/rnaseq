@@ -25,7 +25,7 @@
 use Getopt::Long;
 
 # Parse args from ext.args
-@ARGV = split(/\\s+/, "${args}");
+@ARGV = split(/\\s+/, "${task.ext.args ?: ''}");
 
 my \$extended;
 GetOptions("x"=>\\\$extended);
@@ -72,7 +72,7 @@ while (<IN>) {
     }
 }
 
-my \$out_file = "${prefix}.bed";
+my \$out_file = "${task.ext.prefix ?: meta.id}.bed";
 open OUT, ">", \$out_file or die "Can't open \$out_file: \$!\\n";
 
 for \$id (

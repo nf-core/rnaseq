@@ -33,7 +33,7 @@ nextflow_process {
                     [ id:'test'], // meta map
                     file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
                 ])
-                input[1] = UNTAR.out.untar.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
+                input[1] = UNTAR.out.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
                 input[2] = 'kallisto'
                 input[3] = 'gene_id'
                 input[4] = 'gene_name'
@@ -72,7 +72,7 @@ nextflow_process {
                     [ id:'test'], // meta map
                     file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
                 ])
-                input[1] = UNTAR.out.untar.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
+                input[1] = UNTAR.out.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
                 input[2] = 'kallisto'
                 input[3] = 'gene_id'
                 input[4] = 'gene_name,gene_biotype'
@@ -111,7 +111,7 @@ nextflow_process {
                     [ id:'test'], // meta map
                     file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
                 ])
-                input[1] = UNTAR.out.untar.map { meta, dir ->
+                input[1] = UNTAR.out.map { meta, dir ->
                     def results = []
                     dir.eachFileRecurse { f ->
                         if (f.name.endsWith('.isoforms.results')) results << f
@@ -158,7 +158,7 @@ nextflow_process {
                     [ id:'test'], // meta map
                     file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
                 ])
-                input[1] = UNTAR.out.untar.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
+                input[1] = UNTAR.out.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
                 input[2] = 'kallisto'
                 input[3] = 'gene_id'
                 input[4] = 'gene_name'

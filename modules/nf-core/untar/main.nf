@@ -1,3 +1,9 @@
+nextflow.enable.types = true
+
+def untarPrefix(meta: Map, archive: Path, prefix: String?) {
+    return prefix ?: (meta.id ? "${meta.id}" : archive.baseName.replaceFirst(/\.tar$/, ""))
+}
+
 process UNTAR {
     tag "${archive}"
     label 'process_single'
@@ -8,19 +14,18 @@ process UNTAR {
         : 'community.wave.seqera.io/library/coreutils_grep_gzip_lbzip2_pruned:838ba80435a629f8'}"
 
     input:
-    tuple val(meta), path(archive)
+    tuple(meta: Map, archive: Path)
 
     output:
-    tuple val(meta), path("${prefix}"), emit: untar
-    tuple val("${task.process}"), val('untar'), eval('tar --version 2>&1 | head -1 | sed "s/tar (GNU tar) //; s/ Copyright.*//"'), emit: versions_untar, topic: versions
+    tuple(meta, file(untarPrefix(meta, archive, task.ext.prefix)))
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'untar', eval('tar --version 2>&1 | head -1 | sed "s/tar (GNU tar) //; s/ Copyright.*//"')) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''
     def args2 = task.ext.args2 ?: ''
-    prefix = task.ext.prefix ?: (meta.id ? "${meta.id}" : archive.baseName.toString().replaceFirst(/\.tar$/, ""))
+    def prefix = untarPrefix(meta, archive, task.ext.prefix)
 
     """
     mkdir ${prefix}
@@ -46,7 +51,7 @@ process UNTAR {
     """
 
     stub:
-    prefix = task.ext.prefix ?: (meta.id ? "${meta.id}" : archive.toString().replaceFirst(/\.[^\.]+(.gz)?$/, ""))
+    def prefix = untarPrefix(meta, archive, task.ext.prefix)
     """
     mkdir ${prefix}
     ## Dry-run untaring the archive to get the files and place all in prefix

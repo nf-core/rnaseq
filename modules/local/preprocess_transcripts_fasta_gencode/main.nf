@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process PREPROCESS_TRANSCRIPTS_FASTA_GENCODE {
     tag "$fasta"
 
@@ -7,17 +9,16 @@ process PREPROCESS_TRANSCRIPTS_FASTA_GENCODE {
         'nf-core/ubuntu:20.04' }"
 
     input:
-    path fasta
+    fasta: Path
 
     output:
-    path "*.fa", emit: fasta
-    tuple val("${task.process}"), val('sed'), eval("sed --version 2>&1 | sed '1!d;s/^.*) //'"), topic: versions
+    file('*.fa')
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'sed', eval("sed --version 2>&1 | sed '1!d;s/^.*) //'")) >> 'versions'
 
     script:
-    def gzipped = fasta.toString().endsWith('.gz')
+    def gzipped = fasta.name.endsWith('.gz')
     def outfile = gzipped ? file(fasta.baseName).baseName : fasta.baseName
     def command = gzipped ? 'zcat' : 'cat'
     """
@@ -25,7 +26,7 @@ process PREPROCESS_TRANSCRIPTS_FASTA_GENCODE {
     """
 
     stub:
-    def gzipped = fasta.toString().endsWith('.gz')
+    def gzipped = fasta.name.endsWith('.gz')
     def outfile = gzipped ? file(fasta.baseName).baseName : fasta.baseName
     """
     touch ${outfile}.fixed.fa

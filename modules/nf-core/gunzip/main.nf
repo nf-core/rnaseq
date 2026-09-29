@@ -1,3 +1,12 @@
+nextflow.enable.types = true
+
+def gunzipName(archive: Path, prefix: String?) -> String {
+    def nameWithoutGz = archive.extension == 'gz' ? archive.baseName : archive.name
+    def extension = file(nameWithoutGz).extension
+    def name = file(nameWithoutGz).baseName
+    return (prefix ?: name) + ".${extension}"
+}
+
 process GUNZIP {
     tag "${archive}"
     label 'process_single'
@@ -8,22 +17,17 @@ process GUNZIP {
         : 'community.wave.seqera.io/library/coreutils_grep_gzip_lbzip2_pruned:838ba80435a629f8'}"
 
     input:
-    tuple val(meta), path(archive)
+    tuple(meta: Map, archive: Path)
 
     output:
-    tuple val(meta), path("${gunzip}"), emit: gunzip
-    tuple val("${task.process}"), val('gunzip'), eval('gunzip --version 2>&1 | head -1 | sed "s/^.*(gzip) //; s/ Copyright.*//"'), topic: versions, emit: versions_gunzip
+    tuple(meta, file(gunzipName(archive, task.ext.prefix)))
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'gunzip', eval('gunzip --version 2>&1 | head -1 | sed "s/^.*(gzip) //; s/ Copyright.*//"')) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''
-    def nameWithoutGz = archive.extension == 'gz' ? archive.baseName : archive.name
-	def extension = file(nameWithoutGz).extension
-	def name = file(nameWithoutGz).baseName
-    def prefix = task.ext.prefix ?: name
-    gunzip = prefix + ".${extension}"
+    def gunzip = gunzipName(archive, task.ext.prefix)
     """
     # Not calling gunzip itself because it creates files
     # with the original group ownership rather than the
@@ -36,11 +40,7 @@ process GUNZIP {
     """
 
     stub:
-    def nameWithoutGz = archive.extension == 'gz' ? archive.baseName : archive.name
-	def extension = file(nameWithoutGz).extension
-	def name = file(nameWithoutGz).baseName
-    def prefix = task.ext.prefix ?: name
-    gunzip = prefix + ".${extension}"
+    def gunzip = gunzipName(archive, task.ext.prefix)
     """
     touch ${gunzip}
     """

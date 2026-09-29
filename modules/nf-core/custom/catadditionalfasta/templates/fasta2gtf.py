@@ -114,7 +114,7 @@ def main() -> None:
     fasta_to_gtf("$add_fasta", f"{add_name}.gtf", "$biotype")
 
     # Concatenate new fasta to existing fasta, and the GTF we just generated to the GTF
-    output_prefix = "$prefix"
+    output_prefix = "${task.ext.prefix ?: meta.id}"
     os.mkdir("out")
     os.system(f"cat $fasta $add_fasta > out/{output_prefix}.fasta")
     os.system(f"cat $gtf {add_name}.gtf > out/{output_prefix}.gtf")

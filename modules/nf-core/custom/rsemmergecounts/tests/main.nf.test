@@ -29,7 +29,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = UNTAR.out.untar.flatMap { meta, dir ->
+                input[0] = UNTAR.out.flatMap { meta, dir ->
                     def files = []
                     dir.toFile().eachFileRecurse { f ->
                         if (f.name.endsWith('.genes.results')) {
@@ -38,7 +38,7 @@ nextflow_process {
                     }
                     files
                 }.collect().map { files -> [ [ id: 'rsem_merged' ], files ] }
-                input[1] = UNTAR.out.untar.flatMap { meta, dir ->
+                input[1] = UNTAR.out.flatMap { meta, dir ->
                     def files = []
                     dir.toFile().eachFileRecurse { f ->
                         if (f.name.endsWith('.isoforms.results')) {

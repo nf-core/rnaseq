@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process CUSTOM_CATADDITIONALFASTA {
     tag "$meta.id"
 
@@ -7,25 +9,25 @@ process CUSTOM_CATADDITIONALFASTA {
         'quay.io/biocontainers/python:3.12' }"
 
     input:
-    tuple val(meta), path(fasta), path(gtf)
-    tuple val(meta2), path(add_fasta)
-    val(biotype)
+    tuple(meta: Map, fasta: Path, gtf: Path)
+    tuple(meta2: Map, add_fasta: Path)
+    biotype: String
 
     output:
-    tuple val(meta), path("out/${prefix}.fasta"), emit: fasta
-    tuple val(meta), path("out/${prefix}.gtf")  , emit: gtf
-    path "versions.yml"                         , emit: versions, topic: versions
+    record(
+        meta:  meta,
+        fasta: file("out/${task.ext.prefix ?: meta.id}.fasta"),
+        gtf:   file("out/${task.ext.prefix ?: meta.id}.gtf")
+    )
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    file('versions.yml') >> 'versions'
 
     script:
-    prefix = task.ext.prefix ?: "${meta.id}"
-
     template 'fasta2gtf.py'
 
     stub:
-    prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.id}"
     """
     mkdir out
     touch out/${prefix}.fasta

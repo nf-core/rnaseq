@@ -37,7 +37,7 @@ nextflow_workflow {
                     [ id: 'samplesheet' ],
                     file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true)
                 ]
-                input[1] = UNTAR.out.untar.flatMap { meta, dir ->
+                input[1] = UNTAR.out.flatMap { meta, dir ->
                     def entries = []
                     dir.toFile().eachDir { d ->
                         entries << [[ id: d.name ], d.toPath()]
@@ -103,7 +103,7 @@ nextflow_workflow {
                 // GTF. Regression test for SE_TRANSCRIPT_UNIFIED failing on exactly this case.
                 // The copy keeps the original directory basename (tximport derives sample
                 // identity from it, not from meta.id) - only the parent changes.
-                input[1] = UNTAR.out.untar.flatMap { meta, dir ->
+                input[1] = UNTAR.out.flatMap { meta, dir ->
                     def entries = []
                     dir.toFile().eachDir { d ->
                         def copyDir = file("\${workDir}/\${d.name}_orphan/\${d.name}")
@@ -157,7 +157,7 @@ nextflow_workflow {
                     [ id: 'samplesheet' ],
                     file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true)
                 ]
-                input[1] = UNTAR.out.untar.flatMap { meta, dir ->
+                input[1] = UNTAR.out.flatMap { meta, dir ->
                     def entries = []
                     dir.toFile().eachDir { d ->
                         entries << [[ id: d.name ], d.toPath()]
@@ -218,7 +218,7 @@ nextflow_workflow {
                     [ id: 'samplesheet' ],
                     file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true)
                 ]
-                input[1] = UNTAR.out.untar.flatMap { meta, dir ->
+                input[1] = UNTAR.out.flatMap { meta, dir ->
                     def entries = []
                     dir.toFile().eachFileRecurse { f ->
                         if (f.name.endsWith('.isoforms.results')) {

@@ -33,7 +33,7 @@ nextflow_process {
                         [ id:'test'], // meta map
                         file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
                     ])
-                    input[1] = UNTAR.out.untar.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
+                    input[1] = UNTAR.out.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
                     input[2] = 'kallisto'
                     input[3] = 'gene_id'
                     input[4] = 'gene_name'
@@ -45,7 +45,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = UNTAR.out.untar.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
+                input[0] = UNTAR.out.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
                 input[1] = CUSTOM_TX2GENE.out.tx2gene
                 input[2] = 'kallisto'
                 """
@@ -94,7 +94,7 @@ nextflow_process {
                         [ id:'test'], // meta map
                         file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
                     ])
-                    input[1] = UNTAR.out.untar.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
+                    input[1] = UNTAR.out.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
                     input[2] = 'kallisto'
                     input[3] = 'gene_id'
                     input[4] = 'gene_name,gene_biotype'
@@ -106,7 +106,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = UNTAR.out.untar.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
+                input[0] = UNTAR.out.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
                 input[1] = CUSTOM_TX2GENE.out.tx2gene
                 input[2] = 'kallisto'
                 """
@@ -177,7 +177,7 @@ nextflow_process {
                         [ id:'test'], // meta map
                         file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
                     ])
-                    input[1] = UNTAR.out.untar.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
+                    input[1] = UNTAR.out.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
                     input[2] = 'salmon'
                     input[3] = 'gene_id'
                     input[4] = 'gene_name'
@@ -189,7 +189,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = UNTAR.out.untar.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
+                input[0] = UNTAR.out.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
                 input[1] = CUSTOM_TX2GENE.out.tx2gene
                 input[2] = 'salmon'
                 """
@@ -239,7 +239,7 @@ nextflow_process {
                         [ id:'test'], // meta map
                         file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
                     ])
-                    input[1] = UNTAR.out.untar.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
+                    input[1] = UNTAR.out.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
                     input[2] = 'salmon'
                     input[3] = 'gene_id'
                     input[4] = 'gene_name'
@@ -251,7 +251,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = UNTAR.out.untar.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
+                input[0] = UNTAR.out.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
                 // Remove half the entries from tx2gene to simulate FASTA/GTF mismatch
                 input[1] = CUSTOM_TX2GENE.out.tx2gene.map { meta, tx2gene ->
                     def lines = tx2gene.readLines()
@@ -320,7 +320,7 @@ nextflow_process {
                         [ id:'test'], // meta map
                         file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
                     ])
-                    input[1] = UNTAR.out.untar.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
+                    input[1] = UNTAR.out.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
                     input[2] = 'salmon'
                     input[3] = 'gene_id'
                     input[4] = 'gene_name'
@@ -369,7 +369,7 @@ nextflow_process {
                         [ id:'test'], // meta map
                         file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
                     ])
-                    input[1] = UNTAR.out.untar.map { meta, dir ->
+                    input[1] = UNTAR.out.map { meta, dir ->
                         def results = []
                         dir.eachFileRecurse { f ->
                             if (f.name.endsWith('.isoforms.results')) results << f
@@ -387,7 +387,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = UNTAR.out.untar.map { meta, dir ->
+                input[0] = UNTAR.out.map { meta, dir ->
                     def results = []
                     dir.eachFileRecurse { f ->
                         if (f.name.endsWith('.isoforms.results')) results << f
@@ -467,7 +467,7 @@ nextflow_process {
                         [ id:'test'], // meta map
                         file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
                     ])
-                    input[1] = UNTAR.out.untar.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
+                    input[1] = UNTAR.out.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
                     input[2] = 'kallisto'
                     input[3] = 'gene_id'
                     input[4] = 'gene_name,gene_biotype'
@@ -480,7 +480,7 @@ nextflow_process {
             process {
                 """
                 // Uses ext.args = '--gene_name_col gene_biotype' from nextflow.config
-                input[0] = UNTAR.out.untar.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
+                input[0] = UNTAR.out.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
                 input[1] = CUSTOM_TX2GENE.out.tx2gene
                 input[2] = 'kallisto'
                 """

@@ -29,7 +29,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(process.out[0]).match() }
             )
         }
     }
@@ -54,7 +54,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(process.out[0]).match() }
             )
         }
     }
@@ -81,7 +81,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(process.out[0]).match() }
             )
         }
     }
@@ -108,7 +108,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(process.out[0]).match() }
             )
         }
     }
@@ -124,7 +124,7 @@ nextflow_process {
                 ]
                 input[1] = [
                     [ id: 'no_fasta' ], // meta map
-                    []
+                    null
                 ]
                 """
             }
@@ -133,7 +133,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(process.out[0]).match() }
             )
         }
     }
@@ -160,7 +160,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(process.out[0]).match() }
             )
         }
     }

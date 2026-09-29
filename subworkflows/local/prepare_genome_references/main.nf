@@ -59,19 +59,19 @@ workflow PREPARE_GENOME_REFERENCES {
     ch_gff_uncompressed = channel.empty()
     if (gtf) {
         if (gtf.endsWith('.gz')) {
-            ch_gtf      = GUNZIP_GTF ([ [:], file(gtf, checkIfExists: true) ]).gunzip.map { tuple -> tuple[1] }
+            ch_gtf      = GUNZIP_GTF ([ [:], file(gtf, checkIfExists: true) ]).map { tuple -> tuple[1] }
         } else {
             ch_gtf = channel.value(file(gtf, checkIfExists: true))
         }
     } else if (gff) {
         def ch_gff
         if (gff.endsWith('.gz')) {
-            ch_gff              = GUNZIP_GFF ([ [:], file(gff, checkIfExists: true) ]).gunzip
+            ch_gff              = GUNZIP_GFF ([ [:], file(gff, checkIfExists: true) ])
             ch_gff_uncompressed = ch_gff.map { tuple -> tuple[1] }
         } else {
             ch_gff = channel.value(file(gff, checkIfExists: true)).map { item -> [ [:], item ] }
         }
-        ch_gtf      = GFFREAD(ch_gff, []).gtf.map { tuple -> tuple[1] }
+        ch_gtf      = GFFREAD(ch_gff, null).map { r -> r.gtf }
     }
     // Set below, once, at the first step that supersedes ch_gtf (if any).
     ch_gtf_pre_filter = null
@@ -85,7 +85,7 @@ workflow PREPARE_GENOME_REFERENCES {
     if (fasta_provided) {
         // Uncompress FASTA if needed
         if (fasta.endsWith('.gz')) {
-            ch_fasta    = GUNZIP_FASTA ([ [:], file(fasta, checkIfExists: true) ]).gunzip.map { tuple -> tuple[1] }
+            ch_fasta    = GUNZIP_FASTA ([ [:], file(fasta, checkIfExists: true) ]).map { tuple -> tuple[1] }
         } else {
             ch_fasta = channel.value(file(fasta, checkIfExists: true))
         }
@@ -106,9 +106,9 @@ workflow PREPARE_GENOME_REFERENCES {
             ch_gtf.map { item -> [ [id: item.baseName + '.filtered'], item ] },
             fasta_provided
                 ? ch_fasta.map { item -> [ [id: 'genome'], item ] }
-                : channel.value([ [id: 'no_fasta'], [] ])
+                : channel.value([ [id: 'no_fasta'], null ])
         )
-        ch_gtf      = CUSTOM_GTFFILTER.out.gtf.map { _meta, filtered_gtf -> filtered_gtf }.first()
+        ch_gtf      = CUSTOM_GTFFILTER.out.map { _meta, filtered_gtf -> filtered_gtf }.first()
     }
 
     //---------------------------------------------------
@@ -120,7 +120,7 @@ workflow PREPARE_GENOME_REFERENCES {
     ch_gtf_pre_concat   = channel.empty()
     if (fasta_provided && additional_fasta) {
         if (additional_fasta.endsWith('.gz')) {
-            ch_add_fasta = GUNZIP_ADDITIONAL_FASTA([ [:], file(additional_fasta, checkIfExists: true) ]).gunzip.map { tuple -> tuple[1] }
+            ch_add_fasta = GUNZIP_ADDITIONAL_FASTA([ [:], file(additional_fasta, checkIfExists: true) ]).map { tuple -> tuple[1] }
             ch_additional_fasta_uncompressed = ch_add_fasta
         } else {
             ch_add_fasta = channel.value(file(additional_fasta, checkIfExists: true))
@@ -136,8 +136,8 @@ workflow PREPARE_GENOME_REFERENCES {
             ch_add_fasta.map { item -> [ [id: 'genome_transcriptome'], item ] },
             gencode ? "gene_type" : featurecounts_group_type
         )
-        ch_fasta    = CUSTOM_CATADDITIONALFASTA.out.fasta.map { tuple -> tuple[1] }.first()
-        ch_gtf      = CUSTOM_CATADDITIONALFASTA.out.gtf.map { tuple -> tuple[1] }.first()
+        ch_fasta    = CUSTOM_CATADDITIONALFASTA.out.map { r -> r.fasta }.first()
+        ch_gtf      = CUSTOM_CATADDITIONALFASTA.out.map { r -> r.gtf }.first()
     }
     ch_gtf_pre_filter = ch_gtf_pre_filter ?: channel.empty()
 
@@ -147,7 +147,7 @@ workflow PREPARE_GENOME_REFERENCES {
     ch_gene_bed = channel.empty()
     if (gene_bed) {
         if (gene_bed.endsWith('.gz')) {
-            ch_gene_bed = GUNZIP_GENE_BED ([ [:], file(gene_bed, checkIfExists: true) ]).gunzip.map { tuple -> tuple[1] }
+            ch_gene_bed = GUNZIP_GENE_BED ([ [:], file(gene_bed, checkIfExists: true) ]).map { tuple -> tuple[1] }
         } else {
             ch_gene_bed = channel.value(file(gene_bed, checkIfExists: true))
         }
@@ -157,10 +157,10 @@ workflow PREPARE_GENOME_REFERENCES {
         // gffread --bed derives intervals from any feature type.
         ch_gene_bed = GFFREAD_GENE_BED(
             ch_gtf.map { item -> [ [id: item.baseName], item ] },
-            []
-        ).bed.map { _meta, bed -> bed }
+            null
+        ).map { r -> r.bed }
     } else {
-        ch_gene_bed = EAUTILS_GTF2BED(ch_gtf.map { item -> [ [id: item.baseName], item ] }).bed.map { _meta, bed -> bed }
+        ch_gene_bed = EAUTILS_GTF2BED(ch_gtf.map { item -> [ [id: item.baseName], item ] }).map { _meta, bed -> bed }
     }
 
     //----------------------------------------------------------------------
@@ -174,14 +174,14 @@ workflow PREPARE_GENOME_REFERENCES {
     if (transcript_fasta) {
         // Use user-provided transcript FASTA
         if (transcript_fasta.endsWith('.gz')) {
-            ch_transcript_fasta = GUNZIP_TRANSCRIPT_FASTA ([ [:], file(transcript_fasta, checkIfExists: true) ]).gunzip.map { tuple -> tuple[1] }
+            ch_transcript_fasta = GUNZIP_TRANSCRIPT_FASTA ([ [:], file(transcript_fasta, checkIfExists: true) ]).map { tuple -> tuple[1] }
         } else {
             ch_transcript_fasta = channel.value(file(transcript_fasta, checkIfExists: true))
         }
         if (gencode) {
             ch_transcript_fasta_pre_gencode = ch_transcript_fasta
             PREPROCESS_TRANSCRIPTS_FASTA_GENCODE(ch_transcript_fasta)
-            ch_transcript_fasta = PREPROCESS_TRANSCRIPTS_FASTA_GENCODE.out.fasta
+            ch_transcript_fasta = PREPROCESS_TRANSCRIPTS_FASTA_GENCODE.out
         }
     } else if (fasta_provided) {
 
@@ -192,7 +192,7 @@ workflow PREPARE_GENOME_REFERENCES {
                 ch_gtf.map { gtf_file -> [ [id: 'transcripts'], gtf_file ] },
                 ch_fasta
             )
-            ch_transcript_fasta = GFFREAD_TRANSCRIPTS.out.gffread_fasta.map { _meta, fasta_file -> fasta_file }
+            ch_transcript_fasta = GFFREAD_TRANSCRIPTS.out.map { r -> r.gffread_fasta }
         } else if (use_sentieon_star) {
             // Build transcripts from genome if we have it
             SENTIEON_MAKE_TRANSCRIPTS_FASTA(ch_fasta, ch_gtf)
@@ -239,7 +239,6 @@ workflow PREPARE_GENOME_REFERENCES {
             }
 
         ch_rrna_fastas = GUNZIP_RRNA_FASTAS(ch_rrna_inputs.gz.map { rrna_fasta -> [ [:], rrna_fasta ] })
-            .gunzip
             .map { tuple -> tuple[1] }
             .mix(ch_rrna_inputs.plain)
     }
@@ -250,7 +249,7 @@ workflow PREPARE_GENOME_REFERENCES {
     ch_kraken_db = channel.empty()
     if (contaminant_screening && kraken_db) {
         if (kraken_db.endsWith('.tar.gz')) {
-            ch_kraken_db = UNTAR_KRAKEN_DB ( [ [:], file(kraken_db, checkIfExists: true) ] ).untar.map { tuple -> tuple[1] }
+            ch_kraken_db = UNTAR_KRAKEN_DB ( [ [:], file(kraken_db, checkIfExists: true) ] ).map { tuple -> tuple[1] }
         } else {
             ch_kraken_db = channel.value(file(kraken_db, checkIfExists: true))
         }

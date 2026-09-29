@@ -55,9 +55,20 @@ jobs:
           echo ${{ steps.set-shards.outputs.shard }}
           echo ${{ steps.set-shards.outputs.total_shards }}
 
+  # TEMPORARY: builds the Nextflow used by every nf-test job, see .github/actions/build-nextflow
+  build-nextflow:
+    name: build-nextflow
+    needs: [nf-test-changes]
+    if: ${{ needs.nf-test-changes.outputs.total_shards != '0' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - uses: ./.github/actions/build-nextflow
+
   nf-test:
     name: "${{ matrix.profile }} | ${{ matrix.NXF_VER }} | ${{ matrix.shard }}/${{ needs.nf-test-changes.outputs.total_shards }}"
-    needs: [nf-test-changes]
+    needs: [nf-test-changes, build-nextflow]
     if: ${{ needs.nf-test-changes.outputs.total_shards != '0' }}
     runs-on: # use self-hosted runners
       - runs-on=${{ github.run_id }}-nf-test

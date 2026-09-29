@@ -128,14 +128,14 @@ workflow MULTIQC_RNASEQ {
     // closure below builds it so the branches stay focused on file
     // assembly.
     //
-    def buildMultiqcInputTuple = { id, files, dynamic_config, replace_names = [] ->
+    def buildMultiqcInputTuple = { id, files, dynamic_config, replace_names = null ->
         [
             [id: id],
             files,
             [mqc_default_config, dynamic_config, mqc_custom_config].findAll { cfg -> cfg },
-            mqc_logo,
-            replace_names,
-            [],
+            mqc_logo ?: null,
+            replace_names ?: null,
+            null,
         ]
     }
 
@@ -247,21 +247,18 @@ workflow MULTIQC_RNASEQ {
     // One record per MULTIQC task: a single 'multiqc_report' row when
     // merged, or one per sample under skip_quantification_merge.
     //
-    ch_results = MULTIQC.out.report.map { meta, report -> [meta.id, meta, report] }
-        .join(MULTIQC.out.data.map { meta, data -> [meta.id, data] }, failOnMismatch: true, failOnDuplicate: true)
-        .join(MULTIQC.out.plots.map { meta, plots -> [meta.id, plots] }, remainder: true)
-        .map { id, meta, report, data, plots ->
-            record(
-                id:     id,
-                meta:   meta,
-                report: report,
-                data:   data,
-                plots:  plots
-            )
-        }
+    ch_results = MULTIQC.out.map { r ->
+        record(
+            id:     r.meta.id,
+            meta:   r.meta,
+            report: r.report,
+            data:   r.data,
+            plots:  r.plots
+        )
+    }
 
     emit:
-    report  = MULTIQC.out.report.map { _meta, report -> report }
+    report  = MULTIQC.out.map { r -> r.report }
     results = ch_results // channel: MultiqcReport
 }
 

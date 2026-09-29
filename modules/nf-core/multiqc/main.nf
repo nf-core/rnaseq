@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process MULTIQC {
     tag "${meta.id}"
     label 'process_single'
@@ -8,22 +10,25 @@ process MULTIQC {
         : 'community.wave.seqera.io/library/multiqc:1.35--c17fb751507e9dfc'}"
 
     input:
-    tuple val(meta), path(multiqc_files, stageAs: "?/*"), path(multiqc_config, stageAs: "?/*"), path(multiqc_logo), path(replace_names), path(sample_names)
+    tuple(meta: Map, multiqc_files: List<Path>, multiqc_config: List<Path>, multiqc_logo: Path?, replace_names: Path?, sample_names: Path?)
 
+    stage:
+    stageAs multiqc_files, '?/*'
+    stageAs multiqc_config, '?/*'
+
+    // MultiQC must not push its version to the `versions` topic: its input depends on that topic, so the pipeline would hang forever
     output:
-    tuple val(meta), path("*.html"), emit: report
-    tuple val(meta), path("*_data"), emit: data
-    tuple val(meta), path("*_plots"), emit: plots, optional: true
-    // MultiQC should not push its versions to the `versions` topic. Its input depends on the versions topic to be resolved thus outputting to the topic will let the pipeline hang forever
-    tuple val("${task.process}"), val('multiqc'), eval('multiqc --version | sed "s/.* //g"'), emit: versions
-
-    when:
-    task.ext.when == null || task.ext.when
+    record(
+        meta:   meta,
+        report: file('*.html'),
+        data:   file('*_data'),
+        plots:  file('*_plots', optional: true)
+    )
 
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ? "--filename ${task.ext.prefix}.html" : ''
-    def config = multiqc_config ? multiqc_config instanceof List ? "--config ${multiqc_config.join(' --config ')}" : "--config ${multiqc_config}" : ""
+    def config = multiqc_config ? "--config ${multiqc_config.join(' --config ')}" : ''
     def logo = multiqc_logo ? "--cl-config 'custom_logo: \"${multiqc_logo}\"'" : ''
     def replace = replace_names ? "--replace-names ${replace_names}" : ''
     def samples = sample_names ? "--sample-names ${sample_names}" : ''

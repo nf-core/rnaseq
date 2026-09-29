@@ -900,35 +900,6 @@ def buildDeseq2Record(ch_rdata, ch_pca_txt, ch_pdf, ch_dists_txt, ch_size_factor
 }
 
 //
-// Generic helpers for the `output {}` block
-//
-
-// Named per-field publish conditions that combine params or depend on the record.
-// Single-param conditions stay inline at the call site.
-def saveFile(key, r = null) {
-    if (key == 'align_bam')      { return params.save_align_intermeds || params.skip_markduplicates }
-    if (key == 'umi_bam')        { return params.save_align_intermeds || params.save_umi_intermeds }
-    if (key == 'non_ribo_reads') { return params.remove_ribo_rna && params.save_non_ribo_reads && (params.ribo_removal_tool != 'bowtie2' || r.meta.single_end) }
-    error("saveFile: unknown key '${key}'")
-}
-
-// Whole-output publish switch for outputs whose `enabled` isn't a single param expression.
-// Guards outputs whose `>>` targets can all be null, which crashes publishing
-// (https://github.com/nextflow-io/nextflow/issues/7669, fixed after 26.09.1-edge).
-def outputEnabled(name) {
-    if (name == 'preprocessed') {
-        // Disjunction of the `preprocessed` path closure's `>>` conditions.
-        return !(params.skip_fastqc || params.skip_qc) ||
-            !params.skip_trimming ||
-            (params.with_umi && !params.skip_umi_extract) ||
-            (!params.skip_bbsplit && params.fasta) ||
-            params.remove_ribo_rna ||
-            params.save_merged_fastq
-    }
-    error("outputEnabled: unknown output '${name}'")
-}
-
-//
 // RustQC output-path helpers
 //
 

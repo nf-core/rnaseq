@@ -29,51 +29,60 @@ nextflow_process {
         }
 
         then {
+            def r = process.out[0][0]
+            // every Path in the record apart from the aggregate all_files listing
+            def leaves
+            leaves = { x ->
+                x instanceof Map ? x.findAll { k, v -> k != 'meta' && k != 'all_files' }.values().collectMany { v -> leaves(v) } :
+                    x instanceof Collection ? x.collectMany { v -> leaves(v) } :
+                    x == null ? [] : [x]
+            }
+            def names = { x -> leaves(x).collect { v -> file(v).name }.sort() }
+            def qualimapFiles = []
+            file(r.qualimap).eachFileRecurse { f -> if( !f.isDirectory() ) qualimapFiles << f.toString() }
+            def uncovered = r.all_files.findAll { v -> !file(v).isDirectory() }.collect { v -> v.toString() } -
+                leaves(r).collect { v -> v.toString() } - qualimapFiles
             assertAll(
                 { assert process.success },
                 { assert snapshot(
                     // reproducible text outputs - full content
-                    process.out.featurecounts,
-                    process.out.preseq,
-                    process.out.rseqc[0][1].findAll { it.toString().endsWith("infer_experiment.txt") || it.toString().endsWith("tin.xls") || it.toString().endsWith("summary.txt") },
+                    r.featurecounts.counts,
+                    r.featurecounts.summary,
+                    r.biotype,
+                    r.preseq.lc_extrap,
+                    r.rseqc.inferexperiment,
+                    r.rseqc.tin.xls,
+                    r.rseqc.tin.txt,
+                    r.rseqc.innerdistance.summary,
+                    r.rseqc.junctionsaturation.summary,
 
                     // non-reproducible outputs - filenames only
-                    process.out.dupradar[0][1].collect { file(it).name }.sort(),
-                    process.out.samtools[0][1].collect { file(it).name }.sort(),
-                    process.out.qualimap[0][1].findAll { !file(it).isDirectory() }.collect { file(it).name }.sort(),
-                    process.out.rseqc[0][1].findAll {
-                        !file(it).isDirectory() &&
-                        !it.toString().endsWith("infer_experiment.txt") &&
-                        !it.toString().endsWith("tin.xls") &&
-                        !it.toString().endsWith("summary.txt")
-                    }.collect { file(it).name }.sort()
+                    names(r.dupradar),
+                    names(r.samtools),
+                    qualimapFiles.collect { v -> file(v).name }.sort(),
+                    names([r.rseqc.bamstat, r.rseqc.readdistribution,
+                        r.rseqc.innerdistance.distance, r.rseqc.innerdistance.freq, r.rseqc.innerdistance.mean,
+                        r.rseqc.innerdistance.plot, r.rseqc.innerdistance.rscript,
+                        r.rseqc.junctionannotation, r.rseqc.junctionsaturation.plot, r.rseqc.junctionsaturation.rscript,
+                        r.rseqc.readduplication])
                 ).match() },
 
-                // versions
-                { assert snapshot(process.out.versions_rustqc).match("versions") },
+                // every MultiQC-eligible file RustQC wrote is routed by some record field
+                { assert uncovered == [] },
 
                 // content assertions for non-snapshottable outputs
                 // samtools flagstat - 5644 total reads
-                { assert process.out.samtools[0][1].any {
-                    it.toString().endsWith(".flagstat") &&
-                    file(it).text.contains("5644 + 0 in total")
-                } },
+                { assert file(r.samtools.flagstat).text.contains("5644 + 0 in total") },
                 // samtools idxstats - 5642 reads on chr22
-                { assert process.out.samtools[0][1].any {
-                    it.toString().endsWith(".idxstats") &&
-                    file(it).text.contains("chr22\t40001\t5642")
-                } },
+                { assert file(r.samtools.idxstats).text.contains("chr22\t40001\t5642") },
                 // qualimap - 5,642 alignments, 23.55% exonic
-                { assert process.out.qualimap[0][1].any {
-                    it.toString().endsWith("rnaseq_qc_results.txt") &&
-                    file(it).text.contains("total alignments = 5,642") &&
-                    file(it).text.contains("exonic =  1,328 (23.55%)")
+                { assert qualimapFiles.any { v ->
+                    v.endsWith("rnaseq_qc_results.txt") &&
+                    file(v).text.contains("total alignments = 5,642") &&
+                    file(v).text.contains("exonic =  1,328 (23.55%)")
                 } },
                 // dupradar - 664 reads for ENSG00000239435
-                { assert process.out.dupradar[0][1].any {
-                    it.toString().endsWith("dupMatrix.txt") &&
-                    file(it).text.contains("ENSG00000239435\t3389\t664")
-                } }
+                { assert file(r.dupradar.dupmatrix).text.contains("ENSG00000239435\t3389\t664") }
             )
         }
     }
@@ -99,9 +108,23 @@ nextflow_process {
         }
 
         then {
+            def r = process.out[0][0]
+            // every Path in the record apart from the aggregate all_files listing
+            def leaves
+            leaves = { x ->
+                x instanceof Map ? x.findAll { k, v -> k != 'meta' && k != 'all_files' }.values().collectMany { v -> leaves(v) } :
+                    x instanceof Collection ? x.collectMany { v -> leaves(v) } :
+                    x == null ? [] : [x]
+            }
+            def names = { x -> leaves(x).collect { v -> file(v).name }.sort() }
+            def qualimapFiles = []
+            file(r.qualimap).eachFileRecurse { f -> if( !f.isDirectory() ) qualimapFiles << f.toString() }
+            def uncovered = r.all_files.findAll { v -> !file(v).isDirectory() }.collect { v -> v.toString() } -
+                leaves(r).collect { v -> v.toString() } - qualimapFiles
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(names(r)).match() },
+                { assert uncovered == [] }
             )
         }
     }

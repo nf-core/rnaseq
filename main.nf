@@ -617,8 +617,50 @@ output {
         }
     }
 
-    bam_qc_rustqc {   // record(id, file, target); --use_rustqc alternative, one entry per output file with a non-null target; the target is precomputed by rustqcTarget() in workflows/rnaseq/main.nf
-        path { s -> s.file >> s.target }
+    bam_qc_rustqc {   // RUSTQC record (meta, samtools, preseq, dupradar, featurecounts, biotype, rseqc, qualimap); --use_rustqc alternative to bam_qc, never sample-prefixed
+        path { s ->
+            def dir      = "${params.aligner}/rustqc/"
+            def dupradar = "${dir}dupradar/"
+            def fcDir    = "${dir}featurecounts/"
+            def rseqc    = "${dir}rseqc/"
+            def annDir   = "${rseqc}junction_annotation/"
+            def satDir   = "${rseqc}junction_saturation/"
+            def rdupDir  = "${rseqc}read_duplication/"
+            def innerDir = "${rseqc}inner_distance/"
+            def rq       = s.rseqc
+            [
+                ([s.samtools?.stats, s.samtools?.flagstat, s.samtools?.idxstats]): "${dir}samtools_stats/",
+                (s.preseq?.lc_extrap):          "${dir}preseq/",
+                (s.dupradar?.scatter2d):        "${dupradar}scatter_plot/",
+                (s.dupradar?.boxplot):          "${dupradar}box_plot/",
+                (s.dupradar?.hist):             "${dupradar}histogram/",
+                (s.dupradar?.dupmatrix):        "${dupradar}gene_data/",
+                (s.dupradar?.intercept_slope):  "${dupradar}intercepts_slope/",
+                (s.dupradar?.multiqc):          dupradar,
+                ([s.featurecounts?.counts, s.biotype?.tsv, s.biotype?.mqc, s.biotype?.rrna]): fcDir,
+                // Published under the name featureCounts gives its non-biotype summary
+                (s.featurecounts?.summary):     "${fcDir}${s.featurecounts?.summary?.name?.replace('.biotype.tsv.summary', '.tsv.summary')}",
+                (s.qualimap):                   "${dir}qualimap/",
+                (rq?.bamstat):                  "${rseqc}bam_stat/",
+                (rq?.inferexperiment):          "${rseqc}infer_experiment/",
+                (rq?.readdistribution):         "${rseqc}read_distribution/",
+                ([rq?.tin?.txt, rq?.tin?.xls]): "${rseqc}tin/",
+                ([rq?.junctionannotation?.bed, rq?.junctionannotation?.interact_bed]): "${annDir}bed/",
+                (rq?.junctionannotation?.xls):     "${annDir}xls/",
+                (rq?.junctionannotation?.log):     "${annDir}log/",
+                (rq?.junctionannotation?.plot):    "${annDir}plot/",
+                (rq?.junctionannotation?.rscript): "${annDir}rscript/",
+                (rq?.junctionsaturation?.summary): "${satDir}txt/",
+                (rq?.junctionsaturation?.plot):    "${satDir}plot/",
+                (rq?.junctionsaturation?.rscript): "${satDir}rscript/",
+                ([rq?.readduplication?.seq_xls, rq?.readduplication?.pos_xls]): "${rdupDir}xls/",
+                (rq?.readduplication?.plot):       "${rdupDir}plot/",
+                (rq?.readduplication?.rscript):    "${rdupDir}rscript/",
+                ([rq?.innerdistance?.distance, rq?.innerdistance?.freq, rq?.innerdistance?.mean, rq?.innerdistance?.summary]): "${innerDir}txt/",
+                (rq?.innerdistance?.plot):         "${innerDir}plot/",
+                (rq?.innerdistance?.rscript):      "${innerDir}rscript/",
+            ]
+        }
     }
 
     multiqc {   // MultiqcReport; anchor: report

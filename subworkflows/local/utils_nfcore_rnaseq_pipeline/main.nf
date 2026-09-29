@@ -877,61 +877,6 @@ def classifyStrand(meta, strand_log, stranded_threshold, unstranded_threshold) {
 }
 
 //
-// RustQC output-path helpers
-//
-
-// Path of a RustQC output file below its task-local <prefix>/<category>/ directory,
-// found by anchoring on the category name rather than assuming a fixed work-directory depth.
-def rustqcRelPath(category, file) {
-    def marker = "/${category}/"
-    def path = file.toString()
-    def idx = path.lastIndexOf(marker)
-    if (idx < 0) {
-        error("Unexpected RustQC output path for category '${category}': ${file}")
-    }
-    path.substring(idx + marker.length())
-}
-
-// Computes the per-tool destination directory for one RustQC output file.
-// Not sample-prefixed under --skip_quantification_merge: RustQC output names already carry the sample id.
-def rustqcTarget(r, category, file) {
-    def dir = "${params.aligner}/rustqc"
-    def base = file.name
-    if (category == 'samtools')     { return "${dir}/samtools_stats/${base}" }
-    if (category == 'preseq')       { return "${dir}/preseq/${base}" }
-    if (category == 'dupradar') {
-        if (base.contains('Boxplot'))                                { return "${dir}/dupradar/box_plot/${base}" }
-        if (base.contains('ExpDens') && !base.contains('Curve_mqc')) { return "${dir}/dupradar/scatter_plot/${base}" }
-        if (base.contains('expressionHist'))                        { return "${dir}/dupradar/histogram/${base}" }
-        if (base.contains('dupMatrix'))                              { return "${dir}/dupradar/gene_data/${base}" }
-        if (base.contains('intercept_slope'))                        { return "${dir}/dupradar/intercepts_slope/${base}" }
-        return "${dir}/dupradar/${base}"
-    }
-    if (category == 'featurecounts') {
-        if (base.endsWith('.featureCounts.biotype.tsv.summary')) { return "${dir}/featurecounts/${base.replace('.biotype.tsv.summary', '.tsv.summary')}" }
-        if (base.endsWith('.featureCounts.tsv.summary'))         { return null }
-        return "${dir}/featurecounts/${base}"
-    }
-    if (category == 'rseqc') {
-        def relPath = rustqcRelPath(category, file)
-        def tool = relPath.tokenize('/')[0]
-        if (tool in ['junction_annotation', 'junction_saturation', 'inner_distance', 'read_duplication']) {
-            if (base.endsWith('.r'))                                { return "${dir}/rseqc/${tool}/rscript/${base}" }
-            if (base.endsWith('.png') || base.endsWith('.svg'))     { return "${dir}/rseqc/${tool}/plot/${base}" }
-            if (base.endsWith('.xls'))                              { return "${dir}/rseqc/${tool}/xls/${base}" }
-            if (base.endsWith('.bed'))                              { return "${dir}/rseqc/${tool}/bed/${base}" }
-            if (base.endsWith('.junction_annotation.log'))          { return "${dir}/rseqc/${tool}/log/${base}" }
-            if (base.endsWith('.txt'))                              { return "${dir}/rseqc/${tool}/txt/${base}" }
-        }
-        return "${dir}/rseqc/${relPath}"
-    }
-    if (category == 'qualimap') {
-        return "${dir}/qualimap/${r.id}/${rustqcRelPath(category, file)}"
-    }
-    return null
-}
-
-//
 // Print pipeline summary on completion
 //
 def rnaseqSummary(monochrome_logs=true, pass_mapped_reads=[:], pass_trimmed_reads=[:], pass_strand_check=[:]) {

@@ -25,7 +25,6 @@ include { BAM_DEDUP_UMI                         } from '../../subworkflows/nf-co
 include { checkSamplesAfterGrouping      } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { classifyStrand                 } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { getHisat2PercentMapped         } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
-include { rustqcTarget                   } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -634,18 +633,7 @@ workflow RNASEQ {
                 ch_gtf.map { gtf -> [ [:], gtf ] },
             )
 
-            // Each output is a glob, so a single match arrives as a bare Path.
-            // Category travels alongside meta/files through one shared transpose,
-            // so each file ends up in its own record with a precomputed >> target.
-            ch_bam_qc_rustqc = RUSTQC.out.samtools.map { meta, files -> [meta, 'samtools', [files].flatten()] }
-                .mix(RUSTQC.out.dupradar.map      { meta, files -> [meta, 'dupradar', [files].flatten()] })
-                .mix(RUSTQC.out.featurecounts.map { meta, files -> [meta, 'featurecounts', [files].flatten()] })
-                .mix(RUSTQC.out.preseq.map        { meta, files -> [meta, 'preseq', [files].flatten()] })
-                .mix(RUSTQC.out.rseqc.map         { meta, files -> [meta, 'rseqc', [files].flatten()] })
-                .mix(RUSTQC.out.qualimap.map      { meta, files -> [meta, 'qualimap', [files].flatten()] })
-                .transpose(by: 2)
-                .map { meta, category, f -> record(id: meta.id, file: f, target: rustqcTarget(meta, category, f)) }
-                .filter { r -> r.target != null }
+            ch_bam_qc_rustqc = RUSTQC.out
 
             // Drop non-MultiQC files. Excluding `*.featureCounts.tsv.summary`
             // keeps only the biotype summary, matching the default pipeline's
@@ -654,45 +642,20 @@ workflow RNASEQ {
                 f.name.endsWith('.featureCounts.tsv.summary') ? false :
                     (f.name =~ /(?i)\.(txt|tsv|xls|log|stats|flagstat|idxstats|html)$/ || f.name.contains('_mqc.'))
             }
-            def mqcFilter = { meta, files -> [meta, (files instanceof List ? files : [files]).findAll(mqcKeep)] }
-
-            ch_rustqc_dupradar = RUSTQC.out.dupradar.map(mqcFilter)
-            ch_rustqc_feature  = RUSTQC.out.featurecounts.map(mqcFilter)
-            ch_rustqc_preseq   = RUSTQC.out.preseq.map(mqcFilter)
-            ch_rustqc_samtools = RUSTQC.out.samtools.map(mqcFilter)
-            ch_rustqc_rseqc    = RUSTQC.out.rseqc.map(mqcFilter)
-            ch_rustqc_qualimap = RUSTQC.out.qualimap.map(mqcFilter)
+            ch_rustqc_mqc = RUSTQC.out.map { r -> [r.meta, r.all_files.findAll(mqcKeep)] }
 
             ch_multiqc_files = ch_multiqc_files.mix(
-                ch_rustqc_dupradar
-                    .mix(ch_rustqc_feature)
-                    .mix(ch_rustqc_preseq)
-                    .mix(ch_rustqc_samtools)
-                    .mix(ch_rustqc_rseqc)
-                    .mix(ch_rustqc_qualimap)
-                    .flatMap { meta, files -> files.collect { f -> [meta, f] } }
+                ch_rustqc_mqc.flatMap { meta, files -> files.collect { f -> [meta, f] } }
             )
 
-            // All six inputs are keyed on the same per-sample meta.id from the single
-            // RUSTQC task per sample, so remainder: true only guards against a category
-            // filtering out every file for a sample, not a genuine key mismatch.
-            ch_rustqc_bundle = ch_rustqc_dupradar
-                .join(ch_rustqc_feature,  remainder: true)
-                .join(ch_rustqc_preseq,   remainder: true)
-                .join(ch_rustqc_samtools, remainder: true)
-                .join(ch_rustqc_rseqc,    remainder: true)
-                .join(ch_rustqc_qualimap, remainder: true)
-                .map(collapseAgg)
+            ch_rustqc_bundle = ch_rustqc_mqc.map { meta, files -> [meta.id, files] }
             ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
                 .join(ch_rustqc_bundle, remainder: true)
 
             // Extract infer_experiment from rseqc channel
-            ch_inferexperiment_txt = RUSTQC.out.rseqc
-                .map { meta, files ->
-                    def ie = (files instanceof List ? files : [files]).find { f -> f.name.endsWith('.infer_experiment.txt') }
-                    ie ? [meta, ie] : null
-                }
-                .filter { entry -> entry != null }
+            ch_inferexperiment_txt = RUSTQC.out
+                .filter { r -> r.rseqc.inferexperiment != null }
+                .map { r -> [r.meta, r.rseqc.inferexperiment] }
         } else {
             //
             // SUBWORKFLOW: Post-alignment QC
@@ -988,7 +951,7 @@ workflow RNASEQ {
     umi_dedup           = ch_umi_dedup           // channel: UmiDedupBam
     markdup             = ch_markdup             // channel: MarkdupBam
     bam_qc              = ch_bam_qc              // channel: BamQcRnaseq
-    bam_qc_rustqc       = ch_bam_qc_rustqc       // channel: record(id, file, target), one entry per RustQC output file with a non-null target
+    bam_qc_rustqc       = ch_bam_qc_rustqc       // channel: RUSTQC record (meta, samtools, preseq, dupradar, featurecounts, biotype, rseqc, qualimap)
     quant               = ch_quant               // channel: RsemQuantSample | PseudoQuantSample, alignment-based quantifier
     quant_merged        = ch_quant_merged        // channel: QuantMerged, alignment-based quantifier
     quant_rsem_merge    = ch_quant_rsem_merge    // channel: record(id, rsem_merge: RsemMerge), CUSTOM_RSEMMERGECOUNTS outputs; empty unless --aligner star_rsem

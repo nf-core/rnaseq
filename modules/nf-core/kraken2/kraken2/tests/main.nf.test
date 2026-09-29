@@ -44,15 +44,15 @@ nextflow_process {
         }
 
         then {
+            def kraken2 = process.out[0][0]
             assertAll(
             { assert process.success },
             { assert snapshot(
-                    process.out.report,
-                    process.out.findAll { key, val -> key.startsWith("versions") },
+                    kraken2.report,
                 ).match()
             },
-            { assert process.out.classified_reads_fastq.get(0).get(1) ==~ ".*/test.classified.fastq.gz" },
-            { assert process.out.unclassified_reads_fastq.get(0).get(1) ==~ ".*/test.unclassified.fastq.gz" },
+            { assert kraken2.classified_reads_fastq.sort().get(0) ==~ ".*/test.classified.fastq.gz" },
+            { assert kraken2.unclassified_reads_fastq.sort().get(0) ==~ ".*/test.unclassified.fastq.gz" },
             )
         }
     }
@@ -87,20 +87,20 @@ nextflow_process {
         }
 
         then {
+            def kraken2 = process.out[0][0]
             assertAll(
             { assert process.success },
             { assert snapshot(
-                    process.out.report,
-                    process.out.findAll { key, val -> key.startsWith("versions") },
+                    kraken2.report,
                 ).match()
             },
-            { assert process.out.classified_reads_fastq.get(0).get(1).get(0)
+            { assert kraken2.classified_reads_fastq.sort().get(0)
                 ==~ ".*/test.classified_1.fastq.gz" },
-            { assert process.out.classified_reads_fastq.get(0).get(1).get(1)
+            { assert kraken2.classified_reads_fastq.sort().get(1)
                 ==~ ".*/test.classified_2.fastq.gz" },
-            { assert process.out.unclassified_reads_fastq.get(0).get(1).get(0)
+            { assert kraken2.unclassified_reads_fastq.sort().get(0)
                 ==~ ".*/test.unclassified_1.fastq.gz" },
-            { assert process.out.unclassified_reads_fastq.get(0).get(1).get(1)
+            { assert kraken2.unclassified_reads_fastq.sort().get(1)
                 ==~ ".*/test.unclassified_2.fastq.gz" },
             )
         }
@@ -129,12 +129,12 @@ nextflow_process {
         }
 
         then {
+            def kraken2 = process.out[0][0]
             assertAll(
             { assert process.success },
             { assert snapshot(
-                    process.out.report,
-                    process.out.findAll { key, val -> key.startsWith("versions") },
-                    process.out.classified_reads_assignment,
+                    kraken2.report,
+                    kraken2.classified_reads_assignment,
                 ).match()
             },
             )
@@ -160,15 +160,15 @@ nextflow_process {
         }
 
         then {
+            def kraken2 = process.out[0][0]
             assertAll(
             { assert process.success },
             { assert snapshot(
-                    process.out.report,
-                    process.out.findAll { key, val -> key.startsWith("versions") },
+                    kraken2.report,
                 ).match()
             },
-            { assert process.out.classified_reads_fastq.get(0).get(1) ==~ ".*/test.classified.fastq.gz" },
-            { assert process.out.unclassified_reads_fastq.get(0).get(1) ==~ ".*/test.unclassified.fastq.gz" },
+            { assert kraken2.classified_reads_fastq.sort().get(0) ==~ ".*/test.classified.fastq.gz" },
+            { assert kraken2.unclassified_reads_fastq.sort().get(0) ==~ ".*/test.unclassified.fastq.gz" },
             )
         }
     }
@@ -192,20 +192,20 @@ nextflow_process {
         }
 
         then {
+            def kraken2 = process.out[0][0]
             assertAll(
             { assert process.success },
             { assert snapshot(
-                    process.out.report,
-                    process.out.findAll { key, val -> key.startsWith("versions") },
+                    kraken2.report,
                 ).match()
             },
-            { assert process.out.classified_reads_fastq.get(0).get(1).get(0)
+            { assert kraken2.classified_reads_fastq.sort().get(0)
                 ==~ ".*/test.classified_1.fastq.gz" },
-            { assert process.out.classified_reads_fastq.get(0).get(1).get(1)
+            { assert kraken2.classified_reads_fastq.sort().get(1)
                 ==~ ".*/test.classified_2.fastq.gz" },
-            { assert process.out.unclassified_reads_fastq.get(0).get(1).get(0)
+            { assert kraken2.unclassified_reads_fastq.sort().get(0)
                 ==~ ".*/test.unclassified_1.fastq.gz" },
-            { assert process.out.unclassified_reads_fastq.get(0).get(1).get(1)
+            { assert kraken2.unclassified_reads_fastq.sort().get(1)
                 ==~ ".*/test.unclassified_2.fastq.gz" },
             )
         }

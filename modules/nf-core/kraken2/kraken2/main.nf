@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process KRAKEN2_KRAKEN2 {
     tag "$meta.id"
     label 'process_high'
@@ -8,21 +10,23 @@ process KRAKEN2_KRAKEN2 {
         'community.wave.seqera.io/library/kraken2_coreutils_pigz:920ecc6b96e2ba71' }"
 
     input:
-    tuple val(meta), path(reads)
-    path  db
-    val save_output_fastqs
-    val save_reads_assignment
+    tuple(meta: Map, reads: List<Path>)
+    db: Path
+    save_output_fastqs: Boolean
+    save_reads_assignment: Boolean
 
     output:
-    tuple val(meta), path('*.classified{.,_}*')     , optional:true, emit: classified_reads_fastq
-    tuple val(meta), path('*.unclassified{.,_}*')   , optional:true, emit: unclassified_reads_fastq
-    tuple val(meta), path('*classifiedreads.txt')   , optional:true, emit: classified_reads_assignment
-    tuple val(meta), path('*report.txt')                           , emit: report
-    tuple val("${task.process}"), val('kraken2'), eval('kraken2 --version 2>&1 | head -1 | sed "s/^.*Kraken version //; s/ .*//"'), topic: versions, emit: versions_kraken2
-    tuple val("${task.process}"), val('pigz'), eval('pigz --version 2>&1 | sed "s/pigz //g"'), topic: versions, emit: versions_pigz
+    record(
+        meta:                        meta,
+        report:                      file('*report.txt'),
+        classified_reads_fastq:      files('*.classified{.,_}*', optional: true),
+        unclassified_reads_fastq:    files('*.unclassified{.,_}*', optional: true),
+        classified_reads_assignment: file('*classifiedreads.txt', optional: true)
+    )
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'kraken2', eval('kraken2 --version 2>&1 | head -1 | sed "s/^.*Kraken version //; s/ .*//"')) >> 'versions'
+    tuple(task.process, 'pigz', eval('pigz --version 2>&1 | sed "s/pigz //g"')) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''
@@ -46,7 +50,7 @@ process KRAKEN2_KRAKEN2 {
         $readclassification_option \\
         $paired \\
         $args \\
-        $reads
+        ${reads.join(' ')}
 
     $compress_reads_command
     """

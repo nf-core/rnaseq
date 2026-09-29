@@ -831,25 +831,14 @@ workflow RNASEQ {
                 params.save_kraken_assignments,
                 params.save_kraken_unassigned
             )
-            ch_kraken_reports = KRAKEN2.out.report
+            ch_kraken_reports = KRAKEN2.out.map { r -> [r.meta, r.report] }
 
-            ch_contaminant_fields = KRAKEN2.out.report.map { meta, report -> [meta.id, [meta: meta, kraken2_report: report]] }
-            if (params.save_kraken_assignments) {
-                ch_contaminant_fields = ch_contaminant_fields
-                    .join(KRAKEN2.out.classified_reads_fastq.map { meta, f -> [meta.id, f] }, remainder: true)
-                    .join(KRAKEN2.out.unclassified_reads_fastq.map { meta, f -> [meta.id, f] }, remainder: true)
-                    .map { id, fields, classified, unclassified -> [id, fields + [kraken2_classified: classified, kraken2_unclassified: unclassified]] }
-            }
-            if (params.save_kraken_unassigned) {
-                ch_contaminant_fields = ch_contaminant_fields
-                    .join(KRAKEN2.out.classified_reads_assignment.map { meta, f -> [meta.id, f] }, remainder: true)
-                    .map { id, fields, assignment -> [id, fields + [kraken2_assignment: assignment]] }
-            }
+            ch_contaminant_fields = KRAKEN2.out.map { r -> [r.meta.id, [meta: r.meta, kraken2: r]] }
 
             if (params.contaminant_screening == 'kraken2') {
-                ch_multiqc_files = ch_multiqc_files.mix(KRAKEN2.out.report)
+                ch_multiqc_files = ch_multiqc_files.mix(ch_kraken_reports)
                 ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
-                    .join(KRAKEN2.out.report.map { meta, f -> [meta.id, f] }, remainder: true)
+                    .join(ch_kraken_reports.map { meta, f -> [meta.id, f] }, remainder: true)
             } else if (params.contaminant_screening == 'kraken2_bracken') {
                 BRACKEN (
                     ch_kraken_reports,
@@ -892,12 +881,7 @@ workflow RNASEQ {
             record(
                 id:       id,
                 meta:     fields.meta,
-                kraken2:  fields.kraken2_report != null ? record(
-                    report:                      fields.kraken2_report,
-                    classified_reads_fastq:      fields.kraken2_classified,
-                    unclassified_reads_fastq:    fields.kraken2_unclassified,
-                    classified_reads_assignment: fields.kraken2_assignment
-                ) : null,
+                kraken2:  fields.kraken2,
                 bracken:  fields.bracken_report != null ? record(abundance: fields.bracken_abundance, report: fields.bracken_report) : null,
                 sylph:    fields.sylph_profile != null ? record(profile: fields.sylph_profile) : null,
                 sylphtax: fields.sylphtax_taxprof != null ? record(taxprof: fields.sylphtax_taxprof) : null

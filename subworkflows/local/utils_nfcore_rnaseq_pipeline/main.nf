@@ -694,6 +694,8 @@ def isStarIndexLegacy() {
 // Reference and index params accept pre-built files that reach the genome
 // records untouched. Only files written by a task may be routed through the
 // output block, so anything outside the work directory is dropped to null.
+// Workaround for https://github.com/nextflow-io/nextflow/issues/7667 (routing a
+// non-task file with `>>` in a dynamic path closure crashes); remove once fixed.
 //
 def taskOutputOrNull(path) {
     return path instanceof Path && path.startsWith(workflow.workDir) ? path : null

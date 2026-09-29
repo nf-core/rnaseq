@@ -324,10 +324,11 @@ output {
             def kraken  = "${dir}kraken2/kraken_reports/"
             def bracken = "${dir}bracken/"
             def sylph   = "${dir}sylph/"
+            def saveAssignments = params.save_kraken_assignments ? kraken : null
             [
                 (s.kraken2?.report):                         kraken,
-                (s.kraken2?.classified_reads_fastq):         params.save_kraken_assignments ? kraken : null,
-                (s.kraken2?.unclassified_reads_fastq):       params.save_kraken_assignments ? kraken : null,
+                (s.kraken2?.classified_reads_fastq):         saveAssignments,
+                (s.kraken2?.unclassified_reads_fastq):       saveAssignments,
                 (s.kraken2?.classified_reads_assignment):    params.save_kraken_unassigned ? kraken : null,
                 ([s.bracken?.abundance, s.bracken?.report]): bracken,
                 ([s.sylph?.profile, s.sylphtax?.taxprof]):   sylph,
@@ -387,10 +388,15 @@ output {
 
     preprocessed {   // FastqQcTrimFilterSetstrandedness; no single anchor field survives every skip combination
         path { s ->
-            def sp      = samplePrefix(s)
-            def fastqc  = "${sp}fastqc/"
-            def trimDir = "${sp}${params.trimmer}/"
-            def riboDir = "${sp}${params.ribo_removal_tool == 'bowtie2' ? 'bowtie2_rrna' : params.ribo_removal_tool}/"
+            def sp       = samplePrefix(s)
+            def fastqc   = "${sp}fastqc/"
+            def trimDir  = "${sp}${params.trimmer}/"
+            def umitools = "${sp}umitools/"
+            def bbsplit  = "${sp}bbsplit/"
+            def riboDir  = "${sp}${params.ribo_removal_tool == 'bowtie2' ? 'bowtie2_rrna' : params.ribo_removal_tool}/"
+            def isFastp  = params.trimmer == 'fastp'
+            def saveTrimmed = params.save_trimmed ? trimDir : null
+            def saveBbsplit = params.save_bbsplit_reads ? bbsplit : null
             // Only the single-end --un-gz FASTQs are published; paired-end reads rebuilt by SAMTOOLS_FASTQ_BOWTIE2 are not.
             def saveNonRibo = params.remove_ribo_rna && params.save_non_ribo_reads && (params.ribo_removal_tool != 'bowtie2' || s.meta.single_end)
             [
@@ -398,7 +404,7 @@ output {
                 // replaces an earlier one even when its target is null, so `reads` must stay first.
                 (s.reads):                       saveNonRibo ? riboDir : null,
                 (s.reads_cat):                   params.save_merged_fastq ? "${sp}fastq/" : null,
-                (s.reads_trimmed):               !params.skip_trimming && params.save_trimmed ? trimDir : null,
+                (s.reads_trimmed):               params.skip_trimming ? null : saveTrimmed,
                 (s.fastqc?.raw_html):            "${fastqc}raw/",
                 (s.fastqc?.raw_zip):             "${fastqc}raw/",
                 (s.fastqc?.trim_html):           "${fastqc}trim/",
@@ -406,16 +412,16 @@ output {
                 (s.fastqc?.filtered_html):       "${fastqc}filtered/",
                 (s.fastqc?.filtered_zip):        "${fastqc}filtered/",
                 (s.trim?.html):                  trimDir,
-                (s.trim?.log):                   params.trimmer == 'fastp' ? "${trimDir}log/" : trimDir,
-                (s.trim?.json):                  params.trimmer == 'fastp' ? trimDir : null,
-                (s.trim?.unpaired):              params.save_trimmed ? trimDir : null,
-                (s.trim?.reads_fail):            params.save_trimmed ? trimDir : null,
-                (s.trim?.reads_merged):          params.save_trimmed ? trimDir : null,
-                (s.umi?.log):                    "${sp}umitools/",
-                (s.umi?.reads):                  params.save_umi_intermeds ? "${sp}umitools/" : null,
-                (s.bbsplit?.stats):              "${sp}bbsplit/",
-                (s.bbsplit?.primary_reads):      params.save_bbsplit_reads ? "${sp}bbsplit/" : null,
-                (s.bbsplit?.other_genome_reads): params.save_bbsplit_reads ? "${sp}bbsplit/" : null,
+                (s.trim?.log):                   isFastp ? "${trimDir}log/" : trimDir,
+                (s.trim?.json):                  isFastp ? trimDir : null,
+                (s.trim?.unpaired):              saveTrimmed,
+                (s.trim?.reads_fail):            saveTrimmed,
+                (s.trim?.reads_merged):          saveTrimmed,
+                (s.umi?.log):                    umitools,
+                (s.umi?.reads):                  params.save_umi_intermeds ? umitools : null,
+                (s.bbsplit?.stats):              bbsplit,
+                (s.bbsplit?.primary_reads):      saveBbsplit,
+                (s.bbsplit?.other_genome_reads): saveBbsplit,
                 (s.rrna?.sortmerna_log):         "${sp}sortmerna/",
                 ([s.rrna?.ribodetector_log, s.rrna?.seqkit_stats]): "${sp}ribodetector/",
                 (s.rrna?.bowtie2_log):           "${sp}bowtie2_rrna/",
@@ -442,16 +448,18 @@ output {
 
     aligned {   // StarAligned | Bowtie2Aligned | Hisat2Aligned; anchor: samtools.stats
         path { s ->
-            def dir     = alignedDir(s)
-            def saveBam = params.save_align_intermeds || params.skip_markduplicates
+            def dir         = alignedDir(s)
+            def logDir      = "${dir}log/"
+            def bamDir      = (params.save_align_intermeds || params.skip_markduplicates) ? dir : null
+            def intermedDir = params.save_align_intermeds ? dir : null
             [
                 ([s.samtools?.stats, s.samtools?.flagstat, s.samtools?.idxstats]): "${dir}samtools_stats/",
-                ([s.bam, s.bai]):                                                   saveBam ? dir : null,
-                (s.orig_bam):                                                       params.save_align_intermeds ? dir : null,
-                (s.transcriptome_bam):                                              params.save_align_intermeds ? dir : null,
+                ([s.bam, s.bai]):                                                   bamDir,
+                (s.orig_bam):                                                       intermedDir,
+                (s.transcriptome_bam):                                              intermedDir,
                 (s.unmapped):                                                       params.save_unaligned ? "${dir}unmapped/" : null,
-                ([s.star?.log_final, s.star?.log_out, s.star?.log_progress, s.hisat2?.summary, s.bowtie2?.log]): "${dir}log/",
-                (s.star?.tab):                                                      "${dir}log/",
+                ([s.star?.log_final, s.star?.log_out, s.star?.log_progress, s.hisat2?.summary, s.bowtie2?.log]): logDir,
+                (s.star?.tab):                                                      logDir,
             ]
         }
     }
@@ -469,6 +477,7 @@ output {
             def dir      = alignedDir(s)
             def stats    = "${dir}samtools_stats/"
             def umitools = "${dir}umitools/"
+            def tool     = "${dir}${params.umi_dedup_tool}/"
             def saveBam  = params.save_align_intermeds || params.save_umi_intermeds
             def t        = s.transcriptome
             [
@@ -481,8 +490,8 @@ output {
                 ([s.tsv?.edit_distance, s.tsv?.per_umi, s.tsv?.umi_per_position,
                   t?.tsv?.edit_distance, t?.tsv?.per_umi, t?.tsv?.umi_per_position]): umitools,
                 (s.prepare_for_rsem_log):        "${umitools}prepare_for_quantification_log/",
-                (s.genomic_dedup_log):           "${dir}${params.umi_dedup_tool}/genomic_dedup_log/",
-                (s.transcriptomic_dedup_log):    "${dir}${params.umi_dedup_tool}/transcriptomic_dedup_log/",
+                (s.genomic_dedup_log):           "${tool}genomic_dedup_log/",
+                (s.transcriptomic_dedup_log):    "${tool}transcriptomic_dedup_log/",
             ]
         }
     }
@@ -569,36 +578,40 @@ output {
     bam_qc {   // BamQcRnaseq: preseq, featurecounts, biotype, qualimap, dupradar, rseqc
         enabled defineQcTools(params).size() > 0   // same check that decides whether any of these tools ran
         path { s ->
-            def dir   = alignedDir(s)
-            def dup   = "${dir}dupradar/"
-            def rseqc = "${dir}rseqc/"
-            def rq    = s.rseqc
+            def dir      = alignedDir(s)
+            def dupradar = "${dir}dupradar/"
+            def rseqc    = "${dir}rseqc/"
+            def annDir   = "${rseqc}junction_annotation/"
+            def satDir   = "${rseqc}junction_saturation/"
+            def rdupDir  = "${rseqc}read_duplication/"
+            def innerDir = "${rseqc}inner_distance/"
+            def rq       = s.rseqc
             [
                 (s.preseq?.lc_extrap):          "${dir}preseq/",
                 (s.preseq?.log):                "${dir}preseq/log/",
                 ([s.featurecounts?.counts, s.featurecounts?.summary, s.biotype?.tsv, s.biotype?.rrna]): "${dir}featurecounts/",
                 (s.qualimap):                   "${dir}qualimap/",
-                (s.dupradar?.scatter2d):        "${dup}scatter_plot/",
-                (s.dupradar?.boxplot):          "${dup}box_plot/",
-                (s.dupradar?.hist):             "${dup}histogram/",
-                (s.dupradar?.dupmatrix):        "${dup}gene_data/",
-                (s.dupradar?.intercept_slope):  "${dup}intercepts_slope/",
+                (s.dupradar?.scatter2d):        "${dupradar}scatter_plot/",
+                (s.dupradar?.boxplot):          "${dupradar}box_plot/",
+                (s.dupradar?.hist):             "${dupradar}histogram/",
+                (s.dupradar?.dupmatrix):        "${dupradar}gene_data/",
+                (s.dupradar?.intercept_slope):  "${dupradar}intercepts_slope/",
                 (rq?.bamstat):                  "${rseqc}bam_stat/",
                 (rq?.inferexperiment):          "${rseqc}infer_experiment/",
-                ([rq?.junctionannotation?.pdf, rq?.junctionannotation?.events_pdf]):  "${rseqc}junction_annotation/pdf/",
-                ([rq?.junctionannotation?.bed, rq?.junctionannotation?.interact_bed]): "${rseqc}junction_annotation/bed/",
-                (rq?.junctionannotation?.xls):     "${rseqc}junction_annotation/xls/",
-                (rq?.junctionannotation?.log):     "${rseqc}junction_annotation/log/",
-                (rq?.junctionannotation?.rscript): "${rseqc}junction_annotation/rscript/",
-                (rq?.junctionsaturation?.pdf):     "${rseqc}junction_saturation/pdf/",
-                (rq?.junctionsaturation?.rscript): "${rseqc}junction_saturation/rscript/",
+                ([rq?.junctionannotation?.pdf, rq?.junctionannotation?.events_pdf]):  "${annDir}pdf/",
+                ([rq?.junctionannotation?.bed, rq?.junctionannotation?.interact_bed]): "${annDir}bed/",
+                (rq?.junctionannotation?.xls):     "${annDir}xls/",
+                (rq?.junctionannotation?.log):     "${annDir}log/",
+                (rq?.junctionannotation?.rscript): "${annDir}rscript/",
+                (rq?.junctionsaturation?.pdf):     "${satDir}pdf/",
+                (rq?.junctionsaturation?.rscript): "${satDir}rscript/",
                 (rq?.readdistribution):            "${rseqc}read_distribution/",
-                (rq?.readduplication?.pdf):        "${rseqc}read_duplication/pdf/",
-                ([rq?.readduplication?.seq_xls, rq?.readduplication?.pos_xls]): "${rseqc}read_duplication/xls/",
-                (rq?.readduplication?.rscript):    "${rseqc}read_duplication/rscript/",
-                ([rq?.innerdistance?.distance, rq?.innerdistance?.freq, rq?.innerdistance?.mean]): "${rseqc}inner_distance/txt/",
-                (rq?.innerdistance?.pdf):          "${rseqc}inner_distance/pdf/",
-                (rq?.innerdistance?.rscript):      "${rseqc}inner_distance/rscript/",
+                (rq?.readduplication?.pdf):        "${rdupDir}pdf/",
+                ([rq?.readduplication?.seq_xls, rq?.readduplication?.pos_xls]): "${rdupDir}xls/",
+                (rq?.readduplication?.rscript):    "${rdupDir}rscript/",
+                ([rq?.innerdistance?.distance, rq?.innerdistance?.freq, rq?.innerdistance?.mean]): "${innerDir}txt/",
+                (rq?.innerdistance?.pdf):          "${innerDir}pdf/",
+                (rq?.innerdistance?.rscript):      "${innerDir}rscript/",
                 ([rq?.tin?.txt, rq?.tin?.xls]):    "${rseqc}tin/",
             ]
         }

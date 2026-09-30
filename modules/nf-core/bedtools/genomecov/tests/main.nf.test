@@ -13,11 +13,12 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                    [ id:'test' ], // meta map
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.bam", checkIfExists: true),
-                    1
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    intervals: file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.bam", checkIfExists: true),
+                    scale: 1
+                )
                 // sizes
                 input[1] = []
                 // extension
@@ -39,11 +40,12 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                    [ id:'test'],
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.bam", checkIfExists: true),
-                    0.5
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test'],
+                    intervals: file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.bam", checkIfExists: true),
+                    scale: 0.5
+                )
                 // sizes
                 input[1] = file('dummy_chromosome_sizes')
                 // extension
@@ -65,11 +67,12 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                    [ id:'test'],
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/bed/baits.bed", checkIfExists: true),
-                    0.5
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test'],
+                    intervals: file(params.modules_testdata_base_path + "genomics/sarscov2/genome/bed/baits.bed", checkIfExists: true),
+                    scale: 0.5
+                )
                 // sizes
                 input[1] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.sizes", checkIfExists: true)
                 // extension
@@ -93,11 +96,12 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                    [ id:'test' ], // meta map
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.bam", checkIfExists: true),
-                    1
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    intervals: file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.bam", checkIfExists: true),
+                    scale: 1
+                )
                 // sizes
                 input[1] = []
                 // extension
@@ -121,11 +125,12 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                    [ id:'test'],
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.bam", checkIfExists: true),
-                    0.5
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test'],
+                    intervals: file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.bam", checkIfExists: true),
+                    scale: 0.5
+                )
                 // sizes
                 input[1] = file('dummy_chromosome_sizes')
                 // extension
@@ -149,11 +154,12 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                    [ id:'test'],
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/bed/baits.bed", checkIfExists: true),
-                    0.5
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test'],
+                    intervals: file(params.modules_testdata_base_path + "genomics/sarscov2/genome/bed/baits.bed", checkIfExists: true),
+                    scale: 0.5
+                )
                 // sizes
                 input[1] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.sizes", checkIfExists: true)
                 // extension

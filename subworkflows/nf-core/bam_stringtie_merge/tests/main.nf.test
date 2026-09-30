@@ -15,11 +15,12 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = Channel.of([
-                                [ id:'sample1', strandedness:'reverse' ],
-                                file(params.modules_testdata_base_path + "genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true),
-                                file(params.modules_testdata_base_path + "genomics/homo_sapiens/pacbio/bam/test.sorted.bam", checkIfExists: true)
-                            ])
+                input[0] = channel.of(record(
+                    id: 'sample1',
+                    meta: [ id:'sample1', strandedness:'reverse' ],
+                    bam: file(params.modules_testdata_base_path + "genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true),
+                    lrbam: file(params.modules_testdata_base_path + "genomics/homo_sapiens/pacbio/bam/test.sorted.bam", checkIfExists: true)
+                ))
                 input[1] = Channel.value(["mix-reads-assembly"])
                 input[2] = Channel.of([
                                 [ id:'annotation' ],
@@ -32,7 +33,7 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success },
-                { assert snapshot(workflow.out.results.collect { r -> r + [ballgown: r.ballgown?.sort()] }, workflow.out.merged_results).match() },
+                { assert snapshot(workflow.out[0][0].assemblies.collect { r -> r + [ballgown: r.ballgown?.sort()] }, workflow.out[0][0].merged_gtf).match() },
             )
         }
     }
@@ -56,7 +57,7 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success },
-                { assert workflow.out.merged_results.size() == 0 },
+                { assert workflow.out[0].size() == 0 },
             )
         }
     }

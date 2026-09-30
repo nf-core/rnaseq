@@ -19,11 +19,12 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = [
-                    [ id:'test'], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam.bai', checkIfExists: true)
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test'],
+                    bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam', checkIfExists: true),
+                    bai: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam.bai', checkIfExists: true)
+                )
                 input[1] = [
                     [id:'genome'],
                     file(params.modules_testdata_base_path + '/genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
@@ -31,10 +32,11 @@ nextflow_workflow {
                 ]
                 input[2] = 'umitools'
                 input[3] = false
-                input[4] = [
-                    [ id:'test'], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam', checkIfExists: true)
-                ]
+                input[4] = record(
+                    id: 'test',
+                    meta: [ id:'test'],
+                    bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam', checkIfExists: true)
+                )
                 input[5] = [
                     [id:'genome'],
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true),
@@ -49,19 +51,15 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    bam(workflow.out.bam[0][1]).getReadsMD5(),
-                    bam(workflow.out.transcriptome_bam[0][1]).getReadsMD5(),
-                    workflow.out.stats,
-                    workflow.out.flagstat,
-                    workflow.out.idxstats
+                    bam(workflow.out[0][0].bam).getReadsMD5(),
+                    bam(workflow.out[0][0].transcriptome.filtered_bam ?: workflow.out[0][0].transcriptome.sorted_bam).getReadsMD5(),
+                    workflow.out[0][0].genome.stats,
+                    workflow.out[0][0].genome.flagstat,
+                    workflow.out[0][0].genome.idxstats
                 ).match() },
-                { assert path(workflow.out.index.get(0).get(1)).exists() },
-                { assert workflow.out.genome_stats.size() == 1 },
-                { assert workflow.out.genome_flagstat.size() == 1 },
-                { assert workflow.out.genome_idxstats.size() == 1 },
-                { assert workflow.out.per_sample_mqc_bundle.size() == 1 },
-                { assert workflow.out.per_sample_mqc_bundle[0][0] == [ id:'test' ] },
-                { assert workflow.out.per_sample_mqc_bundle[0][1].size() == 4 }
+                { assert path(workflow.out[0][0].bai).exists() },
+                { assert workflow.out[0].size() == 1 },
+                { assert workflow.out[0][0].meta == [ id:'test' ] }
             )
         }
 
@@ -72,11 +70,12 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = [
-                    [ id:'test'], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam.bai', checkIfExists: true)
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test'],
+                    bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam', checkIfExists: true),
+                    bai: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam.bai', checkIfExists: true)
+                )
                 input[1] = [
                     [id:'genome'],
                     file(params.modules_testdata_base_path + '/genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
@@ -95,18 +94,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    bam(workflow.out.bam[0][1]).getReadsMD5(),
-                    workflow.out.stats,
-                    workflow.out.flagstat,
-                    workflow.out.idxstats
+                    bam(workflow.out[0][0].bam).getReadsMD5(),
+                    workflow.out[0][0].genome.stats,
+                    workflow.out[0][0].genome.flagstat,
+                    workflow.out[0][0].genome.idxstats
                 ).match() },
-                { assert path(workflow.out.index.get(0).get(1)).exists() },
-                { assert workflow.out.genome_stats.size() == 1 },
-                { assert workflow.out.genome_flagstat.size() == 1 },
-                { assert workflow.out.genome_idxstats.size() == 1 },
-                { assert workflow.out.per_sample_mqc_bundle.size() == 1 },
-                { assert workflow.out.per_sample_mqc_bundle[0][0] == [ id:'test' ] },
-                { assert workflow.out.per_sample_mqc_bundle[0][1].size() == 4 }
+                { assert path(workflow.out[0][0].bai).exists() },
+                { assert workflow.out[0].size() == 1 },
+                { assert workflow.out[0][0].meta == [ id:'test' ] }
             )
         }
     }

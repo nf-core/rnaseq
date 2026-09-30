@@ -36,8 +36,7 @@ include { PseudoQuantSample                                                     
 include { StringtieMerged                                                                } from '../../subworkflows/nf-core/bam_stringtie_merge/types'
 include { FastqQcTrimFilterSetstrandedness; RrnaReferences                               } from '../../subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness/types'
 include { MultiqcReport                                                                  } from '../../subworkflows/local/multiqc_rnaseq/types'
-include { GenomeBam; RsemMergeSample; Contaminants; StringtieSample; BigwigSample        } from './types'
-include { Deseq2Qc; PipelineInfo; RustqcResult                                           } from './types'
+include { AlignedSample; QuantSample; GenomeBam; RsemMergeSample; Contaminants; StringtieSample; BigwigSample; Deseq2Qc; PipelineInfo; RustqcResult } from '../../subworkflows/local/types'
 
 include { readSamplesheet                } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline/samplesheet'
 include { classifyStrand                 } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
@@ -121,7 +120,7 @@ workflow RNASEQ {
         'star_rsem'      : 'STAR uniquely mapped reads',
         'hisat2'         : 'HISAT2 overall alignment rate',
         'bowtie2_salmon' : 'Bowtie2 overall alignment rate',
-    ][params.aligner] ?: 'Aligned reads'
+    ][params.aligner as String] ?: 'Aligned reads'
 
     ch_fasta                = ch_fasta_fai.map { _meta, fasta, _fai -> fasta }
     ch_transcript_fasta_fai = ch_transcript_fasta.map { fasta -> tuple([:], fasta, null) }
@@ -915,12 +914,12 @@ workflow RNASEQ {
 
     // Stage result records, keyed on id
     preprocessed:        Channel<FastqQcTrimFilterSetstrandedness> = ch_preprocessed
-    aligned                                                        = ch_aligned   // StarAligned | Bowtie2Aligned | Hisat2Aligned
+    aligned:             Channel<AlignedSample> = ch_aligned                       // StarAligned | Bowtie2Aligned | Hisat2Aligned
     umi_dedup:           Channel<UmiDedupBam> = ch_umi_dedup
     markdup:             Channel<MarkdupBam> = ch_markdup
     bam_qc:              Channel<BamQcRnaseq> = ch_bam_qc
     bam_qc_rustqc:       Channel<RustqcResult> = ch_bam_qc_rustqc
-    quant                                                          = ch_quant     // RsemQuantSample | PseudoQuantSample, alignment-based quantifier
+    quant:               Channel<QuantSample> = ch_quant                           // RsemQuantSample | PseudoQuantSample, alignment-based quantifier
     quant_merged:        Channel<QuantMerged> = ch_quant_merged                   // alignment-based quantifier
     quant_rsem_merge:    Channel<RsemMergeSample> = ch_quant_rsem_merge           // empty unless --aligner star_rsem
     quant_pseudo:        Channel<PseudoQuantSample> = ch_quant_pseudo             // pseudo-aligner

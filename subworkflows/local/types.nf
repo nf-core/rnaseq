@@ -1,5 +1,3 @@
-// Record types shared across the pipeline's top-level scripts. Documentation only: nothing casts a
-// record(...) to these types (nextflow-io/nextflow#7680 corrupts remote Path fields on cast).
 include { SamtoolsStatsFiles } from '../nf-core/bam_stats_samtools/types'
 include { StarLogs           } from './align_star/types'
 include { Bowtie2Logs        } from './align_bowtie2/types'
@@ -42,50 +40,79 @@ record QuantSample {
     log:               Path?
 }
 
-record RsemMergeResult {
+// One FQ_LINT result. Raw, trimmed, BBSplit-filtered and rRNA-removed reads each publish through
+// their own output because the four results share a basename.
+record LintFile {
+    id:   String
+    file: Path
+}
+
+// One row of samplesheet_with_bams.csv; field order is the CSV column order.
+record SamplesheetRow {
+    sample:            String
+    fastq_1:           Path
+    fastq_2:           Path?
+    strandedness:      String
+    seq_platform:      String?
+    seq_center:        String?
+    genome_bam:        String?
+    percent_mapped:    Float?
+    transcriptome_bam: String?
+}
+
+// A genome-aligned BAM with its index, from an aligner or a pre-aligned samplesheet entry.
+// percent_mapped is null when the samplesheet does not provide it.
+record GenomeBam {
+    id:             String
+    meta:           Map
+    bam:            Path
+    bai:            Path
+    percent_mapped: Float?
+}
+
+// CUSTOM_RSEMMERGECOUNTS outputs, a single 'all_samples' row
+record RsemMergeSample {
     id:         String
+    meta:       Map
     rsem_merge: RsemMerge
 }
 
-record Deseq2Results {
-    rdata:        Path
-    pca_vals:     Path
-    plots_pdf:    Path
-    sample_dists: Path
-    size_factors: Path
-    log:          Path
+record Kraken2Result {
+    id:                          String
+    meta:                        Map
+    report:                      Path
+    classified_reads_fastq:      List<Path>
+    unclassified_reads_fastq:    List<Path>
+    classified_reads_assignment: Path?
 }
 
-record ContaminantsKraken2 {
-    report:                       Path?
-    classified_reads_fastq:       Path?
-    unclassified_reads_fastq:     Path?
-    classified_reads_assignment:  Path?
-}
-
-record ContaminantsBracken {
+record BrackenResult {
+    id:        String
+    meta:      Map
     abundance: Path
     report:    Path
 }
 
-record ContaminantsSylph {
+record SylphProfile {
     profile: Path
 }
 
-record ContaminantsSylphtax {
+record SylphtaxTaxprof {
     taxprof: Path
 }
 
-// Exactly one tool branch is populated per run.
-record ContaminantsSample {
-    id:        String
-    meta:      Map
-    kraken2:   ContaminantsKraken2?
-    bracken:   ContaminantsBracken?
-    sylph:     ContaminantsSylph?
-    sylphtax:  ContaminantsSylphtax?
+// Exactly one screening tool branch is populated per run: kraken2 (plus bracken), or sylph (plus sylphtax
+// when the profile was not empty).
+record Contaminants {
+    id:       String
+    meta:     Map
+    kraken2:  Kraken2Result?
+    bracken:  BrackenResult?
+    sylph:    SylphProfile?
+    sylphtax: SylphtaxTaxprof?
 }
 
+// StringTie assembly with the per-sample de novo assembly that fed the merged GTF (--stringtie_ignore_gtf only)
 record StringtieSample {
     id:             String
     meta:           Map
@@ -96,12 +123,30 @@ record StringtieSample {
     denovo:         StringtieAssembly?
 }
 
+// Coverage tracks; forward and reverse are null for unstranded samples
 record BigwigSample {
-    id:      String
-    meta:    Map
-    combined: BigwigFiles?
+    id:       String
+    meta:     Map
+    combined: BigwigFiles
     forward:  BigwigFiles?
     reverse:  BigwigFiles?
+}
+
+record Deseq2Qc {
+    id:            String
+    meta:          Map
+    rdata:         Path?
+    pca_vals:      Path?
+    plots_pdf:     Path?
+    sample_dists:  Path?
+    size_factors:  Path?
+    log:           Path?
+    pca_multiqc:   Path?
+    dists_multiqc: Path?
+}
+
+record PipelineInfo {
+    versions: Path
 }
 
 record RustqcSamtools {
@@ -115,12 +160,12 @@ record RustqcPreseq {
 }
 
 record RustqcDupradar {
-    scatter2d:       List<Path>
-    boxplot:         List<Path>
-    hist:            List<Path>
+    scatter2d:       Set<Path>
+    boxplot:         Set<Path>
+    hist:            Set<Path>
     dupmatrix:       Path?
     intercept_slope: Path?
-    multiqc:         List<Path>
+    multiqc:         Set<Path>
 }
 
 record RustqcFeaturecounts {
@@ -144,7 +189,7 @@ record RustqcInnerdistance {
     freq:     Path?
     mean:     Path?
     summary:  Path?
-    plot:     List<Path>
+    plot:     Set<Path>
     rscript:  Path?
 }
 
@@ -153,20 +198,20 @@ record RustqcJunctionannotation {
     interact_bed: Path?
     xls:          Path?
     log:          Path?
-    plot:         List<Path>
+    plot:         Set<Path>
     rscript:      Path?
 }
 
 record RustqcJunctionsaturation {
     summary: Path?
-    plot:    List<Path>
+    plot:    Set<Path>
     rscript: Path?
 }
 
 record RustqcReadduplication {
     seq_xls: Path?
     pos_xls: Path?
-    plot:    List<Path>
+    plot:    Set<Path>
     rscript: Path?
 }
 
@@ -181,7 +226,7 @@ record RustqcRseqc {
     readduplication:    RustqcReadduplication
 }
 
-record RustqcSample {
+record RustqcResult {
     id:            String
     meta:          Map
     samtools:      RustqcSamtools
@@ -191,29 +236,5 @@ record RustqcSample {
     biotype:       RustqcBiotype
     rseqc:         RustqcRseqc
     qualimap:      Path?
-    all_files:     List<Path>
-}
-
-// One FQ_LINT result. Raw, trimmed, BBSplit-filtered and rRNA-removed reads each publish through
-// their own output because the four results share a basename.
-record LintFile {
-    id:   String
-    file: Path
-}
-
-record PipelineInfo {
-    versions: Path
-}
-
-// One row of samplesheet_with_bams.csv; field order is the CSV column order.
-record SamplesheetRow {
-    sample:            String
-    fastq_1:           Path
-    fastq_2:           Path?
-    strandedness:      String
-    seq_platform:      String?
-    seq_center:        String?
-    genome_bam:        String?
-    percent_mapped:    Float?
-    transcriptome_bam: String?
+    all_files:     Set<Path>
 }

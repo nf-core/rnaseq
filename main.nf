@@ -157,7 +157,7 @@ include { getGenomeAttribute         } from './subworkflows/local/utils_nfcore_r
 include { isStarIndexLegacy          } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { anySampleAutoStrandedness  } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 
-include { AlignedSample; ContaminantsSample; StringtieSample; BigwigSample; QuantSample; RsemMergeResult; Deseq2Results; RustqcSample; LintFile; PipelineInfo; SamplesheetRow } from './subworkflows/local/types'
+include { AlignedSample; Contaminants; StringtieSample; BigwigSample; QuantSample; RsemMergeSample; Deseq2Qc; RustqcResult; LintFile; PipelineInfo; SamplesheetRow } from './subworkflows/local/types'
 include { GenomeArtifact                                   } from './subworkflows/local/utils_nfcore_rnaseq_pipeline/types'
 include { FastqQcTrimFilterSetstrandedness; RrnaReferences } from './subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness/types'
 include { UmiDedupBam                                      } from './subworkflows/nf-core/bam_dedup_umi/types'
@@ -279,7 +279,7 @@ workflow NFCORE_RNASEQ {
     // --bowtie2_rrna_index is republished here exactly as it is today.
     ch_rrna_bowtie2_index = results.rrna_references
         .map { r -> r.bowtie2_index }
-        .filter { index -> index != null }
+        .flatMap { index -> index == null ? [] : [index] }
 
     // Same-basename fields split out per stage to avoid a >> rename-key collision (nextflow-io/nextflow#6617).
     ch_lint_raw     = results.preprocessed.map { r -> record(id: r.id, file: r.lint?.raw) }.filter { s -> s.file != null }
@@ -288,7 +288,7 @@ workflow NFCORE_RNASEQ {
     ch_lint_ribo    = results.preprocessed.map { r -> record(id: r.id, file: r.lint?.ribo) }.filter { s -> s.file != null }
 
     // The prepared rRNA FASTAs publish whether or not --save_reference is set, so they cannot ride the genome target.
-    ch_rrna_seqkit = results.rrna_references.filter { r -> !(r.seqkit_prefixed ?: []).isEmpty() || !(r.seqkit_converted ?: []).isEmpty() }
+    ch_rrna_seqkit = results.rrna_references.flatMap { r -> (r.seqkit_prefixed ?: []).isEmpty() && (r.seqkit_converted ?: []).isEmpty() ? [] : [r] }
 
     // samplesheet_with_bams.csv rows: one per sequencing run of a sample, with the aligned record's
     // meta so an inferred strandedness replaces 'auto'. genome_bam is the
@@ -339,21 +339,21 @@ workflow NFCORE_RNASEQ {
     umi_dedup:            Channel<UmiDedupBam>                      = results.umi_dedup
     markdup:              Channel<MarkdupBam>                       = results.markdup
     bam_qc:               Channel<BamQcRnaseq>                      = results.bam_qc
-    bam_qc_rustqc:        Channel<RustqcSample>                     = results.bam_qc_rustqc
+    bam_qc_rustqc:        Channel<RustqcResult>                     = results.bam_qc_rustqc
     samplesheet:          Channel<SamplesheetRow>                   = ch_samplesheet_rows
     quant:                Channel<QuantSample>                      = results.quant
     quant_merged:         Channel<QuantMerged>                      = results.quant_merged
-    quant_rsem_merge:     Channel<RsemMergeResult>                  = results.quant_rsem_merge
+    quant_rsem_merge:     Channel<RsemMergeSample>                  = results.quant_rsem_merge
     quant_pseudo:         Channel<QuantSample>                      = results.quant_pseudo
     quant_merged_pseudo:  Channel<QuantMerged>                      = results.quant_merged_pseudo
-    contaminants:         Channel<ContaminantsSample>               = results.contaminants
+    contaminants:         Channel<Contaminants>               = results.contaminants
     stringtie:            Channel<StringtieSample>                  = results.stringtie
     bigwig:               Channel<BigwigSample>                     = results.bigwig
 
     // Run-level result records
     stringtie_merged:     Channel<StringtieMerged>                  = results.stringtie_merged
-    deseq2:               Channel<Deseq2Results>                    = results.deseq2
-    deseq2_pseudo:        Channel<Deseq2Results>                    = results.deseq2_pseudo
+    deseq2:               Channel<Deseq2Qc>                    = results.deseq2
+    deseq2_pseudo:        Channel<Deseq2Qc>                    = results.deseq2_pseudo
     multiqc:              Channel<MultiqcReport>                    = results.multiqc
     pipeline_info:        Channel<PipelineInfo>                     = results.pipeline_info
 }
@@ -443,7 +443,7 @@ def samplePrefix(id: String) -> String { params.skip_quantification_merge ? "${i
 def alignedDir(id: String) -> String { "${samplePrefix(id)}${params.aligner}/" }
 
 output {
-    contaminants: Channel<ContaminantsSample> {   // record(id, meta, kraken2, bracken, sylph, sylphtax); exactly one tool branch is populated per run
+    contaminants: Channel<Contaminants> {   // record(id, meta, kraken2, bracken, sylph, sylphtax); exactly one tool branch is populated per run
         enabled !params.skip_qc && params.contaminant_screening
         path { s ->
             def dir     = "${alignedDir(s.id)}contaminants/"
@@ -658,7 +658,7 @@ output {
     }
 
     // CUSTOM_RSEMMERGECOUNTS and tximport both write rsem.merged.* basenames, so they need separate targets (nextflow-io/nextflow#6617).
-    quant_rsem_merge: Channel<RsemMergeResult> {   // record(id, rsem_merge: RsemMerge); empty channel unless --aligner star_rsem, rsem_merge is always non-null in every record it carries
+    quant_rsem_merge: Channel<RsemMergeSample> {   // record(id, rsem_merge: RsemMerge); empty channel unless --aligner star_rsem, rsem_merge is always non-null in every record it carries
         path { r ->
             def m = r.rsem_merge
             [
@@ -689,13 +689,13 @@ output {
         }
     }
 
-    deseq2: Channel<Deseq2Results> {   // record(rdata, pca_vals, plots_pdf, sample_dists, size_factors, log); anchor: rdata; never sample-prefixed
+    deseq2: Channel<Deseq2Qc> {   // record(rdata, pca_vals, plots_pdf, sample_dists, size_factors, log); anchor: rdata; never sample-prefixed
         path { d ->
             [([d.rdata, d.pca_vals, d.plots_pdf, d.sample_dists, d.size_factors, d.log]): "${params.aligner}/deseq2_qc/"]
         }
     }
 
-    deseq2_pseudo: Channel<Deseq2Results> {   // same shape, pseudo-aligner; never sample-prefixed
+    deseq2_pseudo: Channel<Deseq2Qc> {   // same shape, pseudo-aligner; never sample-prefixed
         path { d ->
             [([d.rdata, d.pca_vals, d.plots_pdf, d.sample_dists, d.size_factors, d.log]): "${params.pseudo_aligner}/deseq2_qc/"]
         }
@@ -743,7 +743,7 @@ output {
         }
     }
 
-    bam_qc_rustqc: Channel<RustqcSample> {   // RUSTQC record (meta, samtools, preseq, dupradar, featurecounts, biotype, rseqc, qualimap); --use_rustqc alternative to bam_qc, never sample-prefixed
+    bam_qc_rustqc: Channel<RustqcResult> {   // RUSTQC record (meta, samtools, preseq, dupradar, featurecounts, biotype, rseqc, qualimap); --use_rustqc alternative to bam_qc, never sample-prefixed
         path { s ->
             def dir      = "${params.aligner}/rustqc/"
             def dupradar = "${dir}dupradar/"

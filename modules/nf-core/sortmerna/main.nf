@@ -1,7 +1,9 @@
 nextflow.enable.types = true
 
+include { ReadsInput } from '../types'
+
 process SORTMERNA {
-    tag "$meta.id"
+    tag "${sample.meta.id}"
     label 'process_high'
 
     conda "${moduleDir}/environment.yml"
@@ -10,14 +12,14 @@ process SORTMERNA {
         'community.wave.seqera.io/library/sortmerna:4.3.7--b730cad73fc42b8e' }"
 
     input:
-    record(id: String, meta: Map, reads: List<Path>)
+    sample: ReadsInput
     fastas: List<Path>
     index: Path?
 
     output:
     record(
-        id:    id,
-        meta:  meta,
+        id:    sample.id,
+        meta:  sample.meta,
         reads: files('*non_rRNA.fastq.gz', optional: true).toSorted { f -> f.name },
         log:   file('*.log', optional: true),
         index: file('idx', optional: true)
@@ -28,7 +30,7 @@ process SORTMERNA {
 
     script:
     def args          = task.ext.args  ?: ''
-    def prefix        = task.ext.prefix ?: "${meta.id}"
+    def prefix        = task.ext.prefix ?: "${sample.meta.id}"
 
     def index_only    = args.contains('--index 1')? true : false
     def skip_index    = args.contains('--index 0')? true : false
@@ -41,8 +43,8 @@ process SORTMERNA {
 
     if (! index_only){
         reads_args = '--aligned rRNA_reads --fastx --other non_rRNA_reads'
-        reads_input = reads.collect{ r -> "--reads $r"}.join(' ')
-        def n_fastq = reads.size()
+        reads_input = sample.reads.collect{ r -> "--reads $r"}.join(' ')
+        def n_fastq = sample.reads.size()
         if ( n_fastq == 1 ) {
             mv_cmd = """
             mv non_rRNA_reads.f*q.gz ${prefix}.non_rRNA.fastq.gz
@@ -75,13 +77,13 @@ process SORTMERNA {
 
     stub:
     def args          = task.ext.args  ?: ''
-    def prefix        = task.ext.prefix ?: "${meta.id}"
+    def prefix        = task.ext.prefix ?: "${sample.meta.id}"
 
     def index_only    = args.contains('--index 1')? true : false
     def mv_cmd        = ''
 
     if (! index_only){
-        def n_fastq = reads.size()
+        def n_fastq = sample.reads.size()
         if ( n_fastq == 1 ) {
             mv_cmd = "echo | gzip > ${prefix}.non_rRNA.fastq.gz"
         } else {

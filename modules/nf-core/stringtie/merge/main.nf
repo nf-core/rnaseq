@@ -1,7 +1,9 @@
 nextflow.enable.types = true
 
+include { StringtieMergeInput } from '../../types'
+
 process STRINGTIE_MERGE {
-    tag "${meta.id}"
+    tag "${sample.meta.id}"
     label 'process_medium'
 
     // Note: 2.7X indices incompatible with AWS iGenomes.
@@ -11,13 +13,13 @@ process STRINGTIE_MERGE {
         'community.wave.seqera.io/library/stringtie:3.0.3--e8043d00caecd051' }"
 
     input:
-    record(id: String, meta: Map, gtf: List<Path>)
+    sample: StringtieMergeInput
     annotation_gtf: Path?
 
     output:
     record(
-        id:         id,
-        meta:       meta,
+        id:         sample.id,
+        meta:       sample.meta,
         merged_gtf: file("${prefix}.gtf")
     )
 
@@ -26,12 +28,12 @@ process STRINGTIE_MERGE {
 
     script:
     def args = task.ext.args ?: ''
-    prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${sample.meta.id}"
     def reference = annotation_gtf ? "-G ${annotation_gtf}" : ""
     """
     stringtie \\
         --merge \\
-        ${gtf.join(' ')} \\
+        ${sample.gtf.join(' ')} \\
         ${reference} \\
         -o ${prefix}.gtf \\
         -p ${task.cpus} \\
@@ -39,7 +41,7 @@ process STRINGTIE_MERGE {
     """
 
     stub:
-    prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     touch ${prefix}.gtf
     """

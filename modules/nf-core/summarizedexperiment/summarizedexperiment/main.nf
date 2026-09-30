@@ -1,7 +1,9 @@
 nextflow.enable.types = true
 
+include { SummarizedexperimentInput } from '../../types'
+
 process SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT {
-    tag "$meta.id"
+    tag "${sample.meta.id}"
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
@@ -10,14 +12,14 @@ process SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT {
         'quay.io/biocontainers/bioconductor-summarizedexperiment:1.32.0--r43hdfd78af_0' }"
 
     input:
-    record(id: String, meta: Map, matrix_files: List<Path>)
+    sample: SummarizedexperimentInput
     rowdata: Path?
     coldata: Path?
 
     output:
     record(
-        id:   id,
-        meta: meta,
+        id:   sample.id,
+        meta: sample.meta,
         rds:  file("*.rds"),
         log:  file("*.R_sessionInfo.log")
     )
@@ -30,8 +32,8 @@ process SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT {
 
     stub:
     """
-    touch ${meta.id}.SummarizedExperiment.rds
-    touch ${meta.id}.R_sessionInfo.log
+    touch ${sample.meta.id}.SummarizedExperiment.rds
+    touch ${sample.meta.id}.R_sessionInfo.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

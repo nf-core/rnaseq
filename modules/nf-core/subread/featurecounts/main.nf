@@ -1,7 +1,9 @@
 nextflow.enable.types = true
 
+include { BamInput } from '../../types'
+
 process SUBREAD_FEATURECOUNTS {
-    tag "${meta.id}"
+    tag "${sample.meta.id}"
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
@@ -10,13 +12,13 @@ process SUBREAD_FEATURECOUNTS {
         : 'quay.io/biocontainers/subread:2.1.1--h577a1d6_0'}"
 
     input:
-    record(id: String, meta: Map, bam: Path)
+    sample: BamInput
     annotation: Path
 
     output:
     record(
-        id:    id,
-        meta:    meta,
+        id:    sample.id,
+        meta:    sample.meta,
         counts:  file("*featureCounts.tsv"),
         summary: file("*featureCounts.tsv.summary")
     )
@@ -26,14 +28,14 @@ process SUBREAD_FEATURECOUNTS {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
-    def paired_end = meta.single_end ? '' : '-p'
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
+    def paired_end = sample.meta.single_end ? '' : '-p'
 
     def strandedness = 0
-    if (meta.strandedness == 'forward') {
+    if (sample.meta.strandedness == 'forward') {
         strandedness = 1
     }
-    else if (meta.strandedness == 'reverse') {
+    else if (sample.meta.strandedness == 'reverse') {
         strandedness = 2
     }
     """
@@ -44,11 +46,11 @@ process SUBREAD_FEATURECOUNTS {
         -a ${annotation} \\
         -s ${strandedness} \\
         -o ${prefix}.featureCounts.tsv \\
-        ${bam}
+        ${sample.bam}
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     touch ${prefix}.featureCounts.tsv
     touch ${prefix}.featureCounts.tsv.summary

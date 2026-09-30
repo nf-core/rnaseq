@@ -70,7 +70,7 @@ nextflow_process {
             assert process.success
             assertAll(
                 { assert snapshot(
-                    file(process.out[0][0][1]).name
+                    file(process.out[0][0].index).name
                 ).match() }
             )
         }

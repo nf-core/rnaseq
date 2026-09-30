@@ -13,7 +13,7 @@ process SAMTOOLS_FLAGSTAT {
     tuple(meta: Map, bam: Path, bai: Path)
 
     output:
-    tuple(meta, file('*.flagstat'))
+    record(meta: meta, flagstat: file('*.flagstat'))
 
     topic:
     tuple(task.process, 'samtools', eval("samtools version | sed '1!d;s/.* //'")) >> 'versions'

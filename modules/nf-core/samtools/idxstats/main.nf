@@ -13,7 +13,7 @@ process SAMTOOLS_IDXSTATS {
     tuple(meta: Map, bam: Path, bai: Path)
 
     output:
-    tuple(meta, file('*.idxstats'))
+    record(meta: meta, idxstats: file('*.idxstats'))
 
     topic:
     tuple(task.process, 'samtools', eval("samtools version | sed '1!d;s/.* //'")) >> 'versions'

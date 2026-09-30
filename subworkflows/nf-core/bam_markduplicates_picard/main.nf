@@ -21,7 +21,9 @@ workflow BAM_MARKDUPLICATES_PICARD {
 
     SAMTOOLS_INDEX(ch_markdup)
 
-    ch_reads_index = ch_markdup.join(SAMTOOLS_INDEX.out, by: [0])
+    ch_index = SAMTOOLS_INDEX.out.map { r -> [r.meta, r.index] }
+
+    ch_reads_index = ch_markdup.join(ch_index, by: [0])
 
     ch_stats = channel.empty()
     ch_flagstat = channel.empty()
@@ -37,7 +39,7 @@ workflow BAM_MARKDUPLICATES_PICARD {
 
     // samtools is a remainder join because the stats can be disabled by the caller.
     ch_results = PICARD_MARKDUPLICATES.out.map { r -> [r.id, r] }
-        .join(SAMTOOLS_INDEX.out.map { meta, index -> [meta.id, index] }, by: [0])
+        .join(SAMTOOLS_INDEX.out.map { r -> [r.meta.id, r.index] }, by: [0])
         .join(ch_samtools, by: [0], remainder: true)
         .map { id, markdup, index, samtools ->
             record(
@@ -62,7 +64,7 @@ workflow BAM_MARKDUPLICATES_PICARD {
     bam                   = PICARD_MARKDUPLICATES.out.filter { r -> r.bam }.map { r -> [r.meta, r.bam] } // channel: [ val(meta), path(bam) ]
     cram                  = PICARD_MARKDUPLICATES.out.filter { r -> r.cram }.map { r -> [r.meta, r.cram] } // channel: [ val(meta), path(cram) ]
     metrics               = ch_metrics // channel: [ val(meta), path(metrics) ]
-    index                 = SAMTOOLS_INDEX.out // channel: [ val(meta), path(index) ]
+    index                 = ch_index // channel: [ val(meta), path(index) ]
     stats                 = ch_stats // channel: [ val(meta), path(stats) ]
     flagstat              = ch_flagstat // channel: [ val(meta), path(flagstat) ]
     idxstats              = ch_idxstats // channel: [ val(meta), path(idxstats) ]

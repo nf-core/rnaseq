@@ -209,7 +209,7 @@ workflow RNASEQ {
     SAMTOOLS_INDEX (
         ch_genome_bam
     )
-    ch_genome_bam_index = SAMTOOLS_INDEX.out
+    ch_genome_bam_index = SAMTOOLS_INDEX.out.map { r -> [r.meta, r.index] }
 
     //
     // Run RNA-seq FASTQ preprocessing subworkflow

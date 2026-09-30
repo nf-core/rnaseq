@@ -35,7 +35,7 @@ workflow BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS {
 
         SAMTOOLS_INDEX_PRIMARY(ch_primary_bam)
 
-        ch_dedup_input = ch_primary_bam.join(SAMTOOLS_INDEX_PRIMARY.out, by: [0])
+        ch_dedup_input = ch_primary_bam.join(SAMTOOLS_INDEX_PRIMARY.out.map { r -> [r.meta, r.index] }, by: [0])
     }
     else {
         ch_dedup_input = ch_bam_bai
@@ -53,7 +53,9 @@ workflow BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS {
 
     SAMTOOLS_INDEX(ch_dedup_bam)
 
-    ch_bam_bai_dedup = ch_dedup_bam.join(SAMTOOLS_INDEX.out, by: [0])
+    ch_index = SAMTOOLS_INDEX.out.map { r -> [r.meta, r.index] }
+
+    ch_bam_bai_dedup = ch_dedup_bam.join(ch_index, by: [0])
 
     BAM_STATS_SAMTOOLS(ch_bam_bai_dedup, [[:], [], []])
 
@@ -61,7 +63,7 @@ workflow BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS {
     // complete or absent.
     ch_results = UMITOOLS_DEDUP.out
         .map { r -> [r.id, r] }
-        .join(SAMTOOLS_INDEX.out.map { meta, bai -> [meta.id, bai] }, by: [0])
+        .join(SAMTOOLS_INDEX.out.map { r -> [r.meta.id, r.index] }, by: [0])
         .join(BAM_STATS_SAMTOOLS.out.results.map { r -> [r.id, r] }, by: [0])
         .map { id, dedup, bai, samtools ->
             record(
@@ -82,7 +84,7 @@ workflow BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS {
     tsv_edit_distance    = UMITOOLS_DEDUP.out.filter { r -> r.tsv_edit_distance }.map { r -> [r.meta, r.tsv_edit_distance] } // channel: [ val(meta), path(tsv) ]
     tsv_per_umi          = UMITOOLS_DEDUP.out.filter { r -> r.tsv_per_umi }.map { r -> [r.meta, r.tsv_per_umi] } // channel: [ val(meta), path(tsv) ]
     tsv_umi_per_position = UMITOOLS_DEDUP.out.filter { r -> r.tsv_umi_per_position }.map { r -> [r.meta, r.tsv_umi_per_position] } // channel: [ val(meta), path(tsv) ]
-    index                = SAMTOOLS_INDEX.out // channel: [ val(meta), path(index) ]
+    index                = ch_index // channel: [ val(meta), path(index) ]
     stats                = BAM_STATS_SAMTOOLS.out.stats // channel: [ val(meta), path(stats) ]
     flagstat             = BAM_STATS_SAMTOOLS.out.flagstat // channel: [ val(meta), path(flagstat) ]
     idxstats             = BAM_STATS_SAMTOOLS.out.idxstats // channel: [ val(meta), path(idxstats) ]

@@ -14,7 +14,7 @@ process SAMTOOLS_STATS {
     tuple(meta2: Map, fasta: Path?, fai: Path?)
 
     output:
-    tuple(meta, file('*.stats'))
+    record(meta: meta, stats: file('*.stats'))
 
     topic:
     tuple(task.process, 'samtools', eval("samtools version | sed '1!d;s/.* //'")) >> 'versions'

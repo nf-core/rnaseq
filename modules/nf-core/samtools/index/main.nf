@@ -13,7 +13,7 @@ process SAMTOOLS_INDEX {
     tuple(meta: Map, input: Path)
 
     output:
-    tuple(meta, file('*.{bai,csi,crai}'))
+    record(meta: meta, index: file('*.{bai,csi,crai}'))
 
     topic:
     tuple(task.process, 'samtools', eval("samtools version | sed '1!d;s/.* //'")) >> 'versions'

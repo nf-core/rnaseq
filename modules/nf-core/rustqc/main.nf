@@ -92,6 +92,20 @@ record RustqcRseqc {
     readduplication:    RustqcReadduplication
 }
 
+// Flatten the tool subdirectories into the task root so every record field is a plain file,
+// keeping qualimap's own directory structure under the sample-named directory (the tool's
+// --outdir stays ${prefix} because featureCounts records it in its output header).
+def flattenOutputs(prefix: String) {
+    """
+    dups=\$(find ${prefix} -type f -not -path '${prefix}/qualimap/*' | sed 's#.*/##' | sort | uniq -d)
+    if [ -n "\$dups" ]; then echo "RustQC output basenames collide: \$dups" >&2; exit 1; fi
+    find ${prefix} -type f -not -path '${prefix}/qualimap/*' -exec mv {} . \\;
+    mv ${prefix}/qualimap qualimap_tmp
+    rm -rf ${prefix}
+    mv qualimap_tmp ${prefix}
+    """
+}
+
 process RUSTQC {
     tag "$sample.meta.id"
     label 'process_high'
@@ -181,17 +195,6 @@ process RUSTQC {
     prefix = task.ext.prefix ?: "${sample.meta.id}"
     def args = task.ext.args ?: ''
     def paired = sample.meta.single_end ? '' : '--paired'
-    // Flatten the tool subdirectories into the task root so every record field is a plain file,
-    // keeping qualimap's own directory structure under the sample-named directory (the tool's
-    // --outdir stays ${prefix} because featureCounts records it in its output header).
-    def flatten = """
-    dups=\$(find ${prefix} -type f -not -path '${prefix}/qualimap/*' | sed 's#.*/##' | sort | uniq -d)
-    if [ -n "\$dups" ]; then echo "RustQC output basenames collide: \$dups" >&2; exit 1; fi
-    find ${prefix} -type f -not -path '${prefix}/qualimap/*' -exec mv {} . \\;
-    mv ${prefix}/qualimap qualimap_tmp
-    rm -rf ${prefix}
-    mv qualimap_tmp ${prefix}
-    """
     """
     rustqc rna \\
         ${sample.bam} \\
@@ -201,22 +204,11 @@ process RUSTQC {
         --outdir ${prefix} \\
         --sample-name ${prefix} \\
         ${args}
-    ${flatten}
+    ${flattenOutputs(prefix)}
     """
 
     stub:
     prefix = task.ext.prefix ?: "${sample.meta.id}"
-    // Flatten the tool subdirectories into the task root so every record field is a plain file,
-    // keeping qualimap's own directory structure under the sample-named directory (the tool's
-    // --outdir stays ${prefix} because featureCounts records it in its output header).
-    def flatten = """
-    dups=\$(find ${prefix} -type f -not -path '${prefix}/qualimap/*' | sed 's#.*/##' | sort | uniq -d)
-    if [ -n "\$dups" ]; then echo "RustQC output basenames collide: \$dups" >&2; exit 1; fi
-    find ${prefix} -type f -not -path '${prefix}/qualimap/*' -exec mv {} . \\;
-    mv ${prefix}/qualimap qualimap_tmp
-    rm -rf ${prefix}
-    mv qualimap_tmp ${prefix}
-    """
     """
     mkdir -p ${prefix}/{dupradar,featurecounts,preseq,samtools} \\
             ${prefix}/rseqc/{bam_stat,infer_experiment,read_duplication,read_distribution,junction_annotation,junction_saturation,inner_distance,tin} \\
@@ -245,6 +237,6 @@ process RUSTQC {
           ${prefix}/qualimap/rnaseq_qc_results.txt \\
           ${prefix}/qualimap/qualimapReport.html
     touch "${prefix}/qualimap/raw_data_qualimapReport/coverage_profile_along_genes_(total).txt"
-    ${flatten}
+    ${flattenOutputs(prefix)}
     """
 }

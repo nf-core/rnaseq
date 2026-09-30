@@ -102,7 +102,7 @@ process SAMTOOLS_VIEW {
     default_index_format = file_type == "bam"
         ? "csi"
         : file_type == "cram" ? "crai" : ""
-    def index_command = index_format ? "touch ${prefix}.${file_type}.${index_format}" : args.contains("--write-index") ? "touch ${prefix}.${file_type}.${default_index_format}" : ""
+    index = index_format ? "touch ${prefix}.${file_type}.${index_format}" : args.contains("--write-index") ? "touch ${prefix}.${file_type}.${default_index_format}" : ""
     unselected = qname ? "touch ${prefix}.unselected.${file_type}" : ""
     // Can't choose index type of unselected file
     unselected_index = qname && (args.contains("--write-index") || index_format) ? "touch ${prefix}.unselected.${file_type}.${default_index_format}" : ""
@@ -120,7 +120,7 @@ process SAMTOOLS_VIEW {
     }
     """
     touch ${prefix}.${file_type}
-    ${index_command}
+    ${index}
     ${unselected}
     ${unselected_index}
     """

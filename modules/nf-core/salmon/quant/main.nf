@@ -50,20 +50,17 @@ process SALMON_QUANT {
     def reads_list = raw_reads instanceof List ? (raw_reads as List<Path>) : [raw_reads as Path]
     def alignment_mode = "${reads_list[0]}".endsWith('.bam')
 
-    def transcript_fasta_file = transcript_fasta
-    def index_dir = index
-
     def reference
     def input_reads
     if (alignment_mode) {
-        if (!transcript_fasta_file) {
+        if (!transcript_fasta) {
             error("[Salmon Quant] Alignment mode needs 'transcript_fasta' to be provided as the reference (BAM input detected for sample '${sample.meta.id}').")
         }
         reference = "-t ${transcript_fasta}"
         input_reads = "-a ${reads_list.join(' ')}"
     }
     else {
-        if (!index_dir) {
+        if (!index) {
             error("[Salmon Quant] Reads mode needs 'index' to be provided as a salmon index directory (no BAM input detected for sample '${sample.meta.id}').")
         }
         def reads1 = sample.meta.single_end ? reads_list.join(' ') : reads_list.findAll { r -> reads_list.indexOf(r) % 2 == 0 }.join(' ')

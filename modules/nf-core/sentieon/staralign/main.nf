@@ -3,7 +3,7 @@ nextflow.enable.types = true
 include { ReadsInput; StarAlignResult } from '../../types'
 
 process SENTIEON_STARALIGN {
-    tag "${sample.meta.id}"
+    tag "$sample.meta.id"
     label 'process_high'
     label 'sentieon'
 
@@ -24,24 +24,24 @@ process SENTIEON_STARALIGN {
 
     output:
     record(
-        id:                sample.id,
-        meta:              sample.meta,
-        raw_bams:          files('*d.out.bam', optional: true).toSorted { f -> f.name },
-        bam_sorted:        file("${prefix}.sortedByCoord.out.bam", optional: true),
+        id:                 sample.id,
+        meta:               sample.meta,
+        raw_bams:           files('*d.out.bam', optional: true).toSorted { f -> f.name },
+        bam_sorted:         file("${prefix}.sortedByCoord.out.bam", optional: true),
         bam_sorted_aligned: file("${prefix}.Aligned.sortedByCoord.out.bam", optional: true),
-        bam_unsorted:      file('*Aligned.unsort.out.bam', optional: true),
-        transcriptome_bam: file('*toTranscriptome.out.bam', optional: true),
-        unmapped:          files('*fastq.gz', optional: true).toSorted { f -> f.name },
-        sam:               file('*.out.sam', optional: true),
-        junction:          file('*.out.junction', optional: true),
-        spl_junc_tab:      file('*.SJ.out.tab', optional: true),
-        read_per_gene_tab: file('*.ReadsPerGene.out.tab', optional: true),
-        wig:               files('*.wig', optional: true).toSorted { f -> f.name },
-        bedgraph:          files('*.bg', optional: true).toSorted { f -> f.name },
-        orig_bai:          null,
-        qc_metrics:        null,
-        duplicate_metrics: null,
-        star:              record(
+        bam_unsorted:       file('*Aligned.unsort.out.bam', optional: true),
+        transcriptome_bam:  file('*toTranscriptome.out.bam', optional: true),
+        unmapped:           files('*fastq.gz', optional: true).toSorted { f -> f.name },
+        sam:                file('*.out.sam', optional: true),
+        junction:           file('*.out.junction', optional: true),
+        spl_junc_tab:       file('*.SJ.out.tab', optional: true),
+        read_per_gene_tab:  file('*.ReadsPerGene.out.tab', optional: true),
+        wig:                files('*.wig', optional: true).toSorted { f -> f.name },
+        bedgraph:           files('*.bg', optional: true).toSorted { f -> f.name },
+        orig_bai:           null,
+        qc_metrics:         null,
+        duplicate_metrics:  null,
+        star:               record(
             log_final:    file('*Log.final.out'),
             log_out:      file('*Log.out'),
             log_progress: file('*Log.progress.out'),

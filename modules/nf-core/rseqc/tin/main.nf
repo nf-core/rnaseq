@@ -17,7 +17,7 @@ process RSEQC_TIN {
 
     output:
     record(
-        id: sample.id,
+        id:   sample.id,
         meta: sample.meta,
         txt:  file("*.txt"),
         xls:  file("*.xls")

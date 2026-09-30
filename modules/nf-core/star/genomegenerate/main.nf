@@ -9,7 +9,7 @@ record StarGenomegenerateResult {
 }
 
 process STAR_GENOMEGENERATE {
-    tag "${sample.fasta}"
+    tag "$sample.fasta"
     label 'process_high'
 
     conda "${moduleDir}/environment.yml"
@@ -40,7 +40,7 @@ process STAR_GENOMEGENERATE {
         STAR \\
             --runMode genomeGenerate \\
             --genomeDir star/ \\
-            --genomeFastaFiles ${sample.fasta} \\
+            --genomeFastaFiles $sample.fasta \\
             $include_gtf \\
             --runThreadN $task.cpus \\
             $memory \\
@@ -48,14 +48,14 @@ process STAR_GENOMEGENERATE {
         """
     } else {
         """
-        samtools faidx ${sample.fasta}
+        samtools faidx $sample.fasta
         NUM_BASES=`gawk '{sum = sum + \$2}END{if ((log(sum)/log(2))/2 - 1 > 14) {printf "%.0f", 14} else {printf "%.0f", (log(sum)/log(2))/2 - 1}}' ${sample.fasta}.fai`
 
         mkdir star
         STAR \\
             --runMode genomeGenerate \\
             --genomeDir star/ \\
-            --genomeFastaFiles ${sample.fasta} \\
+            --genomeFastaFiles $sample.fasta \\
             $include_gtf \\
             --runThreadN $task.cpus \\
             --genomeSAindexNbases \$NUM_BASES \\

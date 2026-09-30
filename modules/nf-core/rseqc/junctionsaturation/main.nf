@@ -17,7 +17,7 @@ process RSEQC_JUNCTIONSATURATION {
 
     output:
     record(
-        id:    sample.id,
+        id:      sample.id,
         meta:    sample.meta,
         pdf:     file("*.pdf"),
         rscript: file("*.r")

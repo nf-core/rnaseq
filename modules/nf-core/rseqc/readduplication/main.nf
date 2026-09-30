@@ -16,7 +16,7 @@ process RSEQC_READDUPLICATION {
 
     output:
     record(
-        id:    sample.id,
+        id:      sample.id,
         meta:    sample.meta,
         seq_xls: file("*seq.DupRate.xls"),
         pos_xls: file("*pos.DupRate.xls"),

@@ -17,7 +17,7 @@ process RSEQC_INNERDISTANCE {
 
     output:
     record(
-        id:     sample.id,
+        id:       sample.id,
         meta:     sample.meta,
         distance: file("*distance.txt"),
         freq:     file("*freq.txt", optional: true),

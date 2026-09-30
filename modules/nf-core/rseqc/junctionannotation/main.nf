@@ -17,7 +17,7 @@ process RSEQC_JUNCTIONANNOTATION {
 
     output:
     record(
-        id:         sample.id,
+        id:           sample.id,
         meta:         sample.meta,
         bed:          file("*.junction.bed", optional: true),
         interact_bed: file("*.Interact.bed", optional: true),

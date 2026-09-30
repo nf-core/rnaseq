@@ -13,7 +13,7 @@ process FQ_LINT {
     tuple(meta: Map, fastq: List<Path>)
 
     output:
-    tuple(meta, file("*.fq_lint.txt"))
+    record(meta: meta, lint: file("*.fq_lint.txt"))
 
     topic:
     tuple(task.process, 'fq', eval("fq lint --version | sed 's/fq-lint //; s/ .*//'")) >> 'versions'

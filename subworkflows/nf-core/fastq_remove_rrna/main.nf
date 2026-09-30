@@ -94,12 +94,12 @@ workflow FASTQ_REMOVE_RRNA {
         // Run seqkit stats to determine average read length
         SEQKIT_STATS(ch_filtered_reads)
 
-        ch_seqkit_stats = SEQKIT_STATS.out
-        ch_multiqc_files = ch_multiqc_files.mix(SEQKIT_STATS.out)
+        ch_seqkit_stats = SEQKIT_STATS.out.map { r -> [r.meta, r.stats] }
+        ch_multiqc_files = ch_multiqc_files.mix(ch_seqkit_stats)
 
         // Join stats with reads and calculate read length for RiboDetector
         ch_filtered_reads
-            .join(SEQKIT_STATS.out)
+            .join(ch_seqkit_stats)
             .multiMap { meta, reads, stats ->
                 def readLength = getReadLengthFromSeqkitStats(stats)
                 reads: [meta, reads]
@@ -117,7 +117,7 @@ workflow FASTQ_REMOVE_RRNA {
         ch_multiqc_files = ch_multiqc_files.mix(ch_ribodetector_log)
 
         ch_results = SEQKIT_STATS.out
-            .map { meta, stats -> [meta.id, stats] }
+            .map { r -> [r.meta.id, r.stats] }
             .join(RIBODETECTOR.out.map { r -> [r.id, r.log] }, by: [0])
             .map { id, stats, log ->
                 record(id: id, sortmerna_log: null, ribodetector_log: log, seqkit_stats: stats, bowtie2_log: null)
@@ -133,19 +133,19 @@ workflow FASTQ_REMOVE_RRNA {
 
             // Step 1: Add filename prefixes to sequence headers
             SEQKIT_REPLACE(ch_rrna_with_meta, '')
-            ch_seqkit_prefixed = SEQKIT_REPLACE.out
+            ch_seqkit_prefixed = SEQKIT_REPLACE.out.map { r -> [r.meta, r.fastx] }
 
             // Step 2: Convert U to T in sequences (RNA to DNA)
             SEQKIT_REPLACE.out
-                .map { meta, fasta_file -> [[id: "${meta.id}_dna"], fasta_file] }
+                .map { r -> [[id: "${r.meta.id}_dna"], r.fastx] }
                 .set { ch_prefixed_fastas }
 
             SEQKIT_REPLACE_U2T(ch_prefixed_fastas, '')
-            ch_seqkit_converted = SEQKIT_REPLACE_U2T.out
+            ch_seqkit_converted = SEQKIT_REPLACE_U2T.out.map { r -> [r.meta, r.fastx] }
 
             // Collect processed files (already prefixed and U->T converted)
             SEQKIT_REPLACE_U2T.out
-                .map { _meta, fasta_file -> fasta_file }
+                .map { r -> r.fastx }
                 .collectFile(name: 'rrna_combined_dna.fasta', newLine: true)
                 .map { fasta_file -> [[id: 'rrna_refs'], fasta_file] }
                 .set { ch_combined_fasta }

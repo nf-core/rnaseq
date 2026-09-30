@@ -723,17 +723,17 @@ workflow RNASEQ {
         // SUBWORKFLOW: Convert bedGraph to bigWig
         //
         BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD (
-            BEDTOOLS_GENOMECOV_FW.out,
+            BEDTOOLS_GENOMECOV_FW.out.map { r -> [r.meta, r.genomecov] },
             ch_chrom_sizes
         )
 
         BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE (
-            BEDTOOLS_GENOMECOV_REV.out,
+            BEDTOOLS_GENOMECOV_REV.out.map { r -> [r.meta, r.genomecov] },
             ch_chrom_sizes
         )
 
         BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_COMBINED (
-            BEDTOOLS_GENOMECOV_COMBINED.out,
+            BEDTOOLS_GENOMECOV_COMBINED.out.map { r -> [r.meta, r.genomecov] },
             ch_chrom_sizes
         )
 

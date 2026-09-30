@@ -178,7 +178,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     //
     // MODULE: Concatenate FastQ files from same sample if required
     //
-    CAT_FASTQ(ch_fastq.multiple).mix(ch_fastq.single).set { ch_filtered_reads }
+    CAT_FASTQ(ch_fastq.multiple).map { r -> [r.meta, r.reads] }.mix(ch_fastq.single).set { ch_filtered_reads }
 
     //
     // MODULE: Lint FastQ files
@@ -188,8 +188,8 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         FQ_LINT(
             ch_filtered_reads
         )
-        ch_lint_log_raw = FQ_LINT.out
-        ch_filtered_reads = ch_filtered_reads.join(FQ_LINT.out.map { meta, _lint -> meta })
+        ch_lint_log_raw = FQ_LINT.out.map { r -> [r.meta, r.lint] }
+        ch_filtered_reads = ch_filtered_reads.join(FQ_LINT.out.map { r -> r.meta })
     }
 
     ch_reads_cat = ch_filtered_reads
@@ -342,8 +342,8 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         FQ_LINT_AFTER_TRIMMING(
             ch_filtered_reads
         )
-        ch_lint_log_trimmed = FQ_LINT_AFTER_TRIMMING.out
-        ch_filtered_reads = ch_filtered_reads.join(FQ_LINT_AFTER_TRIMMING.out.map { meta, _lint -> meta })
+        ch_lint_log_trimmed = FQ_LINT_AFTER_TRIMMING.out.map { r -> [r.meta, r.lint] }
+        ch_filtered_reads = ch_filtered_reads.join(FQ_LINT_AFTER_TRIMMING.out.map { r -> r.meta })
 
         ch_results = ch_results
             .join(ch_lint_log_trimmed.map { meta, lint -> [meta.id, lint] }, by: [0], remainder: true)
@@ -390,8 +390,8 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
             FQ_LINT_AFTER_BBSPLIT(
                 ch_filtered_reads
             )
-            ch_lint_log_bbsplit = FQ_LINT_AFTER_BBSPLIT.out
-            ch_filtered_reads = ch_filtered_reads.join(FQ_LINT_AFTER_BBSPLIT.out.map { meta, _lint -> meta })
+            ch_lint_log_bbsplit = FQ_LINT_AFTER_BBSPLIT.out.map { r -> [r.meta, r.lint] }
+            ch_filtered_reads = ch_filtered_reads.join(FQ_LINT_AFTER_BBSPLIT.out.map { r -> r.meta })
 
             ch_results = ch_results
                 .join(ch_lint_log_bbsplit.map { meta, lint -> [meta.id, lint] }, by: [0], remainder: true)
@@ -432,8 +432,8 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
             FQ_LINT_AFTER_RIBO_REMOVAL(
                 ch_filtered_reads
             )
-            ch_lint_log_ribo = FQ_LINT_AFTER_RIBO_REMOVAL.out
-            ch_filtered_reads = ch_filtered_reads.join(FQ_LINT_AFTER_RIBO_REMOVAL.out.map { meta, _lint -> meta })
+            ch_lint_log_ribo = FQ_LINT_AFTER_RIBO_REMOVAL.out.map { r -> [r.meta, r.lint] }
+            ch_filtered_reads = ch_filtered_reads.join(FQ_LINT_AFTER_RIBO_REMOVAL.out.map { r -> r.meta })
 
             ch_results = ch_results
                 .join(ch_lint_log_ribo.map { meta, lint -> [meta.id, lint] }, by: [0], remainder: true)

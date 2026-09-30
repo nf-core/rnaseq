@@ -13,7 +13,7 @@ process SEQKIT_STATS {
     tuple(meta: Map, reads: List<Path>)
 
     output:
-    tuple(meta, file("*.tsv"))
+    record(meta: meta, stats: file("*.tsv"))
 
     topic:
     tuple(task.process, 'seqkit', eval("seqkit version | sed 's/^.*v//'")) >> 'versions'

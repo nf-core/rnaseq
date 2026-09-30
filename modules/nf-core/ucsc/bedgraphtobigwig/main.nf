@@ -14,7 +14,7 @@ process UCSC_BEDGRAPHTOBIGWIG {
     sizes: Path
 
     output:
-    tuple(meta, file("*.bigWig"))
+    record(meta: meta, bigwig: file("*.bigWig"))
 
     topic:
     // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.

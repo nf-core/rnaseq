@@ -49,7 +49,7 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = CAT_FASTQ.out                                    // ch_reads
+                input[0] = CAT_FASTQ.out.map { r -> [r.meta, r.reads] }                                    // ch_reads
                 input[1] = Channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas
                 input[2] = []                                                     // ch_sortmerna_index
                 input[3] = []                                                     // ch_bowtie2_index
@@ -90,7 +90,7 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = CAT_FASTQ.out                                    // ch_reads
+                input[0] = CAT_FASTQ.out.map { r -> [r.meta, r.reads] }                                    // ch_reads
                 input[1] = []                                                     // ch_rrna_fastas (not needed for ribodetector)
                 input[2] = []                                                     // ch_sortmerna_index
                 input[3] = []                                                     // ch_bowtie2_index
@@ -138,7 +138,7 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = CAT_FASTQ.out                                    // ch_reads
+                input[0] = CAT_FASTQ.out.map { r -> [r.meta, r.reads] }                                    // ch_reads
                 input[1] = Channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas
                 input[2] = []                                                     // ch_sortmerna_index
                 input[3] = []                                                     // ch_bowtie2_index
@@ -201,7 +201,7 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = CAT_FASTQ_SE.out.map { meta, reads -> [meta, reads instanceof List ? reads : [reads]] }
+                input[0] = CAT_FASTQ_SE.out.map { r -> [r.meta, r.reads instanceof List ? r.reads : [r.reads]] }
                 input[1] = Channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas
                 input[2] = []                                                     // ch_sortmerna_index
                 input[3] = []                                                     // ch_bowtie2_index
@@ -262,7 +262,7 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = CAT_FASTQ_SE.out.map { meta, reads -> [meta, reads instanceof List ? reads : [reads]] }
+                input[0] = CAT_FASTQ_SE.out.map { r -> [r.meta, r.reads instanceof List ? r.reads : [r.reads]] }
                 input[1] = Channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas
                 input[2] = []                                                     // ch_sortmerna_index
                 input[3] = []                                                     // ch_bowtie2_index
@@ -301,7 +301,7 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = CAT_FASTQ.out                                    // ch_reads
+                input[0] = CAT_FASTQ.out.map { r -> [r.meta, r.reads] }                                    // ch_reads
                 // Test with multiple rRNA databases that contain clustered sequences with
                 // duplicate identifiers. SILVA databases use clustered sequences where the sequence ID
                 // (the part before the first space) can be the same across different databases, causing

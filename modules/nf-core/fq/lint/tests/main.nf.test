@@ -27,10 +27,10 @@ nextflow_process {
         then {
             assertAll (
                 { assert process.success },
-                { assert process.out[0][0][1] ==~ ".*/test.fq_lint.txt" },
-                { assert path(process.out[0][0][1]).getText().contains("fq-lint start") },
-                { assert path(process.out[0][0][1]).getText().contains("read 100 records") },
-                { assert path(process.out[0][0][1]).getText().contains("fq-lint end") },
+                { assert process.out[0][0].lint ==~ ".*/test.fq_lint.txt" },
+                { assert path(process.out[0][0].lint).getText().contains("fq-lint start") },
+                { assert path(process.out[0][0].lint).getText().contains("read 100 records") },
+                { assert path(process.out[0][0].lint).getText().contains("fq-lint end") },
             )
         }
 

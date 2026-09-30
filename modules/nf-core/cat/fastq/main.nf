@@ -16,7 +16,7 @@ process CAT_FASTQ {
     stageAs reads, 'input*/*'
 
     output:
-    tuple(meta, files("*.merged.fastq.gz").toSorted { f -> f.name })
+    record(meta: meta, reads: files("*.merged.fastq.gz").toSorted { f -> f.name })
 
     topic:
     tuple(task.process, "cat", eval("cat --version 2>&1 | head -n 1 | sed 's/^.*coreutils) //; s/ .*\$//'")) >> 'versions'

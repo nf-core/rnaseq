@@ -16,7 +16,7 @@ process BEDTOOLS_GENOMECOV {
     sort: Boolean
 
     output:
-    tuple(meta, file("*.${extension}"))
+    record(meta: meta, genomecov: file("*.${extension}"))
 
     topic:
     tuple(task.process, 'bedtools', eval("bedtools --version | sed -e 's/bedtools v//g'")) >> 'versions'

@@ -14,7 +14,7 @@ process UCSC_BEDCLIP {
     sizes: Path
 
     output:
-    tuple(meta, file("*.bedGraph"))
+    record(meta: meta, bedgraph: file("*.bedGraph"))
 
     topic:
     // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.

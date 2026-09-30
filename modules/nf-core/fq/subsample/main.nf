@@ -13,7 +13,7 @@ process FQ_SUBSAMPLE {
     tuple(meta: Map, fastq: List<Path>)
 
     output:
-    tuple(meta, files("*.fastq.gz").toSorted { f -> f.name })
+    record(meta: meta, fastq: files("*.fastq.gz").toSorted { f -> f.name })
 
     topic:
     tuple(task.process, 'fq', eval("fq subsample --version | sed 's/fq-subsample //; s/ .*//'")) >> 'versions'

@@ -25,11 +25,12 @@ nextflow_workflow {
                 script "../../../../modules/nf-core/salmon/index/main.nf"
                 process {
                     """
-                    input[0] = channel.of([
-                        [ id:'test' ], // meta map
-                        file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true),
-                        file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.fasta", checkIfExists: true)
-                    ])
+                    input[0] = channel.of(record(
+                        id: 'test',
+                        meta: [ id:'test' ],
+                        transcript_fasta: file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true),
+                        genome_fasta: file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.fasta", checkIfExists: true)
+                    ))
                     """
                 }
             }
@@ -38,20 +39,18 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = [
-                    [ id: 'samplesheet' ],
-                    file(params.modules_testdata_base_path + '/genomics/sarscov2/illumina/csv/samplesheet_micro.csv', checkIfExists: true)
-                ]
-                input[1] = [
-                    [ id: 'test' ],
-                    [
+                input[0] = channel.value(file(params.modules_testdata_base_path + '/genomics/sarscov2/illumina/csv/samplesheet_micro.csv', checkIfExists: true))
+                input[1] = channel.of(record(
+                    id: 'test',
+                    meta: [ id: 'test' ],
+                    reads: [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                     ]
-                ]
-                input[2] = SALMON_INDEX.out.map { r -> r.index }
-                input[3] = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))
-                input[4] = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true))
+                ))
+                input[2] = SALMON_INDEX.out.map { r -> r.index }.first()
+                input[3] = channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))
+                input[4] = channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true))
                 input[5] = 'gene_id'
                 input[6] = 'gene_name'
                 input[7] = 'salmon'
@@ -66,16 +65,16 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                        file(workflow.out.merged_gene_rds_unified[0][1]).name,
-                        file(workflow.out.merged_transcript_rds_unified[0][1]).name,
-                        workflow.out.counts_gene,
-                        workflow.out.counts_gene_length_scaled,
-                        workflow.out.lengths_gene,
-                        workflow.out.lengths_transcript,
-                        workflow.out.counts_transcript,
-                        workflow.out.tpm_gene,
-                        workflow.out.tpm_transcript,
-                        workflow.out.tx2gene_augmented
+                        file(workflow.out.merged[0].merged_gene_rds).name,
+                        file(workflow.out.merged[0].merged_transcript_rds).name,
+                        workflow.out.merged[0].counts_gene,
+                        workflow.out.merged[0].counts_gene_length_scaled,
+                        workflow.out.merged[0].lengths_gene,
+                        workflow.out.merged[0].lengths_transcript,
+                        workflow.out.merged[0].counts_transcript,
+                        workflow.out.merged[0].tpm_gene,
+                        workflow.out.merged[0].tpm_transcript,
+                        workflow.out.merged[0].tx2gene_augmented
                     ).match()
                 }
             )
@@ -89,10 +88,11 @@ nextflow_workflow {
                 script "../../../../modules/nf-core/kallisto/index/main.nf"
                 process {
                     """
-                    input[0] = channel.of([
-                        [ id:'transcriptome' ], // meta map
-                        file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)
-                    ])
+                    input[0] = channel.of(record(
+                        id: 'transcriptome',
+                        meta: [ id:'transcriptome' ],
+                        fasta: file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)
+                    ))
                     """
                 }
             }
@@ -101,25 +101,23 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = [
-                    [ id: 'samplesheet' ],
-                    file(params.modules_testdata_base_path + '/genomics/sarscov2/illumina/csv/samplesheet_micro.csv', checkIfExists: true)
-                ]
-                input[1] = [
-                    [ id: 'test' ],
-                    [
+                input[0] = channel.value(file(params.modules_testdata_base_path + '/genomics/sarscov2/illumina/csv/samplesheet_micro.csv', checkIfExists: true))
+                input[1] = channel.of(record(
+                    id: 'test',
+                    meta: [ id: 'test' ],
+                    reads: [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                     ]
-                ]
-                input[2] = KALLISTO_INDEX.out.map { r -> r.index }
-                input[3] = channel.of(file(params.modules_testdata_base_path +  "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))
-                input[4] = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true))
+                ))
+                input[2] = KALLISTO_INDEX.out.map { r -> r.index }.first()
+                input[3] = channel.value(file(params.modules_testdata_base_path +  "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))
+                input[4] = channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true))
                 input[5] = 'gene_id'
                 input[6] = 'gene_name'
                 input[7] = 'kallisto'
-                input[8] = []
-                input[9] = []
+                input[8] = null
+                input[9] = null
                 input[10] = false
                 """
             }
@@ -129,15 +127,15 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                        file(workflow.out.merged_gene_rds_unified[0][1]).name,
-                        file(workflow.out.merged_transcript_rds_unified[0][1]).name,
-                        workflow.out.counts_gene,
-                        workflow.out.counts_gene_length_scaled,
-                        workflow.out.lengths_gene,
-                        workflow.out.lengths_transcript,
-                        workflow.out.tpm_gene,
-                        workflow.out.tpm_transcript,
-                        workflow.out.tx2gene_augmented
+                        file(workflow.out.merged[0].merged_gene_rds).name,
+                        file(workflow.out.merged[0].merged_transcript_rds).name,
+                        workflow.out.merged[0].counts_gene,
+                        workflow.out.merged[0].counts_gene_length_scaled,
+                        workflow.out.merged[0].lengths_gene,
+                        workflow.out.merged[0].lengths_transcript,
+                        workflow.out.merged[0].tpm_gene,
+                        workflow.out.merged[0].tpm_transcript,
+                        workflow.out.merged[0].tx2gene_augmented
                     ).match()
                 }
             )
@@ -153,11 +151,12 @@ nextflow_workflow {
                 script "../../../../modules/nf-core/salmon/index/main.nf"
                 process {
                     """
-                    input[0] = channel.of([
-                        [ id:'test' ], // meta map
-                        file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true),
-                        file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.fasta", checkIfExists: true)
-                    ])
+                    input[0] = channel.of(record(
+                        id: 'test',
+                        meta: [ id:'test' ],
+                        transcript_fasta: file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true),
+                        genome_fasta: file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.fasta", checkIfExists: true)
+                    ))
                     """
                 }
             }
@@ -166,20 +165,18 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = [
-                    [ id: 'samplesheet' ],
-                    file(params.modules_testdata_base_path + '/genomics/sarscov2/illumina/csv/samplesheet_micro.csv', checkIfExists: true)
-                ]
-                input[1] = [
-                    [ id: 'test' ],
-                    [
+                input[0] = channel.value(file(params.modules_testdata_base_path + '/genomics/sarscov2/illumina/csv/samplesheet_micro.csv', checkIfExists: true))
+                input[1] = channel.of(record(
+                    id: 'test',
+                    meta: [ id: 'test' ],
+                    reads: [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                     ]
-                ]
-                input[2] = SALMON_INDEX.out.map { r -> r.index }
-                input[3] = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))
-                input[4] = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true))
+                ))
+                input[2] = SALMON_INDEX.out.map { r -> r.index }.first()
+                input[3] = channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))
+                input[4] = channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true))
                 input[5] = 'gene_id'
                 input[6] = 'gene_name'
                 input[7] = 'salmon'
@@ -207,10 +204,11 @@ nextflow_workflow {
                 script "../../../../modules/nf-core/kallisto/index/main.nf"
                 process {
                     """
-                    input[0] = channel.of([
-                        [ id:'transcriptome' ], // meta map
-                        file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)
-                    ])
+                    input[0] = channel.of(record(
+                        id: 'transcriptome',
+                        meta: [ id:'transcriptome' ],
+                        fasta: file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)
+                    ))
                     """
                 }
             }
@@ -219,25 +217,23 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = [
-                    [ id: 'samplesheet' ],
-                    file(params.modules_testdata_base_path + '/genomics/sarscov2/illumina/csv/samplesheet_micro.csv', checkIfExists: true)
-                ]
-                input[1] = [
-                    [ id: 'test' ],
-                    [
+                input[0] = channel.value(file(params.modules_testdata_base_path + '/genomics/sarscov2/illumina/csv/samplesheet_micro.csv', checkIfExists: true))
+                input[1] = channel.of(record(
+                    id: 'test',
+                    meta: [ id: 'test' ],
+                    reads: [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                     ]
-                ]
-                input[2] = KALLISTO_INDEX.out.map { r -> r.index }
-                input[3] = channel.of(file(params.modules_testdata_base_path +  "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))
-                input[4] = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true))
+                ))
+                input[2] = KALLISTO_INDEX.out.map { r -> r.index }.first()
+                input[3] = channel.value(file(params.modules_testdata_base_path +  "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))
+                input[4] = channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true))
                 input[5] = 'gene_id'
                 input[6] = 'gene_name'
                 input[7] = 'kallisto'
-                input[8] = []
-                input[9] = []
+                input[8] = null
+                input[9] = null
                 input[10] = false
                 """
             }

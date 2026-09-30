@@ -34,18 +34,15 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = [
-                    [ id: 'samplesheet' ],
-                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true)
-                ]
+                input[0] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true))
                 input[1] = UNTAR.out.map { r -> [ r.meta, r.dir ] }.flatMap { meta, dir ->
                     def entries = []
                     dir.toFile().eachDir { d ->
-                        entries << [[ id: d.name ], d.toPath()]
+                        entries << record(id: d.name, meta: [ id: d.name ], quants: [ d.toPath() ])
                     }
                     entries
                 }
-                input[2] = channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
+                input[2] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
                 input[3] = 'gene_id'
                 input[4] = 'gene_name'
                 input[5] = 'salmon'
@@ -58,18 +55,18 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                        file(workflow.out.merged_gene_rds[0][1]).name,
-                        file(workflow.out.merged_transcript_rds[0][1]).name,
-                        workflow.out.counts_gene,
-                        workflow.out.counts_gene_length_scaled,
-                        workflow.out.counts_gene_scaled,
-                        workflow.out.lengths_gene,
-                        workflow.out.lengths_transcript,
-                        workflow.out.tpm_gene,
-                        workflow.out.tpm_transcript,
-                        workflow.out.counts_transcript,
-                        workflow.out.tx2gene,
-                        workflow.out.tx2gene_augmented
+                        file(workflow.out[0][0].merged_gene_rds).name,
+                        file(workflow.out[0][0].merged_transcript_rds).name,
+                        workflow.out[0][0].counts_gene,
+                        workflow.out[0][0].counts_gene_length_scaled,
+                        workflow.out[0][0].counts_gene_scaled,
+                        workflow.out[0][0].lengths_gene,
+                        workflow.out[0][0].lengths_transcript,
+                        workflow.out[0][0].tpm_gene,
+                        workflow.out[0][0].tpm_transcript,
+                        workflow.out[0][0].counts_transcript,
+                        workflow.out[0][0].tx2gene,
+                        workflow.out[0][0].tx2gene_augmented
                     ).match()
                 }
             )
@@ -96,10 +93,7 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = [
-                    [ id: 'samplesheet' ],
-                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true)
-                ]
+                input[0] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true))
                 // Append a row for a transcript absent from the GTF to each sample's quant.sf,
                 // simulating e.g. a spike-in or a transcript_fasta sequence not derived from the
                 // GTF. Regression test for SE_TRANSCRIPT_UNIFIED failing on exactly this case.
@@ -111,11 +105,11 @@ nextflow_workflow {
                         def copyDir = file("\${workDir}/\${d.name}_orphan/\${d.name}")
                         copyDir.mkdirs()
                         file("\${copyDir}/quant.sf").text = new File(d, 'quant.sf').text + "ORPHAN_TX_FIXTURE\\t500\\t450.000\\t0.000000\\t0.000\\n"
-                        entries << [[ id: d.name ], copyDir]
+                        entries << record(id: d.name, meta: [ id: d.name ], quants: [ copyDir ])
                     }
                     entries
                 }
-                input[2] = channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
+                input[2] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
                 input[3] = 'gene_id'
                 input[4] = 'gene_name'
                 input[5] = 'salmon'
@@ -128,10 +122,10 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 // Present in transcript-level output (with its identity self-mapping)...
-                { assert file(workflow.out.counts_transcript[0][1]).text.contains('ORPHAN_TX_FIXTURE') },
-                { assert file(workflow.out.tx2gene_augmented[0][1]).text.contains('ORPHAN_TX_FIXTURE') },
+                { assert file(workflow.out[0][0].counts_transcript).text.contains('ORPHAN_TX_FIXTURE') },
+                { assert file(workflow.out[0][0].tx2gene_augmented).text.contains('ORPHAN_TX_FIXTURE') },
                 // ...but excluded from gene-level output, since it isn't a real gene.
-                { assert !file(workflow.out.counts_gene[0][1]).text.contains('ORPHAN_TX_FIXTURE') }
+                { assert !file(workflow.out[0][0].counts_gene).text.contains('ORPHAN_TX_FIXTURE') }
             )
         }
     }
@@ -156,18 +150,15 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = [
-                    [ id: 'samplesheet' ],
-                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true)
-                ]
+                input[0] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true))
                 input[1] = UNTAR.out.map { r -> [ r.meta, r.dir ] }.flatMap { meta, dir ->
                     def entries = []
                     dir.toFile().eachDir { d ->
-                        entries << [[ id: d.name ], d.toPath()]
+                        entries << record(id: d.name, meta: [ id: d.name ], quants: [ d.toPath() ])
                     }
                     entries
                 }
-                input[2] = channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
+                input[2] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
                 input[3] = 'gene_id'
                 input[4] = 'gene_name'
                 input[5] = 'kallisto'
@@ -180,18 +171,18 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                        file(workflow.out.merged_gene_rds[0][1]).name,
-                        file(workflow.out.merged_transcript_rds[0][1]).name,
-                        workflow.out.counts_gene,
-                        workflow.out.counts_gene_length_scaled,
-                        workflow.out.counts_gene_scaled,
-                        workflow.out.lengths_gene,
-                        workflow.out.lengths_transcript,
-                        workflow.out.tpm_gene,
-                        workflow.out.tpm_transcript,
-                        workflow.out.counts_transcript,
-                        workflow.out.tx2gene,
-                        workflow.out.tx2gene_augmented
+                        file(workflow.out[0][0].merged_gene_rds).name,
+                        file(workflow.out[0][0].merged_transcript_rds).name,
+                        workflow.out[0][0].counts_gene,
+                        workflow.out[0][0].counts_gene_length_scaled,
+                        workflow.out[0][0].counts_gene_scaled,
+                        workflow.out[0][0].lengths_gene,
+                        workflow.out[0][0].lengths_transcript,
+                        workflow.out[0][0].tpm_gene,
+                        workflow.out[0][0].tpm_transcript,
+                        workflow.out[0][0].counts_transcript,
+                        workflow.out[0][0].tx2gene,
+                        workflow.out[0][0].tx2gene_augmented
                     ).match()
                 }
             )
@@ -218,10 +209,7 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = [
-                    [ id: 'samplesheet' ],
-                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true)
-                ]
+                input[0] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true))
                 input[1] = UNTAR.out.map { r -> [ r.meta, r.dir ] }.flatMap { meta, dir ->
                     def entries = []
                     dir.toFile().eachFileRecurse { f ->
@@ -231,7 +219,7 @@ nextflow_workflow {
                     }
                     entries
                 }
-                input[2] = channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
+                input[2] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
                 input[3] = 'gene_id'
                 input[4] = 'gene_name'
                 input[5] = 'rsem'
@@ -244,18 +232,18 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                        file(workflow.out.merged_gene_rds[0][1]).name,
-                        file(workflow.out.merged_transcript_rds[0][1]).name,
-                        workflow.out.counts_gene,
-                        workflow.out.counts_gene_length_scaled,
-                        workflow.out.counts_gene_scaled,
-                        workflow.out.lengths_gene,
-                        workflow.out.lengths_transcript,
-                        workflow.out.tpm_gene,
-                        workflow.out.tpm_transcript,
-                        workflow.out.counts_transcript,
-                        workflow.out.tx2gene,
-                        workflow.out.tx2gene_augmented
+                        file(workflow.out[0][0].merged_gene_rds).name,
+                        file(workflow.out[0][0].merged_transcript_rds).name,
+                        workflow.out[0][0].counts_gene,
+                        workflow.out[0][0].counts_gene_length_scaled,
+                        workflow.out[0][0].counts_gene_scaled,
+                        workflow.out[0][0].lengths_gene,
+                        workflow.out[0][0].lengths_transcript,
+                        workflow.out[0][0].tpm_gene,
+                        workflow.out[0][0].tpm_transcript,
+                        workflow.out[0][0].counts_transcript,
+                        workflow.out[0][0].tx2gene,
+                        workflow.out[0][0].tx2gene_augmented
                     ).match()
                 }
             )
@@ -269,14 +257,9 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = [
-                    [ id: 'samplesheet' ],
-                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true)
-                ]
-                input[1] = channel.of(
-                    [[ id: 'sample1' ], file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)]
-                )
-                input[2] = channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
+                input[0] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true))
+                input[1] = channel.of(record(id: 'sample1', meta: [ id: 'sample1' ], quants: [ file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true) ]))
+                input[2] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
                 input[3] = 'gene_id'
                 input[4] = 'gene_name'
                 input[5] = 'salmon'
@@ -300,14 +283,9 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = [
-                    [ id: 'samplesheet' ],
-                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true)
-                ]
-                input[1] = channel.of(
-                    [[ id: 'sample1' ], file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)]
-                )
-                input[2] = channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
+                input[0] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true))
+                input[1] = channel.of(record(id: 'sample1', meta: [ id: 'sample1' ], quants: [ file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true) ]))
+                input[2] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
                 input[3] = 'gene_id'
                 input[4] = 'gene_name'
                 input[5] = 'kallisto'
@@ -331,14 +309,9 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = [
-                    [ id: 'samplesheet' ],
-                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true)
-                ]
-                input[1] = channel.of(
-                    [[ id: 'sample1' ], file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)]
-                )
-                input[2] = channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
+                input[0] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true))
+                input[1] = channel.of(record(id: 'sample1', meta: [ id: 'sample1' ], quants: [ file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true) ]))
+                input[2] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
                 input[3] = 'gene_id'
                 input[4] = 'gene_name'
                 input[5] = 'rsem'

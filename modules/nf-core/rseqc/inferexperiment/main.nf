@@ -1,7 +1,9 @@
 nextflow.enable.types = true
 
+include { BamBaiInput } from '../../types'
+
 process RSEQC_INFEREXPERIMENT {
-    tag "$meta.id"
+    tag "$sample.meta.id"
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
@@ -10,28 +12,28 @@ process RSEQC_INFEREXPERIMENT {
         'community.wave.seqera.io/library/rseqc_r-base:2e29d2dfda9cef15' }"
 
     input:
-    record(id: String, meta: Map, bam: Path, bai: Path)
+    sample: BamBaiInput
     bed: Path
 
     output:
-    record(id: id, meta: meta, inferexperiment: file("*.infer_experiment.txt"))
+    record(id: sample.id, meta: sample.meta, inferexperiment: file("*.infer_experiment.txt"))
 
     topic:
     tuple(task.process, 'rseqc', eval('infer_experiment.py --version | sed "s/infer_experiment.py //"')) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     infer_experiment.py \\
-        -i $bam \\
+        -i $sample.bam \\
         -r $bed \\
         $args \\
         > ${prefix}.infer_experiment.txt
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     touch ${prefix}.infer_experiment.txt
     """

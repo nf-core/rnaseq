@@ -1,7 +1,9 @@
 nextflow.enable.types = true
 
+include { ReadsInput } from '../../types'
+
 process RSEM_CALCULATEEXPRESSION {
-    tag "$meta.id"
+    tag "$sample.meta.id"
     label 'process_high'
 
     conda "${moduleDir}/environment.yml"
@@ -10,13 +12,13 @@ process RSEM_CALCULATEEXPRESSION {
         'community.wave.seqera.io/library/rsem_star:5acb4e8c03239c32' }"
 
     input:
-    record(id: String, meta: Map, reads: List<Path>)  // FASTQ files or BAM file for --alignments mode
+    sample: ReadsInput
     index: Path
 
     output:
     record(
-        id:                id,
-        meta:              meta,
+        id:                sample.id,
+        meta:              sample.meta,
         counts_gene:       file("*.genes.results"),
         counts_transcript: file("*.isoforms.results"),
         stat:              file("*.stat"),
@@ -31,23 +33,23 @@ process RSEM_CALCULATEEXPRESSION {
 
     script:
     def args = task.ext.args   ?: ''
-    prefix   = task.ext.prefix ?: "${meta.id}"
+    prefix   = task.ext.prefix ?: "${sample.meta.id}"
 
     def strandedness = ''
-    if (meta.strandedness == 'forward') {
+    if (sample.meta.strandedness == 'forward') {
         strandedness = '--strandedness forward'
-    } else if (meta.strandedness == 'reverse') {
+    } else if (sample.meta.strandedness == 'reverse') {
         strandedness = '--strandedness reverse'
     }
 
     // Detect if input is BAM file(s); a lone file arrives as a Path, which iterates over its name components
-    def reads_names = reads instanceof Path ? "${reads}" : reads.join(' ')
-    def reads_count = reads instanceof Path ? 1 : reads.size()
+    def reads_names = sample.reads instanceof Path ? "${sample.reads}" : sample.reads.join(' ')
+    def reads_count = sample.reads instanceof Path ? 1 : sample.reads.size()
     def is_bam = reads_names.toLowerCase().endsWith('.bam')
     def alignment_mode = is_bam ? '--alignments' : ''
 
     // Use metadata for paired-end detection if available, otherwise empty (auto-detect)
-    def paired_end = meta.containsKey('single_end') ? (meta.single_end ? "" : "--paired-end") : "unknown"
+    def paired_end = sample.meta.containsKey('single_end') ? (sample.meta.single_end ? "" : "--paired-end") : "unknown"
 
     """
     INDEX=`find -L ./ -name "*.grp" | sed 's/\\.grp\$//'`
@@ -76,8 +78,8 @@ process RSEM_CALCULATEEXPRESSION {
     """
 
     stub:
-    prefix = task.ext.prefix ?: "${meta.id}"
-    def is_bam = (reads instanceof Path ? "${reads}" : reads.join(' ')).toLowerCase().endsWith('.bam')
+    prefix = task.ext.prefix ?: "${sample.meta.id}"
+    def is_bam = (sample.reads instanceof Path ? "${sample.reads}" : sample.reads.join(' ')).toLowerCase().endsWith('.bam')
     """
     touch ${prefix}.genes.results
     touch ${prefix}.isoforms.results

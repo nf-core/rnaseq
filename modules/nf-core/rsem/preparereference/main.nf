@@ -1,7 +1,9 @@
 nextflow.enable.types = true
 
+include { FastaGtfInput } from '../../types'
+
 process RSEM_PREPAREREFERENCE {
-    tag "$fasta"
+    tag "$sample.fasta"
     label 'process_high'
 
     conda "${moduleDir}/environment.yml"
@@ -10,15 +12,15 @@ process RSEM_PREPAREREFERENCE {
         'community.wave.seqera.io/library/rsem_star:5acb4e8c03239c32' }"
 
     input:
-    record(id: String, meta: Map, fasta: Path, gtf: Path)
+    sample: FastaGtfInput
 
     stage:
-    stageAs fasta, 'rsem/*'
+    stageAs sample.fasta, 'rsem/*'
 
     output:
     record(
-        id:               id,
-        meta:             meta,
+        id:               sample.id,
+        meta:             sample.meta,
         index:            file("rsem"),
         transcript_fasta: file("*transcripts.fa")
     )
@@ -37,17 +39,17 @@ process RSEM_PREPAREREFERENCE {
         STAR \\
             --runMode genomeGenerate \\
             --genomeDir rsem/ \\
-            --genomeFastaFiles $fasta \\
-            --sjdbGTFfile $gtf \\
+            --genomeFastaFiles $sample.fasta \\
+            --sjdbGTFfile $sample.gtf \\
             --runThreadN $task.cpus \\
             $memory \\
             $args2
 
         rsem-prepare-reference \\
-            --gtf $gtf \\
+            --gtf $sample.gtf \\
             --num-threads $task.cpus \\
             ${args_no_star} \\
-            $fasta \\
+            $sample.fasta \\
             rsem/genome
 
         cp rsem/genome.transcripts.fa .
@@ -55,10 +57,10 @@ process RSEM_PREPAREREFERENCE {
     } else {
         """
         rsem-prepare-reference \\
-            --gtf $gtf \\
+            --gtf $sample.gtf \\
             --num-threads $task.cpus \\
             $args \\
-            $fasta \\
+            $sample.fasta \\
             rsem/genome
 
         cp rsem/genome.transcripts.fa .

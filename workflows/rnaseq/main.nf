@@ -36,7 +36,7 @@ include { SalmonQuantSample; KallistoQuantSample                                
 include { RsemQuantSample                                                                } from '../../subworkflows/nf-core/quantify_rsem/types'
 include { StringtieMerged                                                                } from '../../subworkflows/nf-core/bam_stringtie_merge/types'
 include { FastqQcTrimFilterSetstrandedness; RrnaReferences                               } from '../../subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness/types'
-include { MultiqcReport                                                                  } from '../../subworkflows/local/multiqc_rnaseq/types'
+include { MultiqcReport; MultiqcFiles                                                                  } from '../../subworkflows/local/multiqc_rnaseq/types'
 include { AlignedSample; Bam; RsemMergeSample; Contaminants; StringtieSample; BigwigSample; Deseq2Qc; PipelineInfo; RustqcResult } from '../../subworkflows/local/types'
 
 include { readSamplesheet                } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline/samplesheet'
@@ -123,13 +123,13 @@ workflow RNASEQ {
         'bowtie2_salmon' : 'Bowtie2 overall alignment rate',
     ][params.aligner as String] ?: 'Aligned reads'
 
-    // Flat [ meta, file ] contributions to the merged MultiQC report
-    ch_multiqc_files = channel.empty()
+    // Files each stage contributes to MultiQC, per sample. The report-only and sample-only
+    // channels hold the files that go to just the merged report or just the per-sample reports
+    // (--skip_quantification_merge). fail_* rows are appended inside MULTIQC_RNASEQ.
+    def ch_mqc_files: Channel<MultiqcFiles>       = channel.empty()
+    def ch_mqc_sample_only: Channel<MultiqcFiles> = channel.empty()
+    def ch_mqc_report_only: Channel<Path>         = channel.empty()
 
-    // Per-sample MultiQC bundle: one record per input sample, with a field per contributing
-    // stage that stays null when the stage did not run or produced nothing for the sample.
-    // Every stage joins with `remainder: true` so samples with no match still come through.
-    // fail_* rows are appended inside MULTIQC_RNASEQ.
     def ch_input = channel
         .fromList(readSamplesheet(params.input, "${projectDir}/assets/schema_input.json", params.skip_alignment) as List<Map>)
         .map { s ->
@@ -144,29 +144,6 @@ workflow RNASEQ {
                 prealigned:        s.prealigned
             )
         }
-
-    ch_mqc_bundle = ch_input.map { s ->
-        record(
-            id:             s.id,
-            meta:           s.meta,
-            fastq_qc:       null,
-            star_log:       null,
-            star_stats:     null,
-            bowtie2_log:    null,
-            bowtie2_stats:  null,
-            hisat2_summary: null,
-            hisat2_stats:   null,
-            umi_dedup:      null,
-            rsem_stat:      null,
-            markdup:        null,
-            rustqc:         null,
-            bam_qc:         null,
-            kraken2:        null,
-            bracken:        null,
-            sylphtax:       null,
-            pseudo:         null
-        )
-    }
 
     // Samples that go through FASTQ preprocessing and samples supplied as pre-aligned BAM files
     ch_fastq_samples = ch_input.filter { s -> !s.prealigned }
@@ -226,8 +203,8 @@ workflow RNASEQ {
     // Samples that fail min_trimmed_reads have no filtered reads and go no further
     ch_reads_ok = ch_preprocessed.filter { r -> r.reads != null }
 
-    // MultiQC files from FASTQ preprocessing. The trimmer log is only sent to the
-    // merged report when the trimmer is not fastp.
+    // MultiQC files from FASTQ preprocessing. The trimmer log only reaches the merged
+    // report when the trimmer is not fastp.
     ch_fastq_qc = ch_preprocessed.map { r ->
         def fastqc_head = (r.fastqc?.raw_zip ?: []) + (r.fastqc?.trim_zip ?: [])
         def trim_json   = r.trim?.json ?: []
@@ -235,19 +212,16 @@ workflow RNASEQ {
         def other       = [r.umi?.log, r.bbsplit?.stats, r.rrna?.sortmerna_log, r.rrna?.ribodetector_log, r.rrna?.seqkit_stats, r.rrna?.bowtie2_log] +
                           (r.fastqc?.filtered_zip ?: [])
         record(
-            id:           r.id,
-            meta:         r.meta,
-            merged_files: fastqc_head + (params.trimmer == 'fastp' ? [] : trim_log) + trim_json + other,
-            bundle_files: fastqc_head + trim_log + trim_json + other
+            id:    r.id,
+            files: (fastqc_head + (params.trimmer == 'fastp' ? [] : trim_log) + trim_json + other).findAll { f -> f != null }
         )
     }
-    ch_multiqc_files = ch_multiqc_files.mix(
-        ch_fastq_qc.flatMap { q -> q.merged_files.findAll { f -> f != null }.collect { f -> tuple(q.meta, f) } }
-    )
-    ch_mqc_bundle = ch_mqc_bundle.join(
-        ch_fastq_qc.map { q -> record(id: q.id, fastq_qc: q.bundle_files.findAll { f -> f != null }) },
-        by: 'id', remainder: true
-    )
+    ch_mqc_files = ch_mqc_files.mix(ch_fastq_qc)
+    if (params.trimmer == 'fastp') {
+        ch_mqc_sample_only = ch_mqc_sample_only.mix(
+            ch_preprocessed.map { r -> record(id: r.id, files: r.trim?.log ?: []) }
+        )
+    }
 
     ch_trim_read_count = ch_preprocessed
         .filter { r -> r.num_trimmed_reads != null }
@@ -274,11 +248,7 @@ workflow RNASEQ {
             params.skip_markduplicates
         )
 
-        ch_multiqc_files = ch_multiqc_files.mix(ch_star.map { r -> tuple(r.meta, r.star.log_final) })
-        ch_mqc_bundle = ch_mqc_bundle.join(
-            ch_star.map { r -> record(id: r.id, star_log: r.star.log_final) },
-            by: 'id', remainder: true
-        )
+        ch_mqc_files = ch_mqc_files.mix(ch_star.map { r -> record(id: r.id, files: [r.star.log_final]) })
 
         if (!params.with_umi && (params.skip_markduplicates || params.use_parabricks_star)) {
             // The deduplicated stats should take priority for MultiQC, but use
@@ -287,12 +257,8 @@ workflow RNASEQ {
             // duplicate flagstat files in MultiQC.
             // When Parabricks handles markduplicates internally, Picard is
             // skipped, so we also need to add alignment stats here.
-            ch_multiqc_files = ch_multiqc_files.mix(
-                ch_star.flatMap { r -> [tuple(r.meta, r.samtools.stats), tuple(r.meta, r.samtools.flagstat), tuple(r.meta, r.samtools.idxstats)] }
-            )
-            ch_mqc_bundle = ch_mqc_bundle.join(
-                ch_star.map { r -> record(id: r.id, star_stats: [r.samtools.stats, r.samtools.flagstat, r.samtools.idxstats]) },
-                by: 'id', remainder: true
+            ch_mqc_files = ch_mqc_files.mix(
+                ch_star.map { r -> record(id: r.id, files: [r.samtools.stats, r.samtools.flagstat, r.samtools.idxstats]) }
             )
         }
     }
@@ -309,19 +275,11 @@ workflow RNASEQ {
             ch_fai
         )
 
-        ch_multiqc_files = ch_multiqc_files.mix(ch_bowtie2.map { r -> tuple(r.meta, r.bowtie2.log) })
-        ch_mqc_bundle = ch_mqc_bundle.join(
-            ch_bowtie2.map { r -> record(id: r.id, bowtie2_log: r.bowtie2.log) },
-            by: 'id', remainder: true
-        )
+        ch_mqc_files = ch_mqc_files.mix(ch_bowtie2.map { r -> record(id: r.id, files: [r.bowtie2.log]) })
 
         if (!params.with_umi && params.skip_markduplicates) {
-            ch_multiqc_files = ch_multiqc_files.mix(
-                ch_bowtie2.flatMap { r -> [tuple(r.meta, r.samtools.stats), tuple(r.meta, r.samtools.flagstat), tuple(r.meta, r.samtools.idxstats)] }
-            )
-            ch_mqc_bundle = ch_mqc_bundle.join(
-                ch_bowtie2.map { r -> record(id: r.id, bowtie2_stats: [r.samtools.stats, r.samtools.flagstat, r.samtools.idxstats]) },
-                by: 'id', remainder: true
+            ch_mqc_files = ch_mqc_files.mix(
+                ch_bowtie2.map { r -> record(id: r.id, files: [r.samtools.stats, r.samtools.flagstat, r.samtools.idxstats]) }
             )
         }
     }
@@ -340,23 +298,15 @@ workflow RNASEQ {
             params.save_unaligned || (params.contaminant_screening && params.contaminant_screening_input == 'unmapped')
         )
 
-        ch_multiqc_files = ch_multiqc_files.mix(ch_hisat2.map { r -> tuple(r.meta, r.hisat2.summary) })
-        ch_mqc_bundle = ch_mqc_bundle.join(
-            ch_hisat2.map { r -> record(id: r.id, hisat2_summary: r.hisat2.summary) },
-            by: 'id', remainder: true
-        )
+        ch_mqc_files = ch_mqc_files.mix(ch_hisat2.map { r -> record(id: r.id, files: [r.hisat2.summary]) })
 
         if (!params.with_umi && params.skip_markduplicates) {
             // The deduplicated stats should take priority for MultiQC, but use
             // them straight out of the aligner otherwise. If mark duplicates
             // will run, those stats will be added later instead to avoid
             // duplicate flagstat files in MultiQC.
-            ch_multiqc_files = ch_multiqc_files.mix(
-                ch_hisat2.flatMap { r -> [tuple(r.meta, r.samtools.stats), tuple(r.meta, r.samtools.flagstat), tuple(r.meta, r.samtools.idxstats)] }
-            )
-            ch_mqc_bundle = ch_mqc_bundle.join(
-                ch_hisat2.map { r -> record(id: r.id, hisat2_stats: [r.samtools.stats, r.samtools.flagstat, r.samtools.idxstats]) },
-                by: 'id', remainder: true
+            ch_mqc_files = ch_mqc_files.mix(
+                ch_hisat2.map { r -> record(id: r.id, files: [r.samtools.stats, r.samtools.flagstat, r.samtools.idxstats]) }
             )
         }
     }
@@ -397,14 +347,8 @@ workflow RNASEQ {
         ch_transcriptome_bam = ch_umi_dedup.filter { r -> r.transcriptome_bam != null }
 
         // Genome-side files only; MultiQC cannot tell transcriptome stats apart from genome stats
-        ch_multiqc_files = ch_multiqc_files.mix(
-            ch_umi_dedup.flatMap { r ->
-                [r.genomic_dedup_log, r.samtools.stats, r.samtools.flagstat, r.samtools.idxstats].collect { f -> tuple(r.meta, f) }
-            }
-        )
-        ch_mqc_bundle = ch_mqc_bundle.join(
-            ch_umi_dedup.map { r -> record(id: r.id, umi_dedup: [r.genomic_dedup_log, r.samtools.stats, r.samtools.flagstat, r.samtools.idxstats]) },
-            by: 'id', remainder: true
+        ch_mqc_files = ch_mqc_files.mix(
+            ch_umi_dedup.map { r -> record(id: r.id, files: [r.genomic_dedup_log, r.samtools.stats, r.samtools.flagstat, r.samtools.idxstats]) }
         )
     }
 
@@ -436,11 +380,7 @@ workflow RNASEQ {
         ch_quant_merged     = rsem.merged
         ch_quant_rsem_merge = rsem.rsem_merge
 
-        ch_multiqc_files = ch_multiqc_files.mix(rsem.samples.map { r -> tuple(r.meta, r.stat) })
-        ch_mqc_bundle = ch_mqc_bundle.join(
-            rsem.samples.map { r -> record(id: r.id, rsem_stat: r.stat) },
-            by: 'id', remainder: true
-        )
+        ch_mqc_files = ch_mqc_files.mix(rsem.samples.map { r -> record(id: r.id, files: [r.stat]) })
 
         if (run_deseq2_qc) {
             ch_deseq2 = DESEQ2_QC_RSEM (
@@ -515,17 +455,13 @@ workflow RNASEQ {
 
         ch_genome_bam = ch_genome_bam.join(ch_markdup.filter { r -> r.bam != null }, by: 'id')
 
-        ch_multiqc_files = ch_multiqc_files.mix(
+        ch_mqc_files = ch_mqc_files.mix(
             ch_markdup
                 .filter { r -> r.samtools != null }
-                .flatMap { r -> [tuple(r.meta, r.samtools.stats), tuple(r.meta, r.samtools.flagstat), tuple(r.meta, r.samtools.idxstats)] }
+                .map { r -> record(id: r.id, files: [r.samtools.stats, r.samtools.flagstat, r.samtools.idxstats, r.metrics]) }
         )
-        ch_multiqc_files = ch_multiqc_files.mix(ch_markdup.map { r -> tuple(r.meta, r.metrics) })
-        ch_mqc_bundle = ch_mqc_bundle.join(
-            ch_markdup
-                .filter { r -> r.samtools != null }
-                .map { r -> record(id: r.id, markdup: [r.samtools.stats, r.samtools.flagstat, r.samtools.idxstats, r.metrics]) },
-            by: 'id', remainder: true
+        ch_mqc_report_only = ch_mqc_report_only.mix(
+            ch_markdup.filter { r -> r.samtools == null }.map { r -> r.metrics }
         )
     }
 
@@ -586,23 +522,16 @@ workflow RNASEQ {
             // Drop non-MultiQC files. Excluding `*.featureCounts.tsv.summary`
             // keeps only the biotype summary, matching the default pipeline's
             // `featureCounts -g gene_biotype` output.
-            ch_rustqc_mqc = ch_bam_qc_rustqc.map { r ->
-                record(
-                    id:    r.id,
-                    meta:  r.meta,
-                    files: r.all_files.findAll { f ->
-                        !f.name.endsWith('.featureCounts.tsv.summary') &&
-                            ((f.name =~ /(?i)\.(txt|tsv|xls|log|stats|flagstat|idxstats|html)$/).find() || f.name.contains('_mqc.'))
-                    }
-                )
-            }
-
-            ch_multiqc_files = ch_multiqc_files.mix(
-                ch_rustqc_mqc.flatMap { q -> q.files.collect { f -> tuple(q.meta, f) } }
-            )
-            ch_mqc_bundle = ch_mqc_bundle.join(
-                ch_rustqc_mqc.map { q -> record(id: q.id, rustqc: q.files) },
-                by: 'id', remainder: true
+            ch_mqc_files = ch_mqc_files.mix(
+                ch_bam_qc_rustqc.map { r ->
+                    record(
+                        id:    r.id,
+                        files: r.all_files.findAll { f ->
+                            !f.name.endsWith('.featureCounts.tsv.summary') &&
+                                ((f.name =~ /(?i)\.(txt|tsv|xls|log|stats|flagstat|idxstats|html)$/).find() || f.name.contains('_mqc.'))
+                        }.toList()
+                    )
+                }
             )
 
             // Extract infer_experiment from rseqc channel
@@ -624,15 +553,7 @@ workflow RNASEQ {
                 biotype
             )
 
-            ch_multiqc_files = ch_multiqc_files.mix(
-                ch_bam_qc.flatMap { r -> r.mqc_files.collect { f -> tuple(r.meta, f) } }
-            )
-            ch_mqc_bundle = ch_mqc_bundle.join(
-                ch_bam_qc
-                    .filter { r -> !r.mqc_files.isEmpty() }
-                    .map { r -> record(id: r.id, bam_qc: r.mqc_files) },
-                by: 'id', remainder: true
-            )
+            ch_mqc_files = ch_mqc_files.mix(ch_bam_qc.map { r -> record(id: r.id, files: r.mqc_files) })
             ch_inferexperiment = ch_bam_qc
                 .filter { r -> r.rseqc != null && r.rseqc.inferexperiment != null }
                 .map { r -> tuple(r.meta, r.rseqc.inferexperiment) }
@@ -746,23 +667,15 @@ workflow RNASEQ {
             }
 
             if (params.contaminant_screening == 'kraken2') {
-                ch_multiqc_files = ch_multiqc_files.mix(ch_kraken2.map { r -> tuple(r.meta, r.report) })
-                ch_mqc_bundle = ch_mqc_bundle.join(
-                    ch_kraken2.map { r -> record(id: r.id, kraken2: r.report) },
-                    by: 'id', remainder: true
-                )
+                ch_mqc_files = ch_mqc_files.mix(ch_kraken2.map { r -> record(id: r.id, files: [r.report]) })
             } else if (params.contaminant_screening == 'kraken2_bracken') {
                 ch_bracken = BRACKEN (
                     ch_kraken2,
                     ch_kraken_db
                 )
-                ch_multiqc_files = ch_multiqc_files.mix(ch_bracken.map { r -> tuple(r.meta, r.report) })
+                ch_mqc_files = ch_mqc_files.mix(ch_bracken.map { r -> record(id: r.id, files: [r.report]) })
                 ch_contaminants = ch_contaminants
                     .join(ch_bracken.map { r -> record(id: r.id, bracken: r) }, by: 'id')
-                ch_mqc_bundle = ch_mqc_bundle.join(
-                    ch_bracken.map { r -> record(id: r.id, bracken: r.report) },
-                    by: 'id', remainder: true
-                )
             }
         } else if (params.contaminant_screening == 'sylph') {
             def sylph_databases = (params.sylph_db ? params.sylph_db.split(',').collect{ path -> file(path.trim()) } : []) as List<Path>
@@ -779,11 +692,7 @@ workflow RNASEQ {
                 ch_sylph_profile,
                 ch_sylph_taxonomies
             )
-            ch_multiqc_files = ch_multiqc_files.mix(ch_sylphtax.map { r -> tuple(r.meta, r.taxprof_output) })
-            ch_mqc_bundle = ch_mqc_bundle.join(
-                ch_sylphtax.map { r -> record(id: r.id, sylphtax: r.taxprof_output) },
-                by: 'id', remainder: true
-            )
+            ch_mqc_files = ch_mqc_files.mix(ch_sylphtax.map { r -> record(id: r.id, files: [r.taxprof_output]) })
 
             // Every profile is published, but empty ones never reach SYLPHTAX_TAXPROF
             ch_contaminants = ch_sylph
@@ -827,13 +736,9 @@ workflow RNASEQ {
 
         // MultiQC parses the Salmon quant directory and the Kallisto log
         ch_pseudo_mqc = ch_quant_pseudo
-            .map { r -> record(id: r.id, meta: r.meta, file: r.quant_dir) }
-            .mix(ch_quant_pseudo_kallisto.map { r -> record(id: r.id, meta: r.meta, file: r.log) })
-        ch_multiqc_files = ch_multiqc_files.mix(ch_pseudo_mqc.map { r -> tuple(r.meta, r.file) })
-        ch_mqc_bundle = ch_mqc_bundle.join(
-            ch_pseudo_mqc.map { r -> record(id: r.id, pseudo: r.file) },
-            by: 'id', remainder: true
-        )
+            .map { r -> record(id: r.id, files: [r.quant_dir]) }
+            .mix(ch_quant_pseudo_kallisto.map { r -> record(id: r.id, files: [r.log]) })
+        ch_mqc_files = ch_mqc_files.mix(ch_pseudo_mqc)
 
         if (run_deseq2_qc) {
             ch_deseq2_pseudo = DESEQ2_QC_PSEUDO (
@@ -844,10 +749,9 @@ workflow RNASEQ {
         }
     }
 
-    ch_multiqc_files = ch_multiqc_files.mix(ch_deseq2.filter { r -> r.pca_multiqc != null }.map { r -> tuple([:], r.pca_multiqc) })
-    ch_multiqc_files = ch_multiqc_files.mix(ch_deseq2.filter { r -> r.dists_multiqc != null }.map { r -> tuple([:], r.dists_multiqc) })
-    ch_multiqc_files = ch_multiqc_files.mix(ch_deseq2_pseudo.filter { r -> r.pca_multiqc != null }.map { r -> tuple([:], r.pca_multiqc) })
-    ch_multiqc_files = ch_multiqc_files.mix(ch_deseq2_pseudo.filter { r -> r.dists_multiqc != null }.map { r -> tuple([:], r.dists_multiqc) })
+    ch_mqc_report_only = ch_mqc_report_only.mix(
+        ch_deseq2.mix(ch_deseq2_pseudo).flatMap { r -> [r.pca_multiqc, r.dists_multiqc].findAll { f -> f != null } }
+    )
 
     //
     // Collate and save software versions from the `versions` topic. Entries are either
@@ -881,11 +785,10 @@ workflow RNASEQ {
 
     if (!params.skip_multiqc) {
         ch_multiqc = MULTIQC_RNASEQ(
-            ch_multiqc_files,
-            ch_mqc_bundle.map { b ->
-                tuple(b.id, b.meta, b.fastq_qc, b.star_log, b.star_stats, b.bowtie2_log, b.bowtie2_stats, b.hisat2_summary, b.hisat2_stats,
-                      b.umi_dedup, b.rsem_stat, b.markdup, b.rustqc, b.bam_qc, b.kraken2, b.bracken, b.sylphtax, b.pseudo)
-            },
+            ch_input.map { s -> s.id },
+            ch_mqc_files,
+            ch_mqc_sample_only,
+            ch_mqc_report_only,
             ch_strand_data,
             ch_trim_read_count,
             ch_percent_mapped_pass,

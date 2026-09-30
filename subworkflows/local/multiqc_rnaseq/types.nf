@@ -6,3 +6,9 @@ record MultiqcReport {
     data:   Path
     plots:  Path?
 }
+
+// MultiQC input files one stage contributes for one sample
+record MultiqcFiles {
+    id:    String
+    files: List<Path>
+}

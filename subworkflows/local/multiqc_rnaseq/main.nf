@@ -8,11 +8,11 @@ include { MULTIQC                    } from '../../../modules/nf-core/multiqc'
 include { MULTIQC_WRITE_FILE         } from '../../../modules/local/multiqc_write_file'
 include { MULTIQC_CONCATENATE_TABLES } from '../../../modules/local/multiqc_concatenate_tables'
 include { workflowVersionToYAML      } from '../../nf-core/utils_nfcore_pipeline'
+include { MultiqcFiles               } from './types'
 include { methodsDescriptionText     } from '../utils_nfcore_rnaseq_pipeline'
 include { workflowSummaryMultiqcYaml } from './helpers'
 include { multiqcNameReplacementLines } from './helpers'
 include { multiqcSampleMergeYaml     } from './helpers'
-include { bundleFiles                } from './helpers'
 include { loadMultiqcAsset           } from './helpers'
 include { strandCheckSummaryYaml     } from './helpers'
 include { strandCheckCompositionYaml } from './helpers'
@@ -20,8 +20,10 @@ include { strandCheckCompositionYaml } from './helpers'
 workflow MULTIQC_RNASEQ {
 
     take:
-    ch_multiqc_files: Channel<Tuple<Map, Path>>   // [ meta, file ] - flat, contributor outputs
-    ch_per_sample_bundle_raw: Channel<List>       // [ id, meta, f1, f2, ... ] - per-sample, grown by `.join(..., remainder: true)` at each subworkflow aggregation site
+    ch_sample_ids: Channel<String>                // one id per input sample; every sample gets a report under skip_quantification_merge
+    ch_mqc_files: Channel<MultiqcFiles>           // per-sample files from each stage, for both report modes
+    ch_mqc_sample_only: Channel<MultiqcFiles>     // per-sample files for the per-sample reports only
+    ch_mqc_report_only: Channel<Path>             // files for the merged report only
     ch_strand_data: Channel<Tuple<Map, String, String, Map, Map>> // [ meta, provided, status, salmon, rseqc ] - per-sample strand classification, used for the Strandedness checks section
     ch_trim_read_count: Channel<Tuple<Map, Float>> // [ meta, num_reads ] - for fail_trimmed section
     ch_percent_mapped_pass: Channel<Tuple<String, Float, Boolean>> // [ id, percent_mapped, pass ] - for fail_mapped section
@@ -190,27 +192,21 @@ workflow MULTIQC_RNASEQ {
             }
         ).map { r -> record(id: r.id, strand_composition: r.file) }
 
-        // Collapse the raw bundle with every per-sample contributor,
-        // one `.join(remainder: true)` per stream. Missing streams show
-        // up as null fields that are dropped before MULTIQC sees them.
-        ch_per_sample_bundle = ch_per_sample_bundle_raw
-            .map { row ->
-                record(
-                    id:    row[0],
-                    meta:  row[1],
-                    files: bundleFiles(row)
-                )
-            }
-            .join(ch_fail_trimmed_by_id,        by: 'id', remainder: true)
-            .join(ch_fail_mapped_by_id,         by: 'id', remainder: true)
-            .join(ch_strand_summary_by_id,      by: 'id', remainder: true)
-            .join(ch_strand_composition_by_id,  by: 'id', remainder: true)
-            .map { r ->
-                record(
-                    id:    r.id,
-                    meta:  r.meta,
-                    files: r.files + [r.fail_trimmed, r.fail_mapped, r.strand_summary, r.strand_composition].findAll { f -> f != null }.toList()
-                )
+        // One empty contribution per sample keeps samples that no stage contributed files for.
+        def ch_no_files: Channel<MultiqcFiles> = ch_sample_ids.map { id -> record(id: id, files: []) }
+        ch_per_sample_bundle = ch_no_files
+            .mix(ch_mqc_files)
+            .mix(ch_mqc_sample_only)
+            .mix(ch_fail_trimmed_by_id.map { r -> record(id: r.id, files: [r.fail_trimmed]) })
+            .mix(ch_fail_mapped_by_id.map { r -> record(id: r.id, files: [r.fail_mapped]) })
+            .mix(ch_strand_summary_by_id.map { r -> record(id: r.id, files: [r.strand_summary]) })
+            .mix(ch_strand_composition_by_id.map { r -> record(id: r.id, files: [r.strand_composition]) })
+            .collect()
+            .flatMap { rs ->
+                rs.collect { r -> r.id }.toSet().toSorted().collect { id ->
+                    def files = rs.findAll { r -> r.id == id }.collectMany { r -> r.files }
+                    record(id: id, files: files.toSorted { f -> f.name })
+                }
             }
 
         ch_manifest_versions = MULTIQC_WRITE_FILE(
@@ -299,8 +295,9 @@ workflow MULTIQC_RNASEQ {
 
         // `multiqc_report` is a sentinel meta.id used by
         // conf/modules/multiqc.config to pick the merged output path.
-        ch_multiqc_files_merged = ch_multiqc_files
-            .flatMap { _meta, f -> [f] }
+        ch_multiqc_files_merged = ch_mqc_files
+            .flatMap { r -> r.files }
+            .mix(ch_mqc_report_only)
             .mix(ch_fail_trimmed_merged)
             .mix(ch_fail_mapped_merged)
             .mix(ch_strand_summary_merged)

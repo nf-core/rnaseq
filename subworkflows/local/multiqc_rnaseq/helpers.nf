@@ -22,16 +22,6 @@ def workflowSummaryMultiqcYaml() {
 }
 
 //
-// Files of a per-sample bundle row [ id, meta, f1, f2, ... ]: the entries after
-// meta, with nulls dropped and file lists flattened.
-//
-def bundleFiles(row) {
-    return row.drop(2)
-        .findAll { entry -> entry != null }
-        .collectMany { entry -> (entry instanceof List) ? entry : [entry] }
-}
-
-//
 // MultiQC `--replace-names` lines: map each FASTQ simpleName to
 // '<id>_1' / '<id>_2' (or '<id>' for SE), skipping cases where the
 // simpleName already equals the sample ID (see #1341 / #1659).

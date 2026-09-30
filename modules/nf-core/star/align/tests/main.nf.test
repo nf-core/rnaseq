@@ -33,10 +33,11 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:true ], // meta map
-                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true) ]
-                ])
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:true ],
+                    reads: [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true) ]
+                ))
                 input[1] = STAR_GENOMEGENERATE.out.map { r -> [r.meta, r.index] }
                 input[2] = Channel.of([
                     [ id:'test_gtf' ],
@@ -93,13 +94,14 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false ], // meta map
-                    [
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    reads: [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
-                ])
+                ))
                 input[1] = STAR_GENOMEGENERATE.out.map { r -> [r.meta, r.index] }
                 input[2] = Channel.of([
                     [ id:'test_gtf' ],
@@ -156,13 +158,14 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false ], // meta map
-                    [
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    reads: [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
-                ])
+                ))
                 input[1] = STAR_GENOMEGENERATE.out.map { r -> [r.meta, r.index] }
                 input[2] = Channel.of([
                     [ id:'test_gtf' ],
@@ -218,13 +221,14 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false ], // meta map
-                    [
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    reads: [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
-                ])
+                ))
                 input[1] = STAR_GENOMEGENERATE.out.map { r -> [r.meta, r.index] }
                 input[2] = Channel.of([
                     [ id:'test_gtf' ],
@@ -281,15 +285,16 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false ], // meta map
-                    [
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    reads: [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
-                ])
+                ))
                 input[1] = STAR_GENOMEGENERATE.out.map { r -> [r.meta, r.index] }
                 input[2] = Channel.of([
                     [ id:'test_gtf' ],
@@ -347,10 +352,11 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:true ], // meta map
-                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true) ]
-                ])
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:true ],
+                    reads: [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true) ]
+                ))
                 input[1] = STAR_GENOMEGENERATE.out.map { r -> [r.meta, r.index] }
                 input[2] = Channel.of([
                     [ id:'test_gtf' ],
@@ -394,13 +400,14 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false ], // meta map
-                    [
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    reads: [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
-                ])
+                ))
                 input[1] = STAR_GENOMEGENERATE.out.map { r -> [r.meta, r.index] }
                 input[2] = Channel.of([
                     [ id:'test_gtf' ],
@@ -444,13 +451,14 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false ], // meta map
-                    [
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    reads: [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
-                ])
+                ))
                 input[1] = STAR_GENOMEGENERATE.out.map { r -> [r.meta, r.index] }
                 input[2] = Channel.of([
                     [ id:'test_gtf' ],
@@ -494,13 +502,14 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false ], // meta map
-                    [
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    reads: [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
-                ])
+                ))
                 input[1] = STAR_GENOMEGENERATE.out.map { r -> [r.meta, r.index] }
                 input[2] = Channel.of([
                     [ id:'test_gtf' ],
@@ -544,15 +553,16 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false ], // meta map
-                    [
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    reads: [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
-                ])
+                ))
                 input[1] = STAR_GENOMEGENERATE.out.map { r -> [r.meta, r.index] }
                 input[2] = Channel.of([
                     [ id:'test_gtf' ],

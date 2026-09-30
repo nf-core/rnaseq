@@ -10,7 +10,7 @@ process PARABRICKS_RNAFQ2BAM {
     container "nvcr.io/nvidia/clara/clara-parabricks:4.7.1-1"
 
     input:
-    tuple(meta: Map, reads: List<Path>)
+    record(id: String, meta: Map, reads: List<Path>)
     tuple(meta2: Map, fasta: Path)
     tuple(meta3: Map, index: Path)
     qc_metrics: Boolean
@@ -18,9 +18,9 @@ process PARABRICKS_RNAFQ2BAM {
 
     output:
     record(
-        id:                meta.id,
+        id:                id,
         meta:              meta,
-        orig_bam:          files("${prefix}.bam", optional: true),
+        orig_bam:          files("${prefix}.bam", optional: true).toSorted { f -> f.name },
         bam_sorted:        file("${prefix}.sortedByCoord.out.bam", optional: true),
         bam_sorted_aligned: file("${prefix}.Aligned.sortedByCoord.out.bam", optional: true),
         bam_unsorted:      file('*Aligned.unsort.out.bam', optional: true),

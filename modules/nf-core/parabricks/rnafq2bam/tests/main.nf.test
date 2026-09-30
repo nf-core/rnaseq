@@ -40,10 +40,11 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:true ], // meta map
-                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/test_starfusion_rnaseq_1.fastq.gz', checkIfExists: true) ]
-                ])
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:true ],
+                    reads: [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/test_starfusion_rnaseq_1.fastq.gz', checkIfExists: true) ]
+                ))
                 input[1] = Channel.of([
                     [ id:'test' ], // meta map
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
@@ -77,10 +78,11 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:true ], // meta map
-                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/test_starfusion_rnaseq_1.fastq.gz', checkIfExists: true) ]
-                ])
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:true ],
+                    reads: [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/test_starfusion_rnaseq_1.fastq.gz', checkIfExists: true) ]
+                ))
                 input[1] = Channel.of([
                     [ id:'test' ], // meta map
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/minigenome.fa', checkIfExists: true)
@@ -108,10 +110,11 @@ nextflow_process {
             }
             process {
                 """
-                 input[0] = Channel.of([
-                    [ id:'test', single_end:true ], // meta map
-                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/test_starfusion_rnaseq_1.fastq.gz', checkIfExists: true) ]
-                ])
+                 input[0] = Channel.of(record(
+                     id: 'test',
+                     meta: [ id:'test', single_end:true ],
+                     reads: [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/test_starfusion_rnaseq_1.fastq.gz', checkIfExists: true) ]
+                 ))
                 input[1] = Channel.of([
                     [ id:'test' ], // meta map
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
@@ -146,10 +149,11 @@ nextflow_process {
             }
             process {
                 """
-                 input[0] = Channel.of([
-                    [ id:'test', single_end:true ], // meta map
-                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/test_starfusion_rnaseq_1.fastq.gz', checkIfExists: true) ]
-                ])
+                 input[0] = Channel.of(record(
+                     id: 'test',
+                     meta: [ id:'test', single_end:true ],
+                     reads: [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/test_starfusion_rnaseq_1.fastq.gz', checkIfExists: true) ]
+                 ))
                 input[1] = Channel.of([
                     [ id:'test' ], // meta map
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)

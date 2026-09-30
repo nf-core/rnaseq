@@ -12,7 +12,7 @@ process SENTIEON_STARALIGN {
         : 'community.wave.seqera.io/library/sentieon:202503.02--def60555294d04fa'}"
 
     input:
-    tuple(meta: Map, reads: List<Path>)
+    record(id: String, meta: Map, reads: List<Path>)
     tuple(meta2: Map, index: Path)
     tuple(meta3: Map, gtf: Path?)
     star_ignore_sjdbgtf: Boolean
@@ -22,7 +22,7 @@ process SENTIEON_STARALIGN {
 
     output:
     record(
-        id:                meta.id,
+        id:                id,
         meta:              meta,
         orig_bam:          files('*d.out.bam', optional: true).toSorted { f -> f.name },
         bam_sorted:        file("${prefix}.sortedByCoord.out.bam", optional: true),

@@ -10,7 +10,7 @@ process STAR_ALIGN {
         'community.wave.seqera.io/library/htslib_samtools_star_gawk:ae438e9a604351a4' }"
 
     input:
-    tuple(meta: Map, reads: List<Path>)
+    record(id: String, meta: Map, reads: List<Path>)
     tuple(meta2: Map, index: Path)
     tuple(meta3: Map, gtf: Path?)
     star_ignore_sjdbgtf: Boolean
@@ -20,7 +20,7 @@ process STAR_ALIGN {
 
     output:
     record(
-        id:                meta.id,
+        id:                id,
         meta:              meta,
         orig_bam:          files('*d.out.bam', optional: true).toSorted { f -> f.name },
         bam_sorted:        file("${prefix}.sortedByCoord.out.bam", optional: true),

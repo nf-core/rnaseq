@@ -30,7 +30,7 @@ process FASTQC {
         meta: sample.meta,
         html: files('*.html').toSorted { f -> f.name },
         zip:  files('*.zip').toSorted { f -> f.name }
-    )
+    ) as FastqcResult
 
     topic:
     tuple(task.process, 'fastqc', eval('fastqc --version | sed "/FastQC v/!d; s/.*v//"')) >> 'versions'

@@ -21,7 +21,7 @@ process KALLISTO_INDEX {
     sample: FastaInput
 
     output:
-    record(id: sample.id, meta: sample.meta, index: file('kallisto'))
+    record(id: sample.id, meta: sample.meta, index: file('kallisto')) as KallistoIndexResult
 
     topic:
     tuple(task.process, 'kallisto', eval('kallisto 2>&1 | head -1 | sed "s/^kallisto //; s/Usage.*//"')) >> 'versions'

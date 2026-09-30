@@ -8,6 +8,12 @@ record Hisat2BuildInput {
     splicesites: Path?
 }
 
+record Hisat2BuildResult {
+    id:   String
+    meta: Map
+    index: Path
+}
+
 process HISAT2_BUILD {
     tag "${sample.meta.id}"
     label 'process_high'
@@ -22,7 +28,7 @@ process HISAT2_BUILD {
     hisat2_memory_input: String?
 
     output:
-    record(id: sample.id, meta: sample.meta, index: file('hisat2'))
+    record(id: sample.id, meta: sample.meta, index: file('hisat2')) as Hisat2BuildResult
 
     topic:
     tuple(task.process, 'hisat2', eval("hisat2 --version | sed -n 's/.*version \\([^ ]*\\).*/\\1/p'")) >> 'versions'

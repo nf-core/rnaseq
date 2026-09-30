@@ -2,6 +2,12 @@ nextflow.enable.types = true
 
 include { BamInput } from '../../types'
 
+record QualimapRnaseqResult {
+    id:   String
+    meta: Map
+    qualimap: Path
+}
+
 process QUALIMAP_RNASEQ {
     tag "$sample.meta.id"
     label 'process_medium'
@@ -16,7 +22,7 @@ process QUALIMAP_RNASEQ {
     gtf: Path
 
     output:
-    record(id: sample.id, meta: sample.meta, qualimap: file("${prefix}"))
+    record(id: sample.id, meta: sample.meta, qualimap: file("${prefix}")) as QualimapRnaseqResult
 
     topic:
     tuple(task.process, 'qualimap', eval("qualimap -h | sed -n 's/^QualiMap v.//p'")) >> 'versions'

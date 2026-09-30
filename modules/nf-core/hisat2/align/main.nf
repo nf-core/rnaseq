@@ -32,7 +32,7 @@ process HISAT2_ALIGN {
         raw_bams: files('*.bam').toSorted { f -> f.name },
         unmapped: files('*fastq.gz', optional: true).toSorted { f -> f.name },
         hisat2:   record(summary: file('*.log'))
-    )
+    ) as Hisat2AlignResult
 
     topic:
     tuple(task.process, 'hisat2', eval("hisat2 --version | sed -n '1s/.*version //p'")) >> 'versions'

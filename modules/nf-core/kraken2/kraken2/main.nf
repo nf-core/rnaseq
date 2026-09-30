@@ -1,6 +1,6 @@
 nextflow.enable.types = true
 
-include { ReadsInput } from '../../types'
+include { ReadsInput; Kraken2Result } from '../../types'
 
 process KRAKEN2_KRAKEN2 {
     tag "$sample.meta.id"
@@ -25,7 +25,7 @@ process KRAKEN2_KRAKEN2 {
         classified_reads_fastq:      files('*.classified{.,_}*', optional: true),
         unclassified_reads_fastq:    files('*.unclassified{.,_}*', optional: true),
         classified_reads_assignment: file('*classifiedreads.txt', optional: true)
-    )
+    ) as Kraken2Result
 
     topic:
     tuple(task.process, 'kraken2', eval('kraken2 --version 2>&1 | head -1 | sed "s/^.*Kraken version //; s/ .*//"')) >> 'versions'

@@ -42,7 +42,7 @@ process MULTIQC {
         report: file('*.html'),
         data:   file('*_data'),
         plots:  file('*_plots', optional: true)
-    )
+    ) as MultiqcReport
 
     script:
     def args = task.ext.args ?: ''

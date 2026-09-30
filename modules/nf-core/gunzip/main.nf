@@ -21,7 +21,7 @@ process GUNZIP {
     sample: ArchiveInput
 
     output:
-    record(id: sample.id, meta: sample.meta, file: file("${gunzip}"))
+    record(id: sample.id, meta: sample.meta, file: file("${gunzip}")) as GunzipResult
 
     topic:
     tuple(task.process, 'gunzip', eval('gunzip --version 2>&1 | head -1 | sed "s/^.*(gzip) //; s/ Copyright.*//"')) >> 'versions'

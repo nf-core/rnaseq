@@ -2,6 +2,13 @@ nextflow.enable.types = true
 
 include { BamInput } from '../../types'
 
+record PreseqLcextrapResult {
+    id:   String
+    meta: Map
+    lc_extrap: Path
+    log:       Path
+}
+
 process PRESEQ_LCEXTRAP {
     tag "$sample.meta.id"
     label 'process_single'
@@ -21,7 +28,7 @@ process PRESEQ_LCEXTRAP {
         meta:      sample.meta,
         lc_extrap: file("*.lc_extrap.txt"),
         log:       file("*.log")
-    )
+    ) as PreseqLcextrapResult
 
     topic:
     tuple(task.process, 'preseq', eval("preseq 2>&1 | sed -n 's/Version: //p'")) >> 'versions'

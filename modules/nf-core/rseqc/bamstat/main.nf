@@ -2,6 +2,12 @@ nextflow.enable.types = true
 
 include { BamBaiInput } from '../../types'
 
+record RseqcBamstatResult {
+    id:   String
+    meta: Map
+    bamstat: Path
+}
+
 process RSEQC_BAMSTAT {
     tag "$sample.meta.id"
     label 'process_medium'
@@ -15,7 +21,7 @@ process RSEQC_BAMSTAT {
     sample: BamBaiInput
 
     output:
-    record(id: sample.id, meta: sample.meta, bamstat: file("*.bam_stat.txt"))
+    record(id: sample.id, meta: sample.meta, bamstat: file("*.bam_stat.txt")) as RseqcBamstatResult
 
     topic:
     tuple(task.process, 'rseqc', eval('bam_stat.py --version | sed "s/bam_stat.py //"')) >> 'versions'

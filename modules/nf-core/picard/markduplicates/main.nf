@@ -33,7 +33,7 @@ process PICARD_MARKDUPLICATES {
         bai:     file('*.bai', optional: true),
         cram:    file('*.cram', optional: true),
         metrics: file('*.metrics.txt')
-    )
+    ) as PicardMarkduplicatesResult
 
     topic:
     tuple(task.process, 'picard', eval("picard MarkDuplicates --version 2>&1 | sed -n 's/.*Version://p'")) >> 'versions'

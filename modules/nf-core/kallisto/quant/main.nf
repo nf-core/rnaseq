@@ -34,7 +34,7 @@ process KALLISTO_QUANT {
         quant_dir: file("${prefix}"),
         json_info: file("*.run_info.json"),
         log:       file("*.log")
-    )
+    ) as KallistoQuantSample
 
     topic:
     tuple(task.process, 'kallisto', eval("kallisto version | sed 's/.*version //'")) >> 'versions'

@@ -30,7 +30,7 @@ process RSEM_PREPAREREFERENCE {
         meta:             sample.meta,
         index:            file("rsem"),
         transcript_fasta: file("*transcripts.fa")
-    )
+    ) as RsemPreparereferenceResult
 
     topic:
     tuple(task.process, 'rsem', eval('rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g"')) >> 'versions'

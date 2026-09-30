@@ -2,6 +2,12 @@ nextflow.enable.types = true
 
 include { GtfInput } from '../../types'
 
+record Hisat2ExtractsplicesitesResult {
+    id:   String
+    meta: Map
+    splicesites: Path
+}
+
 process HISAT2_EXTRACTSPLICESITES {
     tag "${sample.meta.id}"
     label 'process_medium'
@@ -15,7 +21,7 @@ process HISAT2_EXTRACTSPLICESITES {
     sample: GtfInput
 
     output:
-    record(id: sample.id, meta: sample.meta, splicesites: file('*.splice_sites.txt'))
+    record(id: sample.id, meta: sample.meta, splicesites: file('*.splice_sites.txt')) as Hisat2ExtractsplicesitesResult
 
     topic:
     tuple(task.process, 'hisat2', eval('hisat2 --version | grep -o "version [^ ]*" | cut -d " " -f 2')) >> 'versions'

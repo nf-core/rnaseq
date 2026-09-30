@@ -21,7 +21,7 @@ process FQ_SUBSAMPLE {
     sample: ReadsInput
 
     output:
-    record(id: sample.id, meta: sample.meta, reads: files("*.fastq.gz").toSorted { f -> f.name })
+    record(id: sample.id, meta: sample.meta, reads: files("*.fastq.gz").toSorted { f -> f.name }) as FqSubsampleResult
 
     topic:
     tuple(task.process, 'fq', eval("fq subsample --version | sed 's/fq-subsample //; s/ .*//'")) >> 'versions'

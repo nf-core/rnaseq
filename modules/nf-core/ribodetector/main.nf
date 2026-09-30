@@ -32,7 +32,7 @@ process RIBODETECTOR {
 		meta:  sample.meta,
 		reads: files('*.nonrna*.fastq.gz').toSorted { f -> f.name },
 		log:   file('*.log')
-	)
+	) as RibodetectorResult
 
 	topic:
 	tuple(task.process, 'ribodetector', eval('ribodetector --version | sed "s/ribodetector //"')) >> 'versions'

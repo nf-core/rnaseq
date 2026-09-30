@@ -38,7 +38,7 @@ process RSEM_CALCULATEEXPRESSION {
         bam_star:          file("*.STAR.genome.bam", optional: true),
         bam_genome:        file("${prefix}.genome.bam", optional: true),
         bam_transcript:    file("${prefix}.transcript.bam", optional: true)
-    )
+    ) as RsemQuantSample
 
     topic:
     tuple(task.process, 'rsem', eval("rsem-calculate-expression --version | sed 's/Current version: RSEM v//'")) >> 'versions'

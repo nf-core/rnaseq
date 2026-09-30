@@ -21,7 +21,7 @@ process FQ_LINT {
     sample: ReadsInput
 
     output:
-    record(id: sample.id, meta: sample.meta, lint: file("*.fq_lint.txt"))
+    record(id: sample.id, meta: sample.meta, lint: file("*.fq_lint.txt")) as FqLintResult
 
     topic:
     tuple(task.process, 'fq', eval("fq lint --version | sed 's/fq-lint //; s/ .*//'")) >> 'versions'

@@ -2,6 +2,12 @@ nextflow.enable.types = true
 
 include { BamBaiInput } from '../../types'
 
+record RseqcInferexperimentResult {
+    id:   String
+    meta: Map
+    inferexperiment: Path
+}
+
 process RSEQC_INFEREXPERIMENT {
     tag "$sample.meta.id"
     label 'process_medium'
@@ -16,7 +22,7 @@ process RSEQC_INFEREXPERIMENT {
     bed: Path
 
     output:
-    record(id: sample.id, meta: sample.meta, inferexperiment: file("*.infer_experiment.txt"))
+    record(id: sample.id, meta: sample.meta, inferexperiment: file("*.infer_experiment.txt")) as RseqcInferexperimentResult
 
     topic:
     tuple(task.process, 'rseqc', eval('infer_experiment.py --version | sed "s/infer_experiment.py //"')) >> 'versions'

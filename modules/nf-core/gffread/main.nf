@@ -6,6 +6,15 @@ record GffreadInput {
     gff:  Path
 }
 
+record GffreadResult {
+    id:   String
+    meta: Map
+    gtf:   Path?
+    gff:   Path?
+    fasta: Path?
+    bed:   Path?
+}
+
 process GFFREAD {
     tag "$sample.meta.id"
     label 'process_low'
@@ -27,7 +36,7 @@ process GFFREAD {
         gff:           file('*.gff3', optional: true),
         fasta:         file('*.fasta', optional: true),
         bed:           file('*.bed', optional: true)
-    )
+    ) as GffreadResult
 
     topic:
     tuple(task.process, 'gffread', eval('gffread --version 2>&1')) >> 'versions'

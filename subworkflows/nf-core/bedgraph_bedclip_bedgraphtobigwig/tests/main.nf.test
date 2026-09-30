@@ -22,7 +22,7 @@ nextflow_workflow {
                     meta: [ id:'test', single_end:false ],
                     bedgraph: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bedgraph/test.bedgraph', checkIfExists: true)
                 ))
-                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.sizes', checkIfExists: true))
+                input[1] = channel.value(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.sizes', checkIfExists: true))
                 """
             }
         }
@@ -47,7 +47,7 @@ nextflow_workflow {
                     meta: [ id:'test', single_end:false ],
                     bedgraph: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bedgraph/test.bedgraph', checkIfExists: true)
                 ))
-                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.sizes', checkIfExists: true))
+                input[1] = channel.value(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.sizes', checkIfExists: true))
                 """
             }
         }

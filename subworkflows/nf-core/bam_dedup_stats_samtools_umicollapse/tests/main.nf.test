@@ -32,8 +32,7 @@ nextflow_workflow {
                 input[0] = channel.of(record(
                     id: 'test',
                     meta: [ id:'test'],
-                    bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam', checkIfExists: true),
-                    bai: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam.bai', checkIfExists: true)
+                    bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam', checkIfExists: true)
                 ))
                 """
             }

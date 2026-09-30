@@ -19,22 +19,29 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = record(
+                input[0] = channel.of(record(
                     id: 'test',
                     meta: [ id:'test'],
                     bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam', checkIfExists: true),
-                    bai: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam.bai', checkIfExists: true)
-                )
-                input[1] = file(params.modules_testdata_base_path + '/genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
-                input[2] = file(params.modules_testdata_base_path + '/genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)
+                    bai: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam.bai', checkIfExists: true),
+                    samtools: null,
+                    percent_mapped: null,
+                    transcriptome_bam: null
+                ))
+                input[1] = channel.value(file(params.modules_testdata_base_path + '/genomics/sarscov2/genome/genome.fasta', checkIfExists: true))
+                input[2] = channel.value(file(params.modules_testdata_base_path + '/genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true))
                 input[3] = 'umitools'
                 input[4] = false
-                input[5] = record(
+                input[5] = channel.of(record(
                     id: 'test',
                     meta: [ id:'test'],
+                    bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam', checkIfExists: true),
+                    bai: null,
+                    samtools: null,
+                    percent_mapped: null,
                     transcriptome_bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam', checkIfExists: true)
-                )
-                input[6] = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true)
+                ))
+                input[6] = channel.value(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true))
                 input[7] = false
                 """
             }
@@ -46,9 +53,9 @@ nextflow_workflow {
                 { assert snapshot(
                     bam(workflow.out[0][0].bam).getReadsMD5(),
                     bam(workflow.out[0][0].transcriptome.filtered_bam ?: workflow.out[0][0].transcriptome.sorted_bam).getReadsMD5(),
-                    workflow.out[0][0].genome.stats,
-                    workflow.out[0][0].genome.flagstat,
-                    workflow.out[0][0].genome.idxstats
+                    workflow.out[0][0].samtools.stats,
+                    workflow.out[0][0].samtools.flagstat,
+                    workflow.out[0][0].samtools.idxstats
                 ).match() },
                 { assert path(workflow.out[0][0].bai).exists() },
                 { assert workflow.out[0].size() == 1 },
@@ -63,18 +70,21 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = record(
+                input[0] = channel.of(record(
                     id: 'test',
                     meta: [ id:'test'],
                     bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam', checkIfExists: true),
-                    bai: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam.bai', checkIfExists: true)
-                )
-                input[1] = file(params.modules_testdata_base_path + '/genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
-                input[2] = file(params.modules_testdata_base_path + '/genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)
+                    bai: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam.bai', checkIfExists: true),
+                    samtools: null,
+                    percent_mapped: null,
+                    transcriptome_bam: null
+                ))
+                input[1] = channel.value(file(params.modules_testdata_base_path + '/genomics/sarscov2/genome/genome.fasta', checkIfExists: true))
+                input[2] = channel.value(file(params.modules_testdata_base_path + '/genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true))
                 input[3] = 'umicollapse'
                 input[4] = false
-                input[5] = Channel.empty()
-                input[6] = null
+                input[5] = channel.empty()
+                input[6] = channel.value(null as Path)
                 input[7] = false
                 """
             }
@@ -85,9 +95,9 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     bam(workflow.out[0][0].bam).getReadsMD5(),
-                    workflow.out[0][0].genome.stats,
-                    workflow.out[0][0].genome.flagstat,
-                    workflow.out[0][0].genome.idxstats
+                    workflow.out[0][0].samtools.stats,
+                    workflow.out[0][0].samtools.flagstat,
+                    workflow.out[0][0].samtools.idxstats
                 ).match() },
                 { assert path(workflow.out[0][0].bai).exists() },
                 { assert workflow.out[0].size() == 1 },

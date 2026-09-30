@@ -36,12 +36,10 @@ nextflow_workflow {
                     bam: file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
                     bai: file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true)
                 ))
-                input[1] = channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
-                input[2] = channel.of(
-                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.bed12', checkIfExists: true)
-                )
-                input[3] = channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome/genome.fa', checkIfExists: true))
-                input[4] = channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome/genome.fa.fai', checkIfExists: true))
+                input[1] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
+                input[2] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.bed12', checkIfExists: true))
+                input[3] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome/genome.fa', checkIfExists: true))
+                input[4] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome/genome.fa.fai', checkIfExists: true))
                 input[5] = biotypes_header
                 input[6] = ['preseq', 'biotype_qc', 'qualimap', 'dupradar', 'rseqc_bam_stat', 'rseqc_inner_distance', 'rseqc_infer_experiment', 'rseqc_junction_annotation', 'rseqc_junction_saturation', 'rseqc_read_distribution', 'rseqc_read_duplication', 'rseqc_tin']
                 input[7] = 'gene_biotype'
@@ -96,12 +94,10 @@ nextflow_workflow {
                     bam: file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/illumina/bam/test.single_end.sorted.bam', checkIfExists: true),
                     bai: file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/illumina/bam/test.single_end.sorted.bam.bai', checkIfExists: true)
                 ))
-                input[1] = channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
-                input[2] = channel.of(
-                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.bed12', checkIfExists: true)
-                )
-                input[3] = channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome/genome.fa', checkIfExists: true))
-                input[4] = channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome/genome.fa.fai', checkIfExists: true))
+                input[1] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
+                input[2] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.bed12', checkIfExists: true))
+                input[3] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome/genome.fa', checkIfExists: true))
+                input[4] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome/genome.fa.fai', checkIfExists: true))
                 input[5] = biotypes_header
                 input[6] = ['preseq', 'biotype_qc', 'qualimap', 'dupradar', 'rseqc_bam_stat', 'rseqc_infer_experiment', 'rseqc_junction_annotation', 'rseqc_junction_saturation', 'rseqc_read_distribution', 'rseqc_read_duplication', 'rseqc_tin']
                 input[7] = 'gene_biotype'
@@ -150,12 +146,10 @@ nextflow_workflow {
                     bam: file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
                     bai: file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true)
                 ))
-                input[1] = channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
-                input[2] = channel.of(
-                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.bed12', checkIfExists: true)
-                )
-                input[3] = channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome/genome.fa', checkIfExists: true))
-                input[4] = channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome/genome.fa.fai', checkIfExists: true))
+                input[1] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
+                input[2] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.bed12', checkIfExists: true))
+                input[3] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome/genome.fa', checkIfExists: true))
+                input[4] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome/genome.fa.fai', checkIfExists: true))
                 input[5] = biotypes_header
                 input[6] = [] // tools - none enabled
                 input[7] = '' // biotype
@@ -191,12 +185,10 @@ nextflow_workflow {
                     bam: file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
                     bai: file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true)
                 ))
-                input[1] = channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
-                input[2] = channel.of(
-                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.bed12', checkIfExists: true)
-                )
-                input[3] = channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome/genome.fa', checkIfExists: true))
-                input[4] = channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome/genome.fa.fai', checkIfExists: true))
+                input[1] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
+                input[2] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.bed12', checkIfExists: true))
+                input[3] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome/genome.fa', checkIfExists: true))
+                input[4] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome/genome.fa.fai', checkIfExists: true))
                 input[5] = biotypes_header
                 input[6] = ['preseq', 'biotype_qc', 'qualimap', 'dupradar', 'rseqc_bam_stat', 'rseqc_inner_distance', 'rseqc_infer_experiment', 'rseqc_junction_annotation', 'rseqc_junction_saturation', 'rseqc_read_distribution', 'rseqc_read_duplication', 'rseqc_tin']
                 input[7] = 'gene_biotype'

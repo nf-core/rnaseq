@@ -55,20 +55,20 @@ workflow ALIGN_BOWTIE2 {
     //
     // Sort, index BAM file and run samtools stats, flagstat and idxstats
     //
-    BAM_SORT_STATS_SAMTOOLS(ch_orig_bam, fasta_fai)
+    BAM_SORT_STATS_SAMTOOLS(ch_bowtie2.map { r -> record(id: r.id, meta: r.meta, bam: r.orig_bam) }, fasta_fai)
 
     ch_results = ch_bowtie2
         .map { r -> r + record(aligner: 'bowtie2', percent_mapped: getBowtie2PercentMapped(r.bowtie2.log)) }
-        .join(BAM_SORT_STATS_SAMTOOLS.out.results, by: 'id')
+        .join(BAM_SORT_STATS_SAMTOOLS.out, by: 'id')
 
     emit:
     orig_bam       = ch_orig_bam                          // channel: [ val(meta), bam ]
     log_final      = ch_log                               // channel: [ val(meta), log ]
-    bam            = BAM_SORT_STATS_SAMTOOLS.out.bam      // channel: [ val(meta), [ bam ] ]
-    index          = BAM_SORT_STATS_SAMTOOLS.out.index    // channel: [ val(meta), [ index ] ]
-    stats          = BAM_SORT_STATS_SAMTOOLS.out.stats    // channel: [ val(meta), [ stats ] ]
-    flagstat       = BAM_SORT_STATS_SAMTOOLS.out.flagstat // channel: [ val(meta), [ flagstat ] ]
-    idxstats       = BAM_SORT_STATS_SAMTOOLS.out.idxstats // channel: [ val(meta), [ idxstats ] ]
+    bam            = BAM_SORT_STATS_SAMTOOLS.out.map { r -> [r.meta, r.bam] }      // channel: [ val(meta), [ bam ] ]
+    index          = BAM_SORT_STATS_SAMTOOLS.out.map { r -> [r.meta, r.bai] }    // channel: [ val(meta), [ index ] ]
+    stats          = BAM_SORT_STATS_SAMTOOLS.out.map { r -> [r.meta, r.samtools.stats] }    // channel: [ val(meta), [ stats ] ]
+    flagstat       = BAM_SORT_STATS_SAMTOOLS.out.map { r -> [r.meta, r.samtools.flagstat] } // channel: [ val(meta), [ flagstat ] ]
+    idxstats       = BAM_SORT_STATS_SAMTOOLS.out.map { r -> [r.meta, r.samtools.idxstats] } // channel: [ val(meta), [ idxstats ] ]
     percent_mapped = ch_percent_mapped                    // channel: [ val(meta), percent_mapped ]
     results        = ch_results                           // channel: Bowtie2Aligned
 }

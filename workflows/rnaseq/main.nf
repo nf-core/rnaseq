@@ -207,9 +207,9 @@ workflow RNASEQ {
 
     // Index pre-aligned input BAM files
     SAMTOOLS_INDEX (
-        ch_genome_bam
+        ch_genome_bam.map { meta, bam -> record(id: meta.id, meta: meta, bam: bam) }
     )
-    ch_genome_bam_index = SAMTOOLS_INDEX.out.map { r -> [r.meta, r.index] }
+    ch_genome_bam_index = SAMTOOLS_INDEX.out.map { r -> [r.meta, r.bai] }
 
     //
     // Run RNA-seq FASTQ preprocessing subworkflow
@@ -297,7 +297,7 @@ workflow RNASEQ {
 
     if (!params.skip_alignment && (params.aligner == 'star_salmon' || params.aligner == 'star_rsem')) {
         ALIGN_STAR (
-            ch_strand_inferred_filtered_fastq,
+            ch_strand_inferred_filtered_fastq.map { meta, fastqs -> record(id: meta.id, meta: meta, reads: [ fastqs ].flatten()) },
             ch_star_index.map { item -> [ [:], item ] },
             ch_gtf.map { item -> [ [:], item ] },
             params.star_ignore_sjdbgtf,
@@ -307,13 +307,27 @@ workflow RNASEQ {
             params.skip_markduplicates
         )
 
-        ch_genome_bam                    = ch_genome_bam.mix(ALIGN_STAR.out.bam)
-        ch_genome_bam_index              = ch_genome_bam_index.mix(ALIGN_STAR.out.index)
-        ch_transcriptome_bam             = ch_transcriptome_bam.mix(ALIGN_STAR.out.bam_transcript)
-        ch_percent_mapped                = ch_percent_mapped.mix(ALIGN_STAR.out.percent_mapped)
-        ch_star_log                      = ALIGN_STAR.out.log_final
-        ch_unaligned_sequences           = ALIGN_STAR.out.fastq
-        ch_aligned                       = ch_aligned.mix(ALIGN_STAR.out.results)
+        ch_star_aligned = ALIGN_STAR.out
+
+        // BEGIN adapters from the ALIGN_STAR record to legacy tuple channels; removed once the consumers below are typed
+        ch_star_bam            = ch_star_aligned.map { r -> [ r.meta, r.bam ] }
+        ch_star_bai            = ch_star_aligned.map { r -> [ r.meta, r.bai ] }
+        ch_star_transcriptome  = ch_star_aligned.filter { r -> r.transcriptome_bam }.map { r -> [ r.meta, r.transcriptome_bam ] }
+        ch_star_percent_mapped = ch_star_aligned.map { r -> [ r.meta, r.percent_mapped ] }
+        ch_star_log_final      = ch_star_aligned.map { r -> [ r.meta, r.star.log_final ] }
+        ch_star_unmapped       = ch_star_aligned.filter { r -> r.unmapped }.map { r -> [ r.meta, r.unmapped ] }
+        ch_star_stats          = ch_star_aligned.map { r -> [ r.meta, r.samtools.stats ] }
+        ch_star_flagstat       = ch_star_aligned.map { r -> [ r.meta, r.samtools.flagstat ] }
+        ch_star_idxstats       = ch_star_aligned.map { r -> [ r.meta, r.samtools.idxstats ] }
+        // END adapters
+
+        ch_genome_bam                    = ch_genome_bam.mix(ch_star_bam)
+        ch_genome_bam_index              = ch_genome_bam_index.mix(ch_star_bai)
+        ch_transcriptome_bam             = ch_transcriptome_bam.mix(ch_star_transcriptome)
+        ch_percent_mapped                = ch_percent_mapped.mix(ch_star_percent_mapped)
+        ch_star_log                      = ch_star_log_final
+        ch_unaligned_sequences           = ch_star_unmapped
+        ch_aligned                       = ch_aligned.mix(ch_star_aligned)
         ch_multiqc_files                 = ch_multiqc_files.mix(ch_star_log)
         ch_mqc_per_sample_bundle         = ch_mqc_per_sample_bundle
             .join(ch_star_log.map { meta, f -> [meta.id, f] }, remainder: true)
@@ -327,12 +341,12 @@ workflow RNASEQ {
             // skipped, so we also need to add alignment stats here.
 
             ch_multiqc_files = ch_multiqc_files
-                .mix(ALIGN_STAR.out.stats)
-                .mix(ALIGN_STAR.out.flagstat)
-                .mix(ALIGN_STAR.out.idxstats)
-            ch_star_stats_bundle = ALIGN_STAR.out.stats
-                .join(ALIGN_STAR.out.flagstat)
-                .join(ALIGN_STAR.out.idxstats)
+                .mix(ch_star_stats)
+                .mix(ch_star_flagstat)
+                .mix(ch_star_idxstats)
+            ch_star_stats_bundle = ch_star_stats
+                .join(ch_star_flagstat)
+                .join(ch_star_idxstats)
                 .map(collapseAgg)
             ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
                 .join(ch_star_stats_bundle, remainder: true)
@@ -554,19 +568,28 @@ workflow RNASEQ {
     def markdups_done = !params.skip_markduplicates && params.use_parabricks_star
     if (!params.skip_markduplicates && !params.with_umi && !markdups_done) {
         BAM_MARKDUPLICATES_PICARD (
-            ch_genome_bam,
+            ch_genome_bam.map { meta, bam -> record(id: meta.id, meta: meta, bam: bam) },
             ch_fasta_fai,
             !params.use_rustqc
         )
-        ch_genome_bam       = BAM_MARKDUPLICATES_PICARD.out.bam
-        ch_genome_bam_index = BAM_MARKDUPLICATES_PICARD.out.index
-        ch_markdup          = BAM_MARKDUPLICATES_PICARD.out.results
-        ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.stats)
-        ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.flagstat)
-        ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.idxstats)
-        ch_multiqc_files = ch_multiqc_files.mix(BAM_MARKDUPLICATES_PICARD.out.metrics)
-        ch_markdup_bundle = BAM_MARKDUPLICATES_PICARD.out.per_sample_mqc_bundle
-            .map { meta, files -> [meta.id, files] }
+        ch_markdup = BAM_MARKDUPLICATES_PICARD.out
+
+        // BEGIN adapters from the BAM_MARKDUPLICATES_PICARD record to legacy tuple channels; removed once the consumers below are typed
+        ch_markdup_stats    = ch_markdup.filter { r -> r.samtools }.map { r -> [ r.meta, r.samtools.stats ] }
+        ch_markdup_flagstat = ch_markdup.filter { r -> r.samtools }.map { r -> [ r.meta, r.samtools.flagstat ] }
+        ch_markdup_idxstats = ch_markdup.filter { r -> r.samtools }.map { r -> [ r.meta, r.samtools.idxstats ] }
+        ch_markdup_metrics  = ch_markdup.map { r -> [ r.meta, r.metrics ] }
+        ch_markdup_bundle   = ch_markdup
+            .filter { r -> r.samtools }
+            .map { r -> [ r.id, [ r.samtools.stats, r.samtools.flagstat, r.samtools.idxstats, r.metrics ] ] }
+        // END adapters
+
+        ch_genome_bam       = ch_markdup.filter { r -> r.bam }.map { r -> [ r.meta, r.bam ] }
+        ch_genome_bam_index = ch_markdup.map { r -> [ r.meta, r.bai ] }
+        ch_multiqc_files = ch_multiqc_files.mix(ch_markdup_stats)
+        ch_multiqc_files = ch_multiqc_files.mix(ch_markdup_flagstat)
+        ch_multiqc_files = ch_multiqc_files.mix(ch_markdup_idxstats)
+        ch_multiqc_files = ch_multiqc_files.mix(ch_markdup_metrics)
         ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
             .join(ch_markdup_bundle, remainder: true)
     }

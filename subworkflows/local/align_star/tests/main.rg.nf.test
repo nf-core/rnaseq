@@ -33,13 +33,14 @@ nextflow_workflow {
                 use_parabricks_star  = false
                 skip_markduplicates  = false
 
-                input[0] = channel.of([
-                    [ id:'test', single_end:false, seq_platform:'ILLUMINA' ],
-                    [
+                input[0] = channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false, seq_platform:'ILLUMINA' ],
+                    reads: [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
-                ])
+                ))
                 input[1] = STAR_GENOMEGENERATE.out.map { r -> [r.meta, r.index] }
                 input[2] = channel.of([
                     [ id:'test_gtf' ],
@@ -62,9 +63,9 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 // params.seq_center = 'GLOBAL_CENTER' (from nextflow.rg.config), no meta.seq_center
-                { assert bam(workflow.out.bam[0][1]).getHeader().any { line -> line.contains('CN:GLOBAL_CENTER') } },
-                { assert bam(workflow.out.bam[0][1]).getHeader().any { line -> line.contains('PL:ILLUMINA') } },
-                { assert bam(workflow.out.bam[0][1]).getHeader().any { line -> line.contains('SM:test') } }
+                { assert bam(workflow.out[0][0].bam).getHeader().any { line -> line.contains('CN:GLOBAL_CENTER') } },
+                { assert bam(workflow.out[0][0].bam).getHeader().any { line -> line.contains('PL:ILLUMINA') } },
+                { assert bam(workflow.out[0][0].bam).getHeader().any { line -> line.contains('SM:test') } }
             )
         }
 
@@ -104,13 +105,14 @@ nextflow_workflow {
                 use_parabricks_star  = false
                 skip_markduplicates  = false
 
-                input[0] = channel.of([
-                    [ id:'test', single_end:false, seq_platform:'ILLUMINA', seq_center:'SAMPLE_CENTER' ],
-                    [
+                input[0] = channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false, seq_platform:'ILLUMINA', seq_center:'SAMPLE_CENTER' ],
+                    reads: [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
-                ])
+                ))
                 input[1] = STAR_GENOMEGENERATE.out.map { r -> [r.meta, r.index] }
                 input[2] = channel.of([
                     [ id:'test_gtf' ],
@@ -133,9 +135,9 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 // meta.seq_center = 'SAMPLE_CENTER' should override params.seq_center = 'GLOBAL_CENTER'
-                { assert bam(workflow.out.bam[0][1]).getHeader().any { line -> line.contains('CN:SAMPLE_CENTER') } },
-                { assert !bam(workflow.out.bam[0][1]).getHeader().any { line -> line.contains('CN:GLOBAL_CENTER') } },
-                { assert bam(workflow.out.bam[0][1]).getHeader().any { line -> line.contains('PL:ILLUMINA') } }
+                { assert bam(workflow.out[0][0].bam).getHeader().any { line -> line.contains('CN:SAMPLE_CENTER') } },
+                { assert !bam(workflow.out[0][0].bam).getHeader().any { line -> line.contains('CN:GLOBAL_CENTER') } },
+                { assert bam(workflow.out[0][0].bam).getHeader().any { line -> line.contains('PL:ILLUMINA') } }
             )
         }
 

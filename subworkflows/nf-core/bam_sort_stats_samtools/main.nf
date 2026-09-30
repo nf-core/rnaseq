@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 //
 // Sort, index BAM file and run samtools stats, flagstat and idxstats
 //
@@ -5,47 +7,25 @@
 include { SAMTOOLS_SORT      } from '../../../modules/nf-core/samtools/sort/main'
 include { SAMTOOLS_INDEX     } from '../../../modules/nf-core/samtools/index/main'
 include { BAM_STATS_SAMTOOLS } from '../bam_stats_samtools/main'
-include { SortedBam          } from './types'
+include { BamsToSort; SortedBam } from './types'
 
 workflow BAM_SORT_STATS_SAMTOOLS {
     take:
-    ch_bam // channel: [ val(meta), [ bam ] ]
-    ch_fasta_fai // channel: [ val(meta), path(fasta), path(fai) ]
+    ch_bam: Channel<BamsToSort>
+    ch_fasta_fai: Value<Tuple<Map, Path?, Path?>>
 
     main:
-    SAMTOOLS_SORT(ch_bam, ch_fasta_fai, '')
+    ch_sorted = SAMTOOLS_SORT(ch_bam, ch_fasta_fai, '')
+        .filter { r -> r.bam != null }
 
-    ch_sorted_bam = SAMTOOLS_SORT.out
-        .filter { r -> r.bam }
-        .map { r -> [r.meta, r.bam] }
+    ch_indexed = ch_sorted.join(SAMTOOLS_INDEX(ch_sorted), by: 'id')
 
-    SAMTOOLS_INDEX(ch_sorted_bam)
-
-    ch_index = SAMTOOLS_INDEX.out.map { r -> [r.meta, r.index] }
-
-    ch_sorted_bam
-        .join(ch_index, by: [0])
-        .set { ch_bam_bai }
-
-    BAM_STATS_SAMTOOLS(ch_bam_bai, ch_fasta_fai)
-
-    ch_results = ch_bam_bai
-        .map { meta, bam, bai -> [meta.id, bam, bai] }
-        .join(BAM_STATS_SAMTOOLS.out.results.map { r -> [r.id, r] }, by: [0])
-        .map { id, bam, bai, samtools ->
-            record(
-                id: id,
-                bam: bam,
-                bai: bai,
-                samtools: record(stats: samtools.stats, flagstat: samtools.flagstat, idxstats: samtools.idxstats)
-            )
-        }
+    // SAMTOOLS_SORT also carries cram, sam, csi and crai fields; dropping them keeps them from
+    // overwriting same-named fields when a caller joins this result onto its own record.
+    ch_results = ch_indexed
+        .join(BAM_STATS_SAMTOOLS(ch_indexed, ch_fasta_fai), by: 'id')
+        .map { r -> record(id: r.id, meta: r.meta, bam: r.bam, bai: r.bai, samtools: r.samtools) }
 
     emit:
-    bam      = ch_sorted_bam // channel: [ val(meta), [ bam ] ]
-    index    = ch_index // channel: [ val(meta), [ index ] ]
-    stats    = BAM_STATS_SAMTOOLS.out.stats // channel: [ val(meta), [ stats ] ]
-    flagstat = BAM_STATS_SAMTOOLS.out.flagstat // channel: [ val(meta), [ flagstat ] ]
-    idxstats = BAM_STATS_SAMTOOLS.out.idxstats // channel: [ val(meta), [ idxstats ] ]
-    results  = ch_results // channel: SortedBam
+    ch_results
 }

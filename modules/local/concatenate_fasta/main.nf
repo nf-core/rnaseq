@@ -1,17 +1,19 @@
 nextflow.enable.types = true
 
+include { ConcatenateFastaInput } from '../../nf-core/types'
+
 process CONCATENATE_FASTA {
-    tag "${meta.id}"
+    tag "${sample.meta.id}"
 
     input:
-    record(id: String, meta: Map, fastas: List<Path>)
+    sample: ConcatenateFastaInput
 
     output:
-    record(id: id, meta: meta, fasta: file('rrna_combined_dna.fasta'))
+    record(id: sample.id, meta: sample.meta, fasta: file('rrna_combined_dna.fasta'))
 
     exec:
     def combined = task.workDir.resolve('rrna_combined_dna.fasta')
-    fastas.each { f ->
+    sample.fastas.each { f ->
         combined << f.text
         combined << '\n'
     }

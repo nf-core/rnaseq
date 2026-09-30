@@ -1,7 +1,9 @@
 nextflow.enable.types = true
 
+include { StarGenomeparamsUpgradeInput } from '../../nf-core/types'
+
 process STAR_GENOMEPARAMS_UPGRADE {
-    tag "${meta.id ?: index.name}"
+    tag "${sample.meta.id ?: sample.index.name}"
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
@@ -10,13 +12,13 @@ process STAR_GENOMEPARAMS_UPGRADE {
         'community.wave.seqera.io/library/gawk:5.3.1--e09efb5dfc4b8156' }"
 
     input:
-    record(id: String, meta: Map, index: Path)
+    sample: StarGenomeparamsUpgradeInput
 
     stage:
-    stageAs index, 'input_index'
+    stageAs sample.index, 'input_index'
 
     output:
-    record(id: id, meta: meta, index: file('star'))
+    record(id: sample.id, meta: sample.meta, index: file('star'))
 
     topic:
     tuple(task.process, 'gawk', eval("awk -Wversion | sed '1!d; s/.*Awk //; s/,.*//'")) >> 'versions'

@@ -1,19 +1,21 @@
 nextflow.enable.types = true
 
+include { MultiqcConcatenateTablesInput } from '../../nf-core/types'
+
 process MULTIQC_CONCATENATE_TABLES {
-    tag "${id}"
+    tag "${sample.id}"
 
     input:
-    record(id: String, meta: Map, name: String, skip: Integer, files: List<Path>)
+    sample: MultiqcConcatenateTablesInput
 
     output:
-    record(id: id, meta: meta, file: file(name))
+    record(id: sample.id, meta: sample.meta, file: file(sample.name))
 
     exec:
-    def combined = task.workDir.resolve(name)
-    combined << files.first().text
-    files.tail().each { f ->
+    def combined = task.workDir.resolve(sample.name)
+    combined << sample.files.first().text
+    sample.files.tail().each { f ->
         def lines = f.readLines()
-        combined << lines.subList(skip, lines.size()).collect { line -> "${line}\n" }.join('')
+        combined << lines.subList(sample.skip, lines.size()).collect { line -> "${line}\n" }.join('')
     }
 }

@@ -416,13 +416,7 @@ headers:
                     ],
                 ]
                 input[1] = [
-                    [
-                        [id: 'WT_REP1'],
-                        'auto',
-                        'pass',
-                        [inferred_strandedness: 'reverse', forwardFragments: 10.0, reverseFragments: 85.0, unstrandedFragments: 5.0],
-                        [inferred_strandedness: 'reverse', forwardFragments:  9.1, reverseFragments: 86.3, unstrandedFragments: 4.6],
-                    ],
+                    [id: 'WT_REP1', meta: [id: 'WT_REP1'], provided: 'auto', status: 'pass', salmon: [inferred_strandedness: 'reverse', forwardFragments: 10.0, reverseFragments: 85.0, unstrandedFragments: 5.0], rseqc: [inferred_strandedness: 'reverse', forwardFragments:  9.1, reverseFragments: 86.3, unstrandedFragments: 4.6]],
                 ]
                 """
             }
@@ -463,24 +457,9 @@ headers:
                 // Rows supplied in shuffled order; the helper must emit the data
                 // map keyed by sample id in alphabetical order.
                 input[1] = [
-                    [
-                        [id: 'WT_REP2'],
-                        'auto', 'pass',
-                        [inferred_strandedness: 'reverse', forwardFragments: 10.0, reverseFragments: 85.0, unstrandedFragments: 5.0],
-                        [inferred_strandedness: 'reverse', forwardFragments:  9.1, reverseFragments: 86.3, unstrandedFragments: 4.6],
-                    ],
-                    [
-                        [id: 'RAP1_IAA_30M_REP1'],
-                        'auto', 'pass',
-                        [inferred_strandedness: 'reverse', forwardFragments: 11.0, reverseFragments: 84.0, unstrandedFragments: 5.0],
-                        [inferred_strandedness: 'reverse', forwardFragments:  9.5, reverseFragments: 85.0, unstrandedFragments: 5.5],
-                    ],
-                    [
-                        [id: 'WT_REP1'],
-                        'auto', 'pass',
-                        [inferred_strandedness: 'reverse', forwardFragments: 10.0, reverseFragments: 85.0, unstrandedFragments: 5.0],
-                        [inferred_strandedness: 'reverse', forwardFragments:  9.1, reverseFragments: 86.3, unstrandedFragments: 4.6],
-                    ],
+                    [id: 'WT_REP2', meta: [id: 'WT_REP2'], provided: 'auto', status: 'pass', salmon: [inferred_strandedness: 'reverse', forwardFragments: 10.0, reverseFragments: 85.0, unstrandedFragments: 5.0], rseqc: [inferred_strandedness: 'reverse', forwardFragments:  9.1, reverseFragments: 86.3, unstrandedFragments: 4.6]],
+                    [id: 'RAP1_IAA_30M_REP1', meta: [id: 'RAP1_IAA_30M_REP1'], provided: 'auto', status: 'pass', salmon: [inferred_strandedness: 'reverse', forwardFragments: 11.0, reverseFragments: 84.0, unstrandedFragments: 5.0], rseqc: [inferred_strandedness: 'reverse', forwardFragments:  9.5, reverseFragments: 85.0, unstrandedFragments: 5.5]],
+                    [id: 'WT_REP1', meta: [id: 'WT_REP1'], provided: 'auto', status: 'pass', salmon: [inferred_strandedness: 'reverse', forwardFragments: 10.0, reverseFragments: 85.0, unstrandedFragments: 5.0], rseqc: [inferred_strandedness: 'reverse', forwardFragments:  9.1, reverseFragments: 86.3, unstrandedFragments: 4.6]],
                 ]
                 """
             }
@@ -512,13 +491,7 @@ headers:
                 // strandSummaryCells is an undeclared column
                 input[0] = [id: 'demo', headers: [provided: [title: 'Provided']]]
                 input[1] = [
-                    [
-                        [id: 'WT_REP1'],
-                        'auto',
-                        '-',
-                        [inferred_strandedness: 'forward', forwardFragments: 90.0, reverseFragments: 10.0, unstrandedFragments: 0.0],
-                        null,
-                    ],
+                    [id: 'WT_REP1', meta: [id: 'WT_REP1'], provided: 'auto', status: '-', salmon: [inferred_strandedness: 'forward', forwardFragments: 90.0, reverseFragments: 10.0, unstrandedFragments: 0.0], rseqc: null],
                 ]
                 """
             }
@@ -589,13 +562,7 @@ headers:
                     pconfig: [id: 'demo_bar', title: 'Demo', ylab: '% of fragments'],
                 ]
                 input[1] = [
-                    [
-                        [id: 'WT_REP1'],
-                        'auto',
-                        '-',
-                        [inferred_strandedness: 'forward', forwardFragments: 82.0, reverseFragments: 13.0, unstrandedFragments: 5.0],
-                        null,
-                    ],
+                    [id: 'WT_REP1', meta: [id: 'WT_REP1'], provided: 'auto', status: '-', salmon: [inferred_strandedness: 'forward', forwardFragments: 82.0, reverseFragments: 13.0, unstrandedFragments: 5.0], rseqc: null],
                 ]
                 """
             }
@@ -621,13 +588,7 @@ headers:
                     pconfig: [id: 'demo_bar', title: 'Demo', ylab: '% of fragments'],
                 ]
                 input[1] = [
-                    [
-                        [id: 'WT_REP1'],
-                        'auto',
-                        'pass',
-                        [inferred_strandedness: 'reverse', forwardFragments: 10.0, reverseFragments: 85.0, unstrandedFragments: 5.0],
-                        [inferred_strandedness: 'reverse', forwardFragments:  9.1, reverseFragments: 86.3, unstrandedFragments: 4.6],
-                    ],
+                    [id: 'WT_REP1', meta: [id: 'WT_REP1'], provided: 'auto', status: 'pass', salmon: [inferred_strandedness: 'reverse', forwardFragments: 10.0, reverseFragments: 85.0, unstrandedFragments: 5.0], rseqc: [inferred_strandedness: 'reverse', forwardFragments:  9.1, reverseFragments: 86.3, unstrandedFragments: 4.6]],
                 ]
                 """
             }

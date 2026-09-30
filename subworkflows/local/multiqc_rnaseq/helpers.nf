@@ -25,11 +25,12 @@ def workflowSummaryMultiqcYaml() {
 // MultiQC `--replace-names` lines: map each FASTQ simpleName to
 // '<id>_1' / '<id>_2' (or '<id>' for SE), skipping cases where the
 // simpleName already equals the sample ID (see #1341 / #1659).
-// `fastq_rows` is a list of [ meta, [ [ fastq_1, fastq_2? ], ... ] ].
+// `fastq_rows` is a list of record(id, meta, runs), runs being [ [ fastq_1, fastq_2? ], ... ].
 //
 def multiqcNameReplacementLines(fastq_rows) {
     def lines = fastq_rows.collectMany { row ->
-        def (meta, reads) = row
+        def meta  = row.meta
+        def reads = row.runs
         def paired   = reads[0][1] as boolean
         def suffixes = paired ? ['_1', '_2'] : ['']
         def mappings = []
@@ -154,15 +155,14 @@ def strandCheckSummaryYaml(static_config, rows) {
     // Sort by sample id so the merged output is deterministic regardless of
     // which sample finished RSeQC/Salmon first, and so the rendered MultiQC
     // table has a consistent default row order.
-    def data = rows.toSorted { row -> row[0].id }.collectEntries { row ->
-        def (meta, provided, status, salmon, rseqc) = row
-        def raw = strandSummaryCells(meta, provided, status, salmon, rseqc)
+    def data = rows.toSorted { row -> row.id }.collectEntries { row ->
+        def raw = strandSummaryCells(row.meta, row.provided, row.status, row.salmon, row.rseqc)
         def unknown = raw.keySet() - header_keys
         if (unknown) error("strand_check_summary.yaml headers do not declare columns: ${unknown}")
 
         def cells = [:]  // follow header order, drop null cells
         header_keys.each { k -> if (raw[k] != null) cells[k] = raw[k] }
-        [ (meta.id): cells ]
+        [ (row.id): cells ]
     }
     groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(static_config + [data: data]))
 }
@@ -194,10 +194,9 @@ def strandCheckCompositionYaml(static_config, rows) {
     // Sort by sample id so the merged output is deterministic regardless of
     // which sample finished RSeQC/Salmon first, and so the rendered MultiQC
     // bargraph has a consistent default sample order.
-    rows.toSorted { row -> row[0].id }.each { row ->
-        def (meta, _p, _s, salmon, rseqc) = row
-        if (rseqc)  rseqc_data[meta.id]  = strandCompositionMap(rseqc)
-        if (salmon) salmon_data[meta.id] = strandCompositionMap(salmon)
+    rows.toSorted { row -> row.id }.each { row ->
+        if (row.rseqc)  rseqc_data[row.id]  = strandCompositionMap(row.rseqc)
+        if (row.salmon) salmon_data[row.id] = strandCompositionMap(row.salmon)
     }
     def datasets = []
     def labels   = []

@@ -25,7 +25,7 @@ include { BAM_QC_RNASEQ                         } from '../../subworkflows/nf-co
 include { QUANTIFY_RSEM                         } from '../../subworkflows/nf-core/quantify_rsem'
 include { BAM_DEDUP_UMI                         } from '../../subworkflows/nf-core/bam_dedup_umi'
 
-include { Bowtie2Aligned; StarAligned; MultiqcFiles; AlignedSample; Bam; Contaminants; StringtieSample; BigwigSample; PipelineInfo; UmiDedupBam; MarkdupBam; BamQcRnaseq; StringtieMerged; Hisat2Aligned; RrnaReferences; FastqQcTrimFilterSetstrandedness; QuantMerged } from '../../modules/nf-core/types'
+include { Bowtie2Aligned; StarAligned; MultiqcFiles; AlignedSample; Bam; Contaminants; StringtieSample; BigwigSample; PipelineInfo; UmiDedupBam; MarkdupBam; BamQcRnaseq; StringtieMerged; Hisat2Aligned; RrnaReferences; FastqQcTrimFilterSetstrandedness; QuantMerged; SampleRuns; TrimReadCount; TrimStatus; PercentMapped; MapStatus; PercentMappedPass; InferExperimentLog; StrandData; StrandStatus } from '../../modules/nf-core/types'
 include { RsemMergeSample } from '../../modules/nf-core/custom/rsemmergecounts/main'
 include { KallistoQuantSample } from '../../modules/nf-core/kallisto/quant/main'
 include { MultiqcReport } from '../../modules/nf-core/multiqc/main'
@@ -147,7 +147,7 @@ workflow RNASEQ {
     ch_bam_samples   = ch_input.filter { s -> s.prealigned }
 
     // One entry per sequencing run of each sample
-    ch_fastq = ch_fastq_samples.map { s -> tuple(s.meta, s.runs) }
+    ch_fastq = ch_fastq_samples.map { s -> record(id: s.id, meta: s.meta, runs: s.runs) }
 
     // Index pre-aligned genome BAM files; a sample may supply only a transcriptome BAM
     ch_prealigned_genome = ch_bam_samples.filter { s -> s.bam != null }
@@ -229,11 +229,11 @@ workflow RNASEQ {
 
     ch_trim_read_count = ch_preprocessed
         .filter { r -> r.num_trimmed_reads != null }
-        .map { r -> tuple(r.meta, r.num_trimmed_reads) }
+        .map { r -> record(id: r.id, meta: r.meta, num_reads: r.num_trimmed_reads) }
 
     ch_trim_status = ch_preprocessed
         .filter { r -> r.num_trimmed_reads != null }
-        .map { r -> tuple(r.id, r.num_trimmed_reads > params.min_trimmed_reads.toFloat()) }
+        .map { r -> record(id: r.id, pass: r.num_trimmed_reads > params.min_trimmed_reads.toFloat()) }
 
     //
     // SUBWORKFLOW: Alignment with STAR and gene/transcript quantification with Salmon
@@ -436,14 +436,14 @@ workflow RNASEQ {
         r + record(pass: r.percent_mapped != null ? r.percent_mapped >= params.min_mapped_reads.toFloat() : null)
     }
 
-    ch_percent_mapped = ch_mapped.map { r -> tuple(r.id, r.percent_mapped) }
+    ch_percent_mapped = ch_mapped.map { r -> record(id: r.id, percent_mapped: r.percent_mapped) }
 
     // Save mapping status for workflow summary where present
     ch_map_status = ch_mapped
         .filter { r -> r.pass != null }
-        .map { r -> tuple(r.id, r.pass as Boolean) }
+        .map { r -> record(id: r.id, pass: r.pass as Boolean) }
 
-    ch_percent_mapped_pass = ch_mapped.map { r -> tuple(r.id, r.percent_mapped, r.pass) }
+    ch_percent_mapped_pass = ch_mapped.map { r -> record(id: r.id, percent_mapped: r.percent_mapped, pass: r.pass) }
 
     // Where a percent mapping is present, use it to filter bam and index
     ch_genome_bam = ch_mapped.filter { r -> r.pass == null || r.pass }
@@ -517,7 +517,7 @@ workflow RNASEQ {
 
     def ch_bam_qc                                       = channel.empty()
     def ch_bam_qc_rustqc: Channel<RustqcResult>         = channel.empty()
-    def ch_inferexperiment: Channel<Tuple2<Map, Path>>   = channel.empty()
+    def ch_inferexperiment: Channel<InferExperimentLog> = channel.empty()
 
     if (!params.skip_qc) {
         if (params.use_rustqc) {
@@ -547,7 +547,7 @@ workflow RNASEQ {
             // Extract infer_experiment from rseqc channel
             ch_inferexperiment = ch_bam_qc_rustqc
                 .filter { r -> r.rseqc.inferexperiment != null }
-                .map { r -> tuple(r.meta, r.rseqc.inferexperiment) }
+                .map { r -> record(id: r.id, meta: r.meta, inferexperiment: r.rseqc.inferexperiment) }
         } else {
             //
             // SUBWORKFLOW: Post-alignment QC
@@ -566,12 +566,12 @@ workflow RNASEQ {
             ch_mqc_files = ch_mqc_files.mix(ch_bam_qc.map { r -> record(id: r.id, files: r.mqc_files) })
             ch_inferexperiment = ch_bam_qc
                 .filter { r -> r.rseqc != null && r.rseqc.inferexperiment != null }
-                .map { r -> tuple(r.meta, r.rseqc.inferexperiment) }
+                .map { r -> record(id: r.id, meta: r.meta, inferexperiment: r.rseqc.inferexperiment) }
         }
     }
 
     //
-    // Build the per-sample strand-classification tuple consumed by the
+    // Build the per-sample strand-classification record consumed by the
     // MultiQC Strandedness checks section. When RSeQC / RustQC ran we
     // classify via `classifyStrand`; otherwise we surface Salmon's
     // auto-inference so --skip_rseqc / --skip_qc users still see the
@@ -581,15 +581,15 @@ workflow RNASEQ {
     def run_infer_experiment = !params.skip_qc && (params.use_rustqc || rseqc_modules.contains('infer_experiment'))
     ch_strand_status = channel.empty()
     if (run_infer_experiment) {
-        ch_strand_data = ch_inferexperiment.map { meta, strand_log ->
-            classifyStrand(meta, strand_log, params.stranded_threshold, params.unstranded_threshold)
+        ch_strand_data = ch_inferexperiment.map { r ->
+            classifyStrand(r.meta, r.inferexperiment, params.stranded_threshold, params.unstranded_threshold)
         }
-        ch_strand_status = ch_strand_data.map { meta, _provided, status, _salmon, _rseqc -> tuple(meta.id, status == 'pass') }
+        ch_strand_status = ch_strand_data.map { r -> record(id: r.id, pass: r.status == 'pass') }
     }
     else {
         ch_strand_data = ch_reads_ok
             .filter { r -> r.meta.salmon_strand_analysis != null }
-            .map { r -> tuple(r.meta, 'auto', '-', r.meta.salmon_strand_analysis, null) }
+            .map { r -> record(id: r.id, meta: r.meta, provided: 'auto', status: '-', salmon: r.meta.salmon_strand_analysis, rseqc: null) }
     }
 
     //
@@ -823,12 +823,12 @@ workflow RNASEQ {
     }
 
     emit:
-    trim_status:         Channel<Tuple2<String, Boolean>> = ch_trim_status         // [ id, passes min_trimmed_reads ]
-    map_status:          Channel<Tuple2<String, Boolean>> = ch_map_status          // [ id, passes min_mapped_reads ], samples with a mapping percentage only
-    strand_status:       Channel<Tuple2<String, Boolean>> = ch_strand_status       // [ id, strandedness check passed ]
+    trim_status:         Channel<TrimStatus> = ch_trim_status                  // pass: meets min_trimmed_reads
+    map_status:          Channel<MapStatus> = ch_map_status                    // pass: meets min_mapped_reads; samples with a mapping percentage only
+    strand_status:       Channel<StrandStatus> = ch_strand_status             // pass: strandedness check passed
     multiqc_report:      Channel<Path> = ch_multiqc_report                        // multiqc_report.html
-    reads:               Channel<Tuple2<Map, List<List<Path>>>> = ch_fastq         // [ meta, [ [fastq_1, fastq_2?], ... ] ], one entry per sequencing run of a sample
-    percent_mapped:      Channel<Tuple2<String, Float?>> = ch_percent_mapped       // [ id, percent mapped ]
+    reads:               Channel<SampleRuns> = ch_fastq
+    percent_mapped:      Channel<PercentMapped> = ch_percent_mapped
 
     // Stage result records, keyed on id
     preprocessed:        Channel<FastqQcTrimFilterSetstrandedness> = ch_preprocessed

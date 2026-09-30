@@ -118,9 +118,9 @@ workflow PIPELINE_COMPLETION {
     outdir          //    path: Path to output directory where results will be published
     monochrome_logs // boolean: Disable ANSI colour codes in log output
     multiqc_report  //  string: Path to MultiQC report
-    trim_status        // map: pass/fail status per sample for trimming
-    map_status         // map: pass/fail status per sample for mapping
-    strand_status      // map: pass/fail status per sample for strandedness check
+    trim_status        // channel: record(id, pass) for trimming
+    map_status         // channel: record(id, pass) for mapping
+    strand_status      // channel: record(id, pass) for the strandedness check
 
     main:
     def pass_mapped_reads  = [:]
@@ -131,19 +131,13 @@ workflow PIPELINE_COMPLETION {
     def multiqc_reports = multiqc_report.toList()
 
     trim_status
-        .map{
-            id, status -> pass_trimmed_reads[id] = status
-        }
+        .map{ r -> pass_trimmed_reads[r.id] = r.pass }
 
     map_status
-        .map{
-            id, status -> pass_mapped_reads[id] = status
-        }
+        .map{ r -> pass_mapped_reads[r.id] = r.pass }
 
     strand_status
-        .map{
-            id, status -> pass_strand_check[id] = status
-        }
+        .map{ r -> pass_strand_check[r.id] = r.pass }
 
     //
     // Completion email and summary
@@ -866,15 +860,14 @@ def getInferexperimentStrandedness(inferexperiment_file, stranded_threshold = 0.
 
 //
 // Compare a sample's declared / Salmon-inferred strandedness against its
-// RSeQC infer_experiment result. Returns a per-sample tuple:
-//   [ meta, provided, status, salmon, rseqc ]
-// where
+// RSeQC infer_experiment result. Returns a per-sample record
+// (id, meta, provided, status, salmon, rseqc) where
 //   - provided = 'auto' when Salmon inferred the strand, else meta.strandedness
 //   - status   = 'pass' / 'fail' from comparing the two methods
 //   - salmon   = Salmon's calculateStrandedness map (or null if no auto-inference)
 //   - rseqc    = RSeQC's getInferexperimentStrandedness map
 // Both the summary table and the composition bargraph sections of the
-// MultiQC report are derived from this tuple.
+// MultiQC report are derived from this record.
 //
 def classifyStrand(meta, strand_log, stranded_threshold, unstranded_threshold) {
     def rseqc = getInferexperimentStrandedness(strand_log, stranded_threshold, unstranded_threshold)
@@ -894,7 +887,7 @@ def classifyStrand(meta, strand_log, stranded_threshold, unstranded_threshold) {
             status = 'pass'
         }
     }
-    return [ meta, provided, status, salmon, rseqc ]
+    return record(id: meta.id, meta: meta, provided: provided, status: status, salmon: salmon, rseqc: rseqc)
 }
 
 //

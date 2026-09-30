@@ -8,7 +8,7 @@ include { MULTIQC                    } from '../../../modules/nf-core/multiqc'
 include { MULTIQC_WRITE_FILE         } from '../../../modules/local/multiqc_write_file'
 include { MULTIQC_CONCATENATE_TABLES } from '../../../modules/local/multiqc_concatenate_tables'
 include { workflowVersionToYAML      } from '../../nf-core/utils_nfcore_pipeline'
-include { Sample; MultiqcFiles } from '../../../modules/nf-core/types'
+include { Sample; MultiqcFiles; SampleRuns; TrimReadCount; PercentMappedPass; StrandData } from '../../../modules/nf-core/types'
 include { MultiqcReport } from '../../../modules/nf-core/multiqc/main'
 include { methodsDescriptionText     } from '../utils_nfcore_rnaseq_pipeline'
 include { workflowSummaryMultiqcYaml } from './helpers'
@@ -25,11 +25,11 @@ workflow MULTIQC_RNASEQ {
     ch_mqc_files: Channel<MultiqcFiles>           // per-sample files from each stage, for both report modes
     ch_mqc_sample_only: Channel<MultiqcFiles>     // per-sample files for the per-sample reports only
     ch_mqc_report_only: Channel<Path>             // files for the merged report only
-    ch_strand_data: Channel<Tuple5<Map, String, String, Map, Map>> // [ meta, provided, status, salmon, rseqc ] - per-sample strand classification, used for the Strandedness checks section
-    ch_trim_read_count: Channel<Tuple2<Map, Float>> // [ meta, num_reads ] - for fail_trimmed section
-    ch_percent_mapped_pass: Channel<Tuple3<String, Float, Boolean>> // [ id, percent_mapped, pass ] - for fail_mapped section
+    ch_strand_data: Channel<StrandData>           // per-sample strand classification, used for the Strandedness checks section
+    ch_trim_read_count: Channel<TrimReadCount>  // for fail_trimmed section
+    ch_percent_mapped_pass: Channel<PercentMappedPass> // for fail_mapped section
     aligner_display_name: String                  // display name of the aligner used for the percent_mapped metric, e.g. 'STAR uniquely mapped reads' or 'Bowtie2 overall alignment rate'
-    ch_fastq: Channel<Tuple2<Map, List<List<Path>>>> // [ meta, [ [ fastq_1, fastq_2? ], ... ] ]
+    ch_fastq: Channel<SampleRuns>                 // one entry per sample, one run per sequencing run
     ch_collated_versions: Channel<Path>           // versions yaml
     samplesheet_path: Path?                       // pipeline input samplesheet
     samplesheet_schema: String                    // samplesheet JSON schema
@@ -59,13 +59,13 @@ workflow MULTIQC_RNASEQ {
 
     ch_fail_trimmed_by_id = MULTIQC_WRITE_FILE(
         ch_trim_read_count
-            .filter { _meta, n -> n <= min_trimmed_reads }
-            .map { meta, n ->
+            .filter { r -> r.num_reads <= min_trimmed_reads }
+            .map { r ->
                 record(
-                    id:      meta.id,
-                    meta:    meta,
-                    name:    "${meta.id}_fail_trimmed_samples_mqc.tsv",
-                    content: "Sample\tReads after trimming\n${meta.id}\t${n}\n"
+                    id:      r.id,
+                    meta:    r.meta,
+                    name:    "${r.id}_fail_trimmed_samples_mqc.tsv",
+                    content: "Sample\tReads after trimming\n${r.id}\t${r.num_reads}\n"
                 )
             }
     ).map { r -> record(id: r.id, fail_trimmed: r.file) }
@@ -88,13 +88,13 @@ workflow MULTIQC_RNASEQ {
 
     ch_fail_mapped_by_id = MULTIQC_WRITE_FILE(
         ch_percent_mapped_pass
-            .filter { _id, _pm, pass -> pass != null && !pass }
-            .map { id, percent_mapped, _pass ->
+            .filter { r -> r.pass != null && !r.pass }
+            .map { r ->
                 record(
-                    id:      id,
-                    meta:    [id: id],
-                    name:    "${id}_fail_mapped_samples_mqc.tsv",
-                    content: status_header_text + "Sample\t${aligner_display_name} (%)\n${id}\t${percent_mapped}\n"
+                    id:      r.id,
+                    meta:    [id: r.id],
+                    name:    "${r.id}_fail_mapped_samples_mqc.tsv",
+                    content: status_header_text + "Sample\t${aligner_display_name} (%)\n${r.id}\t${r.percent_mapped}\n"
                 )
             }
     ).map { r -> record(id: r.id, fail_mapped: r.file) }
@@ -118,7 +118,7 @@ workflow MULTIQC_RNASEQ {
     //
     // Strandedness checks custom-content section. Two MultiQC
     // subsections (summary table + stacked composition bargraph) are
-    // rendered from the same per-sample tuple, with header / pconfig
+    // rendered from the same per-sample record, with header / pconfig
     // / colour config in the bundled YAML templates. The composition
     // section inherits `parent_*` from the summary section so the
     // description lives in one place.
@@ -170,25 +170,23 @@ workflow MULTIQC_RNASEQ {
     //
     if (skip_quantification_merge) {
         ch_strand_summary_by_id = MULTIQC_WRITE_FILE(
-            ch_strand_data.map { row ->
-                def (meta, _provided, _status, _salmon, _rseqc) = row
+            ch_strand_data.map { r ->
                 record(
-                    id:      meta.id,
-                    meta:    meta,
-                    name:    "${meta.id}_strand_check_summary_mqc.json",
-                    content: strandCheckSummaryYaml(strand_summary_static, [row])
+                    id:      r.id,
+                    meta:    r.meta,
+                    name:    "${r.id}_strand_check_summary_mqc.json",
+                    content: strandCheckSummaryYaml(strand_summary_static, [r])
                 )
             }
         ).map { r -> record(id: r.id, strand_summary: r.file) }
 
         ch_strand_composition_by_id = MULTIQC_WRITE_FILE(
-            ch_strand_data.map { row ->
-                def (meta, _provided, _status, _salmon, _rseqc) = row
+            ch_strand_data.map { r ->
                 record(
-                    id:      meta.id,
-                    meta:    meta,
-                    name:    "${meta.id}_strand_check_composition_mqc.json",
-                    content: strandCheckCompositionYaml(strand_composition_static, [row])
+                    id:      r.id,
+                    meta:    r.meta,
+                    name:    "${r.id}_strand_check_composition_mqc.json",
+                    content: strandCheckCompositionYaml(strand_composition_static, [r])
                 )
             }
         ).map { r -> record(id: r.id, strand_composition: r.file) }

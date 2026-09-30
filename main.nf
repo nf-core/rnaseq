@@ -158,7 +158,7 @@ include { getGenomeAttribute         } from './subworkflows/local/utils_nfcore_r
 include { isStarIndexLegacy          } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { anySampleAutoStrandedness  } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 
-include { StringtieAssembly; AlignedSample; LintFile; SamplesheetRow; Contaminants; StringtieSample; BigwigSample; PipelineInfo; GenomeArtifact; UmiDedupBam; MarkdupBam; BamQcRnaseq; StringtieMerged; BigwigFiles; RrnaReferences; FastqQcTrimFilterSetstrandedness; QuantMerged } from './modules/nf-core/types'
+include { StringtieAssembly; AlignedSample; LintFile; SamplesheetRow; Contaminants; StringtieSample; BigwigSample; PipelineInfo; GenomeArtifact; UmiDedupBam; MarkdupBam; BamQcRnaseq; StringtieMerged; BigwigFiles; RrnaReferences; FastqQcTrimFilterSetstrandedness; QuantMerged; SampleRuns; TrimStatus; MapStatus; StrandStatus; PercentMapped } from './modules/nf-core/types'
 include { RsemMerge; RsemMergeSample } from './modules/nf-core/custom/rsemmergecounts/main'
 include { KallistoQuantSample } from './modules/nf-core/kallisto/quant/main'
 include { MultiqcReport } from './modules/nf-core/multiqc/main'
@@ -296,8 +296,8 @@ workflow NFCORE_RNASEQ {
     // coordinate-sorted BAM; bowtie2_salmon aligns to the transcriptome, so its unsorted bowtie2 BAM is the transcriptome_bam.
     // The BAMs are published by the `aligned` output, so the row carries their published location
     // as a string; routing the Paths through `samplesheet` too would copy each file twice.
-    ch_runs           = results.reads.map { meta, runs -> record(id: meta.id, runs: runs) }
-    ch_percent_mapped = results.percent_mapped.map { id, percent_mapped -> record(id: id, percent_mapped: percent_mapped) }
+    ch_runs           = results.reads.map { r -> record(id: r.id, runs: r.runs) }
+    ch_percent_mapped = results.percent_mapped.map { r -> record(id: r.id, percent_mapped: r.percent_mapped) }
 
     def ch_samplesheet_rows: Channel<SamplesheetRow> = results.aligned
         .join(ch_runs, by: 'id')
@@ -319,9 +319,9 @@ workflow NFCORE_RNASEQ {
         }
 
     emit:
-    trim_status:          Channel<Tuple2<String, Boolean>>           = results.trim_status
-    map_status:           Channel<Tuple2<String, Boolean>>           = results.map_status
-    strand_status:        Channel<Tuple2<String, Boolean>>           = results.strand_status
+    trim_status:          Channel<TrimStatus>   = results.trim_status
+    map_status:           Channel<MapStatus>    = results.map_status
+    strand_status:        Channel<StrandStatus> = results.strand_status
     multiqc_report:       Channel<Path>                             = results.multiqc_report
     genome_references:    Channel<GenomeArtifact>                   = references.references
     genome_intermediates: Channel<GenomeArtifact>                   = references.intermediates

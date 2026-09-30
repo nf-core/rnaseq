@@ -695,6 +695,62 @@ record FastqQcTrimFilterSetstrandedness {
     rrna:              PreprocessedRrna?
 }
 
+// FASTQ runs of one sample, one [ fastq_1, fastq_2? ] entry per sequencing run
+record SampleRuns {
+    id:   String
+    meta: Map
+    runs: List<List<Path>>
+}
+
+record TrimReadCount {
+    id:        String
+    meta:      Map
+    num_reads: Long
+}
+
+record TrimStatus {
+    id:   String
+    pass: Boolean
+}
+
+record PercentMapped {
+    id:             String
+    percent_mapped: Float?
+}
+
+// Only samples with a mapping percentage
+record MapStatus {
+    id:   String
+    pass: Boolean
+}
+
+record PercentMappedPass {
+    id:             String
+    percent_mapped: Float?
+    pass:           Boolean?
+}
+
+record InferExperimentLog {
+    id:              String
+    meta:            Map
+    inferexperiment: Path
+}
+
+// Strandedness check of one sample; `salmon` is null without Salmon auto-inference and `rseqc` without infer_experiment
+record StrandData {
+    id:       String
+    meta:     Map
+    provided: String
+    status:   String
+    salmon:   Map?
+    rseqc:    Map?
+}
+
+record StrandStatus {
+    id:   String
+    pass: Boolean
+}
+
 // `reads` is null for samples with no reads left after rRNA removal. The tool
 // logs are set only for the selected tool.
 record FastqRemoveRrna {

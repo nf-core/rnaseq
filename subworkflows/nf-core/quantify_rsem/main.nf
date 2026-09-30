@@ -9,7 +9,7 @@ include { CUSTOM_RSEMMERGECOUNTS             } from '../../../modules/nf-core/cu
 include { SENTIEON_RSEMCALCULATEEXPRESSION   } from '../../../modules/nf-core/sentieon/rsemcalculateexpression'
 
 include { QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT } from '../quant_tximport_summarizedexperiment'
-include { Reads; RsemQuantified               } from './types'
+include { Reads } from './types'
 
 workflow QUANTIFY_RSEM {
     take:
@@ -42,7 +42,7 @@ workflow QUANTIFY_RSEM {
     // collect emits [] rather than nothing on an empty channel.
     //
     if (skip_merge) {
-        ch_rsem_merge = ch_rsem.map { r -> record(id: r.id, rsem_merge: null) }
+        ch_rsem_merge = channel.empty()
     } else {
         ch_rsem_merge = CUSTOM_RSEMMERGECOUNTS(
             ch_rsem
@@ -73,19 +73,8 @@ workflow QUANTIFY_RSEM {
         skip_merge
     )
 
-    //
-    // Per-sample rows carry the RSEM outputs; merged rows carry the tximport (and, when
-    // merging, RSEM merge) outputs. A merged row has the id of its tximport run, which is a
-    // sample id under skip_merge and 'all_samples' otherwise.
-    //
-    ch_sample_rows = ch_rsem.map { r -> record(id: r.id, meta: r.meta, sample: r, merged: null, rsem_merge: null) }
-    ch_merged_rows = ch_quant_merged
-        .map { m -> record(id: m.id, meta: m.meta, merged: m) }
-        .join(ch_rsem_merge, by: 'id')
-        .map { r -> r + record(sample: null) }
-
-    ch_results = ch_sample_rows.mix(ch_merged_rows)
-
     emit:
-    ch_results
+    samples    = ch_rsem        // per sample
+    merged     = ch_quant_merged // one row per sample under skip_merge, a single 'all_samples' row otherwise
+    rsem_merge = ch_rsem_merge  // a single 'all_samples' row; empty under skip_merge
 }

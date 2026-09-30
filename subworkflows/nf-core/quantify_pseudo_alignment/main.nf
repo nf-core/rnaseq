@@ -8,7 +8,7 @@ include { SALMON_QUANT     } from '../../../modules/nf-core/salmon/quant'
 include { KALLISTO_QUANT   } from '../../../modules/nf-core/kallisto/quant'
 
 include { QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT } from '../quant_tximport_summarizedexperiment'
-include { PseudoQuantified; Reads             } from './types'
+include { Reads                               } from './types'
 
 workflow QUANTIFY_PSEUDO_ALIGNMENT {
     take:
@@ -63,14 +63,7 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
         skip_merge
     )
 
-    //
-    // Per-sample rows carry the quantification outputs; merged rows carry the tximport outputs:
-    // one per sample under skip_merge, a single 'all_samples' row otherwise.
-    //
-    ch_results = ch_sample_results
-        .map { r -> record(id: r.id, meta: r.meta, sample: r, merged: null) }
-        .mix(ch_quant_merged.map { m -> record(id: m.id, meta: m.meta, sample: null, merged: m) })
-
     emit:
-    ch_results
+    samples = ch_sample_results // per sample
+    merged  = ch_quant_merged   // one row per sample under skip_merge, a single 'all_samples' row otherwise
 }

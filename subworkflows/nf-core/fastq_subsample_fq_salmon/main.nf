@@ -31,9 +31,11 @@ workflow FASTQ_SUBSAMPLE_FQ_SALMON {
                 .combine(genome_fasta: ch_genome_fasta)
         )
         ch_index_ref = ch_index_built.map { r -> tuple(r.meta, r.index) }
+        ch_index_file = ch_index_built.map { r -> r.index }
     }
     else {
         ch_index_ref = ch_index.map { index -> tuple([:], index) }
+        ch_index_file = ch_index.map { _index -> null }
     }
 
     //
@@ -47,13 +49,8 @@ workflow FASTQ_SUBSAMPLE_FQ_SALMON {
     ch_quant = SALMON_QUANT(ch_subsampled, ch_index_ref.combine(ch_gtf).combine(ch_transcript_fasta))
 
     ch_results = ch_subsampled.join(ch_quant, by: 'id')
-    if (make_index) {
-        ch_results = ch_results.combine(index_built: ch_index_built.map { r -> r.index })
-    }
-    else {
-        ch_results = ch_results.map { r -> r + record(index_built: null) }
-    }
 
     emit:
-    ch_results
+    samples     = ch_results
+    index_built = ch_index_file // null unless the index was built here
 }

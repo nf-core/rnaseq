@@ -5,7 +5,7 @@ record Reads {
     reads: List<Path>
 }
 
-// reads are the sub-sampled FASTQ files. index_built is set only when the Salmon index was built here.
+// reads are the sub-sampled FASTQ files.
 record SalmonSubsampled {
     id:                String
     meta:              Map
@@ -13,5 +13,4 @@ record SalmonSubsampled {
     quant_dir:         Path
     json_info:         Path?
     lib_format_counts: Path?
-    index_built:       Path?
 }

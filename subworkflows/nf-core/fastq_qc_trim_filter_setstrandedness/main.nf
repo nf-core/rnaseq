@@ -492,10 +492,10 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         make_salmon_index,
     )
 
-    // BEGIN adapters from the FASTQ_SUBSAMPLE_FQ_SALMON record to legacy channels (removed when this subworkflow is typed)
-    // SEAM(quant): index_built rides on every row; only the single built index is kept
-    ch_salmon_index_built = FASTQ_SUBSAMPLE_FQ_SALMON.out.filter { r -> r.index_built != null }.map { r -> r.index_built }.unique()
-    ch_lib_format_counts = FASTQ_SUBSAMPLE_FQ_SALMON.out.filter { r -> r.lib_format_counts != null }.map { r -> [ r.meta, r.lib_format_counts ] }
+    // BEGIN adapters from the FASTQ_SUBSAMPLE_FQ_SALMON records to legacy channels (removed when this subworkflow is typed)
+    // SEAM(quant)
+    ch_salmon_index_built = FASTQ_SUBSAMPLE_FQ_SALMON.out.index_built.filter { f -> f != null }
+    ch_lib_format_counts = FASTQ_SUBSAMPLE_FQ_SALMON.out.samples.filter { r -> r.lib_format_counts != null }.map { r -> [ r.meta, r.lib_format_counts ] }
     // END adapters
 
     ch_lib_format_counts

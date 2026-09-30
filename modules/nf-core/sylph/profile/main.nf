@@ -2,6 +2,12 @@ nextflow.enable.types = true
 
 include { ReadsInput } from '../../types'
 
+record SylphProfileResult {
+    id:          String
+    meta:        Map
+    profile_out: Path
+}
+
 process SYLPH_PROFILE {
     tag "${sample.meta.id}"
     label 'process_high'
@@ -16,7 +22,7 @@ process SYLPH_PROFILE {
     database: List<Path>
 
     output:
-    record(id: sample.id, meta: sample.meta, profile_out: file('*.tsv'))
+    record(id: sample.id, meta: sample.meta, profile_out: file('*.tsv')) as SylphProfileResult
 
     topic:
     tuple(task.process, 'sylph', eval('sylph -V | sed "s/sylph //g"')) >> 'versions'

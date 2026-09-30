@@ -6,6 +6,12 @@ record SylphtaxTaxprofInput {
     profile_out: Path
 }
 
+record SylphtaxTaxprofResult {
+    id:             String
+    meta:           Map
+    taxprof_output: Path
+}
+
 process SYLPHTAX_TAXPROF {
     tag "${sample.meta.id}"
     label 'process_medium'
@@ -20,7 +26,7 @@ process SYLPHTAX_TAXPROF {
     taxonomy: List<Path>
 
     output:
-    record(id: sample.id, meta: sample.meta, taxprof_output: file('*.sylphmpa'))
+    record(id: sample.id, meta: sample.meta, taxprof_output: file('*.sylphmpa')) as SylphtaxTaxprofResult
 
     topic:
     tuple(task.process, 'sylph-tax', eval("sylph-tax --version 2>&1 | tail -1")) >> 'versions'

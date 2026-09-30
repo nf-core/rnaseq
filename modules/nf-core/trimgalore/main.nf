@@ -2,6 +2,17 @@ nextflow.enable.types = true
 
 include { ReadsInput } from '../types'
 
+record TrimgaloreResult {
+    id:       String
+    meta:     Map
+    reads:    List<Path>
+    log:      List<Path>
+    json:     List<Path>
+    unpaired: List<Path>
+    html:     List<Path>
+    zip:      List<Path>
+}
+
 process TRIMGALORE {
     tag "${sample.meta.id}"
     label 'process_medium'
@@ -24,7 +35,7 @@ process TRIMGALORE {
         unpaired: files("*unpaired{,_1,_2}.fq.gz", optional: true).toSorted { f -> f.name },
         html:     files("*.html", optional: true).toSorted { f -> f.name },
         zip:      files("*.zip", optional: true).toSorted { f -> f.name }
-    )
+    ) as TrimgaloreResult
 
     topic:
     tuple(task.process, "trimgalore", eval('trim_galore --version | grep -Eo "[0-9]+(\\.[0-9]+)+"')) >> 'versions'

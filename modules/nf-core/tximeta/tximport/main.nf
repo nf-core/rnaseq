@@ -46,7 +46,7 @@ process TXIMETA_TXIMPORT {
         counts_transcript:         file("*transcript_counts.tsv"),
         lengths_transcript:        file("*transcript_lengths.tsv"),
         tx2gene_augmented:         file("*tx2gene_augmented.tsv")
-    )
+    ) as TximetaTximportResult
 
     topic:
     file('versions.yml') >> 'versions'

@@ -1,7 +1,7 @@
 nextflow_function {
 
     name "Test Functions"
-    script "../main.nf"
+    script "../helpers.nf"
 
     test("Test Function multiqcSampleMergeYamlPattern plain id") {
 

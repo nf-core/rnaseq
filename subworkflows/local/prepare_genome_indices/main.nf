@@ -34,9 +34,9 @@ include { GenomeArtifact                     } from '../utils_nfcore_rnaseq_pipe
 workflow PREPARE_GENOME_INDICES {
 
     take:
-    ch_fasta_fai: Value<Tuple<Map, Path, Path>> // [ meta, genome.fasta, genome.fai ] - emitted from PREPARE_GENOME_REFERENCES
-    ch_gtf: Value<Path>                         // genome.gtf - emitted from PREPARE_GENOME_REFERENCES
-    ch_transcript_fasta: Value<Path>            // transcript.fasta - emitted from PREPARE_GENOME_REFERENCES
+    ch_fasta_fai: Value<Tuple<Map, Path?, Path?>> // [ meta, genome.fasta, genome.fai ] - emitted from PREPARE_GENOME_REFERENCES
+    ch_gtf: Value<Path?>                        // genome.gtf - emitted from PREPARE_GENOME_REFERENCES
+    ch_transcript_fasta: Value<Path?>           // transcript.fasta - emitted from PREPARE_GENOME_REFERENCES
     ch_rrna_fastas: Channel<Path>               // rRNA fastas - emitted from PREPARE_GENOME_REFERENCES
     fasta_provided: Boolean                     // whether a genome FASTA was provided
     splicesites: String?                        // file: /path/to/splicesites.txt

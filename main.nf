@@ -572,7 +572,7 @@ output {
         path { s -> s.file >> "${samplePrefix(s.id)}fq_lint/${params.ribo_removal_tool ?: 'sortmerna'}/" }
     }
 
-    aligned: Channel<AlignedSample> {   // StarAligned | Bowtie2Aligned | Hisat2Aligned; anchor: samtools.stats
+    aligned: Channel<AlignedSample> {   // STAR, Bowtie2 or HISAT2 result; anchor: samtools.stats
         path { s ->
             def dir         = alignedDir(s.id)
             def logDir      = "${dir}log/"
@@ -633,7 +633,7 @@ output {
         }
     }
 
-    quant: Channel<QuantSample> {   // RsemQuantSample | PseudoQuantSample (bam-salmon reuses the pseudo-alignment shape)
+    quant: Channel<QuantSample> {   // RSEM or Salmon-on-BAM result (bam-salmon reuses the pseudo-alignment shape)
         path { s ->
             def dir = alignedDir(s.id)
             [
@@ -667,7 +667,7 @@ output {
         }
     }
 
-    quant_pseudo: Channel<QuantSample> {   // PseudoQuantSample, pseudo-aligner
+    quant_pseudo: Channel<QuantSample> {   // pseudo-aligner result
         path { s ->
             // s.log (kallisto only; always null for salmon) lives inside
             // quant_dir already and is not routed separately.

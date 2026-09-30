@@ -1,0 +1,38 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: "multiqc_concatenate_tables"
+description: Concatenate tab-separated tables in the given order, keeping the header rows (the first `skip` lines) of the first table only.
+keywords:
+  - multiqc
+  - custom content
+  - concatenate
+tools: []
+input:
+  - - id:
+        type: string
+        description: Identifier of the merged table, used as the task tag
+    - meta:
+        type: map
+        description: Groovy Map containing sample information
+    - name:
+        type: string
+        description: Name of the merged file
+    - skip:
+        type: integer
+        description: Number of header lines at the top of every table
+    - files:
+        type: file
+        description: Tables to concatenate, in the given order
+        pattern: "*.tsv"
+output:
+  file:
+    - - meta:
+          type: map
+          description: Groovy Map containing sample information
+      - file:
+          type: file
+          description: The merged table, named by the `name` input
+          pattern: "*"
+authors:
+  - "@pinin4fjords"
+maintainers:
+  - "@pinin4fjords"

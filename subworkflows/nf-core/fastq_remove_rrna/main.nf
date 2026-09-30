@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 include { BOWTIE2_ALIGN                            } from '../../../modules/nf-core/bowtie2/align'
 include { BOWTIE2_ALIGN as BOWTIE2_ALIGN_PE        } from '../../../modules/nf-core/bowtie2/align'
 include { BOWTIE2_BUILD                            } from '../../../modules/nf-core/bowtie2/build'
@@ -9,7 +11,7 @@ include { SEQKIT_REPLACE as SEQKIT_REPLACE_U2T     } from '../../../modules/nf-c
 include { SEQKIT_STATS                             } from '../../../modules/nf-core/seqkit/stats'
 include { SORTMERNA                                } from '../../../modules/nf-core/sortmerna'
 include { SORTMERNA as SORTMERNA_INDEX             } from '../../../modules/nf-core/sortmerna'
-include { FastqRemoveRrna                          } from './types'
+include { Reads; FastqRemoveRrna                   } from './types'
 
 //
 // Function that parses seqkit stats TSV output to extract the mean read length
@@ -34,202 +36,208 @@ def getReadLengthFromSeqkitStats(stats_file) {
     return Math.round(meanAvgLen) as int
 }
 
+process CONCATENATE_FASTA {
+    input:
+    fastas: List<Path>
+
+    output:
+    file('rrna_combined_dna.fasta')
+
+    exec:
+    def combined = task.workDir.resolve('rrna_combined_dna.fasta')
+    fastas.each { f ->
+        combined << f.text
+        combined << '\n'
+    }
+}
+
 workflow FASTQ_REMOVE_RRNA {
     take:
-    ch_reads // channel: [ val(meta), [ reads ] ]
-    ch_rrna_fastas // channel: one or more fasta files containing rrna sequences
-    ch_sortmerna_index // channel: /path/to/sortmerna/index/ (optional)
-    ch_bowtie2_index // channel: /path/to/bowtie2/index/ (optional)
-    ribo_removal_tool // string (enum): 'sortmerna', 'ribodetector', or 'bowtie2'
-    make_sortmerna_index // boolean: Whether to create a sortmerna index before running sortmerna
-    make_bowtie2_index // boolean: Whether to create a bowtie2 index before running bowtie2
+    ch_reads: Channel<Reads>
+    ch_rrna_fastas: Channel<Path> // one or more fasta files containing rrna sequences
+    ch_sortmerna_index: Value<Tuple<Map, Path>> // sortmerna index (optional)
+    ch_bowtie2_index: Value<Tuple<Map, Path>> // bowtie2 index (optional)
+    ribo_removal_tool: String // 'sortmerna', 'ribodetector', or 'bowtie2'
+    make_sortmerna_index: Boolean // Whether to create a sortmerna index before running sortmerna
+    make_bowtie2_index: Boolean // Whether to create a bowtie2 index before running bowtie2
 
     main:
 
-    ch_multiqc_files = channel.empty()
-    ch_filtered_reads = ch_reads
-
-    // Individual output channels for workflow outputs
-    ch_sortmerna_log = channel.empty()
-    ch_ribodetector_log = channel.empty()
-    ch_seqkit_stats = channel.empty()
-    ch_bowtie2_log = channel.empty()
-    ch_bowtie2_index_out = channel.empty()
-    ch_sortmerna_index_out = channel.empty()
-    ch_seqkit_prefixed = channel.empty()
-    ch_seqkit_converted = channel.empty()
-
-    ch_results = channel.empty()
+    // Run-level references built here, attached to every sample record at the end
+    val_refs = channel.value(
+        record(sortmerna_index: null, bowtie2_index: null, seqkit_prefixed: null, seqkit_converted: null)
+    )
 
     if (ribo_removal_tool == 'sortmerna') {
         ch_sortmerna_fastas = ch_rrna_fastas
             .collect()
-            .map { fastas -> [[id: 'rrna_refs'], fastas] }
+            .map { fastas -> tuple([id: 'rrna_refs'], fastas) }
 
+        ch_sortmerna_idx = ch_sortmerna_index
         if (make_sortmerna_index) {
-            SORTMERNA_INDEX(
-                [[:], []],
+            ch_sortmerna_built = SORTMERNA_INDEX(
+                record(id: 'rrna_refs', meta: [:], reads: []),
                 ch_sortmerna_fastas,
-                [[:], null],
+                tuple([:], null),
             )
-            ch_sortmerna_index = SORTMERNA_INDEX.out.map { r -> [[id: 'rrna_refs'], r.index] }
-            ch_sortmerna_index_out = SORTMERNA_INDEX.out.map { r -> r.index }
+            ch_sortmerna_idx = ch_sortmerna_built.map { r -> tuple([id: 'rrna_refs'], r.index) }
+            val_refs = ch_sortmerna_built.map { r ->
+                record(sortmerna_index: r.index, bowtie2_index: null, seqkit_prefixed: null, seqkit_converted: null)
+            }
         }
 
-        SORTMERNA(
-            ch_filtered_reads,
+        ch_sortmerna = SORTMERNA(
+            ch_reads,
             ch_sortmerna_fastas,
-            ch_sortmerna_index,
+            ch_sortmerna_idx,
         )
 
-        ch_filtered_reads = SORTMERNA.out.filter { r -> r.reads }.map { r -> [r.meta, r.reads] }
-        ch_sortmerna_log = SORTMERNA.out.filter { r -> r.log }.map { r -> [r.meta, r.log] }
-        ch_multiqc_files = ch_multiqc_files.mix(ch_sortmerna_log)
-
-        ch_results = ch_sortmerna_log.map { meta, log ->
-            record(id: meta.id, sortmerna_log: log, ribodetector_log: null, seqkit_stats: null, bowtie2_log: null)
-        }
+        ch_results = ch_sortmerna
+            .map { r ->
+                record(
+                    id:               r.id,
+                    meta:             r.meta,
+                    reads:            r.reads.isEmpty() ? null : r.reads,
+                    sortmerna_log:    r.log,
+                    ribodetector_log: null,
+                    seqkit_stats:     null,
+                    bowtie2_log:      null
+                )
+            }
+            .combine(val_refs)
+            .map { r, refs -> r + refs }
     }
     else if (ribo_removal_tool == 'ribodetector') {
         // Run seqkit stats to determine average read length
-        SEQKIT_STATS(ch_filtered_reads)
-
-        ch_seqkit_stats = SEQKIT_STATS.out.map { r -> [r.meta, r.stats] }
-        ch_multiqc_files = ch_multiqc_files.mix(ch_seqkit_stats)
+        ch_seqkit_stats = SEQKIT_STATS(ch_reads)
 
         // Join stats with reads and calculate read length for RiboDetector
-        ch_filtered_reads
-            .join(ch_seqkit_stats)
-            .multiMap { meta, reads, stats ->
-                def readLength = getReadLengthFromSeqkitStats(stats)
-                reads: [meta, reads]
-                length: readLength
-            }
-            .set { ch_reads_with_length }
-
-        RIBODETECTOR(
-            ch_reads_with_length.reads,
-            ch_reads_with_length.length,
+        ch_reads_with_stats = ch_reads.join(ch_seqkit_stats, by: 'id')
+        ch_ribodetector = RIBODETECTOR(
+            ch_reads_with_stats.map { r -> r + record(length: getReadLengthFromSeqkitStats(r.stats)) }
         )
 
-        ch_filtered_reads = RIBODETECTOR.out.map { r -> [r.meta, r.fastq] }
-        ch_ribodetector_log = RIBODETECTOR.out.map { r -> [r.meta, r.log] }
-        ch_multiqc_files = ch_multiqc_files.mix(ch_ribodetector_log)
-
-        ch_results = SEQKIT_STATS.out
-            .map { r -> [r.meta.id, r.stats] }
-            .join(RIBODETECTOR.out.map { r -> [r.id, r.log] }, by: [0])
-            .map { id, stats, log ->
-                record(id: id, sortmerna_log: null, ribodetector_log: log, seqkit_stats: stats, bowtie2_log: null)
+        ch_results = ch_ribodetector
+            .join(ch_seqkit_stats.map { r -> record(id: r.id, seqkit_stats: r.stats) }, by: 'id')
+            .map { r ->
+                record(
+                    id:               r.id,
+                    meta:             r.meta,
+                    reads:            r.reads,
+                    sortmerna_log:    null,
+                    ribodetector_log: r.log,
+                    seqkit_stats:     r.seqkit_stats,
+                    bowtie2_log:      null
+                )
             }
+            .combine(val_refs)
+            .map { r, refs -> r + refs }
     }
-    else if (ribo_removal_tool == 'bowtie2') {
+    else {
+        ch_bowtie2_idx = ch_bowtie2_index
         if (make_bowtie2_index) {
             // Process each rRNA file to add unique prefixes and convert U to T
             // This prevents duplicate sequence IDs in SAM header when combining databases
-            ch_rrna_fastas
-                .map { fasta_file -> [[id: fasta_file.baseName], fasta_file] }
-                .set { ch_rrna_with_meta }
+            ch_rrna_with_meta = ch_rrna_fastas.map { fasta_file ->
+                record(id: fasta_file.baseName, meta: [id: fasta_file.baseName], fastx: fasta_file)
+            }
 
             // Step 1: Add filename prefixes to sequence headers
-            SEQKIT_REPLACE(ch_rrna_with_meta, '')
-            ch_seqkit_prefixed = SEQKIT_REPLACE.out.map { r -> [r.meta, r.fastx] }
+            ch_seqkit_prefixed = SEQKIT_REPLACE(ch_rrna_with_meta, '')
 
             // Step 2: Convert U to T in sequences (RNA to DNA)
-            SEQKIT_REPLACE.out
-                .map { r -> [[id: "${r.meta.id}_dna"], r.fastx] }
-                .set { ch_prefixed_fastas }
-
-            SEQKIT_REPLACE_U2T(ch_prefixed_fastas, '')
-            ch_seqkit_converted = SEQKIT_REPLACE_U2T.out.map { r -> [r.meta, r.fastx] }
+            ch_prefixed_fastas = ch_seqkit_prefixed.map { r ->
+                record(id: "${r.meta.id}_dna", meta: [id: "${r.meta.id}_dna"], fastx: r.fastx)
+            }
+            ch_seqkit_converted = SEQKIT_REPLACE_U2T(ch_prefixed_fastas, '')
 
             // Collect processed files (already prefixed and U->T converted)
-            SEQKIT_REPLACE_U2T.out
-                .map { r -> r.fastx }
-                .collectFile(name: 'rrna_combined_dna.fasta', newLine: true)
-                .map { fasta_file -> [[id: 'rrna_refs'], fasta_file] }
-                .set { ch_combined_fasta }
+            ch_combined_fasta = CONCATENATE_FASTA(
+                ch_seqkit_converted.collect().map { built -> built.collect { r -> r.fastx }.toSorted { f -> f.name } }
+            ).map { fasta_file -> tuple([id: 'rrna_refs'], fasta_file) }
 
-            // SEAM(refs): adapter removed when FASTQ_REMOVE_RRNA is typed
-            BOWTIE2_BUILD(ch_combined_fasta.map { meta, fasta_file -> record(id: meta.id, meta: meta, fasta: fasta_file) })
-            ch_bowtie2_index = BOWTIE2_BUILD.out.map { r -> [r.meta, r.index] }.first()
-            ch_bowtie2_index_out = BOWTIE2_BUILD.out.map { r -> [r.meta, r.index] }
+            ch_bowtie2_built = BOWTIE2_BUILD(
+                ch_combined_fasta.map { meta, fasta_file -> record(id: meta.id, meta: meta, fasta: fasta_file) }
+            )
+            ch_bowtie2_idx = ch_bowtie2_built.map { built -> tuple(built.meta, built.index) }
+            val_seqkit_prefixed = ch_seqkit_prefixed
+                .collect()
+                .map { built -> built.collect { r -> r.fastx }.toSorted { f -> f.name } }
+            val_seqkit_converted = ch_seqkit_converted
+                .collect()
+                .map { built -> built.collect { r -> r.fastx }.toSorted { f -> f.name } }
+            val_refs = ch_bowtie2_built
+                .combine(val_seqkit_prefixed)
+                .combine(val_seqkit_converted)
+                .map { built, prefixed, converted ->
+                    record(sortmerna_index: null, bowtie2_index: built.index, seqkit_prefixed: prefixed, seqkit_converted: converted)
+                }
         }
-
-        // Branch reads by single-end vs paired-end for different filtering strategies
-        ch_filtered_reads
-            .branch { meta, _reads ->
-                single_end: meta.single_end
-                paired_end: !meta.single_end
-            }
-            .set { ch_reads_for_bowtie2 }
 
         // For single-end reads: bowtie2's --un-gz works correctly
         // save_unaligned=true outputs unmapped reads directly
-        BOWTIE2_ALIGN(
-            ch_reads_for_bowtie2.single_end,
-            ch_bowtie2_index,
-            [[], []], // No reference fasta needed
-            true,     // save_unaligned - for single-end this works correctly
-            false,    // sort_bam - not needed
+        ch_bowtie2_se = BOWTIE2_ALIGN(
+            ch_reads.filter { r -> r.meta.single_end },
+            ch_bowtie2_idx,
+            tuple([:], null), // No reference fasta needed
+            true,             // save_unaligned - for single-end this works correctly
+            false,            // sort_bam - not needed
         )
-
-        ch_bowtie2_log = BOWTIE2_ALIGN.out.map { r -> [r.meta, r.bowtie2.log] }
-        ch_multiqc_files = ch_multiqc_files.mix(ch_bowtie2_log)
 
         // For paired-end reads: bowtie2's --un-conc-gz outputs pairs that didn't
         // align concordantly, which INCLUDES pairs where one mate aligned.
         // We need to filter via samtools to get pairs where BOTH mates are unmapped.
-        BOWTIE2_ALIGN_PE(
-            ch_reads_for_bowtie2.paired_end,
-            ch_bowtie2_index,
-            [[], []], // No reference fasta needed for BAM output
-            false,    // save_unaligned - we'll extract from BAM instead
-            false,    // sort_bam - not needed
+        ch_bowtie2_pe = BOWTIE2_ALIGN_PE(
+            ch_reads.filter { r -> !r.meta.single_end },
+            ch_bowtie2_idx,
+            tuple([:], null), // No reference fasta needed for BAM output
+            false,            // save_unaligned - we'll extract from BAM instead
+            false,            // sort_bam - not needed
         )
-
-        ch_bowtie2_pe_log = BOWTIE2_ALIGN_PE.out.map { r -> [r.meta, r.bowtie2.log] }
-        ch_bowtie2_log = ch_bowtie2_log.mix(ch_bowtie2_pe_log)
-        ch_multiqc_files = ch_multiqc_files.mix(ch_bowtie2_pe_log)
 
         // Filter BAM for read pairs where BOTH mates are unmapped (flag 12 = 4 + 8)
         // This removes any pair where at least one mate aligned to rRNA
-        SAMTOOLS_VIEW_BOWTIE2(
-            // SEAM(aln): adapter removed when this subworkflow is typed
-            BOWTIE2_ALIGN_PE.out.filter { r -> r.orig_bam }.map { r -> record(id: r.id, meta: r.meta, bam: r.orig_bam, bai: null) },
-            [[:], [], []], // No reference fasta
-            [[:], []],     // No qname file
-            [[:], []],     // No bed file
-            ''             // No index format
+        ch_view = SAMTOOLS_VIEW_BOWTIE2(
+            ch_bowtie2_pe.filter { r -> !r.orig_bam.isEmpty() }.map { r -> record(id: r.id, meta: r.meta, bam: r.orig_bam[0], bai: null) },
+            tuple([:], null, null), // No reference fasta
+            tuple([:], null),       // No qname file
+            tuple([:], null),       // No bed file
+            ''                      // No index format
         )
-        // Note: samtools/view versions collected via topic
+        ch_view_bam = ch_view.filter { r -> r.bam != null }
 
         // Convert filtered BAM back to paired FASTQ
-        SAMTOOLS_FASTQ_BOWTIE2(
-            SAMTOOLS_VIEW_BOWTIE2.out.filter { r -> r.bam }.map { r -> [r.meta, r.bam] },
+        ch_fastq_pe = SAMTOOLS_FASTQ_BOWTIE2(
+            ch_view_bam,
             false, // not interleaved
         )
 
         // Combine single-end and paired-end results
-        BOWTIE2_ALIGN.out.filter { r -> r.unmapped }.map { r -> [r.meta, r.unmapped] }
-            .mix(SAMTOOLS_FASTQ_BOWTIE2.out.filter { r -> r.fastq }.map { r -> [r.meta, r.fastq] })
-            .set { ch_filtered_reads }
+        ch_filtered_reads = ch_bowtie2_se
+            .filter { r -> !r.unmapped.isEmpty() }
+            .map { r -> record(id: r.id, reads: r.unmapped) }
+            .mix(ch_fastq_pe.filter { r -> !r.reads.isEmpty() }.map { r -> record(id: r.id, reads: r.reads) })
 
-        ch_results = ch_bowtie2_log.map { meta, log ->
-            record(id: meta.id, sortmerna_log: null, ribodetector_log: null, seqkit_stats: null, bowtie2_log: log)
-        }
+        ch_bowtie2_logs = ch_bowtie2_se
+            .mix(ch_bowtie2_pe)
+            .map { r ->
+                record(
+                    id:               r.id,
+                    meta:             r.meta,
+                    reads:            null,
+                    sortmerna_log:    null,
+                    ribodetector_log: null,
+                    seqkit_stats:     null,
+                    bowtie2_log:      r.bowtie2.log
+                )
+            }
+
+        ch_results = ch_bowtie2_logs
+            .join(ch_filtered_reads, by: 'id', remainder: true)
+            .combine(val_refs)
+            .map { r, refs -> r + refs }
     }
 
     emit:
-    reads            = ch_filtered_reads // channel: [ val(meta), [ reads ] ]
-    multiqc_files    = ch_multiqc_files // channel: [ val(meta), [ log files ] ]
-    sortmerna_log    = ch_sortmerna_log // channel: [ val(meta), [ log ] ]
-    ribodetector_log = ch_ribodetector_log // channel: [ val(meta), [ log ] ]
-    seqkit_stats     = ch_seqkit_stats // channel: [ val(meta), [ stats ] ]
-    bowtie2_log      = ch_bowtie2_log // channel: [ val(meta), [ log ] ]
-    bowtie2_index    = ch_bowtie2_index_out // channel: [ val(meta), [ index ] ]
-    sortmerna_index  = ch_sortmerna_index_out // channel: path(sortmerna/index/), only set when built here
-    seqkit_prefixed  = ch_seqkit_prefixed // channel: [ val(meta), [ fasta ] ]
-    seqkit_converted = ch_seqkit_converted // channel: [ val(meta), [ fasta ] ]
-    results          = ch_results // channel: FastqRemoveRrna
+    ch_results // channel: FastqRemoveRrna
 }

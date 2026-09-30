@@ -1,5 +1,9 @@
 // Documentation only: nothing casts a record(...) to these types (nextflow-io/nextflow#7680 corrupts remote Path fields on cast).
-include { FastqRemoveRrna } from '../fastq_remove_rrna/types'
+record Reads {
+    id:    String
+    meta:  Map
+    reads: List<Path>
+}
 
 // TrimGalore and fastp report the same kinds of file with different
 // cardinality, so every multi-file field is a list and tool-specific fields
@@ -41,8 +45,23 @@ record PreprocessedLint {
     ribo:    Path?
 }
 
+// The tool logs are set only for the selected tool. The last four fields are
+// run-level references, repeated on every sample and set only when built here.
+record PreprocessedRrna {
+    sortmerna_log:    Path?
+    ribodetector_log: Path?
+    seqkit_stats:     Path?
+    bowtie2_log:      Path?
+    sortmerna_index:  Path?
+    bowtie2_index:    Path?
+    seqkit_prefixed:  List<Path>?
+    seqkit_converted: List<Path>?
+}
+
 // Samples that fail min_trimmed_reads keep their record with null reads and
 // reads_trimmed, and a meta that lacks the inferred strandedness.
+// salmon_index_built is run-level, repeated on every sample and set only when
+// the Salmon index is built here.
 record FastqQcTrimFilterSetstrandedness {
     id:                String
     meta:              Map
@@ -55,5 +74,6 @@ record FastqQcTrimFilterSetstrandedness {
     umi:               PreprocessedUmi?
     bbsplit:           PreprocessedBbsplit?
     lint:              PreprocessedLint?
-    rrna:              FastqRemoveRrna?
+    rrna:              PreprocessedRrna?
+    salmon_index_built: Path?
 }

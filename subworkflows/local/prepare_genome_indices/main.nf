@@ -101,9 +101,9 @@ workflow PREPARE_GENOME_INDICES {
             )
         )
 
-        // SEAM(reads): adapter removed when BBMAP_BBSPLIT takes a record
+        // Index-only run: no reads
         ch_bbsplit = BBMAP_BBSPLIT(
-            channel.value(tuple([:], [])),
+            channel.value(record(id: 'bbsplit_index', meta: [:], reads: [])),
             channel.value(null as Path),
             ch_fasta,
             ch_bbsplit_fasta_list,
@@ -127,9 +127,9 @@ workflow PREPARE_GENOME_INDICES {
         ch_sortmerna_index = channel.value(tuple([:], file(sortmerna_index, checkIfExists: true)))
     } else if ('sortmerna' in prepare_tool_indices) {
         // Build new SortMeRNA index from the rRNA references
-        // SEAM(reads): adapter removed when SORTMERNA takes a record
+        // Index-only run: no reads
         ch_sortmerna_built = SORTMERNA_INDEX(
-            channel.value(tuple([:], [])),
+            channel.value(record(id: 'rrna_refs', meta: [:], reads: [])),
             ch_rrna_fastas.collect().map { refs -> tuple([id: 'rrna_refs'], refs) },
             channel.value(tuple([:], null as Path))
         )

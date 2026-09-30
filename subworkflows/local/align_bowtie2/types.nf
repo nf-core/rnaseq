@@ -1,6 +1,12 @@
 // Documentation only: nothing casts a record(...) to these types (nextflow-io/nextflow#7680 corrupts remote Path fields on cast).
 include { SamtoolsStatsFiles } from '../../nf-core/bam_stats_samtools/types'
 
+record Reads {
+    id:    String
+    meta:  Map
+    reads: List<Path>
+}
+
 record Bowtie2Logs {
     log: Path
 }
@@ -9,7 +15,7 @@ record Bowtie2Aligned {
     id:             String
     meta:           Map
     aligner:        String
-    orig_bam:       Path
+    orig_bam:       List<Path>
     unmapped:       List<Path>?
     percent_mapped: Float
     bowtie2:        Bowtie2Logs

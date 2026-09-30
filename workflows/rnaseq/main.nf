@@ -66,6 +66,12 @@ include { FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS              } from '../../subwor
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
+// Flattens a mix of files, file lists and nulls into a list of files; used by the
+// FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS adapters, removed with them
+def flattenNonNull(items) {
+    return items.findAll { f -> f != null }.collectMany { f -> (f instanceof List) ? f : [ f ] }
+}
+
 workflow RNASEQ {
 
     take:
@@ -218,8 +224,12 @@ workflow RNASEQ {
     // Bowtie2 rRNA index building still happens here, not in PREPARE_GENOME_INDICES.
     def make_bowtie2_index = !params.bowtie2_rrna_index && params.remove_ribo_rna && params.ribo_removal_tool == 'bowtie2'
 
+    // BEGIN adapters into FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS (removed when the samplesheet step emits records)
+    ch_fastq_reads = ch_fastq.map { meta, fastqs -> record(id: meta.id, meta: meta, reads: fastqs.flatten()) }
+    // END adapters
+
     FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS (
-        ch_fastq,                                   // ch_reads
+        ch_fastq_reads,                             // ch_reads
         ch_fasta,                                   // ch_fasta
         ch_transcript_fasta,                        // ch_transcript_fasta
         ch_gtf,                                     // ch_gtf
@@ -249,22 +259,56 @@ workflow RNASEQ {
         params.unstranded_threshold                 // unstranded_threshold
     )
 
-    ch_multiqc_files                  = ch_multiqc_files.mix(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.multiqc_files)
-    ch_strand_inferred_filtered_fastq = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.reads
-    ch_reads_cat                      = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.reads_cat
-    ch_reads_trimmed                  = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.reads_trimmed
-    ch_trim_read_count                = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.trim_read_count
+    ch_preprocessed = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out
+
+    // BEGIN adapters from the FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS record to legacy tuple channels; removed once the consumers below are typed
+    ch_multiqc_files = ch_multiqc_files.mix(
+        ch_preprocessed.flatMap { r ->
+            flattenNonNull([
+                r.fastqc?.raw_zip,
+                r.fastqc?.trim_zip,
+                params.trimmer == 'fastp' ? null : r.trim?.log,
+                r.trim?.json,
+                r.umi?.log,
+                r.bbsplit?.stats,
+                r.rrna?.sortmerna_log,
+                r.rrna?.ribodetector_log,
+                r.rrna?.seqkit_stats,
+                r.rrna?.bowtie2_log,
+                r.fastqc?.filtered_zip
+            ]).collect { f -> [ r.meta, f ] }
+        }
+    )
+    ch_fastq_qc_bundle = ch_preprocessed.map { r ->
+        [ r.id, flattenNonNull([
+            r.fastqc?.raw_zip,
+            r.fastqc?.trim_zip,
+            r.trim?.log,
+            r.trim?.json,
+            r.umi?.log,
+            r.bbsplit?.stats,
+            r.rrna?.sortmerna_log,
+            r.rrna?.ribodetector_log,
+            r.rrna?.seqkit_stats,
+            r.rrna?.bowtie2_log,
+            r.fastqc?.filtered_zip
+        ]) ]
+    }
+    ch_strand_inferred_reads          = ch_preprocessed.filter { r -> r.reads != null }
+    ch_strand_inferred_filtered_fastq = ch_strand_inferred_reads.map { r -> [ r.meta, r.reads ] }
+    ch_reads_cat                      = ch_preprocessed.map { r -> [ r.meta, r.reads_cat ] }
+    ch_reads_trimmed                  = ch_preprocessed.filter { r -> r.reads_trimmed != null }.map { r -> [ r.meta, r.reads_trimmed ] }
+    ch_trim_read_count                = ch_preprocessed.filter { r -> r.num_trimmed_reads != null }.map { r -> [ r.meta, r.num_trimmed_reads ] }
+    // END adapters
 
     // Run-level rRNA references, built by FASTQ_REMOVE_RRNA from the rRNA
     // FASTAs only when no bowtie2 rRNA index was supplied
     ch_rrna_references = channel.value(record(bowtie2_index: null, seqkit_prefixed: null, seqkit_converted: null))
     if (make_bowtie2_index) {
-        ch_rrna_references = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.bowtie2_index.map { _meta, index -> index }
-            .combine(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.seqkit_prefixed.map { _meta, f -> f }.toSortedList { a, b -> a.name <=> b.name }.map { fs -> [fs] })
-            .combine(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.seqkit_converted.map { _meta, f -> f }.toSortedList { a, b -> a.name <=> b.name }.map { fs -> [fs] })
-            .map { index, prefixed, converted ->
-                record(bowtie2_index: index, seqkit_prefixed: prefixed, seqkit_converted: converted)
-            }
+        ch_rrna_references = ch_preprocessed
+            .filter { r -> r.rrna != null }
+            .map { r -> record(bowtie2_index: r.rrna.bowtie2_index, seqkit_prefixed: r.rrna.seqkit_prefixed, seqkit_converted: r.rrna.seqkit_converted) }
+            .first()
     }
 
     ch_trim_status = ch_trim_read_count
@@ -285,8 +329,6 @@ workflow RNASEQ {
     // Unmatched samples wait on that contributor's channel to close —
     // per-contributor, not workflow-global. fail_* rows are appended
     // inside MULTIQC_RNASEQ.
-    ch_fastq_qc_bundle = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.per_sample_mqc_bundle
-        .map { meta, files -> [meta.id, files] }
     ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
         .join(ch_fastq_qc_bundle, remainder: true)
 
@@ -297,7 +339,7 @@ workflow RNASEQ {
 
     if (!params.skip_alignment && (params.aligner == 'star_salmon' || params.aligner == 'star_rsem')) {
         ALIGN_STAR (
-            ch_strand_inferred_filtered_fastq.map { meta, fastqs -> record(id: meta.id, meta: meta, reads: [ fastqs ].flatten()) },
+            ch_strand_inferred_reads,
             ch_star_index.map { item -> [ [:], item ] },
             ch_gtf.map { item -> [ [:], item ] },
             params.star_ignore_sjdbgtf,
@@ -360,31 +402,44 @@ workflow RNASEQ {
     if (!params.skip_alignment && params.aligner == 'bowtie2_salmon') {
 
         ALIGN_BOWTIE2 (
-            ch_strand_inferred_filtered_fastq,
+            ch_strand_inferred_reads,
             ch_bowtie2_index,
             ch_fasta_fai
         )
 
+        ch_bowtie2_aligned = ALIGN_BOWTIE2.out
+
+        // BEGIN adapters from the ALIGN_BOWTIE2 record to legacy tuple channels; removed once the consumers below are typed
+        ch_bowtie2_bam         = ch_bowtie2_aligned.map { r -> [ r.meta, r.bam ] }
+        ch_bowtie2_bai         = ch_bowtie2_aligned.map { r -> [ r.meta, r.bai ] }
+        ch_bowtie2_orig_bam    = ch_bowtie2_aligned.map { r -> [ r.meta, r.orig_bam[0] ] }
+        ch_bowtie2_percent     = ch_bowtie2_aligned.map { r -> [ r.meta, r.percent_mapped ] }
+        ch_bowtie2_log_final   = ch_bowtie2_aligned.map { r -> [ r.meta, r.bowtie2.log ] }
+        ch_bowtie2_stats       = ch_bowtie2_aligned.map { r -> [ r.meta, r.samtools.stats ] }
+        ch_bowtie2_flagstat    = ch_bowtie2_aligned.map { r -> [ r.meta, r.samtools.flagstat ] }
+        ch_bowtie2_idxstats    = ch_bowtie2_aligned.map { r -> [ r.meta, r.samtools.idxstats ] }
+        // END adapters
+
         // For Bowtie2+Salmon, the BAM is aligned to transcriptome so it's the "transcriptome_bam"
         // Use orig_bam (query-grouped) for Salmon - coordinate-sorted BAM breaks paired-end quantification
-        ch_genome_bam                    = ch_genome_bam.mix(ALIGN_BOWTIE2.out.bam)
-        ch_genome_bam_index              = ch_genome_bam_index.mix(ALIGN_BOWTIE2.out.index)
-        ch_transcriptome_bam             = ch_transcriptome_bam.mix(ALIGN_BOWTIE2.out.orig_bam)
-        ch_percent_mapped                = ch_percent_mapped.mix(ALIGN_BOWTIE2.out.percent_mapped)
-        ch_bowtie2_log                   = ALIGN_BOWTIE2.out.log_final
-        ch_aligned                       = ch_aligned.mix(ALIGN_BOWTIE2.out.results)
+        ch_genome_bam                    = ch_genome_bam.mix(ch_bowtie2_bam)
+        ch_genome_bam_index              = ch_genome_bam_index.mix(ch_bowtie2_bai)
+        ch_transcriptome_bam             = ch_transcriptome_bam.mix(ch_bowtie2_orig_bam)
+        ch_percent_mapped                = ch_percent_mapped.mix(ch_bowtie2_percent)
+        ch_bowtie2_log                   = ch_bowtie2_log_final
+        ch_aligned                       = ch_aligned.mix(ch_bowtie2_aligned)
         ch_multiqc_files                 = ch_multiqc_files.mix(ch_bowtie2_log)
         ch_mqc_per_sample_bundle         = ch_mqc_per_sample_bundle
             .join(ch_bowtie2_log.map { meta, f -> [meta.id, f] }, remainder: true)
 
         if (!params.with_umi && params.skip_markduplicates) {
             ch_multiqc_files = ch_multiqc_files
-                .mix(ALIGN_BOWTIE2.out.stats)
-                .mix(ALIGN_BOWTIE2.out.flagstat)
-                .mix(ALIGN_BOWTIE2.out.idxstats)
-            ch_bowtie2_stats_bundle = ALIGN_BOWTIE2.out.stats
-                .join(ALIGN_BOWTIE2.out.flagstat)
-                .join(ALIGN_BOWTIE2.out.idxstats)
+                .mix(ch_bowtie2_stats)
+                .mix(ch_bowtie2_flagstat)
+                .mix(ch_bowtie2_idxstats)
+            ch_bowtie2_stats_bundle = ch_bowtie2_stats
+                .join(ch_bowtie2_flagstat)
+                .join(ch_bowtie2_idxstats)
                 .map(collapseAgg)
             ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
                 .join(ch_bowtie2_stats_bundle, remainder: true)
@@ -1030,7 +1085,7 @@ workflow RNASEQ {
     percent_mapped      = ch_percent_mapped      // channel: [ id, Float? ]
 
     // Stage result records, keyed on id
-    preprocessed        = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.results // channel: FastqQcTrimFilterSetstrandedness
+    preprocessed        = ch_preprocessed // channel: FastqQcTrimFilterSetstrandedness
     aligned             = ch_aligned             // channel: StarAligned | Bowtie2Aligned | Hisat2Aligned
     umi_dedup           = ch_umi_dedup           // channel: UmiDedupBam
     markdup             = ch_markdup             // channel: MarkdupBam

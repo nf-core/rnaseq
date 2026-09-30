@@ -21,10 +21,11 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:true ], // meta map
-                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
-                ])
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:true ],
+                    reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                ))
                 input[1] = false // skip_fastqc
                 input[2] = true  // with_umi
                 input[3] = false // skip_umi_extract
@@ -53,13 +54,14 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false ], // meta map
-                    [
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    reads: [
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                     ]
-                ])
+                ))
                 input[1] = false // skip_fastqc
                 input[2] = true  // with_umi
                 input[3] = false // skip_umi_extract
@@ -86,13 +88,14 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false ], // meta map
-                    [
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    reads: [
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                     ]
-                ])
+                ))
                 input[1] = false // skip_fastqc
                 input[2] = false // with_umi
                 input[3] = false // skip_umi_extract
@@ -122,13 +125,14 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = channel.of([
-                    [ id:'test', single_end:false ], // meta map
-                    [
+                input[0] = channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    reads: [
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                     ]
-                ])
+                ))
                 input[1] = true  // skip_fastqc
                 input[2] = false // with_umi
                 input[3] = true  // skip_umi_extract
@@ -156,13 +160,14 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false ], // meta map
-                    [
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    reads: [
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                     ]
-                ])
+                ))
                 input[1] = true // skip_fastqc
                 input[2] = true // with_umi
                 input[3] = true // skip_umi_extract
@@ -191,10 +196,11 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:true ], // meta map
-                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
-                ])
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:true ],
+                    reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                ))
                 input[1] = false // skip_fastqc
                 input[2] = true  // with_umi
                 input[3] = false // skip_umi_extract
@@ -220,13 +226,14 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false ], // meta map
-                    [
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    reads: [
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                     ]
-                ])
+                ))
                 input[1] = false // skip_fastqc
                 input[2] = true  // with_umi
                 input[3] = false // skip_umi_extract
@@ -251,13 +258,14 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false ], // meta map
-                    [
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    reads: [
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                     ]
-                ])
+                ))
                 input[1] = false // skip_fastqc
                 input[2] = false // with_umi
                 input[3] = false // skip_umi_extract
@@ -283,13 +291,14 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false ], // meta map
-                    [
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    reads: [
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                     ]
-                ])
+                ))
                 input[1] = true // skip_fastqc
                 input[2] = true // with_umi
                 input[3] = true // skip_umi_extract

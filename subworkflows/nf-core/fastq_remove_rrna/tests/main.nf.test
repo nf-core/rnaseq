@@ -30,15 +30,16 @@ nextflow_workflow {
             process {
                 """
                 // CAT_FASTQ input: alternating R1/R2 files [r1_a, r2_a, r1_b, r2_b, ...]
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false ],
-                    [
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    reads: [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'generic/fastq/rrna_reads_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'generic/fastq/rrna_reads_2.fastq.gz', checkIfExists: true)
                     ]
-                ])
+                ))
                 """
             }
         }
@@ -49,7 +50,7 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = CAT_FASTQ.out.map { r -> [r.meta, r.reads] }                                    // ch_reads
+                input[0] = CAT_FASTQ.out                                    // ch_reads
                 input[1] = Channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas
                 input[2] = []                                                     // ch_sortmerna_index
                 input[3] = []                                                     // ch_bowtie2_index
@@ -90,7 +91,7 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = CAT_FASTQ.out.map { r -> [r.meta, r.reads] }                                    // ch_reads
+                input[0] = CAT_FASTQ.out                                    // ch_reads
                 input[1] = []                                                     // ch_rrna_fastas (not needed for ribodetector)
                 input[2] = []                                                     // ch_sortmerna_index
                 input[3] = []                                                     // ch_bowtie2_index
@@ -138,7 +139,7 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = CAT_FASTQ.out.map { r -> [r.meta, r.reads] }                                    // ch_reads
+                input[0] = CAT_FASTQ.out                                    // ch_reads
                 input[1] = Channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas
                 input[2] = []                                                     // ch_sortmerna_index
                 input[3] = []                                                     // ch_bowtie2_index
@@ -186,13 +187,14 @@ nextflow_workflow {
                 process {
                     """
                     // Single-end test data with synthetic rRNA reads
-                    input[0] = Channel.of([
-                        [ id:'test_se', single_end:true ],
-                        [
+                    input[0] = Channel.of(record(
+                        id: 'test_se',
+                        meta: [ id:'test_se', single_end:true ],
+                        reads: [
                             file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
                             file(params.modules_testdata_base_path + 'generic/fastq/rrna_reads_1.fastq.gz', checkIfExists: true)
                         ]
-                    ])
+                    ))
                     """
                 }
             }
@@ -201,7 +203,7 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = CAT_FASTQ_SE.out.map { r -> [r.meta, r.reads instanceof List ? r.reads : [r.reads]] }
+                input[0] = CAT_FASTQ_SE.out
                 input[1] = Channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas
                 input[2] = []                                                     // ch_sortmerna_index
                 input[3] = []                                                     // ch_bowtie2_index
@@ -247,13 +249,14 @@ nextflow_workflow {
                 process {
                     """
                     // Single-end test data with synthetic rRNA reads
-                    input[0] = Channel.of([
-                        [ id:'test_se', single_end:true ],
-                        [
+                    input[0] = Channel.of(record(
+                        id: 'test_se',
+                        meta: [ id:'test_se', single_end:true ],
+                        reads: [
                             file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
                             file(params.modules_testdata_base_path + 'generic/fastq/rrna_reads_1.fastq.gz', checkIfExists: true)
                         ]
-                    ])
+                    ))
                     """
                 }
             }
@@ -262,7 +265,7 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = CAT_FASTQ_SE.out.map { r -> [r.meta, r.reads instanceof List ? r.reads : [r.reads]] }
+                input[0] = CAT_FASTQ_SE.out
                 input[1] = Channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas
                 input[2] = []                                                     // ch_sortmerna_index
                 input[3] = []                                                     // ch_bowtie2_index
@@ -301,7 +304,7 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = CAT_FASTQ.out.map { r -> [r.meta, r.reads] }                                    // ch_reads
+                input[0] = CAT_FASTQ.out                                    // ch_reads
                 // Test with multiple rRNA databases that contain clustered sequences with
                 // duplicate identifiers. SILVA databases use clustered sequences where the sequence ID
                 // (the part before the first space) can be the same across different databases, causing

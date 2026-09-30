@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 //
 // Read QC, UMI extraction and trimming
 //
@@ -5,7 +7,7 @@ include { FASTQC as FASTQC_RAW  } from '../../../modules/nf-core/fastqc/main'
 include { FASTQC as FASTQC_TRIM } from '../../../modules/nf-core/fastqc/main'
 include { UMITOOLS_EXTRACT      } from '../../../modules/nf-core/umitools/extract/main'
 include { FASTP                 } from '../../../modules/nf-core/fastp/main'
-include { FastqFastqcUmitoolsFastp } from './types'
+include { FastpReads; FastqFastqcUmitoolsFastp } from './types'
 
 //
 // Function that parses fastp json output file to get total number of reads after trimming
@@ -17,8 +19,8 @@ def getFastpReadsAfterFiltering(json_file, min_num_reads) {
         return min_num_reads
     }
 
-    def json = new groovy.json.JsonSlurper().parseText(json_file.text).get('summary') as Map
-    return json['after_filtering']['total_reads'].toLong()
+    def json = (new groovy.json.JsonSlurper().parseText(json_file.text) as Map)['summary'] as Map
+    return (json['after_filtering'] as Map)['total_reads'] as Long
 }
 
 def getFastpAdapterSequence(json_file) {
@@ -29,7 +31,7 @@ def getFastpAdapterSequence(json_file) {
 
     def json = new groovy.json.JsonSlurper().parseText(json_file.text) as Map
     try {
-        return json['adapter_cutting']['read1_adapter_sequence']
+        return (json['adapter_cutting'] as Map)['read1_adapter_sequence'] as String
     }
     catch (Exception _ex) {
         return ""
@@ -38,186 +40,107 @@ def getFastpAdapterSequence(json_file) {
 
 workflow FASTQ_FASTQC_UMITOOLS_FASTP {
     take:
-    reads             // channel: [ val(meta), [ reads ], adapter_fasta ]
-    skip_fastqc       // boolean: true/false
-    with_umi          // boolean: true/false
-    skip_umi_extract  // boolean: true/false
-    umi_discard_read  // integer: 0, 1 or 2
-    skip_trimming     // boolean: true/false
-    save_trimmed_fail // boolean: true/false
-    save_merged       // boolean: true/false
-    min_trimmed_reads // integer: > 0
+    ch_reads: Channel<FastpReads>
+    skip_fastqc: Boolean // true/false
+    with_umi: Boolean // true/false
+    skip_umi_extract: Boolean // true/false
+    umi_discard_read: Integer // 0, 1 or 2
+    skip_trimming: Boolean // true/false
+    save_trimmed_fail: Boolean // true/false
+    save_merged: Boolean // true/false
+    min_trimmed_reads: Integer // > 0
 
     main:
-    fastqc_raw_html = channel.empty()
-    fastqc_raw_zip = channel.empty()
-    umi_log = channel.empty()
-    trim_json = channel.empty()
-    trim_html = channel.empty()
-    trim_log = channel.empty()
-    trim_reads_fail = channel.empty()
-    trim_reads_merged = channel.empty()
-    fastqc_trim_html = channel.empty()
-    fastqc_trim_zip = channel.empty()
-    trim_read_count = channel.empty()
-    adapter_seq = channel.empty()
-
-    // Split input channel for reads-only operations
-    reads_only = reads.map { meta, reads_files, _adapter_fasta -> [ meta, reads_files ] }
-
-    // Each step that runs joins its outputs onto this per-sample skeleton;
-    // groups for skipped steps are left unset and become null in the final
-    // record, so no join is ever made against an empty channel.
-    ch_results = reads_only.map { meta, _reads -> [meta.id, [:]] }
+    // Each stage that runs joins its outputs onto this per-sample record, overwriting
+    // the null placeholders of the fields it owns.
+    ch_results = ch_reads.map { r ->
+        record(
+            id:                r.id,
+            meta:              r.meta,
+            reads:             r.reads,
+            fastqc_raw_html:   null,
+            fastqc_raw_zip:    null,
+            fastqc_trim_html:  null,
+            fastqc_trim_zip:   null,
+            umi:               null,
+            trim:              null,
+            adapter_seq:       null,
+            num_trimmed_reads: null
+        )
+    }
 
     if (!skip_fastqc) {
-        FASTQC_RAW(
-            reads_only
+        ch_fastqc_raw = FASTQC_RAW(ch_reads)
+        ch_results = ch_results.join(
+            ch_fastqc_raw.map { r -> record(id: r.id, fastqc_raw_html: r.html, fastqc_raw_zip: r.zip) },
+            by: 'id'
         )
-        fastqc_raw_html = FASTQC_RAW.out.map { r -> [r.meta, r.html] }
-        fastqc_raw_zip = FASTQC_RAW.out.map { r -> [r.meta, r.zip] }
-
-        ch_results = ch_results
-            .join(FASTQC_RAW.out.map { r -> [r.id, r] }, by: [0])
-            .map { id, fields, r ->
-                [id, fields + [fastqc: record(raw_html: r.html, raw_zip: r.zip, trim_html: null, trim_zip: null)]]
-            }
     }
 
-    trimmer_reads = reads_only
-    umi_reads = channel.empty()
+    ch_trimmer_reads = ch_reads.map { r ->
+        record(id: r.id, meta: r.meta, reads: r.reads, adapter_fasta: r.adapter_fasta, umi: null)
+    }
     if (with_umi && !skip_umi_extract) {
-        UMITOOLS_EXTRACT(
-            reads_only
-        )
-        umi_reads = UMITOOLS_EXTRACT.out.map { r -> [r.meta, r.reads] }
-        trimmer_reads = umi_reads
-        umi_log = UMITOOLS_EXTRACT.out.map { r -> [r.meta, r.log] }
-
-        ch_results = ch_results
-            .join(UMITOOLS_EXTRACT.out.map { r -> [r.meta.id, r] }, by: [0])
-            .map { id, fields, umi ->
-                [id, fields + [umi: record(log: umi.log, reads: umi.reads)]]
-            }
-
-        // Discard R1 / R2 if required
-        if (umi_discard_read in [1, 2]) {
-            umi_reads
-                .map { meta, _reads ->
-                    meta.single_end ? [meta, [_reads].flatten()] : [meta + [single_end: true], [_reads[umi_discard_read % 2]]]
-                }
-                .set { trimmer_reads }
-        }
-    }
-
-    trim_reads = trimmer_reads
-    if (!skip_trimming) {
-        // Rejoin trimmer_reads with adapter info from original input
-        // Use ID-based join to handle metadata modifications from UMI processing
-        umi_reads_with_adapters = trimmer_reads
-            .map { meta, reads_files -> [meta.id, meta, reads_files] }
-            .join(
-                reads.map { meta, _original_reads, adapter_fasta -> [meta.id, adapter_fasta ?: null] }
-            )
-            .map { _sample_id, meta, umi_reads_files, adapter_fasta -> [meta, umi_reads_files, adapter_fasta] }
-
-        FASTP(
-            umi_reads_with_adapters,
-            false,
-            save_trimmed_fail,
-            save_merged
-        )
-        trim_json = FASTP.out.map { r -> [r.meta, r.json] }
-        trim_html = FASTP.out.map { r -> [r.meta, r.html] }
-        trim_log = FASTP.out.map { r -> [r.meta, r.log] }
-        trim_reads_fail = FASTP.out.filter { r -> r.reads_fail }.map { r -> [r.meta, r.reads_fail] }
-        trim_reads_merged = FASTP.out.filter { r -> r.reads_merged }.map { r -> [r.meta, r.reads_merged] }
-
-        // FASTP reads are optional, so a sample can lack a read count
-        FASTP.out
+        // The adapter fasta of the original input is re-attached by sample id, since UMI extraction does not carry it
+        ch_trimmer_reads = UMITOOLS_EXTRACT(ch_reads)
+            .join(ch_reads.map { r -> record(id: r.id, adapter_fasta: r.adapter_fasta) }, by: 'id')
             .map { r ->
-                def num_reads = r.reads ? getFastpReadsAfterFiltering(r.json, min_trimmed_reads.toLong()) : null
-                [r, num_reads, getFastpAdapterSequence(r.json)]
+                // Discard R1 / R2 if required
+                def discard = umi_discard_read in [1, 2] && !r.meta.single_end
+                def meta = r.meta
+                if (discard) {
+                    meta = r.meta + [single_end: true]
+                }
+                record(
+                    id:            r.id,
+                    meta:          meta,
+                    reads:         discard ? [r.reads[umi_discard_read % 2]] : r.reads,
+                    adapter_fasta: r.adapter_fasta,
+                    umi:           record(log: r.log, reads: r.reads)
+                )
             }
-            .set { ch_trimmed }
+    }
+    ch_results = ch_results.join(
+        ch_trimmer_reads.map { r -> record(id: r.id, meta: r.meta, reads: r.reads, umi: r.umi) },
+        by: 'id'
+    )
 
+    if (!skip_trimming) {
         //
         // Filter FastQ files based on minimum trimmed read count after adapter trimming
         //
-        ch_trimmed
-            .filter { r, num_reads, _seq -> r.reads && num_reads >= min_trimmed_reads.toLong() }
-            .map { r, _num_reads, _seq -> [r.meta, r.reads] }
-            .set { trim_reads }
-
-        ch_trimmed
-            .filter { r, _num_reads, _seq -> r.reads }
-            .map { r, num_reads, _seq -> [r.meta, num_reads] }
-            .set { trim_read_count }
-
-        ch_trimmed
-            .map { r, _num_reads, seq -> [r.meta, seq] }
-            .set { adapter_seq }
-
-        ch_results = ch_results
-            .join(ch_trimmed.map { r, num_reads, seq -> [r.id, r, num_reads, seq] }, by: [0])
-            .map { id, fields, r, num_reads, seq ->
-                def trim = record(
+        ch_trim = FASTP(ch_trimmer_reads, false, save_trimmed_fail, save_merged).map { r ->
+            // FASTP reads are optional, so a sample can lack a read count
+            def num_reads = r.reads.isEmpty() ? null : getFastpReadsAfterFiltering(r.json, min_trimmed_reads as Long)
+            record(
+                id:                r.id,
+                meta:              r.meta,
+                reads:             num_reads != null && num_reads >= (min_trimmed_reads as Long) ? r.reads : null,
+                trim:              record(
                     html:         r.html,
                     json:         r.json,
                     log:          r.log,
-                    reads_fail:   r.reads_fail ?: null,
+                    reads_fail:   r.reads_fail.isEmpty() ? null : r.reads_fail,
                     reads_merged: r.reads_merged
-                )
-                [id, fields + [trim: trim, adapter_seq: seq, num_trimmed_reads: num_reads != null ? num_reads as Long : null]]
-            }
+                ),
+                adapter_seq:       getFastpAdapterSequence(r.json),
+                num_trimmed_reads: num_reads
+            )
+        }
+        ch_results = ch_results.join(ch_trim, by: 'id')
 
         if (!skip_fastqc) {
-            FASTQC_TRIM(
-                trim_reads
-            )
-            fastqc_trim_html = FASTQC_TRIM.out.map { r -> [r.meta, r.html] }
-            fastqc_trim_zip = FASTQC_TRIM.out.map { r -> [r.meta, r.zip] }
+            ch_fastqc_trim = FASTQC_TRIM(ch_results.filter { r -> r.reads != null })
 
             // Samples below min_trimmed_reads are not passed to FASTQC_TRIM
-            ch_results = ch_results
-                .join(FASTQC_TRIM.out.map { r -> [r.id, r] }, by: [0], remainder: true)
-                .map { id, fields, r ->
-                    def fastqc = record(
-                        raw_html:  fields.fastqc.raw_html,
-                        raw_zip:   fields.fastqc.raw_zip,
-                        trim_html: r ? r.html : null,
-                        trim_zip:  r ? r.zip : null
-                    )
-                    [id, fields + [fastqc: fastqc]]
-                }
+            ch_results = ch_results.join(
+                ch_fastqc_trim.map { r -> record(id: r.id, fastqc_trim_html: r.html, fastqc_trim_zip: r.zip) },
+                by: 'id',
+                remainder: true
+            )
         }
     }
 
-    ch_results = ch_results.map { id, fields ->
-        record(
-            id:                id,
-            fastqc:            fields.fastqc,
-            umi:               fields.umi,
-            trim:              fields.trim,
-            adapter_seq:       fields.adapter_seq,
-            num_trimmed_reads: fields.num_trimmed_reads
-        )
-    }
-
     emit:
-    reads             = trim_reads // channel: [ val(meta), [ reads ] ]
-    fastqc_raw_html   // channel: [ val(meta), [ html ] ]
-    fastqc_raw_zip    // channel: [ val(meta), [ zip ] ]
-    umi_log           // channel: [ val(meta), [ log ] ]
-    umi_reads         // channel: [ val(meta), [ reads ] ]
-    adapter_seq       // channel: [ val(meta), [ adapter_seq] ]
-    trim_json         // channel: [ val(meta), [ json ] ]
-    trim_html         // channel: [ val(meta), [ html ] ]
-    trim_log          // channel: [ val(meta), [ log ] ]
-    trim_reads_fail   // channel: [ val(meta), [ fastq.gz ] ]
-    trim_reads_merged // channel: [ val(meta), [ fastq.gz ] ]
-    trim_read_count   // channel: [ val(meta), val(count) ]
-    fastqc_trim_html  // channel: [ val(meta), [ html ] ]
-    fastqc_trim_zip   // channel: [ val(meta), [ zip ] ]
-    results           = ch_results // channel: FastqFastqcUmitoolsFastp
+    ch_results // channel: FastqFastqcUmitoolsFastp
 }

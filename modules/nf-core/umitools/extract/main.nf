@@ -26,11 +26,13 @@ process UMITOOLS_EXTRACT {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def raw_reads = reads as Object
+    def reads_list = raw_reads instanceof List ? (raw_reads as List<Path>) : [raw_reads as Path]
     if (meta.single_end) {
         """
         umi_tools \\
             extract \\
-            -I ${[reads].flatten().join(' ')} \\
+            -I ${reads_list.join(' ')} \\
             -S ${prefix}.umi_extract.fastq.gz \\
             $args \\
             > ${prefix}.umi_extract.log

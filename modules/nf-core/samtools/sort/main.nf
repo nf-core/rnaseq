@@ -50,7 +50,8 @@ process SAMTOOLS_SORT {
         output_file = "${prefix}.${extension}##idx##${prefix}.${extension}.${index_format}"
     }
     // A lone file arrives as a Path, which iterates over its name components.
-    def bams = [bam].flatten()
+    def raw_bam = bam as Object
+    def bams = raw_bam instanceof List ? (raw_bam as List<Path>) : [raw_bam as Path]
     def is_sam = bams[0].name.endsWith('.sam')
     if (index_format) {
         if (!(index_format in ['bai', 'csi', 'crai'])) {

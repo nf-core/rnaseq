@@ -10,10 +10,10 @@ process SEQKIT_STATS {
         : 'community.wave.seqera.io/library/seqkit:2.13.0--05c0a96bf9fb2751'}"
 
     input:
-    tuple(meta: Map, reads: List<Path>)
+    record(id: String, meta: Map, reads: List<Path>)
 
     output:
-    record(meta: meta, stats: file("*.tsv"))
+    record(id: id, meta: meta, stats: file("*.tsv"))
 
     topic:
     tuple(task.process, 'seqkit', eval("seqkit version | sed 's/^.*v//'")) >> 'versions'

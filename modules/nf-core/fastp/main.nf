@@ -10,14 +10,14 @@ process FASTP {
 :         'community.wave.seqera.io/library/fastp:1.3.6--4df8d6c11b471bde' }"
 
     input:
-    tuple(meta: Map, reads: List<Path>, adapter_fasta: Path?)
+    record(id: String, meta: Map, reads: List<Path>, adapter_fasta: Path?)
     discard_trimmed_pass: Boolean
     save_trimmed_fail: Boolean
     save_merged: Boolean
 
     output:
     record(
-        id:           meta.id,
+        id:           id,
         meta:         meta,
         reads:        files('*.fastp.fastq.gz', optional: true).toSorted { f -> f.name },
         json:         file('*.json'),

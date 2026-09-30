@@ -10,10 +10,10 @@ process FQ_LINT {
         'quay.io/biocontainers/fq:0.12.0--h9ee0642_0' }"
 
     input:
-    tuple(meta: Map, fastq: List<Path>)
+    record(id: String, meta: Map, reads: List<Path>)
 
     output:
-    record(meta: meta, lint: file("*.fq_lint.txt"))
+    record(id: id, meta: meta, lint: file("*.fq_lint.txt"))
 
     topic:
     tuple(task.process, 'fq', eval("fq lint --version | sed 's/fq-lint //; s/ .*//'")) >> 'versions'
@@ -24,7 +24,7 @@ process FQ_LINT {
     """
     fq lint \\
         $args \\
-        ${fastq.join(' ')} > ${prefix}.fq_lint.txt
+        ${reads.join(' ')} > ${prefix}.fq_lint.txt
     """
 
     stub:

@@ -13,7 +13,11 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [[:], []]
+                input[0] = record(
+                    id: 'test',
+                    meta: [:],
+                    reads: []
+                )
                 input[1] = null
                 input[2] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true))
                 input[3] = Channel.of([
@@ -42,7 +46,11 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [[:], []]
+                input[0] = record(
+                    id: 'test',
+                    meta: [:],
+                    reads: []
+                )
                 input[1] = null
                 input[2] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true))
                 input[3] = Channel.of([
@@ -69,7 +77,11 @@ nextflow_process {
                 script "../main.nf"
                 process {
                     """
-                    input[0] = [[:], []]
+                    input[0] = record(
+                        id: 'test',
+                        meta: [:],
+                        reads: []
+                    )
                     input[1] = null
                     input[2] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true))
                     input[3] = Channel.of([
@@ -85,10 +97,11 @@ nextflow_process {
         when {
             process {
                     """
-                    input[0] = Channel.of([
-                        [ id:'test', single_end:true ], // meta map
-                        [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
-                    ])
+                    input[0] = Channel.of(record(
+                        id: 'test',
+                        meta: [ id:'test', single_end:true ],
+                        reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                    ))
                     input[1] = BBMAP_BBSPLIT_INDEX.out.map { r -> r.index }
                     input[2] = null
                     input[3] = [[], []]
@@ -120,7 +133,11 @@ nextflow_process {
                 script "../main.nf"
                 process {
                     """
-                    input[0] = [[:], []]
+                    input[0] = record(
+                        id: 'test',
+                        meta: [:],
+                        reads: []
+                    )
                     input[1] = null
                     input[2] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true))
                     input[3] = Channel.of([
@@ -136,10 +153,11 @@ nextflow_process {
         when {
             process {
                 """
-                    input[0] = Channel.of([
-                        [ id:'test', single_end:true ], // meta map
-                        [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
-                    ])
+                    input[0] = Channel.of(record(
+                        id: 'test',
+                        meta: [ id:'test', single_end:true ],
+                        reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                    ))
                     input[1] = BBMAP_BBSPLIT_INDEX.out.map { r -> r.index }
                     input[2] = null
                     input[3] = [[], []]

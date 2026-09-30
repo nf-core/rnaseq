@@ -14,11 +14,12 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:true ], // meta map
-                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:true ],
+                    reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)]
-                ])
+                ))
                 """
             }
         }
@@ -36,13 +37,14 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false ], // meta map
-                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true),
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test2_1.fastq.gz', checkIfExists: true),
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test2_2.fastq.gz', checkIfExists: true)]
-                ])
+                ))
                 """
             }
         }
@@ -60,11 +62,12 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:true ], // meta map
-                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:true ],
+                    reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)]
-                ])
+                ))
                 """
             }
         }
@@ -82,13 +85,14 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false ], // meta map
-                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true),
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)]
-                ])
+                ))
                 """
             }
         }
@@ -109,8 +113,16 @@ nextflow_process {
                 process {
                     """
                     input[0] = Channel.of(
-                        record(id: 'r1', meta: [ id:'r1' ], archive: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)),
-                        record(id: 'r2', meta: [ id:'r2' ], archive: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true))
+                        record(
+                            id: 'r1',
+                            meta: [ id:'r1' ],
+                            reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                        ),
+                        record(
+                            id: 'r2',
+                            meta: [ id:'r2' ],
+                            reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
+                        )
                     )
                     """
                 }
@@ -120,7 +132,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = GUNZIP.out.map { r -> [ r.meta, r.gunzip ] }
+                input[0] = GUNZIP.out.map { r -> record(id: r.meta.id, meta: r.meta, reads: [ r.gunzip ]) }
                     .toSortedList { a, b -> a[0].id <=> b[0].id }
                     .map { items -> [[ id: 'test', single_end: true ], items.collect { it[1] }] }
                 """
@@ -143,10 +155,26 @@ nextflow_process {
                 process {
                     """
                     input[0] = Channel.of(
-                        record(id: 'a', meta: [ id:'a' ], archive: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)),
-                        record(id: 'b', meta: [ id:'b' ], archive: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)),
-                        record(id: 'c', meta: [ id:'c' ], archive: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test2_1.fastq.gz', checkIfExists: true)),
-                        record(id: 'd', meta: [ id:'d' ], archive: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test2_2.fastq.gz', checkIfExists: true))
+                        record(
+                            id: 'a',
+                            meta: [ id:'a' ],
+                            reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                        ),
+                        record(
+                            id: 'b',
+                            meta: [ id:'b' ],
+                            reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
+                        ),
+                        record(
+                            id: 'c',
+                            meta: [ id:'c' ],
+                            reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test2_1.fastq.gz', checkIfExists: true) ]
+                        ),
+                        record(
+                            id: 'd',
+                            meta: [ id:'d' ],
+                            reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test2_2.fastq.gz', checkIfExists: true) ]
+                        )
                     )
                     """
                 }
@@ -156,7 +184,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = GUNZIP.out.map { r -> [ r.meta, r.gunzip ] }
+                input[0] = GUNZIP.out.map { r -> record(id: r.meta.id, meta: r.meta, reads: [ r.gunzip ]) }
                     .toSortedList { a, b -> a[0].id <=> b[0].id }
                     .map { items -> [[ id: 'test', single_end: false ], items.collect { it[1] }] }
                 """
@@ -176,10 +204,11 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:true ], // meta map
-                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)]
-                ])
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:true ],
+                    reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)]
+                ))
                 """
             }
         }
@@ -199,11 +228,12 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:true ], // meta map
-                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:true ],
+                    reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)]
-                ])
+                ))
                 """
             }
         }
@@ -223,13 +253,14 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false ], // meta map
-                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true),
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test2_1.fastq.gz', checkIfExists: true),
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test2_2.fastq.gz', checkIfExists: true)]
-                ])
+                ))
                 """
             }
         }
@@ -249,11 +280,12 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:true ], // meta map
-                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:true ],
+                    reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)]
-                ])
+                ))
                 """
             }
         }
@@ -273,13 +305,14 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false ], // meta map
-                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true),
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)]
-                ])
+                ))
                 """
             }
         }
@@ -299,10 +332,11 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:true ], // meta map
-                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)]
-                ])
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:true ],
+                    reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)]
+                ))
                 """
             }
         }
@@ -320,10 +354,11 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:true ], // meta map
-                    []
-                ])
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:true ],
+                    reads: []
+                ))
                 """
             }
         }
@@ -341,10 +376,11 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false ], // meta map
-                    []
-                ])
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    reads: []
+                ))
                 """
             }
         }
@@ -364,10 +400,11 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:true ], // meta map
-                    []
-                ])
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:true ],
+                    reads: []
+                ))
                 """
             }
         }
@@ -387,10 +424,11 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false ], // meta map
-                    []
-                ])
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    reads: []
+                ))
                 """
             }
         }

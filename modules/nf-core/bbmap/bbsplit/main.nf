@@ -11,7 +11,7 @@ process BBMAP_BBSPLIT {
         'community.wave.seqera.io/library/bbmap_pigz:07416fe99b090fa9' }"
 
     input:
-    tuple(meta: Map, reads: List<Path>)
+    record(id: String, meta: Map, reads: List<Path>)
     index: Path?
     primary_ref: Path?
     tuple(other_ref_names: List<String>, other_ref_paths: List<Path>)
@@ -22,7 +22,7 @@ process BBMAP_BBSPLIT {
 
     output:
     record(
-        id:                 meta.id,
+        id:                 id,
         meta:               meta,
         index:              file('bbsplit_index', optional: true),
         primary_reads:      files('*primary*fastq.gz', optional: true).toSorted { f -> f.name },

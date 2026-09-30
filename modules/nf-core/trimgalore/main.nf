@@ -10,11 +10,11 @@ process TRIMGALORE {
         'community.wave.seqera.io/library/trim-galore:2.3.0--6a38a479b4972363'}"
 
     input:
-    tuple(meta: Map, reads: List<Path>)
+    record(id: String, meta: Map, reads: List<Path>)
 
     output:
     record(
-        id:       meta.id,
+        id:       id,
         meta:     meta,
         reads:    files("*{3prime,5prime,trimmed,val}{,_1,_2}.fq.gz").toSorted { f -> f.name },
         log:      files("*report.txt", optional: true).toSorted { f -> f.name },

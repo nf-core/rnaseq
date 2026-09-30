@@ -16,10 +16,12 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = [ [ id:'test', single_end:false ], // meta map
-                             [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
-                               file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
-                           ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
+                )
                 """
             }
         }
@@ -47,9 +49,11 @@ nextflow_process {
                 def fq2 = file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                 def fq3 = file("\${workDir}/test_3.fastq.gz")
                 fq3.bytes = fq1.bytes
-                input[0] = [ [ id:'test', single_end:false ],
-                             [ fq1, fq2, fq3 ]
-                           ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    reads: [ fq1, fq2, fq3 ]
+                )
                 """
             }
         }
@@ -69,10 +73,12 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = [ [ id:'test', single_end:false ], // meta map
-                             [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
-                               file(params.modules_testdata_base_path + 'genomics/prokaryotes/candidatus_portiera_aleyrodidarum/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
-                           ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/prokaryotes/candidatus_portiera_aleyrodidarum/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
+                )
                 """
             }
         }

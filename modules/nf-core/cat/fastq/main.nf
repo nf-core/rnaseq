@@ -10,13 +10,13 @@ process CAT_FASTQ {
         : 'community.wave.seqera.io/library/coreutils_grep_gzip_lbzip2_pruned:838ba80435a629f8'}"
 
     input:
-    tuple(meta: Map, reads: List<Path>)
+    record(id: String, meta: Map, reads: List<Path>)
 
     stage:
     stageAs reads, 'input*/*'
 
     output:
-    record(meta: meta, reads: files("*.merged.fastq.gz").toSorted { f -> f.name })
+    record(id: id, meta: meta, reads: files("*.merged.fastq.gz").toSorted { f -> f.name })
 
     topic:
     tuple(task.process, "cat", eval("cat --version 2>&1 | head -n 1 | sed 's/^.*coreutils) //; s/ .*\$//'")) >> 'versions'

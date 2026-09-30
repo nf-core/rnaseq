@@ -10,14 +10,14 @@ process FASTQC {
         : 'quay.io/biocontainers/fastqc:0.12.1--hdfd78af_0'}"
 
     input:
-    tuple(meta: Map, reads: List<Path>)
+    record(id: String, meta: Map, reads: List<Path>)
 
     stage:
     stageAs reads, '?/*'
 
     output:
     record(
-        id:   meta.id,
+        id:   id,
         meta: meta,
         html: files('*.html').toSorted { f -> f.name },
         zip:  files('*.zip').toSorted { f -> f.name }

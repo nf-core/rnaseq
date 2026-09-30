@@ -1,6 +1,10 @@
 nextflow.enable.types = true
 
-include { Deseq2QcInput } from '../../nf-core/types'
+record Deseq2QcInput {
+    id:                        String
+    meta:                      Map
+    counts_gene_length_scaled: Path
+}
 
 process DESEQ2_QC {
     label "process_medium"

@@ -1,6 +1,12 @@
 nextflow.enable.types = true
 
-include { MultiqcConcatenateTablesInput } from '../../nf-core/types'
+record MultiqcConcatenateTablesInput {
+    id:    String
+    meta:  Map
+    name:  String
+    skip:  Integer
+    files: List<Path>
+}
 
 process MULTIQC_CONCATENATE_TABLES {
     tag "${sample.id}"

@@ -1,6 +1,11 @@
 nextflow.enable.types = true
 
-include { MultiqcWriteFileInput } from '../../nf-core/types'
+record MultiqcWriteFileInput {
+    id:      String
+    meta:    Map
+    name:    String
+    content: String
+}
 
 process MULTIQC_WRITE_FILE {
     tag "${sample.id}"

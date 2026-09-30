@@ -1,6 +1,10 @@
 nextflow.enable.types = true
 
-include { SylphtaxTaxprofInput } from '../../types'
+record SylphtaxTaxprofInput {
+    id:          String
+    meta:        Map
+    profile_out: Path
+}
 
 process SYLPHTAX_TAXPROF {
     tag "${sample.meta.id}"

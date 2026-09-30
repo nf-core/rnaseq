@@ -1,6 +1,10 @@
 nextflow.enable.types = true
 
-include { GffreadInput } from '../types'
+record GffreadInput {
+    id:   String
+    meta: Map
+    gff:  Path
+}
 
 process GFFREAD {
     tag "$sample.meta.id"

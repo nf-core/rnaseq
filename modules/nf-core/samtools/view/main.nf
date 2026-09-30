@@ -1,6 +1,11 @@
 nextflow.enable.types = true
 
-include { SamtoolsViewInput } from '../../types'
+record SamtoolsViewInput {
+    id:   String
+    meta: Map
+    bam:  Path
+    bai:  Path?
+}
 
 process SAMTOOLS_VIEW {
     tag "${sample.meta.id}"

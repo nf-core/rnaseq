@@ -1,6 +1,10 @@
 nextflow.enable.types = true
 
-include { ConcatenateFastaInput } from '../../nf-core/types'
+record ConcatenateFastaInput {
+    id:     String
+    meta:   Map
+    fastas: List<Path>
+}
 
 process CONCATENATE_FASTA {
     tag "${sample.meta.id}"

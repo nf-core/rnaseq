@@ -1,6 +1,10 @@
 nextflow.enable.types = true
 
-include { BrackenInput } from '../../types'
+record BrackenInput {
+    id:     String
+    meta:   Map
+    report: Path
+}
 
 process BRACKEN_BRACKEN {
     tag "${sample.meta.id}"

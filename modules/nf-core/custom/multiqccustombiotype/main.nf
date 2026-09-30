@@ -1,6 +1,10 @@
 nextflow.enable.types = true
 
-include { CustomMultiqccustombiotypeInput } from '../../types'
+record CustomMultiqccustombiotypeInput {
+    id:     String
+    meta:   Map
+    counts: Path
+}
 
 process CUSTOM_MULTIQCCUSTOMBIOTYPE {
     tag "${sample.meta.id}"

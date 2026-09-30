@@ -1,6 +1,10 @@
 nextflow.enable.types = true
 
-include { StringtieMergeInput } from '../../types'
+record StringtieMergeInput {
+    id:   String
+    meta: Map
+    gtf:  List<Path>
+}
 
 process STRINGTIE_MERGE {
     tag "${sample.meta.id}"

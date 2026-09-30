@@ -1,6 +1,10 @@
 nextflow.enable.types = true
 
-include { StarGenomeparamsUpgradeInput } from '../../nf-core/types'
+record StarGenomeparamsUpgradeInput {
+    id:    String
+    meta:  Map
+    index: Path
+}
 
 process STAR_GENOMEPARAMS_UPGRADE {
     tag "${sample.meta.id ?: sample.index.name}"

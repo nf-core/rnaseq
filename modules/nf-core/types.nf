@@ -94,17 +94,6 @@ record BbmapBbsplitResult {
 }
 
 // ============================================================================
-// bedtools
-// ============================================================================
-
-record BedtoolsGenomecovInput {
-    id:        String
-    meta:      Map
-    intervals: Path
-    scale:     Float
-}
-
-// ============================================================================
 // bowtie2
 // ============================================================================
 
@@ -134,12 +123,6 @@ record Bowtie2BuildResult {
 // bracken
 // ============================================================================
 
-record BrackenInput {
-    id:     String
-    meta:   Map
-    report: Path
-}
-
 record BrackenResult {
     id:        String
     meta:      Map
@@ -150,19 +133,6 @@ record BrackenResult {
 // ============================================================================
 // custom
 // ============================================================================
-
-record CustomMultiqccustombiotypeInput {
-    id:     String
-    meta:   Map
-    counts: Path
-}
-
-record CustomRsemmergecountsInput {
-    id:       String
-    meta:     Map
-    genes:    List<Path>
-    isoforms: List<Path>
-}
 
 record RsemMerge {
     counts_gene:       Path
@@ -249,16 +219,6 @@ record FqSubsampleResult {
 }
 
 // ============================================================================
-// gffread
-// ============================================================================
-
-record GffreadInput {
-    id:   String
-    meta: Map
-    gff:  Path
-}
-
-// ============================================================================
 // gunzip
 // ============================================================================
 
@@ -271,14 +231,6 @@ record GunzipResult {
 // ============================================================================
 // hisat2
 // ============================================================================
-
-record Hisat2BuildInput {
-    id:          String
-    meta:        Map
-    fasta:       Path
-    gtf:         Path?
-    splicesites: Path?
-}
 
 record Hisat2Logs {
     summary: Path
@@ -327,16 +279,6 @@ record Kraken2Result {
 // multiqc
 // ============================================================================
 
-record MultiqcInput {
-    id:             String
-    meta:           Map
-    multiqc_files:  List<Path>
-    multiqc_config: List<Path>
-    multiqc_logo:   Path?
-    replace_names:  Path?
-    sample_names:   Path?
-}
-
 record MultiqcReport {
     id:     String
     meta:   Map
@@ -372,13 +314,6 @@ record BamQcPreseq {
 // ============================================================================
 // ribodetector
 // ============================================================================
-
-record RibodetectorInput {
-    id:     String
-    meta:   Map
-    reads:  List<Path>
-    length: Integer
-}
 
 record RibodetectorResult {
     id:    String
@@ -557,13 +492,6 @@ record RustqcRseqc {
 // salmon
 // ============================================================================
 
-record SalmonIndexInput {
-    id:               String
-    meta:             Map
-    transcript_fasta: Path
-    genome_fasta:     Path?
-}
-
 record SalmonQuantSample {
     id:                String
     meta:              Map
@@ -581,20 +509,6 @@ record SalmonIndexResult {
 // ============================================================================
 // samtools
 // ============================================================================
-
-record SamtoolsFaidxInput {
-    id:    String
-    meta:  Map
-    fasta: Path
-    fai:   Path?
-}
-
-record SamtoolsViewInput {
-    id:   String
-    meta: Map
-    bam:  Path
-    bai:  Path?
-}
 
 record SamtoolsStatsFiles {
     stats:    Path
@@ -671,12 +585,6 @@ record SamtoolsViewResult {
 // seqkit
 // ============================================================================
 
-record SeqkitReplaceInput {
-    id:    String
-    meta:  Map
-    fastx: Path
-}
-
 record SeqkitReplaceResult {
     id:    String
     meta:  Map
@@ -745,12 +653,6 @@ record StarGenomegenerateResult {
 // stringtie
 // ============================================================================
 
-record StringtieMergeInput {
-    id:   String
-    meta: Map
-    gtf:  List<Path>
-}
-
 record StringtieInput {
     id:    String
     meta:  Map
@@ -791,26 +693,6 @@ record BamQcFeaturecounts {
     meta:    Map
     counts:  Path
     summary: Path
-}
-
-// ============================================================================
-// summarizedexperiment
-// ============================================================================
-
-record SummarizedexperimentInput {
-    id:           String
-    meta:         Map
-    matrix_files: List<Path>
-}
-
-// ============================================================================
-// sylphtax
-// ============================================================================
-
-record SylphtaxTaxprofInput {
-    id:          String
-    meta:        Map
-    profile_out: Path
 }
 
 // ============================================================================
@@ -884,12 +766,6 @@ record UmitoolsPrepareforrsemResult {
 // Local module concatenate_fasta
 // ============================================================================
 
-record ConcatenateFastaInput {
-    id:     String
-    meta:   Map
-    fastas: List<Path>
-}
-
 record ConcatenateFastaResult {
     id:    String
     meta:  Map
@@ -899,12 +775,6 @@ record ConcatenateFastaResult {
 // ============================================================================
 // Local module deseq2_qc
 // ============================================================================
-
-record Deseq2QcInput {
-    id:                        String
-    meta:                      Map
-    counts_gene_length_scaled: Path
-}
 
 record Deseq2Qc {
     id:            String
@@ -917,39 +787,6 @@ record Deseq2Qc {
     log:           Path?
     pca_multiqc:   Path?
     dists_multiqc: Path?
-}
-
-// ============================================================================
-// Local module multiqc_concatenate_tables
-// ============================================================================
-
-record MultiqcConcatenateTablesInput {
-    id:    String
-    meta:  Map
-    name:  String
-    skip:  Integer
-    files: List<Path>
-}
-
-// ============================================================================
-// Local module multiqc_write_file
-// ============================================================================
-
-record MultiqcWriteFileInput {
-    id:      String
-    meta:    Map
-    name:    String
-    content: String
-}
-
-// ============================================================================
-// Local module star_genomeparams_upgrade
-// ============================================================================
-
-record StarGenomeparamsUpgradeInput {
-    id:    String
-    meta:  Map
-    index: Path
 }
 
 // ============================================================================

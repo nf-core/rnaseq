@@ -1,6 +1,10 @@
 nextflow.enable.types = true
 
-include { SummarizedexperimentInput } from '../../types'
+record SummarizedexperimentInput {
+    id:           String
+    meta:         Map
+    matrix_files: List<Path>
+}
 
 process SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT {
     tag "${sample.meta.id}"

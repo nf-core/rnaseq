@@ -1,6 +1,11 @@
 nextflow.enable.types = true
 
-include { CustomRsemmergecountsInput } from '../../types'
+record CustomRsemmergecountsInput {
+    id:       String
+    meta:     Map
+    genes:    List<Path>
+    isoforms: List<Path>
+}
 
 process CUSTOM_RSEMMERGECOUNTS {
     tag "${sample.meta.id}"

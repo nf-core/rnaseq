@@ -1,6 +1,11 @@
 nextflow.enable.types = true
 
-include { SalmonIndexInput } from '../../types'
+record SalmonIndexInput {
+    id:               String
+    meta:             Map
+    transcript_fasta: Path
+    genome_fasta:     Path?
+}
 
 process SALMON_INDEX {
     tag "$sample.meta.id"

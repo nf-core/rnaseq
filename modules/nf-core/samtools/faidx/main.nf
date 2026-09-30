@@ -1,6 +1,11 @@
 nextflow.enable.types = true
 
-include { SamtoolsFaidxInput } from '../../types'
+record SamtoolsFaidxInput {
+    id:    String
+    meta:  Map
+    fasta: Path
+    fai:   Path?
+}
 
 process SAMTOOLS_FAIDX {
     tag "${sample.fasta}"

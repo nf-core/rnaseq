@@ -1,6 +1,14 @@
 nextflow.enable.types = true
 
-include { MultiqcInput } from '../types'
+record MultiqcInput {
+    id:             String
+    meta:           Map
+    multiqc_files:  List<Path>
+    multiqc_config: List<Path>
+    multiqc_logo:   Path?
+    replace_names:  Path?
+    sample_names:   Path?
+}
 
 process MULTIQC {
     tag "${sample.meta.id}"

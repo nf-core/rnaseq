@@ -1,6 +1,12 @@
 nextflow.enable.types = true
 
-include { Hisat2BuildInput } from '../../types'
+record Hisat2BuildInput {
+    id:          String
+    meta:        Map
+    fasta:       Path
+    gtf:         Path?
+    splicesites: Path?
+}
 
 process HISAT2_BUILD {
     tag "${sample.meta.id}"

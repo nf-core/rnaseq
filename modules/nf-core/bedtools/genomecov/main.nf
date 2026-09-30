@@ -1,6 +1,11 @@
 nextflow.enable.types = true
 
-include { BedtoolsGenomecovInput } from '../../types'
+record BedtoolsGenomecovInput {
+    id:        String
+    meta:      Map
+    intervals: Path
+    scale:     Float
+}
 
 process BEDTOOLS_GENOMECOV {
     tag "${sample.meta.id}"

@@ -1,6 +1,10 @@
 nextflow.enable.types = true
 
-include { SeqkitReplaceInput } from '../../types'
+record SeqkitReplaceInput {
+    id:    String
+    meta:  Map
+    fastx: Path
+}
 
 process SEQKIT_REPLACE {
     tag "${sample.meta.id}"

@@ -1,6 +1,11 @@
 nextflow.enable.types = true
 
-include { RibodetectorInput } from '../types'
+record RibodetectorInput {
+    id:     String
+    meta:   Map
+    reads:  List<Path>
+    length: Integer
+}
 
 process RIBODETECTOR {
 	tag "$sample.meta.id"

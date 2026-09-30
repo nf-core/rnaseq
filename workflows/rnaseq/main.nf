@@ -9,7 +9,6 @@ nextflow.enable.types = true
 //
 // MODULE: Loaded from modules/local/
 //
-include { COLLATE_VERSIONS                   } from '../../modules/local/collate_versions'
 include { DESEQ2_QC as DESEQ2_QC_BAM_SALMON } from '../../modules/local/deseq2_qc'
 include { DESEQ2_QC as DESEQ2_QC_RSEM        } from '../../modules/local/deseq2_qc'
 include { DESEQ2_QC as DESEQ2_QC_PSEUDO      } from '../../modules/local/deseq2_qc'
@@ -778,12 +777,10 @@ workflow RNASEQ {
             "${process}:\n${tool_versions.toSet().toSorted().join('\n')}"
         }
 
-    ch_versions_entries = softwareVersionsToYAML(ch_topic_versions.filter { entry -> entry instanceof Path })
+    ch_collated_versions = softwareVersionsToYAML(ch_topic_versions.filter { entry -> entry instanceof Path })
         .mix(ch_versions_string)
-        .collect()
-        .map { entries -> entries.toSorted() }
-
-    ch_collated_versions = COLLATE_VERSIONS('nf_core_rnaseq_software_mqc_versions.yml', ch_versions_entries)
+        .collectFile(name: 'nf_core_rnaseq_software_mqc_versions.yml', sort: true, newLine: true)
+        .map { p -> p as Path }
 
     ch_pipeline_info = ch_collated_versions.map { versions -> record(versions: versions) }
 

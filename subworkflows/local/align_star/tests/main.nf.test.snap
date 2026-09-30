@@ -176,7 +176,9 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.SJ.out.tab:md5,844af19ab0fc8cd9a3f75228445aca0d"
+                    [
+                        "test.SJ.out.tab:md5,844af19ab0fc8cd9a3f75228445aca0d"
+                    ]
                 ]
             ]
         ],
@@ -238,7 +240,9 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.SJ.out.tab:md5,844af19ab0fc8cd9a3f75228445aca0d"
+                    [
+                        "test.SJ.out.tab:md5,844af19ab0fc8cd9a3f75228445aca0d"
+                    ]
                 ]
             ]
         ],

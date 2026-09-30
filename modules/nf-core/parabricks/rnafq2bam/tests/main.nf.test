@@ -48,7 +48,7 @@ nextflow_process {
                     [ id:'test' ], // meta map
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
                 ])
-                input[2] = STAR_GENOMEGENERATE.out.index
+                input[2] = STAR_GENOMEGENERATE.out
                 input[3] = false
                 input[4] = false
                 """
@@ -56,12 +56,12 @@ nextflow_process {
         }
 
         then {
+            def aln = process.out[0][0]
             assertAll(
                 { assert process.success },
                 { assert snapshot(
-                    file(process.out.log_final[0][1]).name,
-                    process.out.findAll { key, val -> key.startsWith('versions') },
-                    bam(process.out.bam[0][1]).getReadsMD5()
+                    file(aln.star.log_final).name,
+                    bam(aln.orig_bam[0]).getReadsMD5()
                 ).match() }
             )
         }
@@ -85,7 +85,7 @@ nextflow_process {
                     [ id:'test' ], // meta map
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/minigenome.fa', checkIfExists: true)
                 ])
-                input[2] = STAR_GENOMEGENERATE.out.index
+                input[2] = STAR_GENOMEGENERATE.out
                 input[3] = false
                 input[4] = false
                 """
@@ -116,7 +116,7 @@ nextflow_process {
                     [ id:'test' ], // meta map
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
                 ])
-                input[2] = STAR_GENOMEGENERATE.out.index
+                input[2] = STAR_GENOMEGENERATE.out
                 input[3] = false
                 input[4] = false
                 """
@@ -124,13 +124,13 @@ nextflow_process {
         }
 
         then {
+            def aln = process.out[0][0]
             assertAll(
                 { assert process.success },
                 { assert snapshot(
-                    bam(process.out.bam[0][1]).getReadsMD5(),
-                    file(process.out.bai[0][1]).name,
-                    file(process.out.junction[0][1]).name,
-                    process.out.findAll { key, val -> key.startsWith('versions') }
+                    bam(aln.orig_bam[0]).getReadsMD5(),
+                    file(aln.orig_bai).name,
+                    file(aln.junction).name,
                 ).match() }
             )
         }
@@ -154,7 +154,7 @@ nextflow_process {
                     [ id:'test' ], // meta map
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
                 ])
-                input[2] = STAR_GENOMEGENERATE.out.index
+                input[2] = STAR_GENOMEGENERATE.out
                 input[3] = false
                 input[4] = false
                 """

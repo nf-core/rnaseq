@@ -13,11 +13,11 @@ nextflow_workflow {
                 """
                 input[0] = channel.of([
                     [ id:'test_fasta' ],
-                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
                 ])
                 input[1] = channel.of([
                     [ id:'test_gtf' ],
-                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
                 ])
                 """
             }
@@ -40,10 +40,10 @@ nextflow_workflow {
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
                 ])
-                input[1] = PARABRICKS_STARGENOMEGENERATE.out.index
+                input[1] = PARABRICKS_STARGENOMEGENERATE.out
                 input[2] = channel.of([
                     [ id:'test_gtf' ],
-                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
                 ])
                 input[3] = star_ignore_sjdbgtf
                 input[4] = channel.of([
@@ -70,7 +70,7 @@ nextflow_workflow {
                     workflow.out.fastq,
                     workflow.out.flagstat,
                     workflow.out.idxstats,
-                    bam(workflow.out.orig_bam[0][1]).getReadsMD5(),
+                    bam(workflow.out.orig_bam[0][1][0]).getReadsMD5(),
                     workflow.out.stats,
                     workflow.out.tab).match()}
             )
@@ -102,10 +102,10 @@ nextflow_workflow {
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
                 ])
-                input[1] = PARABRICKS_STARGENOMEGENERATE.out.index
+                input[1] = PARABRICKS_STARGENOMEGENERATE.out
                 input[2] = channel.of([
                     [ id:'test_gtf' ],
-                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
                 ])
                 input[3] = star_ignore_sjdbgtf
                 input[4] = channel.of([

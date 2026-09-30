@@ -217,7 +217,7 @@ Modules emit their versions onto the `versions` channel topic so the calling wor
 
 Subworkflows that produce per-sample files also emit a `results` record (or `sample_results` where `results` was already taken by an existing channel): one value per sample carrying the process outputs as named, possibly-nested fields, instead of one channel per file. `main.nf`'s `output {}` block publishes these records; no process uses `publishDir`. See nf-core/rnaseq#1931 for the full design and nf-core/rnaseq#1933 for the rules a new record should follow. In short:
 
-- Keyed on `id` (`meta.id`); the top-level per-stage record also carries the original `meta` map so `ext.args`/`ext.prefix` config closures keep working.
+- Keyed on `id` (`meta.id`); the top-level per-stage record also carries the original `meta` map so `ext.args`/`ext.prefix` config closures can read it.
 - Built right after the process call it wraps, from that process's own tuple outputs (`join` on shared `meta`), not derived from something built elsewhere.
 - Combined across stages with `.join(other, by: 'id')`, never `mix` + `groupTuple` - an unsized `groupTuple` waits for the channel to close and defers every downstream release to end of run.
 - Conditional stages (`if (!params.skip_x) { ... }`) join conditionally, at the workflow level. Joining a `channel.empty()` with `remainder: true` has the same end-of-run-only problem as `groupTuple`.

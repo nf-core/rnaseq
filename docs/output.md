@@ -995,7 +995,7 @@ When `--skip_quantification_merge` is enabled, MultiQC generates one report per 
 
 </details>
 
-Per-sample reports carry a manifest-only software versions section (pipeline name and Nextflow version) rather than the full collated tool versions. The full `software_versions.yml` is still published unchanged to `pipeline_info/`.
+Per-sample reports carry a manifest-only software versions section (pipeline name and Nextflow version) rather than the full collated tool versions. The full `software_versions.yml` is published to `pipeline_info/`.
 
 [MultiQC](http://multiqc.info) is a visualization tool that generates a single HTML report summarising all samples in your project. Most of the pipeline QC results are visualised in the report and further statistics are available in the report data directory.
 

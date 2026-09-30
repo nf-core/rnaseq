@@ -954,12 +954,12 @@ To further assist in reproducibility, you can use share and reuse [parameter fil
 
 The pipeline publishes its results through Nextflow's [workflow output definition](https://www.nextflow.io/docs/latest/workflow.html#publishing-outputs) (an `output {}` block in `main.nf`), not through per-process `publishDir` directives. This changes how output locations can be customised:
 
-- `--outdir` (or the equivalent `-output-dir` Nextflow option) sets the base directory results are published under, same as before.
-- `--publish_dir_mode` still controls whether files are copied, symlinked, moved, etc; it now maps onto Nextflow's `workflow.output.mode` setting.
-- The various `--save_*` flags (`--save_align_intermeds`, `--save_reference`, `--save_trimmed`, and so on) still control which intermediate files get published, exactly as before.
+- `--outdir` (or the equivalent `-output-dir` Nextflow option) sets the base directory results are published under.
+- `--publish_dir_mode` controls whether files are copied, symlinked or moved, and maps onto Nextflow's `workflow.output.mode` setting.
+- The various `--save_*` flags (`--save_align_intermeds`, `--save_reference`, `--save_trimmed`, and so on) control which intermediate files get published.
 - Nextflow's `workflow.output.overwrite` setting controls whether a rerun into the same `--outdir` overwrites existing files.
 
-A `process.withName:<NAME>.publishDir` override in a custom config no longer has any effect: publishing decisions live entirely in the `output {}` block in `main.nf`, keyed on the named result channels (`aligned`, `quant_merged`, `multiqc`, and so on), not on individual process names.
+A `process.withName:<NAME>.publishDir` override in a custom config has no effect: publishing decisions live entirely in the `output {}` block in `main.nf`, keyed on the named result channels (`aligned`, `quant_merged`, `multiqc`, and so on), not on individual process names.
 
 ## Core Nextflow arguments
 

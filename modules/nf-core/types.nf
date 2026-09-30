@@ -619,7 +619,7 @@ record FastqFastqcUmitoolsTrimgalore {
     fastqc_raw_zip:    List<Path>?
     umi:               UmitoolsExtractFiles?
     trim:              TrimgaloreTrim?
-    num_trimmed_reads: Float?
+    num_trimmed_reads: Float?  // a Float from TrimGalore and a Long from fastp, unconverted so the MultiQC table text is unchanged
 }
 
 // TrimGalore and fastp report the same kinds of file with different
@@ -686,7 +686,7 @@ record FastqQcTrimFilterSetstrandedness {
     reads:             List<Path>?
     reads_cat:         List<Path>
     reads_trimmed:     List<Path>?
-    num_trimmed_reads: Long?  // Float for TrimGalore, Long for fastp
+    num_trimmed_reads: Float?  // a Float from TrimGalore and a Long from fastp, unconverted so the MultiQC table text is unchanged
     fastqc:            PreprocessedFastqc?
     trim:              PreprocessedTrim?
     umi:               PreprocessedUmi?
@@ -705,7 +705,7 @@ record SampleRuns {
 record TrimReadCount {
     id:        String
     meta:      Map
-    num_reads: Long
+    num_reads: Float
 }
 
 record TrimStatus {

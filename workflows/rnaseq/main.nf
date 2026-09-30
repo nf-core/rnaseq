@@ -338,6 +338,7 @@ workflow RNASEQ {
             params.umitools_dedup_primary_only
         )
 
+        // The right-hand record wins on every shared field, so the deduplicated bam, bai and samtools replace the aligner's
         ch_genome_deduped = ch_genome_bam.join(ch_umi_dedup, by: 'id', remainder: true)
         ch_genome_deduped.subscribe { r ->
             if( r.genomic_dedup_log == null ) {
@@ -451,7 +452,18 @@ workflow RNASEQ {
             !params.use_rustqc
         )
 
-        ch_genome_bam = ch_genome_bam.join(ch_markdup.filter { r -> r.bam != null }, by: 'id')
+        // Only bam, bai and metrics are merged: joining the whole result would overwrite the aligner's samtools stats with null when RustQC skips them
+        ch_genome_marked = ch_genome_bam.join(
+            ch_markdup.map { r -> record(id: r.id, bam: r.bam, bai: r.bai, metrics: r.metrics) },
+            by: 'id',
+            remainder: true
+        )
+        ch_genome_marked.subscribe { r ->
+            if( r.meta == null || r.bam == null || r.metrics == null ) {
+                error "Sample '${r.id}' is missing its BAM from mark duplicates"
+            }
+        }
+        ch_genome_bam = ch_genome_marked.filter { r -> r.meta != null && r.bam != null && r.metrics != null }
 
         ch_mqc_files = ch_mqc_files.mix(
             ch_markdup

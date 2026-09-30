@@ -10,14 +10,14 @@ process KALLISTO_QUANT {
         'community.wave.seqera.io/library/kallisto:0.52.0--31c771060d82d25c' }"
 
     input:
-    tuple(meta: Map, reads: List<Path>)
+    record(id: String, meta: Map, reads: List<Path>)
     tuple(meta2: Map, index: Path, gtf: Path?, chromosomes: Path?)
     fragment_length: Integer?
     fragment_length_sd: Integer?
 
     output:
     record(
-        id:        meta.id,
+        id:        id,
         meta:      meta,
         quant_dir: file("${prefix}"),
         json_info: file("*.run_info.json"),

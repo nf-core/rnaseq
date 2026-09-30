@@ -13,10 +13,11 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = channel.of([
-                    [ id:'transcriptome' ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true)
-                ])
+                input[0] = channel.of(record(
+                    id: 'transcriptome',
+                    meta: [ id:'transcriptome' ],
+                    fasta: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true)
+                ))
                 """
             }
         }
@@ -40,10 +41,11 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = channel.of([
-                    [ id:'transcriptome' ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true)
-                ])
+                input[0] = channel.of(record(
+                    id: 'transcriptome',
+                    meta: [ id:'transcriptome' ],
+                    fasta: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true)
+                ))
                 """
             }
         }

@@ -10,8 +10,7 @@ process CUSTOM_RSEMMERGECOUNTS {
         'quay.io/nf-core/ubuntu:20.04' }"
 
     input:
-    tuple(meta: Map, genes: List<Path>)
-    isoforms: List<Path>
+    record(id: String, meta: Map, genes: List<Path>, isoforms: List<Path>)
 
     stage:
     stageAs genes, 'genes/*'
@@ -19,7 +18,8 @@ process CUSTOM_RSEMMERGECOUNTS {
 
     output:
     record(
-        id: meta.id,
+        id: id,
+        meta: meta,
         rsem_merge: record(
             counts_gene:       file("${prefix}.gene_counts.tsv"),
             tpm_gene:          file("${prefix}.gene_tpm.tsv"),

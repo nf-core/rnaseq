@@ -10,10 +10,10 @@ process FQ_SUBSAMPLE {
         'quay.io/biocontainers/fq:0.12.0--h9ee0642_0' }"
 
     input:
-    tuple(meta: Map, fastq: List<Path>)
+    record(id: String, meta: Map, reads: List<Path>)
 
     output:
-    record(meta: meta, fastq: files("*.fastq.gz").toSorted { f -> f.name })
+    record(id: id, meta: meta, reads: files("*.fastq.gz").toSorted { f -> f.name })
 
     topic:
     tuple(task.process, 'fq', eval("fq subsample --version | sed 's/fq-subsample //; s/ .*//'")) >> 'versions'
@@ -30,7 +30,7 @@ process FQ_SUBSAMPLE {
         error "FQ/SUBSAMPLE requires --probability (-p) or --record-count (-n) specified in task.ext.args!"
     }
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def n_fastq = fastq.size()
+    def n_fastq = reads.size()
     fastq1_output = ''
     fastq2_output = ''
     if ( n_fastq == 1 ){
@@ -45,7 +45,7 @@ process FQ_SUBSAMPLE {
     """
     fq subsample \\
         $args \\
-        ${fastq.join(' ')} \\
+        ${reads.join(' ')} \\
         $fastq1_output \\
         $fastq2_output
     """

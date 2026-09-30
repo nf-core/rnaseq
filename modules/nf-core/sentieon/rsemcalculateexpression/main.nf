@@ -11,12 +11,12 @@ process SENTIEON_RSEMCALCULATEEXPRESSION {
         'community.wave.seqera.io/library/rsem_sentieon:3e4315fa0b636313' }"
 
     input:
-    tuple(meta: Map, reads: List<Path>)  // FASTQ files or BAM file for --alignments mode
+    record(id: String, meta: Map, reads: List<Path>)  // FASTQ files or BAM file for --alignments mode
     index: Path
 
     output:
     record(
-        id:                meta.id,
+        id:                id,
         meta:              meta,
         counts_gene:       file("*.genes.results"),
         counts_transcript: file("*.isoforms.results"),

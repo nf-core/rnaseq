@@ -10,12 +10,12 @@ process RSEM_CALCULATEEXPRESSION {
         'community.wave.seqera.io/library/rsem_star:5acb4e8c03239c32' }"
 
     input:
-    tuple(meta: Map, reads: List<Path>)  // FASTQ files or BAM file for --alignments mode
+    record(id: String, meta: Map, reads: List<Path>)  // FASTQ files or BAM file for --alignments mode
     index: Path
 
     output:
     record(
-        id:                meta.id,
+        id:                id,
         meta:              meta,
         counts_gene:       file("*.genes.results"),
         counts_transcript: file("*.isoforms.results"),

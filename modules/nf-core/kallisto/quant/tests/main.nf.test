@@ -14,10 +14,11 @@ nextflow_process {
                 script "../../index/main.nf"
                 process {
                     """
-                    input[0] = channel.of([
-                        [ id:'transcriptome' ], // meta map
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true)
-                    ])
+                    input[0] = channel.of(record(
+                        id: 'transcriptome',
+                        meta: [ id:'transcriptome' ],
+                        fasta: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true)
+                    ))
                     """
                 }
             }
@@ -26,10 +27,11 @@ nextflow_process {
                 script "../../index/main.nf"
                 process {
                     """
-                    input[0] = channel.of([
-                        [ id:'transcriptome' ], // meta map
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true)
-                    ])
+                    input[0] = channel.of(record(
+                        id: 'transcriptome',
+                        meta: [ id:'transcriptome' ],
+                        fasta: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true)
+                    ))
                     """
                 }
             }
@@ -42,10 +44,11 @@ nextflow_process {
                 fragment_length    = 150
                 fragment_length_sd = 75
 
-                input[0] = channel.of([
-                    [ id:'test', single_end:true ],
-                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
-                ])
+                input[0] = channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:true ],
+                    reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                ))
                 input[1] = KALLISTO_INDEX.out.map { r -> [ r.meta, r.index ] }.combine(channel.of([ null, null ]))
                 input[2] = fragment_length
                 input[3] = fragment_length_sd
@@ -71,11 +74,11 @@ nextflow_process {
                 fragment_length    = []
                 fragment_length_sd = []
 
-                input[0] = channel.of([
-                    [ id:'test', single_end:false ], // meta map
-                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
-                ])
+                input[0] = channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true), file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
+                ))
                 input[1] = KALLISTO_INDEX.out.map { r -> [ r.meta, r.index ] }.combine(channel.of([ null, null ]))
                 input[2] = fragment_length
                 input[3] = fragment_length_sd
@@ -102,10 +105,11 @@ nextflow_process {
                 fragment_length    = 150
                 fragment_length_sd = 75
 
-                input[0] = channel.of([
-                    [ id:'test', single_end:true ],
-                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
-                ])
+                input[0] = channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:true ],
+                    reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                ))
                 input[1] = KALLISTO_INDEX.out.map { r -> [ r.meta, r.index ] }.combine(channel.of([ null, null ]))
                 input[2] = fragment_length
                 input[3] = fragment_length_sd
@@ -135,10 +139,11 @@ nextflow_process {
                 fragment_length    = 150
                 fragment_length_sd = 75
 
-                input[0] = channel.of([
-                    [ id:'test', single_end:true ],
-                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
-                ])
+                input[0] = channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:true ],
+                    reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                ))
                 input[1] = KALLISTO_INDEX_STUB.out.map { r -> [ r.meta, r.index ] }.combine(channel.of([ null, null ]))
                 input[2] = fragment_length
                 input[3] = fragment_length_sd
@@ -167,11 +172,11 @@ nextflow_process {
                 fragment_length    = []
                 fragment_length_sd = []
 
-                input[0] = channel.of([
-                    [ id:'test', single_end:false ], // meta map
-                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
-                ])
+                input[0] = channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true), file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
+                ))
                 input[1] = KALLISTO_INDEX_STUB.out.map { r -> [ r.meta, r.index ] }.combine(channel.of([ null, null ]))
                 input[2] = fragment_length
                 input[3] = fragment_length_sd

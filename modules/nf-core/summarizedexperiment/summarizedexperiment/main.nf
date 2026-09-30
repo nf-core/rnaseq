@@ -10,13 +10,13 @@ process SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT {
         'quay.io/biocontainers/bioconductor-summarizedexperiment:1.32.0--r43hdfd78af_0' }"
 
     input:
-    tuple(meta: Map, matrix_files: List<Path>)
+    record(id: String, meta: Map, matrix_files: List<Path>)
     tuple(meta2: Map, rowdata: Path?)
     tuple(meta3: Map, coldata: Path?)
 
     output:
     record(
-        id:   meta.id,
+        id:   id,
         meta: meta,
         rds:  file("*.rds"),
         log:  file("*.R_sessionInfo.log")

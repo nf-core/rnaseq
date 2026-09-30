@@ -195,12 +195,14 @@ workflow PREPARE_GENOME_REFERENCES {
             ch_transcript_fasta = GFFREAD_TRANSCRIPTS.out.map { r -> r.gffread_fasta }
         } else if (use_sentieon_star) {
             // Build transcripts from genome if we have it
-            SENTIEON_MAKE_TRANSCRIPTS_FASTA(ch_fasta, ch_gtf)
+            // SEAM(quant): record input adapter removed when the refs family passes the genome as a record
+            SENTIEON_MAKE_TRANSCRIPTS_FASTA(ch_fasta.combine(ch_gtf).map { fasta_file, gtf_file -> record(id: 'genome', meta: [id: 'genome'], fasta: fasta_file, gtf: gtf_file) }.first())
             ch_transcript_fasta          = SENTIEON_MAKE_TRANSCRIPTS_FASTA.out.map { r -> r.transcript_fasta }
             ch_transcript_fasta_rsem_dir = SENTIEON_MAKE_TRANSCRIPTS_FASTA.out.map { r -> r.index } // unused here; published via the genome record's transcript_fasta_rsem_dir field
         } else {
             // Build transcripts from genome if we have it
-            MAKE_TRANSCRIPTS_FASTA(ch_fasta, ch_gtf)
+            // SEAM(quant): record input adapter removed when the refs family passes the genome as a record
+            MAKE_TRANSCRIPTS_FASTA(ch_fasta.combine(ch_gtf).map { fasta_file, gtf_file -> record(id: 'genome', meta: [id: 'genome'], fasta: fasta_file, gtf: gtf_file) }.first())
             ch_transcript_fasta          = MAKE_TRANSCRIPTS_FASTA.out.map { r -> r.transcript_fasta }
             ch_transcript_fasta_rsem_dir = MAKE_TRANSCRIPTS_FASTA.out.map { r -> r.index } // unused here; published via the genome record's transcript_fasta_rsem_dir field
         }

@@ -29,11 +29,11 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
+                input[0] = UNTAR.out.map { r -> [ r.meta, r.untar ] }.map { meta, dir -> record(id: meta.id, meta: meta, quants: dir.listFiles().collect()) }
+                input[1] = Channel.of([
                     [ id:'test'], // meta map
                     file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
                 ])
-                input[1] = UNTAR.out.map { r -> [ r.meta, r.untar ] }.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
                 input[2] = 'kallisto'
                 input[3] = 'gene_id'
                 input[4] = 'gene_name'
@@ -68,11 +68,11 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
+                input[0] = UNTAR.out.map { r -> [ r.meta, r.untar ] }.map { meta, dir -> record(id: meta.id, meta: meta, quants: dir.listFiles().collect()) }
+                input[1] = Channel.of([
                     [ id:'test'], // meta map
                     file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
                 ])
-                input[1] = UNTAR.out.map { r -> [ r.meta, r.untar ] }.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
                 input[2] = 'kallisto'
                 input[3] = 'gene_id'
                 input[4] = 'gene_name,gene_biotype'
@@ -107,17 +107,17 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test'], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
-                ])
-                input[1] = UNTAR.out.map { r -> [ r.meta, r.untar ] }.map { meta, dir ->
+                input[0] = UNTAR.out.map { r -> [ r.meta, r.untar ] }.map { meta, dir ->
                     def results = []
                     dir.eachFileRecurse { f ->
                         if (f.name.endsWith('.isoforms.results')) results << f
                     }
-                    [ meta, results ]
+                    record(id: meta.id, meta: meta, quants: results)
                 }
+                input[1] = Channel.of([
+                    [ id:'test'], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
+                ])
                 input[2] = 'rsem'
                 input[3] = 'gene_id'
                 input[4] = 'gene_name'
@@ -154,11 +154,11 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
+                input[0] = UNTAR.out.map { r -> [ r.meta, r.untar ] }.map { meta, dir -> record(id: meta.id, meta: meta, quants: dir.listFiles().collect()) }
+                input[1] = Channel.of([
                     [ id:'test'], // meta map
                     file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
                 ])
-                input[1] = UNTAR.out.map { r -> [ r.meta, r.untar ] }.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
                 input[2] = 'kallisto'
                 input[3] = 'gene_id'
                 input[4] = 'gene_name'

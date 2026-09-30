@@ -11,12 +11,14 @@ process DESEQ2_QC {
         'community.wave.seqera.io/library/r-base_r-optparse_r-ggplot2_r-rcolorbrewer_pruned:9e75394d0bc21987' }"
 
     input:
-    counts: Path
+    record(id: String, meta: Map, counts: Path)
     pca_header_multiqc: Path
     clustering_header_multiqc: Path
 
     output:
     record(
+        id:            id,
+        meta:          meta,
         rdata:         file('*.RData',               optional: true),
         pca_vals:      file('*pca.vals.txt',         optional: true),
         plots_pdf:     file('*.pdf',                 optional: true),

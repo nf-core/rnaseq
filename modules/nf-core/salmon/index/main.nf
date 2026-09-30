@@ -10,10 +10,10 @@ process SALMON_INDEX {
         'community.wave.seqera.io/library/salmon:2.7.0--74784226202c61b9' }"
 
     input:
-    tuple(meta: Map, transcript_fasta: Path, genome_fasta: Path?)
+    record(id: String, meta: Map, transcript_fasta: Path, genome_fasta: Path?)
 
     output:
-    record(meta: meta, index: file('salmon'))
+    record(id: id, meta: meta, index: file('salmon'))
 
     topic:
     tuple(task.process, 'salmon', eval("salmon --version | sed 's/salmon //'")) >> 'versions'

@@ -10,14 +10,15 @@ process RSEM_PREPAREREFERENCE {
         'community.wave.seqera.io/library/rsem_star:5acb4e8c03239c32' }"
 
     input:
-    fasta: Path
-    gtf: Path
+    record(id: String, meta: Map, fasta: Path, gtf: Path)
 
     stage:
     stageAs fasta, 'rsem/*'
 
     output:
     record(
+        id:               id,
+        meta:             meta,
         index:            file("rsem"),
         transcript_fasta: file("*transcripts.fa")
     )

@@ -10,7 +10,7 @@ process TXIMETA_TXIMPORT {
         'community.wave.seqera.io/library/bioconductor-tximeta_jq:78bccd386c46a07c' }"
 
     input:
-    tuple(meta: Map, quants: List<Path>)
+    record(id: String, meta: Map, quants: List<Path>)
     tuple(meta2: Map, tx2gene: Path)
     quant_type: String
 
@@ -19,7 +19,7 @@ process TXIMETA_TXIMPORT {
 
     output:
     record(
-        id:                        meta.id,
+        id:                        id,
         meta:                      meta,
         tpm_gene:                  file("*gene_tpm.tsv"),
         counts_gene:               file("*gene_counts.tsv"),

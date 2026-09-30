@@ -10,12 +10,12 @@ process SALMON_QUANT {
         : 'community.wave.seqera.io/library/salmon:2.7.0--74784226202c61b9'}"
 
     input:
-    tuple(meta: Map, reads: List<Path>)
+    record(id: String, meta: Map, reads: List<Path>)
     tuple(meta2: Map, index: Path?, gtf: Path, transcript_fasta: Path?)
 
     output:
     record(
-        id:                meta.id,
+        id:                id,
         meta:              meta,
         quant_dir:         file("${prefix}"),
         json_info:         file("*info.json", optional: true),

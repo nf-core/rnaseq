@@ -16,8 +16,12 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
-                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
+                input[0] = Channel.of(record(
+                    id: 'genome',
+                    meta: [ id:'genome' ],
+                    fasta: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true),
+                    gtf: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
+                ))
                 """
             }
         }
@@ -38,8 +42,12 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
-                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
+                input[0] = Channel.of(record(
+                    id: 'genome',
+                    meta: [ id:'genome' ],
+                    fasta: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true),
+                    gtf: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
+                ))
                 """
             }
         }

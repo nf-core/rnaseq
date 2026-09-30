@@ -30,9 +30,10 @@ nextflow_process {
         }
 
         then {
-            def log_text = path(process.out.log[0][1]).getText().replaceAll(/\x1b\[[0-9;]*m/, '')
-            def fq1 = path(process.out.fastq[0][1][0]).fastq
-            def fq2 = path(process.out.fastq[0][1][1]).fastq
+            def rd = process.out[0][0]
+            def log_text = path(rd.log).getText().replaceAll(/\x1b\[[0-9;]*m/, '')
+            def fq1 = path(rd.reads[0]).fastq
+            def fq2 = path(rd.reads[1]).fastq
             assertAll(
                 { assert process.success },
                 { assert log_text.contains("4159 sequences loaded") },
@@ -43,8 +44,7 @@ nextflow_process {
                 { assert fq2.getNumberOfRecords() == 4159 },
                 { assert snapshot(
                     fq1.getReadNames().sort(),
-                    fq2.getReadNames().sort(),
-                    process.out.findAll { key, val -> key.startsWith("versions") }
+                    fq2.getReadNames().sort()
                 ).match() }
             )
         }

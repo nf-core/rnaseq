@@ -28,8 +28,8 @@ nextflow_process {
         then {
             def rd = process.out[0][0]
             def log_text = path(rd.log).getText().replaceAll(/\x1b\[[0-9;]*m/, '')
-            def fq1 = path(rd.fastq[0]).fastq
-            def fq2 = path(rd.fastq[1]).fastq
+            def fq1 = path(rd.reads[0]).fastq
+            def fq2 = path(rd.reads[1]).fastq
             assertAll(
                 { assert process.success },
                 { assert log_text.contains("4159 sequences loaded") },

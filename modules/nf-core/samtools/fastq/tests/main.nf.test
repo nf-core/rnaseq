@@ -29,7 +29,7 @@ nextflow_process {
         then {
             assert process.success
             assertAll(
-                { assert snapshot(process.out[0][0].fastq.collect { path(it).linesGzip[0..6] }).match("bam_fastq") },
+                { assert snapshot(process.out[0][0].reads.collect { path(it).linesGzip[0..6] }).match("bam_fastq") },
                 { assert snapshot(process.out[0][0].interleaved).match("bam_interleaved") },
                 { assert snapshot(file(process.out[0][0].singleton).name).match("bam_singleton") },
                 { assert snapshot(file(process.out[0][0].other).name).match("bam_other") }
@@ -57,7 +57,7 @@ nextflow_process {
         then {
             assert process.success
             assertAll(
-                { assert snapshot(process.out[0][0].fastq).match("bam_interleave_fastq") },
+                { assert snapshot(process.out[0][0].reads).match("bam_interleave_fastq") },
                 { assert snapshot(path(process.out[0][0].interleaved).readLines()[0..6]).match("bam_interlinterleave_eaved") },
                 { assert snapshot(process.out[0][0].singleton).match("bam_singinterleave_leton") },
                 { assert snapshot(file(process.out[0][0].other).name).match("bam_interleave_other") }
@@ -88,7 +88,7 @@ nextflow_process {
             assert process.success
             assertAll(
                 { assert snapshot(
-                    process.out[0][0].fastq,
+                    process.out[0][0].reads,
                     process.out[0][0].interleaved,
                     process.out[0][0].singleton,
                     process.out[0][0].other
@@ -120,7 +120,7 @@ nextflow_process {
             assert process.success
             assertAll(
                 { assert snapshot(
-                    process.out[0][0].fastq,
+                    process.out[0][0].reads,
                     process.out[0][0].interleaved,
                     process.out[0][0].singleton,
                     process.out[0][0].other

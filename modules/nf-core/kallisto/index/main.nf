@@ -1,7 +1,9 @@
 nextflow.enable.types = true
 
+include { FastaInput } from '../../types'
+
 process KALLISTO_INDEX {
-    tag "$fasta"
+    tag "$sample.fasta"
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
@@ -10,10 +12,10 @@ process KALLISTO_INDEX {
         'community.wave.seqera.io/library/kallisto:0.52.0--31c771060d82d25c' }"
 
     input:
-    record(id: String, meta: Map, fasta: Path)
+    sample: FastaInput
 
     output:
-    record(id: id, meta: meta, index: file('kallisto'))
+    record(id: sample.id, meta: sample.meta, index: file('kallisto'))
 
     topic:
     tuple(task.process, 'kallisto', eval('kallisto 2>&1 | head -1 | sed "s/^kallisto //; s/Usage.*//"')) >> 'versions'
@@ -25,7 +27,7 @@ process KALLISTO_INDEX {
         index \\
         $args \\
         -i kallisto \\
-        $fasta
+        $sample.fasta
     """
 
     stub:

@@ -1,7 +1,9 @@
 nextflow.enable.types = true
 
+include { Hisat2BuildInput } from '../../types'
+
 process HISAT2_BUILD {
-    tag "${meta.id}"
+    tag "${sample.meta.id}"
     label 'process_high'
 
     conda "${moduleDir}/environment.yml"
@@ -10,11 +12,11 @@ process HISAT2_BUILD {
         : 'community.wave.seqera.io/library/hisat2:2.2.3--2616fa83d3b9d8f8'}"
 
     input:
-    record(id: String, meta: Map, fasta: Path, gtf: Path?, splicesites: Path?)
+    sample: Hisat2BuildInput
     hisat2_memory_input: String?
 
     output:
-    record(id: id, meta: meta, index: file('hisat2'))
+    record(id: sample.id, meta: sample.meta, index: file('hisat2'))
 
     topic:
     tuple(task.process, 'hisat2', eval("hisat2 --version | sed -n 's/.*version \\([^ ]*\\).*/\\1/p'")) >> 'versions'
@@ -34,9 +36,9 @@ process HISAT2_BUILD {
 
     if (avail_mem >= hisat2_build_memory) {
         log.info("[HISAT2 index build] ${avail_mem} GB available, using splice sites and exons to build HISAT2 index")
-        extract_exons = gtf ? "hisat2_extract_exons.py ${gtf} > ${gtf.baseName}.exons.txt" : ""
-        ss = splicesites ? "--ss ${splicesites}" : ""
-        exon = gtf ? "--exon ${gtf.baseName}.exons.txt" : ""
+        extract_exons = sample.gtf ? "hisat2_extract_exons.py ${sample.gtf} > ${sample.gtf.baseName}.exons.txt" : ""
+        ss = sample.splicesites ? "--ss ${sample.splicesites}" : ""
+        exon = sample.gtf ? "--exon ${sample.gtf.baseName}.exons.txt" : ""
     }
     else {
         log.info("[HISAT2 index build] Only ${avail_mem} GB available (< ${hisat2_build_memory} GB threshold), so NOT using splice sites and exons to build HISAT2 index.")
@@ -51,8 +53,8 @@ process HISAT2_BUILD {
         ${ss} \\
         ${exon} \\
         ${args} \\
-        ${fasta} \\
-        hisat2/${fasta.baseName}
+        ${sample.fasta} \\
+        hisat2/${sample.fasta.baseName}
     """
 
     stub:

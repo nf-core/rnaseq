@@ -1,7 +1,9 @@
 nextflow.enable.types = true
 
+include { GtfInput } from '../../types'
+
 process HISAT2_EXTRACTSPLICESITES {
-    tag "${meta.id}"
+    tag "${sample.meta.id}"
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
@@ -10,10 +12,10 @@ process HISAT2_EXTRACTSPLICESITES {
         : 'community.wave.seqera.io/library/hisat2_samtools:a0c9b8ccf8116a89'}"
 
     input:
-    record(id: String, meta: Map, gtf: Path)
+    sample: GtfInput
 
     output:
-    record(id: id, meta: meta, splicesites: file('*.splice_sites.txt'))
+    record(id: sample.id, meta: sample.meta, splicesites: file('*.splice_sites.txt'))
 
     topic:
     tuple(task.process, 'hisat2', eval('hisat2 --version | grep -o "version [^ ]*" | cut -d " " -f 2')) >> 'versions'
@@ -24,12 +26,12 @@ process HISAT2_EXTRACTSPLICESITES {
     """
     hisat2_extract_splice_sites.py \\
         ${args} \\
-        ${gtf} \\
-        > ${gtf.baseName}.splice_sites.txt
+        ${sample.gtf} \\
+        > ${sample.gtf.baseName}.splice_sites.txt
     """
 
     stub:
     """
-    touch ${gtf.baseName}.splice_sites.txt
+    touch ${sample.gtf.baseName}.splice_sites.txt
     """
 }

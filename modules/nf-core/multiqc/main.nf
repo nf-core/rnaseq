@@ -10,6 +10,14 @@ record MultiqcInput {
     sample_names:   Path?
 }
 
+record MultiqcReport {
+    id:     String
+    meta:   Map
+    report: Path
+    data:   Path
+    plots:  Path?
+}
+
 process MULTIQC {
     tag "${sample.meta.id}"
     label 'process_single'

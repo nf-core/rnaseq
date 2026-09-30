@@ -2,6 +2,12 @@ nextflow.enable.types = true
 
 include { FastaInput } from '../../types'
 
+record KallistoIndexResult {
+    id:    String
+    meta:  Map
+    index: Path
+}
+
 process KALLISTO_INDEX {
     tag "$sample.fasta"
     label 'process_medium'

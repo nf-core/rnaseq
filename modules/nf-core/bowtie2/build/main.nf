@@ -2,6 +2,12 @@ nextflow.enable.types = true
 
 include { FastaInput } from '../../types'
 
+record Bowtie2BuildResult {
+    id:    String
+    meta:  Map
+    index: Path
+}
+
 process BOWTIE2_BUILD {
     tag "${sample.fasta}"
     label 'process_high'

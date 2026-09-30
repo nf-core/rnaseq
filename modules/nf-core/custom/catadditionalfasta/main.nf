@@ -2,6 +2,13 @@ nextflow.enable.types = true
 
 include { FastaGtfInput } from '../../types'
 
+record CustomCatadditionalfastaResult {
+    id:    String
+    meta:  Map
+    fasta: Path
+    gtf:   Path
+}
+
 process CUSTOM_CATADDITIONALFASTA {
     tag "${sample.meta.id}"
 

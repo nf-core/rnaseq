@@ -2,6 +2,12 @@ nextflow.enable.types = true
 
 include { QuantsInput } from '../../types'
 
+record CustomTx2geneResult {
+    id:      String
+    meta:    Map
+    tx2gene: Path
+}
+
 process CUSTOM_TX2GENE {
     tag "${sample.meta.id}"
     label 'process_single'

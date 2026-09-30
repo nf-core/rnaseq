@@ -2,6 +2,18 @@ nextflow.enable.types = true
 
 include { ReadsInput } from '../../types'
 
+record RsemQuantSample {
+    id:                String
+    meta:              Map
+    counts_gene:       Path
+    counts_transcript: Path
+    stat:              Path
+    log:               Path?
+    bam_star:          Path?
+    bam_genome:        Path?
+    bam_transcript:    Path?
+}
+
 process RSEM_CALCULATEEXPRESSION {
     tag "$sample.meta.id"
     label 'process_high'

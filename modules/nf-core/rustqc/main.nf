@@ -2,6 +2,96 @@ nextflow.enable.types = true
 
 include { BamBaiInput } from '../types'
 
+record RustqcResult {
+    id:            String
+    meta:          Map
+    samtools:      RustqcSamtools
+    preseq:        RustqcPreseq
+    dupradar:      RustqcDupradar
+    featurecounts: RustqcFeaturecounts
+    biotype:       RustqcBiotype
+    rseqc:         RustqcRseqc
+    qualimap:      Path?
+    all_files:     Set<Path>
+}
+
+record RustqcSamtools {
+    stats:    Path?
+    flagstat: Path?
+    idxstats: Path?
+}
+
+record RustqcPreseq {
+    lc_extrap: Path?
+}
+
+record RustqcDupradar {
+    scatter2d:       Set<Path>
+    boxplot:         Set<Path>
+    hist:            Set<Path>
+    dupmatrix:       Path?
+    intercept_slope: Path?
+    multiqc:         Set<Path>
+}
+
+record RustqcFeaturecounts {
+    counts:  Path?
+    summary: Path?
+}
+
+record RustqcBiotype {
+    tsv:  Path?
+    mqc:  Path?
+    rrna: Path?
+}
+
+record RustqcTin {
+    txt: Path?
+    xls: Path?
+}
+
+record RustqcInnerdistance {
+    distance: Path?
+    freq:     Path?
+    mean:     Path?
+    summary:  Path?
+    plot:     Set<Path>
+    rscript:  Path?
+}
+
+record RustqcJunctionannotation {
+    bed:          Path?
+    interact_bed: Path?
+    xls:          Path?
+    log:          Path?
+    plot:         Set<Path>
+    rscript:      Path?
+}
+
+record RustqcJunctionsaturation {
+    summary: Path?
+    plot:    Set<Path>
+    rscript: Path?
+}
+
+record RustqcReadduplication {
+    seq_xls: Path?
+    pos_xls: Path?
+    plot:    Set<Path>
+    rscript: Path?
+}
+
+record RustqcRseqc {
+    bamstat:            Path?
+    inferexperiment:    Path?
+    readdistribution:   Path?
+    tin:                RustqcTin
+    innerdistance:      RustqcInnerdistance
+    junctionannotation: RustqcJunctionannotation
+    junctionsaturation: RustqcJunctionsaturation
+    readduplication:    RustqcReadduplication
+}
+
 process RUSTQC {
     tag "$sample.meta.id"
     label 'process_high'

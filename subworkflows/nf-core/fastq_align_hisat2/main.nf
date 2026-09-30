@@ -2,7 +2,8 @@ nextflow.enable.types = true
 
 include { HISAT2_ALIGN            } from '../../../modules/nf-core/hisat2/align/main'
 include { BAM_SORT_STATS_SAMTOOLS } from '../bam_sort_stats_samtools/main'
-include { ReadsInput; Hisat2AlignResult; Bam; Hisat2Aligned } from '../../../modules/nf-core/types'
+include { ReadsInput; Bam; Hisat2Aligned } from '../../../modules/nf-core/types'
+include { Hisat2AlignResult } from '../../../modules/nf-core/hisat2/align/main'
 
 workflow FASTQ_ALIGN_HISAT2 {
     take:

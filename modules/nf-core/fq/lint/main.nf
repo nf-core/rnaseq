@@ -2,6 +2,12 @@ nextflow.enable.types = true
 
 include { ReadsInput } from '../../types'
 
+record FqLintResult {
+    id:   String
+    meta: Map
+    lint: Path
+}
+
 process FQ_LINT {
     tag "$sample.meta.id"
     label 'process_low'

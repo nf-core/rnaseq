@@ -8,7 +8,9 @@ include { SALMON_QUANT     } from '../../../modules/nf-core/salmon/quant'
 include { KALLISTO_QUANT   } from '../../../modules/nf-core/kallisto/quant'
 
 include { QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT } from '../quant_tximport_summarizedexperiment'
-include { ReadsInput; KallistoQuantSample; SalmonQuantSample; QuantMerged } from '../../../modules/nf-core/types'
+include { ReadsInput; QuantMerged } from '../../../modules/nf-core/types'
+include { KallistoQuantSample } from '../../../modules/nf-core/kallisto/quant/main'
+include { SalmonQuantSample } from '../../../modules/nf-core/salmon/quant/main'
 
 workflow QUANTIFY_PSEUDO_ALIGNMENT {
     take:

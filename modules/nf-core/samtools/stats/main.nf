@@ -2,6 +2,12 @@ nextflow.enable.types = true
 
 include { BamBaiInput } from '../../types'
 
+record SamtoolsStatsResult {
+    id:    String
+    meta:  Map
+    stats: Path
+}
+
 process SAMTOOLS_STATS {
     tag "${sample.meta.id}"
     label 'process_single'

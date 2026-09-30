@@ -6,6 +6,13 @@ record CustomMultiqccustombiotypeInput {
     counts: Path
 }
 
+record CustomMultiqccustombiotypeResult {
+    id:   String
+    meta: Map
+    tsv:  Path
+    rrna: Path
+}
+
 process CUSTOM_MULTIQCCUSTOMBIOTYPE {
     tag "${sample.meta.id}"
     label 'process_single'

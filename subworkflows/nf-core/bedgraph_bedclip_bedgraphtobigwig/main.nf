@@ -6,7 +6,9 @@ nextflow.enable.types = true
 
 include { UCSC_BEDCLIP          } from '../../../modules/nf-core/ucsc/bedclip/main'
 include { UCSC_BEDGRAPHTOBIGWIG } from '../../../modules/nf-core/ucsc/bedgraphtobigwig/main'
-include { BedgraphInput; UcscBedclipResult; UcscBedgraphtobigwigResult; BigwigFiles } from '../../../modules/nf-core/types'
+include { BedgraphInput; BigwigFiles } from '../../../modules/nf-core/types'
+include { UcscBedclipResult } from '../../../modules/nf-core/ucsc/bedclip/main'
+include { UcscBedgraphtobigwigResult } from '../../../modules/nf-core/ucsc/bedgraphtobigwig/main'
 
 workflow BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG {
     take:

@@ -2,6 +2,16 @@ nextflow.enable.types = true
 
 include { BamBaiInput } from '../../types'
 
+record UmitoolsDedupResult {
+    id:                   String
+    meta:                 Map
+    bam:                  Path
+    log:                  Path
+    tsv_edit_distance:    Path?
+    tsv_per_umi:          Path?
+    tsv_umi_per_position: Path?
+}
+
 process UMITOOLS_DEDUP {
     tag "${sample.meta.id}"
     label "process_medium"

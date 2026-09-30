@@ -6,6 +6,12 @@ record ConcatenateFastaInput {
     fastas: List<Path>
 }
 
+record ConcatenateFastaResult {
+    id:    String
+    meta:  Map
+    fasta: Path
+}
+
 process CONCATENATE_FASTA {
     tag "${sample.meta.id}"
 

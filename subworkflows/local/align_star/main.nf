@@ -7,7 +7,8 @@ include { SENTIEON_STARALIGN as SENTIEON_STAR_ALIGN } from '../../../modules/nf-
 include { PARABRICKS_RNAFQ2BAM as PARABRICKS_RNA_FQ2BAM } from '../../../modules/nf-core/parabricks/rnafq2bam/main'
 include { STAR_ALIGN                                } from '../../../modules/nf-core/star/align'
 include { BAM_SORT_STATS_SAMTOOLS                   } from '../../nf-core/bam_sort_stats_samtools'
-include { ReadsInput; StarAlignResult; StarAligned; Bam } from '../../../modules/nf-core/types'
+include { ReadsInput; StarAligned; Bam } from '../../../modules/nf-core/types'
+include { StarAlignResult } from '../../../modules/nf-core/star/align/main'
 
 
 //

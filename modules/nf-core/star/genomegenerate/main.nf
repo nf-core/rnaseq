@@ -2,6 +2,12 @@ nextflow.enable.types = true
 
 include { FastaInput } from '../../types'
 
+record StarGenomegenerateResult {
+    id:    String
+    meta:  Map
+    index: Path
+}
+
 process STAR_GENOMEGENERATE {
     tag "${sample.fasta}"
     label 'process_high'

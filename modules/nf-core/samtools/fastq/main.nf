@@ -2,6 +2,15 @@ nextflow.enable.types = true
 
 include { BamInput } from '../../types'
 
+record SamtoolsFastqResult {
+    id:          String
+    meta:        Map
+    reads:       List<Path>
+    interleaved: Path?
+    singleton:   Path?
+    other:       Path?
+}
+
 process SAMTOOLS_FASTQ {
     tag "${sample.meta.id}"
     label 'process_low'

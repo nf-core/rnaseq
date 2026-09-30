@@ -2,6 +2,14 @@ nextflow.enable.types = true
 
 include { BamInput } from '../types'
 
+record UmicollapseResult {
+    id:    String
+    meta:  Map
+    bam:   Path?
+    fastq: Path?
+    log:   Path
+}
+
 process UMICOLLAPSE {
     tag "${sample.meta.id}"
     label "process_high"

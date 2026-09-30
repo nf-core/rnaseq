@@ -7,7 +7,8 @@ nextflow.enable.types = true
 include { FASTQC           } from '../../../modules/nf-core/fastqc/main'
 include { UMITOOLS_EXTRACT } from '../../../modules/nf-core/umitools/extract/main'
 include { TRIMGALORE       } from '../../../modules/nf-core/trimgalore/main'
-include { ReadsInput; FastqcResult; FastqFastqcUmitoolsTrimgalore } from '../../../modules/nf-core/types'
+include { ReadsInput; FastqFastqcUmitoolsTrimgalore } from '../../../modules/nf-core/types'
+include { FastqcResult } from '../../../modules/nf-core/fastqc/main'
 
 //
 // Function that parses TrimGalore log output file to get total number of reads after trimming

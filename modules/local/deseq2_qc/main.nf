@@ -6,6 +6,19 @@ record Deseq2QcInput {
     counts_gene_length_scaled: Path
 }
 
+record Deseq2Qc {
+    id:            String
+    meta:          Map
+    rdata:         Path?
+    pca_vals:      Path?
+    plots_pdf:     Path?
+    sample_dists:  Path?
+    size_factors:  Path?
+    log:           Path?
+    pca_multiqc:   Path?
+    dists_multiqc: Path?
+}
+
 process DESEQ2_QC {
     label "process_medium"
 

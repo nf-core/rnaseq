@@ -7,7 +7,9 @@ nextflow.enable.types = true
 include { UMICOLLAPSE        } from '../../../modules/nf-core/umicollapse/main'
 include { SAMTOOLS_INDEX     } from '../../../modules/nf-core/samtools/index/main'
 include { BAM_STATS_SAMTOOLS } from '../bam_stats_samtools/main'
-include { BamInput; SamtoolsIndexResult; UmicollapseResult; UmicollapseDedupBam } from '../../../modules/nf-core/types'
+include { BamInput; UmicollapseDedupBam } from '../../../modules/nf-core/types'
+include { SamtoolsIndexResult } from '../../../modules/nf-core/samtools/index/main'
+include { UmicollapseResult } from '../../../modules/nf-core/umicollapse/main'
 
 workflow BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE {
     take:

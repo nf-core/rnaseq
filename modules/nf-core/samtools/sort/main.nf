@@ -2,6 +2,17 @@ nextflow.enable.types = true
 
 include { RawBams } from '../../types'
 
+record SamtoolsSortResult {
+    id:   String
+    meta: Map
+    bam:  Path?
+    cram: Path?
+    sam:  Path?
+    bai:  Path?
+    csi:  Path?
+    crai: Path?
+}
+
 process SAMTOOLS_SORT {
     tag "${sample.meta.id}"
     label 'process_medium'

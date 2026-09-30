@@ -6,6 +6,12 @@ record StringtieMergeInput {
     gtf:  List<Path>
 }
 
+record StringtieMergeResult {
+    id:         String
+    meta:       Map
+    merged_gtf: Path
+}
+
 process STRINGTIE_MERGE {
     tag "${sample.meta.id}"
     label 'process_medium'

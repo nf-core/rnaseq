@@ -7,6 +7,12 @@ record SalmonIndexInput {
     genome_fasta:     Path?
 }
 
+record SalmonIndexResult {
+    id:    String
+    meta:  Map
+    index: Path
+}
+
 process SALMON_INDEX {
     tag "$sample.meta.id"
     label "process_medium"

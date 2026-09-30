@@ -2,6 +2,12 @@ nextflow.enable.types = true
 
 include { ArchiveInput } from '../types'
 
+record GunzipResult {
+    id:   String
+    meta: Map
+    file: Path
+}
+
 process GUNZIP {
     tag "${sample.archive}"
     label 'process_single'

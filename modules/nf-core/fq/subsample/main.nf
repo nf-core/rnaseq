@@ -2,6 +2,12 @@ nextflow.enable.types = true
 
 include { ReadsInput } from '../../types'
 
+record FqSubsampleResult {
+    id:    String
+    meta:  Map
+    reads: List<Path>
+}
+
 process FQ_SUBSAMPLE {
     tag "$sample.meta.id"
     label 'process_single'

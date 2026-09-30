@@ -7,6 +7,15 @@ record SamtoolsViewInput {
     bai:  Path?
 }
 
+record SamtoolsViewResult {
+    id:               String
+    meta:             Map
+    bam:              Path?
+    bai:              Path?
+    unselected:       Path?
+    unselected_index: Path?
+}
+
 process SAMTOOLS_VIEW {
     tag "${sample.meta.id}"
     label 'process_low'

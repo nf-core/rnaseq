@@ -2,6 +2,16 @@ nextflow.enable.types = true
 
 include { ReadsInput } from '../../types'
 
+record BbmapBbsplitResult {
+    id:                 String
+    meta:               Map
+    index:              Path?
+    reads:              List<Path>
+    other_genome_reads: List<Path>
+    stats:              Path?
+    log:                Path?
+}
+
 process BBMAP_BBSPLIT {
     tag "${sample.meta.id}"
     label 'process_high'

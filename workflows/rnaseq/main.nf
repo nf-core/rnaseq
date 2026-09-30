@@ -25,7 +25,16 @@ include { BAM_QC_RNASEQ                         } from '../../subworkflows/nf-co
 include { QUANTIFY_RSEM                         } from '../../subworkflows/nf-core/quantify_rsem'
 include { BAM_DEDUP_UMI                         } from '../../subworkflows/nf-core/bam_dedup_umi'
 
-include { RsemMergeSample; KallistoQuantSample; MultiqcReport; RsemQuantSample; RustqcResult; SalmonQuantSample; SamtoolsIndexResult; StringtieResult; Deseq2Qc; Bowtie2Aligned; StarAligned; MultiqcFiles; AlignedSample; Bam; Contaminants; StringtieSample; BigwigSample; PipelineInfo; UmiDedupBam; MarkdupBam; BamQcRnaseq; StringtieMerged; Hisat2Aligned; RrnaReferences; FastqQcTrimFilterSetstrandedness; QuantMerged } from '../../modules/nf-core/types'
+include { Bowtie2Aligned; StarAligned; MultiqcFiles; AlignedSample; Bam; Contaminants; StringtieSample; BigwigSample; PipelineInfo; UmiDedupBam; MarkdupBam; BamQcRnaseq; StringtieMerged; Hisat2Aligned; RrnaReferences; FastqQcTrimFilterSetstrandedness; QuantMerged } from '../../modules/nf-core/types'
+include { RsemMergeSample } from '../../modules/nf-core/custom/rsemmergecounts/main'
+include { KallistoQuantSample } from '../../modules/nf-core/kallisto/quant/main'
+include { MultiqcReport } from '../../modules/nf-core/multiqc/main'
+include { RsemQuantSample } from '../../modules/nf-core/rsem/calculateexpression/main'
+include { RustqcResult } from '../../modules/nf-core/rustqc/main'
+include { SalmonQuantSample } from '../../modules/nf-core/salmon/quant/main'
+include { SamtoolsIndexResult } from '../../modules/nf-core/samtools/index/main'
+include { StringtieResult } from '../../modules/nf-core/stringtie/stringtie/main'
+include { Deseq2Qc } from '../../modules/local/deseq2_qc/main'
 
 include { readSamplesheet                } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline/samplesheet'
 include { classifyStrand                 } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'

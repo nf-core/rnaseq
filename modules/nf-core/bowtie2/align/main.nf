@@ -1,6 +1,18 @@
 nextflow.enable.types = true
 
-include { ReadsInput } from '../../types'
+include { ReadsInput; Bowtie2Logs } from '../../types'
+
+record Bowtie2AlignResult {
+    id:       String
+    meta:     Map
+    sam:      Path?
+    raw_bams: List<Path>
+    cram:     Path?
+    csi:      Path?
+    crai:     Path?
+    unmapped: List<Path>
+    bowtie2:  Bowtie2Logs
+}
 
 process BOWTIE2_ALIGN {
     tag "${sample.meta.id}"

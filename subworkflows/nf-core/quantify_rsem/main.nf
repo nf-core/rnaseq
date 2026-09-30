@@ -9,7 +9,9 @@ include { CUSTOM_RSEMMERGECOUNTS             } from '../../../modules/nf-core/cu
 include { SENTIEON_RSEMCALCULATEEXPRESSION   } from '../../../modules/nf-core/sentieon/rsemcalculateexpression'
 
 include { QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT } from '../quant_tximport_summarizedexperiment'
-include { ReadsInput; RsemMergeSample; RsemQuantSample; QuantMerged } from '../../../modules/nf-core/types'
+include { ReadsInput; QuantMerged } from '../../../modules/nf-core/types'
+include { RsemMergeSample } from '../../../modules/nf-core/custom/rsemmergecounts/main'
+include { RsemQuantSample } from '../../../modules/nf-core/rsem/calculateexpression/main'
 
 workflow QUANTIFY_RSEM {
     take:

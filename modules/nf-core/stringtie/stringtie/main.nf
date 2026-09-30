@@ -2,6 +2,15 @@ nextflow.enable.types = true
 
 include { StringtieInput } from '../../types'
 
+record StringtieResult {
+    id:             String
+    meta:           Map
+    transcript_gtf: Path
+    abundance:      Path
+    coverage_gtf:   Path?
+    ballgown:       Set<Path>
+}
+
 process STRINGTIE_STRINGTIE {
     tag "${sample.meta.id}"
     label 'process_medium'

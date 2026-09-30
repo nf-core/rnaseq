@@ -11,7 +11,10 @@ include { FASTQ_REMOVE_RRNA                     } from '../fastq_remove_rrna'
 include { FASTQ_SUBSAMPLE_FQ_SALMON             } from '../fastq_subsample_fq_salmon'
 include { FASTQ_FASTQC_UMITOOLS_TRIMGALORE      } from '../fastq_fastqc_umitools_trimgalore'
 include { FASTQ_FASTQC_UMITOOLS_FASTP           } from '../fastq_fastqc_umitools_fastp'
-include { ReadsInput; BbmapBbsplitResult; FastqcResult; FqLintResult; RrnaReferences; FastqQcTrimFilterSetstrandedness } from '../../../modules/nf-core/types'
+include { ReadsInput; RrnaReferences; FastqQcTrimFilterSetstrandedness } from '../../../modules/nf-core/types'
+include { BbmapBbsplitResult } from '../../../modules/nf-core/bbmap/bbsplit/main'
+include { FastqcResult } from '../../../modules/nf-core/fastqc/main'
+include { FqLintResult } from '../../../modules/nf-core/fq/lint/main'
 
 //
 // Function to determine library type by comparing type counts.

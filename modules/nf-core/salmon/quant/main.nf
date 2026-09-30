@@ -2,6 +2,14 @@ nextflow.enable.types = true
 
 include { ReadsInput } from '../../types'
 
+record SalmonQuantSample {
+    id:                String
+    meta:              Map
+    quant_dir:         Path
+    json_info:         Path?
+    lib_format_counts: Path?
+}
+
 process SALMON_QUANT {
     tag "${sample.meta.id}"
     label "process_medium"

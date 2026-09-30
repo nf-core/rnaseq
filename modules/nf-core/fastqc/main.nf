@@ -2,6 +2,13 @@ nextflow.enable.types = true
 
 include { ReadsInput } from '../types'
 
+record FastqcResult {
+    id:   String
+    meta: Map
+    html: List<Path>
+    zip:  List<Path>
+}
+
 process FASTQC {
     tag "${sample.meta.id}"
     label 'process_low'

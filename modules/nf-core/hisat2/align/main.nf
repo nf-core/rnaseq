@@ -1,6 +1,14 @@
 nextflow.enable.types = true
 
-include { ReadsInput } from '../../types'
+include { ReadsInput; Hisat2Logs } from '../../types'
+
+record Hisat2AlignResult {
+    id:       String
+    meta:     Map
+    raw_bams: List<Path>
+    unmapped: List<Path>
+    hisat2:   Hisat2Logs
+}
 
 process HISAT2_ALIGN {
     tag "${sample.meta.id}"

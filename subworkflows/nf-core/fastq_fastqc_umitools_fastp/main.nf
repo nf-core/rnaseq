@@ -7,7 +7,8 @@ include { FASTQC as FASTQC_RAW  } from '../../../modules/nf-core/fastqc/main'
 include { FASTQC as FASTQC_TRIM } from '../../../modules/nf-core/fastqc/main'
 include { UMITOOLS_EXTRACT      } from '../../../modules/nf-core/umitools/extract/main'
 include { FASTP                 } from '../../../modules/nf-core/fastp/main'
-include { FastqcResult; FastpReads; FastqFastqcUmitoolsFastp } from '../../../modules/nf-core/types'
+include { FastpReads; FastqFastqcUmitoolsFastp } from '../../../modules/nf-core/types'
+include { FastqcResult } from '../../../modules/nf-core/fastqc/main'
 
 //
 // Function that parses fastp json output file to get total number of reads after trimming

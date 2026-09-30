@@ -12,7 +12,16 @@ include { SEQKIT_REPLACE as SEQKIT_REPLACE_U2T     } from '../../../modules/nf-c
 include { SEQKIT_STATS                             } from '../../../modules/nf-core/seqkit/stats'
 include { SORTMERNA                                } from '../../../modules/nf-core/sortmerna'
 include { SORTMERNA as SORTMERNA_INDEX             } from '../../../modules/nf-core/sortmerna'
-include { ReadsInput; Bowtie2AlignResult; Bowtie2BuildResult; RibodetectorResult; SamtoolsFastqResult; SamtoolsViewResult; SeqkitReplaceResult; SeqkitStatsResult; SortmernaResult; ConcatenateFastaResult; RrnaReferences; FastqRemoveRrna } from '../../../modules/nf-core/types'
+include { ReadsInput; RrnaReferences; FastqRemoveRrna } from '../../../modules/nf-core/types'
+include { Bowtie2AlignResult } from '../../../modules/nf-core/bowtie2/align/main'
+include { Bowtie2BuildResult } from '../../../modules/nf-core/bowtie2/build/main'
+include { RibodetectorResult } from '../../../modules/nf-core/ribodetector/main'
+include { SamtoolsFastqResult } from '../../../modules/nf-core/samtools/fastq/main'
+include { SamtoolsViewResult } from '../../../modules/nf-core/samtools/view/main'
+include { SeqkitReplaceResult } from '../../../modules/nf-core/seqkit/replace/main'
+include { SeqkitStatsResult } from '../../../modules/nf-core/seqkit/stats/main'
+include { SortmernaResult } from '../../../modules/nf-core/sortmerna/main'
+include { ConcatenateFastaResult } from '../../../modules/local/concatenate_fasta/main'
 
 //
 // Function that parses seqkit stats TSV output to extract the mean read length

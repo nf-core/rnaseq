@@ -12,7 +12,9 @@ include { BAM_SORT_STATS_SAMTOOLS                                               
 
 include { UMITOOLS_PREPAREFORRSEM                                                                    } from '../../../modules/nf-core/umitools/prepareforrsem'
 include { SAMTOOLS_SORT                                                                              } from '../../../modules/nf-core/samtools/sort/main'
-include { SamtoolsSortResult; UmitoolsPrepareforrsemResult; Bam; UmiDedupBam } from '../../../modules/nf-core/types'
+include { Bam; UmiDedupBam } from '../../../modules/nf-core/types'
+include { SamtoolsSortResult } from '../../../modules/nf-core/samtools/sort/main'
+include { UmitoolsPrepareforrsemResult } from '../../../modules/nf-core/umitools/prepareforrsem/main'
 
 workflow BAM_DEDUP_UMI {
     take:

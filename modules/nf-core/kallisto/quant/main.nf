@@ -2,6 +2,14 @@ nextflow.enable.types = true
 
 include { ReadsInput } from '../../types'
 
+record KallistoQuantSample {
+    id:        String
+    meta:      Map
+    quant_dir: Path
+    json_info: Path
+    log:       Path
+}
+
 process KALLISTO_QUANT {
     tag "$sample.meta.id"
     label 'process_high'

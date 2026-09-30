@@ -2,6 +2,13 @@ nextflow.enable.types = true
 
 include { BamInput } from '../../types'
 
+record UmitoolsPrepareforrsemResult {
+    id:   String
+    meta: Map
+    bam:  Path
+    log:  Path
+}
+
 process UMITOOLS_PREPAREFORRSEM {
     tag "${sample.meta.id}"
     label 'process_medium'

@@ -158,7 +158,14 @@ include { getGenomeAttribute         } from './subworkflows/local/utils_nfcore_r
 include { isStarIndexLegacy          } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { anySampleAutoStrandedness  } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 
-include { RsemMerge; RsemMergeSample; KallistoQuantSample; MultiqcReport; RsemQuantSample; RustqcResult; SalmonQuantSample; StringtieAssembly; Deseq2Qc; AlignedSample; LintFile; SamplesheetRow; Contaminants; StringtieSample; BigwigSample; PipelineInfo; GenomeArtifact; UmiDedupBam; MarkdupBam; BamQcRnaseq; StringtieMerged; BigwigFiles; RrnaReferences; FastqQcTrimFilterSetstrandedness; QuantMerged } from './modules/nf-core/types'
+include { StringtieAssembly; AlignedSample; LintFile; SamplesheetRow; Contaminants; StringtieSample; BigwigSample; PipelineInfo; GenomeArtifact; UmiDedupBam; MarkdupBam; BamQcRnaseq; StringtieMerged; BigwigFiles; RrnaReferences; FastqQcTrimFilterSetstrandedness; QuantMerged } from './modules/nf-core/types'
+include { RsemMerge; RsemMergeSample } from './modules/nf-core/custom/rsemmergecounts/main'
+include { KallistoQuantSample } from './modules/nf-core/kallisto/quant/main'
+include { MultiqcReport } from './modules/nf-core/multiqc/main'
+include { RsemQuantSample } from './modules/nf-core/rsem/calculateexpression/main'
+include { RustqcResult } from './modules/nf-core/rustqc/main'
+include { SalmonQuantSample } from './modules/nf-core/salmon/quant/main'
+include { Deseq2Qc } from './modules/local/deseq2_qc/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

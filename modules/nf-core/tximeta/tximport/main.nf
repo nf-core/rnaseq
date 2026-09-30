@@ -2,6 +2,20 @@ nextflow.enable.types = true
 
 include { QuantsInput } from '../../types'
 
+record TximetaTximportResult {
+    id:                        String
+    meta:                      Map
+    tpm_gene:                  Path
+    counts_gene:               Path
+    lengths_gene:              Path
+    counts_gene_length_scaled: Path
+    counts_gene_scaled:        Path
+    tpm_transcript:            Path
+    counts_transcript:         Path
+    lengths_transcript:        Path
+    tx2gene_augmented:         Path
+}
+
 process TXIMETA_TXIMPORT {
     tag "${sample.meta.id}"
     label "process_medium"

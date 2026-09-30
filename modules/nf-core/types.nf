@@ -80,43 +80,11 @@ record BedgraphInput {
 }
 
 // ============================================================================
-// bbmap
-// ============================================================================
-
-record BbmapBbsplitResult {
-    id:                 String
-    meta:               Map
-    index:              Path?
-    reads:              List<Path>
-    other_genome_reads: List<Path>
-    stats:              Path?
-    log:                Path?
-}
-
-// ============================================================================
 // bowtie2
 // ============================================================================
 
 record Bowtie2Logs {
     log: Path
-}
-
-record Bowtie2AlignResult {
-    id:       String
-    meta:     Map
-    sam:      Path?
-    raw_bams: List<Path>
-    cram:     Path?
-    csi:      Path?
-    crai:     Path?
-    unmapped: List<Path>
-    bowtie2:  Bowtie2Logs
-}
-
-record Bowtie2BuildResult {
-    id:    String
-    meta:  Map
-    index: Path
 }
 
 // ============================================================================
@@ -128,51 +96,6 @@ record BrackenResult {
     meta:      Map
     abundance: Path
     report:    Path
-}
-
-// ============================================================================
-// custom
-// ============================================================================
-
-record RsemMerge {
-    counts_gene:       Path
-    tpm_gene:          Path
-    counts_transcript: Path
-    tpm_transcript:    Path
-    genes_long:        Path
-    isoforms_long:     Path
-}
-
-// The single 'all_samples' row of merged RSEM tables; CUSTOM_RSEMMERGECOUNTS output without meta
-record RsemMergeSample {
-    id:         String
-    rsem_merge: RsemMerge
-}
-
-record CustomCatadditionalfastaResult {
-    id:    String
-    meta:  Map
-    fasta: Path
-    gtf:   Path
-}
-
-record CustomGtffilterResult {
-    id:   String
-    meta: Map
-    gtf:  Path
-}
-
-record CustomMultiqccustombiotypeResult {
-    id:   String
-    meta: Map
-    tsv:  Path
-    rrna: Path
-}
-
-record CustomTx2geneResult {
-    id:      String
-    meta:    Map
-    tx2gene: Path
 }
 
 // ============================================================================
@@ -192,74 +115,11 @@ record BamQcDupradar {
 }
 
 // ============================================================================
-// fastqc
-// ============================================================================
-
-record FastqcResult {
-    id:   String
-    meta: Map
-    html: List<Path>
-    zip:  List<Path>
-}
-
-// ============================================================================
-// fq
-// ============================================================================
-
-record FqLintResult {
-    id:   String
-    meta: Map
-    lint: Path
-}
-
-record FqSubsampleResult {
-    id:    String
-    meta:  Map
-    reads: List<Path>
-}
-
-// ============================================================================
-// gunzip
-// ============================================================================
-
-record GunzipResult {
-    id:   String
-    meta: Map
-    file: Path
-}
-
-// ============================================================================
 // hisat2
 // ============================================================================
 
 record Hisat2Logs {
     summary: Path
-}
-
-record Hisat2AlignResult {
-    id:       String
-    meta:     Map
-    raw_bams: List<Path>
-    unmapped: List<Path>
-    hisat2:   Hisat2Logs
-}
-
-// ============================================================================
-// kallisto
-// ============================================================================
-
-record KallistoQuantSample {
-    id:        String
-    meta:      Map
-    quant_dir: Path
-    json_info: Path
-    log:       Path
-}
-
-record KallistoIndexResult {
-    id:    String
-    meta:  Map
-    index: Path
 }
 
 // ============================================================================
@@ -276,31 +136,6 @@ record Kraken2Result {
 }
 
 // ============================================================================
-// multiqc
-// ============================================================================
-
-record MultiqcReport {
-    id:     String
-    meta:   Map
-    report: Path
-    data:   Path
-    plots:  Path?
-}
-
-// ============================================================================
-// picard
-// ============================================================================
-
-record PicardMarkduplicatesResult {
-    id:      String
-    meta:    Map
-    bam:     Path?
-    bai:     Path?
-    cram:    Path?
-    metrics: Path
-}
-
-// ============================================================================
 // preseq
 // ============================================================================
 
@@ -309,40 +144,6 @@ record BamQcPreseq {
     meta:      Map
     lc_extrap: Path
     log:       Path
-}
-
-// ============================================================================
-// ribodetector
-// ============================================================================
-
-record RibodetectorResult {
-    id:    String
-    meta:  Map
-    reads: List<Path>
-    log:   Path
-}
-
-// ============================================================================
-// rsem
-// ============================================================================
-
-record RsemQuantSample {
-    id:                String
-    meta:              Map
-    counts_gene:       Path
-    counts_transcript: Path
-    stat:              Path
-    log:               Path?
-    bam_star:          Path?
-    bam_genome:        Path?
-    bam_transcript:    Path?
-}
-
-record RsemPreparereferenceResult {
-    id:               String
-    meta:             Map
-    index:            Path
-    transcript_fasta: Path
 }
 
 // ============================================================================
@@ -395,118 +196,6 @@ record RseqcTin {
 }
 
 // ============================================================================
-// rustqc
-// ============================================================================
-
-record RustqcResult {
-    id:            String
-    meta:          Map
-    samtools:      RustqcSamtools
-    preseq:        RustqcPreseq
-    dupradar:      RustqcDupradar
-    featurecounts: RustqcFeaturecounts
-    biotype:       RustqcBiotype
-    rseqc:         RustqcRseqc
-    qualimap:      Path?
-    all_files:     Set<Path>
-}
-
-record RustqcSamtools {
-    stats:    Path?
-    flagstat: Path?
-    idxstats: Path?
-}
-
-record RustqcPreseq {
-    lc_extrap: Path?
-}
-
-record RustqcDupradar {
-    scatter2d:       Set<Path>
-    boxplot:         Set<Path>
-    hist:            Set<Path>
-    dupmatrix:       Path?
-    intercept_slope: Path?
-    multiqc:         Set<Path>
-}
-
-record RustqcFeaturecounts {
-    counts:  Path?
-    summary: Path?
-}
-
-record RustqcBiotype {
-    tsv:  Path?
-    mqc:  Path?
-    rrna: Path?
-}
-
-record RustqcTin {
-    txt: Path?
-    xls: Path?
-}
-
-record RustqcInnerdistance {
-    distance: Path?
-    freq:     Path?
-    mean:     Path?
-    summary:  Path?
-    plot:     Set<Path>
-    rscript:  Path?
-}
-
-record RustqcJunctionannotation {
-    bed:          Path?
-    interact_bed: Path?
-    xls:          Path?
-    log:          Path?
-    plot:         Set<Path>
-    rscript:      Path?
-}
-
-record RustqcJunctionsaturation {
-    summary: Path?
-    plot:    Set<Path>
-    rscript: Path?
-}
-
-record RustqcReadduplication {
-    seq_xls: Path?
-    pos_xls: Path?
-    plot:    Set<Path>
-    rscript: Path?
-}
-
-record RustqcRseqc {
-    bamstat:            Path?
-    inferexperiment:    Path?
-    readdistribution:   Path?
-    tin:                RustqcTin
-    innerdistance:      RustqcInnerdistance
-    junctionannotation: RustqcJunctionannotation
-    junctionsaturation: RustqcJunctionsaturation
-    readduplication:    RustqcReadduplication
-}
-
-// ============================================================================
-// salmon
-// ============================================================================
-
-record SalmonQuantSample {
-    id:                String
-    meta:              Map
-    quant_dir:         Path
-    json_info:         Path?
-    lib_format_counts: Path?
-}
-
-record SalmonIndexResult {
-    id:    String
-    meta:  Map
-    index: Path
-}
-
-// ============================================================================
 // samtools
 // ============================================================================
 
@@ -528,87 +217,6 @@ record RawBams {
     raw_bams: List<Path>
 }
 
-record SamtoolsFastqResult {
-    id:          String
-    meta:        Map
-    reads:       List<Path>
-    interleaved: Path?
-    singleton:   Path?
-    other:       Path?
-}
-
-record SamtoolsFlagstatResult {
-    id:       String
-    meta:     Map
-    flagstat: Path
-}
-
-record SamtoolsIdxstatsResult {
-    id:       String
-    meta:     Map
-    idxstats: Path
-}
-
-record SamtoolsIndexResult {
-    id:   String
-    meta: Map
-    bai:  Path
-}
-
-record SamtoolsSortResult {
-    id:   String
-    meta: Map
-    bam:  Path?
-    cram: Path?
-    sam:  Path?
-    bai:  Path?
-    csi:  Path?
-    crai: Path?
-}
-
-record SamtoolsStatsResult {
-    id:    String
-    meta:  Map
-    stats: Path
-}
-
-record SamtoolsViewResult {
-    id:               String
-    meta:             Map
-    bam:              Path?
-    bai:              Path?
-    unselected:       Path?
-    unselected_index: Path?
-}
-
-// ============================================================================
-// seqkit
-// ============================================================================
-
-record SeqkitReplaceResult {
-    id:    String
-    meta:  Map
-    fastx: Path
-}
-
-record SeqkitStatsResult {
-    id:    String
-    meta:  Map
-    stats: Path
-}
-
-// ============================================================================
-// sortmerna
-// ============================================================================
-
-record SortmernaResult {
-    id:    String
-    meta:  Map
-    reads: List<Path>
-    log:   Path?
-    index: Path?
-}
-
 // ============================================================================
 // star
 // ============================================================================
@@ -618,35 +226,6 @@ record StarLogs {
     log_out:      Path
     log_progress: Path
     tab:          List<Path>
-}
-
-// Emitted by STAR_ALIGN, SENTIEON_STARALIGN and PARABRICKS_RNAFQ2BAM alike.
-// orig_bai, qc_metrics and duplicate_metrics are only set by Parabricks.
-record StarAlignResult {
-    id:                 String
-    meta:               Map
-    raw_bams:           List<Path>
-    bam_sorted:         Path?
-    bam_sorted_aligned: Path?
-    bam_unsorted:       Path?
-    transcriptome_bam:  Path?
-    unmapped:           List<Path>
-    sam:                Path?
-    junction:           Path?
-    spl_junc_tab:       Path?
-    read_per_gene_tab:  Path?
-    wig:                List<Path>
-    bedgraph:           List<Path>
-    orig_bai:           Path?
-    qc_metrics:         Path?
-    duplicate_metrics:  Path?
-    star:               StarLogs
-}
-
-record StarGenomegenerateResult {
-    id:    String
-    meta:  Map
-    index: Path
 }
 
 // ============================================================================
@@ -669,21 +248,6 @@ record StringtieAssembly {
     ballgown:       List<Path>?
 }
 
-record StringtieMergeResult {
-    id:         String
-    meta:       Map
-    merged_gtf: Path
-}
-
-record StringtieResult {
-    id:             String
-    meta:           Map
-    transcript_gtf: Path
-    abundance:      Path
-    coverage_gtf:   Path?
-    ballgown:       Set<Path>
-}
-
 // ============================================================================
 // subread
 // ============================================================================
@@ -693,100 +257,6 @@ record BamQcFeaturecounts {
     meta:    Map
     counts:  Path
     summary: Path
-}
-
-// ============================================================================
-// tximeta
-// ============================================================================
-
-record TximetaTximportResult {
-    id:                        String
-    meta:                      Map
-    tpm_gene:                  Path
-    counts_gene:               Path
-    lengths_gene:              Path
-    counts_gene_length_scaled: Path
-    counts_gene_scaled:        Path
-    tpm_transcript:            Path
-    counts_transcript:         Path
-    lengths_transcript:        Path
-    tx2gene_augmented:         Path
-}
-
-// ============================================================================
-// ucsc
-// ============================================================================
-
-record UcscBedclipResult {
-    id:       String
-    meta:     Map
-    bedgraph: Path
-}
-
-record UcscBedgraphtobigwigResult {
-    id:     String
-    meta:   Map
-    bigwig: Path
-}
-
-// ============================================================================
-// umicollapse
-// ============================================================================
-
-record UmicollapseResult {
-    id:    String
-    meta:  Map
-    bam:   Path?
-    fastq: Path?
-    log:   Path
-}
-
-// ============================================================================
-// umitools
-// ============================================================================
-
-record UmitoolsDedupResult {
-    id:                   String
-    meta:                 Map
-    bam:                  Path
-    log:                  Path
-    tsv_edit_distance:    Path?
-    tsv_per_umi:          Path?
-    tsv_umi_per_position: Path?
-}
-
-record UmitoolsPrepareforrsemResult {
-    id:   String
-    meta: Map
-    bam:  Path
-    log:  Path
-}
-
-// ============================================================================
-// Local module concatenate_fasta
-// ============================================================================
-
-record ConcatenateFastaResult {
-    id:    String
-    meta:  Map
-    fasta: Path
-}
-
-// ============================================================================
-// Local module deseq2_qc
-// ============================================================================
-
-record Deseq2Qc {
-    id:            String
-    meta:          Map
-    rdata:         Path?
-    pca_vals:      Path?
-    plots_pdf:     Path?
-    sample_dists:  Path?
-    size_factors:  Path?
-    log:           Path?
-    pca_multiqc:   Path?
-    dists_multiqc: Path?
 }
 
 // ============================================================================

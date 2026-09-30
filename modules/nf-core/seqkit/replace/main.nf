@@ -6,6 +6,12 @@ record SeqkitReplaceInput {
     fastx: Path
 }
 
+record SeqkitReplaceResult {
+    id:    String
+    meta:  Map
+    fastx: Path
+}
+
 process SEQKIT_REPLACE {
     tag "${sample.meta.id}"
     label 'process_low'

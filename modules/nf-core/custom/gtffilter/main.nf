@@ -2,6 +2,12 @@ nextflow.enable.types = true
 
 include { GtfInput } from '../../types'
 
+record CustomGtffilterResult {
+    id:   String
+    meta: Map
+    gtf:  Path
+}
+
 process CUSTOM_GTFFILTER {
     tag "${sample.meta.id}"
     label 'process_single'

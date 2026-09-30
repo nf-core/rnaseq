@@ -2,6 +2,13 @@ nextflow.enable.types = true
 
 include { FastaGtfInput } from '../../types'
 
+record RsemPreparereferenceResult {
+    id:               String
+    meta:             Map
+    index:            Path
+    transcript_fasta: Path
+}
+
 process RSEM_PREPAREREFERENCE {
     tag "$sample.fasta"
     label 'process_high'

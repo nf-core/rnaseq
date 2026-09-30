@@ -29,7 +29,12 @@ include { SENTIEON_RSEMPREPAREREFERENCE as SENTIEON_RSEM_PREPAREREFERENCE_GENOME
 include { STAR_GENOMEPARAMS_UPGRADE         } from '../../../modules/local/star_genomeparams_upgrade'
 
 include { taskOutputOrNull                  } from '../utils_nfcore_rnaseq_pipeline'
-include { BbmapBbsplitResult; KallistoIndexResult; SalmonIndexResult; SortmernaResult; StarGenomegenerateResult; GenomeArtifact } from '../../../modules/nf-core/types'
+include { GenomeArtifact } from '../../../modules/nf-core/types'
+include { BbmapBbsplitResult } from '../../../modules/nf-core/bbmap/bbsplit/main'
+include { KallistoIndexResult } from '../../../modules/nf-core/kallisto/index/main'
+include { SalmonIndexResult } from '../../../modules/nf-core/salmon/index/main'
+include { SortmernaResult } from '../../../modules/nf-core/sortmerna/main'
+include { StarGenomegenerateResult } from '../../../modules/nf-core/star/genomegenerate/main'
 
 workflow PREPARE_GENOME_INDICES {
 

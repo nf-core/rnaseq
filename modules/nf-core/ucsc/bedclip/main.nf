@@ -2,6 +2,12 @@ nextflow.enable.types = true
 
 include { BedgraphInput } from '../../types'
 
+record UcscBedclipResult {
+    id:       String
+    meta:     Map
+    bedgraph: Path
+}
+
 process UCSC_BEDCLIP {
     tag "${sample.meta.id}"
     label 'process_medium'

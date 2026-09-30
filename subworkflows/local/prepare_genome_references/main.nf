@@ -27,7 +27,11 @@ include { EAUTILS_GTF2BED                      } from '../../../modules/nf-core/
 include { CUSTOM_GTFFILTER                     } from '../../../modules/nf-core/custom/gtffilter'
 
 include { taskOutputOrNull                     } from '../utils_nfcore_rnaseq_pipeline'
-include { CustomCatadditionalfastaResult; CustomGtffilterResult; GunzipResult; RsemPreparereferenceResult; GenomeArtifact } from '../../../modules/nf-core/types'
+include { GenomeArtifact } from '../../../modules/nf-core/types'
+include { CustomCatadditionalfastaResult } from '../../../modules/nf-core/custom/catadditionalfasta/main'
+include { CustomGtffilterResult } from '../../../modules/nf-core/custom/gtffilter/main'
+include { GunzipResult } from '../../../modules/nf-core/gunzip/main'
+include { RsemPreparereferenceResult } from '../../../modules/nf-core/rsem/preparereference/main'
 
 workflow PREPARE_GENOME_REFERENCES {
 

@@ -2,6 +2,14 @@ nextflow.enable.types = true
 
 include { ReadsInput } from '../types'
 
+record SortmernaResult {
+    id:    String
+    meta:  Map
+    reads: List<Path>
+    log:   Path?
+    index: Path?
+}
+
 process SORTMERNA {
     tag "${sample.meta.id}"
     label 'process_high'

@@ -9,7 +9,9 @@ include { TXIMETA_TXIMPORT } from '../../../modules/nf-core/tximeta/tximport'
 
 include { SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT as SE_GENE_UNIFIED       } from '../../../modules/nf-core/summarizedexperiment/summarizedexperiment'
 include { SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT as SE_TRANSCRIPT_UNIFIED } from '../../../modules/nf-core/summarizedexperiment/summarizedexperiment'
-include { QuantsInput; CustomTx2geneResult; TximetaTximportResult; QuantMerged } from '../../../modules/nf-core/types'
+include { QuantsInput; QuantMerged } from '../../../modules/nf-core/types'
+include { CustomTx2geneResult } from '../../../modules/nf-core/custom/tx2gene/main'
+include { TximetaTximportResult } from '../../../modules/nf-core/tximeta/tximport/main'
 
 workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT {
     take:

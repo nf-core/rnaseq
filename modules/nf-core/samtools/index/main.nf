@@ -2,6 +2,12 @@ nextflow.enable.types = true
 
 include { BamInput } from '../../types'
 
+record SamtoolsIndexResult {
+    id:   String
+    meta: Map
+    bai:  Path
+}
+
 process SAMTOOLS_INDEX {
     tag "${sample.meta.id}"
     label 'process_low'

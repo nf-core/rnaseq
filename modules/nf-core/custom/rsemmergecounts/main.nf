@@ -7,6 +7,21 @@ record CustomRsemmergecountsInput {
     isoforms: List<Path>
 }
 
+record RsemMerge {
+    counts_gene:       Path
+    tpm_gene:          Path
+    counts_transcript: Path
+    tpm_transcript:    Path
+    genes_long:        Path
+    isoforms_long:     Path
+}
+
+// The single 'all_samples' row of merged RSEM tables; CUSTOM_RSEMMERGECOUNTS output without meta
+record RsemMergeSample {
+    id:         String
+    rsem_merge: RsemMerge
+}
+
 process CUSTOM_RSEMMERGECOUNTS {
     tag "${sample.meta.id}"
     label "process_medium"

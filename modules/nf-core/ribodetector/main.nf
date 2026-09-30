@@ -7,6 +7,13 @@ record RibodetectorInput {
     length: Integer
 }
 
+record RibodetectorResult {
+    id:    String
+    meta:  Map
+    reads: List<Path>
+    log:   Path
+}
+
 process RIBODETECTOR {
 	tag "$sample.meta.id"
 	label 'process_medium'

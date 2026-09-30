@@ -11,7 +11,8 @@ nextflow.enable.types = true
 
 include { BOWTIE2_ALIGN           } from '../../../modules/nf-core/bowtie2/align'
 include { BAM_SORT_STATS_SAMTOOLS } from '../../nf-core/bam_sort_stats_samtools'
-include { ReadsInput; Bowtie2AlignResult; Bowtie2Aligned; Bam } from '../../../modules/nf-core/types'
+include { ReadsInput; Bowtie2Aligned; Bam } from '../../../modules/nf-core/types'
+include { Bowtie2AlignResult } from '../../../modules/nf-core/bowtie2/align/main'
 
 //
 // Function that parses and returns the alignment rate from the Bowtie2 log output

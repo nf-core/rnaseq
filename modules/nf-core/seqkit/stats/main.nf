@@ -2,6 +2,12 @@ nextflow.enable.types = true
 
 include { ReadsInput } from '../../types'
 
+record SeqkitStatsResult {
+    id:    String
+    meta:  Map
+    stats: Path
+}
+
 process SEQKIT_STATS {
     tag "${sample.meta.id}"
     label 'process_low'

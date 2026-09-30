@@ -8,7 +8,10 @@ nextflow.enable.types = true
 include { SALMON_INDEX } from '../../../modules/nf-core/salmon/index/main'
 include { FQ_SUBSAMPLE } from '../../../modules/nf-core/fq/subsample/main'
 include { SALMON_QUANT } from '../../../modules/nf-core/salmon/quant/main'
-include { ReadsInput; FqSubsampleResult; SalmonQuantSample; SalmonIndexResult; SalmonSubsampled } from '../../../modules/nf-core/types'
+include { ReadsInput; SalmonSubsampled } from '../../../modules/nf-core/types'
+include { FqSubsampleResult } from '../../../modules/nf-core/fq/subsample/main'
+include { SalmonQuantSample } from '../../../modules/nf-core/salmon/quant/main'
+include { SalmonIndexResult } from '../../../modules/nf-core/salmon/index/main'
 
 workflow FASTQ_SUBSAMPLE_FQ_SALMON {
     take:

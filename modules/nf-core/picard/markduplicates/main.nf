@@ -2,6 +2,15 @@ nextflow.enable.types = true
 
 include { BamInput } from '../../types'
 
+record PicardMarkduplicatesResult {
+    id:      String
+    meta:    Map
+    bam:     Path?
+    bai:     Path?
+    cram:    Path?
+    metrics: Path
+}
+
 process PICARD_MARKDUPLICATES {
     tag "${sample.meta.id}"
     label 'process_medium'

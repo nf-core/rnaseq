@@ -1,7 +1,9 @@
 nextflow.enable.types = true
 
+include { ReadsInput } from '../../types'
+
 process SEQKIT_STATS {
-    tag "${meta.id}"
+    tag "${sample.meta.id}"
     label 'process_low'
 
     conda "${moduleDir}/environment.yml"
@@ -10,28 +12,28 @@ process SEQKIT_STATS {
         : 'community.wave.seqera.io/library/seqkit:2.13.0--05c0a96bf9fb2751'}"
 
     input:
-    record(id: String, meta: Map, reads: List<Path>)
+    sample: ReadsInput
 
     output:
-    record(id: id, meta: meta, stats: file("*.tsv"))
+    record(id: sample.id, meta: sample.meta, stats: file("*.tsv"))
 
     topic:
     tuple(task.process, 'seqkit', eval("seqkit version | sed 's/^.*v//'")) >> 'versions'
 
     script:
     def args = task.ext.args ?: '--all'
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     seqkit stats \\
         --tabular \\
         --threads ${task.cpus} \\
         ${args} \\
-        ${reads.join(' ')} > '${prefix}.tsv'
+        ${sample.reads.join(' ')} > '${prefix}.tsv'
     """
 
     stub:
     def args = task.ext.args ?: '--all'
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     echo ${args}
 

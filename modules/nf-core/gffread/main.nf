@@ -10,11 +10,12 @@ process GFFREAD {
         'quay.io/biocontainers/gffread:0.12.7--hdcf5f25_4' }"
 
     input:
-    tuple(meta: Map, gff: Path)
+    record(id: String, meta: Map, gff: Path)
     fasta: Path?
 
     output:
     record(
+        id:            id,
         meta:          meta,
         gtf:           file('*.gtf', optional: true),
         gffread_gff:   file('*.gff3', optional: true),

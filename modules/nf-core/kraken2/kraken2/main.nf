@@ -10,13 +10,14 @@ process KRAKEN2_KRAKEN2 {
         'community.wave.seqera.io/library/kraken2_coreutils_pigz:920ecc6b96e2ba71' }"
 
     input:
-    tuple(meta: Map, reads: List<Path>)
+    record(id: String, meta: Map, reads: List<Path>)
     db: Path
     save_output_fastqs: Boolean
     save_reads_assignment: Boolean
 
     output:
     record(
+        id:                          id,
         meta:                        meta,
         report:                      file('*report.txt'),
         classified_reads_fastq:      files('*.classified{.,_}*', optional: true),

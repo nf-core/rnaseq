@@ -10,11 +10,11 @@ process SYLPHTAX_TAXPROF {
         : 'quay.io/biocontainers/sylph-tax:1.9.0--pyhdfd78af_0'}"
 
     input:
-    tuple(meta: Map, sylph_results: Path)
+    record(id: String, meta: Map, profile_out: Path)
     taxonomy: List<Path>
 
     output:
-    record(meta: meta, taxprof_output: file('*.sylphmpa'))
+    record(id: id, meta: meta, taxprof_output: file('*.sylphmpa'))
 
     topic:
     tuple(task.process, 'sylph-tax', eval("sylph-tax --version 2>&1 | tail -1")) >> 'versions'
@@ -27,7 +27,7 @@ process SYLPHTAX_TAXPROF {
     export SYLPH_TAXONOMY_CONFIG="/tmp/config.json"
     sylph-tax \\
         taxprof \\
-        ${sylph_results} \\
+        ${profile_out} \\
         ${args} \\
         -t ${taxonomy.join(' ')}
 

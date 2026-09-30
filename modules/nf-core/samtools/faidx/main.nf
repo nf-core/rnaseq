@@ -10,11 +10,12 @@ process SAMTOOLS_FAIDX {
         : 'community.wave.seqera.io/library/htslib_samtools:1.24--d697cfb9dce007cd'}"
 
     input:
-    tuple(meta: Map, fasta: Path, fai: Path?)
+    record(id: String, meta: Map, fasta: Path, fai: Path?)
     get_sizes: Boolean
 
     output:
     record(
+        id:    id,
         meta:  meta,
         fa:    file('*.{fa,fasta}', optional: true),
         sizes: file('*.sizes', optional: true),

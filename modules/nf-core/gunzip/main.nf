@@ -10,10 +10,10 @@ process GUNZIP {
         : 'community.wave.seqera.io/library/coreutils_grep_gzip_lbzip2_pruned:838ba80435a629f8'}"
 
     input:
-    tuple(meta: Map, archive: Path)
+    record(id: String, meta: Map, archive: Path)
 
     output:
-    record(meta: meta, gunzip: file("${gunzip}"))
+    record(id: id, meta: meta, gunzip: file("${gunzip}"))
 
     topic:
     tuple(task.process, 'gunzip', eval('gunzip --version 2>&1 | head -1 | sed "s/^.*(gzip) //; s/ Copyright.*//"')) >> 'versions'

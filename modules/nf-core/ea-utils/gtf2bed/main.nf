@@ -10,10 +10,10 @@ process EAUTILS_GTF2BED {
         'quay.io/biocontainers/perl:5.26.2' }"
 
     input:
-    tuple(meta: Map, gtf: Path)
+    record(id: String, meta: Map, gtf: Path)
 
     output:
-    record(meta: meta, bed: file("${prefix}.bed"))
+    record(id: id, meta: meta, bed: file("${prefix}.bed"))
 
     topic:
     file('versions.yml') >> 'versions'

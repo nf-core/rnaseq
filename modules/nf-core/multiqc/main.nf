@@ -10,7 +10,7 @@ process MULTIQC {
         : 'community.wave.seqera.io/library/multiqc:1.35--c17fb751507e9dfc'}"
 
     input:
-    tuple(meta: Map, multiqc_files: List<Path>, multiqc_config: List<Path>, multiqc_logo: Path?, replace_names: Path?, sample_names: Path?)
+    record(id: String, meta: Map, multiqc_files: List<Path>, multiqc_config: List<Path>, multiqc_logo: Path?, replace_names: Path?, sample_names: Path?)
 
     stage:
     stageAs multiqc_files, '?/*'
@@ -19,6 +19,7 @@ process MULTIQC {
     // MultiQC must not push its version to the `versions` topic: its input depends on that topic, so the pipeline would hang forever
     output:
     record(
+        id:     id,
         meta:   meta,
         report: file('*.html'),
         data:   file('*_data'),

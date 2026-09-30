@@ -10,10 +10,10 @@ process UNTAR {
         : 'community.wave.seqera.io/library/coreutils_grep_gzip_lbzip2_pruned:838ba80435a629f8'}"
 
     input:
-    tuple(meta: Map, archive: Path)
+    record(id: String, meta: Map, archive: Path)
 
     output:
-    record(meta: meta, untar: file("${prefix}"))
+    record(id: id, meta: meta, untar: file("${prefix}"))
 
     topic:
     tuple(task.process, 'untar', eval('tar --version 2>&1 | head -1 | sed "s/tar (GNU tar) //; s/ Copyright.*//"')) >> 'versions'

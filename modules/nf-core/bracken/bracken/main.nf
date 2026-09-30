@@ -10,11 +10,12 @@ process BRACKEN_BRACKEN {
         'community.wave.seqera.io/library/bracken:3.1--22a4e66ce04c5e01' }"
 
     input:
-    tuple(meta: Map, kraken_report: Path)
+    record(id: String, meta: Map, report: Path)
     database: Path
 
     output:
     record(
+        id:        id,
         meta:      meta,
         abundance: file(bracken_report),
         report:    file(bracken_kraken_style_report)
@@ -32,7 +33,7 @@ process BRACKEN_BRACKEN {
     bracken \\
         ${args} \\
         -d '${database}' \\
-        -i '${kraken_report}' \\
+        -i '${report}' \\
         -o '${bracken_report}' \\
         -w '${bracken_kraken_style_report}'
     """

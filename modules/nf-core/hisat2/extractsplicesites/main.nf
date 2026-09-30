@@ -10,10 +10,10 @@ process HISAT2_EXTRACTSPLICESITES {
         : 'community.wave.seqera.io/library/hisat2_samtools:a0c9b8ccf8116a89'}"
 
     input:
-    tuple(meta: Map, gtf: Path)
+    record(id: String, meta: Map, gtf: Path)
 
     output:
-    record(meta: meta, splicesites: file('*.splice_sites.txt'))
+    record(id: id, meta: meta, splicesites: file('*.splice_sites.txt'))
 
     topic:
     tuple(task.process, 'hisat2', eval('hisat2 --version | grep -o "version [^ ]*" | cut -d " " -f 2')) >> 'versions'

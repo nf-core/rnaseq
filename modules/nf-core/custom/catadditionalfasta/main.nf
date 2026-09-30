@@ -9,12 +9,13 @@ process CUSTOM_CATADDITIONALFASTA {
         'quay.io/biocontainers/python:3.12' }"
 
     input:
-    tuple(meta: Map, fasta: Path, gtf: Path)
+    record(id: String, meta: Map, fasta: Path, gtf: Path)
     tuple(meta2: Map, add_fasta: Path)
     biotype: String
 
     output:
     record(
+        id:    id,
         meta:  meta,
         fasta: file("out/${prefix}.fasta"),
         gtf:   file("out/${prefix}.gtf")

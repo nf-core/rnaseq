@@ -101,6 +101,7 @@ runs:
       run: |
         if [ -f .github/UPDATE_SNAPSHOTS ]; then
           sed 's#def baseIgnore = \[.*\]#def baseIgnore = []#' nf-test.config > nf-test.update.config
+          grep -q 'def baseIgnore = \[\]' nf-test.update.config || { echo "::error::could not remove the nf-test ignore list"; exit 1; }
           MODE_FLAGS="--update-snapshot --config nf-test.update.config"
         else
           MODE_FLAGS="--ci --changed-since HEAD^"

@@ -239,6 +239,8 @@ Subworkflows that produce per-sample files also emit a `results` record (or `sam
 
 Non-deterministic outputs (STAR, Salmon, Kallisto, RSEM, HISAT2 indices; qualimap reports) are snapshotted by file-name-only (`getSnapshot()` filtered) rather than content. Deterministic text outputs are snapshotted by md5. Verbose JSON test output (e.g. helper-function tests) should snapshot `.md5()` of the result rather than inlining the JSON. Don't snapshot timestamps or paths that contain hash directories.
 
+The tests of vendored modules and nf-core subworkflows (`modules/nf-core/**/tests`, `subworkflows/nf-core/**/tests`) are excluded from CI by `nf-test.config`, as upstream, because nf-core/modules runs them. This branch edits those components in place, so their snapshots only change when someone runs the tests with that ignore list removed; ordinary CI will not notice if they go stale.
+
 #### `.nftignore`
 
 `tests/.nftignore` (and `tests/.nftignore_rustqc` for the RustQC variant) is a list of glob patterns that nf-test excludes from `${outputDir}` snapshots at the pipeline-test level. It is the right place to drop outputs that are content-stable but not byte-stable (e.g. files that include a timestamp, paths under multiqc/multiqc_data, log files where ordering varies), or that are already covered elsewhere. If a pipeline-level snapshot is fluttering on a file you don't actually need to assert on, add it here rather than rerunning until you get lucky.

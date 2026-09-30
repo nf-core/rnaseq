@@ -41,7 +41,7 @@ process BBMAP_BBSPLIT {
         other_genome_reads: files('*fastq.gz', optional: true).findAll { f -> !f.name.contains('primary') }.toSorted { f -> f.name },
         stats:              file('*txt', optional: true),
         log:                file('*.log', optional: true)
-    )
+    ) as BbmapBbsplitResult
 
     topic:
     tuple(task.process, 'bbmap', eval('bbversion.sh | grep -v "Duplicate cpuset"')) >> 'versions'

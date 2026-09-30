@@ -2,6 +2,12 @@ nextflow.enable.types = true
 
 include { GtfInput } from '../../types'
 
+record EautilsGtf2bedResult {
+    id:   String
+    meta: Map
+    bed:  Path
+}
+
 process EAUTILS_GTF2BED {
     tag "${sample.meta.id}"
     label 'process_low'
@@ -15,7 +21,7 @@ process EAUTILS_GTF2BED {
     sample: GtfInput
 
     output:
-    record(id: sample.id, meta: sample.meta, bed: file("${prefix}.bed"))
+    record(id: sample.id, meta: sample.meta, bed: file("${prefix}.bed")) as EautilsGtf2bedResult
 
     topic:
     file('versions.yml') >> 'versions'

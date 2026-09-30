@@ -32,7 +32,7 @@ process CUSTOM_MULTIQCCUSTOMBIOTYPE {
         meta: sample.meta,
         tsv:  file('*biotype_counts_mqc.tsv'),
         rrna: file('*biotype_counts_rrna_mqc.tsv')
-    )
+    ) as CustomMultiqccustombiotypeResult
 
     topic:
     file('versions.yml') >> 'versions'

@@ -46,7 +46,7 @@ process DESEQ2_QC {
         log:           file('*.log',                 optional: true),
         pca_multiqc:   file('*pca.vals_mqc.tsv',     optional: true),
         dists_multiqc: file('*sample.dists_mqc.tsv', optional: true)
-    )
+    ) as Deseq2Qc
 
     topic:
     tuple(task.process, 'r-base', eval("Rscript -e 'cat(as.character(getRversion()))'")) >> 'versions'

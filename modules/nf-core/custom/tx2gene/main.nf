@@ -28,7 +28,7 @@ process CUSTOM_TX2GENE {
     stageAs sample.quants, 'quants/*'
 
     output:
-    record(id: sample.id, meta: sample.meta, tx2gene: file("*tx2gene.tsv"))
+    record(id: sample.id, meta: sample.meta, tx2gene: file("*tx2gene.tsv")) as CustomTx2geneResult
 
     topic:
     file('versions.yml') >> 'versions'

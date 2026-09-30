@@ -1,5 +1,7 @@
 nextflow.enable.types = true
 
+include { BrackenResult } from '../../types'
+
 record BrackenInput {
     id:     String
     meta:   Map
@@ -25,7 +27,7 @@ process BRACKEN_BRACKEN {
         meta:      sample.meta,
         abundance: file(bracken_report),
         report:    file(bracken_kraken_style_report)
-    )
+    ) as BrackenResult
 
     topic:
     tuple(task.process, 'bracken', eval('bracken -v | cut -f2 -d"v"')) >> 'versions'

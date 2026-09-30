@@ -7,6 +7,12 @@ record MultiqcWriteFileInput {
     content: String
 }
 
+record MultiqcWriteFileResult {
+    id:   String
+    meta: Map
+    file: Path
+}
+
 process MULTIQC_WRITE_FILE {
     tag "${sample.id}"
 
@@ -14,7 +20,7 @@ process MULTIQC_WRITE_FILE {
     sample: MultiqcWriteFileInput
 
     output:
-    record(id: sample.id, meta: sample.meta, file: file(sample.name))
+    record(id: sample.id, meta: sample.meta, file: file(sample.name)) as MultiqcWriteFileResult
 
     exec:
     task.workDir.resolve(sample.name) << sample.content

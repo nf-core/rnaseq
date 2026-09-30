@@ -1,6 +1,6 @@
 nextflow.enable.types = true
 
-include { BamInput } from '../types'
+include { BamInput; BamQcDupradar } from '../types'
 
 process DUPRADAR {
     tag "${sample.meta.id}"
@@ -26,7 +26,7 @@ process DUPRADAR {
         intercept_slope: file("*_intercept_slope.txt"),
         multiqc:         files("*_mqc.txt", optional: true).toSorted { f -> f.name },
         session_info:    file("*.R_sessionInfo.log")
-    )
+    ) as BamQcDupradar
 
     topic:
     file('versions.yml') >> 'versions'

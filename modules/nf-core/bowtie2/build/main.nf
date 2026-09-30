@@ -21,7 +21,7 @@ process BOWTIE2_BUILD {
     sample: FastaInput
 
     output:
-    record(id: sample.id, meta: sample.meta, index: file('bowtie2'))
+    record(id: sample.id, meta: sample.meta, index: file('bowtie2')) as Bowtie2BuildResult
 
     topic:
     tuple(task.process, 'bowtie2', eval("bowtie2 --version 2>&1 | sed -n 's/.*bowtie2-align-s version //p'")) >> 'versions'

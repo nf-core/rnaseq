@@ -2,6 +2,12 @@ nextflow.enable.types = true
 
 include { FastaInput } from '../../nf-core/types'
 
+record PreprocessTranscriptsFastaGencodeResult {
+    id:    String
+    meta:  Map
+    fasta: Path
+}
+
 process PREPROCESS_TRANSCRIPTS_FASTA_GENCODE {
     tag "${sample.fasta}"
 
@@ -14,7 +20,7 @@ process PREPROCESS_TRANSCRIPTS_FASTA_GENCODE {
     sample: FastaInput
 
     output:
-    record(id: sample.id, meta: sample.meta, fasta: file('*.fa'))
+    record(id: sample.id, meta: sample.meta, fasta: file('*.fa')) as PreprocessTranscriptsFastaGencodeResult
 
     topic:
     tuple(task.process, 'sed', eval("sed --version 2>&1 | sed '1!d;s/^.*) //'")) >> 'versions'

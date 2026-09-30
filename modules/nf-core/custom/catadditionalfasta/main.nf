@@ -28,7 +28,7 @@ process CUSTOM_CATADDITIONALFASTA {
         meta:  sample.meta,
         fasta: file("out/${prefix}.fasta"),
         gtf:   file("out/${prefix}.gtf")
-    )
+    ) as CustomCatadditionalfastaResult
 
     topic:
     file('versions.yml') >> 'versions'

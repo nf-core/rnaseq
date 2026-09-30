@@ -22,7 +22,7 @@ process CUSTOM_GTFFILTER {
     fasta: Path?
 
     output:
-    record(id: sample.id, meta: sample.meta, gtf: file("${prefix}.${suffix}"))
+    record(id: sample.id, meta: sample.meta, gtf: file("${prefix}.${suffix}")) as CustomGtffilterResult
 
     topic:
     file('versions.yml') >> 'versions'

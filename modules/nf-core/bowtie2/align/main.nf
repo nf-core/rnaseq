@@ -41,7 +41,7 @@ process BOWTIE2_ALIGN {
         crai:     file('*.crai', optional: true),
         unmapped: files('*fastq.gz', optional: true).toSorted { f -> f.name },
         bowtie2:  record(log: file('*.log'))
-    )
+    ) as Bowtie2AlignResult
 
     topic:
     tuple(task.process, 'bowtie2', eval("bowtie2 --version 2>&1 | sed -n 's/.*bowtie2-align-s version //p'")) >> 'versions'

@@ -2,6 +2,12 @@ nextflow.enable.types = true
 
 include { ReadsInput } from '../../types'
 
+record CatFastqResult {
+    id:    String
+    meta:  Map
+    reads: List<Path>
+}
+
 process CAT_FASTQ {
     tag "${sample.meta.id}"
     label 'process_single'
@@ -18,7 +24,7 @@ process CAT_FASTQ {
     stageAs sample.reads, 'input*/*'
 
     output:
-    record(id: sample.id, meta: sample.meta, reads: files("*.merged.fastq.gz").toSorted { f -> f.name })
+    record(id: sample.id, meta: sample.meta, reads: files("*.merged.fastq.gz").toSorted { f -> f.name }) as CatFastqResult
 
     topic:
     tuple(task.process, "cat", eval("cat --version 2>&1 | head -n 1 | sed 's/^.*coreutils) //; s/ .*\$//'")) >> 'versions'

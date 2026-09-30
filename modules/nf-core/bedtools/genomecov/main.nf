@@ -7,6 +7,12 @@ record BedtoolsGenomecovInput {
     scale:     Float
 }
 
+record BedtoolsGenomecovResult {
+    id:       String
+    meta:     Map
+    bedgraph: Path
+}
+
 process BEDTOOLS_GENOMECOV {
     tag "${sample.meta.id}"
     label 'process_single'
@@ -23,7 +29,7 @@ process BEDTOOLS_GENOMECOV {
     sort: Boolean
 
     output:
-    record(id: sample.id, meta: sample.meta, bedgraph: file("*.${extension}"))
+    record(id: sample.id, meta: sample.meta, bedgraph: file("*.${extension}")) as BedtoolsGenomecovResult
 
     topic:
     tuple(task.process, 'bedtools', eval("bedtools --version | sed -e 's/bedtools v//g'")) >> 'versions'

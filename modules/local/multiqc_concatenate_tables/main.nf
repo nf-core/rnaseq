@@ -8,6 +8,12 @@ record MultiqcConcatenateTablesInput {
     files: List<Path>
 }
 
+record MultiqcConcatenateTablesResult {
+    id:   String
+    meta: Map
+    file: Path
+}
+
 process MULTIQC_CONCATENATE_TABLES {
     tag "${sample.id}"
 
@@ -15,7 +21,7 @@ process MULTIQC_CONCATENATE_TABLES {
     sample: MultiqcConcatenateTablesInput
 
     output:
-    record(id: sample.id, meta: sample.meta, file: file(sample.name))
+    record(id: sample.id, meta: sample.meta, file: file(sample.name)) as MultiqcConcatenateTablesResult
 
     exec:
     def combined = task.workDir.resolve(sample.name)

@@ -22,6 +22,12 @@ record RsemMergeSample {
     rsem_merge: RsemMerge
 }
 
+record CustomRsemmergecountsResult {
+    id:         String
+    meta:       Map
+    rsem_merge: RsemMerge
+}
+
 process CUSTOM_RSEMMERGECOUNTS {
     tag "${sample.meta.id}"
     label "process_medium"
@@ -50,7 +56,7 @@ process CUSTOM_RSEMMERGECOUNTS {
             genes_long:        file("${prefix}.genes_long.tsv"),
             isoforms_long:     file("${prefix}.isoforms_long.tsv")
         )
-    )
+    ) as CustomRsemmergecountsResult
 
     topic:
     tuple(task.process, 'sed', eval("sed --version 2>&1 | sed '1!d;s/^.*) //'")) >> 'versions'

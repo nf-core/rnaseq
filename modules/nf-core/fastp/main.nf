@@ -2,6 +2,17 @@ nextflow.enable.types = true
 
 include { FastpReads } from '../types'
 
+record FastpResult {
+    id:           String
+    meta:         Map
+    reads:        List<Path>
+    json:         Path
+    html:         Path
+    log:          Path
+    reads_fail:   List<Path>
+    reads_merged: Path?
+}
+
 process FASTP {
     tag "${sample.meta.id}"
     label 'process_medium'
@@ -27,7 +38,7 @@ process FASTP {
         log:          file('*.log'),
         reads_fail:   files('*.fail.fastq.gz', optional: true).toSorted { f -> f.name },
         reads_merged: file('*.merged.fastq.gz', optional: true)
-    )
+    ) as FastpResult
 
     topic:
     tuple(task.process, 'fastp', eval('fastp --version 2>&1 | sed -e "s/fastp //g"')) >> 'versions'

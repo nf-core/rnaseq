@@ -6,6 +6,12 @@ record StarGenomeparamsUpgradeInput {
     index: Path
 }
 
+record StarGenomeparamsUpgradeResult {
+    id:    String
+    meta:  Map
+    index: Path
+}
+
 process STAR_GENOMEPARAMS_UPGRADE {
     tag "${sample.meta.id ?: sample.index.name}"
     label 'process_single'
@@ -22,7 +28,7 @@ process STAR_GENOMEPARAMS_UPGRADE {
     stageAs sample.index, 'input_index'
 
     output:
-    record(id: sample.id, meta: sample.meta, index: file('star'))
+    record(id: sample.id, meta: sample.meta, index: file('star')) as StarGenomeparamsUpgradeResult
 
     topic:
     tuple(task.process, 'gawk', eval("awk -Wversion | sed '1!d; s/.*Awk //; s/,.*//'")) >> 'versions'

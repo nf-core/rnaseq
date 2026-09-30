@@ -19,7 +19,7 @@ process CONCATENATE_FASTA {
     sample: ConcatenateFastaInput
 
     output:
-    record(id: sample.id, meta: sample.meta, fasta: file('rrna_combined_dna.fasta'))
+    record(id: sample.id, meta: sample.meta, fasta: file('rrna_combined_dna.fasta')) as ConcatenateFastaResult
 
     exec:
     def combined = task.workDir.resolve('rrna_combined_dna.fasta')

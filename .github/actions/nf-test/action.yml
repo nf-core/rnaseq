@@ -99,17 +99,39 @@ runs:
         SENTIEON_LICSRVR_IP: ${{ env.SENTIEON_LICSRVR_IP }}
         SENTIEON_AUTH_MECH: "GitHub Actions - token"
       run: |
+        if [ -f .github/UPDATE_SNAPSHOTS ]; then
+          MODE_FLAGS="--update-snapshot"
+        else
+          MODE_FLAGS="--ci --changed-since HEAD^"
+        fi
         nf-test test \
           --profile=+${{ inputs.profile }} \
           $(if [ -n "${{ inputs.tags }}" ]; then echo "--tag ${{ inputs.tags }}"; fi) \
-          --ci \
-          --changed-since HEAD^ \
+          $MODE_FLAGS \
           --verbose \
           --tap=test.tap \
           --shard ${{ inputs.shard }}/${{ inputs.total_shards }}
 
           # Save the absolute path of the test.tap file to the output
           echo "tap_file_path=$(realpath test.tap)" >> $GITHUB_OUTPUT
+
+    - name: Collect updated snapshots
+      if: always() && hashFiles('.github/UPDATE_SNAPSHOTS') != ''
+      shell: bash
+      run: |
+        mkdir -p "$RUNNER_TEMP/snaps"
+        git status --porcelain -- '*.snap' | awk '{print $2}' | while read -r f; do
+          mkdir -p "$RUNNER_TEMP/snaps/$(dirname "$f")"
+          cp "$f" "$RUNNER_TEMP/snaps/$f"
+        done
+
+    - name: Upload updated snapshots
+      if: always() && hashFiles('.github/UPDATE_SNAPSHOTS') != ''
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+      with:
+        name: snaps-${{ inputs.shard }}
+        path: ${{ runner.temp }}/snaps
+        if-no-files-found: ignore
 
     - name: Generate test summary
       if: always()

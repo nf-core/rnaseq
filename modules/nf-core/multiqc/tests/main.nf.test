@@ -15,14 +15,15 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = channel.of([
-                    [ id: 'FASTQC' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastqc/test_fastqc.zip', checkIfExists: true),
-                    [],
-                    null,
-                    null,
-                    null
-                ])
+                input[0] = channel.of(record(
+                    id: 'FASTQC',
+                    meta: [ id: 'FASTQC' ],
+                    multiqc_files: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastqc/test_fastqc.zip', checkIfExists: true),
+                    multiqc_config: [],
+                    multiqc_logo: null,
+                    replace_names: null,
+                    sample_names: null
+                ))
                 """
             }
         }
@@ -50,14 +51,15 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = channel.of([
-                    [ id: 'FASTQC' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastqc/test_fastqc.zip', checkIfExists: true),
-                    [],
-                    null,
-                    null,
-                    null
-                ])
+                input[0] = channel.of(record(
+                    id: 'FASTQC',
+                    meta: [ id: 'FASTQC' ],
+                    multiqc_files: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastqc/test_fastqc.zip', checkIfExists: true),
+                    multiqc_config: [],
+                    multiqc_logo: null,
+                    replace_names: null,
+                    sample_names: null
+                ))
                 """
             }
         }
@@ -84,14 +86,15 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = channel.of([
-                    [ id: 'FASTQC' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastqc/test_fastqc.zip', checkIfExists: true),
-                    [file("https://raw.githubusercontent.com/nf-core/seqinspector/1.0.0/assets/multiqc_config.yml", checkIfExists: true)],
-                    null,
-                    null,
-                    null
-                ])
+                input[0] = channel.of(record(
+                    id: 'FASTQC',
+                    meta: [ id: 'FASTQC' ],
+                    multiqc_files: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastqc/test_fastqc.zip', checkIfExists: true),
+                    multiqc_config: [file("https:,
+                    multiqc_logo: null,
+                    replace_names: null,
+                    sample_names: null
+                ))
                 """
             }
         }
@@ -118,17 +121,18 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = channel.of([
-                    [ id: 'FASTQC' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastqc/test_fastqc.zip', checkIfExists: true),
-                    [
-                        file("https://raw.githubusercontent.com/nf-core/seqinspector/1.0.0/assets/multiqc_config.yml", checkIfExists: true),
-                        file("https://raw.githubusercontent.com/nf-core/seqinspector/1.0.0/assets/multiqc_config.yml", checkIfExists: true)
+                input[0] = channel.of(record(
+                    id: 'FASTQC',
+                    meta: [ id: 'FASTQC' ],
+                    multiqc_files: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastqc/test_fastqc.zip', checkIfExists: true),
+                    multiqc_config: [
+                        file("https:
+                        file("https:
                     ],
-                    [],
-                    [],
-                    []
-                ])
+                    multiqc_logo: [],
+                    replace_names: [],
+                    sample_names: []
+                ))
                 """
             }
         }
@@ -157,14 +161,15 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = channel.of([
-                    [ id: 'FASTQC' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastqc/test_fastqc.zip', checkIfExists: true),
-                    [],
-                    null,
-                    null,
-                    null
-                ])
+                input[0] = channel.of(record(
+                    id: 'FASTQC',
+                    meta: [ id: 'FASTQC' ],
+                    multiqc_files: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastqc/test_fastqc.zip', checkIfExists: true),
+                    multiqc_config: [],
+                    multiqc_logo: null,
+                    replace_names: null,
+                    sample_names: null
+                ))
                 """
             }
         }

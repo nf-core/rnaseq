@@ -109,8 +109,8 @@ nextflow_process {
                 process {
                     """
                     input[0] = Channel.of(
-                        [[ id:'r1' ], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)],
-                        [[ id:'r2' ], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)]
+                        record(id: 'r1', meta: [ id:'r1' ], archive: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)),
+                        record(id: 'r2', meta: [ id:'r2' ], archive: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true))
                     )
                     """
                 }
@@ -143,10 +143,10 @@ nextflow_process {
                 process {
                     """
                     input[0] = Channel.of(
-                        [[ id:'a' ], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)],
-                        [[ id:'b' ], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)],
-                        [[ id:'c' ], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test2_1.fastq.gz', checkIfExists: true)],
-                        [[ id:'d' ], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test2_2.fastq.gz', checkIfExists: true)]
+                        record(id: 'a', meta: [ id:'a' ], archive: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)),
+                        record(id: 'b', meta: [ id:'b' ], archive: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)),
+                        record(id: 'c', meta: [ id:'c' ], archive: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test2_1.fastq.gz', checkIfExists: true)),
+                        record(id: 'd', meta: [ id:'d' ], archive: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test2_2.fastq.gz', checkIfExists: true))
                     )
                     """
                 }

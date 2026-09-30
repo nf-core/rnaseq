@@ -25,10 +25,11 @@ nextflow_workflow {
                 script "../../../../modules/nf-core/hisat2/extractsplicesites/main.nf"
                 process {
                     """
-                    input[0] = channel.of([
-                        [id: 'test'],
-                        file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
-                    ])
+                    input[0] = channel.of(record(
+                        id: 'test',
+                        meta: [id: 'test'],
+                        gtf: file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
+                    ))
                     """
                 }
             }
@@ -50,11 +51,13 @@ nextflow_workflow {
                 process {
                     """
                     input[0] = HISAT2_EXTRACTSPLICESITES.out.map { r ->
-                        [ r.meta,
-                            file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true),
-                            file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true),
-                            r.splicesites
-                        ]}
+                        record(
+                            id: r.id,
+                            meta: r.meta,
+                            fasta: file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true),
+                            gtf: file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true),
+                            splicesites: r.splicesites
+                        )}
                     input[1] = false
                     """
                 }

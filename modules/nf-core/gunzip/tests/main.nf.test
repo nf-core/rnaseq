@@ -15,11 +15,11 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = Channel.of([
-                        [:],
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
-                    ]
-                )
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [:],
+                    archive: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
+                ))
                 """
             }
         }
@@ -43,11 +43,11 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = Channel.of([
-                        [ id: 'test' ],
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
-                    ]
-                )
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id: 'test' ],
+                    archive: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
+                ))
                 """
             }
         }
@@ -71,11 +71,11 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = Channel.of([
-                        [:],
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
-                    ]
-                )
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [:],
+                    archive: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
+                ))
                 """
             }
         }
@@ -97,11 +97,11 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = Channel.of([
-                        [:],
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true).copyTo('test.fa.v1.fa.gz')
-                    ]
-                )
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [:],
+                    archive: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true).copyTo('test.fa.v1.fa.gz')
+                ))
                 """
             }
         }
@@ -125,11 +125,11 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = Channel.of([
-                        [ id: 'test' ],
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true).copyTo('test.fa.v1.fa.gz')
-                    ]
-                )
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id: 'test' ],
+                    archive: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true).copyTo('test.fa.v1.fa.gz')
+                ))
                 """
             }
         }
@@ -154,11 +154,11 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = Channel.of([
-                        [ id: 'test' ],
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
-                    ]
-                )
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id: 'test' ],
+                    archive: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
+                ))
                 """
             }
         }

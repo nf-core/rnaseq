@@ -14,10 +14,11 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                    [ id:'test' ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    gtf: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
+                )
                 input[1] = [
                     [ id: 'test' ], // meta map
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
@@ -39,10 +40,11 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                    [ id:'test' ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    gtf: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
+                )
                 input[1] = [
                     [ id: 'test' ], // meta map
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.gz', checkIfExists: true)
@@ -66,10 +68,11 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                    [ id:'test' ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    gtf: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
+                )
                 input[1] = [
                     [ id: 'test' ], // meta map
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
@@ -93,10 +96,11 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                    [ id:'test' ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    gtf: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
+                )
                 input[1] = [
                     [ id: 'test' ], // meta map
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.gz', checkIfExists: true)
@@ -118,10 +122,11 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                    [ id:'test' ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    gtf: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
+                )
                 input[1] = [
                     [ id: 'no_fasta' ], // meta map
                     null
@@ -145,10 +150,11 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                    [ id:'test' ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    gtf: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
+                )
                 input[1] = [
                     [ id: 'test' ], // meta map
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)

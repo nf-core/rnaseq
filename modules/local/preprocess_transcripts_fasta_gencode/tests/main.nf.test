@@ -17,7 +17,7 @@ nextflow_process {
                 gencodeFasta.withWriter{ out ->
                     fileContents.each {out.println it}
                 }
-                input[0] = gencodeFasta
+                input[0] = record(id: 'test', meta: [:], fasta: gencodeFasta)
                 """
             }
         }
@@ -45,7 +45,7 @@ nextflow_process {
                 gencodeFasta.withWriter{ out ->
                     fileContents.each {out.println it}
                 }
-                input[0] = gencodeFasta
+                input[0] = record(id: 'test', meta: [:], fasta: gencodeFasta)
                 """
             }
         }

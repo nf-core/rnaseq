@@ -13,10 +13,11 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
-                    [id:'genome'],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
-                ])
+                input[0] = Channel.of(record(
+                    id: 'genome',
+                    meta: [id:'genome'],
+                    gtf: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
+                ))
                 """
             }
         }
@@ -36,10 +37,11 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
-                    [id:'genome'],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
-                ])
+                input[0] = Channel.of(record(
+                    id: 'genome',
+                    meta: [id:'genome'],
+                    gtf: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
+                ))
                 """
             }
         }

@@ -18,11 +18,12 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = [
-                    [ id:'test' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
-                    []
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    fasta: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
+                    fai: []
+                )
                 input[1] = false
                 """
             }
@@ -44,11 +45,12 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = [
-                    [ id:'test' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.gz', checkIfExists: true),
-                    []
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    fasta: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.gz', checkIfExists: true),
+                    fai: []
+                )
                 input[1] = false
                 """
             }
@@ -70,11 +72,12 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = [
-                    [ id:'test' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    fasta: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
+                    fai: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)
+                )
                 input[1] = false
                 """
             }
@@ -98,11 +101,12 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = [
-                    [ id:'test' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    fasta: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
+                    fai: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)
+                )
                 input[1] = false
                 """
             }
@@ -126,11 +130,12 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = [
-                    [ id:'test' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
-                    []
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    fasta: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
+                    fai: []
+                )
                 input[1] = false
                 """
             }
@@ -152,11 +157,12 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = [
-                    [ id:'test' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
-                    []
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    fasta: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
+                    fai: []
+                )
                 input[1] = true
                 """
             }
@@ -178,11 +184,12 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = [
-                    [ id:'test' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.gz', checkIfExists: true),
-                    []
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    fasta: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.gz', checkIfExists: true),
+                    fai: []
+                )
                 input[1] = true
                 """
             }
@@ -206,11 +213,12 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = [
-                    [ id:'test' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
-                    []
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    fasta: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
+                    fai: []
+                )
                 input[1] = true
                 """
             }
@@ -234,11 +242,12 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = [
-                    [ id:'test' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.gz', checkIfExists: true),
-                    []
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    fasta: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.gz', checkIfExists: true),
+                    fai: []
+                )
                 input[1] = true
                 """
             }

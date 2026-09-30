@@ -17,10 +17,11 @@ nextflow_process {
                 script "../../../untar/main.nf"
                 process {
                     """
-                    input[0] = Channel.of([
-                        [ id:'test'], // meta map
-                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/kallisto_results.tar.gz', checkIfExists: true)
-                    ])
+                    input[0] = Channel.of(record(
+                        id: 'test',
+                        meta: [ id:'test'],
+                        archive: file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/kallisto_results.tar.gz', checkIfExists: true)
+                    ))
                     """
                 }
             }
@@ -56,10 +57,11 @@ nextflow_process {
                 script "../../../untar/main.nf"
                 process {
                     """
-                    input[0] = Channel.of([
-                        [ id:'test'], // meta map
-                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/kallisto_results.tar.gz', checkIfExists: true)
-                    ])
+                    input[0] = Channel.of(record(
+                        id: 'test',
+                        meta: [ id:'test'],
+                        archive: file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/kallisto_results.tar.gz', checkIfExists: true)
+                    ))
                     """
                 }
             }
@@ -95,10 +97,11 @@ nextflow_process {
                 script "../../../untar/main.nf"
                 process {
                     """
-                    input[0] = Channel.of([
-                        [ id:'test'], // meta map
-                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/rsem_results.tar.gz', checkIfExists: true)
-                    ])
+                    input[0] = Channel.of(record(
+                        id: 'test',
+                        meta: [ id:'test'],
+                        archive: file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/rsem_results.tar.gz', checkIfExists: true)
+                    ))
                     """
                 }
             }
@@ -142,10 +145,11 @@ nextflow_process {
                 script "../../../untar/main.nf"
                 process {
                     """
-                    input[0] = Channel.of([
-                        [ id:'test'], // meta map
-                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/kallisto_results.tar.gz', checkIfExists: true)
-                    ])
+                    input[0] = Channel.of(record(
+                        id: 'test',
+                        meta: [ id:'test'],
+                        archive: file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/kallisto_results.tar.gz', checkIfExists: true)
+                    ))
                     """
                 }
             }

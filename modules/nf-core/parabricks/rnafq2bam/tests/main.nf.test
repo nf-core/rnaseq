@@ -17,10 +17,11 @@ nextflow_process {
             script "../../../star/genomegenerate/main.nf"
             process {
                 """
-                input[0] = [
-                    [ id:'minigenome_fasta' ],
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/minigenome.fa')
-                ]
+                input[0] = record(
+                    id: 'minigenome_fasta',
+                    meta: [ id:'minigenome_fasta' ],
+                    fasta: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/minigenome.fa')
+                )
                 input[1] = [
                     [ id:'minigenome_gtf' ],
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/minigenome.gtf')

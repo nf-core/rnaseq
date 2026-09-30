@@ -14,11 +14,12 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = channel.of([
-                    [ id:'genome' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
-                ])
+                input[0] = channel.of(record(
+                    id: 'genome',
+                    meta: [ id:'genome' ],
+                    fasta: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
+                    gtf: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
+                ))
                 input[1] = channel.of([
                     [ id:'transcriptome' ],
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true)
@@ -43,11 +44,12 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = channel.of([
-                    [ id:'genome' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
-                ])
+                input[0] = channel.of(record(
+                    id: 'genome',
+                    meta: [ id:'genome' ],
+                    fasta: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
+                    gtf: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
+                ))
                 input[1] = channel.of([
                     [ id:'transcriptome' ],
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true)

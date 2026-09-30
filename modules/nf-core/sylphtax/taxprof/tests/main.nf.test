@@ -18,11 +18,13 @@ nextflow_process {
                 script "../../../sylph/profile/main.nf"
                 process {
                 """
-                input[0] = [ [ id:'test', single_end:true  ], // meta map
-                            [
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:true ],
+                    reads: [
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
                     ]
-                ]
+                )
                 input[1] = [file(params.modules_testdata_base_path +'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
                 """
                 }
@@ -31,7 +33,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = SYLPH_PROFILE.out.map { r -> [ r.meta, r.profile_out ] }
+                input[0] = SYLPH_PROFILE.out
                 input[1] = [file('https://github.com/nf-core/test-datasets/raw/taxprofiler/data/database/sylph/test_taxonomy.tsv.gz', checkIfExists: true)]
                 """
             }
@@ -55,11 +57,13 @@ nextflow_process {
                 script "../../../sylph/profile/main.nf"
                 process {
                 """
-                input[0] = [ [ id:'test' ], // meta map
-                            [
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    reads: [
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
                     ]
-                ]
+                )
                 input[1] = [file(params.modules_testdata_base_path +'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
                 """
                 }
@@ -68,7 +72,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = SYLPH_PROFILE.out.map { r -> [ r.meta, r.profile_out ] }
+                input[0] = SYLPH_PROFILE.out
                 input[1] = [file('https://github.com/nf-core/test-datasets/raw/taxprofiler/data/database/sylph/test_taxonomy.tsv.gz', checkIfExists: true)]
                 """
             }

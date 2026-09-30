@@ -13,10 +13,11 @@ nextflow_process {
                 script "../../../../modules/nf-core/star/genomegenerate/main.nf"
                 process {
                     """
-                    input[0] = channel.of([
-                        [ id:'test_fasta' ],
-                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
-                    ])
+                    input[0] = channel.of(record(
+                        id: 'test_fasta',
+                        meta: [ id:'test_fasta' ],
+                        fasta: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                    ))
                     input[1] = channel.of([
                         [ id:'test_gtf' ],
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
@@ -29,7 +30,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = STAR_GENOMEGENERATE.out.map { r -> [ [ id:'star_index' ], r.index ] }
+                input[0] = STAR_GENOMEGENERATE.out.map { r -> record(id: 'star_index', meta: [ id:'star_index' ], index: r.index) }
                 """
             }
         }
@@ -65,10 +66,11 @@ nextflow_process {
                 script "../../../../modules/nf-core/star/genomegenerate/main.nf"
                 process {
                     """
-                    input[0] = channel.of([
-                        [ id:'test_fasta' ],
-                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
-                    ])
+                    input[0] = channel.of(record(
+                        id: 'test_fasta',
+                        meta: [ id:'test_fasta' ],
+                        fasta: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                    ))
                     input[1] = channel.of([
                         [ id:'test_gtf' ],
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
@@ -81,7 +83,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = STAR_GENOMEGENERATE.out.map { r -> [ [ id:'star_index' ], r.index ] }
+                input[0] = STAR_GENOMEGENERATE.out.map { r -> record(id: 'star_index', meta: [ id:'star_index' ], index: r.index) }
                 """
             }
         }
@@ -110,10 +112,11 @@ nextflow_process {
                 script "../../../../modules/nf-core/star/genomegenerate/main.nf"
                 process {
                     """
-                    input[0] = channel.of([
-                        [ id:'test_fasta' ],
-                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
-                    ])
+                    input[0] = channel.of(record(
+                        id: 'test_fasta',
+                        meta: [ id:'test_fasta' ],
+                        fasta: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                    ))
                     input[1] = channel.of([
                         [ id:'test_gtf' ],
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
@@ -126,7 +129,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = STAR_GENOMEGENERATE.out.map { r -> [ [ id:'star_index' ], r.index ] }
+                input[0] = STAR_GENOMEGENERATE.out.map { r -> record(id: 'star_index', meta: [ id:'star_index' ], index: r.index) }
                 """
             }
         }

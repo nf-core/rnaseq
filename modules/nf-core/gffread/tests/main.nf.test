@@ -18,10 +18,11 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = [
-                    [id: 'test'],
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gff3", checkIfExists: true)
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [id: 'test'],
+                    gff: file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gff3", checkIfExists: true)
+                )
                 input[1] = null
 
                 """
@@ -50,10 +51,11 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = [
-                    [id: 'test'],
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gff3", checkIfExists: true)
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [id: 'test'],
+                    gff: file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gff3", checkIfExists: true)
+                )
                 input[1] = null
                 """
             }
@@ -80,10 +82,11 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = [
-                    [id: 'test'],
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gff3", checkIfExists: true)
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [id: 'test'],
+                    gff: file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gff3", checkIfExists: true)
+                )
                 input[1] = null
                 """
             }
@@ -111,10 +114,11 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = [
-                    [id: 'test'],
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gff3", checkIfExists: true)
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [id: 'test'],
+                    gff: file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gff3", checkIfExists: true)
+                )
                 input[1] = null
                 """
             }
@@ -141,10 +145,11 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = [
-                    [id: 'test'],
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gff3", checkIfExists: true)
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [id: 'test'],
+                    gff: file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gff3", checkIfExists: true)
+                )
                 input[1] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true)
                 """
             }
@@ -172,10 +177,11 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = [
-                    [id: 'test'],
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gff3", checkIfExists: true)
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [id: 'test'],
+                    gff: file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gff3", checkIfExists: true)
+                )
                 input[1] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true)
                 """
             }
@@ -199,10 +205,11 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                    [id: 'test'],
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gff3", checkIfExists: true)
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [id: 'test'],
+                    gff: file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gff3", checkIfExists: true)
+                )
                 input[1] = null
                 """
             }
@@ -225,10 +232,11 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                    [id: 'test'],
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gff3", checkIfExists: true)
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [id: 'test'],
+                    gff: file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gff3", checkIfExists: true)
+                )
                 input[1] = null
                 """
             }
@@ -254,10 +262,11 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = [
-                    [id: 'genome'],
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gff3", checkIfExists: true)
-                ]
+                input[0] = record(
+                    id: 'genome',
+                    meta: [id: 'genome'],
+                    gff: file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gff3", checkIfExists: true)
+                )
                 input[1] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true)
                 """
             }

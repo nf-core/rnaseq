@@ -131,7 +131,7 @@ Run the pipeline normally, adding `--save_align_intermeds` to publish BAM files 
 nextflow run nf-core/rnaseq \
   --input samplesheet.csv \
   --save_align_intermeds \
-  --outdir results_initial \
+  -output-dir results_initial \
   -profile docker
 ```
 
@@ -145,7 +145,7 @@ Use the auto-generated samplesheet to reprocess data, skipping alignment:
 nextflow run nf-core/rnaseq \
   --input samplesheets/samplesheet_with_bams.csv \
   --skip_alignment \
-  --outdir results_reprocessed \
+  -output-dir results_reprocessed \
   -profile docker
 ```
 
@@ -352,7 +352,7 @@ The STAR aligner can also be GPU-accelerated using NVIDIA Parabricks via the `--
 ```bash
 nextflow run nf-core/rnaseq \
     --input samplesheet.csv \
-    --outdir results \
+    -output-dir results \
     --fasta genome.fa \
     --gtf annotation.gtf \
     --use_parabricks_star \
@@ -435,7 +435,7 @@ To enable RustQC, use the `--use_rustqc` flag. The individual tools listed above
 ```bash
 nextflow run nf-core/rnaseq \
     --input samplesheet.csv \
-    --outdir results \
+    -output-dir results \
     --fasta genome.fa \
     --gtf annotation.gtf \
     --use_rustqc \
@@ -474,7 +474,7 @@ By default, the pipeline merges quantification results across all samples, produ
 - **Memory**: aggregation steps (tximport `.collect()`, SummarizedExperiment, RSEM merge counts, merged MultiQC) load all samples into a single process, which can exceed available memory
 - **Organization**: run-centric output directories (`fastqc/`, `salmon/`, `multiqc/`) mix files from all samples, making it harder to locate, deliver, or archive results per sample
 
-The `--skip_quantification_merge` parameter switches the pipeline to sample-centric operation. Each sample is processed independently and all its outputs are organized under `<outdir>/<sample_id>/`:
+The `--skip_quantification_merge` parameter switches the pipeline to sample-centric operation. Each sample is processed independently and all its outputs are organized under `<OUTDIR>/<sample_id>/`:
 
 ```
 results/
@@ -505,7 +505,7 @@ nextflow run nf-core/rnaseq \
     --pseudo_aligner salmon \
     --skip_alignment \
     --skip_quantification_merge \
-    --outdir results
+    -output-dir results
 ```
 
 A convenience profile `rapid_quant` bundles these options together with additional skips for alignment-dependent QC steps:
@@ -514,7 +514,7 @@ A convenience profile `rapid_quant` bundles these options together with addition
 nextflow run nf-core/rnaseq \
     --input samplesheet.csv \
     -profile rapid_quant,docker \
-    --outdir results
+    -output-dir results
 ```
 
 :::tip
@@ -669,7 +669,7 @@ nextflow run nf-core/rnaseq \
     --input samplesheet.csv \
     --fasta genome.fasta \
     --gff annotation.gff3 \
-    --outdir results \
+    -output-dir results \
     -profile prokaryotic,docker
 ```
 
@@ -704,7 +704,7 @@ nextflow run nf-core/rnaseq \
     --input samplesheet.csv \
     --fasta genome.fasta \
     --gff annotation.gff3 \
-    --outdir results \
+    -output-dir results \
     --aligner star_salmon \
     -profile prokaryotic,docker
 ```
@@ -732,7 +732,7 @@ nextflow run nf-core/rnaseq \
     --fasta genome.fasta \
     --gtf annotation.gtf \
     --gffread_transcript_fasta \
-    --outdir results \
+    -output-dir results \
     -profile docker
 ```
 
@@ -849,7 +849,7 @@ The typical command for running the pipeline is as follows:
 nextflow run \
     nf-core/rnaseq \
     --input <SAMPLESHEET> \
-    --outdir <OUTDIR> \
+    -output-dir <OUTDIR> \
     --gtf <GTF> \
     --fasta <GENOME FASTA> \
     -profile docker
@@ -861,7 +861,7 @@ You can also run without a genomic FASTA file, provided you skip the alignment s
 nextflow run \
     nf-core/rnaseq \
     --input <SAMPLESHEET> \
-    --outdir <OUTDIR> \
+    -output-dir <OUTDIR> \
     --gtf <GTF> \
     --transcript_fasta <TRANSCRIPTOME FASTA> \
     --skip_alignment \
@@ -880,7 +880,7 @@ Note that the pipeline will create the following files in your working directory
 
 ```bash
 work                # Directory containing the nextflow working files
-<OUTDIR>            # Finished results in specified location (defined with --outdir)
+<OUTDIR>            # Finished results in specified location (defined with `-output-dir`)
 .nextflow_log       # Log file from Nextflow
 # Other nextflow hidden files, eg. history of pipeline runs and old logs.
 ```
@@ -895,14 +895,13 @@ Pipeline settings can be provided in a `yaml` or `json` file via `-params-file <
 The above pipeline run specified with a params file in yaml format:
 
 ```bash
-nextflow run nf-core/rnaseq -profile docker -params-file params.yaml
+nextflow run nf-core/rnaseq -profile docker -params-file params.yaml -output-dir <OUTDIR>
 ```
 
 with:
 
 ```yaml
 input: <SAMPLESHEET>
-outdir: <OUTDIR>
 genome: 'GRCh37'
 <...>
 ```
@@ -921,7 +920,7 @@ The pipeline can be executed in an ARM compatible mode by specifying the ARM pro
 nextflow run \
     nf-core/rnaseq \
     --input <SAMPLESHEET> \
-    --outdir <OUTDIR> \
+    -output-dir <OUTDIR> \
     --gtf <GTF> \
     --fasta <GENOME FASTA> \
     -profile docker,arm64
@@ -954,10 +953,10 @@ To further assist in reproducibility, you can use share and reuse [parameter fil
 
 The pipeline publishes its results through Nextflow's [workflow output definition](https://www.nextflow.io/docs/latest/workflow.html#publishing-outputs) (an `output {}` block in `main.nf`), not through per-process `publishDir` directives. This changes how output locations can be customised:
 
-- `--outdir` (or the equivalent `-output-dir` Nextflow option) sets the base directory results are published under.
+- The Nextflow `-output-dir` option (or `outputDir` in a custom config) sets the base directory results are published under. The pipeline has no `--outdir` parameter; Nextflow's default output directory applies when neither is set.
 - `--publish_dir_mode` controls whether files are copied, symlinked or moved, and maps onto Nextflow's `workflow.output.mode` setting.
 - The various `--save_*` flags (`--save_align_intermeds`, `--save_reference`, `--save_trimmed`, and so on) control which intermediate files get published.
-- Nextflow's `workflow.output.overwrite` setting controls whether a rerun into the same `--outdir` overwrites existing files.
+- Nextflow's `workflow.output.overwrite` setting controls whether a rerun into the same output directory overwrites existing files.
 
 A `process.withName:<NAME>.publishDir` override in a custom config has no effect: publishing decisions live entirely in the `output {}` block in `main.nf`, keyed on the named result channels (`aligned`, `quant_merged`, `multiqc`, and so on), not on individual process names.
 

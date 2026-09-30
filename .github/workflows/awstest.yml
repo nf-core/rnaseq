@@ -19,10 +19,8 @@ jobs:
           compute_env: ${{ vars.TOWER_COMPUTE_ENV }}
           revision: ${{ github.sha }}
           workdir: s3://${{ vars.AWS_S3_BUCKET }}/work/rnaseq/work-${{ github.sha }}
-          parameters: |
-            {
-              "outdir": "s3://${{ vars.AWS_S3_BUCKET }}/rnaseq/results-test-${{ github.sha }}"
-            }
+          nextflow_config: |
+            outputDir = 's3://${{ vars.AWS_S3_BUCKET }}/rnaseq/results-test-${{ github.sha }}'
           profiles: test
 
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7

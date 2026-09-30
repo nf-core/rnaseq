@@ -23,12 +23,12 @@ nf-metro render assets/metro_map.mmd --animate \
 
 ```bash
 nf-metro serve assets/metro_map.mmd --open --shutdown-after-complete -- \
-    nextflow run nf-core/rnaseq -profile test,docker --outdir results
+    nextflow run nf-core/rnaseq -profile test,docker -output-dir results
 ```
 
 After editing the map, verify the mapping against a real run:
 
 ```bash
-nextflow run nf-core/rnaseq -profile test,docker --outdir results -with-dag dag.mmd
+nextflow run nf-core/rnaseq -profile test,docker -output-dir results -with-dag dag.mmd
 nf-metro check-mapping assets/metro_map.mmd --dag dag.mmd
 ```

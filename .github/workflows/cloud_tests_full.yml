@@ -30,10 +30,11 @@ jobs:
           run_name: "aws_rnaseq_full_${{ matrix.aligner }}"
           revision: ${{ github.sha }}
           profiles: test_full_aws
+          nextflow_config: |
+            outputDir = '${{ secrets.TOWER_BUCKET_AWS }}/rnaseq/results-${{ github.sha }}/aligner_${{ matrix.aligner }}/'
           parameters: |
             {
-                "aligner": "${{ matrix.aligner }}",
-                "outdir": "${{ secrets.TOWER_BUCKET_AWS }}/rnaseq/results-${{ github.sha }}/aligner_${{ matrix.aligner }}/"
+              "aligner": "${{ matrix.aligner }}"
             }
       - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
         with:
@@ -56,10 +57,11 @@ jobs:
           run_name: "azure_rnaseq_full_${{ matrix.aligner }}"
           revision: ${{ github.sha }}
           profiles: test_full_azure
+          nextflow_config: |
+            outputDir = '${{ secrets.TOWER_BUCKET_AZURE }}/rnaseq/results-${{ github.sha }}/aligner_${{ matrix.aligner }}/'
           parameters: |
             {
                 "aligner": "${{ matrix.aligner }}",
-                "outdir": "${{ secrets.TOWER_BUCKET_AZURE }}/rnaseq/results-${{ github.sha }}/aligner_${{ matrix.aligner }}/",
                 "igenomes_base": "${{ secrets.TOWER_IGENOMES_BASE_AZURE }}"
             }
       - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
@@ -83,10 +85,11 @@ jobs:
           run_name: "gcp_rnaseq_full_${{ matrix.aligner }}"
           revision: ${{ github.sha }}
           profiles: test_full_gcp
+          nextflow_config: |
+            outputDir = '${{ secrets.TOWER_BUCKET_GCP }}/rnaseq/results-${{ github.sha }}/aligner_${{ matrix.aligner }}/'
           parameters: |
             {
-                "aligner": "${{ matrix.aligner }}",
-                "outdir": "${{ secrets.TOWER_BUCKET_GCP }}/rnaseq/results-${{ github.sha }}/aligner_${{ matrix.aligner }}/"
+              "aligner": "${{ matrix.aligner }}"
             }
       - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
         with:

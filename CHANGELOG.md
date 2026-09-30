@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1943](https://github.com/nf-core/rnaseq/pull/1943) - Apply `--min_mapped_reads` filtering to HISAT2 alignments
 - [PR #1958](https://github.com/nf-core/rnaseq/pull/1958) - Stop building the SortMeRNA index twice, and build the Salmon strandedness-inference index centrally in `PREPARE_GENOME_INDICES`
 - [PR #1945](https://github.com/nf-core/rnaseq/pull/1945) - Migrate publishing to Nextflow's workflow output syntax; `process.withName:<NAME>.publishDir` overrides in custom configs no longer have any effect
+- Drop the `--outdir` pipeline parameter in favour of Nextflow's native `-output-dir` option (`outputDir` config setting); execution reports use the `directory` option of the `report`, `timeline`, `trace` and `dag` scopes
 
 ## [[3.27.0](https://github.com/nf-core/rnaseq/releases/tag/3.27.0)] - 2026-09-23
 

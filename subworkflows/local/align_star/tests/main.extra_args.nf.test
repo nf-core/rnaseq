@@ -31,19 +31,19 @@ nextflow_workflow {
                 use_parabricks_star  = false
                 skip_markduplicates  = false
 
-                input[0] = channel.of(record(
+                input[0] = new nextflow.dataflow.ChannelImpl(channel.of(record(
                     id: 'test',
                     meta: [ id:'test', single_end:false ],
                     reads: [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
-                ))
-                input[1] = STAR_GENOMEGENERATE.out.map { r -> r.index }.first()
-                input[2] = channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
+                )))
+                input[1] = new nextflow.dataflow.ValueImpl(STAR_GENOMEGENERATE.out.map { r -> r.index }.first())
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)))
                 input[3] = star_ignore_sjdbgtf
-                input[4] = channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
-                input[5] = channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true))
+                input[4] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)))
+                input[5] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)))
                 input[6] = use_sentieon_star
                 input[7] = use_parabricks_star
                 input[8] = skip_markduplicates

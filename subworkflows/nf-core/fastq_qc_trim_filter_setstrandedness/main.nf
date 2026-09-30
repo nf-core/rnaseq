@@ -129,11 +129,12 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     //
     // MODULE: Concatenate FastQ files from same sample if required
     //
+    // `reads` is flat, so a paired-end sample holds two files per run: one run means one file (single-end) or two (paired-end)
     ch_fastq_single = ch_reads.filter { r ->
-        r.reads.size() == 1 && r.reads[0].name.endsWith('.gz') && !save_merged_fastq
+        (r.meta.single_end ? r.reads.size() == 1 : r.reads.size() == 2) && r.reads[0].name.endsWith('.gz') && !save_merged_fastq
     }
     ch_fastq_multiple = ch_reads.filter { r ->
-        !(r.reads.size() == 1 && r.reads[0].name.endsWith('.gz') && !save_merged_fastq)
+        !((r.meta.single_end ? r.reads.size() == 1 : r.reads.size() == 2) && r.reads[0].name.endsWith('.gz') && !save_merged_fastq)
     }
     ch_cat = CAT_FASTQ(ch_fastq_multiple).mix(ch_fastq_single)
 

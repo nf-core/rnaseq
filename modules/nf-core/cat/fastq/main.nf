@@ -31,7 +31,7 @@ process CAT_FASTQ {
 
     script:
     def prefix = task.ext.prefix ?: "${sample.meta.id}"
-    def compress = sample.reads[0].name.endsWith('.gz') ? '' : '| gzip'
+    def compress = sample.reads[0]?.name?.endsWith('.gz') ? '' : '| gzip'
     if (sample.meta.single_end) {
         if (sample.reads.size() >= 1) {
             """

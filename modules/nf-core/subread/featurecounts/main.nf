@@ -2,6 +2,13 @@ nextflow.enable.types = true
 
 include { BamInput } from '../../types'
 
+record SubreadFeaturecountsResult {
+    id:      String
+    meta:    Map
+    counts:  Path
+    summary: Path
+}
+
 process SUBREAD_FEATURECOUNTS {
     tag "${sample.meta.id}"
     label 'process_medium'
@@ -21,7 +28,7 @@ process SUBREAD_FEATURECOUNTS {
         meta:    sample.meta,
         counts:  file("*featureCounts.tsv"),
         summary: file("*featureCounts.tsv.summary")
-    )
+    ) as SubreadFeaturecountsResult
 
     topic:
     tuple(task.process, 'subread', eval("featureCounts -v 2>&1 | sed 's/featureCounts v//'")) >> 'versions'

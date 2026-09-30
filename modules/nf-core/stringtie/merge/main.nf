@@ -31,7 +31,7 @@ process STRINGTIE_MERGE {
         id:         sample.id,
         meta:       sample.meta,
         merged_gtf: file("${prefix}.gtf")
-    )
+    ) as StringtieMergeResult
 
     topic:
     tuple(task.process, 'stringtie', eval('stringtie --version')) >> 'versions'

@@ -33,7 +33,7 @@ process STRINGTIE_STRINGTIE {
         abundance:      file("${prefix}.gene.abundance.txt"),
         coverage_gtf:   file("${prefix}.coverage.gtf", optional: true),
         ballgown:       files("${prefix}.ballgown/*.ctab", optional: true)
-    )
+    ) as StringtieResult
 
     topic:
     tuple(task.process, 'stringtie', eval('stringtie --version')) >> 'versions'

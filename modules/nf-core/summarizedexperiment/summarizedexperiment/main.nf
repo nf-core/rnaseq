@@ -6,6 +6,13 @@ record SummarizedexperimentInput {
     matrix_files: List<Path>
 }
 
+record SummarizedexperimentSummarizedexperimentResult {
+    id:   String
+    meta: Map
+    rds:  Path
+    log:  Path
+}
+
 process SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT {
     tag "${sample.meta.id}"
     label 'process_medium'
@@ -26,7 +33,7 @@ process SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT {
         meta: sample.meta,
         rds:  file("*.rds"),
         log:  file("*.R_sessionInfo.log")
-    )
+    ) as SummarizedexperimentSummarizedexperimentResult
 
     topic:
     file('versions.yml') >> 'versions'

@@ -1,7 +1,6 @@
 nextflow.enable.types = true
 
-include { ReadsInput } from '../../types'
-include { StarAlignResult } from '../../star/align/main'
+include { ReadsInput; StarAlignResult } from '../../types'
 
 process SENTIEON_STARALIGN {
     tag "${sample.meta.id}"

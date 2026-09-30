@@ -2,11 +2,11 @@
 // (ReadsInput, BamBaiInput, ...), pipeline-level and subworkflow records, and the sub-records they
 // nest. Types specific to one module (its Input type and the Result type describing its output)
 // are declared in that module's main.nf and imported from there.
-// Documentation only: nothing casts a record(...) to these types (nextflow-io/nextflow#7680 corrupts remote Path fields on cast).
 //
 // A module takes its record input as `sample: <Type>` (bound as one variable, so scripts and
-// task.ext closures read sample.meta, sample.bam ...). Result types annotate the channels a
-// process call returns.
+// task.ext closures read sample.meta, sample.bam ...). Each module casts its output record to a
+// Result type (`record(...) as <Type>`): lint checks for missing fields and wrong field types, not
+// for nullability or extra fields. Result types also annotate the channels a process call returns.
 
 // ============================================================================
 // Shared vocabulary
@@ -229,6 +229,29 @@ record StarLogs {
     log_out:      Path
     log_progress: Path
     tab:          List<Path>
+}
+
+// Emitted by STAR_ALIGN, SENTIEON_STARALIGN and PARABRICKS_RNAFQ2BAM alike.
+// orig_bai, qc_metrics and duplicate_metrics are only set by Parabricks.
+record StarAlignResult {
+    id:                 String
+    meta:               Map
+    raw_bams:           List<Path>
+    bam_sorted:         Path?
+    bam_sorted_aligned: Path?
+    bam_unsorted:       Path?
+    transcriptome_bam:  Path?
+    unmapped:           List<Path>
+    sam:                Path?
+    junction:           Path?
+    spl_junc_tab:       Path?
+    read_per_gene_tab:  Path?
+    wig:                List<Path>
+    bedgraph:           List<Path>
+    orig_bai:           Path?
+    qc_metrics:         Path?
+    duplicate_metrics:  Path?
+    star:               StarLogs
 }
 
 // ============================================================================

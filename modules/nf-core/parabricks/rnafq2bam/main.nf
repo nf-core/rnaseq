@@ -1,27 +1,6 @@
 nextflow.enable.types = true
 
-include { ReadsInput; StarLogs } from '../../types'
-
-record ParabricksRnafq2bamResult {
-    id:                 String
-    meta:               Map
-    raw_bams:           List<Path>
-    bam_sorted:         Path?
-    bam_sorted_aligned: Path?
-    bam_unsorted:       Path?
-    transcriptome_bam:  Path?
-    unmapped:           List<Path>
-    sam:                Path?
-    junction:           Path?
-    spl_junc_tab:       Path?
-    read_per_gene_tab:  Path?
-    wig:                List<Path>
-    bedgraph:           List<Path>
-    orig_bai:           Path?
-    qc_metrics:         Path?
-    duplicate_metrics:  Path?
-    star:               StarLogs
-}
+include { ReadsInput; StarAlignResult } from '../../types'
 
 process PARABRICKS_RNAFQ2BAM {
     tag "${sample.meta.id}"
@@ -64,7 +43,7 @@ process PARABRICKS_RNAFQ2BAM {
             log_progress: file("${prefix}.Log.progress.out"),
             tab:          files('*.tab', optional: true).toSorted { f -> f.name }
         )
-    ) as ParabricksRnafq2bamResult
+    ) as StarAlignResult
 
     topic:
     tuple(task.process, 'parabricks', eval("pbrun version 2>&1 | grep -Po '(?<=^pbrun: ).*'")) >> 'versions'

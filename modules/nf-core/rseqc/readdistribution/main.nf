@@ -2,6 +2,12 @@ nextflow.enable.types = true
 
 include { BamBaiInput } from '../../types'
 
+record RseqcReaddistributionResult {
+    id:               String
+    meta:             Map
+    readdistribution: Path
+}
+
 process RSEQC_READDISTRIBUTION {
     tag "$sample.meta.id"
     label 'process_medium'
@@ -16,7 +22,7 @@ process RSEQC_READDISTRIBUTION {
     bed: Path
 
     output:
-    record(id: sample.id, meta: sample.meta, readdistribution: file("*.read_distribution.txt"))
+    record(id: sample.id, meta: sample.meta, readdistribution: file("*.read_distribution.txt")) as RseqcReaddistributionResult
 
     topic:
     tuple(task.process, 'rseqc', eval('read_distribution.py --version | sed "s/read_distribution.py //"')) >> 'versions'

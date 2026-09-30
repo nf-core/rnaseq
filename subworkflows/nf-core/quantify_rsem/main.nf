@@ -9,12 +9,12 @@ include { CUSTOM_RSEMMERGECOUNTS             } from '../../../modules/nf-core/cu
 include { SENTIEON_RSEMCALCULATEEXPRESSION   } from '../../../modules/nf-core/sentieon/rsemcalculateexpression'
 
 include { QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT } from '../quant_tximport_summarizedexperiment'
-include { Reads } from './types'
+include { ReadsInput } from '../../../modules/nf-core/types'
 
 workflow QUANTIFY_RSEM {
     take:
     samplesheet: Value<Path>
-    ch_samples: Channel<Reads> // FASTQ or BAM files
+    ch_samples: Channel<ReadsInput> // FASTQ or BAM files
     index: Value<Path> // RSEM index
     gtf: Value<Path>
     gtf_id_attribute: String // GTF gene ID attribute

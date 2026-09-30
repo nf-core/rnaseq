@@ -12,7 +12,7 @@ include { SEQKIT_REPLACE as SEQKIT_REPLACE_U2T     } from '../../../modules/nf-c
 include { SEQKIT_STATS                             } from '../../../modules/nf-core/seqkit/stats'
 include { SORTMERNA                                } from '../../../modules/nf-core/sortmerna'
 include { SORTMERNA as SORTMERNA_INDEX             } from '../../../modules/nf-core/sortmerna'
-include { Reads; FastqRemoveRrna; RrnaReferences   } from './types'
+include { ReadsInput; FastqRemoveRrna; RrnaReferences } from '../../../modules/nf-core/types'
 
 //
 // Function that parses seqkit stats TSV output to extract the mean read length
@@ -39,7 +39,7 @@ def getReadLengthFromSeqkitStats(stats_file) {
 
 workflow FASTQ_REMOVE_RRNA {
     take:
-    ch_reads: Channel<Reads>
+    ch_reads: Channel<ReadsInput>
     ch_rrna_fastas: Channel<Path> // one or more fasta files containing rrna sequences
     ch_sortmerna_index: Value<Path> // sortmerna index (optional)
     ch_bowtie2_index: Value<Path> // bowtie2 index (optional)

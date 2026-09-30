@@ -11,8 +11,7 @@ include { SUBREAD_FEATURECOUNTS           } from '../../../modules/nf-core/subre
 include { CUSTOM_MULTIQCCUSTOMBIOTYPE     } from '../../../modules/nf-core/custom/multiqccustombiotype/main'
 include { SAMTOOLS_SORT as SAMTOOLS_SORT_QUALIMAP } from '../../../modules/nf-core/samtools/sort/main'
 include { BAM_RSEQC                       } from '../bam_rseqc/main'
-include { Bam                          } from '../../local/types'
-include { BamQcRnaseq                     } from './types'
+include { Bam; BamQcRnaseq } from '../../../modules/nf-core/types'
 
 workflow BAM_QC_RNASEQ {
 

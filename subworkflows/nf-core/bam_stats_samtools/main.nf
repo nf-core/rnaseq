@@ -7,8 +7,7 @@ nextflow.enable.types = true
 include { SAMTOOLS_STATS    } from '../../../modules/nf-core/samtools/stats/main'
 include { SAMTOOLS_IDXSTATS } from '../../../modules/nf-core/samtools/idxstats/main'
 include { SAMTOOLS_FLAGSTAT } from '../../../modules/nf-core/samtools/flagstat/main'
-include { Bam                } from '../../local/types'
-include { SamtoolsStats      } from './types'
+include { Bam; SamtoolsStats } from '../../../modules/nf-core/types'
 
 workflow BAM_STATS_SAMTOOLS {
     take:

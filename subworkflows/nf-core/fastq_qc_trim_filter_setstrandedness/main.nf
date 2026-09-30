@@ -11,7 +11,7 @@ include { FASTQ_REMOVE_RRNA                     } from '../fastq_remove_rrna'
 include { FASTQ_SUBSAMPLE_FQ_SALMON             } from '../fastq_subsample_fq_salmon'
 include { FASTQ_FASTQC_UMITOOLS_TRIMGALORE      } from '../fastq_fastqc_umitools_trimgalore'
 include { FASTQ_FASTQC_UMITOOLS_FASTP           } from '../fastq_fastqc_umitools_fastp'
-include { Reads; FastqQcTrimFilterSetstrandedness; RrnaReferences } from './types'
+include { ReadsInput; FastqQcTrimFilterSetstrandedness; RrnaReferences } from '../../../modules/nf-core/types'
 
 //
 // Function to determine library type by comparing type counts.
@@ -78,7 +78,7 @@ def getSalmonInferredStrandedness(json_file, stranded_threshold = 0.8, unstrande
 workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     take:
     // Input channels
-    ch_reads: Channel<Reads>
+    ch_reads: Channel<ReadsInput>
     ch_fasta: Value<Path> // genome.fasta
     ch_transcript_fasta: Value<Path> // transcript.fasta
     ch_gtf: Value<Path> // genome.gtf

@@ -27,7 +27,7 @@ include { EAUTILS_GTF2BED                      } from '../../../modules/nf-core/
 include { CUSTOM_GTFFILTER                     } from '../../../modules/nf-core/custom/gtffilter'
 
 include { taskOutputOrNull                     } from '../utils_nfcore_rnaseq_pipeline'
-include { GenomeArtifact                       } from '../utils_nfcore_rnaseq_pipeline/types'
+include { GenomeArtifact } from '../../../modules/nf-core/types'
 
 workflow PREPARE_GENOME_REFERENCES {
 

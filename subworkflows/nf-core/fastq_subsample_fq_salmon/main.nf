@@ -8,11 +8,11 @@ nextflow.enable.types = true
 include { SALMON_INDEX } from '../../../modules/nf-core/salmon/index/main'
 include { FQ_SUBSAMPLE } from '../../../modules/nf-core/fq/subsample/main'
 include { SALMON_QUANT } from '../../../modules/nf-core/salmon/quant/main'
-include { Reads; SalmonSubsampled } from './types'
+include { ReadsInput; SalmonSubsampled } from '../../../modules/nf-core/types'
 
 workflow FASTQ_SUBSAMPLE_FQ_SALMON {
     take:
-    ch_samples: Channel<Reads>
+    ch_samples: Channel<ReadsInput>
     ch_genome_fasta: Value<Path?> // decoys for the Salmon index, absent when the genome is not provided
     ch_transcript_fasta: Value<Path>
     ch_gtf: Value<Path>

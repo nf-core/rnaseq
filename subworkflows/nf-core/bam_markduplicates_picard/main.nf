@@ -7,9 +7,7 @@ nextflow.enable.types = true
 include { PICARD_MARKDUPLICATES } from '../../../modules/nf-core/picard/markduplicates/main'
 include { SAMTOOLS_INDEX        } from '../../../modules/nf-core/samtools/index/main'
 include { BAM_STATS_SAMTOOLS    } from '../bam_stats_samtools/main'
-include { SamtoolsStats         } from '../bam_stats_samtools/types'
-include { Bam                     } from '../../local/types'
-include { MarkdupBam              } from './types'
+include { SamtoolsStats; Bam; MarkdupBam } from '../../../modules/nf-core/types'
 
 workflow BAM_MARKDUPLICATES_PICARD {
     take:

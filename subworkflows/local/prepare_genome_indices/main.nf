@@ -29,7 +29,7 @@ include { SENTIEON_RSEMPREPAREREFERENCE as SENTIEON_RSEM_PREPAREREFERENCE_GENOME
 include { STAR_GENOMEPARAMS_UPGRADE         } from '../../../modules/local/star_genomeparams_upgrade'
 
 include { taskOutputOrNull                  } from '../utils_nfcore_rnaseq_pipeline'
-include { GenomeArtifact                     } from '../utils_nfcore_rnaseq_pipeline/types'
+include { GenomeArtifact } from '../../../modules/nf-core/types'
 
 workflow PREPARE_GENOME_INDICES {
 

@@ -7,7 +7,7 @@ nextflow.enable.types = true
 include { FASTQC           } from '../../../modules/nf-core/fastqc/main'
 include { UMITOOLS_EXTRACT } from '../../../modules/nf-core/umitools/extract/main'
 include { TRIMGALORE       } from '../../../modules/nf-core/trimgalore/main'
-include { Reads; FastqFastqcUmitoolsTrimgalore } from './types'
+include { ReadsInput; FastqFastqcUmitoolsTrimgalore } from '../../../modules/nf-core/types'
 
 //
 // Function that parses TrimGalore log output file to get total number of reads after trimming
@@ -30,7 +30,7 @@ def getTrimGaloreReadsAfterFiltering(log_file) {
 
 workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
     take:
-    ch_reads: Channel<Reads>
+    ch_reads: Channel<ReadsInput>
     skip_fastqc: Boolean // true/false
     with_umi: Boolean // true/false
     skip_umi_extract: Boolean // true/false

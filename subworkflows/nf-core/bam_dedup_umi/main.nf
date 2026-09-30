@@ -12,8 +12,7 @@ include { BAM_SORT_STATS_SAMTOOLS                                               
 
 include { UMITOOLS_PREPAREFORRSEM                                                                    } from '../../../modules/nf-core/umitools/prepareforrsem'
 include { SAMTOOLS_SORT                                                                              } from '../../../modules/nf-core/samtools/sort/main'
-include { Bam                                                                                        } from '../../local/types'
-include { UmiDedupBam                                                                                } from './types'
+include { Bam; UmiDedupBam } from '../../../modules/nf-core/types'
 
 workflow BAM_DEDUP_UMI {
     take:

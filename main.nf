@@ -158,17 +158,7 @@ include { getGenomeAttribute         } from './subworkflows/local/utils_nfcore_r
 include { isStarIndexLegacy          } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { anySampleAutoStrandedness  } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 
-include { AlignedSample; Contaminants; StringtieSample; BigwigSample; RsemMergeSample; Deseq2Qc; RustqcResult; LintFile; PipelineInfo; SamplesheetRow } from './subworkflows/local/types'
-include { GenomeArtifact                                   } from './subworkflows/local/utils_nfcore_rnaseq_pipeline/types'
-include { FastqQcTrimFilterSetstrandedness; RrnaReferences } from './subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness/types'
-include { UmiDedupBam                                      } from './subworkflows/nf-core/bam_dedup_umi/types'
-include { MarkdupBam                                       } from './subworkflows/nf-core/bam_markduplicates_picard/types'
-include { BamQcRnaseq                                      } from './subworkflows/nf-core/bam_qc_rnaseq/types'
-include { RsemQuantSample                                     } from './subworkflows/nf-core/quantify_rsem/types'
-include { SalmonQuantSample; KallistoQuantSample           } from './subworkflows/nf-core/quantify_pseudo_alignment/types'
-include { QuantMerged                                      } from './subworkflows/nf-core/quant_tximport_summarizedexperiment/types'
-include { StringtieMerged                                  } from './subworkflows/nf-core/bam_stringtie_merge/types'
-include { MultiqcReport                                    } from './subworkflows/local/multiqc_rnaseq/types'
+include { AlignedSample; Contaminants; StringtieSample; BigwigSample; RsemMergeSample; Deseq2Qc; RustqcResult; LintFile; PipelineInfo; SamplesheetRow; GenomeArtifact; FastqQcTrimFilterSetstrandedness; RrnaReferences; UmiDedupBam; MarkdupBam; BamQcRnaseq; RsemQuantSample; SalmonQuantSample; KallistoQuantSample; QuantMerged; StringtieMerged; MultiqcReport } from './modules/nf-core/types'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

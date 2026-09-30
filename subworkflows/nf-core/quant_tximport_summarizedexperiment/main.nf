@@ -9,12 +9,12 @@ include { TXIMETA_TXIMPORT } from '../../../modules/nf-core/tximeta/tximport'
 
 include { SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT as SE_GENE_UNIFIED       } from '../../../modules/nf-core/summarizedexperiment/summarizedexperiment'
 include { SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT as SE_TRANSCRIPT_UNIFIED } from '../../../modules/nf-core/summarizedexperiment/summarizedexperiment'
-include { QuantFiles; QuantMerged                                            } from './types'
+include { QuantsInput; QuantMerged } from '../../../modules/nf-core/types'
 
 workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT {
     take:
     samplesheet: Value<Path>
-    ch_quants: Channel<QuantFiles> // per-sample quantification results
+    ch_quants: Channel<QuantsInput> // per-sample quantification results
     gtf: Value<Path>
     gtf_id_attribute: String // GTF gene ID attribute
     gtf_extra_attribute: String // GTF alternative gene attribute (e.g. gene_name)

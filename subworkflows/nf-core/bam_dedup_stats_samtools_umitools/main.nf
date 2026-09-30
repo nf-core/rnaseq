@@ -9,8 +9,7 @@ include { SAMTOOLS_INDEX                           } from '../../../modules/nf-c
 include { SAMTOOLS_VIEW as SAMTOOLS_VIEW_PRIMARY   } from '../../../modules/nf-core/samtools/view'
 include { SAMTOOLS_INDEX as SAMTOOLS_INDEX_PRIMARY } from '../../../modules/nf-core/samtools/index/main'
 include { BAM_STATS_SAMTOOLS                       } from '../bam_stats_samtools/main'
-include { Bam                                   } from '../../local/types'
-include { UmitoolsDedupBam                         } from './types'
+include { Bam; UmitoolsDedupBam } from '../../../modules/nf-core/types'
 
 workflow BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS {
     take:

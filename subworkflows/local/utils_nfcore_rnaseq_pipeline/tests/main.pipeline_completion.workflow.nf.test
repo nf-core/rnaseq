@@ -21,9 +21,9 @@ nextflow_workflow {
                 input[3] = "${outputDir}"                    // outdir (unused in this null-email path)
                 input[4] = true                              // monochrome_logs
                 input[5] = "${outputDir}/multiqc_report.html" // multiqc_report
-                input[6] = channel.of(['test_sample', true])
-                input[7] = channel.of(['test_sample', true])
-                input[8] = channel.of(['test_sample', true])
+                input[6] = channel.of(record(id: 'test_sample', pass: true))
+                input[7] = channel.of(record(id: 'test_sample', pass: true))
+                input[8] = channel.of(record(id: 'test_sample', pass: true))
                 """
             }
         }

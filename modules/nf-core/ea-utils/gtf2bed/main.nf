@@ -13,7 +13,7 @@ process EAUTILS_GTF2BED {
     tuple(meta: Map, gtf: Path)
 
     output:
-    tuple(meta, file("${prefix}.bed"))
+    record(meta: meta, bed: file("${prefix}.bed"))
 
     topic:
     file('versions.yml') >> 'versions'

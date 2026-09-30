@@ -14,7 +14,7 @@ process SYLPHTAX_TAXPROF {
     taxonomy: List<Path>
 
     output:
-    tuple(meta, file('*.sylphmpa'))
+    record(meta: meta, taxprof_output: file('*.sylphmpa'))
 
     topic:
     tuple(task.process, 'sylph-tax', eval("sylph-tax --version 2>&1 | tail -1")) >> 'versions'

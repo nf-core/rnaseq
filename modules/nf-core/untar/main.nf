@@ -13,7 +13,7 @@ process UNTAR {
     tuple(meta: Map, archive: Path)
 
     output:
-    tuple(meta, file("${prefix}"))
+    record(meta: meta, untar: file("${prefix}"))
 
     topic:
     tuple(task.process, 'untar', eval('tar --version 2>&1 | head -1 | sed "s/tar (GNU tar) //; s/ Copyright.*//"')) >> 'versions'

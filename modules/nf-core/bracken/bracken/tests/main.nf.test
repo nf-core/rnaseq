@@ -32,7 +32,7 @@ nextflow_process {
                 process {
                     """
                     input[0] = [[id: 'test', single_end: true], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)]
-                    input[1] = UNTAR.out.map{it[1]}
+                    input[1] = UNTAR.out.map { r -> [ r.meta, r.untar ] }.map{it[1]}
                     input[2] = false
                     input[3] = false
                     """
@@ -44,7 +44,7 @@ nextflow_process {
             process {
                 """
                 input[0] = KRAKEN2_KRAKEN2.out.map { r -> [r.meta, r.report] }
-                input[1] = UNTAR.out.map{it[1]}
+                input[1] = UNTAR.out.map { r -> [ r.meta, r.untar ] }.map{it[1]}
                 """
             }
         }
@@ -74,7 +74,7 @@ nextflow_process {
                                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                                     ]
                                 ]
-                    input[1] = UNTAR.out.map{it[1]}
+                    input[1] = UNTAR.out.map { r -> [ r.meta, r.untar ] }.map{it[1]}
                     input[2] = false
                     input[3] = false
                     """
@@ -86,7 +86,7 @@ nextflow_process {
             process {
                 """
                 input[0] = KRAKEN2_KRAKEN2.out.map { r -> [r.meta, r.report] }
-                input[1] = UNTAR.out.map{it[1]}
+                input[1] = UNTAR.out.map { r -> [ r.meta, r.untar ] }.map{it[1]}
                 """
             }
         }
@@ -116,7 +116,7 @@ nextflow_process {
                                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                                     ]
                                 ]
-                    input[1] = UNTAR.out.map{it[1]}
+                    input[1] = UNTAR.out.map { r -> [ r.meta, r.untar ] }.map{it[1]}
                     input[2] = false
                     input[3] = false
                     """
@@ -128,7 +128,7 @@ nextflow_process {
             process {
                 """
                 input[0] = KRAKEN2_KRAKEN2.out.map { r -> [r.meta, r.report] }
-                input[1] = UNTAR.out.map{it[1]}
+                input[1] = UNTAR.out.map { r -> [ r.meta, r.untar ] }.map{it[1]}
                 """
             }
         }
@@ -150,7 +150,7 @@ nextflow_process {
             process {
                 """
                 input[0] = [[id: 'test'],file(params.modules_testdata_base_path + 'generic/txt/hello.txt', checkIfExists: true)]
-                input[1] = UNTAR.out.map{it[1]}
+                input[1] = UNTAR.out.map { r -> [ r.meta, r.untar ] }.map{it[1]}
                 """
             }
         }

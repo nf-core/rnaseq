@@ -14,7 +14,7 @@ process SYLPH_PROFILE {
     database: List<Path>
 
     output:
-    tuple(meta, file('*.tsv'))
+    record(meta: meta, profile_out: file('*.tsv'))
 
     topic:
     tuple(task.process, 'sylph', eval('sylph -V | sed "s/sylph //g"')) >> 'versions'

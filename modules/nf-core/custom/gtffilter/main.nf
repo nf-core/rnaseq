@@ -14,7 +14,7 @@ process CUSTOM_GTFFILTER {
     tuple(meta2: Map, fasta: Path?)
 
     output:
-    tuple(meta, file("${prefix}.${suffix}"))
+    record(meta: meta, gtf: file("${prefix}.${suffix}"))
 
     topic:
     file('versions.yml') >> 'versions'

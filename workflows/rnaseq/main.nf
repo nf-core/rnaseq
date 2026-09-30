@@ -809,7 +809,7 @@ workflow RNASEQ {
                 ch_contaminant_sequences,
                 ch_sylph_databases
             )
-            ch_sylph_profile = SYLPH_PROFILE.out.filter{ tuple -> !tuple[1].isEmpty() }
+            ch_sylph_profile = SYLPH_PROFILE.out.filter{ r -> !r.profile_out.isEmpty() }.map { r -> [r.meta, r.profile_out] }
 
             def sylph_taxonomies = params.sylph_taxonomy ? params.sylph_taxonomy.split(',').collect{ path -> file(path.trim()) } : []
             ch_sylph_taxonomies = channel.value(sylph_taxonomies)
@@ -817,13 +817,13 @@ workflow RNASEQ {
                 ch_sylph_profile,
                 ch_sylph_taxonomies
             )
-            ch_multiqc_files = ch_multiqc_files.mix(SYLPHTAX_TAXPROF.out)
+            ch_multiqc_files = ch_multiqc_files.mix(SYLPHTAX_TAXPROF.out.map { r -> [r.meta, r.taxprof_output] })
             ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
-                .join(SYLPHTAX_TAXPROF.out.map { meta, f -> [meta.id, f] }, remainder: true)
+                .join(SYLPHTAX_TAXPROF.out.map { r -> [r.meta.id, r.taxprof_output] }, remainder: true)
 
             // Every profile is published, but empty ones never reach SYLPHTAX_TAXPROF
-            ch_contaminant_fields = SYLPH_PROFILE.out.map { meta, profile -> [meta.id, [meta: meta, sylph_profile: profile]] }
-                .join(SYLPHTAX_TAXPROF.out.map { meta, f -> [meta.id, f] }, remainder: true)
+            ch_contaminant_fields = SYLPH_PROFILE.out.map { r -> [r.meta.id, [meta: r.meta, sylph_profile: r.profile_out]] }
+                .join(SYLPHTAX_TAXPROF.out.map { r -> [r.meta.id, r.taxprof_output] }, remainder: true)
                 .map { id, fields, taxprof -> [id, fields + [sylphtax_taxprof: taxprof]] }
         }
 

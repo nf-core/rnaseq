@@ -12,7 +12,7 @@ process PREPROCESS_TRANSCRIPTS_FASTA_GENCODE {
     fasta: Path
 
     output:
-    file('*.fa')
+    record(fasta: file('*.fa'))
 
     topic:
     tuple(task.process, 'sed', eval("sed --version 2>&1 | sed '1!d;s/^.*) //'")) >> 'versions'

@@ -1,40 +1,32 @@
+nextflow.enable.types = true
+
 //
 // Run bedClip and bedGraphToBigWig
 //
 
 include { UCSC_BEDCLIP          } from '../../../modules/nf-core/ucsc/bedclip/main'
 include { UCSC_BEDGRAPHTOBIGWIG } from '../../../modules/nf-core/ucsc/bedgraphtobigwig/main'
-include { BigwigFiles           } from './types'
+include { Bedgraph; BigwigFiles } from './types'
 
 workflow BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG {
     take:
-    bedgraph // channel: [ val(meta), [ bedgraph ] ]
-    sizes    //    path: chrom.sizes
+    ch_bedgraph: Channel<Bedgraph>
+    sizes: Value<Path> // chrom.sizes
 
     main:
 
     //
     // Clip bedGraph file
     //
-    UCSC_BEDCLIP ( bedgraph, sizes )
+    ch_clipped = UCSC_BEDCLIP(ch_bedgraph, sizes)
 
     //
     // Convert bedGraph to bigWig
     //
-    ch_bedgraph = UCSC_BEDCLIP.out.map { r -> [r.meta, r.bedgraph] }
+    ch_bigwig = UCSC_BEDGRAPHTOBIGWIG(ch_clipped, sizes)
 
-    UCSC_BEDGRAPHTOBIGWIG ( ch_bedgraph, sizes )
-
-    ch_bigwig = UCSC_BEDGRAPHTOBIGWIG.out.map { r -> [r.meta, r.bigwig] }
-
-    ch_results = ch_bigwig
-        .join(ch_bedgraph)
-        .map { meta, bigwig, clipped ->
-            record(id: meta.id, bigwig: bigwig, bedgraph: clipped)
-        }
+    ch_results = ch_clipped.join(ch_bigwig, by: 'id')
 
     emit:
-    bigwig   = ch_bigwig   // channel: [ val(meta), [ bigwig ] ]
-    bedgraph = ch_bedgraph          // channel: [ val(meta), [ bedgraph ] ]
-    results  = ch_results                       // channel: BigwigFiles
+    ch_results
 }

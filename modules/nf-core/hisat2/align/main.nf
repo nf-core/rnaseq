@@ -10,16 +10,16 @@ process HISAT2_ALIGN {
         : 'community.wave.seqera.io/library/hisat2_samtools:a0c9b8ccf8116a89'}"
 
     input:
-    tuple(meta: Map, reads: List<Path>)
+    record(id: String, meta: Map, reads: List<Path>)
     tuple(meta2: Map, index: Path)
     tuple(meta3: Map, splicesites: Path?)
     save_unaligned: Boolean
 
     output:
     record(
-        id:       meta.id,
+        id:       id,
         meta:     meta,
-        orig_bam: file('*.bam'),
+        orig_bam: files('*.bam').toSorted { f -> f.name },
         unmapped: files('*fastq.gz', optional: true).toSorted { f -> f.name },
         hisat2:   record(summary: file('*.log'))
     )

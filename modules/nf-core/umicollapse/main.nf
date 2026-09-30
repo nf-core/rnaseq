@@ -11,12 +11,12 @@ process UMICOLLAPSE {
         : 'quay.io/biocontainers/umicollapse:1.1.0--hdfd78af_0'}"
 
     input:
-    tuple(meta: Map, input: Path, bai: Path?)
+    record(id: String, meta: Map, bam: Path)
     mode: String
 
     output:
     record(
-        id:    meta.id,
+        id:    id,
         meta:  meta,
         bam:   file('*.bam', optional: true),
         fastq: file('*dedup*fastq.gz', optional: true),
@@ -49,7 +49,7 @@ process UMICOLLAPSE {
         -Xss${max_stack_size_mega}M \\
         -jar "\$UMICOLLAPSE_JAR" \\
         ${mode} \\
-        -i ${input} \\
+        -i ${bam} \\
         -o ${prefix}.${extension} \\
         ${args} | tee ${prefix}_UMICollapse.log
     """

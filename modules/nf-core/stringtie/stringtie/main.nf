@@ -10,13 +10,13 @@ process STRINGTIE_STRINGTIE {
         'community.wave.seqera.io/library/stringtie:3.0.3--e8043d00caecd051' }"
 
     input:
-    tuple(meta: Map, srbam: Path?, lrbam: Path?)
+    record(id: String, meta: Map, bam: Path?, lrbam: Path?)
     mode: List<String>
     annotation_gtf: Path?
 
     output:
     record(
-        id:             meta.id,
+        id:             id,
         meta:           meta,
         transcript_gtf: file("${prefix}.transcripts.gtf"),
         abundance:      file("${prefix}.gene.abundance.txt"),
@@ -36,8 +36,8 @@ process STRINGTIE_STRINGTIE {
     def coverage  = annotation_gtf ? "-C ${prefix}.coverage.gtf" : ""
 
     // atleast one bam must be provided
-    if (!srbam && !lrbam) {
-        error "At least one of srbam or lrbam must be provided for ${meta.id}"
+    if (!bam && !lrbam) {
+        error "At least one of bam or lrbam must be provided for ${meta.id}"
     }
 
     // check for mode validity and required inputs for each mode
@@ -52,8 +52,8 @@ process STRINGTIE_STRINGTIE {
         }
 
         // check for required inputs based on modes
-        if (modes.contains('mix-reads-assembly') && !(srbam && lrbam)) {
-            error "mode 'mix-reads-assembly' requires both srbam and lrbam to be provided for ${meta.id}"
+        if (modes.contains('mix-reads-assembly') && !(bam && lrbam)) {
+            error "mode 'mix-reads-assembly' requires both bam and lrbam to be provided for ${meta.id}"
         }
         if (modes.contains('long-reads-assembly') && !lrbam) {
             error "mode 'long-reads-assembly' requires lrbam to be provided for ${meta.id}"
@@ -65,7 +65,7 @@ process STRINGTIE_STRINGTIE {
         // add mode flags based on the provided modes
         def mode_flags = []
         if (modes.contains('expression-estimation')) {
-            mode_flags += (lrbam && !srbam) ? ['-L', '-e'] : ['-e']
+            mode_flags += (lrbam && !bam) ? ['-L', '-e'] : ['-e']
         }
         if (modes.contains('long-reads-assembly') && !modes.contains('expression-estimation')) {
             mode_flags += ['-L']
@@ -81,7 +81,7 @@ process STRINGTIE_STRINGTIE {
     }
 
     // --mix requires the short-read alignments first, long-read alignments second
-    def bam_inputs = (srbam && lrbam) ? "$srbam $lrbam" : (srbam ? "$srbam" : "$lrbam")
+    def bam_inputs = (bam && lrbam) ? "$bam $lrbam" : (bam ? "$bam" : "$lrbam")
     """
     stringtie \\
         -o ${prefix}.transcripts.gtf \\

@@ -10,12 +10,12 @@ process UMITOOLS_DEDUP {
         'community.wave.seqera.io/library/umi_tools_future_matplotlib_numpy_pruned:1ee668bafc8c9f81' }"
 
     input:
-    tuple(meta: Map, bam: Path, bai: Path)
+    record(id: String, meta: Map, bam: Path, bai: Path)
     get_output_stats: Boolean
 
     output:
     record(
-        id:                   meta.id,
+        id:                   id,
         meta:                 meta,
         bam:                  file("${prefix}.bam"),
         log:                  file('*.log'),

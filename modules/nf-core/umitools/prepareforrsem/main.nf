@@ -10,11 +10,11 @@ process UMITOOLS_PREPAREFORRSEM {
         'community.wave.seqera.io/library/umi_tools_future_matplotlib_numpy_pruned:1ee668bafc8c9f81' }"
 
     input:
-    tuple(meta: Map, bam: Path, bai: Path?)
+    record(id: String, meta: Map, bam: Path)
 
     output:
     record(
-        id:   meta.id,
+        id:   id,
         meta: meta,
         bam:  file('*.bam'),
         log:  file('*.log')

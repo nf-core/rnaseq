@@ -10,11 +10,11 @@ process UCSC_BEDGRAPHTOBIGWIG {
         'quay.io/biocontainers/ucsc-bedgraphtobigwig:482--hdc0a859_0' }"
 
     input:
-    tuple(meta: Map, bedgraph: Path)
+    record(id: String, meta: Map, bedgraph: Path)
     sizes: Path
 
     output:
-    record(meta: meta, bigwig: file("*.bigWig"))
+    record(id: id, meta: meta, bigwig: file("*.bigWig"))
 
     topic:
     // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.

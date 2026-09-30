@@ -396,20 +396,32 @@ workflow RNASEQ {
     //
     if (!params.skip_alignment && params.aligner == 'hisat2') {
         FASTQ_ALIGN_HISAT2 (
-            ch_strand_inferred_filtered_fastq,
+            ch_strand_inferred_filtered_fastq.map { meta, fastqs -> record(id: meta.id, meta: meta, reads: [ fastqs ].flatten()) },
             ch_hisat2_index.map { item -> [ [:], item ] },
             ch_splicesites.map { item -> [ [:], item ] },
             ch_fasta_fai,
             params.save_unaligned || (params.contaminant_screening && params.contaminant_screening_input == 'unmapped')
         )
-        ch_genome_bam          = ch_genome_bam.mix(FASTQ_ALIGN_HISAT2.out.bam)
-        ch_genome_bam_index    = ch_genome_bam_index.mix(FASTQ_ALIGN_HISAT2.out.index)
-        ch_unaligned_sequences = FASTQ_ALIGN_HISAT2.out.fastq
-        ch_aligned             = ch_aligned.mix(FASTQ_ALIGN_HISAT2.out.results)
-        ch_percent_mapped      = ch_percent_mapped.mix(FASTQ_ALIGN_HISAT2.out.summary.map { meta, log -> [ meta, getHisat2PercentMapped(log) ] })
-        ch_multiqc_files = ch_multiqc_files.mix(FASTQ_ALIGN_HISAT2.out.summary)
+        ch_hisat2_aligned = FASTQ_ALIGN_HISAT2.out
+
+        // BEGIN adapters from the FASTQ_ALIGN_HISAT2 record to legacy tuple channels; removed once the consumers below are typed
+        ch_hisat2_bam      = ch_hisat2_aligned.map { r -> [ r.meta, r.bam ] }
+        ch_hisat2_bai      = ch_hisat2_aligned.map { r -> [ r.meta, r.bai ] }
+        ch_hisat2_unmapped = ch_hisat2_aligned.filter { r -> !r.unmapped.isEmpty() }.map { r -> [ r.meta, r.unmapped ] }
+        ch_hisat2_summary  = ch_hisat2_aligned.map { r -> [ r.meta, r.hisat2.summary ] }
+        ch_hisat2_stats    = ch_hisat2_aligned.map { r -> [ r.meta, r.samtools.stats ] }
+        ch_hisat2_flagstat = ch_hisat2_aligned.map { r -> [ r.meta, r.samtools.flagstat ] }
+        ch_hisat2_idxstats = ch_hisat2_aligned.map { r -> [ r.meta, r.samtools.idxstats ] }
+        // END adapters
+
+        ch_genome_bam          = ch_genome_bam.mix(ch_hisat2_bam)
+        ch_genome_bam_index    = ch_genome_bam_index.mix(ch_hisat2_bai)
+        ch_unaligned_sequences = ch_hisat2_unmapped
+        ch_aligned             = ch_aligned.mix(ch_hisat2_aligned)
+        ch_percent_mapped      = ch_percent_mapped.mix(ch_hisat2_summary.map { meta, log -> [ meta, getHisat2PercentMapped(log) ] })
+        ch_multiqc_files = ch_multiqc_files.mix(ch_hisat2_summary)
         ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
-            .join(FASTQ_ALIGN_HISAT2.out.summary.map { meta, f -> [meta.id, f] }, remainder: true)
+            .join(ch_hisat2_summary.map { meta, f -> [meta.id, f] }, remainder: true)
 
         if (!params.with_umi && params.skip_markduplicates) {
             // The deduplicated stats should take priority for MultiQC, but use
@@ -417,12 +429,12 @@ workflow RNASEQ {
             // will run, those stats will be added later instead to avoid
             // duplicate flagstat files in MultiQC.
             ch_multiqc_files = ch_multiqc_files
-                .mix(FASTQ_ALIGN_HISAT2.out.stats)
-                .mix(FASTQ_ALIGN_HISAT2.out.flagstat)
-                .mix(FASTQ_ALIGN_HISAT2.out.idxstats)
-            ch_hisat2_stats_bundle = FASTQ_ALIGN_HISAT2.out.stats
-                .join(FASTQ_ALIGN_HISAT2.out.flagstat)
-                .join(FASTQ_ALIGN_HISAT2.out.idxstats)
+                .mix(ch_hisat2_stats)
+                .mix(ch_hisat2_flagstat)
+                .mix(ch_hisat2_idxstats)
+            ch_hisat2_stats_bundle = ch_hisat2_stats
+                .join(ch_hisat2_flagstat)
+                .join(ch_hisat2_idxstats)
                 .map(collapseAgg)
             ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
                 .join(ch_hisat2_stats_bundle, remainder: true)
@@ -435,23 +447,37 @@ workflow RNASEQ {
     if (!params.skip_alignment && params.with_umi) {
 
         BAM_DEDUP_UMI(
-            ch_genome_bam.join(ch_genome_bam_index, by: [0]),
+            ch_genome_bam
+                .join(ch_genome_bam_index, by: [0])
+                .map { meta, bam, bai -> record(id: meta.id, meta: meta, bam: bam, bai: bai) },
             ch_fasta_fai,
             params.umi_dedup_tool,
             params.umitools_dedup_stats,
-            ch_transcriptome_bam,
+            ch_transcriptome_bam.map { meta, bam -> record(id: meta.id, meta: meta, bam: bam) },
             ch_transcript_fasta_fai,
             params.umitools_dedup_primary_only
         )
 
-        ch_genome_bam        = BAM_DEDUP_UMI.out.bam
-        ch_transcriptome_bam = BAM_DEDUP_UMI.out.transcriptome_bam
-        ch_genome_bam_index  = BAM_DEDUP_UMI.out.index
-        ch_umi_dedup         = BAM_DEDUP_UMI.out.results
+        ch_umi_dedup = BAM_DEDUP_UMI.out
+
+        // BEGIN adapters from the BAM_DEDUP_UMI record to legacy tuple channels; removed once the consumers below are typed
+        ch_umi_bam            = ch_umi_dedup.map { r -> [ r.meta, r.bam ] }
+        ch_umi_bai            = ch_umi_dedup.map { r -> [ r.meta, r.bai ] }
+        ch_umi_transcriptome  = ch_umi_dedup
+            .filter { r -> r.transcriptome != null && (r.transcriptome.filtered_bam != null || r.transcriptome.sorted_bam != null) }
+            .map { r -> [ r.meta, r.transcriptome.filtered_bam ?: r.transcriptome.sorted_bam ] }
+        // Genome-side files only; MultiQC cannot tell transcriptome stats apart from genome stats
+        ch_umi_genome_files   = ch_umi_dedup.map { r -> [ r.meta, [ r.genomic_dedup_log, r.genome.stats, r.genome.flagstat, r.genome.idxstats ] ] }
+        ch_umi_mqc_files      = ch_umi_genome_files.flatMap { meta, files -> files.collect { f -> [ meta, f ] } }
+        // END adapters
+
+        ch_genome_bam        = ch_umi_bam
+        ch_transcriptome_bam = ch_umi_transcriptome
+        ch_genome_bam_index  = ch_umi_bai
 
         ch_multiqc_files = ch_multiqc_files
-            .mix(BAM_DEDUP_UMI.out.multiqc_files)
-        ch_bam_dedup_umi_bundle = BAM_DEDUP_UMI.out.per_sample_mqc_bundle
+            .mix(ch_umi_mqc_files)
+        ch_bam_dedup_umi_bundle = ch_umi_genome_files
             .map { meta, files -> [meta.id, files] }
         ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
             .join(ch_bam_dedup_umi_bundle, remainder: true)
@@ -598,29 +624,33 @@ workflow RNASEQ {
     // MODULE: StringTie assembly and quantification
     //
     if (!params.skip_stringtie) {
+        // BEGIN adapters from the genome BAM tuple channel to StringTie input records; removed once ch_genome_bam is a record channel
+        ch_stringtie_input = ch_genome_bam.map { meta, bam -> record(id: meta.id, meta: meta, bam: bam, lrbam: null) }
+        // END adapters
+
         if (params.stringtie_ignore_gtf) {
             BAM_STRINGTIE_MERGE(
-                ch_genome_bam.map { meta, bam -> [meta, bam, null] },
+                ch_stringtie_input,
                 channel.value([]),
                 ch_gtf.map { gtf -> [ [:], gtf ] }
             )
-            ch_stringtie_merged = BAM_STRINGTIE_MERGE.out.merged_results
+            ch_stringtie_merged = BAM_STRINGTIE_MERGE.out
             ch_stringtie_gtf = ch_stringtie_merged.map { r -> r.merged_gtf }
         } else {
             ch_stringtie_gtf = ch_gtf
         }
         STRINGTIE_STRINGTIE(
-            ch_genome_bam.map { meta, bam -> [meta, bam, null] },
+            ch_stringtie_input,
             channel.value(['expression-estimation']),
             ch_stringtie_gtf
         )
 
-        ch_stringtie = STRINGTIE_STRINGTIE.out.map { r -> r + record(id: r.meta.id) }
+        ch_stringtie = STRINGTIE_STRINGTIE.out
 
         // Per-sample de novo assemblies that fed the merged GTF
         if (params.stringtie_ignore_gtf) {
             ch_stringtie = ch_stringtie
-                .join(BAM_STRINGTIE_MERGE.out.results.map { r -> record(id: r.id, denovo: r) }, by: 'id')
+                .join(BAM_STRINGTIE_MERGE.out.flatMap { r -> r.assemblies }.map { r -> record(id: r.id, denovo: r) }, by: 'id')
         } else {
             ch_stringtie = ch_stringtie.map { r -> r + record(denovo: null) }
         }
@@ -732,9 +762,11 @@ workflow RNASEQ {
     //
     if (!params.skip_bigwig) {
 
-        ch_genomecov_input = ch_genome_bam.map { meta, bam -> [ meta, bam, 1 ] }
+        // BEGIN adapters from the genome BAM tuple channel to BEDTools input records; removed once ch_genome_bam is a record channel
+        ch_genomecov_input = ch_genome_bam.map { meta, bam -> record(id: meta.id, meta: meta, intervals: bam, scale: 1) }
+        // END adapters
 
-        ch_genomecov_input_stranded = ch_genomecov_input.filter { meta, _bam, _scale -> meta.strandedness in ['forward', 'reverse'] }
+        ch_genomecov_input_stranded = ch_genomecov_input.filter { r -> r.meta.strandedness in ['forward', 'reverse'] }
 
         BEDTOOLS_GENOMECOV_FW (
             ch_genomecov_input_stranded,
@@ -759,31 +791,31 @@ workflow RNASEQ {
         // SUBWORKFLOW: Convert bedGraph to bigWig
         //
         BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD (
-            BEDTOOLS_GENOMECOV_FW.out.map { r -> [r.meta, r.genomecov] },
+            BEDTOOLS_GENOMECOV_FW.out.map { r -> record(id: r.id, meta: r.meta, bedgraph: r.genomecov) },
             ch_chrom_sizes
         )
 
         BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE (
-            BEDTOOLS_GENOMECOV_REV.out.map { r -> [r.meta, r.genomecov] },
+            BEDTOOLS_GENOMECOV_REV.out.map { r -> record(id: r.id, meta: r.meta, bedgraph: r.genomecov) },
             ch_chrom_sizes
         )
 
         BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_COMBINED (
-            BEDTOOLS_GENOMECOV_COMBINED.out.map { r -> [r.meta, r.genomecov] },
+            BEDTOOLS_GENOMECOV_COMBINED.out.map { r -> record(id: r.id, meta: r.meta, bedgraph: r.genomecov) },
             ch_chrom_sizes
         )
 
         // Every sample gets a combined track; only stranded ones get forward/reverse
-        ch_bigwig_combined = ch_genomecov_input.map { meta, _bam, _scale -> [meta.id, meta] }
-            .join(BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_COMBINED.out.results.map { r -> [r.id, r] }, failOnMismatch: true, failOnDuplicate: true)
+        ch_bigwig_combined = ch_genomecov_input.map { r -> [r.id, r.meta] }
+            .join(BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_COMBINED.out.map { r -> [r.id, r] }, failOnMismatch: true, failOnDuplicate: true)
             .branch { _id, meta, _combined ->
                 stranded: meta.strandedness in ['forward', 'reverse']
                 unstranded: true
             }
 
         ch_bigwig = ch_bigwig_combined.stranded
-            .join(BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD.out.results.map { r -> [r.id, r] }, failOnMismatch: true, failOnDuplicate: true)
-            .join(BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE.out.results.map { r -> [r.id, r] }, failOnMismatch: true, failOnDuplicate: true)
+            .join(BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD.out.map { r -> [r.id, r] }, failOnMismatch: true, failOnDuplicate: true)
+            .join(BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE.out.map { r -> [r.id, r] }, failOnMismatch: true, failOnDuplicate: true)
             .mix(ch_bigwig_combined.unstranded.map { id, meta, combined -> [id, meta, combined, null, null] })
             .map { id, meta, combined, forward, reverse ->
                 record(

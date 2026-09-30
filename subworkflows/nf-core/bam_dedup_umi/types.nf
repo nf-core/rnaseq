@@ -2,6 +2,12 @@
 include { SamtoolsStatsFiles } from '../bam_stats_samtools/types'
 include { UmitoolsDedupStats } from '../bam_dedup_stats_samtools_umitools/types'
 
+record TranscriptomeBam {
+    id:   String
+    meta: Map
+    bam:  Path
+}
+
 record UmiDedupTranscriptome {
     bam:                    Path
     dedup_bam:              Path

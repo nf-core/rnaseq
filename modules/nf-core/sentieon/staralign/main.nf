@@ -1,7 +1,9 @@
 nextflow.enable.types = true
 
+include { ReadsInput } from '../../types'
+
 process SENTIEON_STARALIGN {
-    tag "${meta.id}"
+    tag "${sample.meta.id}"
     label 'process_high'
     label 'sentieon'
 
@@ -12,18 +14,18 @@ process SENTIEON_STARALIGN {
         : 'community.wave.seqera.io/library/sentieon:202503.02--def60555294d04fa'}"
 
     input:
-    record(id: String, meta: Map, reads: List<Path>)
+    sample: ReadsInput
     index: Path
     gtf: Path?
     star_ignore_sjdbgtf: Boolean
 
     stage:
-    stageAs reads, 'input*/*'
+    stageAs sample.reads, 'input*/*'
 
     output:
     record(
-        id:                id,
-        meta:              meta,
+        id:                sample.id,
+        meta:              sample.meta,
         raw_bams:          files('*d.out.bam', optional: true).toSorted { f -> f.name },
         bam_sorted:        file("${prefix}.sortedByCoord.out.bam", optional: true),
         bam_sorted_aligned: file("${prefix}.Aligned.sortedByCoord.out.bam", optional: true),
@@ -53,10 +55,10 @@ process SENTIEON_STARALIGN {
 
     script:
     def args = task.ext.args ?: ''
-    prefix = task.ext.prefix ?: "${meta.id}"
-    def read_pairs = reads.collate(2)
-    def reads1 = meta.single_end ? reads : read_pairs.collect { pair -> pair[0] }.toList()
-    def reads2 = meta.single_end ? [] : read_pairs.collect { pair -> pair[1] }.toList()
+    prefix = task.ext.prefix ?: "${sample.meta.id}"
+    def read_pairs = sample.reads.collate(2)
+    def reads1 = sample.meta.single_end ? sample.reads : read_pairs.collect { pair -> pair[0] }.toList()
+    def reads2 = sample.meta.single_end ? [] : read_pairs.collect { pair -> pair[1] }.toList()
     def ignore_gtf = star_ignore_sjdbgtf ? '' : "--sjdbGTFfile ${gtf}"
     attrRG = args.contains("--outSAMattrRGline") ? "" : "--outSAMattrRGline 'ID:${prefix}' 'SM:${prefix}'"
     def out_sam_type = args.contains('--outSAMtype') ? '' : '--outSAMtype BAM Unsorted'
@@ -91,7 +93,7 @@ process SENTIEON_STARALIGN {
     """
 
     stub:
-    prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     echo "" | gzip > ${prefix}.unmapped_1.fastq.gz
     echo "" | gzip > ${prefix}.unmapped_2.fastq.gz

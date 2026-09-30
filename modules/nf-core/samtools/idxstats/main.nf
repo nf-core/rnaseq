@@ -1,7 +1,9 @@
 nextflow.enable.types = true
 
+include { BamBaiInput } from '../../types'
+
 process SAMTOOLS_IDXSTATS {
-    tag "${meta.id}"
+    tag "${sample.meta.id}"
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
@@ -10,28 +12,28 @@ process SAMTOOLS_IDXSTATS {
         : 'community.wave.seqera.io/library/htslib_samtools:1.24--d697cfb9dce007cd'}"
 
     input:
-    record(id: String, meta: Map, bam: Path, bai: Path)
+    sample: BamBaiInput
 
     output:
-    record(id: id, meta: meta, idxstats: file('*.idxstats'))
+    record(id: sample.id, meta: sample.meta, idxstats: file('*.idxstats'))
 
     topic:
     tuple(task.process, 'samtools', eval("samtools version | sed '1!d;s/.* //'")) >> 'versions'
 
     script:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
 
     """
     # Note: --threads value represents *additional* CPUs to allocate (total CPUs = 1 + --threads).
     samtools \\
         idxstats \\
         --threads ${task.cpus - 1} \\
-        ${bam} \\
+        ${sample.bam} \\
         > ${prefix}.idxstats
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
 
     """
     touch ${prefix}.idxstats

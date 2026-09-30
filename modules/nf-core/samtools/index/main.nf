@@ -1,7 +1,9 @@
 nextflow.enable.types = true
 
+include { BamInput } from '../../types'
+
 process SAMTOOLS_INDEX {
-    tag "${meta.id}"
+    tag "${sample.meta.id}"
     label 'process_low'
 
     conda "${moduleDir}/environment.yml"
@@ -10,10 +12,10 @@ process SAMTOOLS_INDEX {
         : 'community.wave.seqera.io/library/htslib_samtools:1.24--d697cfb9dce007cd'}"
 
     input:
-    record(id: String, meta: Map, bam: Path)
+    sample: BamInput
 
     output:
-    record(id: id, meta: meta, bai: file('*.{bai,csi,crai}'))
+    record(id: sample.id, meta: sample.meta, bai: file('*.{bai,csi,crai}'))
 
     topic:
     tuple(task.process, 'samtools', eval("samtools version | sed '1!d;s/.* //'")) >> 'versions'
@@ -25,15 +27,15 @@ process SAMTOOLS_INDEX {
         index \\
         -@ ${task.cpus} \\
         ${args} \\
-        ${bam}
+        ${sample.bam}
     """
 
     stub:
     def args = task.ext.args ?: ''
-    def extension = bam.getExtension() == 'cram'
+    def extension = sample.bam.getExtension() == 'cram'
         ? "crai"
         : args.contains("-c") ? "csi" : "bai"
     """
-    touch ${bam}.${extension}
+    touch ${sample.bam}.${extension}
     """
 }

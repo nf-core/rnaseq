@@ -1,7 +1,9 @@
 nextflow.enable.types = true
 
+include { SamtoolsViewInput } from '../../types'
+
 process SAMTOOLS_VIEW {
-    tag "${meta.id}"
+    tag "${sample.meta.id}"
     label 'process_low'
 
     conda "${moduleDir}/environment.yml"
@@ -10,7 +12,7 @@ process SAMTOOLS_VIEW {
         : 'community.wave.seqera.io/library/htslib_samtools:1.24--d697cfb9dce007cd'}"
 
     input:
-    record(id: String, meta: Map, bam: Path, bai: Path?)
+    sample: SamtoolsViewInput
     fasta: Path?
     fai: Path?
     qname: Path?
@@ -19,8 +21,8 @@ process SAMTOOLS_VIEW {
 
     output:
     record(
-        id:               id,
-        meta:             meta,
+        id:               sample.id,
+        meta:             sample.meta,
         bam:              file("${prefix}.{bam,cram,sam}", optional: true),
         bai:              file("${prefix}.{bam,cram,sam}.{bai,csi,crai}", optional: true),
         unselected:       file("${prefix}.unselected.{bam,cram,sam}", optional: true),
@@ -33,7 +35,7 @@ process SAMTOOLS_VIEW {
     script:
     def args = task.ext.args ?: ''
     def args2 = task.ext.args2 ?: ''
-    prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${sample.meta.id}"
     def reference = fasta ? "--reference ${fasta}" : ""
     file_type = args.contains("--output-fmt sam")
         ? "sam"
@@ -41,14 +43,14 @@ process SAMTOOLS_VIEW {
             ? "bam"
             : args.contains("--output-fmt cram")
                 ? "cram"
-                : bam.getExtension()
+                : sample.bam.getExtension()
 
     output_file = index_format ? "${prefix}.${file_type}##idx##${prefix}.${file_type}.${index_format} --write-index" : "${prefix}.${file_type}"
     // Can't choose index type of unselected file
     readnames = qname ? "--qname-file ${qname} --output-unselected ${prefix}.unselected.${file_type}" : ""
     def bedfile = bed ? "-L ${bed}" : ""
 
-    if ("${bam}" == "${prefix}.${file_type}") {
+    if ("${sample.bam}" == "${prefix}.${file_type}") {
         error("Input and output names are the same, use \"task.ext.prefix\" to disambiguate!")
     }
     if (index_format) {
@@ -69,20 +71,20 @@ process SAMTOOLS_VIEW {
         ${bedfile} \\
         ${args} \\
         -o ${output_file} \\
-        ${bam} \\
+        ${sample.bam} \\
         ${args2}
     """
 
     stub:
     def args = task.ext.args ?: ''
-    prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${sample.meta.id}"
     file_type = args.contains("--output-fmt sam")
         ? "sam"
         : args.contains("--output-fmt bam")
             ? "bam"
             : args.contains("--output-fmt cram")
                 ? "cram"
-                : bam.getExtension()
+                : sample.bam.getExtension()
     default_index_format = file_type == "bam"
         ? "csi"
         : file_type == "cram" ? "crai" : ""
@@ -91,7 +93,7 @@ process SAMTOOLS_VIEW {
     // Can't choose index type of unselected file
     unselected_index = qname && (args.contains("--write-index") || index_format) ? "touch ${prefix}.unselected.${file_type}.${default_index_format}" : ""
 
-    if ("${bam}" == "${prefix}.${file_type}") {
+    if ("${sample.bam}" == "${prefix}.${file_type}") {
         error("Input and output names are the same, use \"task.ext.prefix\" to disambiguate!")
     }
     if (index_format) {

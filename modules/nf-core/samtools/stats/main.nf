@@ -1,7 +1,9 @@
 nextflow.enable.types = true
 
+include { BamBaiInput } from '../../types'
+
 process SAMTOOLS_STATS {
-    tag "${meta.id}"
+    tag "${sample.meta.id}"
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
@@ -10,19 +12,19 @@ process SAMTOOLS_STATS {
         : 'community.wave.seqera.io/library/htslib_samtools:1.24--d697cfb9dce007cd'}"
 
     input:
-    record(id: String, meta: Map, bam: Path, bai: Path)
+    sample: BamBaiInput
     fasta: Path?
     fai: Path?
 
     output:
-    record(id: id, meta: meta, stats: file('*.stats'))
+    record(id: sample.id, meta: sample.meta, stats: file('*.stats'))
 
     topic:
     tuple(task.process, 'samtools', eval("samtools version | sed '1!d;s/.* //'")) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     def reference = fasta ? "--reference ${fasta}" : ""
     """
     samtools \\
@@ -30,12 +32,12 @@ process SAMTOOLS_STATS {
         ${args} \\
         --threads ${task.cpus} \\
         ${reference} \\
-        ${bam} \\
+        ${sample.bam} \\
         > ${prefix}.stats
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     touch ${prefix}.stats
     """

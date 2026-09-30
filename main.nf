@@ -23,7 +23,6 @@ nextflow.enable.types = true
 params {
     // Input/output options
     input:                       Path? = null
-    outdir:                      String?
     email:                       String? = null
 
     // Reference genome options
@@ -309,9 +308,9 @@ workflow NFCORE_RNASEQ {
                     strandedness:      r.meta.strandedness,
                     seq_platform:      r.meta.seq_platform ?: params.seq_platform,
                     seq_center:        r.meta.seq_center ?: params.seq_center,
-                    genome_bam:        r.bam != null ? "${params.outdir}/${alignedDir(r.id)}${r.bam.name}" : null,
+                    genome_bam:        r.bam != null ? "${workflow.outputDir}/${alignedDir(r.id)}${r.bam.name}" : null,
                     percent_mapped:    r.percent_mapped,
-                    transcriptome_bam: r.transcriptome_bam != null ? "${params.outdir}/${alignedDir(r.id)}${r.transcriptome_bam.name}" : null
+                    transcriptome_bam: r.transcriptome_bam != null ? "${workflow.outputDir}/${alignedDir(r.id)}${r.transcriptome_bam.name}" : null
                 )
             }
         }
@@ -375,7 +374,6 @@ workflow {
         params.validate_params,
         params.monochrome_logs,
         args,
-        params.outdir,
         params.input,
         params.help,
         params.help_full,
@@ -394,7 +392,6 @@ workflow {
         params.email,
         params.email_on_fail,
         params.plaintext_email,
-        params.outdir,
         params.monochrome_logs,
         results.multiqc_report,
         results.trim_status,

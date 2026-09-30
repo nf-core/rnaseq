@@ -12,7 +12,7 @@ nextflow_process {
                 input[0] = channel.of(record(
                     id: 'all_samples',
                     meta: [ id:'all_samples' ],
-                    counts: file(params.pipelines_testdata_base_path + "deseq2qc/countFile.tsv", checkIfExists: true)
+                    counts_gene_length_scaled: file(params.pipelines_testdata_base_path + "deseq2qc/countFile.tsv", checkIfExists: true)
                 ))
                 input[1] = file(params.pipelines_testdata_base_path + "deseq2qc/deseq2_pca_header.txt", checkIfExists: true)
                 input[2] = file(params.pipelines_testdata_base_path + "deseq2qc/deseq2_clustering_header.txt", checkIfExists: true)
@@ -44,7 +44,7 @@ nextflow_process {
                 input[0] = channel.of(record(
                     id: 'all_samples',
                     meta: [ id:'all_samples' ],
-                    counts: file(params.pipelines_testdata_base_path + "deseq2qc/countFile.tsv", checkIfExists: true)
+                    counts_gene_length_scaled: file(params.pipelines_testdata_base_path + "deseq2qc/countFile.tsv", checkIfExists: true)
                 ))
                 input[1] = file(params.pipelines_testdata_base_path + "deseq2qc/deseq2_pca_header.txt", checkIfExists: true)
                 input[2] = file(params.pipelines_testdata_base_path + "deseq2qc/deseq2_clustering_header.txt", checkIfExists: true)

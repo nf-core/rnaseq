@@ -32,7 +32,7 @@ tools:
         - "LGPL v3"
       identifier: ""
 input:
-  - - counts:
+  - - counts_gene_length_scaled:
         type: file
         description: |
           Gene-level raw count matrix (samples on columns, genes on rows) - typically the

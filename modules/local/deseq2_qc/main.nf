@@ -11,7 +11,7 @@ process DESEQ2_QC {
         'community.wave.seqera.io/library/r-base_r-optparse_r-ggplot2_r-rcolorbrewer_pruned:9e75394d0bc21987' }"
 
     input:
-    record(id: String, meta: Map, counts: Path)
+    record(id: String, meta: Map, counts_gene_length_scaled: Path)
     pca_header_multiqc: Path
     clustering_header_multiqc: Path
 
@@ -41,7 +41,7 @@ process DESEQ2_QC {
     prefix = task.ext.prefix ?: "deseq2"
     """
     deseq2_qc.r \\
-        --count_file $counts \\
+        --count_file $counts_gene_length_scaled \\
         --outdir ./ \\
         --cores $task.cpus \\
         --outprefix $prefix \\
@@ -77,9 +77,9 @@ process DESEQ2_QC {
 
     mkdir size_factors
     touch size_factors/${prefix}.size_factors.RData
-    # One per-sample size_factors file per data column in $counts; the
+    # One per-sample size_factors file per data column in $counts_gene_length_scaled; the
     # module test snaps these names so the stub must mirror real-run output.
-    for i in `head $counts -n 1 | cut -f3-`;
+    for i in `head $counts_gene_length_scaled -n 1 | cut -f3-`;
     do
         touch size_factors/\${i}.size_factors.RData
     done

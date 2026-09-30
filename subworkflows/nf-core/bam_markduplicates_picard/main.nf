@@ -7,6 +7,7 @@ nextflow.enable.types = true
 include { PICARD_MARKDUPLICATES } from '../../../modules/nf-core/picard/markduplicates/main'
 include { SAMTOOLS_INDEX        } from '../../../modules/nf-core/samtools/index/main'
 include { BAM_STATS_SAMTOOLS    } from '../bam_stats_samtools/main'
+include { SamtoolsStats         } from '../bam_stats_samtools/types'
 include { BamToMarkdup; MarkdupBam } from './types'
 
 workflow BAM_MARKDUPLICATES_PICARD {
@@ -23,7 +24,7 @@ workflow BAM_MARKDUPLICATES_PICARD {
 
     ch_index = SAMTOOLS_INDEX(ch_marked)
 
-    ch_stats = channel.empty()
+    def ch_stats: Channel<SamtoolsStats> = channel.empty()
     if (run_stats) {
         ch_stats = BAM_STATS_SAMTOOLS(ch_marked.join(ch_index, by: 'id'), ch_fasta_fai)
     }

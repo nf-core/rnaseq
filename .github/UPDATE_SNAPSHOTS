@@ -1,1 +1,0 @@
-temporary marker: makes the nf-test action regenerate snapshots and upload them as artifacts; delete this file and revert the action change once the snapshots are collected

@@ -5,8 +5,19 @@ nextflow.enable.types = true
 //
 
 include { MULTIQC                    } from '../../../modules/nf-core/multiqc'
-include { MULTIQC_WRITE_FILE         } from '../../../modules/local/multiqc_write_file'
-include { MULTIQC_CONCATENATE_TABLES } from '../../../modules/local/multiqc_concatenate_tables'
+include { MULTIQC_WRITE_FILE as MULTIQC_WRITE_FAIL_TRIMMED } from '../../../modules/local/multiqc_write_file'
+include { MULTIQC_WRITE_FILE as MULTIQC_WRITE_FAIL_MAPPED } from '../../../modules/local/multiqc_write_file'
+include { MULTIQC_WRITE_FILE as MULTIQC_WRITE_DYNAMIC_CONFIG } from '../../../modules/local/multiqc_write_file'
+include { MULTIQC_WRITE_FILE as MULTIQC_WRITE_WORKFLOW_SUMMARY } from '../../../modules/local/multiqc_write_file'
+include { MULTIQC_WRITE_FILE as MULTIQC_WRITE_METHODS_DESCRIPTION } from '../../../modules/local/multiqc_write_file'
+include { MULTIQC_WRITE_FILE as MULTIQC_WRITE_STRAND_SUMMARY_SAMPLE } from '../../../modules/local/multiqc_write_file'
+include { MULTIQC_WRITE_FILE as MULTIQC_WRITE_STRAND_COMPOSITION_SAMPLE } from '../../../modules/local/multiqc_write_file'
+include { MULTIQC_WRITE_FILE as MULTIQC_WRITE_MANIFEST_VERSIONS } from '../../../modules/local/multiqc_write_file'
+include { MULTIQC_WRITE_FILE as MULTIQC_WRITE_STRAND_SUMMARY } from '../../../modules/local/multiqc_write_file'
+include { MULTIQC_WRITE_FILE as MULTIQC_WRITE_STRAND_COMPOSITION } from '../../../modules/local/multiqc_write_file'
+include { MULTIQC_WRITE_FILE as MULTIQC_WRITE_NAME_REPLACEMENTS } from '../../../modules/local/multiqc_write_file'
+include { MULTIQC_CONCATENATE_TABLES as MULTIQC_CONCATENATE_FAIL_TRIMMED } from '../../../modules/local/multiqc_concatenate_tables'
+include { MULTIQC_CONCATENATE_TABLES as MULTIQC_CONCATENATE_FAIL_MAPPED } from '../../../modules/local/multiqc_concatenate_tables'
 include { workflowVersionToYAML      } from '../../nf-core/utils_nfcore_pipeline'
 include { Sample; MultiqcFiles; SampleRuns; TrimReadCount; PercentMappedPass; StrandData } from '../../../modules/nf-core/types'
 include { MultiqcReport } from '../../../modules/nf-core/multiqc/main'
@@ -57,7 +68,7 @@ workflow MULTIQC_RNASEQ {
     status_header_lines = sample_status_header.readLines().size() + 1  // parent header + one column row
     status_header_text  = sample_status_header.text
 
-    ch_fail_trimmed_by_id = MULTIQC_WRITE_FILE(
+    ch_fail_trimmed_by_id = MULTIQC_WRITE_FAIL_TRIMMED(
         ch_trim_read_count
             .filter { r -> r.num_reads <= min_trimmed_reads }
             .map { r ->
@@ -70,7 +81,7 @@ workflow MULTIQC_RNASEQ {
             }
     ).map { r -> record(id: r.id, fail_trimmed: r.file) }
 
-    ch_fail_trimmed_merged = MULTIQC_CONCATENATE_TABLES(
+    ch_fail_trimmed_merged = MULTIQC_CONCATENATE_FAIL_TRIMMED(
         ch_fail_trimmed_by_id
             .collect()
             .flatMap { rows ->
@@ -86,7 +97,7 @@ workflow MULTIQC_RNASEQ {
             }
     ).map { r -> r.file }
 
-    ch_fail_mapped_by_id = MULTIQC_WRITE_FILE(
+    ch_fail_mapped_by_id = MULTIQC_WRITE_FAIL_MAPPED(
         ch_percent_mapped_pass
             .filter { r -> r.pass != null && !r.pass }
             .map { r ->
@@ -99,7 +110,7 @@ workflow MULTIQC_RNASEQ {
             }
     ).map { r -> record(id: r.id, fail_mapped: r.file) }
 
-    ch_fail_mapped_merged = MULTIQC_CONCATENATE_TABLES(
+    ch_fail_mapped_merged = MULTIQC_CONCATENATE_FAIL_MAPPED(
         ch_fail_mapped_by_id
             .collect()
             .flatMap { rows ->
@@ -129,7 +140,7 @@ workflow MULTIQC_RNASEQ {
     // Per-run table_sample_merge config: only PE samples from the
     // samplesheet get their _1 / _2 rows grouped in the General Stats
     // table.
-    ch_mqc_dynamic_config = MULTIQC_WRITE_FILE(
+    ch_mqc_dynamic_config = MULTIQC_WRITE_DYNAMIC_CONFIG(
         record(
             id:      'multiqc_sample_merge',
             meta:    [:],
@@ -139,7 +150,7 @@ workflow MULTIQC_RNASEQ {
     ).map { r -> r.file }
 
     // Workflow summary and methods description rendered as MultiQC sections.
-    ch_workflow_summary = MULTIQC_WRITE_FILE(
+    ch_workflow_summary = MULTIQC_WRITE_WORKFLOW_SUMMARY(
         record(
             id:      'workflow_summary',
             meta:    [:],
@@ -148,7 +159,7 @@ workflow MULTIQC_RNASEQ {
         )
     ).map { r -> r.file }
 
-    ch_methods_description = MULTIQC_WRITE_FILE(
+    ch_methods_description = MULTIQC_WRITE_METHODS_DESCRIPTION(
         record(
             id:      'methods_description',
             meta:    [:],
@@ -169,7 +180,7 @@ workflow MULTIQC_RNASEQ {
     // contract (id, meta, files, configs, logo, replace_names, sample_names).
     //
     if (skip_quantification_merge) {
-        ch_strand_summary_by_id = MULTIQC_WRITE_FILE(
+        ch_strand_summary_by_id = MULTIQC_WRITE_STRAND_SUMMARY_SAMPLE(
             ch_strand_data.map { r ->
                 record(
                     id:      r.id,
@@ -180,7 +191,7 @@ workflow MULTIQC_RNASEQ {
             }
         ).map { r -> record(id: r.id, strand_summary: r.file) }
 
-        ch_strand_composition_by_id = MULTIQC_WRITE_FILE(
+        ch_strand_composition_by_id = MULTIQC_WRITE_STRAND_COMPOSITION_SAMPLE(
             ch_strand_data.map { r ->
                 record(
                     id:      r.id,
@@ -208,7 +219,7 @@ workflow MULTIQC_RNASEQ {
                 }
             }
 
-        ch_manifest_versions = MULTIQC_WRITE_FILE(
+        ch_manifest_versions = MULTIQC_WRITE_MANIFEST_VERSIONS(
             record(
                 id:      'manifest_versions',
                 meta:    [:],
@@ -246,7 +257,7 @@ workflow MULTIQC_RNASEQ {
         // the section cleanly.
         ch_strand_rows = ch_strand_data.collect()
 
-        ch_strand_summary_merged = MULTIQC_WRITE_FILE(
+        ch_strand_summary_merged = MULTIQC_WRITE_STRAND_SUMMARY(
             ch_strand_rows.flatMap { rows ->
                 rows.isEmpty() ? [] : [
                     record(
@@ -259,7 +270,7 @@ workflow MULTIQC_RNASEQ {
             }
         ).map { r -> r.file }
 
-        ch_strand_composition_merged = MULTIQC_WRITE_FILE(
+        ch_strand_composition_merged = MULTIQC_WRITE_STRAND_COMPOSITION(
             ch_strand_rows.flatMap { rows ->
                 rows.isEmpty() ? [] : [
                     record(
@@ -273,7 +284,7 @@ workflow MULTIQC_RNASEQ {
         ).map { r -> r.file }
 
         // --replace-names TSV so MultiQC uses sample IDs rather than FASTQ basenames.
-        ch_name_replacements = MULTIQC_WRITE_FILE(
+        ch_name_replacements = MULTIQC_WRITE_NAME_REPLACEMENTS(
             ch_fastq
                 .collect()
                 .flatMap { rows ->

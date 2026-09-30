@@ -158,7 +158,7 @@ include { getGenomeAttribute         } from './subworkflows/local/utils_nfcore_r
 include { isStarIndexLegacy          } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { anySampleAutoStrandedness  } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 
-include { AlignedSample; Contaminants; StringtieSample; BigwigSample; RsemMergeSample; Deseq2Qc; RustqcResult; LintFile; PipelineInfo; SamplesheetRow; GenomeArtifact; FastqQcTrimFilterSetstrandedness; RrnaReferences; UmiDedupBam; MarkdupBam; BamQcRnaseq; RsemQuantSample; SalmonQuantSample; KallistoQuantSample; QuantMerged; StringtieMerged; MultiqcReport } from './modules/nf-core/types'
+include { RsemMerge; RsemMergeSample; KallistoQuantSample; MultiqcReport; RsemQuantSample; RustqcResult; SalmonQuantSample; StringtieAssembly; Deseq2Qc; AlignedSample; LintFile; SamplesheetRow; Contaminants; StringtieSample; BigwigSample; PipelineInfo; GenomeArtifact; UmiDedupBam; MarkdupBam; BamQcRnaseq; StringtieMerged; BigwigFiles; RrnaReferences; FastqQcTrimFilterSetstrandedness; QuantMerged } from './modules/nf-core/types'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

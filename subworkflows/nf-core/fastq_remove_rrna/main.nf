@@ -12,7 +12,7 @@ include { SEQKIT_REPLACE as SEQKIT_REPLACE_U2T     } from '../../../modules/nf-c
 include { SEQKIT_STATS                             } from '../../../modules/nf-core/seqkit/stats'
 include { SORTMERNA                                } from '../../../modules/nf-core/sortmerna'
 include { SORTMERNA as SORTMERNA_INDEX             } from '../../../modules/nf-core/sortmerna'
-include { ReadsInput; FastqRemoveRrna; RrnaReferences } from '../../../modules/nf-core/types'
+include { ReadsInput; Bowtie2AlignResult; Bowtie2BuildResult; RibodetectorResult; SamtoolsFastqResult; SamtoolsViewResult; SeqkitReplaceResult; SeqkitStatsResult; SortmernaResult; ConcatenateFastaResult; RrnaReferences; FastqRemoveRrna } from '../../../modules/nf-core/types'
 
 //
 // Function that parses seqkit stats TSV output to extract the mean read length
@@ -59,7 +59,7 @@ workflow FASTQ_REMOVE_RRNA {
 
         ch_sortmerna_idx = ch_sortmerna_index
         if (make_sortmerna_index) {
-            ch_sortmerna_built = SORTMERNA_INDEX(
+            def ch_sortmerna_built: Value<SortmernaResult> = SORTMERNA_INDEX(
                 record(id: 'rrna_refs', meta: [:], reads: []),
                 ch_sortmerna_fastas,
                 channel.value(null as Path),
@@ -70,7 +70,7 @@ workflow FASTQ_REMOVE_RRNA {
             }
         }
 
-        ch_sortmerna = SORTMERNA(
+        def ch_sortmerna: Channel<SortmernaResult> = SORTMERNA(
             ch_reads,
             ch_sortmerna_fastas,
             ch_sortmerna_idx,
@@ -91,11 +91,11 @@ workflow FASTQ_REMOVE_RRNA {
     }
     else if (ribo_removal_tool == 'ribodetector') {
         // Run seqkit stats to determine average read length
-        ch_seqkit_stats = SEQKIT_STATS(ch_reads)
+        def ch_seqkit_stats: Channel<SeqkitStatsResult> = SEQKIT_STATS(ch_reads)
 
         // Join stats with reads and calculate read length for RiboDetector
         ch_reads_with_stats = ch_reads.join(ch_seqkit_stats, by: 'id')
-        ch_ribodetector = RIBODETECTOR(
+        def ch_ribodetector: Channel<RibodetectorResult> = RIBODETECTOR(
             ch_reads_with_stats.map { r -> r + record(length: getReadLengthFromSeqkitStats(r.stats)) }
         )
 
@@ -123,22 +123,22 @@ workflow FASTQ_REMOVE_RRNA {
             }
 
             // Step 1: Add filename prefixes to sequence headers
-            ch_seqkit_prefixed = SEQKIT_REPLACE(ch_rrna_with_meta, '')
+            def ch_seqkit_prefixed: Channel<SeqkitReplaceResult> = SEQKIT_REPLACE(ch_rrna_with_meta, '')
 
             // Step 2: Convert U to T in sequences (RNA to DNA)
             ch_prefixed_fastas = ch_seqkit_prefixed.map { r ->
                 record(id: "${r.meta.id}_dna", meta: [id: "${r.meta.id}_dna"], fastx: r.fastx)
             }
-            ch_seqkit_converted = SEQKIT_REPLACE_U2T(ch_prefixed_fastas, '')
+            def ch_seqkit_converted: Channel<SeqkitReplaceResult> = SEQKIT_REPLACE_U2T(ch_prefixed_fastas, '')
 
             // Collect processed files (already prefixed and U->T converted)
-            ch_combined_fasta = CONCATENATE_FASTA(
+            def ch_combined_fasta: Value<ConcatenateFastaResult> = CONCATENATE_FASTA(
                 ch_seqkit_converted.collect().map { built ->
                     record(id: 'rrna_refs', meta: [id: 'rrna_refs'], fastas: built.collect { r -> r.fastx }.toSorted { f -> f.name })
                 }
             )
 
-            ch_bowtie2_built = BOWTIE2_BUILD(ch_combined_fasta)
+            def ch_bowtie2_built: Value<Bowtie2BuildResult> = BOWTIE2_BUILD(ch_combined_fasta)
             ch_bowtie2_idx = ch_bowtie2_built.map { built -> built.index }
             val_seqkit_prefixed = ch_seqkit_prefixed
                 .collect()
@@ -156,7 +156,7 @@ workflow FASTQ_REMOVE_RRNA {
 
         // For single-end reads: bowtie2's --un-gz works correctly
         // save_unaligned=true outputs unmapped reads directly
-        ch_bowtie2_se = BOWTIE2_ALIGN(
+        def ch_bowtie2_se: Channel<Bowtie2AlignResult> = BOWTIE2_ALIGN(
             ch_reads.filter { r -> r.meta.single_end },
             ch_bowtie2_idx,
             null,             // No reference fasta needed
@@ -167,7 +167,7 @@ workflow FASTQ_REMOVE_RRNA {
         // For paired-end reads: bowtie2's --un-conc-gz outputs pairs that didn't
         // align concordantly, which INCLUDES pairs where one mate aligned.
         // We need to filter via samtools to get pairs where BOTH mates are unmapped.
-        ch_bowtie2_pe = BOWTIE2_ALIGN_PE(
+        def ch_bowtie2_pe: Channel<Bowtie2AlignResult> = BOWTIE2_ALIGN_PE(
             ch_reads.filter { r -> !r.meta.single_end },
             ch_bowtie2_idx,
             null,             // No reference fasta needed for BAM output
@@ -177,7 +177,7 @@ workflow FASTQ_REMOVE_RRNA {
 
         // Filter BAM for read pairs where BOTH mates are unmapped (flag 12 = 4 + 8)
         // This removes any pair where at least one mate aligned to rRNA
-        ch_view = SAMTOOLS_VIEW_BOWTIE2(
+        def ch_view: Channel<SamtoolsViewResult> = SAMTOOLS_VIEW_BOWTIE2(
             ch_bowtie2_pe.filter { r -> !r.raw_bams.isEmpty() }.map { r -> record(id: r.id, meta: r.meta, bam: r.raw_bams[0], bai: null) },
             null, // No reference fasta
             null, // No reference index
@@ -188,7 +188,7 @@ workflow FASTQ_REMOVE_RRNA {
         ch_view_bam = ch_view.filter { r -> r.bam != null }
 
         // Convert filtered BAM back to paired FASTQ
-        ch_fastq_pe = SAMTOOLS_FASTQ_BOWTIE2(
+        def ch_fastq_pe: Channel<SamtoolsFastqResult> = SAMTOOLS_FASTQ_BOWTIE2(
             ch_view_bam,
             false, // not interleaved
         )

@@ -12,7 +12,7 @@ include { RSEQC_JUNCTIONSATURATION } from '../../../modules/nf-core/rseqc/juncti
 include { RSEQC_READDISTRIBUTION   } from '../../../modules/nf-core/rseqc/readdistribution/main'
 include { RSEQC_READDUPLICATION    } from '../../../modules/nf-core/rseqc/readduplication/main'
 include { RSEQC_TIN                } from '../../../modules/nf-core/rseqc/tin/main'
-include { Bam; Rseqc } from '../../../modules/nf-core/types'
+include { Bam } from '../../../modules/nf-core/types'
 
 workflow BAM_RSEQC {
     take:

@@ -7,7 +7,7 @@ include { FASTQC as FASTQC_RAW  } from '../../../modules/nf-core/fastqc/main'
 include { FASTQC as FASTQC_TRIM } from '../../../modules/nf-core/fastqc/main'
 include { UMITOOLS_EXTRACT      } from '../../../modules/nf-core/umitools/extract/main'
 include { FASTP                 } from '../../../modules/nf-core/fastp/main'
-include { FastpReads; FastqFastqcUmitoolsFastp } from '../../../modules/nf-core/types'
+include { FastqcResult; FastpReads; FastqFastqcUmitoolsFastp } from '../../../modules/nf-core/types'
 
 //
 // Function that parses fastp json output file to get total number of reads after trimming
@@ -70,7 +70,7 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
     }
 
     if (!skip_fastqc) {
-        ch_fastqc_raw = FASTQC_RAW(ch_reads)
+        def ch_fastqc_raw: Channel<FastqcResult> = FASTQC_RAW(ch_reads)
         ch_results = ch_results.join(
             ch_fastqc_raw.map { r -> record(id: r.id, fastqc_raw_html: r.html, fastqc_raw_zip: r.zip) },
             by: 'id'
@@ -130,7 +130,7 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
         ch_results = ch_results.join(ch_trim, by: 'id')
 
         if (!skip_fastqc) {
-            ch_fastqc_trim = FASTQC_TRIM(ch_results.filter { r -> r.reads != null })
+            def ch_fastqc_trim: Channel<FastqcResult> = FASTQC_TRIM(ch_results.filter { r -> r.reads != null })
 
             // Samples below min_trimmed_reads are not passed to FASTQC_TRIM
             ch_results = ch_results.join(

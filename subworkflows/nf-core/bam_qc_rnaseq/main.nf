@@ -11,7 +11,7 @@ include { SUBREAD_FEATURECOUNTS           } from '../../../modules/nf-core/subre
 include { CUSTOM_MULTIQCCUSTOMBIOTYPE     } from '../../../modules/nf-core/custom/multiqccustombiotype/main'
 include { SAMTOOLS_SORT as SAMTOOLS_SORT_QUALIMAP } from '../../../modules/nf-core/samtools/sort/main'
 include { BAM_RSEQC                       } from '../bam_rseqc/main'
-include { Bam; BamQcRnaseq } from '../../../modules/nf-core/types'
+include { CustomMultiqccustombiotypeResult; SamtoolsSortResult; BamQcFeaturecounts; Bam } from '../../../modules/nf-core/types'
 
 workflow BAM_QC_RNASEQ {
 
@@ -54,8 +54,8 @@ workflow BAM_QC_RNASEQ {
     }
 
     if ('biotype_qc' in tools && biotype) {
-        ch_featurecounts = SUBREAD_FEATURECOUNTS(ch_bam_bai, ch_gtf)
-        ch_biotype = CUSTOM_MULTIQCCUSTOMBIOTYPE(ch_featurecounts, biotypes_header)
+        def ch_featurecounts: Channel<BamQcFeaturecounts> = SUBREAD_FEATURECOUNTS(ch_bam_bai, ch_gtf)
+        def ch_biotype: Channel<CustomMultiqccustombiotypeResult> = CUSTOM_MULTIQCCUSTOMBIOTYPE(ch_featurecounts, biotypes_header)
         ch_results = ch_results
             .join(ch_featurecounts.map { r -> record(id: r.id, featurecounts: r) }, by: 'id')
             .join(ch_biotype.map { r -> record(id: r.id, biotype: record(tsv: r.tsv, rrna: r.rrna)) }, by: 'id')
@@ -65,7 +65,7 @@ workflow BAM_QC_RNASEQ {
         ch_sort_in = ch_bam_bai.map { r -> record(id: r.id, meta: r.meta, raw_bams: [ r.bam ]) }
 
         // Name-sorted BAM via samtools sort; requires ext.args = '-n' to be set by the caller for SAMTOOLS_SORT_QUALIMAP
-        ch_name_sorted = SAMTOOLS_SORT_QUALIMAP(ch_sort_in, ch_fasta, ch_fai, '')
+        def ch_name_sorted: Channel<SamtoolsSortResult> = SAMTOOLS_SORT_QUALIMAP(ch_sort_in, ch_fasta, ch_fai, '')
         ch_results = ch_results.join(QUALIMAP_RNASEQ(ch_name_sorted, ch_gtf), by: 'id')
     }
 

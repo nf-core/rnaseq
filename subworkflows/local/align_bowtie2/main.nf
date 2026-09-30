@@ -11,7 +11,7 @@ nextflow.enable.types = true
 
 include { BOWTIE2_ALIGN           } from '../../../modules/nf-core/bowtie2/align'
 include { BAM_SORT_STATS_SAMTOOLS } from '../../nf-core/bam_sort_stats_samtools'
-include { ReadsInput; Bowtie2Aligned } from '../../../modules/nf-core/types'
+include { ReadsInput; Bowtie2AlignResult; Bowtie2Aligned; Bam } from '../../../modules/nf-core/types'
 
 //
 // Function that parses and returns the alignment rate from the Bowtie2 log output
@@ -40,7 +40,7 @@ workflow ALIGN_BOWTIE2 {
     //
     // Map reads with Bowtie2
     //
-    ch_bowtie2 = BOWTIE2_ALIGN(
+    def ch_bowtie2: Channel<Bowtie2AlignResult> = BOWTIE2_ALIGN(
         ch_samples,
         index,
         null,                   // No fasta needed for BAM output
@@ -51,7 +51,7 @@ workflow ALIGN_BOWTIE2 {
     //
     // Sort, index BAM file and run samtools stats, flagstat and idxstats
     //
-    ch_sorted = BAM_SORT_STATS_SAMTOOLS(ch_bowtie2, fasta, fai)
+    def ch_sorted: Channel<Bam> = BAM_SORT_STATS_SAMTOOLS(ch_bowtie2, fasta, fai)
 
     // The BAM is aligned to the transcriptome, and its unsorted form is what Salmon quantifies:
     // a coordinate-sorted BAM breaks paired-end quantification.

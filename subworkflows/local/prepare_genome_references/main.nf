@@ -27,7 +27,7 @@ include { EAUTILS_GTF2BED                      } from '../../../modules/nf-core/
 include { CUSTOM_GTFFILTER                     } from '../../../modules/nf-core/custom/gtffilter'
 
 include { taskOutputOrNull                     } from '../utils_nfcore_rnaseq_pipeline'
-include { GenomeArtifact } from '../../../modules/nf-core/types'
+include { CustomCatadditionalfastaResult; CustomGtffilterResult; GunzipResult; RsemPreparereferenceResult; GenomeArtifact } from '../../../modules/nf-core/types'
 
 workflow PREPARE_GENOME_REFERENCES {
 
@@ -107,7 +107,7 @@ workflow PREPARE_GENOME_REFERENCES {
     ch_gtf_pre_filter = ch_no_path
     if (filter_gtf_needed && has_gtf) {
         ch_gtf_pre_filter = ch_gtf
-        ch_gtf_filtered = CUSTOM_GTFFILTER(
+        def ch_gtf_filtered: Value<CustomGtffilterResult> = CUSTOM_GTFFILTER(
             ch_gtf.map { item -> record(id: 'gtf', meta: [id: item.baseName + '.filtered'], gtf: item) },
             ch_fasta
         )
@@ -136,7 +136,7 @@ workflow PREPARE_GENOME_REFERENCES {
             ch_gtf_pre_filter = ch_gtf
         }
 
-        ch_catfasta = CUSTOM_CATADDITIONALFASTA(
+        def ch_catfasta: Value<CustomCatadditionalfastaResult> = CUSTOM_CATADDITIONALFASTA(
             ch_fasta
                 .combine(ch_gtf)
                 .map { fasta_file, gtf_file -> record(id: 'genome_transcriptome', meta: [id: 'genome_transcriptome'], fasta: fasta_file, gtf: gtf_file) },
@@ -205,7 +205,7 @@ workflow PREPARE_GENOME_REFERENCES {
         ).map { r -> r.fasta }
     } else if (fasta_provided && has_gtf && use_sentieon_star) {
         // Build transcripts from genome if we have it
-        ch_rsem_reference = SENTIEON_MAKE_TRANSCRIPTS_FASTA(
+        def ch_rsem_reference: Value<RsemPreparereferenceResult> = SENTIEON_MAKE_TRANSCRIPTS_FASTA(
             ch_fasta.map { fasta_file -> record(id: 'genome', meta: [id: 'genome'], fasta: fasta_file) }.combine(gtf: ch_gtf)
         )
         ch_transcript_fasta          = ch_rsem_reference.map { r -> r.transcript_fasta }
@@ -246,7 +246,7 @@ workflow PREPARE_GENOME_REFERENCES {
         ch_rrna_inputs = channel.fromList(ribo_db.readLines())
             .map { row -> file(row) }
 
-        ch_rrna_gunzipped = GUNZIP_RRNA_FASTAS(
+        def ch_rrna_gunzipped: Channel<GunzipResult> = GUNZIP_RRNA_FASTAS(
             ch_rrna_inputs
                 .filter { rrna_fasta -> rrna_fasta.name.endsWith('.gz') }
                 .map { rrna_fasta -> record(id: rrna_fasta.name, meta: [:], archive: rrna_fasta) }

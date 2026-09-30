@@ -9,7 +9,7 @@ include { CUSTOM_RSEMMERGECOUNTS             } from '../../../modules/nf-core/cu
 include { SENTIEON_RSEMCALCULATEEXPRESSION   } from '../../../modules/nf-core/sentieon/rsemcalculateexpression'
 
 include { QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT } from '../quant_tximport_summarizedexperiment'
-include { ReadsInput } from '../../../modules/nf-core/types'
+include { ReadsInput; RsemQuantSample } from '../../../modules/nf-core/types'
 
 workflow QUANTIFY_RSEM {
     take:
@@ -27,6 +27,7 @@ workflow QUANTIFY_RSEM {
     //
     // Quantify reads with RSEM
     //
+    def ch_rsem: Channel<RsemQuantSample>
     if (use_sentieon_star) {
         ch_rsem = SENTIEON_RSEMCALCULATEEXPRESSION(ch_samples, index)
     } else {

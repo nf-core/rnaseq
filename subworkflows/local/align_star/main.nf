@@ -7,7 +7,7 @@ include { SENTIEON_STARALIGN as SENTIEON_STAR_ALIGN } from '../../../modules/nf-
 include { PARABRICKS_RNAFQ2BAM as PARABRICKS_RNA_FQ2BAM } from '../../../modules/nf-core/parabricks/rnafq2bam/main'
 include { STAR_ALIGN                                } from '../../../modules/nf-core/star/align'
 include { BAM_SORT_STATS_SAMTOOLS                   } from '../../nf-core/bam_sort_stats_samtools'
-include { ReadsInput; StarAligned } from '../../../modules/nf-core/types'
+include { ReadsInput; StarAlignResult; Bam } from '../../../modules/nf-core/types'
 
 
 //
@@ -43,6 +43,7 @@ workflow ALIGN_STAR {
     //
     // Map reads with STAR
     //
+    def ch_star_out: Channel<StarAlignResult>
     if (use_sentieon_star) {
         ch_star_out = SENTIEON_STAR_ALIGN(ch_samples, index, gtf, star_ignore_sjdbgtf)
     } else if (use_parabricks_star) {
@@ -57,7 +58,7 @@ workflow ALIGN_STAR {
     //
     // Sort, index BAM file and run samtools stats, flagstat and idxstats
     //
-    ch_sorted = BAM_SORT_STATS_SAMTOOLS(ch_star, fasta, fai)
+    def ch_sorted: Channel<Bam> = BAM_SORT_STATS_SAMTOOLS(ch_star, fasta, fai)
 
     ch_results = ch_star
         .join(ch_sorted, by: 'id')

@@ -25,7 +25,7 @@ include { BAM_QC_RNASEQ                         } from '../../subworkflows/nf-co
 include { QUANTIFY_RSEM                         } from '../../subworkflows/nf-core/quantify_rsem'
 include { BAM_DEDUP_UMI                         } from '../../subworkflows/nf-core/bam_dedup_umi'
 
-include { StarAligned; Bowtie2Aligned; Hisat2Aligned; UmiDedupBam; MarkdupBam; BamQcRnaseq; QuantMerged; SalmonQuantSample; KallistoQuantSample; RsemQuantSample; StringtieMerged; FastqQcTrimFilterSetstrandedness; RrnaReferences; MultiqcReport; MultiqcFiles; AlignedSample; Bam; RsemMergeSample; Contaminants; StringtieSample; BigwigSample; Deseq2Qc; PipelineInfo; RustqcResult } from '../../modules/nf-core/types'
+include { RsemMergeSample; KallistoQuantSample; MultiqcReport; RsemQuantSample; RustqcResult; SalmonQuantSample; SamtoolsIndexResult; StringtieResult; Deseq2Qc; Bowtie2Aligned; StarAligned; MultiqcFiles; AlignedSample; Bam; Contaminants; StringtieSample; BigwigSample; PipelineInfo; UmiDedupBam; MarkdupBam; BamQcRnaseq; StringtieMerged; Hisat2Aligned; RrnaReferences; FastqQcTrimFilterSetstrandedness; QuantMerged } from '../../modules/nf-core/types'
 
 include { readSamplesheet                } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline/samplesheet'
 include { classifyStrand                 } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
@@ -142,7 +142,7 @@ workflow RNASEQ {
 
     // Index pre-aligned genome BAM files; a sample may supply only a transcriptome BAM
     ch_prealigned_genome = ch_bam_samples.filter { s -> s.bam != null }
-    ch_bam_index = SAMTOOLS_INDEX(ch_prealigned_genome)
+    def ch_bam_index: Channel<SamtoolsIndexResult> = SAMTOOLS_INDEX(ch_prealigned_genome)
     ch_prealigned = ch_prealigned_genome.join(ch_bam_index, by: 'id')
 
     //
@@ -473,7 +473,7 @@ workflow RNASEQ {
         } else {
             ch_stringtie_gtf = ch_gtf
         }
-        ch_stringtie_samples = STRINGTIE_STRINGTIE(
+        def ch_stringtie_samples: Channel<StringtieResult> = STRINGTIE_STRINGTIE(
             ch_stringtie_input,
             channel.value(['expression-estimation']),
             ch_stringtie_gtf

@@ -9,7 +9,7 @@ include { SAMTOOLS_INDEX                           } from '../../../modules/nf-c
 include { SAMTOOLS_VIEW as SAMTOOLS_VIEW_PRIMARY   } from '../../../modules/nf-core/samtools/view'
 include { SAMTOOLS_INDEX as SAMTOOLS_INDEX_PRIMARY } from '../../../modules/nf-core/samtools/index/main'
 include { BAM_STATS_SAMTOOLS                       } from '../bam_stats_samtools/main'
-include { Bam; UmitoolsDedupBam; UmitoolsDedupResult; SamtoolsIndexResult } from '../../../modules/nf-core/types'
+include { SamtoolsIndexResult; SamtoolsViewResult; UmitoolsDedupResult; Bam; UmitoolsDedupBam } from '../../../modules/nf-core/types'
 
 workflow BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS {
     take:
@@ -23,7 +23,7 @@ workflow BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS {
     //
     ch_dedup_input = ch_bam_bai
     if (val_primary_only) {
-        ch_primary = SAMTOOLS_VIEW_PRIMARY(
+        def ch_primary: Channel<SamtoolsViewResult> = SAMTOOLS_VIEW_PRIMARY(
             ch_bam_bai,
             null,
             null,

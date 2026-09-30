@@ -2,7 +2,7 @@ nextflow.enable.types = true
 
 include { STRINGTIE_STRINGTIE } from '../../../modules/nf-core/stringtie/stringtie/main'
 include { STRINGTIE_MERGE     } from '../../../modules/nf-core/stringtie/merge/main'
-include { StringtieInput; StringtieMerged; StringtieResult; StringtieMergeResult } from '../../../modules/nf-core/types'
+include { StringtieInput; StringtieMergeResult; StringtieResult; StringtieMerged } from '../../../modules/nf-core/types'
 
 workflow BAM_STRINGTIE_MERGE {
     take:

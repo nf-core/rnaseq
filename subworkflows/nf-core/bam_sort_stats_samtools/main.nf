@@ -7,7 +7,7 @@ nextflow.enable.types = true
 include { SAMTOOLS_SORT      } from '../../../modules/nf-core/samtools/sort/main'
 include { SAMTOOLS_INDEX     } from '../../../modules/nf-core/samtools/index/main'
 include { BAM_STATS_SAMTOOLS } from '../bam_stats_samtools/main'
-include { Bam; RawBams; SamtoolsSortResult; SamtoolsIndexResult } from '../../../modules/nf-core/types'
+include { RawBams; SamtoolsIndexResult; SamtoolsSortResult; Bam } from '../../../modules/nf-core/types'
 
 workflow BAM_SORT_STATS_SAMTOOLS {
     take:

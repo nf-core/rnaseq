@@ -30,11 +30,12 @@ nextflow_workflow {
                     "# anchor: 'featurecounts_biotype'",
                 ].join('\\n') + '\\n'
 
-                input[0] = channel.of([
-                    [ id:'test', single_end:false, strandedness:'reverse' ],
-                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true)
-                ])
+                input[0] = channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false, strandedness:'reverse' ],
+                    bam: file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    bai: file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true)
+                ))
                 input[1] = channel.of([
                     [ id:'saccharomyces_cerevisiae' ],
                     file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
@@ -55,28 +56,27 @@ nextflow_workflow {
         }
 
         then {
+            def r = workflow.out[0][0]
             assertAll(
                 { assert workflow.success },
-                { assert workflow.out.qualimap_results.size() == 1 },
-                { assert workflow.out.dupradar_multiqc.size() == 1 },
-                { assert workflow.out.biotype_tsv.size() == 1 },
-                { assert workflow.out.biotype_rrna.size() == 1 },
-                { assert workflow.out.featurecounts_counts.size() == 1 },
-                { assert workflow.out.bamstat_txt.size() == 1 },
-                { assert workflow.out.inferexperiment_txt.size() == 1 },
-                { assert workflow.out.readdistribution_txt.size() == 1 },
-                { assert workflow.out.multiqc_files.size() > 0 },
-                { assert workflow.out.per_sample_mqc_bundle.size() == 1 },
-                { assert workflow.out.per_sample_mqc_bundle[0][0] == [ id:'test', single_end:false, strandedness:'reverse' ] },
-                { assert workflow.out.per_sample_mqc_bundle[0][1].size() >= 12 },
+                { assert r.qualimap != null },
+                { assert !r.dupradar.multiqc.isEmpty() },
+                { assert r.biotype.tsv != null },
+                { assert r.biotype.rrna != null },
+                { assert r.featurecounts.counts != null },
+                { assert r.rseqc.bamstat != null },
+                { assert r.rseqc.inferexperiment != null },
+                { assert r.rseqc.readdistribution != null },
+                { assert r.meta == [ id:'test', single_end:false, strandedness:'reverse' ] },
+                { assert r.mqc_files.size() >= 12 },
                 { assert snapshot(
-                    workflow.out.dupradar_dupmatrix,
-                    workflow.out.dupradar_intercept_slope.collect{ meta, slopeFile -> [meta, file(slopeFile).name]}, // Floating number unstable
-                    workflow.out.dupradar_multiqc.collect{ meta, qcFiles -> [meta, qcFiles.collect{qcFile -> file(qcFile).name}]}, // Floating number unstable
-                    workflow.out.bamstat_txt,
-                    workflow.out.inferexperiment_txt,
-                    workflow.out.readdistribution_txt,
-                    workflow.out.readduplication_all.findAll { it[1].endsWith('.pdf') == false },
+                    r.dupradar.dupmatrix,
+                    file(r.dupradar.intercept_slope).name, // Floating number unstable
+                    r.dupradar.multiqc.collect { qcFile -> file(qcFile).name }, // Floating number unstable
+                    r.rseqc.bamstat,
+                    r.rseqc.inferexperiment,
+                    r.rseqc.readdistribution,
+                    r.rseqc.readduplication.pos_xls,
                 ).match() }
             )
         }
@@ -96,11 +96,12 @@ nextflow_workflow {
                     "# anchor: 'featurecounts_biotype'",
                 ].join('\\n') + '\\n'
 
-                input[0] = channel.of([
-                    [ id:'test', single_end:true, strandedness:'reverse' ],
-                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/illumina/bam/test.single_end.sorted.bam', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/illumina/bam/test.single_end.sorted.bam.bai', checkIfExists: true)
-                ])
+                input[0] = channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:true, strandedness:'reverse' ],
+                    bam: file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/illumina/bam/test.single_end.sorted.bam', checkIfExists: true),
+                    bai: file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/illumina/bam/test.single_end.sorted.bam.bai', checkIfExists: true)
+                ))
                 input[1] = channel.of([
                     [ id:'saccharomyces_cerevisiae' ],
                     file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
@@ -121,28 +122,27 @@ nextflow_workflow {
         }
 
         then {
+            def r = workflow.out[0][0]
             assertAll(
                 { assert workflow.success },
-                { assert workflow.out.qualimap_results.size() == 1 },
-                { assert workflow.out.dupradar_multiqc.size() == 1 },
-                { assert workflow.out.biotype_tsv.size() == 1 },
-                { assert workflow.out.bamstat_txt.size() == 1 },
-                { assert workflow.out.inferexperiment_txt.size() == 1 },
-                { assert workflow.out.readdistribution_txt.size() == 1 },
-                { assert workflow.out.multiqc_files.size() > 0 },
-                { assert workflow.out.per_sample_mqc_bundle.size() == 1 },
-                { assert workflow.out.per_sample_mqc_bundle[0][0] == [ id:'test', single_end:true, strandedness:'reverse' ] },
+                { assert r.qualimap != null },
+                { assert !r.dupradar.multiqc.isEmpty() },
+                { assert r.biotype.tsv != null },
+                { assert r.rseqc.bamstat != null },
+                { assert r.rseqc.inferexperiment != null },
+                { assert r.rseqc.readdistribution != null },
+                { assert r.meta == [ id:'test', single_end:true, strandedness:'reverse' ] },
                 // single-end drops rseqc_inner_distance
-                { assert workflow.out.per_sample_mqc_bundle[0][1].size() >= 11 },
+                { assert r.mqc_files.size() >= 11 },
                 { assert snapshot(
-                    workflow.out.dupradar_dupmatrix,
-                    workflow.out.dupradar_intercept_slope.collect{ meta, slopeFile -> [meta, file(slopeFile).name]}, // Floating number unstable
-                    workflow.out.dupradar_multiqc.collect{ meta, qcFiles -> [meta, qcFiles.collect{qcFile -> file(qcFile).name}]}, // Floating number unstable
-                    workflow.out.bamstat_txt,
-                    workflow.out.inferexperiment_txt,
-                    workflow.out.readdistribution_txt,
-                    workflow.out.readduplication_all.findAll { it[1].endsWith('.pdf') == false },
-                    workflow.out.tin_txt
+                    r.dupradar.dupmatrix,
+                    file(r.dupradar.intercept_slope).name, // Floating number unstable
+                    r.dupradar.multiqc.collect { qcFile -> file(qcFile).name }, // Floating number unstable
+                    r.rseqc.bamstat,
+                    r.rseqc.inferexperiment,
+                    r.rseqc.readdistribution,
+                    r.rseqc.readduplication.pos_xls,
+                    r.rseqc.tin.txt
                 ).match() }
             )
         }
@@ -156,11 +156,12 @@ nextflow_workflow {
                 def biotypes_header = file("\${workDir}/biotypes_header.txt")
                 biotypes_header.text = '# stub'
 
-                input[0] = channel.of([
-                    [ id:'test', single_end:false, strandedness:'reverse' ],
-                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true)
-                ])
+                input[0] = channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false, strandedness:'reverse' ],
+                    bam: file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    bai: file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true)
+                ))
                 input[1] = channel.of([
                     [ id:'saccharomyces_cerevisiae' ],
                     file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
@@ -181,13 +182,13 @@ nextflow_workflow {
         }
 
         then {
+            def r = workflow.out[0][0]
             assertAll(
                 { assert workflow.success },
-                { assert workflow.out.qualimap_results.size() == 0 },
-                { assert workflow.out.dupradar_multiqc.size() == 0 },
-                { assert workflow.out.bamstat_txt.size() == 0 },
-                { assert workflow.out.multiqc_files.size() == 0 },
-                { assert workflow.out.per_sample_mqc_bundle.size() == 0 }
+                { assert r.qualimap == null },
+                { assert r.dupradar == null },
+                { assert r.rseqc == null },
+                { assert r.mqc_files.isEmpty() }
             )
         }
     }
@@ -202,11 +203,12 @@ nextflow_workflow {
                 def biotypes_header = file("\${workDir}/biotypes_header.txt")
                 biotypes_header.text = '# stub'
 
-                input[0] = channel.of([
-                    [ id:'test', single_end:false, strandedness:'reverse' ],
-                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true)
-                ])
+                input[0] = channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false, strandedness:'reverse' ],
+                    bam: file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    bai: file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true)
+                ))
                 input[1] = channel.of([
                     [ id:'saccharomyces_cerevisiae' ],
                     file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
@@ -227,15 +229,10 @@ nextflow_workflow {
         }
 
         then {
+            def r = workflow.out[0][0]
             assertAll(
                 { assert workflow.success },
-                { def getNames = { ch -> ch.collect { it[1] instanceof List ? it[1].collect { file(it).name } : file(it[1]).name }.flatten().sort() }
-                  def channels = ['preseq_lc_extrap', 'qualimap_results', 'dupradar_multiqc',
-                      'featurecounts_counts', 'biotype_tsv', 'bamstat_txt', 'inferexperiment_txt',
-                      'readdistribution_txt', 'tin_txt', 'multiqc_files', 'per_sample_mqc_bundle']
-                  assert snapshot(
-                    channels.collectEntries { [it, getNames(workflow.out[it])] }.sort()
-                ).match() }
+                { assert snapshot(r.mqc_files.collect { f -> file(f).name }.sort()).match() }
             )
         }
     }

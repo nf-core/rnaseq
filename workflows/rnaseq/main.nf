@@ -634,13 +634,20 @@ workflow RNASEQ {
 
     ch_inferexperiment_txt = channel.empty()
 
+    // BEGIN adapters into the post-alignment QC record input (removed when the alignment stages hand over a record with bam and bai)
+    // SEAM(qc)
+    ch_bam_bai = ch_genome_bam
+        .join(ch_genome_bam_index, by: [0])
+        .map { meta, bam, bai -> record(id: meta.id, meta: meta, bam: bam, bai: bai) }
+    // END adapters
+
     if (!params.skip_qc) {
         if (params.use_rustqc) {
             //
             // MODULE: RustQC - single-pass replacement for multiple QC tools
             //
             RUSTQC (
-                ch_genome_bam.join(ch_genome_bam_index, by: [0]),
+                ch_bam_bai,
                 ch_gtf.map { gtf -> [ [:], gtf ] },
             )
 
@@ -671,8 +678,8 @@ workflow RNASEQ {
             //
             // SUBWORKFLOW: Post-alignment QC
             //
-            BAM_QC_RNASEQ (
-                ch_genome_bam.join(ch_genome_bam_index, by: [0]),
+            ch_bam_qc = BAM_QC_RNASEQ (
+                ch_bam_bai,
                 ch_gtf.map { gtf -> [ [:], gtf ] },
                 ch_gene_bed,
                 ch_fasta_fai,
@@ -680,12 +687,18 @@ workflow RNASEQ {
                 qc_tools,
                 biotype
             )
-            ch_multiqc_files = ch_multiqc_files.mix(BAM_QC_RNASEQ.out.multiqc_files)
-            ch_inferexperiment_txt = BAM_QC_RNASEQ.out.inferexperiment_txt
-            ch_bam_qc = BAM_QC_RNASEQ.out.results
 
-            ch_bam_qc_rnaseq_bundle = BAM_QC_RNASEQ.out.per_sample_mqc_bundle
-                .map { meta, files -> [meta.id, files] }
+            // BEGIN adapters from the BAM_QC_RNASEQ record to legacy tuple channels; removed once the consumers below are typed
+            ch_bam_qc_mqc_files    = ch_bam_qc.flatMap { r -> r.mqc_files.collect { f -> [ r.meta, f ] } }
+            ch_inferexperiment_txt = ch_bam_qc
+                .filter { r -> r.rseqc?.inferexperiment != null }
+                .map { r -> [ r.meta, r.rseqc.inferexperiment ] }
+            ch_bam_qc_rnaseq_bundle = ch_bam_qc
+                .filter { r -> !r.mqc_files.isEmpty() }
+                .map { r -> [ r.id, r.mqc_files ] }
+            // END adapters
+
+            ch_multiqc_files = ch_multiqc_files.mix(ch_bam_qc_mqc_files)
             ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
                 .join(ch_bam_qc_rnaseq_bundle, remainder: true)
         }

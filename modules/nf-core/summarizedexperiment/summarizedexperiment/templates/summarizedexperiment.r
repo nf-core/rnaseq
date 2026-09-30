@@ -145,7 +145,7 @@ parse_metadata <- function(metadata_path, ids, metadata_id_col = NULL){
 # Matrices
 
 args_opt <- parse_args('$task.ext.args')
-matrix_files <- as.list(strsplit('${matrix_files.join(" ")}', ' ')[[1]])
+matrix_files <- as.list(strsplit('${sample.matrix_files.join(" ")}', ' ')[[1]])
 
 if ('assay_names' %in% names(args_opt)){
     names(matrix_files) <- unlist(strsplit(args_opt[['assay_names']], ',')[[1]])
@@ -196,8 +196,8 @@ if ('$rowdata' != '' && '$rowdata' != 'null'){
 prefix <- tools::file_path_sans_ext(matrix_files[1])
 if ('$task.ext.prefix' != 'null'){
     prefix = '$task.ext.prefix'
-} else if ('$meta.id' != 'null'){
-    prefix = '$meta.id'
+} else if ('$sample.meta.id' != 'null'){
+    prefix = '$sample.meta.id'
 }
 
 # Save the SummarizedExperiment object

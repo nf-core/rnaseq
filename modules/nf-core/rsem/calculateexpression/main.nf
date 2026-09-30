@@ -12,7 +12,7 @@ process RSEM_CALCULATEEXPRESSION {
         'community.wave.seqera.io/library/rsem_star:5acb4e8c03239c32' }"
 
     input:
-    sample: ReadsInput
+    sample: ReadsInput  // FASTQ files or BAM file for --alignments mode
     index: Path
 
     output:

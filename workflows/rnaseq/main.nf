@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT MODULES/SUBWORKFLOWS
@@ -7,6 +9,7 @@
 //
 // MODULE: Loaded from modules/local/
 //
+include { COLLATE_VERSIONS                   } from '../../modules/local/collate_versions'
 include { DESEQ2_QC as DESEQ2_QC_BAM_SALMON } from '../../modules/local/deseq2_qc'
 include { DESEQ2_QC as DESEQ2_QC_RSEM        } from '../../modules/local/deseq2_qc'
 include { DESEQ2_QC as DESEQ2_QC_PSEUDO      } from '../../modules/local/deseq2_qc'
@@ -22,7 +25,21 @@ include { BAM_QC_RNASEQ                         } from '../../subworkflows/nf-co
 include { QUANTIFY_RSEM                         } from '../../subworkflows/nf-core/quantify_rsem'
 include { BAM_DEDUP_UMI                         } from '../../subworkflows/nf-core/bam_dedup_umi'
 
-include { checkSamplesAfterGrouping      } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { StarAligned                                                                    } from '../../subworkflows/local/align_star/types'
+include { Bowtie2Aligned                                                                 } from '../../subworkflows/local/align_bowtie2/types'
+include { Hisat2Aligned                                                                  } from '../../subworkflows/nf-core/fastq_align_hisat2/types'
+include { UmiDedupBam                                                                    } from '../../subworkflows/nf-core/bam_dedup_umi/types'
+include { MarkdupBam                                                                     } from '../../subworkflows/nf-core/bam_markduplicates_picard/types'
+include { BamQcRnaseq                                                                    } from '../../subworkflows/nf-core/bam_qc_rnaseq/types'
+include { QuantMerged                                                                    } from '../../subworkflows/nf-core/quant_tximport_summarizedexperiment/types'
+include { PseudoQuantSample                                                              } from '../../subworkflows/nf-core/quantify_pseudo_alignment/types'
+include { StringtieMerged                                                                } from '../../subworkflows/nf-core/bam_stringtie_merge/types'
+include { FastqQcTrimFilterSetstrandedness; RrnaReferences                               } from '../../subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness/types'
+include { MultiqcReport                                                                  } from '../../subworkflows/local/multiqc_rnaseq/types'
+include { GenomeBam; RsemMergeSample; Contaminants; StringtieSample; BigwigSample        } from './types'
+include { Deseq2Qc; PipelineInfo; RustqcResult                                           } from './types'
+
+include { readSamplesheet                } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline/samplesheet'
 include { classifyStrand                 } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { getHisat2PercentMapped         } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 
@@ -48,7 +65,6 @@ include { SAMTOOLS_INDEX                                       } from '../../mod
 //
 // SUBWORKFLOW: Consisting entirely of nf-core/modules
 //
-include { samplesheetToList                } from 'plugin/nf-schema'
 include { softwareVersionsToYAML           } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
 include { FASTQ_ALIGN_HISAT2               } from '../../subworkflows/nf-core/fastq_align_hisat2'
 include { BAM_MARKDUPLICATES_PICARD        } from '../../subworkflows/nf-core/bam_markduplicates_picard'
@@ -66,34 +82,28 @@ include { FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS              } from '../../subwor
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-// Flattens a mix of files, file lists and nulls into a list of files; used by the
-// FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS adapters, removed with them
-def flattenNonNull(items) {
-    return items.findAll { f -> f != null }.collectMany { f -> (f instanceof List) ? f : [ f ] }
-}
-
 workflow RNASEQ {
 
     take:
-    ch_samplesheet          // channel: path(sample_sheet.csv)
-    ch_fasta_fai            // channel: [ meta, path(genome.fasta), path(genome.fai) ]
-    ch_gtf                  // channel: path(genome.gtf)
-    ch_chrom_sizes          // channel: path(genome.sizes)
-    ch_gene_bed             // channel: path(gene.bed)
-    ch_transcript_fasta     // channel: path(transcript.fasta)
-    ch_star_index           // channel: path(star/index/)
-    ch_rsem_index           // channel: path(rsem/index/)
-    ch_hisat2_index         // channel: path(hisat2/index/)
-    ch_bowtie2_index        // channel: path(bowtie2/index/) for alignment
-    ch_salmon_index         // channel: [ meta, path(salmon/index/) ]
-    ch_kallisto_index       // channel: [ meta, path(kallisto/index/) ]
-    ch_bbsplit_index        // channel: path(bbsplit/index/)
-    ch_ribo_db              // channel: path(sortmerna_fasta_list)
-    ch_sortmerna_index      // channel: path(sortmerna/index/)
-    ch_bowtie2_rrna_index   // channel: path(bowtie2/index/) for rRNA removal
-    ch_splicesites          // channel: path(genome.splicesites.txt)
-    ch_kraken_db            // channel: path(kraken2/db/)
-    qc_tools                // val(list) - QC tools to run, e.g. ['preseq', 'qualimap', 'rseqc_bam_stat', ...]
+    ch_samplesheet: Value<Path>                        // sample_sheet.csv
+    ch_fasta_fai: Value<Tuple<Map, Path?, Path?>>      // [ meta, genome.fasta, genome.fai ]
+    ch_gtf: Value<Path?>                               // genome.gtf
+    ch_chrom_sizes: Value<Path?>                       // genome.sizes
+    ch_gene_bed: Value<Path?>                          // gene.bed
+    ch_transcript_fasta: Value<Path?>                  // transcript.fasta
+    ch_star_index: Value<Path?>                        // star/index/
+    ch_rsem_index: Value<Path?>                        // rsem/index/
+    ch_hisat2_index: Value<Path?>                      // hisat2/index/
+    ch_bowtie2_index: Value<Path?>                     // bowtie2/index/ for alignment
+    ch_salmon_index: Value<Tuple<Map, Path?>>          // [ meta, salmon/index/ ]
+    ch_kallisto_index: Value<Tuple<Map, Path?>>        // [ meta, kallisto/index/ ]
+    ch_bbsplit_index: Value<Path?>                     // bbsplit/index/
+    ch_ribo_db: Channel<Path>                          // sortmerna_fasta_list
+    ch_sortmerna_index: Value<Tuple<Map, Path?>>       // [ meta, sortmerna/index/ ]
+    ch_bowtie2_rrna_index: Value<Tuple<Map, Path?>>    // [ meta, bowtie2/index/ ] for rRNA removal
+    ch_splicesites: Value<Path?>                       // genome.splicesites.txt
+    ch_kraken_db: Value<Path?>                         // kraken2/db/
+    qc_tools: List<String>                             // QC tools to run, e.g. ['preseq', 'qualimap', 'rseqc_bam_stat', ...]
 
     main:
 
@@ -111,111 +121,66 @@ workflow RNASEQ {
         'star_rsem'      : 'STAR uniquely mapped reads',
         'hisat2'         : 'HISAT2 overall alignment rate',
         'bowtie2_salmon' : 'Bowtie2 overall alignment rate',
-    ].get(params.aligner, 'Aligned reads')
+    ][params.aligner] ?: 'Aligned reads'
 
-    ch_fasta                = ch_fasta_fai.map { _meta, fasta, _fai -> fasta }.first()
-    ch_transcript_fasta_fai = ch_transcript_fasta.map { fasta -> [[:], fasta, []] }
+    ch_fasta                = ch_fasta_fai.map { _meta, fasta, _fai -> fasta }
+    ch_transcript_fasta_fai = ch_transcript_fasta.map { fasta -> tuple([:], fasta, null) }
 
+    // Flat [ meta, file ] contributions to the merged MultiQC report
     ch_multiqc_files = channel.empty()
-    ch_trim_status = channel.empty()
-    ch_map_status = channel.empty()
-    ch_strand_status = channel.empty()
-    ch_percent_mapped = channel.empty()
-    ch_unaligned_sequences = channel.empty()
 
-    // Stage result records, one channel per stage; empty when the stage is skipped
-    ch_aligned             = channel.empty()
-    ch_umi_dedup           = channel.empty()
-    ch_markdup             = channel.empty()
-    ch_bam_qc              = channel.empty()
-    ch_bam_qc_rustqc       = channel.empty()
-    ch_quant               = channel.empty()
-    ch_quant_pseudo        = channel.empty()
-    ch_quant_merged        = channel.empty()
-    ch_quant_rsem_merge    = channel.empty()
-    ch_quant_merged_pseudo = channel.empty()
-    ch_deseq2              = channel.empty()
-    ch_deseq2_pseudo       = channel.empty()
-    ch_contaminants        = channel.empty()
-    ch_stringtie           = channel.empty()
-    ch_stringtie_merged    = channel.empty()
-    ch_bigwig              = channel.empty()
-    ch_multiqc             = channel.empty()
-
-    // Per-sample MultiQC bundle — `.join(..., remainder: true)` chains
-    // fed to MULTIQC_RNASEQ. `collapseAgg` re-keys by meta.id at the end
-    // of each multi-output subworkflow aggregation; sibling outputs are
-    // joined by meta internally on the assumption they carry the same
-    // meta per sample — if a future module mutates meta on one of them,
-    // this aggregation silently emits duplicate rows.
-    ch_mqc_per_sample_bundle = channel.empty()
-    def collapseAgg = { row -> [row[0].id, row.drop(1).findAll { e -> e != null }.collectMany { e -> (e instanceof List) ? e : [e] }] }
-
-    //
-    // Collect versions from the topic channel. Entries are either
-    // `path(versions.yml)` (legacy file-emit style) or
-    // `(task.process, tool, version)` tuples (inline `eval` style).
-    //
-    def topic_versions = channel.topic('versions')
-        .distinct()
-        .branch { entry ->
-            versions_file: entry instanceof Path
-            versions_tuple: true
+    // Per-sample MultiQC bundle: one record per input sample, with a field per contributing
+    // stage that stays null when the stage did not run or produced nothing for the sample.
+    // Every stage joins with `remainder: true` so samples with no match still come through.
+    // fail_* rows are appended inside MULTIQC_RNASEQ.
+    def ch_input = channel
+        .fromList(readSamplesheet(params.input, "${projectDir}/assets/schema_input.json", params.skip_alignment) as List<Map>)
+        .map { s ->
+            record(
+                id:                s.id,
+                meta:              s.meta,
+                reads:             s.reads,
+                runs:              s.runs,
+                bam:               s.bam,
+                transcriptome_bam: s.transcriptome_bam,
+                percent_mapped:    s.percent_mapped,
+                prealigned:        s.prealigned
+            )
         }
 
-    def topic_versions_string = topic_versions.versions_tuple
-        .map { process, tool, version ->
-            [ process[process.lastIndexOf(':')+1..-1], "  ${tool}: ${version}" ]
-        }
-        .groupTuple(by: 0)
-        .map { process, tool_versions ->
-            tool_versions.unique().sort()
-            "${process}:\n${tool_versions.join('\n')}"
-        }
+    ch_mqc_bundle = ch_input.map { s ->
+        record(
+            id:             s.id,
+            meta:           s.meta,
+            fastq_qc:       null,
+            star_log:       null,
+            star_stats:     null,
+            bowtie2_log:    null,
+            bowtie2_stats:  null,
+            hisat2_summary: null,
+            hisat2_stats:   null,
+            umi_dedup:      null,
+            rsem_stat:      null,
+            markdup:        null,
+            rustqc:         null,
+            bam_qc:         null,
+            kraken2:        null,
+            bracken:        null,
+            sylphtax:       null,
+            pseudo:         null
+        )
+    }
 
-    //
-    // Create channel from input file provided through params.input
-    //
-    def ch_input_branched = channel
-        .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
-        .map {
-            meta, fastq_1, fastq_2, genome_bam, transcriptome_bam ->
-                def m = meta + [ id: meta.id as String ]
-                if (!fastq_2) {
-                    return [ m.id, m + [ single_end:true ], [ fastq_1 ], genome_bam, transcriptome_bam ]
-                } else {
-                    return [ m.id, m + [ single_end:false ], [ fastq_1, fastq_2 ], genome_bam, transcriptome_bam ]
-                }
-        }
-        .groupTuple()
-        .map { samplesheet ->
-            checkSamplesAfterGrouping(samplesheet)
-        }
-        .branch {
-            meta, reads, genome_bam, transcriptome_bam ->
-                bam: params.skip_alignment && (genome_bam || transcriptome_bam)
-                    return [ meta, genome_bam, transcriptome_bam ]
-                fastq: reads.size() > 0 && reads[0]
-                    return [ meta.findAll { key, _value -> key != 'percent_mapped' }, reads ]
-        }
+    // Samples that go through FASTQ preprocessing and samples supplied as pre-aligned BAM files
+    ch_fastq_samples = ch_input.filter { s -> !s.prealigned }
+    ch_bam_samples   = ch_input.filter { s -> s.prealigned }
 
-    // Get inputs for FASTQ and BAM processing paths
-
-    ch_fastq = ch_input_branched.fastq
-    ch_genome_bam = ch_input_branched.bam.map { meta, genome_bam, _transcriptome_bam -> [ meta, genome_bam ] }.distinct()
-    ch_transcriptome_bam = ch_input_branched.bam.map { meta, _genome_bam, transcriptome_bam -> [ meta, transcriptome_bam ] }.distinct()
-
-    // Derive mapping percentages if supplied with input
-
-    ch_percent_mapped = ch_input_branched.bam
-        .filter{ meta, _genome_bam, _transcriptome_bam -> meta.percent_mapped }
-        .map { meta, _genome_bam, _transcriptome_bam -> [ meta, meta.percent_mapped ] }
+    // One entry per sequencing run of each sample
+    ch_fastq = ch_fastq_samples.map { s -> tuple(s.meta, s.runs) }
 
     // Index pre-aligned input BAM files
-    SAMTOOLS_INDEX (
-        ch_genome_bam.map { meta, bam -> record(id: meta.id, meta: meta, bam: bam) }
-    )
-    ch_genome_bam_index = SAMTOOLS_INDEX.out.map { r -> [r.meta, r.bai] }
+    ch_bam_index = SAMTOOLS_INDEX(ch_bam_samples)
+    ch_prealigned = ch_bam_samples.join(ch_bam_index, by: 'id')
 
     //
     // Run RNA-seq FASTQ preprocessing subworkflow
@@ -224,16 +189,12 @@ workflow RNASEQ {
     // Bowtie2 rRNA index building still happens here, not in PREPARE_GENOME_INDICES.
     def make_bowtie2_index = !params.bowtie2_rrna_index && params.remove_ribo_rna && params.ribo_removal_tool == 'bowtie2'
 
-    // BEGIN adapters into FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS (removed when the samplesheet step emits records)
-    ch_fastq_reads = ch_fastq.map { meta, fastqs -> record(id: meta.id, meta: meta, reads: fastqs.flatten()) }
-    // END adapters
-
-    FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS (
-        ch_fastq_reads,                             // ch_reads
+    fastq_preprocessed = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS (
+        ch_fastq_samples,                           // ch_reads
         ch_fasta,                                   // ch_fasta
         ch_transcript_fasta,                        // ch_transcript_fasta
         ch_gtf,                                     // ch_gtf
-        ch_salmon_index.map { _meta, index -> index }.first(), // ch_salmon_index
+        ch_salmon_index.map { _meta, index -> index }, // ch_salmon_index
         ch_sortmerna_index,                         // ch_sortmerna_index
         ch_bowtie2_rrna_index,                      // ch_bowtie2_index (for rRNA removal)
         ch_bbsplit_index,                           // ch_bbsplit_index
@@ -259,83 +220,55 @@ workflow RNASEQ {
         params.unstranded_threshold                 // unstranded_threshold
     )
 
-    ch_preprocessed = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.samples
-
-    // BEGIN adapters from the FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS record to legacy tuple channels; removed once the consumers below are typed
-    ch_multiqc_files = ch_multiqc_files.mix(
-        ch_preprocessed.flatMap { r ->
-            flattenNonNull([
-                r.fastqc?.raw_zip,
-                r.fastqc?.trim_zip,
-                params.trimmer == 'fastp' ? null : r.trim?.log,
-                r.trim?.json,
-                r.umi?.log,
-                r.bbsplit?.stats,
-                r.rrna?.sortmerna_log,
-                r.rrna?.ribodetector_log,
-                r.rrna?.seqkit_stats,
-                r.rrna?.bowtie2_log,
-                r.fastqc?.filtered_zip
-            ]).collect { f -> [ r.meta, f ] }
-        }
-    )
-    ch_fastq_qc_bundle = ch_preprocessed.map { r ->
-        [ r.id, flattenNonNull([
-            r.fastqc?.raw_zip,
-            r.fastqc?.trim_zip,
-            r.trim?.log,
-            r.trim?.json,
-            r.umi?.log,
-            r.bbsplit?.stats,
-            r.rrna?.sortmerna_log,
-            r.rrna?.ribodetector_log,
-            r.rrna?.seqkit_stats,
-            r.rrna?.bowtie2_log,
-            r.fastqc?.filtered_zip
-        ]) ]
-    }
-    ch_strand_inferred_reads          = ch_preprocessed.filter { r -> r.reads != null }
-    ch_strand_inferred_filtered_fastq = ch_strand_inferred_reads.map { r -> [ r.meta, r.reads ] }
-    ch_reads_cat                      = ch_preprocessed.map { r -> [ r.meta, r.reads_cat ] }
-    ch_reads_trimmed                  = ch_preprocessed.filter { r -> r.reads_trimmed != null }.map { r -> [ r.meta, r.reads_trimmed ] }
-    ch_trim_read_count                = ch_preprocessed.filter { r -> r.num_trimmed_reads != null }.map { r -> [ r.meta, r.num_trimmed_reads ] }
-    // END adapters
+    ch_preprocessed = fastq_preprocessed.samples
 
     // Run-level rRNA references, built by FASTQ_REMOVE_RRNA from the rRNA
     // FASTAs only when no bowtie2 rRNA index was supplied
-    ch_rrna_references = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.rrna_references
+    ch_rrna_references = fastq_preprocessed.rrna_references
 
-    ch_trim_status = ch_trim_read_count
-        .map {
-            meta, num_reads ->
-                return [ meta.id, num_reads > params.min_trimmed_reads.toFloat() ]
-        }
+    // Samples that fail min_trimmed_reads have no filtered reads and go no further
+    ch_reads_ok = ch_preprocessed.filter { r -> r.reads != null }
 
-    // Seed the bundle with every input sample — fastq branch and pre-aligned
-    // BAM branch — so both paths can accumulate per-sample MultiQC
-    // contributions.
-    ch_mqc_per_sample_bundle = ch_fastq.map { meta, _r -> [meta.id, meta] }
-        .mix(ch_input_branched.bam.map { meta, _g, _t -> [meta.id, meta] })
+    // MultiQC files from FASTQ preprocessing. The trimmer log is only sent to the
+    // merged report when the trimmer is not fastp.
+    ch_fastq_qc = ch_preprocessed.map { r ->
+        def fastqc_head = (r.fastqc?.raw_zip ?: []) + (r.fastqc?.trim_zip ?: [])
+        def trim_json   = r.trim?.json ?: []
+        def trim_log    = r.trim?.log ?: []
+        def other       = [r.umi?.log, r.bbsplit?.stats, r.rrna?.sortmerna_log, r.rrna?.ribodetector_log, r.rrna?.seqkit_stats, r.rrna?.bowtie2_log] +
+                          (r.fastqc?.filtered_zip ?: [])
+        record(
+            id:           r.id,
+            meta:         r.meta,
+            merged_files: fastqc_head + (params.trimmer == 'fastp' ? [] : trim_log) + trim_json + other,
+            bundle_files: fastqc_head + trim_log + trim_json + other
+        )
+    }
+    ch_multiqc_files = ch_multiqc_files.mix(
+        ch_fastq_qc.flatMap { q -> q.merged_files.findAll { f -> f != null }.collect { f -> tuple(q.meta, f) } }
+    )
+    ch_mqc_bundle = ch_mqc_bundle.join(
+        ch_fastq_qc.map { q -> record(id: q.id, fastq_qc: q.bundle_files.findAll { f -> f != null }) },
+        by: 'id', remainder: true
+    )
 
-    // Every bundle join uses `remainder: true` so samples with no match on
-    // a contributor (feature off, optional upstream output absent, filter-
-    // excluded, or pre-aligned BAM without FASTQ) still come through.
-    // Unmatched samples wait on that contributor's channel to close —
-    // per-contributor, not workflow-global. fail_* rows are appended
-    // inside MULTIQC_RNASEQ.
-    ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
-        .join(ch_fastq_qc_bundle, remainder: true)
+    ch_trim_read_count = ch_preprocessed
+        .filter { r -> r.num_trimmed_reads != null }
+        .map { r -> tuple(r.meta, r.num_trimmed_reads) }
+
+    ch_trim_status = ch_preprocessed
+        .filter { r -> r.num_trimmed_reads != null }
+        .map { r -> tuple(r.id, r.num_trimmed_reads > params.min_trimmed_reads.toFloat()) }
 
     //
     // SUBWORKFLOW: Alignment with STAR and gene/transcript quantification with Salmon
     //
-    ch_star_log            = channel.empty()
-
+    def ch_star: Channel<StarAligned> = channel.empty()
     if (!params.skip_alignment && (params.aligner == 'star_salmon' || params.aligner == 'star_rsem')) {
-        ALIGN_STAR (
-            ch_strand_inferred_reads,
-            ch_star_index.map { item -> [ [:], item ] },
-            ch_gtf.map { item -> [ [:], item ] },
+        ch_star = ALIGN_STAR (
+            ch_reads_ok,
+            ch_star_index.map { index -> tuple([:], index) },
+            ch_gtf.map { gtf -> tuple([:], gtf) },
             params.star_ignore_sjdbgtf,
             ch_fasta_fai,
             params.use_sentieon_star,
@@ -343,30 +276,11 @@ workflow RNASEQ {
             params.skip_markduplicates
         )
 
-        ch_star_aligned = ALIGN_STAR.out
-
-        // BEGIN adapters from the ALIGN_STAR record to legacy tuple channels; removed once the consumers below are typed
-        ch_star_bam            = ch_star_aligned.map { r -> [ r.meta, r.bam ] }
-        ch_star_bai            = ch_star_aligned.map { r -> [ r.meta, r.bai ] }
-        ch_star_transcriptome  = ch_star_aligned.filter { r -> r.transcriptome_bam }.map { r -> [ r.meta, r.transcriptome_bam ] }
-        ch_star_percent_mapped = ch_star_aligned.map { r -> [ r.meta, r.percent_mapped ] }
-        ch_star_log_final      = ch_star_aligned.map { r -> [ r.meta, r.star.log_final ] }
-        ch_star_unmapped       = ch_star_aligned.filter { r -> r.unmapped }.map { r -> [ r.meta, r.unmapped ] }
-        ch_star_stats          = ch_star_aligned.map { r -> [ r.meta, r.samtools.stats ] }
-        ch_star_flagstat       = ch_star_aligned.map { r -> [ r.meta, r.samtools.flagstat ] }
-        ch_star_idxstats       = ch_star_aligned.map { r -> [ r.meta, r.samtools.idxstats ] }
-        // END adapters
-
-        ch_genome_bam                    = ch_genome_bam.mix(ch_star_bam)
-        ch_genome_bam_index              = ch_genome_bam_index.mix(ch_star_bai)
-        ch_transcriptome_bam             = ch_transcriptome_bam.mix(ch_star_transcriptome)
-        ch_percent_mapped                = ch_percent_mapped.mix(ch_star_percent_mapped)
-        ch_star_log                      = ch_star_log_final
-        ch_unaligned_sequences           = ch_star_unmapped
-        ch_aligned                       = ch_aligned.mix(ch_star_aligned)
-        ch_multiqc_files                 = ch_multiqc_files.mix(ch_star_log)
-        ch_mqc_per_sample_bundle         = ch_mqc_per_sample_bundle
-            .join(ch_star_log.map { meta, f -> [meta.id, f] }, remainder: true)
+        ch_multiqc_files = ch_multiqc_files.mix(ch_star.map { r -> tuple(r.meta, r.star.log_final) })
+        ch_mqc_bundle = ch_mqc_bundle.join(
+            ch_star.map { r -> record(id: r.id, star_log: r.star.log_final) },
+            by: 'id', remainder: true
+        )
 
         if (!params.with_umi && (params.skip_markduplicates || params.use_parabricks_star)) {
             // The deduplicated stats should take priority for MultiQC, but use
@@ -375,176 +289,145 @@ workflow RNASEQ {
             // duplicate flagstat files in MultiQC.
             // When Parabricks handles markduplicates internally, Picard is
             // skipped, so we also need to add alignment stats here.
-
-            ch_multiqc_files = ch_multiqc_files
-                .mix(ch_star_stats)
-                .mix(ch_star_flagstat)
-                .mix(ch_star_idxstats)
-            ch_star_stats_bundle = ch_star_stats
-                .join(ch_star_flagstat)
-                .join(ch_star_idxstats)
-                .map(collapseAgg)
-            ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
-                .join(ch_star_stats_bundle, remainder: true)
+            ch_multiqc_files = ch_multiqc_files.mix(
+                ch_star.flatMap { r -> [tuple(r.meta, r.samtools.stats), tuple(r.meta, r.samtools.flagstat), tuple(r.meta, r.samtools.idxstats)] }
+            )
+            ch_mqc_bundle = ch_mqc_bundle.join(
+                ch_star.map { r -> record(id: r.id, star_stats: [r.samtools.stats, r.samtools.flagstat, r.samtools.idxstats]) },
+                by: 'id', remainder: true
+            )
         }
     }
 
     //
     // SUBWORKFLOW: Alignment with Bowtie2
     //
-    ch_bowtie2_log = channel.empty()
+    def ch_bowtie2: Channel<Bowtie2Aligned> = channel.empty()
     if (!params.skip_alignment && params.aligner == 'bowtie2_salmon') {
-
-        ALIGN_BOWTIE2 (
-            ch_strand_inferred_reads,
+        ch_bowtie2 = ALIGN_BOWTIE2 (
+            ch_reads_ok,
             ch_bowtie2_index,
             ch_fasta_fai
         )
 
-        ch_bowtie2_aligned = ALIGN_BOWTIE2.out
-
-        // BEGIN adapters from the ALIGN_BOWTIE2 record to legacy tuple channels; removed once the consumers below are typed
-        ch_bowtie2_bam         = ch_bowtie2_aligned.map { r -> [ r.meta, r.bam ] }
-        ch_bowtie2_bai         = ch_bowtie2_aligned.map { r -> [ r.meta, r.bai ] }
-        ch_bowtie2_orig_bam    = ch_bowtie2_aligned.map { r -> [ r.meta, r.orig_bam[0] ] }
-        ch_bowtie2_percent     = ch_bowtie2_aligned.map { r -> [ r.meta, r.percent_mapped ] }
-        ch_bowtie2_log_final   = ch_bowtie2_aligned.map { r -> [ r.meta, r.bowtie2.log ] }
-        ch_bowtie2_stats       = ch_bowtie2_aligned.map { r -> [ r.meta, r.samtools.stats ] }
-        ch_bowtie2_flagstat    = ch_bowtie2_aligned.map { r -> [ r.meta, r.samtools.flagstat ] }
-        ch_bowtie2_idxstats    = ch_bowtie2_aligned.map { r -> [ r.meta, r.samtools.idxstats ] }
-        // END adapters
-
-        // For Bowtie2+Salmon, the BAM is aligned to transcriptome so it's the "transcriptome_bam"
-        // Use orig_bam (query-grouped) for Salmon - coordinate-sorted BAM breaks paired-end quantification
-        ch_genome_bam                    = ch_genome_bam.mix(ch_bowtie2_bam)
-        ch_genome_bam_index              = ch_genome_bam_index.mix(ch_bowtie2_bai)
-        ch_transcriptome_bam             = ch_transcriptome_bam.mix(ch_bowtie2_orig_bam)
-        ch_percent_mapped                = ch_percent_mapped.mix(ch_bowtie2_percent)
-        ch_bowtie2_log                   = ch_bowtie2_log_final
-        ch_aligned                       = ch_aligned.mix(ch_bowtie2_aligned)
-        ch_multiqc_files                 = ch_multiqc_files.mix(ch_bowtie2_log)
-        ch_mqc_per_sample_bundle         = ch_mqc_per_sample_bundle
-            .join(ch_bowtie2_log.map { meta, f -> [meta.id, f] }, remainder: true)
+        ch_multiqc_files = ch_multiqc_files.mix(ch_bowtie2.map { r -> tuple(r.meta, r.bowtie2.log) })
+        ch_mqc_bundle = ch_mqc_bundle.join(
+            ch_bowtie2.map { r -> record(id: r.id, bowtie2_log: r.bowtie2.log) },
+            by: 'id', remainder: true
+        )
 
         if (!params.with_umi && params.skip_markduplicates) {
-            ch_multiqc_files = ch_multiqc_files
-                .mix(ch_bowtie2_stats)
-                .mix(ch_bowtie2_flagstat)
-                .mix(ch_bowtie2_idxstats)
-            ch_bowtie2_stats_bundle = ch_bowtie2_stats
-                .join(ch_bowtie2_flagstat)
-                .join(ch_bowtie2_idxstats)
-                .map(collapseAgg)
-            ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
-                .join(ch_bowtie2_stats_bundle, remainder: true)
+            ch_multiqc_files = ch_multiqc_files.mix(
+                ch_bowtie2.flatMap { r -> [tuple(r.meta, r.samtools.stats), tuple(r.meta, r.samtools.flagstat), tuple(r.meta, r.samtools.idxstats)] }
+            )
+            ch_mqc_bundle = ch_mqc_bundle.join(
+                ch_bowtie2.map { r -> record(id: r.id, bowtie2_stats: [r.samtools.stats, r.samtools.flagstat, r.samtools.idxstats]) },
+                by: 'id', remainder: true
+            )
         }
     }
 
     //
     // SUBWORKFLOW: Alignment with HISAT2
     //
+    def ch_hisat2: Channel<Hisat2Aligned> = channel.empty()
     if (!params.skip_alignment && params.aligner == 'hisat2') {
-        FASTQ_ALIGN_HISAT2 (
-            ch_strand_inferred_filtered_fastq.map { meta, fastqs -> record(id: meta.id, meta: meta, reads: [ fastqs ].flatten()) },
-            ch_hisat2_index.map { item -> [ [:], item ] },
-            ch_splicesites.map { item -> [ [:], item ] },
+        ch_hisat2 = FASTQ_ALIGN_HISAT2 (
+            ch_reads_ok,
+            ch_hisat2_index.map { index -> tuple([:], index) },
+            ch_splicesites.map { splicesites -> tuple([:], splicesites) },
             ch_fasta_fai,
             params.save_unaligned || (params.contaminant_screening && params.contaminant_screening_input == 'unmapped')
         )
-        ch_hisat2_aligned = FASTQ_ALIGN_HISAT2.out
 
-        // BEGIN adapters from the FASTQ_ALIGN_HISAT2 record to legacy tuple channels; removed once the consumers below are typed
-        ch_hisat2_bam      = ch_hisat2_aligned.map { r -> [ r.meta, r.bam ] }
-        ch_hisat2_bai      = ch_hisat2_aligned.map { r -> [ r.meta, r.bai ] }
-        ch_hisat2_unmapped = ch_hisat2_aligned.filter { r -> !r.unmapped.isEmpty() }.map { r -> [ r.meta, r.unmapped ] }
-        ch_hisat2_summary  = ch_hisat2_aligned.map { r -> [ r.meta, r.hisat2.summary ] }
-        ch_hisat2_stats    = ch_hisat2_aligned.map { r -> [ r.meta, r.samtools.stats ] }
-        ch_hisat2_flagstat = ch_hisat2_aligned.map { r -> [ r.meta, r.samtools.flagstat ] }
-        ch_hisat2_idxstats = ch_hisat2_aligned.map { r -> [ r.meta, r.samtools.idxstats ] }
-        // END adapters
-
-        ch_genome_bam          = ch_genome_bam.mix(ch_hisat2_bam)
-        ch_genome_bam_index    = ch_genome_bam_index.mix(ch_hisat2_bai)
-        ch_unaligned_sequences = ch_hisat2_unmapped
-        ch_aligned             = ch_aligned.mix(ch_hisat2_aligned)
-        ch_percent_mapped      = ch_percent_mapped.mix(ch_hisat2_summary.map { meta, log -> [ meta, getHisat2PercentMapped(log) ] })
-        ch_multiqc_files = ch_multiqc_files.mix(ch_hisat2_summary)
-        ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
-            .join(ch_hisat2_summary.map { meta, f -> [meta.id, f] }, remainder: true)
+        ch_multiqc_files = ch_multiqc_files.mix(ch_hisat2.map { r -> tuple(r.meta, r.hisat2.summary) })
+        ch_mqc_bundle = ch_mqc_bundle.join(
+            ch_hisat2.map { r -> record(id: r.id, hisat2_summary: r.hisat2.summary) },
+            by: 'id', remainder: true
+        )
 
         if (!params.with_umi && params.skip_markduplicates) {
             // The deduplicated stats should take priority for MultiQC, but use
             // them straight out of the aligner otherwise. If mark duplicates
             // will run, those stats will be added later instead to avoid
             // duplicate flagstat files in MultiQC.
-            ch_multiqc_files = ch_multiqc_files
-                .mix(ch_hisat2_stats)
-                .mix(ch_hisat2_flagstat)
-                .mix(ch_hisat2_idxstats)
-            ch_hisat2_stats_bundle = ch_hisat2_stats
-                .join(ch_hisat2_flagstat)
-                .join(ch_hisat2_idxstats)
-                .map(collapseAgg)
-            ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
-                .join(ch_hisat2_stats_bundle, remainder: true)
+            ch_multiqc_files = ch_multiqc_files.mix(
+                ch_hisat2.flatMap { r -> [tuple(r.meta, r.samtools.stats), tuple(r.meta, r.samtools.flagstat), tuple(r.meta, r.samtools.idxstats)] }
+            )
+            ch_mqc_bundle = ch_mqc_bundle.join(
+                ch_hisat2.map { r -> record(id: r.id, hisat2_stats: [r.samtools.stats, r.samtools.flagstat, r.samtools.idxstats]) },
+                by: 'id', remainder: true
+            )
         }
     }
+
+    // The aligner outputs have different shapes, so the channel is left untyped
+    def ch_aligned = channel.empty().mix(ch_star).mix(ch_bowtie2).mix(ch_hisat2)
+
+    //
+    // Genome-aligned BAMs with their index and mapping percentage, from the aligner or the samplesheet
+    //
+    def ch_genome_bam: Channel<GenomeBam> = ch_prealigned
+        .mix(ch_star)
+        .mix(ch_bowtie2)
+        .mix(ch_hisat2.map { r -> r + record(percent_mapped: getHisat2PercentMapped(r.hisat2.summary)) })
+
+    // For Bowtie2+Salmon, the BAM is aligned to transcriptome so it's the "transcriptome_bam".
+    // Use orig_bam (query-grouped) for Salmon - coordinate-sorted BAM breaks paired-end quantification
+    ch_transcriptome_bam = ch_star
+        .filter { r -> r.transcriptome_bam != null }
+        .map { r -> record(id: r.id, meta: r.meta, bam: r.transcriptome_bam) }
+        .mix(ch_bowtie2.map { r -> record(id: r.id, meta: r.meta, bam: r.orig_bam[0]) })
+        .mix(ch_bam_samples.filter { s -> s.transcriptome_bam != null }.map { s -> record(id: s.id, meta: s.meta, bam: s.transcriptome_bam) })
 
     //
     // SUBWORKFLOW: Remove duplicate reads from BAM file based on UMIs
     //
+    def ch_umi_dedup: Channel<UmiDedupBam> = channel.empty()
     if (!params.skip_alignment && params.with_umi) {
-
-        BAM_DEDUP_UMI(
-            ch_genome_bam
-                .join(ch_genome_bam_index, by: [0])
-                .map { meta, bam, bai -> record(id: meta.id, meta: meta, bam: bam, bai: bai) },
+        ch_umi_dedup = BAM_DEDUP_UMI(
+            ch_genome_bam,
             ch_fasta_fai,
             params.umi_dedup_tool,
             params.umitools_dedup_stats,
-            ch_transcriptome_bam.map { meta, bam -> record(id: meta.id, meta: meta, bam: bam) },
+            ch_transcriptome_bam,
             ch_transcript_fasta_fai,
             params.umitools_dedup_primary_only
         )
 
-        ch_umi_dedup = BAM_DEDUP_UMI.out
-
-        // BEGIN adapters from the BAM_DEDUP_UMI record to legacy tuple channels; removed once the consumers below are typed
-        ch_umi_bam            = ch_umi_dedup.map { r -> [ r.meta, r.bam ] }
-        ch_umi_bai            = ch_umi_dedup.map { r -> [ r.meta, r.bai ] }
-        ch_umi_transcriptome  = ch_umi_dedup
+        ch_genome_bam = ch_genome_bam.join(ch_umi_dedup, by: 'id')
+        ch_transcriptome_bam = ch_umi_dedup
             .filter { r -> r.transcriptome != null && (r.transcriptome.filtered_bam != null || r.transcriptome.sorted_bam != null) }
-            .map { r -> [ r.meta, r.transcriptome.filtered_bam ?: r.transcriptome.sorted_bam ] }
+            .map { r -> record(id: r.id, meta: r.meta, bam: r.transcriptome.filtered_bam ?: r.transcriptome.sorted_bam) }
+
         // Genome-side files only; MultiQC cannot tell transcriptome stats apart from genome stats
-        ch_umi_genome_files   = ch_umi_dedup.map { r -> [ r.meta, [ r.genomic_dedup_log, r.genome.stats, r.genome.flagstat, r.genome.idxstats ] ] }
-        ch_umi_mqc_files      = ch_umi_genome_files.flatMap { meta, files -> files.collect { f -> [ meta, f ] } }
-        // END adapters
-
-        ch_genome_bam        = ch_umi_bam
-        ch_transcriptome_bam = ch_umi_transcriptome
-        ch_genome_bam_index  = ch_umi_bai
-
-        ch_multiqc_files = ch_multiqc_files
-            .mix(ch_umi_mqc_files)
-        ch_bam_dedup_umi_bundle = ch_umi_genome_files
-            .map { meta, files -> [meta.id, files] }
-        ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
-            .join(ch_bam_dedup_umi_bundle, remainder: true)
+        ch_multiqc_files = ch_multiqc_files.mix(
+            ch_umi_dedup.flatMap { r ->
+                [r.genomic_dedup_log, r.genome.stats, r.genome.flagstat, r.genome.idxstats].collect { f -> tuple(r.meta, f) }
+            }
+        )
+        ch_mqc_bundle = ch_mqc_bundle.join(
+            ch_umi_dedup.map { r -> record(id: r.id, umi_dedup: [r.genomic_dedup_log, r.genome.stats, r.genome.flagstat, r.genome.idxstats]) },
+            by: 'id', remainder: true
+        )
     }
 
     //
     // Quantification
     //
+    ch_transcriptome_reads = ch_transcriptome_bam.map { r -> record(id: r.id, meta: r.meta, reads: [r.bam]) }
+
+    def run_deseq2_qc = !params.skip_qc && !params.skip_deseq2_qc && !params.skip_quantification_merge
+
+    // Alignment-based quantifiers emit different per-sample shapes (RsemQuantSample or PseudoQuantSample), so the channel is left untyped
+    def ch_quant                                       = channel.empty()
+    def ch_quant_merged: Channel<QuantMerged>          = channel.empty()
+    def ch_quant_rsem_merge: Channel<RsemMergeSample>  = channel.empty()
+    def ch_deseq2: Channel<Deseq2Qc>                   = channel.empty()
     if (params.aligner == 'star_rsem') {
-
-        // BEGIN adapters for QUANTIFY_RSEM inputs (removed when the transcriptome BAM is a record field)
-        // SEAM(alignment): the transcriptome BAM arrives as a [meta, bam] tuple
-        ch_rsem_reads = ch_transcriptome_bam.map { meta, bam -> record(id: meta.id, meta: meta, reads: [ bam ].flatten()) }
-        // END adapters
-
-        QUANTIFY_RSEM (
+        rsem = QUANTIFY_RSEM (
             ch_samplesheet,
-            ch_rsem_reads,
+            ch_transcriptome_reads,
             ch_rsem_index,
             ch_gtf,
             params.gtf_group_features,
@@ -553,42 +436,32 @@ workflow RNASEQ {
             params.skip_quantification_merge
         )
 
-        // BEGIN adapters from the QUANTIFY_RSEM record to legacy channels; removed once the consumers below are typed
-        ch_rsem_stat    = QUANTIFY_RSEM.out.samples.map { r -> [ r.meta, r.stat ] }
-        // END adapters
+        ch_quant            = rsem.samples
+        ch_quant_merged     = rsem.merged
+        ch_quant_rsem_merge = rsem.rsem_merge
 
-        ch_multiqc_files = ch_multiqc_files.mix(ch_rsem_stat)
-        ch_quant = QUANTIFY_RSEM.out.samples
-        ch_quant_merged = QUANTIFY_RSEM.out.merged
-        ch_quant_rsem_merge = QUANTIFY_RSEM.out.rsem_merge
-        ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
-            .join(ch_rsem_stat.map { meta, f -> [meta.id, f] }, remainder: true)
+        ch_multiqc_files = ch_multiqc_files.mix(rsem.samples.map { r -> tuple(r.meta, r.stat) })
+        ch_mqc_bundle = ch_mqc_bundle.join(
+            rsem.samples.map { r -> record(id: r.id, rsem_stat: r.stat) },
+            by: 'id', remainder: true
+        )
 
-        if (!params.skip_qc && !params.skip_deseq2_qc && !params.skip_quantification_merge) {
-            DESEQ2_QC_RSEM (
-                QUANTIFY_RSEM.out.merged.map { r -> record(id: r.id, meta: r.meta, counts: r.counts_gene_length_scaled) },
+        if (run_deseq2_qc) {
+            ch_deseq2 = DESEQ2_QC_RSEM (
+                ch_quant_merged,
                 ch_pca_header_multiqc,
                 ch_clustering_header_multiqc
             )
-            ch_deseq2 = DESEQ2_QC_RSEM.out
-            ch_multiqc_files = ch_multiqc_files.mix(ch_deseq2.filter { r -> r.pca_multiqc != null }.map { r -> r.pca_multiqc }.collect().map { file -> [[:], file] })
-            ch_multiqc_files = ch_multiqc_files.mix(ch_deseq2.filter { r -> r.dists_multiqc != null }.map { r -> r.dists_multiqc }.collect().map { file -> [[:], file] })
         }
-
     } else if (params.aligner in ['star_salmon', 'bowtie2_salmon']) {
 
         //
         // SUBWORKFLOW: Count reads from BAM alignments using Salmon
         //
-        // BEGIN adapters for QUANTIFY_BAM_SALMON inputs (removed when the transcriptome BAM is a record field)
-        // SEAM(alignment): the transcriptome BAM arrives as a [meta, bam] tuple
-        ch_salmon_bam_reads = ch_transcriptome_bam.map { meta, bam -> record(id: meta.id, meta: meta, reads: [ bam ].flatten()) }
-        // END adapters
-
-        QUANTIFY_BAM_SALMON (
+        bam_salmon = QUANTIFY_BAM_SALMON (
             ch_samplesheet,
-            ch_salmon_bam_reads,
-            channel.value([ [:], ch_transcript_fasta_placeholder ]),
+            ch_transcriptome_reads,
+            channel.value(tuple([:], ch_transcript_fasta_placeholder)),
             ch_transcript_fasta,
             ch_gtf,
             params.gtf_group_features,
@@ -598,57 +471,36 @@ workflow RNASEQ {
             params.kallisto_quant_fraglen_sd,
             params.skip_quantification_merge
         )
-        ch_quant = QUANTIFY_BAM_SALMON.out.samples
-        ch_quant_merged = QUANTIFY_BAM_SALMON.out.merged
 
-        if (!params.skip_qc && !params.skip_deseq2_qc && !params.skip_quantification_merge) {
-            DESEQ2_QC_BAM_SALMON (
-                QUANTIFY_BAM_SALMON.out.merged.map { r -> record(id: r.id, meta: r.meta, counts: r.counts_gene_length_scaled) },
+        ch_quant        = bam_salmon.samples
+        ch_quant_merged = bam_salmon.merged
+
+        if (run_deseq2_qc) {
+            ch_deseq2 = DESEQ2_QC_BAM_SALMON (
+                ch_quant_merged,
                 ch_pca_header_multiqc,
                 ch_clustering_header_multiqc
             )
-            ch_deseq2 = DESEQ2_QC_BAM_SALMON.out
-            ch_multiqc_files = ch_multiqc_files.mix(ch_deseq2.filter { r -> r.pca_multiqc != null }.map { r -> r.pca_multiqc }.collect().map { file -> [[:], file] })
-            ch_multiqc_files = ch_multiqc_files.mix(ch_deseq2.filter { r -> r.dists_multiqc != null }.map { r -> r.dists_multiqc }.collect().map { file -> [[:], file] })
         }
     }
 
     // Filter bam and index by percent mapped being present in the meta
 
-    ch_genome_bam_bai_mapping = ch_genome_bam
-        .join(ch_genome_bam_index)
-        .join(ch_percent_mapped, remainder: true)
-        .map{ row ->
-            def (meta, bam, index) = row[0..2]
-            def percent_mapped = row.size() == 4 ? row[3] : null
-            def pass = percent_mapped != null ? percent_mapped >= params.min_mapped_reads.toFloat() : null
-            return [ meta, bam, index, percent_mapped, pass ]
-        }
-        .multiMap { meta, bam, index, percent_mapped, pass ->
-            bam: [ meta, bam, index, pass ]
-            percent_mapped: [ meta.id, percent_mapped ]
-            percent_mapped_pass: [ meta.id, percent_mapped, pass ]
-            status: [ meta.id, pass ]
-        }
+    ch_mapped = ch_genome_bam.map { r ->
+        r + record(pass: r.percent_mapped != null ? r.percent_mapped >= params.min_mapped_reads.toFloat() : null)
+    }
 
-    ch_percent_mapped = ch_genome_bam_bai_mapping.percent_mapped
+    ch_percent_mapped = ch_mapped.map { r -> tuple(r.id, r.percent_mapped) }
 
     // Save mapping status for workflow summary where present
+    ch_map_status = ch_mapped
+        .filter { r -> r.pass != null }
+        .map { r -> tuple(r.id, r.pass as Boolean) }
 
-    ch_map_status = ch_genome_bam_bai_mapping.status
-        .filter { _id, pass -> pass != null }
+    ch_percent_mapped_pass = ch_mapped.map { r -> tuple(r.id, r.percent_mapped, r.pass) }
 
     // Where a percent mapping is present, use it to filter bam and index
-
-    map_filtered_genome_bam_bai = ch_genome_bam_bai_mapping.bam
-        .filter { _meta, _bam, _index, pass -> pass || pass == null }
-        .multiMap { meta, bam, index, _pass ->
-            bam: [ meta, bam ]
-            index: [ meta, index ]
-        }
-
-    ch_genome_bam = map_filtered_genome_bam_bai.bam
-    ch_genome_bam_index = map_filtered_genome_bam_bai.index
+    ch_genome_bam = ch_mapped.filter { r -> r.pass == null || r.pass }
 
     //
     // SUBWORKFLOW: Mark duplicate reads
@@ -656,145 +508,136 @@ workflow RNASEQ {
 
     // Some tools (Ex. Parabricks) may have already run marked duplicates during alignment
     def markdups_done = !params.skip_markduplicates && params.use_parabricks_star
+    def ch_markdup: Channel<MarkdupBam> = channel.empty()
     if (!params.skip_markduplicates && !params.with_umi && !markdups_done) {
-        BAM_MARKDUPLICATES_PICARD (
-            ch_genome_bam.map { meta, bam -> record(id: meta.id, meta: meta, bam: bam) },
+        ch_markdup = BAM_MARKDUPLICATES_PICARD (
+            ch_genome_bam,
             ch_fasta_fai,
             !params.use_rustqc
         )
-        ch_markdup = BAM_MARKDUPLICATES_PICARD.out
 
-        // BEGIN adapters from the BAM_MARKDUPLICATES_PICARD record to legacy tuple channels; removed once the consumers below are typed
-        ch_markdup_stats    = ch_markdup.filter { r -> r.samtools }.map { r -> [ r.meta, r.samtools.stats ] }
-        ch_markdup_flagstat = ch_markdup.filter { r -> r.samtools }.map { r -> [ r.meta, r.samtools.flagstat ] }
-        ch_markdup_idxstats = ch_markdup.filter { r -> r.samtools }.map { r -> [ r.meta, r.samtools.idxstats ] }
-        ch_markdup_metrics  = ch_markdup.map { r -> [ r.meta, r.metrics ] }
-        ch_markdup_bundle   = ch_markdup
-            .filter { r -> r.samtools }
-            .map { r -> [ r.id, [ r.samtools.stats, r.samtools.flagstat, r.samtools.idxstats, r.metrics ] ] }
-        // END adapters
+        ch_genome_bam = ch_genome_bam.join(ch_markdup.filter { r -> r.bam != null }, by: 'id')
 
-        ch_genome_bam       = ch_markdup.filter { r -> r.bam }.map { r -> [ r.meta, r.bam ] }
-        ch_genome_bam_index = ch_markdup.map { r -> [ r.meta, r.bai ] }
-        ch_multiqc_files = ch_multiqc_files.mix(ch_markdup_stats)
-        ch_multiqc_files = ch_multiqc_files.mix(ch_markdup_flagstat)
-        ch_multiqc_files = ch_multiqc_files.mix(ch_markdup_idxstats)
-        ch_multiqc_files = ch_multiqc_files.mix(ch_markdup_metrics)
-        ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
-            .join(ch_markdup_bundle, remainder: true)
+        ch_multiqc_files = ch_multiqc_files.mix(
+            ch_markdup
+                .filter { r -> r.samtools != null }
+                .flatMap { r -> [tuple(r.meta, r.samtools.stats), tuple(r.meta, r.samtools.flagstat), tuple(r.meta, r.samtools.idxstats)] }
+        )
+        ch_multiqc_files = ch_multiqc_files.mix(ch_markdup.map { r -> tuple(r.meta, r.metrics) })
+        ch_mqc_bundle = ch_mqc_bundle.join(
+            ch_markdup
+                .filter { r -> r.samtools != null }
+                .map { r -> record(id: r.id, markdup: [r.samtools.stats, r.samtools.flagstat, r.samtools.idxstats, r.metrics]) },
+            by: 'id', remainder: true
+        )
     }
 
     //
     // MODULE: StringTie assembly and quantification
     //
+    def ch_stringtie: Channel<StringtieSample>          = channel.empty()
+    def ch_stringtie_merged: Channel<StringtieMerged>   = channel.empty()
     if (!params.skip_stringtie) {
-        // BEGIN adapters from the genome BAM tuple channel to StringTie input records; removed once ch_genome_bam is a record channel
-        ch_stringtie_input = ch_genome_bam.map { meta, bam -> record(id: meta.id, meta: meta, bam: bam, lrbam: null) }
-        // END adapters
+        ch_stringtie_input = ch_genome_bam.map { r -> r + record(lrbam: null) }
 
         if (params.stringtie_ignore_gtf) {
-            BAM_STRINGTIE_MERGE(
+            stringtie_merge = BAM_STRINGTIE_MERGE(
                 ch_stringtie_input,
                 channel.value([]),
-                ch_gtf.map { gtf -> [ [:], gtf ] }
+                ch_gtf.map { gtf -> tuple([:], gtf) }
             )
-            ch_stringtie_merged = BAM_STRINGTIE_MERGE.out
-            ch_stringtie_gtf = ch_stringtie_merged.map { r -> r.merged_gtf }
+            ch_stringtie_merged = channel.empty().mix(stringtie_merge)
+            ch_stringtie_gtf = stringtie_merge.map { r -> r.merged_gtf }
         } else {
             ch_stringtie_gtf = ch_gtf
         }
-        STRINGTIE_STRINGTIE(
+        ch_stringtie_samples = STRINGTIE_STRINGTIE(
             ch_stringtie_input,
             channel.value(['expression-estimation']),
             ch_stringtie_gtf
         )
 
-        ch_stringtie = STRINGTIE_STRINGTIE.out
-
         // Per-sample de novo assemblies that fed the merged GTF
         if (params.stringtie_ignore_gtf) {
-            ch_stringtie = ch_stringtie
-                .join(BAM_STRINGTIE_MERGE.out.flatMap { r -> r.assemblies }.map { r -> record(id: r.id, denovo: r) }, by: 'id')
+            ch_stringtie = ch_stringtie_samples
+                .join(stringtie_merge.flatMap { r -> r.assemblies }.map { r -> record(id: r.id, denovo: r) }, by: 'id')
         } else {
-            ch_stringtie = ch_stringtie.map { r -> r + record(denovo: null) }
+            ch_stringtie = ch_stringtie_samples.map { r -> r + record(denovo: null) }
         }
     }
 
     //
     // Pre-compute param-derived values for QC subworkflow
     //
-    def biotype = params.gencode ? "gene_type" : params.featurecounts_group_type
+    def biotype = (params.gencode ? "gene_type" : params.featurecounts_group_type) as String
     def rseqc_modules = qc_tools.findAll { tool -> tool.startsWith('rseqc_') }.collect { tool -> tool.replace('rseqc_', '') }
 
-    ch_inferexperiment_txt = channel.empty()
-
-    // BEGIN adapters into the post-alignment QC record input (removed when the alignment stages hand over a record with bam and bai)
-    // SEAM(qc)
-    ch_bam_bai = ch_genome_bam
-        .join(ch_genome_bam_index, by: [0])
-        .map { meta, bam, bai -> record(id: meta.id, meta: meta, bam: bam, bai: bai) }
-    // END adapters
+    def ch_bam_qc                                       = channel.empty()
+    def ch_bam_qc_rustqc: Channel<RustqcResult>         = channel.empty()
+    def ch_inferexperiment: Channel<Tuple<Map, Path>>   = channel.empty()
 
     if (!params.skip_qc) {
         if (params.use_rustqc) {
             //
             // MODULE: RustQC - single-pass replacement for multiple QC tools
             //
-            RUSTQC (
-                ch_bam_bai,
-                ch_gtf.map { gtf -> [ [:], gtf ] },
+            ch_bam_qc_rustqc = RUSTQC (
+                ch_genome_bam,
+                ch_gtf.map { gtf -> tuple([:], gtf) },
             )
-
-            ch_bam_qc_rustqc = RUSTQC.out
 
             // Drop non-MultiQC files. Excluding `*.featureCounts.tsv.summary`
             // keeps only the biotype summary, matching the default pipeline's
             // `featureCounts -g gene_biotype` output.
-            def mqcKeep = { f ->
-                f.name.endsWith('.featureCounts.tsv.summary') ? false :
-                    (f.name =~ /(?i)\.(txt|tsv|xls|log|stats|flagstat|idxstats|html)$/ || f.name.contains('_mqc.'))
+            ch_rustqc_mqc = ch_bam_qc_rustqc.map { r ->
+                record(
+                    id:    r.id,
+                    meta:  r.meta,
+                    files: r.all_files.findAll { f ->
+                        !f.name.endsWith('.featureCounts.tsv.summary') &&
+                            ((f.name =~ /(?i)\.(txt|tsv|xls|log|stats|flagstat|idxstats|html)$/).find() || f.name.contains('_mqc.'))
+                    }
+                )
             }
-            ch_rustqc_mqc = RUSTQC.out.map { r -> [r.meta, r.all_files.findAll(mqcKeep)] }
 
             ch_multiqc_files = ch_multiqc_files.mix(
-                ch_rustqc_mqc.flatMap { meta, files -> files.collect { f -> [meta, f] } }
+                ch_rustqc_mqc.flatMap { q -> q.files.collect { f -> tuple(q.meta, f) } }
+            )
+            ch_mqc_bundle = ch_mqc_bundle.join(
+                ch_rustqc_mqc.map { q -> record(id: q.id, rustqc: q.files) },
+                by: 'id', remainder: true
             )
 
-            ch_rustqc_bundle = ch_rustqc_mqc.map { meta, files -> [meta.id, files] }
-            ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
-                .join(ch_rustqc_bundle, remainder: true)
-
             // Extract infer_experiment from rseqc channel
-            ch_inferexperiment_txt = RUSTQC.out
+            ch_inferexperiment = ch_bam_qc_rustqc
                 .filter { r -> r.rseqc.inferexperiment != null }
-                .map { r -> [r.meta, r.rseqc.inferexperiment] }
+                .map { r -> tuple(r.meta, r.rseqc.inferexperiment) }
         } else {
             //
             // SUBWORKFLOW: Post-alignment QC
             //
             ch_bam_qc = BAM_QC_RNASEQ (
-                ch_bam_bai,
-                ch_gtf.map { gtf -> [ [:], gtf ] },
+                ch_genome_bam,
+                ch_gtf.map { gtf -> tuple([:], gtf) },
                 ch_gene_bed,
                 ch_fasta_fai,
-                channel.value([ [:], ch_biotypes_header_multiqc ]),
+                channel.value(tuple([:], ch_biotypes_header_multiqc)),
                 qc_tools,
                 biotype
             )
 
-            // BEGIN adapters from the BAM_QC_RNASEQ record to legacy tuple channels; removed once the consumers below are typed
-            ch_bam_qc_mqc_files    = ch_bam_qc.flatMap { r -> r.mqc_files.collect { f -> [ r.meta, f ] } }
-            ch_inferexperiment_txt = ch_bam_qc
-                .filter { r -> r.rseqc?.inferexperiment != null }
-                .map { r -> [ r.meta, r.rseqc.inferexperiment ] }
-            ch_bam_qc_rnaseq_bundle = ch_bam_qc
-                .filter { r -> !r.mqc_files.isEmpty() }
-                .map { r -> [ r.id, r.mqc_files ] }
-            // END adapters
-
-            ch_multiqc_files = ch_multiqc_files.mix(ch_bam_qc_mqc_files)
-            ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
-                .join(ch_bam_qc_rnaseq_bundle, remainder: true)
+            ch_multiqc_files = ch_multiqc_files.mix(
+                ch_bam_qc.flatMap { r -> r.mqc_files.collect { f -> tuple(r.meta, f) } }
+            )
+            ch_mqc_bundle = ch_mqc_bundle.join(
+                ch_bam_qc
+                    .filter { r -> !r.mqc_files.isEmpty() }
+                    .map { r -> record(id: r.id, bam_qc: r.mqc_files) },
+                by: 'id', remainder: true
+            )
+            ch_inferexperiment = ch_bam_qc
+                .filter { r -> r.rseqc != null && r.rseqc.inferexperiment != null }
+                .map { r -> tuple(r.meta, r.rseqc.inferexperiment) }
         }
     }
 
@@ -807,46 +650,43 @@ workflow RNASEQ {
     // of rseqc_modules.
     //
     def run_infer_experiment = !params.skip_qc && (params.use_rustqc || rseqc_modules.contains('infer_experiment'))
-    ch_strand_data = channel.empty()
+    ch_strand_status = channel.empty()
     if (run_infer_experiment) {
-        ch_strand_data = ch_inferexperiment_txt.map { meta, strand_log ->
+        ch_strand_data = ch_inferexperiment.map { meta, strand_log ->
             classifyStrand(meta, strand_log, params.stranded_threshold, params.unstranded_threshold)
         }
-        ch_strand_status = ch_strand_data.map { meta, _p, status, _s, _r -> [meta.id, status == 'pass'] }
+        ch_strand_status = ch_strand_data.map { meta, _provided, status, _salmon, _rseqc -> tuple(meta.id, status == 'pass') }
     }
     else {
-        ch_strand_data = ch_strand_inferred_filtered_fastq
-            .filter { meta, _reads -> meta.salmon_strand_analysis }
-            .map { meta, _reads -> [meta, 'auto', '-', meta.salmon_strand_analysis, null] }
+        ch_strand_data = ch_reads_ok
+            .filter { r -> r.meta.salmon_strand_analysis != null }
+            .map { r -> tuple(r.meta, 'auto', '-', r.meta.salmon_strand_analysis, null) }
     }
 
     //
     // MODULE: Genome-wide coverage with BEDTools
     // Stranded libraries get per-strand + combined bigWigs; unstranded libraries get only the combined one.
     //
+    def ch_bigwig: Channel<BigwigSample> = channel.empty()
     if (!params.skip_bigwig) {
-
-        // BEGIN adapters from the genome BAM tuple channel to BEDTools input records; removed once ch_genome_bam is a record channel
-        ch_genomecov_input = ch_genome_bam.map { meta, bam -> record(id: meta.id, meta: meta, intervals: bam, scale: 1) }
-        // END adapters
-
+        ch_genomecov_input = ch_genome_bam.map { r -> record(id: r.id, meta: r.meta, intervals: r.bam, scale: 1) }
         ch_genomecov_input_stranded = ch_genomecov_input.filter { r -> r.meta.strandedness in ['forward', 'reverse'] }
 
-        BEDTOOLS_GENOMECOV_FW (
+        ch_bedgraph_fw = BEDTOOLS_GENOMECOV_FW (
             ch_genomecov_input_stranded,
-            [],
+            null,
             'bedGraph',
             true
         )
-        BEDTOOLS_GENOMECOV_REV (
+        ch_bedgraph_rev = BEDTOOLS_GENOMECOV_REV (
             ch_genomecov_input_stranded,
-            [],
+            null,
             'bedGraph',
             true
         )
-        BEDTOOLS_GENOMECOV_COMBINED (
+        ch_bedgraph_combined = BEDTOOLS_GENOMECOV_COMBINED (
             ch_genomecov_input,
-            [],
+            null,
             'bedGraph',
             true
         )
@@ -854,131 +694,112 @@ workflow RNASEQ {
         //
         // SUBWORKFLOW: Convert bedGraph to bigWig
         //
-        BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD (
-            BEDTOOLS_GENOMECOV_FW.out.map { r -> record(id: r.id, meta: r.meta, bedgraph: r.genomecov) },
+        ch_bigwig_fw = BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD (
+            ch_bedgraph_fw,
             ch_chrom_sizes
         )
 
-        BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE (
-            BEDTOOLS_GENOMECOV_REV.out.map { r -> record(id: r.id, meta: r.meta, bedgraph: r.genomecov) },
+        ch_bigwig_rev = BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE (
+            ch_bedgraph_rev,
             ch_chrom_sizes
         )
 
-        BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_COMBINED (
-            BEDTOOLS_GENOMECOV_COMBINED.out.map { r -> record(id: r.id, meta: r.meta, bedgraph: r.genomecov) },
+        ch_bigwig_combined = BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_COMBINED (
+            ch_bedgraph_combined,
             ch_chrom_sizes
         )
 
         // Every sample gets a combined track; only stranded ones get forward/reverse
-        ch_bigwig_combined = ch_genomecov_input.map { r -> [r.id, r.meta] }
-            .join(BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_COMBINED.out.map { r -> [r.id, r] }, failOnMismatch: true, failOnDuplicate: true)
-            .branch { _id, meta, _combined ->
-                stranded: meta.strandedness in ['forward', 'reverse']
-                unstranded: true
-            }
-
-        ch_bigwig = ch_bigwig_combined.stranded
-            .join(BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_FORWARD.out.map { r -> [r.id, r] }, failOnMismatch: true, failOnDuplicate: true)
-            .join(BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG_REVERSE.out.map { r -> [r.id, r] }, failOnMismatch: true, failOnDuplicate: true)
-            .mix(ch_bigwig_combined.unstranded.map { id, meta, combined -> [id, meta, combined, null, null] })
-            .map { id, meta, combined, forward, reverse ->
-                record(
-                    id:       id,
-                    meta:     meta,
-                    combined: combined,
-                    forward:  forward,
-                    reverse:  reverse
-                )
-            }
+        ch_bigwig = ch_bigwig_combined
+            .map { r -> record(id: r.id, meta: r.meta, combined: r, forward: null, reverse: null) }
+            .join(ch_bigwig_fw.map { r -> record(id: r.id, forward: r) }, by: 'id', remainder: true)
+            .join(ch_bigwig_rev.map { r -> record(id: r.id, reverse: r) }, by: 'id', remainder: true)
     }
 
+    def ch_contaminants: Channel<Contaminants> = channel.empty()
     if (!params.skip_qc) {
         //
         // Contaminant screening (Kraken2/Bracken/Sylph)
         //
-        def ch_contaminant_sequences = params.contaminant_screening_input == 'trimmed'
-            ? ch_strand_inferred_filtered_fastq
-            : params.contaminant_screening_input == 'trim_only'
-                ? ch_reads_trimmed
-                : params.contaminant_screening_input == 'raw'
-                    ? ch_reads_cat
-                    : ch_unaligned_sequences
-
-        // BEGIN adapters from the legacy [ meta, reads ] channels to the contaminant-screening reads record (removed when RNASEQ is typed)
-        ch_contaminant_reads = ch_contaminant_sequences.map { meta, reads -> record(id: meta.id, meta: meta, reads: [ reads ].flatten()) }
-        // END adapters
-
-        // Per-sample [id, fields] accumulated from whichever screening tool ran
-        ch_contaminant_fields = channel.empty()
+        if (params.contaminant_screening_input == 'trim_only') {
+            ch_contaminant_reads = ch_preprocessed
+                .filter { r -> r.reads_trimmed != null }
+                .map { r -> record(id: r.id, meta: r.meta, reads: r.reads_trimmed) }
+        } else if (params.contaminant_screening_input == 'trimmed') {
+            ch_contaminant_reads = ch_reads_ok
+        } else if (params.contaminant_screening_input == 'raw') {
+            ch_contaminant_reads = ch_preprocessed.map { r -> record(id: r.id, meta: r.meta, reads: r.reads_cat) }
+        } else {
+            ch_contaminant_reads = ch_star.mix(ch_hisat2)
+                .filter { r -> !r.unmapped.isEmpty() }
+                .map { r -> record(id: r.id, meta: r.meta, reads: r.unmapped) }
+        }
 
         if (params.contaminant_screening in ['kraken2', 'kraken2_bracken'] ) {
-            KRAKEN2 (
+            ch_kraken2 = KRAKEN2 (
                 ch_contaminant_reads,
                 ch_kraken_db,
                 params.save_kraken_assignments,
                 params.save_kraken_unassigned
             )
-            ch_kraken2 = KRAKEN2.out
-            ch_kraken_reports = ch_kraken2.map { r -> [r.meta, r.report] }
 
-            ch_contaminant_fields = KRAKEN2.out.map { r -> [r.meta.id, [meta: r.meta, kraken2: r]] }
+            ch_contaminants = ch_kraken2.map { r ->
+                record(id: r.id, meta: r.meta, kraken2: r, bracken: null, sylph: null, sylphtax: null)
+            }
 
             if (params.contaminant_screening == 'kraken2') {
-                ch_multiqc_files = ch_multiqc_files.mix(ch_kraken_reports)
-                ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
-                    .join(ch_kraken_reports.map { meta, f -> [meta.id, f] }, remainder: true)
+                ch_multiqc_files = ch_multiqc_files.mix(ch_kraken2.map { r -> tuple(r.meta, r.report) })
+                ch_mqc_bundle = ch_mqc_bundle.join(
+                    ch_kraken2.map { r -> record(id: r.id, kraken2: r.report) },
+                    by: 'id', remainder: true
+                )
             } else if (params.contaminant_screening == 'kraken2_bracken') {
-                BRACKEN (
+                ch_bracken = BRACKEN (
                     ch_kraken2,
                     ch_kraken_db
                 )
-                ch_multiqc_files = ch_multiqc_files.mix(BRACKEN.out.map { r -> [r.meta, r.report] })
-                ch_contaminant_fields = ch_contaminant_fields
-                    .join(BRACKEN.out.map { r -> [r.meta.id, r] }, failOnMismatch: true, failOnDuplicate: true)
-                    .map { id, fields, bracken -> [id, fields + [bracken: bracken]] }
-                ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
-                    .join(BRACKEN.out.map { r -> [r.meta.id, r.report] }, remainder: true)
+                ch_multiqc_files = ch_multiqc_files.mix(ch_bracken.map { r -> tuple(r.meta, r.report) })
+                ch_contaminants = ch_contaminants
+                    .join(ch_bracken.map { r -> record(id: r.id, bracken: r) }, by: 'id')
+                ch_mqc_bundle = ch_mqc_bundle.join(
+                    ch_bracken.map { r -> record(id: r.id, bracken: r.report) },
+                    by: 'id', remainder: true
+                )
             }
         } else if (params.contaminant_screening == 'sylph') {
-            def sylph_databases = params.sylph_db ? params.sylph_db.split(',').collect{ path -> file(path.trim()) } : []
+            def sylph_databases = (params.sylph_db ? params.sylph_db.split(',').collect{ path -> file(path.trim()) } : []) as List<Path>
             ch_sylph_databases = channel.value(sylph_databases)
-            SYLPH_PROFILE (
+            ch_sylph = SYLPH_PROFILE (
                 ch_contaminant_reads,
                 ch_sylph_databases
             )
-            ch_sylph_profile = SYLPH_PROFILE.out.filter{ r -> !r.profile_out.isEmpty() }
+            ch_sylph_profile = ch_sylph.filter{ r -> !r.profile_out.isEmpty() }
 
-            def sylph_taxonomies = params.sylph_taxonomy ? params.sylph_taxonomy.split(',').collect{ path -> file(path.trim()) } : []
+            def sylph_taxonomies = (params.sylph_taxonomy ? params.sylph_taxonomy.split(',').collect{ path -> file(path.trim()) } : []) as List<Path>
             ch_sylph_taxonomies = channel.value(sylph_taxonomies)
-            SYLPHTAX_TAXPROF (
+            ch_sylphtax = SYLPHTAX_TAXPROF (
                 ch_sylph_profile,
                 ch_sylph_taxonomies
             )
-            ch_multiqc_files = ch_multiqc_files.mix(SYLPHTAX_TAXPROF.out.map { r -> [r.meta, r.taxprof_output] })
-            ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
-                .join(SYLPHTAX_TAXPROF.out.map { r -> [r.meta.id, r.taxprof_output] }, remainder: true)
+            ch_multiqc_files = ch_multiqc_files.mix(ch_sylphtax.map { r -> tuple(r.meta, r.taxprof_output) })
+            ch_mqc_bundle = ch_mqc_bundle.join(
+                ch_sylphtax.map { r -> record(id: r.id, sylphtax: r.taxprof_output) },
+                by: 'id', remainder: true
+            )
 
             // Every profile is published, but empty ones never reach SYLPHTAX_TAXPROF
-            ch_contaminant_fields = SYLPH_PROFILE.out.map { r -> [r.meta.id, [meta: r.meta, sylph_profile: r.profile_out]] }
-                .join(SYLPHTAX_TAXPROF.out.map { r -> [r.meta.id, r.taxprof_output] }, remainder: true)
-                .map { id, fields, taxprof -> [id, fields + [sylphtax_taxprof: taxprof]] }
-        }
-
-        ch_contaminants = ch_contaminant_fields.map { id, fields ->
-            record(
-                id:       id,
-                meta:     fields.meta,
-                kraken2:  fields.kraken2,
-                bracken:  fields.bracken,
-                sylph:    fields.sylph_profile != null ? record(profile: fields.sylph_profile) : null,
-                sylphtax: fields.sylphtax_taxprof != null ? record(taxprof: fields.sylphtax_taxprof) : null
-            )
+            ch_contaminants = ch_sylph
+                .map { r -> record(id: r.id, meta: r.meta, kraken2: null, bracken: null, sylph: record(profile: r.profile_out), sylphtax: null) }
+                .join(ch_sylphtax.map { r -> record(id: r.id, sylphtax: record(taxprof: r.taxprof_output)) }, by: 'id', remainder: true)
         }
     }
 
     //
     // SUBWORKFLOW: Pseudoalignment and quantification with Salmon
     //
+    def ch_quant_pseudo: Channel<PseudoQuantSample>        = channel.empty()
+    def ch_quant_merged_pseudo: Channel<QuantMerged>       = channel.empty()
+    def ch_deseq2_pseudo: Channel<Deseq2Qc>                = channel.empty()
     if (!params.skip_pseudo_alignment && params.pseudo_aligner) {
 
         if (params.pseudo_aligner == 'salmon') {
@@ -987,14 +808,9 @@ workflow RNASEQ {
             ch_pseudo_index = ch_kallisto_index
         }
 
-        // BEGIN adapters for QUANTIFY_PSEUDO_ALIGNMENT inputs (removed when the reads are a record)
-        // SEAM(reads): the filtered FASTQs arrive as a [meta, fastq] tuple
-        ch_pseudo_reads = ch_strand_inferred_filtered_fastq.map { meta, fastqs -> record(id: meta.id, meta: meta, reads: [ fastqs ].flatten()) }
-        // END adapters
-
-        QUANTIFY_PSEUDO_ALIGNMENT (
+        pseudo = QUANTIFY_PSEUDO_ALIGNMENT (
             ch_samplesheet,
-            ch_pseudo_reads,
+            ch_reads_ok,
             ch_pseudo_index,
             channel.value(ch_transcript_fasta_placeholder),
             ch_gtf,
@@ -1006,57 +822,77 @@ workflow RNASEQ {
             params.skip_quantification_merge
         )
 
-        // BEGIN adapters from the QUANTIFY_PSEUDO_ALIGNMENT record to legacy channels; removed once the consumers below are typed
-        ch_pseudo_multiqc = QUANTIFY_PSEUDO_ALIGNMENT.out.samples.map { r -> [ r.meta, r.multiqc ] }
-        // END adapters
+        ch_quant_pseudo        = pseudo.samples
+        ch_quant_merged_pseudo = pseudo.merged
 
-        ch_quant_pseudo = QUANTIFY_PSEUDO_ALIGNMENT.out.samples
-        ch_quant_merged_pseudo = QUANTIFY_PSEUDO_ALIGNMENT.out.merged
-        ch_multiqc_files = ch_multiqc_files.mix(ch_pseudo_multiqc)
-        ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
-            .join(ch_pseudo_multiqc.map { meta, f -> [meta.id, f] }, remainder: true)
+        ch_multiqc_files = ch_multiqc_files.mix(ch_quant_pseudo.map { r -> tuple(r.meta, r.multiqc) })
+        ch_mqc_bundle = ch_mqc_bundle.join(
+            ch_quant_pseudo.map { r -> record(id: r.id, pseudo: r.multiqc) },
+            by: 'id', remainder: true
+        )
 
-        if (!params.skip_qc && !params.skip_deseq2_qc && !params.skip_quantification_merge) {
-            DESEQ2_QC_PSEUDO (
-                QUANTIFY_PSEUDO_ALIGNMENT.out.merged.map { r -> record(id: r.id, meta: r.meta, counts: r.counts_gene_length_scaled) },
+        if (run_deseq2_qc) {
+            ch_deseq2_pseudo = DESEQ2_QC_PSEUDO (
+                ch_quant_merged_pseudo,
                 ch_pca_header_multiqc,
                 ch_clustering_header_multiqc
             )
-            ch_deseq2_pseudo = DESEQ2_QC_PSEUDO.out
-            ch_multiqc_files = ch_multiqc_files.mix(ch_deseq2_pseudo.filter { r -> r.pca_multiqc != null }.map { r -> r.pca_multiqc }.collect().map { file -> [[:], file] })
-            ch_multiqc_files = ch_multiqc_files.mix(ch_deseq2_pseudo.filter { r -> r.dists_multiqc != null }.map { r -> r.dists_multiqc }.collect().map { file -> [[:], file] })
         }
     }
 
+    ch_multiqc_files = ch_multiqc_files.mix(ch_deseq2.filter { r -> r.pca_multiqc != null }.map { r -> tuple([:], r.pca_multiqc) })
+    ch_multiqc_files = ch_multiqc_files.mix(ch_deseq2.filter { r -> r.dists_multiqc != null }.map { r -> tuple([:], r.dists_multiqc) })
+    ch_multiqc_files = ch_multiqc_files.mix(ch_deseq2_pseudo.filter { r -> r.pca_multiqc != null }.map { r -> tuple([:], r.pca_multiqc) })
+    ch_multiqc_files = ch_multiqc_files.mix(ch_deseq2_pseudo.filter { r -> r.dists_multiqc != null }.map { r -> tuple([:], r.dists_multiqc) })
+
     //
-    // Collate and save software versions from the `versions` topic
+    // Collate and save software versions from the `versions` topic. Entries are either
+    // `path(versions.yml)` (legacy file-emit style) or `(task.process, tool, version)`
+    // tuples (inline `eval` style).
     //
-    ch_collated_versions = softwareVersionsToYAML(topic_versions.versions_file)
-        .mix(topic_versions_string)
-        .collectFile(name: 'nf_core_rnaseq_software_mqc_versions.yml', sort: true, newLine: true)
+    ch_topic_versions = channel.topic('versions').unique()
+
+    ch_versions_string = ch_topic_versions
+        .filter { entry -> !(entry instanceof Path) }
+        .map { entry -> tuple(entry[0].tokenize(':').last(), "  ${entry[1]}: ${entry[2]}") }
+        .groupBy()
+        .map { process, tool_versions ->
+            "${process}:\n${tool_versions.toSet().toSorted().join('\n')}"
+        }
+
+    ch_versions_entries = softwareVersionsToYAML(ch_topic_versions.filter { entry -> entry instanceof Path })
+        .mix(ch_versions_string)
+        .collect()
+        .map { entries -> entries.toSorted() }
+
+    ch_collated_versions = COLLATE_VERSIONS('nf_core_rnaseq_software_mqc_versions.yml', ch_versions_entries)
 
     ch_pipeline_info = ch_collated_versions.map { versions -> record(versions: versions) }
 
     //
     // SUBWORKFLOW: MultiQC
     //
-    ch_multiqc_report = channel.empty()
+    def ch_multiqc: Channel<MultiqcReport> = channel.empty()
+    def ch_multiqc_report: Channel<Path>   = channel.empty()
 
     if (!params.skip_multiqc) {
-        MULTIQC_RNASEQ(
+        ch_multiqc = MULTIQC_RNASEQ(
             ch_multiqc_files,
-            ch_mqc_per_sample_bundle,
+            ch_mqc_bundle.map { b ->
+                tuple(b.id, b.meta, b.fastq_qc, b.star_log, b.star_stats, b.bowtie2_log, b.bowtie2_stats, b.hisat2_summary, b.hisat2_stats,
+                      b.umi_dedup, b.rsem_stat, b.markdup, b.rustqc, b.bam_qc, b.kraken2, b.bracken, b.sylphtax, b.pseudo)
+            },
             ch_strand_data,
             ch_trim_read_count,
-            ch_genome_bam_bai_mapping.percent_mapped_pass,
+            ch_percent_mapped_pass,
             aligner_display_name,
             ch_fastq,
             ch_collated_versions,
             params.input,
             "${projectDir}/assets/schema_input.json",
             file("$projectDir/assets/multiqc_config.yml", checkIfExists: true),
-            params.multiqc_config ? file(params.multiqc_config, checkIfExists: true) : [],
-            params.multiqc_logo   ? file(params.multiqc_logo,   checkIfExists: true) : [],
+            params.multiqc_config ? file(params.multiqc_config, checkIfExists: true) : null,
+            params.multiqc_logo   ? file(params.multiqc_logo,   checkIfExists: true) : null,
             params.multiqc_methods_description
                 ? file(params.multiqc_methods_description)
                 : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true),
@@ -1066,45 +902,44 @@ workflow RNASEQ {
             params.min_trimmed_reads,
             params.skip_quantification_merge
         )
-        ch_multiqc        = MULTIQC_RNASEQ.out
         ch_multiqc_report = ch_multiqc.map { r -> r.report }
     }
 
     emit:
-    trim_status         = ch_trim_status         // channel: [id, boolean]
-    map_status          = ch_map_status          // channel: [id, boolean]
-    strand_status       = ch_strand_status       // channel: [id, boolean]
-    multiqc_report      = ch_multiqc_report      // channel: /path/to/multiqc_report.html
-    reads               = ch_fastq               // channel: [ meta, [ [fastq_1, fastq_2?], ... ] ], one entry per sequencing run of a sample
-    percent_mapped      = ch_percent_mapped      // channel: [ id, Float? ]
+    trim_status:         Channel<Tuple<String, Boolean>> = ch_trim_status         // [ id, passes min_trimmed_reads ]
+    map_status:          Channel<Tuple<String, Boolean>> = ch_map_status          // [ id, passes min_mapped_reads ], samples with a mapping percentage only
+    strand_status:       Channel<Tuple<String, Boolean>> = ch_strand_status       // [ id, strandedness check passed ]
+    multiqc_report:      Channel<Path> = ch_multiqc_report                        // multiqc_report.html
+    reads:               Channel<Tuple<Map, List<List<Path>>>> = ch_fastq         // [ meta, [ [fastq_1, fastq_2?], ... ] ], one entry per sequencing run of a sample
+    percent_mapped:      Channel<Tuple<String, Float?>> = ch_percent_mapped       // [ id, percent mapped ]
 
     // Stage result records, keyed on id
-    preprocessed        = ch_preprocessed // channel: FastqQcTrimFilterSetstrandedness
-    aligned             = ch_aligned             // channel: StarAligned | Bowtie2Aligned | Hisat2Aligned
-    umi_dedup           = ch_umi_dedup           // channel: UmiDedupBam
-    markdup             = ch_markdup             // channel: MarkdupBam
-    bam_qc              = ch_bam_qc              // channel: BamQcRnaseq
-    bam_qc_rustqc       = ch_bam_qc_rustqc       // channel: RUSTQC record (meta, samtools, preseq, dupradar, featurecounts, biotype, rseqc, qualimap)
-    quant               = ch_quant               // channel: RsemQuantSample | PseudoQuantSample, alignment-based quantifier
-    quant_merged        = ch_quant_merged        // channel: QuantMerged, alignment-based quantifier
-    quant_rsem_merge    = ch_quant_rsem_merge    // channel: record(id, rsem_merge: RsemMerge), CUSTOM_RSEMMERGECOUNTS outputs; empty unless --aligner star_rsem
-    quant_pseudo        = ch_quant_pseudo        // channel: PseudoQuantSample, pseudo-aligner
-    quant_merged_pseudo = ch_quant_merged_pseudo // channel: QuantMerged, pseudo-aligner
-    contaminants        = ch_contaminants        // channel: record(id, meta, kraken2, bracken, sylph, sylphtax)
-    stringtie           = ch_stringtie           // channel: record(id, meta, transcript_gtf, abundance, coverage_gtf, ballgown, denovo: StringtieAssembly?)
-    bigwig              = ch_bigwig              // channel: record(id, meta, combined, forward, reverse), each BigwigFiles
+    preprocessed:        Channel<FastqQcTrimFilterSetstrandedness> = ch_preprocessed
+    aligned                                                        = ch_aligned   // StarAligned | Bowtie2Aligned | Hisat2Aligned
+    umi_dedup:           Channel<UmiDedupBam> = ch_umi_dedup
+    markdup:             Channel<MarkdupBam> = ch_markdup
+    bam_qc:              Channel<BamQcRnaseq> = ch_bam_qc
+    bam_qc_rustqc:       Channel<RustqcResult> = ch_bam_qc_rustqc
+    quant                                                          = ch_quant     // RsemQuantSample | PseudoQuantSample, alignment-based quantifier
+    quant_merged:        Channel<QuantMerged> = ch_quant_merged                   // alignment-based quantifier
+    quant_rsem_merge:    Channel<RsemMergeSample> = ch_quant_rsem_merge           // empty unless --aligner star_rsem
+    quant_pseudo:        Channel<PseudoQuantSample> = ch_quant_pseudo             // pseudo-aligner
+    quant_merged_pseudo: Channel<QuantMerged> = ch_quant_merged_pseudo            // pseudo-aligner
+    contaminants:        Channel<Contaminants> = ch_contaminants
+    stringtie:           Channel<StringtieSample> = ch_stringtie
+    bigwig:              Channel<BigwigSample> = ch_bigwig
 
     // Run-level result records
-    stringtie_merged    = ch_stringtie_merged    // channel: StringtieMerged
-    deseq2              = ch_deseq2              // channel: record(rdata, pca_vals, plots_pdf, sample_dists, size_factors, log), alignment-based quantifier
-    deseq2_pseudo       = ch_deseq2_pseudo       // channel: record(rdata, pca_vals, plots_pdf, sample_dists, size_factors, log), pseudo-aligner
-    rrna_references     = ch_rrna_references     // channel: record(bowtie2_index, seqkit_prefixed, seqkit_converted)
-    multiqc             = ch_multiqc             // channel: MultiqcReport, per sample under skip_quantification_merge
-    pipeline_info       = ch_pipeline_info       // channel: record(versions)
+    stringtie_merged:    Channel<StringtieMerged> = ch_stringtie_merged
+    deseq2:              Channel<Deseq2Qc> = ch_deseq2                            // alignment-based quantifier
+    deseq2_pseudo:       Channel<Deseq2Qc> = ch_deseq2_pseudo                     // pseudo-aligner
+    rrna_references:     Value<RrnaReferences> = ch_rrna_references
+    multiqc:             Channel<MultiqcReport> = ch_multiqc                      // per sample under skip_quantification_merge
+    pipeline_info:       Channel<PipelineInfo> = ch_pipeline_info
 }
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     THE END
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */

@@ -50,9 +50,8 @@ process SAMTOOLS_SORT {
         output_file = "${prefix}.${extension}##idx##${prefix}.${extension}.${index_format}"
     }
     // A lone file arrives as a Path, which iterates over its name components.
-    def raw_bam = bam as Object
-    def bams = raw_bam instanceof List ? (raw_bam as List<Path>) : [raw_bam as Path]
-    def is_sam = bams[0].name.endsWith('.sam')
+    def bam_names = bam instanceof Path ? "${bam}" : bam.join(' ')
+    def is_sam = bam_names.replaceAll(' .*', '').endsWith('.sam')
     if (index_format) {
         if (!(index_format in ['bai', 'csi', 'crai'])) {
             error("Index format not one of bai, csi, crai.")
@@ -61,12 +60,12 @@ process SAMTOOLS_SORT {
             error("Indexing not compatible with SAM output")
         }
     }
-    if (bams.join(' ') == "${prefix}.bam") {
+    if (bam_names == "${prefix}.bam") {
         error("Input and output names are the same, use \"task.ext.prefix\" to disambiguate!")
     }
 
-    def input_source = is_sam ? bams.join(' ') : "-"
-    def pre_command = is_sam ? "" : "samtools cat ${bams.join(' ')} | "
+    def input_source = is_sam ? bam_names : "-"
+    def pre_command = is_sam ? "" : "samtools cat ${bam_names} | "
 
     """
     ${pre_command}samtools sort \\

@@ -10,7 +10,7 @@ record Hisat2Aligned {
     meta:     Map
     aligner:  String
     orig_bam: Path
-    unmapped: List<Path>?
+    unmapped: List<Path>
     hisat2:   Hisat2Logs
     bam:      Path
     bai:      Path

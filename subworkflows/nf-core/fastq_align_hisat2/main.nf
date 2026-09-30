@@ -19,27 +19,20 @@ workflow FASTQ_ALIGN_HISAT2 {
     //
     // Sort, index BAM file and run samtools stats, flagstat and idxstats
     //
-    BAM_SORT_STATS_SAMTOOLS(HISAT2_ALIGN.out.bam, ch_fasta_fai)
+    ch_orig_bam = HISAT2_ALIGN.out.map { r -> [ r.meta, r.orig_bam ] }
+    ch_summary = HISAT2_ALIGN.out.map { r -> [ r.meta, r.hisat2.summary ] }
+    ch_fastq = HISAT2_ALIGN.out.filter { r -> r.unmapped }.map { r -> [ r.meta, r.unmapped ] }
 
-    ch_results = HISAT2_ALIGN.out.bam
-        .join(HISAT2_ALIGN.out.summary)
-        .join(HISAT2_ALIGN.out.fastq, remainder: true)
-        .map { meta, orig_bam, summary, fastq ->
-            record(
-                id:       meta.id,
-                meta:     meta,
-                aligner:  'hisat2',
-                orig_bam: orig_bam,
-                unmapped: fastq ? [fastq].flatten() : null,
-                hisat2:   record(summary: summary)
-            )
-        }
+    BAM_SORT_STATS_SAMTOOLS(ch_orig_bam, ch_fasta_fai)
+
+    ch_results = HISAT2_ALIGN.out
+        .map { r -> r + record(aligner: 'hisat2') }
         .join(BAM_SORT_STATS_SAMTOOLS.out.results, by: 'id')
 
     emit:
-    orig_bam = HISAT2_ALIGN.out.bam // channel: [ val(meta), bam   ]
-    summary  = HISAT2_ALIGN.out.summary // channel: [ val(meta), log   ]
-    fastq    = HISAT2_ALIGN.out.fastq // channel: [ val(meta), fastq ]
+    orig_bam = ch_orig_bam // channel: [ val(meta), bam   ]
+    summary  = ch_summary // channel: [ val(meta), log   ]
+    fastq    = ch_fastq // channel: [ val(meta), fastq ]
     bam      = BAM_SORT_STATS_SAMTOOLS.out.bam // channel: [ val(meta), [ bam ] ]
     index    = BAM_SORT_STATS_SAMTOOLS.out.index // channel: [ val(meta), [ index ] ]
     stats    = BAM_SORT_STATS_SAMTOOLS.out.stats // channel: [ val(meta), [ stats ] ]

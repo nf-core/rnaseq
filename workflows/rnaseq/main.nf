@@ -152,9 +152,10 @@ workflow RNASEQ {
     // One entry per sequencing run of each sample
     ch_fastq = ch_fastq_samples.map { s -> tuple(s.meta, s.runs) }
 
-    // Index pre-aligned input BAM files
-    ch_bam_index = SAMTOOLS_INDEX(ch_bam_samples)
-    ch_prealigned = ch_bam_samples.join(ch_bam_index, by: 'id')
+    // Index pre-aligned genome BAM files; a sample may supply only a transcriptome BAM
+    ch_prealigned_genome = ch_bam_samples.filter { s -> s.bam != null }
+    ch_bam_index = SAMTOOLS_INDEX(ch_prealigned_genome)
+    ch_prealigned = ch_prealigned_genome.join(ch_bam_index, by: 'id')
 
     //
     // Run RNA-seq FASTQ preprocessing subworkflow

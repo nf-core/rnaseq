@@ -7,11 +7,11 @@ nextflow.enable.types = true
 include { PICARD_MARKDUPLICATES } from '../../../modules/nf-core/picard/markduplicates/main'
 include { SAMTOOLS_INDEX        } from '../../../modules/nf-core/samtools/index/main'
 include { BAM_STATS_SAMTOOLS    } from '../bam_stats_samtools/main'
-include { PicardMarkduplicatesResult; SamtoolsStats; SamtoolsIndexResult; Bam; MarkdupBam } from '../../../modules/nf-core/types'
+include { BamInput; PicardMarkduplicatesResult; SamtoolsStats; SamtoolsIndexResult; MarkdupBam } from '../../../modules/nf-core/types'
 
 workflow BAM_MARKDUPLICATES_PICARD {
     take:
-    ch_bam: Channel<Bam>
+    ch_bam: Channel<BamInput>
     ch_fasta: Value<Path?>
     ch_fai: Value<Path?>
     run_stats: Boolean

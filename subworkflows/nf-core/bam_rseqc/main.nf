@@ -12,18 +12,18 @@ include { RSEQC_JUNCTIONSATURATION } from '../../../modules/nf-core/rseqc/juncti
 include { RSEQC_READDISTRIBUTION   } from '../../../modules/nf-core/rseqc/readdistribution/main'
 include { RSEQC_READDUPLICATION    } from '../../../modules/nf-core/rseqc/readduplication/main'
 include { RSEQC_TIN                } from '../../../modules/nf-core/rseqc/tin/main'
-include { Bam } from '../../../modules/nf-core/types'
+include { BamBaiInput; Rseqc } from '../../../modules/nf-core/types'
 
 workflow BAM_RSEQC {
     take:
-    ch_bam_bai: Channel<Bam>
+    ch_bam_bai: Channel<BamBaiInput>
     bed: Value<Path>
     rseqc_modules: List<String>
 
     main:
     // Every field starts null and is overwritten by the join of the tool that ran, so
     // skipped tools leave a null field and no join is made against an empty channel.
-    ch_results = ch_bam_bai.map { r ->
+    def ch_results: Channel<Rseqc> = ch_bam_bai.map { r ->
         record(
             id:                 r.id,
             meta:               r.meta,

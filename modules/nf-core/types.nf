@@ -176,7 +176,6 @@ record CustomRsemmergecountsInput {
     isoforms: List<Path>
 }
 
-// rsem_merge emit: record(id, rsem_merge: RsemMerge)
 record RsemMerge {
     counts_gene:       Path
     tpm_gene:          Path
@@ -186,10 +185,9 @@ record RsemMerge {
     isoforms_long:     Path
 }
 
-// CUSTOM_RSEMMERGECOUNTS outputs, a single 'all_samples' row
+// The single 'all_samples' row of merged RSEM tables; CUSTOM_RSEMMERGECOUNTS output without meta
 record RsemMergeSample {
     id:         String
-    meta:       Map
     rsem_merge: RsemMerge
 }
 

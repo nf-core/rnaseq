@@ -12,7 +12,7 @@ include { BAM_SORT_STATS_SAMTOOLS                                               
 
 include { UMITOOLS_PREPAREFORRSEM                                                                    } from '../../../modules/nf-core/umitools/prepareforrsem'
 include { SAMTOOLS_SORT                                                                              } from '../../../modules/nf-core/samtools/sort/main'
-include { SamtoolsSortResult; UmitoolsPrepareforrsemResult; Bam } from '../../../modules/nf-core/types'
+include { SamtoolsSortResult; UmitoolsPrepareforrsemResult; Bam; UmiDedupBam } from '../../../modules/nf-core/types'
 
 workflow BAM_DEDUP_UMI {
     take:
@@ -129,7 +129,7 @@ workflow BAM_DEDUP_UMI {
         }
 
     // The transcriptome side is absent when there is no transcriptome BAM (e.g. HISAT2).
-    ch_results = ch_genome_dedup
+    def ch_results: Channel<UmiDedupBam> = ch_genome_dedup
         .map { r ->
             record(
                 id:                r.id,

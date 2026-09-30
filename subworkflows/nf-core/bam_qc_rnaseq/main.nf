@@ -11,12 +11,12 @@ include { SUBREAD_FEATURECOUNTS           } from '../../../modules/nf-core/subre
 include { CUSTOM_MULTIQCCUSTOMBIOTYPE     } from '../../../modules/nf-core/custom/multiqccustombiotype/main'
 include { SAMTOOLS_SORT as SAMTOOLS_SORT_QUALIMAP } from '../../../modules/nf-core/samtools/sort/main'
 include { BAM_RSEQC                       } from '../bam_rseqc/main'
-include { CustomMultiqccustombiotypeResult; SamtoolsSortResult; BamQcFeaturecounts; Bam } from '../../../modules/nf-core/types'
+include { BamBaiInput; CustomMultiqccustombiotypeResult; SamtoolsSortResult; BamQcFeaturecounts; BamQcRnaseq } from '../../../modules/nf-core/types'
 
 workflow BAM_QC_RNASEQ {
 
     take:
-    ch_bam_bai: Channel<Bam>
+    ch_bam_bai: Channel<BamBaiInput>
     ch_gtf: Value<Path>
     ch_gene_bed: Value<Path>
     ch_fasta: Value<Path?>
@@ -30,7 +30,7 @@ workflow BAM_QC_RNASEQ {
 
     // Every field starts null and is overwritten by the join of the tool group that ran,
     // so skipped groups leave a null field and no join is made against an empty channel.
-    ch_results = ch_bam_bai.map { r ->
+    ch_qc = ch_bam_bai.map { r ->
         record(
             id:            r.id,
             meta:          r.meta,
@@ -46,7 +46,7 @@ workflow BAM_QC_RNASEQ {
     if ('preseq' in tools) {
         // Remainder join: preseq can fail on low-duplication BAMs, and callers
         // may set errorStrategy 'ignore' rather than lose the sample.
-        ch_results = ch_results.join(
+        ch_qc = ch_qc.join(
             PRESEQ_LCEXTRAP(ch_bam_bai).map { r -> record(id: r.id, preseq: r) },
             by: 'id',
             remainder: true
@@ -56,7 +56,7 @@ workflow BAM_QC_RNASEQ {
     if ('biotype_qc' in tools && biotype) {
         def ch_featurecounts: Channel<BamQcFeaturecounts> = SUBREAD_FEATURECOUNTS(ch_bam_bai, ch_gtf)
         def ch_biotype: Channel<CustomMultiqccustombiotypeResult> = CUSTOM_MULTIQCCUSTOMBIOTYPE(ch_featurecounts, biotypes_header)
-        ch_results = ch_results
+        ch_qc = ch_qc
             .join(ch_featurecounts.map { r -> record(id: r.id, featurecounts: r) }, by: 'id')
             .join(ch_biotype.map { r -> record(id: r.id, biotype: record(tsv: r.tsv, rrna: r.rrna)) }, by: 'id')
     }
@@ -66,25 +66,25 @@ workflow BAM_QC_RNASEQ {
 
         // Name-sorted BAM via samtools sort; requires ext.args = '-n' to be set by the caller for SAMTOOLS_SORT_QUALIMAP
         def ch_name_sorted: Channel<SamtoolsSortResult> = SAMTOOLS_SORT_QUALIMAP(ch_sort_in, ch_fasta, ch_fai, '')
-        ch_results = ch_results.join(QUALIMAP_RNASEQ(ch_name_sorted, ch_gtf), by: 'id')
+        ch_qc = ch_qc.join(QUALIMAP_RNASEQ(ch_name_sorted, ch_gtf), by: 'id')
     }
 
     if ('dupradar' in tools) {
-        ch_results = ch_results.join(
+        ch_qc = ch_qc.join(
             DUPRADAR(ch_bam_bai, ch_gtf).map { r -> record(id: r.id, dupradar: r) },
             by: 'id'
         )
     }
 
     if (rseqc_modules.size() > 0) {
-        ch_results = ch_results.join(
+        ch_qc = ch_qc.join(
             BAM_RSEQC(ch_bam_bai, ch_gene_bed, rseqc_modules).map { r -> record(id: r.id, rseqc: r) },
             by: 'id'
         )
     }
 
     // Files MultiQC reads for each sample, in the order the tools report them.
-    ch_results = ch_results.map { r ->
+    def ch_results: Channel<BamQcRnaseq> = ch_qc.map { r ->
         r + record(
             mqc_files: [
                 r.preseq?.lc_extrap,

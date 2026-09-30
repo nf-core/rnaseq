@@ -9,7 +9,7 @@ include { TXIMETA_TXIMPORT } from '../../../modules/nf-core/tximeta/tximport'
 
 include { SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT as SE_GENE_UNIFIED       } from '../../../modules/nf-core/summarizedexperiment/summarizedexperiment'
 include { SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT as SE_TRANSCRIPT_UNIFIED } from '../../../modules/nf-core/summarizedexperiment/summarizedexperiment'
-include { QuantsInput; CustomTx2geneResult; TximetaTximportResult } from '../../../modules/nf-core/types'
+include { QuantsInput; CustomTx2geneResult; TximetaTximportResult; QuantMerged } from '../../../modules/nf-core/types'
 
 workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT {
     take:
@@ -105,7 +105,7 @@ workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT {
     // merging, or one per sample under skip_merge. The SE outputs only exist
     // when merging and are null otherwise.
     //
-    ch_results = ch_tximport
+    def ch_results: Channel<QuantMerged> = ch_tximport
         .join(ch_se_gene, by: 'id')
         .join(ch_se_transcript, by: 'id')
         .combine(tx2gene: ch_tx2gene_file)

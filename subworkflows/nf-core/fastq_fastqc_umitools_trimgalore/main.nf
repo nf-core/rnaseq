@@ -41,7 +41,7 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
     main:
     // Each stage that runs joins its outputs onto this per-sample record, overwriting
     // the null placeholders of the fields it owns.
-    ch_results = ch_reads.map { r ->
+    def ch_results: Channel<FastqFastqcUmitoolsTrimgalore> = ch_reads.map { r ->
         record(
             id:                r.id,
             meta:              r.meta,
@@ -108,5 +108,5 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
     }
 
     emit:
-    ch_results // channel: FastqFastqcUmitoolsTrimgalore
+    ch_results
 }

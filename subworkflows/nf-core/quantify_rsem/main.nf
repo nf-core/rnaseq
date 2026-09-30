@@ -9,7 +9,7 @@ include { CUSTOM_RSEMMERGECOUNTS             } from '../../../modules/nf-core/cu
 include { SENTIEON_RSEMCALCULATEEXPRESSION   } from '../../../modules/nf-core/sentieon/rsemcalculateexpression'
 
 include { QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT } from '../quant_tximport_summarizedexperiment'
-include { ReadsInput; RsemQuantSample } from '../../../modules/nf-core/types'
+include { ReadsInput; RsemMergeSample; RsemQuantSample; QuantMerged } from '../../../modules/nf-core/types'
 
 workflow QUANTIFY_RSEM {
     take:
@@ -42,6 +42,7 @@ workflow QUANTIFY_RSEM {
     // check skips CUSTOM_RSEMMERGECOUNTS when there are no samples, since
     // collect emits [] rather than nothing on an empty channel.
     //
+    def ch_rsem_merge: Channel<RsemMergeSample>
     if (skip_merge) {
         ch_rsem_merge = channel.empty()
     } else {
@@ -64,7 +65,7 @@ workflow QUANTIFY_RSEM {
     //
     // Post-process quantifications with tximport and SummarizedExperiment
     //
-    ch_quant_merged = QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT(
+    def ch_quant_merged: Channel<QuantMerged> = QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT(
         samplesheet,
         ch_rsem.map { r -> record(id: r.id, meta: r.meta, quants: [ r.counts_transcript ]) },
         gtf,
@@ -75,7 +76,7 @@ workflow QUANTIFY_RSEM {
     )
 
     emit:
-    samples    = ch_rsem        // per sample
-    merged     = ch_quant_merged // one row per sample under skip_merge, a single 'all_samples' row otherwise
-    rsem_merge = ch_rsem_merge  // a single 'all_samples' row; empty under skip_merge
+    samples:    Channel<RsemQuantSample> = ch_rsem        // per sample
+    merged:     Channel<QuantMerged>     = ch_quant_merged // one row per sample under skip_merge, a single 'all_samples' row otherwise
+    rsem_merge: Channel<RsemMergeSample> = ch_rsem_merge  // a single 'all_samples' row; empty under skip_merge
 }

@@ -8,7 +8,7 @@ nextflow.enable.types = true
 include { SALMON_INDEX } from '../../../modules/nf-core/salmon/index/main'
 include { FQ_SUBSAMPLE } from '../../../modules/nf-core/fq/subsample/main'
 include { SALMON_QUANT } from '../../../modules/nf-core/salmon/quant/main'
-include { ReadsInput; FqSubsampleResult; SalmonQuantSample; SalmonIndexResult } from '../../../modules/nf-core/types'
+include { ReadsInput; FqSubsampleResult; SalmonQuantSample; SalmonIndexResult; SalmonSubsampled } from '../../../modules/nf-core/types'
 
 workflow FASTQ_SUBSAMPLE_FQ_SALMON {
     take:
@@ -48,9 +48,9 @@ workflow FASTQ_SUBSAMPLE_FQ_SALMON {
     //
     def ch_quant: Channel<SalmonQuantSample> = SALMON_QUANT(ch_subsampled, ch_index_ref, ch_gtf, ch_transcript_fasta)
 
-    ch_results = ch_subsampled.join(ch_quant, by: 'id')
+    def ch_results: Channel<SalmonSubsampled> = ch_subsampled.join(ch_quant, by: 'id')
 
     emit:
-    samples     = ch_results
-    index_built = ch_index_file // null unless the index was built here
+    samples:     Channel<SalmonSubsampled> = ch_results
+    index_built: Value<Path?>              = ch_index_file // null unless the index was built here
 }

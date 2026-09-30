@@ -21,7 +21,7 @@ process SEQKIT_STATS {
     sample: ReadsInput
 
     output:
-    record(id: sample.id, meta: sample.meta, stats: file("*.tsv"))
+    record(id: sample.id, meta: sample.meta, stats: file("*.tsv")) as SeqkitStatsResult
 
     topic:
     tuple(task.process, 'seqkit', eval("seqkit version | sed 's/^.*v//'")) >> 'versions'

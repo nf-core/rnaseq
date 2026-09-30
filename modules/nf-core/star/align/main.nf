@@ -68,7 +68,7 @@ process STAR_ALIGN {
             log_progress: file('*Log.progress.out'),
             tab:          files('*.tab', optional: true).toSorted { f -> f.name }
         )
-    )
+    ) as StarAlignResult
 
     topic:
     tuple(task.process, 'star', eval('STAR --version | sed "s/STAR_//"')) >> 'versions'

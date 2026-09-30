@@ -26,7 +26,7 @@ process SEQKIT_REPLACE {
     out_ext: String
 
     output:
-    record(id: sample.id, meta: sample.meta, fastx: file("*.fast*"))
+    record(id: sample.id, meta: sample.meta, fastx: file("*.fast*")) as SeqkitReplaceResult
 
     topic:
     tuple(task.process, 'seqkit', eval("seqkit version | sed 's/^.*v//'")) >> 'versions'

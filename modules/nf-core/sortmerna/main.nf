@@ -31,7 +31,7 @@ process SORTMERNA {
         reads: files('*non_rRNA.fastq.gz', optional: true).toSorted { f -> f.name },
         log:   file('*.log', optional: true),
         index: file('idx', optional: true)
-    )
+    ) as SortmernaResult
 
     topic:
     tuple(task.process, 'sortmerna', eval('sortmerna --version 2>&1 | grep -oE "[0-9]+\\.[0-9]+\\.[0-9]+" | head -1')) >> 'versions'

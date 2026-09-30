@@ -22,7 +22,7 @@ process STAR_GENOMEGENERATE {
     gtf: Path?
 
     output:
-    record(id: sample.id, meta: sample.meta, index: file('star'))
+    record(id: sample.id, meta: sample.meta, index: file('star')) as StarGenomegenerateResult
 
     topic:
     tuple(task.process, 'star', eval('STAR --version | sed -e "s/STAR_//g"')) >> 'versions'

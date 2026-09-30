@@ -186,7 +186,6 @@ workflow PREPARE_GENOME_REFERENCES {
     ch_transcript_fasta_pre_gencode = ch_no_path
     ch_transcript_fasta_rsem_dir = ch_no_path
     if (transcript_fasta) {
-        // Use user-provided transcript FASTA
         if (transcript_fasta.endsWith('.gz')) {
             ch_transcript_fasta_supplied = GUNZIP_TRANSCRIPT_FASTA(record(id: 'transcript_fasta', meta: [:], archive: file(transcript_fasta, checkIfExists: true))).map { r -> r.file }
         } else {
@@ -201,26 +200,23 @@ workflow PREPARE_GENOME_REFERENCES {
             ch_transcript_fasta = ch_transcript_fasta_supplied
         }
     } else if (fasta_provided && has_gtf && gffread_transcript_fasta) {
-        // Use gffread to extract transcripts instead of RSEM
-        // gffread handles CDS features correctly (e.g., prokaryotic annotations lack exon features)
+        // gffread handles CDS-only annotations (prokaryotic GTFs lack exon features)
         ch_transcript_fasta = GFFREAD_TRANSCRIPTS(
             ch_gtf.map { gtf_file -> record(id: 'transcripts', meta: [id: 'transcripts'], gff: gtf_file) },
             ch_fasta
         ).map { r -> r.fasta }
     } else if (fasta_provided && has_gtf && use_sentieon_star) {
-        // Build transcripts from genome if we have it
         def ch_rsem_reference: Value<RsemPreparereferenceResult> = SENTIEON_MAKE_TRANSCRIPTS_FASTA(
             ch_fasta.map { fasta_file -> record(id: 'genome', meta: [id: 'genome'], fasta: fasta_file) }.combine(gtf: ch_gtf)
         )
         ch_transcript_fasta          = ch_rsem_reference.map { r -> r.transcript_fasta }
-        ch_transcript_fasta_rsem_dir = ch_rsem_reference.map { r -> r.index } // unused here; published via the genome record's transcript_fasta_rsem_dir field
+        ch_transcript_fasta_rsem_dir = ch_rsem_reference.map { r -> r.index }
     } else if (fasta_provided && has_gtf) {
-        // Build transcripts from genome if we have it
         ch_rsem_reference = MAKE_TRANSCRIPTS_FASTA(
             ch_fasta.map { fasta_file -> record(id: 'genome', meta: [id: 'genome'], fasta: fasta_file) }.combine(gtf: ch_gtf)
         )
         ch_transcript_fasta          = ch_rsem_reference.map { r -> r.transcript_fasta }
-        ch_transcript_fasta_rsem_dir = ch_rsem_reference.map { r -> r.index } // unused here; published via the genome record's transcript_fasta_rsem_dir field
+        ch_transcript_fasta_rsem_dir = ch_rsem_reference.map { r -> r.index }
     } else {
         ch_transcript_fasta = ch_no_path
     }
@@ -299,14 +295,14 @@ workflow PREPARE_GENOME_REFERENCES {
     // The genome streams stay separate named emits: RNASEQ and the output block consume each
     // artifact independently, and no per-sample key exists to fuse them into one record.
     emit:
-    fasta:            Value<Path?> = ch_fasta                            // genome.fasta, null when absent
-    fai:              Value<Path?> = ch_fai                              // genome.fai, null when no FASTA is given
-    gtf:              Value<Path?> = ch_gtf                              // genome.gtf, null when absent
-    gene_bed:         Value<Path?> = ch_gene_bed                         // gene.bed, null when absent
-    transcript_fasta: Value<Path?> = ch_transcript_fasta                 // transcript.fasta, null when absent
-    chrom_sizes:      Value<Path?> = ch_chrom_sizes                      // genome.sizes, null when absent
-    rrna_fastas:      Channel<Path> = ch_rrna_fastas                     // rRNA fastas
-    kraken_db:        Value<Path?> = ch_kraken_db                        // kraken2/db/, null when absent
-    references:       Channel<GenomeArtifact> = ch_references            // one record per top-level reference file actually built or supplied
-    intermediates:    Channel<GenomeArtifact> = ch_intermediates         // one record per superseded/incidental reference file
+    fasta:            Value<Path?>            = ch_fasta            // genome.fasta, null when absent
+    fai:              Value<Path?>            = ch_fai              // genome.fai, null when no FASTA is given
+    gtf:              Value<Path?>            = ch_gtf              // genome.gtf, null when absent
+    gene_bed:         Value<Path?>            = ch_gene_bed         // gene.bed, null when absent
+    transcript_fasta: Value<Path?>            = ch_transcript_fasta // transcript.fasta, null when absent
+    chrom_sizes:      Value<Path?>            = ch_chrom_sizes      // genome.sizes, null when absent
+    rrna_fastas:      Channel<Path>           = ch_rrna_fastas      // rRNA fastas
+    kraken_db:        Value<Path?>            = ch_kraken_db        // kraken2/db/, null when absent
+    references:       Channel<GenomeArtifact> = ch_references       // one record per top-level reference file actually built or supplied
+    intermediates:    Channel<GenomeArtifact> = ch_intermediates    // one record per superseded/incidental reference file
 }

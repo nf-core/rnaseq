@@ -87,15 +87,13 @@ workflow PREPARE_GENOME_INDICES {
     // 2) BBSplit index: uses FASTA only if we generate from scratch
     //---------------------------------------------------------
     if ('bbsplit' in prepare_tool_indices && bbsplit_index && bbsplit_index.endsWith('.tar.gz')) {
-        // Use user-provided bbsplit index
         ch_bbsplit_index = UNTAR_BBSPLIT_INDEX(record(id: 'bbsplit_index', meta: [:], archive: file(bbsplit_index, checkIfExists: true))).map { r -> r.dir }
         ch_bbsplit_log   = ch_no_path
     } else if ('bbsplit' in prepare_tool_indices && bbsplit_index) {
         ch_bbsplit_index = channel.value(file(bbsplit_index, checkIfExists: true))
         ch_bbsplit_log   = ch_no_path
     } else if ('bbsplit' in prepare_tool_indices && fasta_provided) {
-        // Build it from scratch if we have FASTA
-        // Read in 2 column csv file: short_name,path_to_fasta
+        // bbsplit_fasta_list is a 2 column csv: short_name,path_to_fasta
         def bbsplit_rows = file(bbsplit_fasta_list, checkIfExists: true).splitCsv()
         ch_bbsplit_fasta_list = channel.value(
             tuple(
@@ -115,7 +113,6 @@ workflow PREPARE_GENOME_INDICES {
         ch_bbsplit_index = ch_bbsplit.map { r -> r.index }
         ch_bbsplit_log   = ch_bbsplit.map { r -> r.log }
     } else {
-        // no FASTA and no user-provided index -> stays absent
         ch_bbsplit_index = ch_no_path
         ch_bbsplit_log   = ch_no_path
     }
@@ -123,13 +120,11 @@ workflow PREPARE_GENOME_INDICES {
     //-------------------------------------------------------------
     // 3) SortMeRNA index
     //-------------------------------------------------------------
-    // Build SortMeRNA index only when using sortmerna
     if ('sortmerna' in prepare_tool_indices && sortmerna_index && sortmerna_index.endsWith('.tar.gz')) {
         ch_sortmerna_index = UNTAR_SORTMERNA_INDEX(record(id: 'sortmerna_index', meta: [:], archive: file(sortmerna_index, checkIfExists: true))).map { r -> r.dir }
     } else if ('sortmerna' in prepare_tool_indices && sortmerna_index) {
         ch_sortmerna_index = channel.value(file(sortmerna_index, checkIfExists: true))
     } else if ('sortmerna' in prepare_tool_indices) {
-        // Build new SortMeRNA index from the rRNA references
         // Index-only run: no reads
         def ch_sortmerna_built: Value<SortmernaResult> = SORTMERNA_INDEX(
             channel.value(record(id: 'rrna_refs', meta: [:], reads: [])),
@@ -171,7 +166,6 @@ workflow PREPARE_GENOME_INDICES {
         ch_star_index         = ch_star_generated.map { r -> r.index }
         ch_star_index_publish = ch_star_index
     } else if (build_star && star_index) {
-        // Pre-built STAR index supplied by the user.
         if (star_index.endsWith('.tar.gz')) {
             ch_star_raw = UNTAR_STAR_INDEX(record(id: 'star_index', meta: [:], archive: file(star_index, checkIfExists: true)))
                 .map { r -> record(id: r.id, meta: r.meta, index: r.dir) }
@@ -235,7 +229,6 @@ workflow PREPARE_GENOME_INDICES {
     } else {
         ch_splicesites = ch_no_path
     }
-    // the index
     if (build_hisat2 && hisat2_index && hisat2_index.endsWith('.tar.gz')) {
         ch_hisat2_index = UNTAR_HISAT2_INDEX(record(id: 'hisat2_index', meta: [:], archive: file(hisat2_index, checkIfExists: true))).map { r -> r.dir }
     } else if (build_hisat2 && hisat2_index) {
@@ -261,7 +254,6 @@ workflow PREPARE_GENOME_INDICES {
     } else if (build_bowtie2 && bowtie2_index) {
         ch_bowtie2_index = channel.value(file(bowtie2_index, checkIfExists: true))
     } else if (build_bowtie2) {
-        // Build Bowtie2 index from transcript FASTA for alignment-based Salmon quantification
         ch_bowtie2_index = BOWTIE2_BUILD(
             ch_transcript_fasta.map { fasta_file -> record(id: 'transcripts', meta: [id: 'transcripts'], fasta: fasta_file) }
         ).map { r -> r.index }
@@ -330,15 +322,15 @@ workflow PREPARE_GENOME_INDICES {
     // The index streams stay separate named emits: RNASEQ consumes each index independently,
     // and no per-sample key exists to fuse them into one record.
     emit:
-    splicesites:        Value<Path?> = ch_splicesites                     // genome.splicesites.txt, null when absent
-    bbsplit_index:      Value<Path?> = ch_bbsplit_index                   // bbsplit/index/, null when absent
-    sortmerna_index:    Value<Path?> = ch_sortmerna_index                 // sortmerna/index/, null when absent
-    bowtie2_rrna_index: Value<Path?> = ch_bowtie2_rrna_index              // bowtie2/index/, null when absent
-    star_index:         Value<Path?> = ch_star_index                      // star/index/, null when absent
-    rsem_index:         Value<Path?> = ch_rsem_index                      // rsem/index/, null when absent
-    hisat2_index:       Value<Path?> = ch_hisat2_index                    // hisat2/index/, null when absent
-    bowtie2_index:      Value<Path?> = ch_bowtie2_index                   // bowtie2/index/, null when absent
-    salmon_index:       Value<Path?> = ch_salmon_index                    // salmon/index/, null when absent
-    kallisto_index:     Value<Path?> = ch_kallisto_index                  // kallisto/index/, null when absent
-    indices:            Channel<GenomeArtifact> = ch_indices                      // one record per index/log actually built or supplied
+    splicesites:        Value<Path?>            = ch_splicesites        // genome.splicesites.txt, null when absent
+    bbsplit_index:      Value<Path?>            = ch_bbsplit_index      // bbsplit/index/, null when absent
+    sortmerna_index:    Value<Path?>            = ch_sortmerna_index    // sortmerna/index/, null when absent
+    bowtie2_rrna_index: Value<Path?>            = ch_bowtie2_rrna_index // bowtie2/index/, null when absent
+    star_index:         Value<Path?>            = ch_star_index         // star/index/, null when absent
+    rsem_index:         Value<Path?>            = ch_rsem_index         // rsem/index/, null when absent
+    hisat2_index:       Value<Path?>            = ch_hisat2_index       // hisat2/index/, null when absent
+    bowtie2_index:      Value<Path?>            = ch_bowtie2_index      // bowtie2/index/, null when absent
+    salmon_index:       Value<Path?>            = ch_salmon_index       // salmon/index/, null when absent
+    kallisto_index:     Value<Path?>            = ch_kallisto_index     // kallisto/index/, null when absent
+    indices:            Channel<GenomeArtifact> = ch_indices            // one record per index/log actually built or supplied
 }

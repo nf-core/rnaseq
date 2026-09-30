@@ -44,8 +44,8 @@ workflow ALIGN_BOWTIE2 {
     def ch_bowtie2: Channel<Bowtie2AlignResult> = BOWTIE2_ALIGN(
         ch_samples,
         index,
-        null,                   // No fasta needed for BAM output
-        params.save_unaligned,  // save_unaligned - enable for downstream analysis of unmapped reads
+        null,                   // no fasta needed for BAM output
+        params.save_unaligned,
         false                   // sort_bam - we'll sort with samtools for consistency
     ).filter { r -> !r.raw_bams.isEmpty() }
 

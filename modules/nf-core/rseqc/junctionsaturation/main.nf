@@ -1,6 +1,6 @@
 nextflow.enable.types = true
 
-include { BamBaiInput } from '../../types'
+include { BamBaiInput; RseqcJunctionSaturation } from '../../types'
 
 process RSEQC_JUNCTIONSATURATION {
     tag "$sample.meta.id"
@@ -21,7 +21,7 @@ process RSEQC_JUNCTIONSATURATION {
         meta:    sample.meta,
         pdf:     file("*.pdf"),
         rscript: file("*.r")
-    )
+    ) as RseqcJunctionSaturation
 
     topic:
     tuple(task.process, 'rseqc', eval('junction_saturation.py --version | sed "s/junction_saturation.py //"')) >> 'versions'

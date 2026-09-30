@@ -41,7 +41,7 @@ process SAMTOOLS_SORT {
         bai:  file("${prefix}.{bam,cram,sam}.bai", optional: true),
         csi:  file("${prefix}.{bam,cram,sam}.csi", optional: true),
         crai: file("${prefix}.{bam,cram,sam}.crai", optional: true)
-    )
+    ) as SamtoolsSortResult
 
     topic:
     tuple(task.process, 'samtools', eval("samtools version | sed '1!d;s/.* //'")) >> 'versions'

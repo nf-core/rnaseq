@@ -1,6 +1,7 @@
 nextflow.enable.types = true
 
 include { ReadsInput } from '../../types'
+include { StarAlignResult } from '../../star/align/main'
 
 process SENTIEON_STARALIGN {
     tag "${sample.meta.id}"
@@ -47,7 +48,7 @@ process SENTIEON_STARALIGN {
             log_progress: file('*Log.progress.out'),
             tab:          files('*.tab', optional: true).toSorted { f -> f.name }
         )
-    )
+    ) as StarAlignResult
 
     topic:
     tuple(task.process, 'star', eval('sentieon STAR --version | sed -e "s/STAR_//g"')) >> 'versions'

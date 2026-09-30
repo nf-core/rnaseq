@@ -7,6 +7,15 @@ record SamtoolsFaidxInput {
     fai:   Path?
 }
 
+record SamtoolsFaidxResult {
+    id:    String
+    meta:  Map
+    fa:    Path?
+    sizes: Path?
+    fai:   Path?
+    gzi:   Path?
+}
+
 process SAMTOOLS_FAIDX {
     tag "${sample.fasta}"
     label 'process_single'
@@ -28,7 +37,7 @@ process SAMTOOLS_FAIDX {
         sizes: file('*.sizes', optional: true),
         fai:   file('*.fai', optional: true),
         gzi:   file('*.gzi', optional: true)
-    )
+    ) as SamtoolsFaidxResult
 
     topic:
     tuple(task.process, 'samtools', eval("samtools version | sed '1!d;s/.* //'")) >> 'versions'

@@ -1,6 +1,6 @@
 nextflow.enable.types = true
 
-include { BamBaiInput } from '../../types'
+include { BamBaiInput; RseqcInnerDistance } from '../../types'
 
 process RSEQC_INNERDISTANCE {
     tag "$sample.meta.id"
@@ -24,7 +24,7 @@ process RSEQC_INNERDISTANCE {
         mean:     file("*mean.txt", optional: true),
         pdf:      file("*.pdf", optional: true),
         rscript:  file("*.r", optional: true)
-    )
+    ) as RseqcInnerDistance
 
     topic:
     tuple(task.process, 'rseqc', eval('inner_distance.py --version | sed "s/inner_distance.py //"')) >> 'versions'

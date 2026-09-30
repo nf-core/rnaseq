@@ -1,6 +1,6 @@
 nextflow.enable.types = true
 
-include { BamBaiInput } from '../../types'
+include { BamBaiInput; RseqcTin } from '../../types'
 
 process RSEQC_TIN {
     tag "$sample.meta.id"
@@ -21,7 +21,7 @@ process RSEQC_TIN {
         meta: sample.meta,
         txt:  file("*.txt"),
         xls:  file("*.xls")
-    )
+    ) as RseqcTin
 
     topic:
     tuple(task.process, 'rseqc', eval('tin.py --version | sed "s/tin.py //"')) >> 'versions'

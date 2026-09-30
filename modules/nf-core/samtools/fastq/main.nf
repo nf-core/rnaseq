@@ -32,7 +32,7 @@ process SAMTOOLS_FASTQ {
         interleaved: file('*_interleaved.fastq', optional: true),
         singleton:   file('*_singleton.fastq.gz', optional: true),
         other:       file('*_other.fastq.gz', optional: true)
-    )
+    ) as SamtoolsFastqResult
 
     topic:
     tuple(task.process, 'samtools', eval("samtools version | sed '1!d;s/.* //'")) >> 'versions'

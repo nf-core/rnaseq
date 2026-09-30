@@ -172,7 +172,7 @@ process RUSTQC {
         ),
         qualimap:  file("${prefix}", optional: true),
         all_files: files("{*.txt,*.tsv,*.xls,*.log,*.stats,*.flagstat,*.idxstats,*.html,*_mqc.*,${prefix}/**}", optional: true)
-    )
+    ) as RustqcResult
 
     topic:
     tuple(task.process, 'rustqc', eval("rustqc --version 2>&1 | sed -n '1s/rustqc //; 1s/ .*//p'")) >> 'versions'

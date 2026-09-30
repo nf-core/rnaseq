@@ -32,7 +32,7 @@ process SALMON_QUANT {
         quant_dir:         file("${prefix}"),
         json_info:         file("*info.json", optional: true),
         lib_format_counts: file("*lib_format_counts.json", optional: true)
-    )
+    ) as SalmonQuantSample
 
     topic:
     tuple(task.process, 'salmon', eval('salmon --version | sed -e "s/salmon //g"')) >> 'versions'

@@ -21,7 +21,7 @@ process SAMTOOLS_INDEX {
     sample: BamInput
 
     output:
-    record(id: sample.id, meta: sample.meta, bai: file('*.{bai,csi,crai}'))
+    record(id: sample.id, meta: sample.meta, bai: file('*.{bai,csi,crai}')) as SamtoolsIndexResult
 
     topic:
     tuple(task.process, 'samtools', eval("samtools version | sed '1!d;s/.* //'")) >> 'versions'

@@ -21,7 +21,7 @@ process SAMTOOLS_IDXSTATS {
     sample: BamBaiInput
 
     output:
-    record(id: sample.id, meta: sample.meta, idxstats: file('*.idxstats'))
+    record(id: sample.id, meta: sample.meta, idxstats: file('*.idxstats')) as SamtoolsIdxstatsResult
 
     topic:
     tuple(task.process, 'samtools', eval("samtools version | sed '1!d;s/.* //'")) >> 'versions'

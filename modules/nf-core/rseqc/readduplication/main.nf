@@ -1,6 +1,6 @@
 nextflow.enable.types = true
 
-include { BamBaiInput } from '../../types'
+include { BamBaiInput; RseqcReadDuplication } from '../../types'
 
 process RSEQC_READDUPLICATION {
     tag "$sample.meta.id"
@@ -22,7 +22,7 @@ process RSEQC_READDUPLICATION {
         pos_xls: file("*pos.DupRate.xls"),
         pdf:     file("*.pdf"),
         rscript: file("*.r")
-    )
+    ) as RseqcReadDuplication
 
     topic:
     tuple(task.process, 'rseqc', eval('read_duplication.py --version | sed "s/read_duplication.py //"')) >> 'versions'

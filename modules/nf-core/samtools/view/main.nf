@@ -41,7 +41,7 @@ process SAMTOOLS_VIEW {
         bai:              file("${prefix}.{bam,cram,sam}.{bai,csi,crai}", optional: true),
         unselected:       file("${prefix}.unselected.{bam,cram,sam}", optional: true),
         unselected_index: file("${prefix}.unselected.{bam,cram,sam}.{csi,crai}", optional: true)
-    )
+    ) as SamtoolsViewResult
 
     topic:
     tuple(task.process, 'samtools', eval("samtools version | sed '1!d;s/.* //'")) >> 'versions'

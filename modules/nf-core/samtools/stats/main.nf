@@ -23,7 +23,7 @@ process SAMTOOLS_STATS {
     fai: Path?
 
     output:
-    record(id: sample.id, meta: sample.meta, stats: file('*.stats'))
+    record(id: sample.id, meta: sample.meta, stats: file('*.stats')) as SamtoolsStatsResult
 
     topic:
     tuple(task.process, 'samtools', eval("samtools version | sed '1!d;s/.* //'")) >> 'versions'

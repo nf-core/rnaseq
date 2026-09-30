@@ -2,6 +2,18 @@ nextflow.enable.types = true
 
 include { ReadsInput } from '../../types'
 
+record SentieonRsemcalculateexpressionResult {
+    id:                String
+    meta:              Map
+    counts_gene:       Path
+    counts_transcript: Path
+    stat:              Path
+    log:               Path?
+    bam_star:          Path?
+    bam_genome:        Path?
+    bam_transcript:    Path?
+}
+
 process SENTIEON_RSEMCALCULATEEXPRESSION {
     tag "$sample.meta.id"
     label 'process_high'
@@ -27,7 +39,7 @@ process SENTIEON_RSEMCALCULATEEXPRESSION {
         bam_star:          file("*.STAR.genome.bam", optional: true),
         bam_genome:        file("${prefix}.genome.bam", optional: true),
         bam_transcript:    file("${prefix}.transcript.bam", optional: true)
-    )
+    ) as SentieonRsemcalculateexpressionResult
 
     topic:
     tuple(task.process, 'rsem', eval('rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g"')) >> 'versions'

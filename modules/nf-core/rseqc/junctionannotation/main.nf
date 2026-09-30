@@ -1,6 +1,6 @@
 nextflow.enable.types = true
 
-include { BamBaiInput } from '../../types'
+include { BamBaiInput; RseqcJunctionAnnotation } from '../../types'
 
 process RSEQC_JUNCTIONANNOTATION {
     tag "$sample.meta.id"
@@ -26,7 +26,7 @@ process RSEQC_JUNCTIONANNOTATION {
         events_pdf:   file("*events.pdf", optional: true),
         rscript:      file("*.r"),
         log:          file("*.log")
-    )
+    ) as RseqcJunctionAnnotation
 
     topic:
     tuple(task.process, 'rseqc', eval('junction_annotation.py --version | sed "s/junction_annotation.py //"')) >> 'versions'

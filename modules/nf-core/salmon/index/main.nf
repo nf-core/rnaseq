@@ -26,7 +26,7 @@ process SALMON_INDEX {
     sample: SalmonIndexInput
 
     output:
-    record(id: sample.id, meta: sample.meta, index: file('salmon'))
+    record(id: sample.id, meta: sample.meta, index: file('salmon')) as SalmonIndexResult
 
     topic:
     tuple(task.process, 'salmon', eval("salmon --version | sed 's/salmon //'")) >> 'versions'

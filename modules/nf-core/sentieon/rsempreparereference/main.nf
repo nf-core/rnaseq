@@ -2,6 +2,13 @@ nextflow.enable.types = true
 
 include { FastaGtfInput } from '../../types'
 
+record SentieonRsempreparereferenceResult {
+    id:               String
+    meta:             Map
+    index:            Path
+    transcript_fasta: Path
+}
+
 process SENTIEON_RSEMPREPAREREFERENCE {
     tag "$sample.fasta"
     label 'process_high'
@@ -24,7 +31,7 @@ process SENTIEON_RSEMPREPAREREFERENCE {
         meta:             sample.meta,
         index:            file("rsem"),
         transcript_fasta: file("*transcripts.fa")
-    )
+    ) as SentieonRsempreparereferenceResult
 
     topic:
     tuple(task.process, 'rsem', eval('rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g"')) >> 'versions'

@@ -21,7 +21,7 @@ process SAMTOOLS_FLAGSTAT {
     sample: BamBaiInput
 
     output:
-    record(id: sample.id, meta: sample.meta, flagstat: file('*.flagstat'))
+    record(id: sample.id, meta: sample.meta, flagstat: file('*.flagstat')) as SamtoolsFlagstatResult
 
     topic:
     tuple(task.process, 'samtools', eval("samtools version | sed '1!d;s/.* //'")) >> 'versions'

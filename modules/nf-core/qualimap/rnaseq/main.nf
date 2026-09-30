@@ -14,14 +14,14 @@ process QUALIMAP_RNASEQ {
     tuple(meta2: Map, gtf: Path)
 
     output:
-    tuple(meta, file("${task.ext.prefix ?: meta.id}"))
+    tuple(meta, file("${prefix}"))
 
     topic:
     tuple(task.process, 'qualimap', eval("qualimap -h | sed -n 's/^QualiMap v.//p'")) >> 'versions'
 
     script:
     def args = task.ext.args   ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix   = task.ext.prefix ?: "${meta.id}"
     def paired_end = meta.single_end ? '' : '-pe'
     def memory = "${(task.memory.toMega() * 0.8).intValue()}M"
 
@@ -40,7 +40,7 @@ process QUALIMAP_RNASEQ {
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
     """
     mkdir ${prefix}
     """

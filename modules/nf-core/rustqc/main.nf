@@ -77,15 +77,15 @@ process RUSTQC {
                 rscript: file("*.DupRate_plot.r", optional: true)
             )
         ),
-        qualimap:  file("${task.ext.prefix ?: meta.id}", optional: true),
-        all_files: files("{*.txt,*.tsv,*.xls,*.log,*.stats,*.flagstat,*.idxstats,*.html,*_mqc.*,${task.ext.prefix ?: meta.id}/**}", optional: true)
+        qualimap:  file("${prefix}", optional: true),
+        all_files: files("{*.txt,*.tsv,*.xls,*.log,*.stats,*.flagstat,*.idxstats,*.html,*_mqc.*,${prefix}/**}", optional: true)
     )
 
     topic:
     tuple(task.process, 'rustqc', eval("rustqc --version 2>&1 | sed -n '1s/rustqc //; 1s/ .*//p'")) >> 'versions'
 
     script:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
     def args = task.ext.args ?: ''
     def paired = meta.single_end ? '' : '--paired'
     // Flatten the tool subdirectories into the task root so every record field is a plain file,
@@ -112,7 +112,7 @@ process RUSTQC {
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
     // Flatten the tool subdirectories into the task root so every record field is a plain file,
     // keeping qualimap's own directory structure under the sample-named directory (the tool's
     // --outdir stays ${prefix} because featureCounts records it in its output header).

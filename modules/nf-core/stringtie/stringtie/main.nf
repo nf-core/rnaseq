@@ -18,10 +18,10 @@ process STRINGTIE_STRINGTIE {
     record(
         id:             meta.id,
         meta:           meta,
-        transcript_gtf: file("${task.ext.prefix ?: meta.id}.transcripts.gtf"),
-        abundance:      file("${task.ext.prefix ?: meta.id}.gene.abundance.txt"),
-        coverage_gtf:   file("${task.ext.prefix ?: meta.id}.coverage.gtf", optional: true),
-        ballgown:       files("${task.ext.prefix ?: meta.id}.ballgown/*.ctab", optional: true)
+        transcript_gtf: file("${prefix}.transcripts.gtf"),
+        abundance:      file("${prefix}.gene.abundance.txt"),
+        coverage_gtf:   file("${prefix}.coverage.gtf", optional: true),
+        ballgown:       files("${prefix}.ballgown/*.ctab", optional: true)
     )
 
     topic:
@@ -30,7 +30,7 @@ process STRINGTIE_STRINGTIE {
     script:
     def args      = task.ext.args ?: ''
     def args2     = task.ext.args2 ?: ''
-    def prefix    = task.ext.prefix ?: "${meta.id}"
+    prefix        = task.ext.prefix ?: "${meta.id}"
     def reference = annotation_gtf ? "-G $annotation_gtf" : ""
     def ballgown  = annotation_gtf ? "-b ${prefix}.ballgown" : ""
     def coverage  = annotation_gtf ? "-C ${prefix}.coverage.gtf" : ""
@@ -97,7 +97,7 @@ process STRINGTIE_STRINGTIE {
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
     def has_annotation = annotation_gtf ? true : false
 
     """

@@ -14,17 +14,25 @@ process CUSTOM_GTFFILTER {
     tuple(meta2: Map, fasta: Path?)
 
     output:
-    tuple(meta, file("${task.ext.prefix ?: meta.id}.gtf${gtf.extension == 'gz' ? '.gz' : ''}"))
+    tuple(meta, file("${prefix}.${suffix}"))
 
     topic:
     file('versions.yml') >> 'versions'
 
     script:
+    prefix = task.ext.prefix ?: "${meta.id}"
+    suffix = "gtf" + (gtf.extension == 'gz' ? '.gz' : '')
+    args   = task.ext.args ?: ''
+
+    """
+    echo $args
+    """
+
     template 'gtffilter.py'
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
-    def suffix = "gtf" + (gtf.extension == 'gz' ? '.gz' : '')
+    prefix = task.ext.prefix ?: "${meta.id}"
+    suffix = "gtf" + (gtf.extension == 'gz' ? '.gz' : '')
     """
     touch ${prefix}.${suffix}
 

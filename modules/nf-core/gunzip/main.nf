@@ -1,12 +1,5 @@
 nextflow.enable.types = true
 
-def gunzipName(archive: Path, prefix: String?) -> String {
-    def nameWithoutGz = archive.extension == 'gz' ? archive.baseName : archive.name
-    def extension = file(nameWithoutGz).extension
-    def name = file(nameWithoutGz).baseName
-    return (prefix ?: name) + ".${extension}"
-}
-
 process GUNZIP {
     tag "${archive}"
     label 'process_single'
@@ -20,14 +13,18 @@ process GUNZIP {
     tuple(meta: Map, archive: Path)
 
     output:
-    tuple(meta, file(gunzipName(archive, task.ext.prefix)))
+    tuple(meta, file("${gunzip}"))
 
     topic:
     tuple(task.process, 'gunzip', eval('gunzip --version 2>&1 | head -1 | sed "s/^.*(gzip) //; s/ Copyright.*//"')) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''
-    def gunzip = gunzipName(archive, task.ext.prefix)
+    def nameWithoutGz = archive.extension == 'gz' ? archive.baseName : archive.name
+	def extension = file(nameWithoutGz).extension
+	def name = file(nameWithoutGz).baseName
+    def prefix = task.ext.prefix ?: name
+    gunzip = prefix + ".${extension}"
     """
     # Not calling gunzip itself because it creates files
     # with the original group ownership rather than the
@@ -40,7 +37,11 @@ process GUNZIP {
     """
 
     stub:
-    def gunzip = gunzipName(archive, task.ext.prefix)
+    def nameWithoutGz = archive.extension == 'gz' ? archive.baseName : archive.name
+	def extension = file(nameWithoutGz).extension
+	def name = file(nameWithoutGz).baseName
+    def prefix = task.ext.prefix ?: name
+    gunzip = prefix + ".${extension}"
     """
     touch ${gunzip}
     """

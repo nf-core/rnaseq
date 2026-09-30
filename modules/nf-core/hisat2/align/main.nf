@@ -32,7 +32,7 @@ process HISAT2_ALIGN {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
 
-    def ss = splicesites ? "--known-splicesite-infile ${splicesites}" : ''
+    def ss = "${splicesites}" ? "--known-splicesite-infile ${splicesites}" : ''
     def rg = args.contains("--rg-id") ? "" : "--rg-id ${prefix} --rg SM:${prefix}"
     if (meta.single_end) {
         def unaligned = save_unaligned ? "--un-gz ${prefix}.unmapped.fastq.gz" : ''

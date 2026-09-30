@@ -19,14 +19,14 @@ process SAMTOOLS_VIEW {
     output:
     record(
         meta:             meta,
-        bam:              file("${task.ext.prefix ?: meta.id}.bam", optional: true),
-        cram:             file("${task.ext.prefix ?: meta.id}.cram", optional: true),
-        sam:              file("${task.ext.prefix ?: meta.id}.sam", optional: true),
-        bai:              file("${task.ext.prefix ?: meta.id}.{bam,cram,sam}.bai", optional: true),
-        csi:              file("${task.ext.prefix ?: meta.id}.{bam,cram,sam}.csi", optional: true),
-        crai:             file("${task.ext.prefix ?: meta.id}.{bam,cram,sam}.crai", optional: true),
-        unselected:       file("${task.ext.prefix ?: meta.id}.unselected.{bam,cram,sam}", optional: true),
-        unselected_index: file("${task.ext.prefix ?: meta.id}.unselected.{bam,cram,sam}.{csi,crai}", optional: true)
+        bam:              file("${prefix}.bam", optional: true),
+        cram:             file("${prefix}.cram", optional: true),
+        sam:              file("${prefix}.sam", optional: true),
+        bai:              file("${prefix}.{bam,cram,sam}.bai", optional: true),
+        csi:              file("${prefix}.{bam,cram,sam}.csi", optional: true),
+        crai:             file("${prefix}.{bam,cram,sam}.crai", optional: true),
+        unselected:       file("${prefix}.unselected.{bam,cram,sam}", optional: true),
+        unselected_index: file("${prefix}.unselected.{bam,cram,sam}.{csi,crai}", optional: true)
     )
 
     topic:
@@ -35,9 +35,9 @@ process SAMTOOLS_VIEW {
     script:
     def args = task.ext.args ?: ''
     def args2 = task.ext.args2 ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
     def reference = fasta ? "--reference ${fasta}" : ""
-    def file_type = args.contains("--output-fmt sam")
+    file_type = args.contains("--output-fmt sam")
         ? "sam"
         : args.contains("--output-fmt bam")
             ? "bam"
@@ -45,9 +45,9 @@ process SAMTOOLS_VIEW {
                 ? "cram"
                 : input.getExtension()
 
-    def output_file = index_format ? "${prefix}.${file_type}##idx##${prefix}.${file_type}.${index_format} --write-index" : "${prefix}.${file_type}"
+    output_file = index_format ? "${prefix}.${file_type}##idx##${prefix}.${file_type}.${index_format} --write-index" : "${prefix}.${file_type}"
     // Can't choose index type of unselected file
-    def readnames = qname ? "--qname-file ${qname} --output-unselected ${prefix}.unselected.${file_type}" : ""
+    readnames = qname ? "--qname-file ${qname} --output-unselected ${prefix}.unselected.${file_type}" : ""
     def bedfile = bed ? "-L ${bed}" : ""
 
     if ("${input}" == "${prefix}.${file_type}") {
@@ -77,21 +77,21 @@ process SAMTOOLS_VIEW {
 
     stub:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
-    def file_type = args.contains("--output-fmt sam")
+    prefix = task.ext.prefix ?: "${meta.id}"
+    file_type = args.contains("--output-fmt sam")
         ? "sam"
         : args.contains("--output-fmt bam")
             ? "bam"
             : args.contains("--output-fmt cram")
                 ? "cram"
                 : input.getExtension()
-    def default_index_format = file_type == "bam"
+    default_index_format = file_type == "bam"
         ? "csi"
         : file_type == "cram" ? "crai" : ""
     def index_command = index_format ? "touch ${prefix}.${file_type}.${index_format}" : args.contains("--write-index") ? "touch ${prefix}.${file_type}.${default_index_format}" : ""
-    def unselected = qname ? "touch ${prefix}.unselected.${file_type}" : ""
+    unselected = qname ? "touch ${prefix}.unselected.${file_type}" : ""
     // Can't choose index type of unselected file
-    def unselected_index = qname && (args.contains("--write-index") || index_format) ? "touch ${prefix}.unselected.${file_type}.${default_index_format}" : ""
+    unselected_index = qname && (args.contains("--write-index") || index_format) ? "touch ${prefix}.unselected.${file_type}.${default_index_format}" : ""
 
     if ("${input}" == "${prefix}.${file_type}") {
         error("Input and output names are the same, use \"task.ext.prefix\" to disambiguate!")

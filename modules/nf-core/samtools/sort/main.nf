@@ -20,12 +20,12 @@ process SAMTOOLS_SORT {
     output:
     record(
         meta: meta,
-        bam:  file("${task.ext.prefix ?: meta.id}.bam", optional: true),
-        cram: file("${task.ext.prefix ?: meta.id}.cram", optional: true),
-        sam:  file("${task.ext.prefix ?: meta.id}.sam", optional: true),
-        bai:  file("${task.ext.prefix ?: meta.id}.{bam,cram,sam}.bai", optional: true),
-        csi:  file("${task.ext.prefix ?: meta.id}.{bam,cram,sam}.csi", optional: true),
-        crai: file("${task.ext.prefix ?: meta.id}.{bam,cram,sam}.crai", optional: true)
+        bam:  file("${prefix}.bam", optional: true),
+        cram: file("${prefix}.cram", optional: true),
+        sam:  file("${prefix}.sam", optional: true),
+        bai:  file("${prefix}.{bam,cram,sam}.bai", optional: true),
+        csi:  file("${prefix}.{bam,cram,sam}.csi", optional: true),
+        crai: file("${prefix}.{bam,cram,sam}.crai", optional: true)
     )
 
     topic:
@@ -33,8 +33,8 @@ process SAMTOOLS_SORT {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
-    def extension = args.contains("--output-fmt sam")
+    prefix = task.ext.prefix ?: "${meta.id}"
+    extension = args.contains("--output-fmt sam")
         ? "sam"
         : args.contains("--output-fmt cram")
             ? "cram"
@@ -80,8 +80,8 @@ process SAMTOOLS_SORT {
 
     stub:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
-    def extension = args.contains("--output-fmt sam")
+    prefix = task.ext.prefix ?: "${meta.id}"
+    extension = args.contains("--output-fmt sam")
         ? "sam"
         : args.contains("--output-fmt cram")
             ? "cram"
@@ -96,7 +96,7 @@ process SAMTOOLS_SORT {
         }
     }
 
-    def index = index_format ? "touch ${prefix}.${extension}.${index_format}" : ""
+    index = index_format ? "touch ${prefix}.${extension}.${index_format}" : ""
 
     """
     touch ${prefix}.${extension}

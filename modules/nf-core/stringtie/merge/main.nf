@@ -17,7 +17,7 @@ process STRINGTIE_MERGE {
     output:
     record(
         id:         meta.id,
-        merged_gtf: file("${task.ext.prefix ?: meta.id}.gtf")
+        merged_gtf: file("${prefix}.gtf")
     )
 
     topic:
@@ -25,7 +25,7 @@ process STRINGTIE_MERGE {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
     def reference = annotation_gtf ? "-G ${annotation_gtf}" : ""
     """
     stringtie \\
@@ -38,7 +38,7 @@ process STRINGTIE_MERGE {
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
     """
     touch ${prefix}.gtf
     """

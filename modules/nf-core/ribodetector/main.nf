@@ -28,14 +28,14 @@ process RIBODETECTOR {
 	script:
 	def args = task.ext.args ?: ''
 	def prefix = task.ext.prefix ?: "${meta.id}"
-	def ribodetector_bin = task.accelerator ? "ribodetector" : "ribodetector_cpu"
-	def ribodetector_mem = task.accelerator ? "-m ${task.memory.toGiga()}" : ""
-	def out_files = meta.single_end ? "${prefix}.nonrna.fastq.gz" : "${prefix}.nonrna.1.fastq.gz ${prefix}.nonrna.2.fastq.gz"
+	ribodetector_bin = task.accelerator ? "ribodetector" : "ribodetector_cpu"
+	ribodetector_mem = task.accelerator ? "-m ${task.memory.toGiga()}" : ""
+	output = meta.single_end ? "${prefix}.nonrna.fastq.gz" : "${prefix}.nonrna.1.fastq.gz ${prefix}.nonrna.2.fastq.gz"
 
 	"""
 	${ribodetector_bin} \\
-		-i ${fastq.join(' ')} \\
-		-o ${out_files} \\
+		-i ${fastq} \\
+		-o ${output} \\
 		-l ${length} \\
 		-t ${task.cpus} \\
 		--log ${prefix}.log \\

@@ -1,9 +1,5 @@
 nextflow.enable.types = true
 
-def untarPrefix(meta: Map, archive: Path, prefix: String?) {
-    return prefix ?: (meta.id ? "${meta.id}" : archive.baseName.replaceFirst(/\.tar$/, ""))
-}
-
 process UNTAR {
     tag "${archive}"
     label 'process_single'
@@ -17,7 +13,7 @@ process UNTAR {
     tuple(meta: Map, archive: Path)
 
     output:
-    tuple(meta, file(untarPrefix(meta, archive, task.ext.prefix)))
+    tuple(meta, file("${prefix}"))
 
     topic:
     tuple(task.process, 'untar', eval('tar --version 2>&1 | head -1 | sed "s/tar (GNU tar) //; s/ Copyright.*//"')) >> 'versions'
@@ -25,7 +21,7 @@ process UNTAR {
     script:
     def args = task.ext.args ?: ''
     def args2 = task.ext.args2 ?: ''
-    def prefix = untarPrefix(meta, archive, task.ext.prefix)
+    prefix = task.ext.prefix ?: (meta.id ? "${meta.id}" : archive.baseName.replaceFirst(/\.tar$/, ""))
 
     """
     mkdir ${prefix}
@@ -51,7 +47,7 @@ process UNTAR {
     """
 
     stub:
-    def prefix = untarPrefix(meta, archive, task.ext.prefix)
+    prefix = task.ext.prefix ?: (meta.id ? "${meta.id}" : archive.name.replaceFirst(/\.[^\.]+(.gz)?$/, ""))
     """
     mkdir ${prefix}
     ## Dry-run untaring the archive to get the files and place all in prefix

@@ -20,9 +20,9 @@ process PARABRICKS_RNAFQ2BAM {
     record(
         id:                meta.id,
         meta:              meta,
-        orig_bam:          files("${task.ext.prefix ?: meta.id}.bam", optional: true),
-        bam_sorted:        file("${task.ext.prefix ?: meta.id}.sortedByCoord.out.bam", optional: true),
-        bam_sorted_aligned: file("${task.ext.prefix ?: meta.id}.Aligned.sortedByCoord.out.bam", optional: true),
+        orig_bam:          files("${prefix}.bam", optional: true),
+        bam_sorted:        file("${prefix}.sortedByCoord.out.bam", optional: true),
+        bam_sorted_aligned: file("${prefix}.Aligned.sortedByCoord.out.bam", optional: true),
         bam_unsorted:      file('*Aligned.unsort.out.bam', optional: true),
         transcriptome_bam: file('*toTranscriptome.out.bam', optional: true),
         unmapped:          files('*fastq.gz', optional: true).toSorted { f -> f.name },
@@ -32,13 +32,13 @@ process PARABRICKS_RNAFQ2BAM {
         read_per_gene_tab: file('*.ReadsPerGene.out.tab', optional: true),
         wig:               files('*.wig', optional: true).toSorted { f -> f.name },
         bedgraph:          files('*.bg', optional: true).toSorted { f -> f.name },
-        orig_bai:          file("${task.ext.prefix ?: meta.id}.bam.bai", optional: true),
-        qc_metrics:        file("${task.ext.prefix ?: meta.id}_qc_metrics", optional: true),
-        duplicate_metrics: file("${task.ext.prefix ?: meta.id}.duplicate-metrics.txt", optional: true),
+        orig_bai:          file("${prefix}.bam.bai", optional: true),
+        qc_metrics:        file("${prefix}_qc_metrics", optional: true),
+        duplicate_metrics: file("${prefix}.duplicate-metrics.txt", optional: true),
         star:              record(
-            log_final:    file("${task.ext.prefix ?: meta.id}.Log.final.out"),
-            log_out:      file("${task.ext.prefix ?: meta.id}.Log.out"),
-            log_progress: file("${task.ext.prefix ?: meta.id}.Log.progress.out"),
+            log_final:    file("${prefix}.Log.final.out"),
+            log_out:      file("${prefix}.Log.out"),
+            log_progress: file("${prefix}.Log.progress.out"),
             tab:          files('*.tab', optional: true).toSorted { f -> f.name }
         )
     )
@@ -52,7 +52,7 @@ process PARABRICKS_RNAFQ2BAM {
         error("Parabricks module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     def in_fq_command = meta.single_end ? "--in-se-fq ${reads.join(' ')}" : "--in-fq ${reads.join(' ')}"
     def num_gpus = task.accelerator ? "--num-gpus ${task.accelerator.request}" : ''
@@ -81,7 +81,7 @@ process PARABRICKS_RNAFQ2BAM {
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
         error("Parabricks module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
     def qc_metrics_output = qc_metrics ? "mkdir ${prefix}_qc_metrics" : ""
     def duplicate_metrics_output = mark_duplicates ? "touch ${prefix}.duplicate-metrics.txt" : ""
     """

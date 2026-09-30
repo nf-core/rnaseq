@@ -31,8 +31,8 @@ process FQ_SUBSAMPLE {
     }
     def prefix = task.ext.prefix ?: "${meta.id}"
     def n_fastq = fastq.size()
-    def fastq1_output = ''
-    def fastq2_output = ''
+    fastq1_output = ''
+    fastq2_output = ''
     if ( n_fastq == 1 ){
         fastq1_output = "--r1-dst ${prefix}.fastq.gz"
         fastq2_output = ""

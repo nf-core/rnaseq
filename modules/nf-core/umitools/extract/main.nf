@@ -51,7 +51,7 @@ process UMITOOLS_EXTRACT {
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def output_command = meta.single_end
+    output_command = meta.single_end
         ? "echo '' | gzip > ${prefix}.umi_extract.fastq.gz"
         : "echo '' | gzip > ${prefix}.umi_extract_1.fastq.gz ;echo '' | gzip > ${prefix}.umi_extract_2.fastq.gz"
     """

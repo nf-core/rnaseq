@@ -25,8 +25,8 @@ process SENTIEON_STARALIGN {
         id:                meta.id,
         meta:              meta,
         orig_bam:          files('*d.out.bam', optional: true).toSorted { f -> f.name },
-        bam_sorted:        file("${task.ext.prefix ?: meta.id}.sortedByCoord.out.bam", optional: true),
-        bam_sorted_aligned: file("${task.ext.prefix ?: meta.id}.Aligned.sortedByCoord.out.bam", optional: true),
+        bam_sorted:        file("${prefix}.sortedByCoord.out.bam", optional: true),
+        bam_sorted_aligned: file("${prefix}.Aligned.sortedByCoord.out.bam", optional: true),
         bam_unsorted:      file('*Aligned.unsort.out.bam', optional: true),
         transcriptome_bam: file('*toTranscriptome.out.bam', optional: true),
         unmapped:          files('*fastq.gz', optional: true).toSorted { f -> f.name },
@@ -53,14 +53,14 @@ process SENTIEON_STARALIGN {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
     def read_pairs = reads.collate(2)
     def reads1 = meta.single_end ? reads : read_pairs.collect { pair -> pair[0] }.toList()
     def reads2 = meta.single_end ? [] : read_pairs.collect { pair -> pair[1] }.toList()
     def ignore_gtf = star_ignore_sjdbgtf ? '' : "--sjdbGTFfile ${gtf}"
-    def attrRG = args.contains("--outSAMattrRGline") ? "" : "--outSAMattrRGline 'ID:${prefix}' 'SM:${prefix}'"
+    attrRG = args.contains("--outSAMattrRGline") ? "" : "--outSAMattrRGline 'ID:${prefix}' 'SM:${prefix}'"
     def out_sam_type = args.contains('--outSAMtype') ? '' : '--outSAMtype BAM Unsorted'
-    def mv_unsorted_bam = args.contains('--outSAMtype BAM Unsorted SortedByCoordinate') ? "mv ${prefix}.Aligned.out.bam ${prefix}.Aligned.unsort.out.bam" : ''
+    mv_unsorted_bam = args.contains('--outSAMtype BAM Unsorted SortedByCoordinate') ? "mv ${prefix}.Aligned.out.bam ${prefix}.Aligned.unsort.out.bam" : ''
 
     def sentieonLicense = secrets.SENTIEON_LICENSE_BASE64
         ? "export SENTIEON_LICENSE=\$(mktemp);echo -e \"${secrets.SENTIEON_LICENSE_BASE64}\" | base64 -d > \$SENTIEON_LICENSE; "
@@ -91,7 +91,7 @@ process SENTIEON_STARALIGN {
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
     """
     echo "" | gzip > ${prefix}.unmapped_1.fastq.gz
     echo "" | gzip > ${prefix}.unmapped_2.fastq.gz

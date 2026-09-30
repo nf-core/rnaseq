@@ -16,8 +16,8 @@ process BRACKEN_BRACKEN {
     output:
     record(
         meta:      meta,
-        abundance: file("${task.ext.prefix ?: meta.id}.tsv"),
-        report:    file("${task.ext.prefix ?: meta.id}.kraken2.report_bracken.txt")
+        abundance: file(bracken_report),
+        report:    file(bracken_kraken_style_report)
     )
 
     topic:
@@ -26,19 +26,23 @@ process BRACKEN_BRACKEN {
     script:
     def args = task.ext.args ?: ""
     def prefix = task.ext.prefix ?: "${meta.id}"
+    bracken_report = "${prefix}.tsv"
+    bracken_kraken_style_report = "${prefix}.kraken2.report_bracken.txt"
     """
     bracken \\
         ${args} \\
         -d '${database}' \\
         -i '${kraken_report}' \\
-        -o '${prefix}.tsv' \\
-        -w '${prefix}.kraken2.report_bracken.txt'
+        -o '${bracken_report}' \\
+        -w '${bracken_kraken_style_report}'
     """
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
+    bracken_report = "${prefix}.tsv"
+    bracken_kraken_style_report = "${prefix}.kraken2.report_bracken.txt"
     """
     touch ${prefix}.tsv
-    touch ${prefix}.kraken2.report_bracken.txt
+    touch ${bracken_kraken_style_report}
     """
 }

@@ -39,7 +39,7 @@ process UMICOLLAPSE {
     if (mode !in ['fastq', 'bam']) {
         error("Mode must be one of 'fastq' or 'bam'.")
     }
-    def extension = mode.contains("fastq") ? "fastq.gz" : "bam"
+    extension = mode.contains("fastq") ? "fastq.gz" : "bam"
     """
     # The generated launcher allows configuring heap size, but not stack size.
     UMICOLLAPSE_JAR=\$(find "\$(dirname "\$(command -v umicollapse)")/../share" -maxdepth 2 -name umicollapse.jar -print -quit)
@@ -59,7 +59,7 @@ process UMICOLLAPSE {
     if (mode !in ['fastq', 'bam']) {
         error("Mode must be one of 'fastq' or 'bam'.")
     }
-    def extension = mode.contains("fastq") ? "fastq.gz" : "bam"
+    extension = mode.contains("fastq") ? "fastq.gz" : "bam"
     """
     touch ${prefix}.dedup.${extension}
     touch ${prefix}_UMICollapse.log

@@ -17,7 +17,7 @@ process UMITOOLS_DEDUP {
     record(
         id:                   meta.id,
         meta:                 meta,
-        bam:                  file("${task.ext.prefix ?: meta.id}.bam"),
+        bam:                  file("${prefix}.bam"),
         log:                  file('*.log'),
         tsv_edit_distance:    file('*edit_distance.tsv', optional: true),
         tsv_per_umi:          file('*per_umi.tsv', optional: true),
@@ -29,9 +29,9 @@ process UMITOOLS_DEDUP {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
     def paired = meta.single_end ? "" : "--paired"
-    def stats = get_output_stats ? "--output-stats ${prefix}" : ""
+    stats = get_output_stats ? "--output-stats ${prefix}" : ""
     if ("$bam" == "${prefix}.bam") error "Input and output names are the same, set prefix in module configuration to disambiguate!"
 
     if (!(args ==~ /.*--random-seed.*/)) {args += " --random-seed=100"}
@@ -50,7 +50,7 @@ process UMITOOLS_DEDUP {
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
     """
     touch ${prefix}.bam
     touch ${prefix}.log

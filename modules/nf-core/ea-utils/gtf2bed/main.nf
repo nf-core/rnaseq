@@ -13,16 +13,23 @@ process EAUTILS_GTF2BED {
     tuple(meta: Map, gtf: Path)
 
     output:
-    tuple(meta, file("${task.ext.prefix ?: meta.id}.bed"))
+    tuple(meta, file("${prefix}.bed"))
 
     topic:
     file('versions.yml') >> 'versions'
 
     script:
+    prefix = task.ext.prefix ?: "${meta.id}"
+    args   = task.ext.args ?: ''
+
+    """
+    echo $args
+    """
+
     template 'gtf2bed.pl'
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
     """
     touch ${prefix}.bed
 

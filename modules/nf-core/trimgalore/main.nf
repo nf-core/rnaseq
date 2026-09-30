@@ -75,7 +75,7 @@ process TRIMGALORE {
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def output_command = ''
+    output_command = ''
     if (meta.single_end) {
         output_command = "echo '' | gzip > ${prefix}_trimmed.fq.gz ;"
         output_command += "touch ${prefix}.fastq.gz_trimming_report.txt ;"

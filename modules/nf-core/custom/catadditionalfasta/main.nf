@@ -16,18 +16,20 @@ process CUSTOM_CATADDITIONALFASTA {
     output:
     record(
         meta:  meta,
-        fasta: file("out/${task.ext.prefix ?: meta.id}.fasta"),
-        gtf:   file("out/${task.ext.prefix ?: meta.id}.gtf")
+        fasta: file("out/${prefix}.fasta"),
+        gtf:   file("out/${prefix}.gtf")
     )
 
     topic:
     file('versions.yml') >> 'versions'
 
     script:
+    prefix = task.ext.prefix ?: "${meta.id}"
+
     template 'fasta2gtf.py'
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
     """
     mkdir out
     touch out/${prefix}.fasta

@@ -123,20 +123,21 @@ workflow MULTIQC_RNASEQ {
     //     pipeline-identity manifest so the report doesn't wait on
     //     the global versions topic.
     //
-    // Each branch ends with a tuple matching the MULTIQC input
-    // contract (id, files, configs, logo, replace_names, extra); the
+    // Each branch ends with a record matching the MULTIQC input
+    // contract (id, meta, files, configs, logo, replace_names, sample_names); the
     // closure below builds it so the branches stay focused on file
     // assembly.
     //
-    def buildMultiqcInputTuple = { id, files, dynamic_config, replace_names = null ->
-        [
-            [id: id],
-            files,
-            [mqc_default_config, dynamic_config, mqc_custom_config].findAll { cfg -> cfg },
-            mqc_logo ?: null,
-            replace_names ?: null,
-            null,
-        ]
+    def buildMultiqcInputRecord = { id, files, dynamic_config, replace_names = null ->
+        record(
+            id:             id,
+            meta:           [id: id],
+            multiqc_files:  files,
+            multiqc_config: [mqc_default_config, dynamic_config, mqc_custom_config].findAll { cfg -> cfg },
+            multiqc_logo:   mqc_logo ?: null,
+            replace_names:  replace_names ?: null,
+            sample_names:   null
+        )
     }
 
     if (skip_quantification_merge) {
@@ -196,7 +197,7 @@ workflow MULTIQC_RNASEQ {
             .combine(ch_mqc_dynamic_config)
             .map { meta, sample_files, static_globals, run_globals, dyn ->
                 // No replace_names: each per-sample report contains one sample.
-                buildMultiqcInputTuple.call(
+                buildMultiqcInputRecord.call(
                     meta.id,
                     sample_files + (static_globals ?: []) + (run_globals ?: []),
                     dyn,
@@ -237,29 +238,18 @@ workflow MULTIQC_RNASEQ {
             .combine(ch_name_replacements.ifEmpty([]).toList())
             .combine(ch_mqc_dynamic_config)
             .map { files, replace_names, dyn ->
-                buildMultiqcInputTuple.call('multiqc_report', files, dyn, replace_names ?: [])
+                buildMultiqcInputRecord.call('multiqc_report', files, dyn, replace_names ?: [])
             }
     }
-
-    MULTIQC(ch_multiqc_input)
 
     //
     // One record per MULTIQC task: a single 'multiqc_report' row when
     // merged, or one per sample under skip_quantification_merge.
     //
-    ch_results = MULTIQC.out.map { r ->
-        record(
-            id:     r.meta.id,
-            meta:   r.meta,
-            report: r.report,
-            data:   r.data,
-            plots:  r.plots
-        )
-    }
+    ch_results = MULTIQC(ch_multiqc_input)
 
     emit:
-    report  = MULTIQC.out.map { r -> r.report }
-    results = ch_results // channel: MultiqcReport
+    ch_results // channel: MultiqcReport
 }
 
 

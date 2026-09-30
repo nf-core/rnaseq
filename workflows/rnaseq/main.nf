@@ -855,17 +855,22 @@ workflow RNASEQ {
                     ? ch_reads_cat
                     : ch_unaligned_sequences
 
+        // BEGIN adapters from the legacy [ meta, reads ] channels to the contaminant-screening reads record (removed when RNASEQ is typed)
+        ch_contaminant_reads = ch_contaminant_sequences.map { meta, reads -> record(id: meta.id, meta: meta, reads: [ reads ].flatten()) }
+        // END adapters
+
         // Per-sample [id, fields] accumulated from whichever screening tool ran
         ch_contaminant_fields = channel.empty()
 
         if (params.contaminant_screening in ['kraken2', 'kraken2_bracken'] ) {
             KRAKEN2 (
-                ch_contaminant_sequences,
+                ch_contaminant_reads,
                 ch_kraken_db,
                 params.save_kraken_assignments,
                 params.save_kraken_unassigned
             )
-            ch_kraken_reports = KRAKEN2.out.map { r -> [r.meta, r.report] }
+            ch_kraken2 = KRAKEN2.out
+            ch_kraken_reports = ch_kraken2.map { r -> [r.meta, r.report] }
 
             ch_contaminant_fields = KRAKEN2.out.map { r -> [r.meta.id, [meta: r.meta, kraken2: r]] }
 
@@ -875,7 +880,7 @@ workflow RNASEQ {
                     .join(ch_kraken_reports.map { meta, f -> [meta.id, f] }, remainder: true)
             } else if (params.contaminant_screening == 'kraken2_bracken') {
                 BRACKEN (
-                    ch_kraken_reports,
+                    ch_kraken2,
                     ch_kraken_db
                 )
                 ch_multiqc_files = ch_multiqc_files.mix(BRACKEN.out.map { r -> [r.meta, r.report] })
@@ -889,10 +894,10 @@ workflow RNASEQ {
             def sylph_databases = params.sylph_db ? params.sylph_db.split(',').collect{ path -> file(path.trim()) } : []
             ch_sylph_databases = channel.value(sylph_databases)
             SYLPH_PROFILE (
-                ch_contaminant_sequences,
+                ch_contaminant_reads,
                 ch_sylph_databases
             )
-            ch_sylph_profile = SYLPH_PROFILE.out.filter{ r -> !r.profile_out.isEmpty() }.map { r -> [r.meta, r.profile_out] }
+            ch_sylph_profile = SYLPH_PROFILE.out.filter{ r -> !r.profile_out.isEmpty() }
 
             def sylph_taxonomies = params.sylph_taxonomy ? params.sylph_taxonomy.split(',').collect{ path -> file(path.trim()) } : []
             ch_sylph_taxonomies = channel.value(sylph_taxonomies)
@@ -1012,8 +1017,8 @@ workflow RNASEQ {
             params.min_trimmed_reads,
             params.skip_quantification_merge
         )
-        ch_multiqc_report = MULTIQC_RNASEQ.out.report
-        ch_multiqc        = MULTIQC_RNASEQ.out.results
+        ch_multiqc        = MULTIQC_RNASEQ.out
+        ch_multiqc_report = ch_multiqc.map { r -> r.report }
     }
 
     emit:

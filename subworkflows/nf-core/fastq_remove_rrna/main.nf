@@ -150,7 +150,8 @@ workflow FASTQ_REMOVE_RRNA {
                 .map { fasta_file -> [[id: 'rrna_refs'], fasta_file] }
                 .set { ch_combined_fasta }
 
-            BOWTIE2_BUILD(ch_combined_fasta)
+            // SEAM(refs): adapter removed when FASTQ_REMOVE_RRNA is typed
+            BOWTIE2_BUILD(ch_combined_fasta.map { meta, fasta_file -> record(id: meta.id, meta: meta, fasta: fasta_file) })
             ch_bowtie2_index = BOWTIE2_BUILD.out.map { r -> [r.meta, r.index] }.first()
             ch_bowtie2_index_out = BOWTIE2_BUILD.out.map { r -> [r.meta, r.index] }
         }

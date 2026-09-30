@@ -85,13 +85,22 @@ workflow NFCORE_RNASEQ {
         params.prokaryotic ?: false
     )
 
+    // BEGIN adapters from the nullable reference Values of PREPARE_GENOME_REFERENCES back to channels that stay empty when the artifact is absent (removed when NFCORE_RNASEQ is typed)
+    ch_fasta_fai        = PREPARE_GENOME_REFERENCES.out.fasta_fai.filter { fasta_fai -> fasta_fai[1] != null }
+    ch_gtf              = PREPARE_GENOME_REFERENCES.out.gtf.filter { gtf -> gtf != null }
+    ch_gene_bed         = PREPARE_GENOME_REFERENCES.out.gene_bed.filter { gene_bed -> gene_bed != null }
+    ch_transcript_fasta = PREPARE_GENOME_REFERENCES.out.transcript_fasta.filter { transcript_fasta -> transcript_fasta != null }
+    ch_chrom_sizes      = PREPARE_GENOME_REFERENCES.out.chrom_sizes.filter { chrom_sizes -> chrom_sizes != null }
+    ch_kraken_db        = PREPARE_GENOME_REFERENCES.out.kraken_db.filter { kraken_db -> kraken_db != null }
+    // END adapters
+
     //
     // SUBWORKFLOW: Build or load aligner / pseudo-aligner / filtering indices
     //
     PREPARE_GENOME_INDICES (
-        PREPARE_GENOME_REFERENCES.out.fasta_fai,
-        PREPARE_GENOME_REFERENCES.out.gtf,
-        PREPARE_GENOME_REFERENCES.out.transcript_fasta,
+        ch_fasta_fai,
+        ch_gtf,
+        ch_transcript_fasta,
         PREPARE_GENOME_REFERENCES.out.rrna_fastas,
         params.fasta ? true : false,
         params.splicesites,
@@ -118,11 +127,22 @@ workflow NFCORE_RNASEQ {
         anySampleAutoStrandedness()
     )
 
+    // BEGIN adapters from the nullable index Values of PREPARE_GENOME_INDICES back to channels that stay empty when the index is absent (removed when NFCORE_RNASEQ is typed)
+    ch_star_index         = PREPARE_GENOME_INDICES.out.star_index.filter { index -> index != null }
+    ch_rsem_index         = PREPARE_GENOME_INDICES.out.rsem_index.filter { index -> index != null }
+    ch_hisat2_index       = PREPARE_GENOME_INDICES.out.hisat2_index.filter { index -> index != null }
+    ch_bowtie2_index      = PREPARE_GENOME_INDICES.out.bowtie2_index.filter { index -> index != null }
+    ch_salmon_index       = PREPARE_GENOME_INDICES.out.salmon_index.filter { salmon_index -> salmon_index[1] != null }
+    ch_kallisto_index     = PREPARE_GENOME_INDICES.out.kallisto_index.filter { kallisto_index -> kallisto_index[1] != null }
+    ch_bbsplit_index      = PREPARE_GENOME_INDICES.out.bbsplit_index.filter { index -> index != null }
+    ch_sortmerna_index    = PREPARE_GENOME_INDICES.out.sortmerna_index.filter { sortmerna_index -> sortmerna_index[1] != null }
+    ch_bowtie2_rrna_index = PREPARE_GENOME_INDICES.out.bowtie2_rrna_index.filter { bowtie2_rrna_index -> bowtie2_rrna_index[1] != null }
+    ch_splicesites        = PREPARE_GENOME_INDICES.out.splicesites.filter { splicesites -> splicesites != null }
+    // END adapters
+
     // Check if contigs in genome fasta file > 512 Mbp
     if (!params.skip_alignment && !params.bam_csi_index) {
-        PREPARE_GENOME_REFERENCES
-            .out
-            .fasta_fai
+        ch_fasta_fai
             .map { _meta, _fasta, fai -> checkMaxContigSize(fai) }
     }
 
@@ -134,23 +154,23 @@ workflow NFCORE_RNASEQ {
 
     RNASEQ (
         ch_samplesheet,
-        PREPARE_GENOME_REFERENCES.out.fasta_fai,
-        PREPARE_GENOME_REFERENCES.out.gtf,
-        PREPARE_GENOME_REFERENCES.out.chrom_sizes,
-        PREPARE_GENOME_REFERENCES.out.gene_bed,
-        PREPARE_GENOME_REFERENCES.out.transcript_fasta,
-        PREPARE_GENOME_INDICES.out.star_index,
-        PREPARE_GENOME_INDICES.out.rsem_index,
-        PREPARE_GENOME_INDICES.out.hisat2_index,
-        PREPARE_GENOME_INDICES.out.bowtie2_index,
-        PREPARE_GENOME_INDICES.out.salmon_index,
-        PREPARE_GENOME_INDICES.out.kallisto_index,
-        PREPARE_GENOME_INDICES.out.bbsplit_index,
+        ch_fasta_fai,
+        ch_gtf,
+        ch_chrom_sizes,
+        ch_gene_bed,
+        ch_transcript_fasta,
+        ch_star_index,
+        ch_rsem_index,
+        ch_hisat2_index,
+        ch_bowtie2_index,
+        ch_salmon_index,
+        ch_kallisto_index,
+        ch_bbsplit_index,
         PREPARE_GENOME_REFERENCES.out.rrna_fastas,
-        PREPARE_GENOME_INDICES.out.sortmerna_index,
-        PREPARE_GENOME_INDICES.out.bowtie2_rrna_index,
-        PREPARE_GENOME_INDICES.out.splicesites,
-        PREPARE_GENOME_REFERENCES.out.kraken_db,
+        ch_sortmerna_index,
+        ch_bowtie2_rrna_index,
+        ch_splicesites,
+        ch_kraken_db,
         qc_tools
     )
 

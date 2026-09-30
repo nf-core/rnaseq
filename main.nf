@@ -444,6 +444,10 @@ def samplePrefix(id: String) -> String { params.skip_quantification_merge ? "${i
 // samplesheet's genome_bam/transcriptome_bam paths in the entry workflow, so the two can't drift.
 def alignedDir(id: String) -> String { "${samplePrefix(id)}${params.aligner}/" }
 
+// Each `path` closure returns a map of files to target directories. When a file is a key more than once
+// (two record fields can hold the same file), the last entry wins, including a null target that
+// suppresses it, so the order of entries is part of the routing. Where fields can overlap, the
+// closure says which entry has to come last.
 output {
     contaminants: Channel<Contaminants> {   // exactly one tool branch is populated per run
         enabled !params.skip_qc && params.contaminant_screening

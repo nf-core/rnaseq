@@ -100,7 +100,8 @@ runs:
         SENTIEON_AUTH_MECH: "GitHub Actions - token"
       run: |
         if [ -f .github/UPDATE_SNAPSHOTS ]; then
-          MODE_FLAGS="--update-snapshot"
+          sed 's#def baseIgnore = \[.*\]#def baseIgnore = []#' nf-test.config > nf-test.update.config
+          MODE_FLAGS="--update-snapshot --config nf-test.update.config"
         else
           MODE_FLAGS="--ci --changed-since HEAD^"
         fi

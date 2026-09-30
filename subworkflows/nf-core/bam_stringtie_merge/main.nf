@@ -22,18 +22,20 @@ workflow BAM_STRINGTIE_MERGE {
 
     ch_to_merge = ch_assemblies
         .collect()
-        .map { assemblies ->
-            record(
-                id:         'stringtie_merge',
-                meta:       [id: 'stringtie_merge'],
-                gtf:        assemblies.collect { r -> r.transcript_gtf }.toSorted { f -> f.name },
-                assemblies: assemblies
-            )
+        .flatMap { assemblies ->
+            assemblies.isEmpty() ? [] : [
+                record(
+                    id:         'stringtie_merge',
+                    meta:       [id: 'stringtie_merge'],
+                    gtf:        assemblies.collect { r -> r.transcript_gtf }.toSorted { f -> f.name },
+                    assemblies: assemblies
+                )
+            ]
         }
 
-    def ch_merged: Value<StringtieMergeResult> = STRINGTIE_MERGE(ch_to_merge, chrgtf)
+    def ch_merged: Channel<StringtieMergeResult> = STRINGTIE_MERGE(ch_to_merge, chrgtf)
 
-    ch_results = ch_to_merge.combine(merged_gtf: ch_merged.map { r -> r.merged_gtf })
+    ch_results = ch_to_merge.join(ch_merged.map { r -> record(id: r.id, merged_gtf: r.merged_gtf) }, by: 'id')
 
     emit:
     ch_results

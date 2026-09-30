@@ -489,8 +489,8 @@ workflow RNASEQ {
                 channel.value([]),
                 ch_gtf
             )
-            ch_stringtie_merged = channel.empty().mix(stringtie_merge)
-            ch_stringtie_gtf = stringtie_merge.map { r -> r.merged_gtf }
+            ch_stringtie_merged = stringtie_merge
+            ch_stringtie_gtf = stringtie_merge.collect().map { merged -> merged.isEmpty() ? null : merged.toList()[0].merged_gtf }
         } else {
             ch_stringtie_gtf = ch_gtf
         }

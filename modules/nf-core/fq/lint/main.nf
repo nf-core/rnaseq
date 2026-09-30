@@ -1,7 +1,9 @@
 nextflow.enable.types = true
 
+include { ReadsInput } from '../../types'
+
 process FQ_LINT {
-    tag "$meta.id"
+    tag "$sample.meta.id"
     label 'process_low'
 
     conda "${moduleDir}/environment.yml"
@@ -10,25 +12,25 @@ process FQ_LINT {
         'quay.io/biocontainers/fq:0.12.0--h9ee0642_0' }"
 
     input:
-    record(id: String, meta: Map, reads: List<Path>)
+    sample: ReadsInput
 
     output:
-    record(id: id, meta: meta, lint: file("*.fq_lint.txt"))
+    record(id: sample.id, meta: sample.meta, lint: file("*.fq_lint.txt"))
 
     topic:
     tuple(task.process, 'fq', eval("fq lint --version | sed 's/fq-lint //; s/ .*//'")) >> 'versions'
 
     script:
     def args   = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     fq lint \\
         $args \\
-        ${reads.join(' ')} > ${prefix}.fq_lint.txt
+        ${sample.reads.join(' ')} > ${prefix}.fq_lint.txt
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     touch ${prefix}.fq_lint.txt
     """

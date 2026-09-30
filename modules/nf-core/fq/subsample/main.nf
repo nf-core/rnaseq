@@ -1,7 +1,9 @@
 nextflow.enable.types = true
 
+include { ReadsInput } from '../../types'
+
 process FQ_SUBSAMPLE {
-    tag "$meta.id"
+    tag "$sample.meta.id"
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
@@ -10,10 +12,10 @@ process FQ_SUBSAMPLE {
         'quay.io/biocontainers/fq:0.12.0--h9ee0642_0' }"
 
     input:
-    record(id: String, meta: Map, reads: List<Path>)
+    sample: ReadsInput
 
     output:
-    record(id: id, meta: meta, reads: files("*.fastq.gz").toSorted { f -> f.name })
+    record(id: sample.id, meta: sample.meta, reads: files("*.fastq.gz").toSorted { f -> f.name })
 
     topic:
     tuple(task.process, 'fq', eval("fq subsample --version | sed 's/fq-subsample //; s/ .*//'")) >> 'versions'
@@ -29,8 +31,8 @@ process FQ_SUBSAMPLE {
     if ( !(prob_exists || nrec_exists) ){
         error "FQ/SUBSAMPLE requires --probability (-p) or --record-count (-n) specified in task.ext.args!"
     }
-    def prefix = task.ext.prefix ?: "${meta.id}"
-    def n_fastq = reads.size()
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
+    def n_fastq = sample.reads.size()
     fastq1_output = ''
     fastq2_output = ''
     if ( n_fastq == 1 ){
@@ -45,13 +47,13 @@ process FQ_SUBSAMPLE {
     """
     fq subsample \\
         $args \\
-        ${reads.join(' ')} \\
+        ${sample.reads.join(' ')} \\
         $fastq1_output \\
         $fastq2_output
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     echo '' | gzip >  ${prefix}_R1.fastq.gz
     echo '' | gzip >  ${prefix}_R2.fastq.gz

@@ -35,18 +35,18 @@ nextflow_workflow {
                 """
                 make_index = false
 
-                input[0] = channel.of(record(
+                input[0] = new nextflow.dataflow.ChannelImpl(channel.of(record(
                     id: 'test',
                     meta: [ id:'test', single_end:false ],
                     reads: [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                     ]
-                ))
-                input[1] = channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))        // genome_fasta
-                input[2] = channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/transcriptome.fasta', checkIfExists: true)) // transcriptome_fasta
-                input[3] = channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))          // genome_gtf
-                input[4] = SALMON_INDEX.out.map { r -> r.index }.first()
+                )))
+                input[1] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)))        // genome_fasta
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/transcriptome.fasta', checkIfExists: true))) // transcriptome_fasta
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)))          // genome_gtf
+                input[4] = new nextflow.dataflow.ValueImpl(SALMON_INDEX.out.map { r -> r.index }.first())
                 input[5] = make_index
                 """
             }
@@ -95,18 +95,18 @@ nextflow_workflow {
                 """
                 make_index = false
 
-                input[0] = channel.of(record(
+                input[0] = new nextflow.dataflow.ChannelImpl(channel.of(record(
                     id: 'test',
                     meta: [ id:'test', single_end:false ],
                     reads: [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                     ]
-                ))
-                input[1] = channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))        // genome_fasta
-                input[2] = channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/transcriptome.fasta', checkIfExists: true)) // transcriptome_fasta
-                input[3] = channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))          // genome_gtf
-                input[4] = SALMON_INDEX.out.map { r -> r.index }.first()
+                )))
+                input[1] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)))        // genome_fasta
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/transcriptome.fasta', checkIfExists: true))) // transcriptome_fasta
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)))          // genome_gtf
+                input[4] = new nextflow.dataflow.ValueImpl(SALMON_INDEX.out.map { r -> r.index }.first())
                 input[5] = make_index
                 """
             }

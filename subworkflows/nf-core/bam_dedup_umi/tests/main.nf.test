@@ -19,7 +19,7 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = channel.of(record(
+                input[0] = new nextflow.dataflow.ChannelImpl(channel.of(record(
                     id: 'test',
                     meta: [ id:'test'],
                     bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam', checkIfExists: true),
@@ -27,12 +27,12 @@ nextflow_workflow {
                     samtools: null,
                     percent_mapped: null,
                     transcriptome_bam: null
-                ))
-                input[1] = channel.value(file(params.modules_testdata_base_path + '/genomics/sarscov2/genome/genome.fasta', checkIfExists: true))
-                input[2] = channel.value(file(params.modules_testdata_base_path + '/genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true))
+                )))
+                input[1] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + '/genomics/sarscov2/genome/genome.fasta', checkIfExists: true)))
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + '/genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)))
                 input[3] = 'umitools'
                 input[4] = false
-                input[5] = channel.of(record(
+                input[5] = new nextflow.dataflow.ChannelImpl(channel.of(record(
                     id: 'test',
                     meta: [ id:'test'],
                     bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam', checkIfExists: true),
@@ -40,8 +40,8 @@ nextflow_workflow {
                     samtools: null,
                     percent_mapped: null,
                     transcriptome_bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam', checkIfExists: true)
-                ))
-                input[6] = channel.value(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true))
+                )))
+                input[6] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true)))
                 input[7] = false
                 """
             }
@@ -70,7 +70,7 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = channel.of(record(
+                input[0] = new nextflow.dataflow.ChannelImpl(channel.of(record(
                     id: 'test',
                     meta: [ id:'test'],
                     bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam', checkIfExists: true),
@@ -78,13 +78,13 @@ nextflow_workflow {
                     samtools: null,
                     percent_mapped: null,
                     transcriptome_bam: null
-                ))
-                input[1] = channel.value(file(params.modules_testdata_base_path + '/genomics/sarscov2/genome/genome.fasta', checkIfExists: true))
-                input[2] = channel.value(file(params.modules_testdata_base_path + '/genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true))
+                )))
+                input[1] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + '/genomics/sarscov2/genome/genome.fasta', checkIfExists: true)))
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + '/genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)))
                 input[3] = 'umicollapse'
                 input[4] = false
-                input[5] = channel.empty()
-                input[6] = channel.value(null as Path)
+                input[5] = new nextflow.dataflow.ChannelImpl(channel.empty())
+                input[6] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))
                 input[7] = false
                 """
             }

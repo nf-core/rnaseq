@@ -21,13 +21,13 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = Channel.of(record(
+                input[0] = new nextflow.dataflow.ChannelImpl(Channel.of(record(
                     id: 'test',
                     meta: [ id:'test', single_end:false ],
                     raw_bams: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.single_end.bam', checkIfExists: true)
-                ))
-                input[1] = channel.value(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true))
-                input[2] = channel.value(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true))
+                )))
+                input[1] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)))
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)))
                 """
             }
         }
@@ -50,13 +50,13 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = Channel.of(record(
+                input[0] = new nextflow.dataflow.ChannelImpl(Channel.of(record(
                     id: 'test',
                     meta: [ id:'test', single_end:false ],
                     raw_bams: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true)
-                ))
-                input[1] = channel.value(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true))
-                input[2] = channel.value(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true))
+                )))
+                input[1] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)))
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)))
                 """
             }
         }
@@ -81,13 +81,13 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = Channel.of(record(
+                input[0] = new nextflow.dataflow.ChannelImpl(Channel.of(record(
                     id: 'test',
                     meta: [ id:'test', single_end:false ],
                     raw_bams: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.single_end.bam', checkIfExists: true)
-                ))
-                input[1] = channel.value(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true))
-                input[2] = channel.value(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true))
+                )))
+                input[1] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)))
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)))
                 """
             }
         }
@@ -107,13 +107,13 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = Channel.of(record(
+                input[0] = new nextflow.dataflow.ChannelImpl(Channel.of(record(
                     id: 'test',
                     meta: [ id:'test', single_end:false ],
                     raw_bams: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true)
-                ))
-                input[1] = channel.value(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true))
-                input[2] = channel.value(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true))
+                )))
+                input[1] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)))
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)))
                 """
             }
         }

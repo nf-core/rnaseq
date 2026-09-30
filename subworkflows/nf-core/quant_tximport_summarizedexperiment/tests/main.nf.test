@@ -34,15 +34,15 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true))
-                input[1] = UNTAR.out.map { r -> [ r.meta, r.dir ] }.flatMap { meta, dir ->
+                input[0] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true)))
+                input[1] = new nextflow.dataflow.ChannelImpl(UNTAR.out.map { r -> [ r.meta, r.dir ] }.flatMap { meta, dir ->
                     def entries = []
                     dir.toFile().eachDir { d ->
                         entries << record(id: d.name, meta: [ id: d.name ], quants: [ d.toPath() ])
                     }
                     entries
-                }
-                input[2] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
+                })
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)))
                 input[3] = 'gene_id'
                 input[4] = 'gene_name'
                 input[5] = 'salmon'
@@ -93,13 +93,13 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true))
+                input[0] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true)))
                 // Append a row for a transcript absent from the GTF to each sample's quant.sf,
                 // simulating e.g. a spike-in or a transcript_fasta sequence not derived from the
                 // GTF. Regression test for SE_TRANSCRIPT_UNIFIED failing on exactly this case.
                 // The copy keeps the original directory basename (tximport derives sample
                 // identity from it, not from meta.id) - only the parent changes.
-                input[1] = UNTAR.out.map { r -> [ r.meta, r.dir ] }.flatMap { meta, dir ->
+                input[1] = new nextflow.dataflow.ChannelImpl(UNTAR.out.map { r -> [ r.meta, r.dir ] }.flatMap { meta, dir ->
                     def entries = []
                     dir.toFile().eachDir { d ->
                         def copyDir = file("\${workDir}/\${d.name}_orphan/\${d.name}")
@@ -108,8 +108,8 @@ nextflow_workflow {
                         entries << record(id: d.name, meta: [ id: d.name ], quants: [ copyDir ])
                     }
                     entries
-                }
-                input[2] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
+                })
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)))
                 input[3] = 'gene_id'
                 input[4] = 'gene_name'
                 input[5] = 'salmon'
@@ -150,15 +150,15 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true))
-                input[1] = UNTAR.out.map { r -> [ r.meta, r.dir ] }.flatMap { meta, dir ->
+                input[0] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true)))
+                input[1] = new nextflow.dataflow.ChannelImpl(UNTAR.out.map { r -> [ r.meta, r.dir ] }.flatMap { meta, dir ->
                     def entries = []
                     dir.toFile().eachDir { d ->
                         entries << record(id: d.name, meta: [ id: d.name ], quants: [ d.toPath() ])
                     }
                     entries
-                }
-                input[2] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
+                })
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)))
                 input[3] = 'gene_id'
                 input[4] = 'gene_name'
                 input[5] = 'kallisto'
@@ -209,8 +209,8 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true))
-                input[1] = UNTAR.out.map { r -> [ r.meta, r.dir ] }.flatMap { meta, dir ->
+                input[0] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true)))
+                input[1] = new nextflow.dataflow.ChannelImpl(UNTAR.out.map { r -> [ r.meta, r.dir ] }.flatMap { meta, dir ->
                     def entries = []
                     dir.toFile().eachFileRecurse { f ->
                         if (f.name.endsWith('.isoforms.results')) {
@@ -218,8 +218,8 @@ nextflow_workflow {
                         }
                     }
                     entries
-                }
-                input[2] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
+                })
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)))
                 input[3] = 'gene_id'
                 input[4] = 'gene_name'
                 input[5] = 'rsem'
@@ -257,9 +257,9 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true))
-                input[1] = channel.of(record(id: 'sample1', meta: [ id: 'sample1' ], quants: [ file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true) ]))
-                input[2] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
+                input[0] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true)))
+                input[1] = new nextflow.dataflow.ChannelImpl(channel.of(record(id: 'sample1', meta: [ id: 'sample1' ], quants: [ file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true) ])))
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)))
                 input[3] = 'gene_id'
                 input[4] = 'gene_name'
                 input[5] = 'salmon'
@@ -283,9 +283,9 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true))
-                input[1] = channel.of(record(id: 'sample1', meta: [ id: 'sample1' ], quants: [ file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true) ]))
-                input[2] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
+                input[0] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true)))
+                input[1] = new nextflow.dataflow.ChannelImpl(channel.of(record(id: 'sample1', meta: [ id: 'sample1' ], quants: [ file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true) ])))
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)))
                 input[3] = 'gene_id'
                 input[4] = 'gene_name'
                 input[5] = 'kallisto'
@@ -309,9 +309,9 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true))
-                input[1] = channel.of(record(id: 'sample1', meta: [ id: 'sample1' ], quants: [ file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true) ]))
-                input[2] = channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
+                input[0] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv', checkIfExists: true)))
+                input[1] = new nextflow.dataflow.ChannelImpl(channel.of(record(id: 'sample1', meta: [ id: 'sample1' ], quants: [ file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true) ])))
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)))
                 input[3] = 'gene_id'
                 input[4] = 'gene_name'
                 input[5] = 'rsem'

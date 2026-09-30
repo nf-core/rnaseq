@@ -50,10 +50,10 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = CAT_FASTQ.out                                    // ch_reads
-                input[1] = Channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas
-                input[2] = channel.value(null as Path)                                                     // ch_sortmerna_index
-                input[3] = channel.value(null as Path)                                                     // ch_bowtie2_index
+                input[0] = new nextflow.dataflow.ChannelImpl(CAT_FASTQ.out)                                    // ch_reads
+                input[1] = new nextflow.dataflow.ChannelImpl(Channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true))) // ch_rrna_fastas
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))                                                     // ch_sortmerna_index
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))                                                     // ch_bowtie2_index
                 input[4] = 'sortmerna'                                            // ribo_removal_tool
                 input[5] = true                                                   // make_sortmerna_index
                 input[6] = false                                                  // make_bowtie2_index
@@ -91,10 +91,10 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = CAT_FASTQ.out                                    // ch_reads
-                input[1] = channel.empty()                                                     // ch_rrna_fastas (not needed for ribodetector)
-                input[2] = channel.value(null as Path)                                                     // ch_sortmerna_index
-                input[3] = channel.value(null as Path)                                                     // ch_bowtie2_index
+                input[0] = new nextflow.dataflow.ChannelImpl(CAT_FASTQ.out)                                    // ch_reads
+                input[1] = new nextflow.dataflow.ChannelImpl(channel.empty())                                                     // ch_rrna_fastas (not needed for ribodetector)
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))                                                     // ch_sortmerna_index
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))                                                     // ch_bowtie2_index
                 input[4] = 'ribodetector'                                         // ribo_removal_tool
                 input[5] = false                                                  // make_sortmerna_index
                 input[6] = false                                                  // make_bowtie2_index
@@ -139,10 +139,10 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = CAT_FASTQ.out                                    // ch_reads
-                input[1] = Channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas
-                input[2] = channel.value(null as Path)                                                     // ch_sortmerna_index
-                input[3] = channel.value(null as Path)                                                     // ch_bowtie2_index
+                input[0] = new nextflow.dataflow.ChannelImpl(CAT_FASTQ.out)                                    // ch_reads
+                input[1] = new nextflow.dataflow.ChannelImpl(Channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true))) // ch_rrna_fastas
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))                                                     // ch_sortmerna_index
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))                                                     // ch_bowtie2_index
                 input[4] = 'bowtie2'                                              // ribo_removal_tool
                 input[5] = false                                                  // make_sortmerna_index
                 input[6] = true                                                   // make_bowtie2_index
@@ -203,10 +203,10 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = CAT_FASTQ_SE.out
-                input[1] = Channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas
-                input[2] = channel.value(null as Path)                                                     // ch_sortmerna_index
-                input[3] = channel.value(null as Path)                                                     // ch_bowtie2_index
+                input[0] = new nextflow.dataflow.ChannelImpl(CAT_FASTQ_SE.out)
+                input[1] = new nextflow.dataflow.ChannelImpl(Channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true))) // ch_rrna_fastas
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))                                                     // ch_sortmerna_index
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))                                                     // ch_bowtie2_index
                 input[4] = 'bowtie2'                                              // ribo_removal_tool
                 input[5] = false                                                  // make_sortmerna_index
                 input[6] = true                                                   // make_bowtie2_index
@@ -265,10 +265,10 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = CAT_FASTQ_SE.out
-                input[1] = Channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas
-                input[2] = channel.value(null as Path)                                                     // ch_sortmerna_index
-                input[3] = channel.value(null as Path)                                                     // ch_bowtie2_index
+                input[0] = new nextflow.dataflow.ChannelImpl(CAT_FASTQ_SE.out)
+                input[1] = new nextflow.dataflow.ChannelImpl(Channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true))) // ch_rrna_fastas
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))                                                     // ch_sortmerna_index
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))                                                     // ch_bowtie2_index
                 input[4] = 'sortmerna'                                            // ribo_removal_tool
                 input[5] = true                                                   // make_sortmerna_index
                 input[6] = false                                                  // make_bowtie2_index
@@ -304,19 +304,19 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = CAT_FASTQ.out                                    // ch_reads
+                input[0] = new nextflow.dataflow.ChannelImpl(CAT_FASTQ.out)                                    // ch_reads
                 // Test with multiple rRNA databases that contain clustered sequences with
                 // duplicate identifiers. SILVA databases use clustered sequences where the sequence ID
                 // (the part before the first space) can be the same across different databases, causing
                 // "Duplicate entry in sam header" errors when building Bowtie2 indexes. This test ensures
                 // the SEQKIT_REPLACE preprocessing correctly prefixes sequence IDs with their source
                 // filename to create unique identifiers while preserving all sequences.
-                input[1] = Channel.of(
+                input[1] = new nextflow.dataflow.ChannelImpl(Channel.of(
                     file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/silva-euk-18s-id95.fasta', checkIfExists: true),
                     file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/silva-euk-28s-id98.fasta', checkIfExists: true)
-                )                                                                 // ch_rrna_fastas
-                input[2] = channel.value(null as Path)                                                     // ch_sortmerna_index
-                input[3] = channel.value(null as Path)                                                     // ch_bowtie2_index
+                )                                                                 // ch_rrna_fastas)
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))                                                     // ch_sortmerna_index
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))                                                     // ch_bowtie2_index
                 input[4] = 'bowtie2'                                              // ribo_removal_tool
                 input[5] = false                                                  // make_sortmerna_index
                 input[6] = true                                                   // make_bowtie2_index

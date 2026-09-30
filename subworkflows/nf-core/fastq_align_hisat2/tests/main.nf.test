@@ -87,17 +87,17 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = channel.of(record(
+                input[0] = new nextflow.dataflow.ChannelImpl(channel.of(record(
                     id: 'test',
                     meta: [ id:'test', single_end:true ],
                     reads: [
                         file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true)
                         ]
-                ))
-                input[1] = HISAT2_BUILD.out.map { r -> r.index }.first()
-                input[2] = HISAT2_EXTRACTSPLICESITES.out.map { r -> r.splicesites }.first()
-                input[3] = channel.value(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true))
-                input[4] = channel.value(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta.fai", checkIfExists: true))
+                )))
+                input[1] = new nextflow.dataflow.ValueImpl(HISAT2_BUILD.out.map { r -> r.index }.first())
+                input[2] = new nextflow.dataflow.ValueImpl(HISAT2_EXTRACTSPLICESITES.out.map { r -> r.splicesites }.first())
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true)))
+                input[4] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta.fai", checkIfExists: true)))
                 input[5] = false
                 """
             }
@@ -115,18 +115,18 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = channel.of(record(
+                input[0] = new nextflow.dataflow.ChannelImpl(channel.of(record(
                     id: 'test',
                     meta: [ id:'test', single_end:false ],
                     reads: [
                         file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true),
                         file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_2.fastq.gz", checkIfExists: true)
                         ]
-                ))
-                input[1] = HISAT2_BUILD.out.map { r -> r.index }.first()
-                input[2] = HISAT2_EXTRACTSPLICESITES.out.map { r -> r.splicesites }.first()
-                input[3] = channel.value(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true))
-                input[4] = channel.value(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta.fai", checkIfExists: true))
+                )))
+                input[1] = new nextflow.dataflow.ValueImpl(HISAT2_BUILD.out.map { r -> r.index }.first())
+                input[2] = new nextflow.dataflow.ValueImpl(HISAT2_EXTRACTSPLICESITES.out.map { r -> r.splicesites }.first())
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true)))
+                input[4] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta.fai", checkIfExists: true)))
                 input[5] = false
                 """
             }
@@ -147,15 +147,15 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = channel.of(record(
+                input[0] = new nextflow.dataflow.ChannelImpl(channel.of(record(
                     id: 'test',
                     meta: [ id:'test', single_end:true ],
                     reads: [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true) ]
-                ))
-                input[1] = HISAT2_BUILD_STUB.out.map { r -> r.index }.first()
-                input[2] = HISAT2_EXTRACTSPLICESITES_STUB.out.map { r -> r.splicesites }.first()
-                input[3] = channel.value(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true))
-                input[4] = channel.value(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta.fai", checkIfExists: true))
+                )))
+                input[1] = new nextflow.dataflow.ValueImpl(HISAT2_BUILD_STUB.out.map { r -> r.index }.first())
+                input[2] = new nextflow.dataflow.ValueImpl(HISAT2_EXTRACTSPLICESITES_STUB.out.map { r -> r.splicesites }.first())
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true)))
+                input[4] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta.fai", checkIfExists: true)))
                 input[5] = false
                 """
             }
@@ -175,18 +175,18 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = channel.of(record(
+                input[0] = new nextflow.dataflow.ChannelImpl(channel.of(record(
                     id: 'test',
                     meta: [ id:'test', single_end:false ],
                     reads: [
                         file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true),
                         file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_2.fastq.gz", checkIfExists: true)
                         ]
-                ))
-                input[1] = HISAT2_BUILD_STUB.out.map { r -> r.index }.first()
-                input[2] = HISAT2_EXTRACTSPLICESITES_STUB.out.map { r -> r.splicesites }.first()
-                input[3] = channel.value(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true))
-                input[4] = channel.value(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta.fai", checkIfExists: true))
+                )))
+                input[1] = new nextflow.dataflow.ValueImpl(HISAT2_BUILD_STUB.out.map { r -> r.index }.first())
+                input[2] = new nextflow.dataflow.ValueImpl(HISAT2_EXTRACTSPLICESITES_STUB.out.map { r -> r.splicesites }.first())
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true)))
+                input[4] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta.fai", checkIfExists: true)))
                 input[5] = false
                 """
             }

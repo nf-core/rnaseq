@@ -17,12 +17,12 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = channel.of(record(
+                input[0] = new nextflow.dataflow.ChannelImpl(channel.of(record(
                     id: 'test',
                     meta: [ id:'test', single_end:false ],
                     bedgraph: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bedgraph/test.bedgraph', checkIfExists: true)
-                ))
-                input[1] = channel.value(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.sizes', checkIfExists: true))
+                )))
+                input[1] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.sizes', checkIfExists: true)))
                 """
             }
         }
@@ -42,12 +42,12 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = channel.of(record(
+                input[0] = new nextflow.dataflow.ChannelImpl(channel.of(record(
                     id: 'test',
                     meta: [ id:'test', single_end:false ],
                     bedgraph: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bedgraph/test.bedgraph', checkIfExists: true)
-                ))
-                input[1] = channel.value(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.sizes', checkIfExists: true))
+                )))
+                input[1] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.sizes', checkIfExists: true)))
                 """
             }
         }

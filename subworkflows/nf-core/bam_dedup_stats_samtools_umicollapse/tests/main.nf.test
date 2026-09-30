@@ -29,11 +29,11 @@ nextflow_workflow {
             }
             workflow {
                 """
-                input[0] = channel.of(record(
+                input[0] = new nextflow.dataflow.ChannelImpl(channel.of(record(
                     id: 'test',
                     meta: [ id:'test'],
                     bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam', checkIfExists: true)
-                ))
+                )))
                 """
             }
         }

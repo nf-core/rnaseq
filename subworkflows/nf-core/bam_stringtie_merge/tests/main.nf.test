@@ -15,14 +15,14 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = channel.of(record(
+                input[0] = new nextflow.dataflow.ChannelImpl(channel.of(record(
                     id: 'sample1',
                     meta: [ id:'sample1', strandedness:'reverse' ],
                     bam: file(params.modules_testdata_base_path + "genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true),
                     lrbam: file(params.modules_testdata_base_path + "genomics/homo_sapiens/pacbio/bam/test.sorted.bam", checkIfExists: true)
-                ))
-                input[1] = Channel.value(["mix-reads-assembly"])
-                input[2] = channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true))
+                )))
+                input[1] = new nextflow.dataflow.ValueImpl(channel.value(Channel.value(["mix-reads-assembly"])))
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true)))
                 """
             }
         }
@@ -41,9 +41,9 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = Channel.empty()
-                input[1] = Channel.value(["mix-reads-assembly"])
-                input[2] = channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true))
+                input[0] = new nextflow.dataflow.ChannelImpl(Channel.empty())
+                input[1] = new nextflow.dataflow.ValueImpl(channel.value(Channel.value(["mix-reads-assembly"])))
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true)))
                 """
             }
         }

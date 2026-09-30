@@ -51,15 +51,15 @@ nextflow_workflow {
             workflow {
                 """
                 // Input channels
-                input[0] = CAT_FASTQ.out
-                input[1] = channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)) // ch_fasta
-                input[2] = channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)) // ch_transcript_fasta
-                input[3] = channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)) // ch_gtf
-                input[4] = channel.value(null as Path)              // ch_salmon_index
-                input[5] = channel.value(null as Path)              // ch_sortmerna_index
-                input[6] = channel.value(null as Path)              // ch_bowtie2_index
-                input[7] = channel.value(null as Path)              // ch_bbsplit_index
-                input[8] = channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas
+                input[0] = new nextflow.dataflow.ChannelImpl(CAT_FASTQ.out)
+                input[1] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))) // ch_fasta
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))) // ch_transcript_fasta
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))) // ch_gtf
+                input[4] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_salmon_index
+                input[5] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_sortmerna_index
+                input[6] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_bowtie2_index
+                input[7] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_bbsplit_index
+                input[8] = new nextflow.dataflow.ChannelImpl(channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true))) // ch_rrna_fastas
 
                 // Skip options
                 input[9] = true            // skip_bbsplit
@@ -147,15 +147,15 @@ nextflow_workflow {
             workflow {
                 """
                 // Input channels
-                input[0] = CAT_FASTQ.out
-                input[1] = channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)) // ch_fasta
-                input[2] = channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)) // ch_transcript_fasta
-                input[3] = channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)) // ch_gtf
-                input[4] = channel.value(null as Path)              // ch_salmon_index
-                input[5] = channel.value(null as Path)              // ch_sortmerna_index
-                input[6] = channel.value(null as Path)              // ch_bowtie2_index
-                input[7] = channel.value(null as Path)              // ch_bbsplit_index
-                input[8] = channel.empty()              // ch_rrna_fastas (not needed for ribodetector)
+                input[0] = new nextflow.dataflow.ChannelImpl(CAT_FASTQ.out)
+                input[1] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))) // ch_fasta
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))) // ch_transcript_fasta
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))) // ch_gtf
+                input[4] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_salmon_index
+                input[5] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_sortmerna_index
+                input[6] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_bowtie2_index
+                input[7] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_bbsplit_index
+                input[8] = new nextflow.dataflow.ChannelImpl(channel.empty())              // ch_rrna_fastas (not needed for ribodetector)
 
                 // Skip options
                 input[9] = true            // skip_bbsplit
@@ -244,15 +244,15 @@ nextflow_workflow {
             workflow {
                 """
                 // Input channels
-                input[0] = CAT_FASTQ.out
-                input[1] = channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)) // ch_fasta
-                input[2] = channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)) // ch_transcript_fasta
-                input[3] = channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)) // ch_gtf
-                input[4] = channel.value(null as Path)              // ch_salmon_index
-                input[5] = channel.value(null as Path)              // ch_sortmerna_index
-                input[6] = channel.value(null as Path)              // ch_bowtie2_index
-                input[7] = channel.value(null as Path)              // ch_bbsplit_index
-                input[8] = channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas
+                input[0] = new nextflow.dataflow.ChannelImpl(CAT_FASTQ.out)
+                input[1] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))) // ch_fasta
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))) // ch_transcript_fasta
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))) // ch_gtf
+                input[4] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_salmon_index
+                input[5] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_sortmerna_index
+                input[6] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_bowtie2_index
+                input[7] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_bbsplit_index
+                input[8] = new nextflow.dataflow.ChannelImpl(channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true))) // ch_rrna_fastas
 
                 // Skip options
                 input[9] = true            // skip_bbsplit
@@ -340,15 +340,15 @@ nextflow_workflow {
             workflow {
                 """
                 // Input channels
-                input[0] = CAT_FASTQ.out
-                input[1] = channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)) // ch_fasta
-                input[2] = channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)) // ch_transcript_fasta
-                input[3] = channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)) // ch_gtf
-                input[4] = channel.value(null as Path)              // ch_salmon_index
-                input[5] = channel.value(null as Path)              // ch_sortmerna_index
-                input[6] = channel.value(null as Path)              // ch_bowtie2_index
-                input[7] = channel.value(null as Path)              // ch_bbsplit_index
-                input[8] = channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas
+                input[0] = new nextflow.dataflow.ChannelImpl(CAT_FASTQ.out)
+                input[1] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))) // ch_fasta
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))) // ch_transcript_fasta
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))) // ch_gtf
+                input[4] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_salmon_index
+                input[5] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_sortmerna_index
+                input[6] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_bowtie2_index
+                input[7] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_bbsplit_index
+                input[8] = new nextflow.dataflow.ChannelImpl(channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true))) // ch_rrna_fastas
 
                 // Skip options
                 input[9] = true            // skip_bbsplit
@@ -442,22 +442,22 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = channel.of(record(
+                input[0] = new nextflow.dataflow.ChannelImpl(channel.of(record(
                     id: 'test',
                     meta: [ id:'test', single_end:false, strandedness:'auto' ],
                     reads: [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true),
                     ]
-                ))
-                input[1] = channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
-                input[2] = channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))
-                input[3] = channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
-                input[4] = channel.value(null as Path)              // ch_salmon_index
-                input[5] = channel.value(null as Path)              // ch_sortmerna_index
-                input[6] = channel.value(null as Path)              // ch_bowtie2_index
-                input[7] = channel.value(null as Path)              // ch_bbsplit_index
-                input[8] = channel.empty()              // ch_rrna_fastas
+                )))
+                input[1] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)))
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)))
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)))
+                input[4] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_salmon_index
+                input[5] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_sortmerna_index
+                input[6] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_bowtie2_index
+                input[7] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_bbsplit_index
+                input[8] = new nextflow.dataflow.ChannelImpl(channel.empty())              // ch_rrna_fastas
 
                 // Skip options
                 input[9] = true            // skip_bbsplit
@@ -509,22 +509,22 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = channel.of(record(
+                input[0] = new nextflow.dataflow.ChannelImpl(channel.of(record(
                     id: 'test',
                     meta: [ id:'test', single_end:false, strandedness:'auto' ],
                     reads: [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true),
                     ]
-                ))
-                input[1] = channel.value(null as Path) // ch_fasta: no genome fasta supplied (e.g. pseudoalignment-only run)
-                input[2] = channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))
-                input[3] = channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
-                input[4] = channel.value(null as Path)              // ch_salmon_index
-                input[5] = channel.value(null as Path)              // ch_sortmerna_index
-                input[6] = channel.value(null as Path)              // ch_bowtie2_index
-                input[7] = channel.value(null as Path)              // ch_bbsplit_index
-                input[8] = channel.empty()              // ch_rrna_fastas
+                )))
+                input[1] = new nextflow.dataflow.ValueImpl(channel.value(null as Path)) // ch_fasta: no genome fasta supplied (e.g. pseudoalignment-only run)
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)))
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)))
+                input[4] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_salmon_index
+                input[5] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_sortmerna_index
+                input[6] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_bowtie2_index
+                input[7] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_bbsplit_index
+                input[8] = new nextflow.dataflow.ChannelImpl(channel.empty())              // ch_rrna_fastas
 
                 // Skip options
                 input[9] = true            // skip_bbsplit
@@ -595,15 +595,15 @@ nextflow_workflow {
             workflow {
                 """
                 // Input channels - wrap single file in list to match expected format
-                input[0] = CAT_FASTQ_SE.out
-                input[1] = channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)) // ch_fasta
-                input[2] = channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)) // ch_transcript_fasta
-                input[3] = channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)) // ch_gtf
-                input[4] = channel.value(null as Path)              // ch_salmon_index
-                input[5] = channel.value(null as Path)              // ch_sortmerna_index
-                input[6] = channel.value(null as Path)              // ch_bowtie2_index
-                input[7] = channel.value(null as Path)              // ch_bbsplit_index
-                input[8] = channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas
+                input[0] = new nextflow.dataflow.ChannelImpl(CAT_FASTQ_SE.out)
+                input[1] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))) // ch_fasta
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))) // ch_transcript_fasta
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))) // ch_gtf
+                input[4] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_salmon_index
+                input[5] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_sortmerna_index
+                input[6] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_bowtie2_index
+                input[7] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_bbsplit_index
+                input[8] = new nextflow.dataflow.ChannelImpl(channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true))) // ch_rrna_fastas
 
                 // Skip options
                 input[9] = true            // skip_bbsplit

@@ -39,18 +39,18 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = channel.value(file(params.modules_testdata_base_path + '/genomics/sarscov2/illumina/csv/samplesheet_micro.csv', checkIfExists: true))
-                input[1] = channel.of(record(
+                input[0] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + '/genomics/sarscov2/illumina/csv/samplesheet_micro.csv', checkIfExists: true)))
+                input[1] = new nextflow.dataflow.ChannelImpl(channel.of(record(
                     id: 'test',
                     meta: [ id: 'test' ],
                     reads: [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                     ]
-                ))
-                input[2] = SALMON_INDEX.out.map { r -> r.index }.first()
-                input[3] = channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))
-                input[4] = channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true))
+                )))
+                input[2] = new nextflow.dataflow.ValueImpl(SALMON_INDEX.out.map { r -> r.index }.first())
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)))
+                input[4] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true)))
                 input[5] = 'gene_id'
                 input[6] = 'gene_name'
                 input[7] = 'salmon'
@@ -101,18 +101,18 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = channel.value(file(params.modules_testdata_base_path + '/genomics/sarscov2/illumina/csv/samplesheet_micro.csv', checkIfExists: true))
-                input[1] = channel.of(record(
+                input[0] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + '/genomics/sarscov2/illumina/csv/samplesheet_micro.csv', checkIfExists: true)))
+                input[1] = new nextflow.dataflow.ChannelImpl(channel.of(record(
                     id: 'test',
                     meta: [ id: 'test' ],
                     reads: [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                     ]
-                ))
-                input[2] = KALLISTO_INDEX.out.map { r -> r.index }.first()
-                input[3] = channel.value(file(params.modules_testdata_base_path +  "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))
-                input[4] = channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true))
+                )))
+                input[2] = new nextflow.dataflow.ValueImpl(KALLISTO_INDEX.out.map { r -> r.index }.first())
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path +  "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)))
+                input[4] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true)))
                 input[5] = 'gene_id'
                 input[6] = 'gene_name'
                 input[7] = 'kallisto'
@@ -165,18 +165,18 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = channel.value(file(params.modules_testdata_base_path + '/genomics/sarscov2/illumina/csv/samplesheet_micro.csv', checkIfExists: true))
-                input[1] = channel.of(record(
+                input[0] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + '/genomics/sarscov2/illumina/csv/samplesheet_micro.csv', checkIfExists: true)))
+                input[1] = new nextflow.dataflow.ChannelImpl(channel.of(record(
                     id: 'test',
                     meta: [ id: 'test' ],
                     reads: [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                     ]
-                ))
-                input[2] = SALMON_INDEX.out.map { r -> r.index }.first()
-                input[3] = channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))
-                input[4] = channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true))
+                )))
+                input[2] = new nextflow.dataflow.ValueImpl(SALMON_INDEX.out.map { r -> r.index }.first())
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)))
+                input[4] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true)))
                 input[5] = 'gene_id'
                 input[6] = 'gene_name'
                 input[7] = 'salmon'
@@ -217,18 +217,18 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = channel.value(file(params.modules_testdata_base_path + '/genomics/sarscov2/illumina/csv/samplesheet_micro.csv', checkIfExists: true))
-                input[1] = channel.of(record(
+                input[0] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + '/genomics/sarscov2/illumina/csv/samplesheet_micro.csv', checkIfExists: true)))
+                input[1] = new nextflow.dataflow.ChannelImpl(channel.of(record(
                     id: 'test',
                     meta: [ id: 'test' ],
                     reads: [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                     ]
-                ))
-                input[2] = KALLISTO_INDEX.out.map { r -> r.index }.first()
-                input[3] = channel.value(file(params.modules_testdata_base_path +  "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))
-                input[4] = channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true))
+                )))
+                input[2] = new nextflow.dataflow.ValueImpl(KALLISTO_INDEX.out.map { r -> r.index }.first())
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path +  "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)))
+                input[4] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true)))
                 input[5] = 'gene_id'
                 input[6] = 'gene_name'
                 input[7] = 'kallisto'

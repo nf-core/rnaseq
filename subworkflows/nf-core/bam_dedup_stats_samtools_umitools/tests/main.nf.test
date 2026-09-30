@@ -26,12 +26,12 @@ nextflow_workflow {
                 """
                 val_get_dedup_stats = false
 
-                input[0] = channel.of(record(
+                input[0] = new nextflow.dataflow.ChannelImpl(channel.of(record(
                     id: 'test',
                     meta: [ id:'test'],
                     bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam', checkIfExists: true),
                     bai: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam.bai', checkIfExists: true)
-                ))
+                )))
                 input[1] = val_get_dedup_stats
                 input[2] = false
                 """
@@ -53,12 +53,12 @@ nextflow_workflow {
                 """
                 val_get_dedup_stats = false
 
-                input[0] = channel.of(record(
+                input[0] = new nextflow.dataflow.ChannelImpl(channel.of(record(
                     id: 'test',
                     meta: [ id:'test'],
                     bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam', checkIfExists: true),
                     bai: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam.bai', checkIfExists: true)
-                ))
+                )))
                 input[1] = val_get_dedup_stats
                 input[2] = true
                 """
@@ -82,12 +82,12 @@ nextflow_workflow {
                 """
                 val_get_dedup_stats = false
 
-                input[0] = channel.of(record(
+                input[0] = new nextflow.dataflow.ChannelImpl(channel.of(record(
                     id: 'test',
                     meta: [ id:'test'],
                     bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam', checkIfExists: true),
                     bai: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam.bai', checkIfExists: true)
-                ))
+                )))
                 input[1] = val_get_dedup_stats
                 input[2] = false
                 """

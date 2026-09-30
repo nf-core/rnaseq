@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process KALLISTO_QUANT {
     tag "$meta.id"
     label 'process_high'
@@ -8,19 +10,22 @@ process KALLISTO_QUANT {
         'community.wave.seqera.io/library/kallisto:0.52.0--31c771060d82d25c' }"
 
     input:
-    tuple val(meta), path(reads)
-    tuple val(meta2), path(index), path(gtf), path(chromosomes)
-    val fragment_length
-    val fragment_length_sd
+    tuple(meta: Map, reads: List<Path>)
+    tuple(meta2: Map, index: Path, gtf: Path?, chromosomes: Path?)
+    fragment_length: Integer?
+    fragment_length_sd: Integer?
 
     output:
-    tuple val(meta), path("${prefix}")        , emit: results
-    tuple val(meta), path("*.run_info.json")  , emit: json_info
-    tuple val(meta), path("*.log")            , emit: log
-    tuple val("${task.process}"), val('kallisto'), eval("kallisto version | sed 's/.*version //'"), emit: versions_kallisto, topic: versions
+    record(
+        id:        meta.id,
+        meta:      meta,
+        quant_dir: file("${prefix}"),
+        json_info: file("*.run_info.json"),
+        log:       file("*.log")
+    )
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'kallisto', eval("kallisto version | sed 's/.*version //'")) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''
@@ -30,10 +35,10 @@ process KALLISTO_QUANT {
 
     def single_end_params = ''
     if (meta.single_end) {
-        if (!(fragment_length =~ /^\d+$/)) {
+        if (!("${fragment_length}" =~ /^\d+$/)) {
             error "fragment_length must be set and numeric for single-end data"
         }
-        if (!(fragment_length_sd =~ /^\d+$/)) {
+        if (!("${fragment_length_sd}" =~ /^\d+$/)) {
             error "fragment_length_sd must be set and numeric for single-end data"
         }
         single_end_params = "--single --fragment-length=${fragment_length} --sd=${fragment_length_sd}"
@@ -48,7 +53,7 @@ process KALLISTO_QUANT {
             ${single_end_params} \\
             ${args} \\
             -o $prefix \\
-            ${reads} 2>| >(tee -a ${prefix}/kallisto_quant.log >&2)
+            ${reads instanceof Path ? "${reads}" : reads.join(' ')} 2>| >(tee -a ${prefix}/kallisto_quant.log >&2)
 
     cp ${prefix}/kallisto_quant.log ${prefix}.log
     cp ${prefix}/run_info.json ${prefix}.run_info.json

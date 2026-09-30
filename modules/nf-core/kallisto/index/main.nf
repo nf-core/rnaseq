@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process KALLISTO_INDEX {
     tag "$fasta"
     label 'process_medium'
@@ -8,14 +10,13 @@ process KALLISTO_INDEX {
         'community.wave.seqera.io/library/kallisto:0.52.0--31c771060d82d25c' }"
 
     input:
-    tuple val(meta), path(fasta)
+    tuple(meta: Map, fasta: Path)
 
     output:
-    tuple val(meta), path("kallisto")  , emit: index
-    tuple val("${task.process}"), val('kallisto'), eval('kallisto 2>&1 | head -1 | sed "s/^kallisto //; s/Usage.*//"'), emit: versions_kallisto, topic: versions
+    record(meta: meta, index: file('kallisto'))
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'kallisto', eval('kallisto 2>&1 | head -1 | sed "s/^kallisto //; s/Usage.*//"')) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''

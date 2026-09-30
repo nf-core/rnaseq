@@ -105,7 +105,6 @@ workflow RNASEQ {
 
     main:
 
-    // Header files for MultiQC
     def ch_pca_header_multiqc        = file("$projectDir/assets/deseq2_pca_header.txt", checkIfExists: true)
     def sample_status_header_multiqc = file("$projectDir/assets/sample_status_header.txt", checkIfExists: true)
     def ch_clustering_header_multiqc = file("$projectDir/assets/deseq2_clustering_header.txt", checkIfExists: true)
@@ -164,7 +163,7 @@ workflow RNASEQ {
     // Run RNA-seq FASTQ preprocessing subworkflow
     //
 
-    // Bowtie2 rRNA index building still happens here, not in PREPARE_GENOME_INDICES.
+    // The bowtie2 rRNA index is built inside the FASTQ subworkflow, not in PREPARE_GENOME_INDICES.
     def make_bowtie2_index = !params.bowtie2_rrna_index && params.remove_ribo_rna && params.ribo_removal_tool == 'bowtie2'
 
     fastq_preprocessed = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS (
@@ -255,12 +254,8 @@ workflow RNASEQ {
         ch_mqc_files = ch_mqc_files.mix(ch_star.map { r -> record(id: r.id, files: [r.star.log_final]) })
 
         if (!params.with_umi && (params.skip_markduplicates || params.use_parabricks_star)) {
-            // The deduplicated stats should take priority for MultiQC, but use
-            // them straight out of the aligner otherwise. If mark duplicates
-            // will run, those stats will be added later instead to avoid
-            // duplicate flagstat files in MultiQC.
-            // When Parabricks handles markduplicates internally, Picard is
-            // skipped, so we also need to add alignment stats here.
+            // When Picard markduplicates runs, its stats are added later; adding these too would
+            // duplicate flagstat files in MultiQC. Parabricks skips Picard, so add them here.
             ch_mqc_files = ch_mqc_files.mix(
                 ch_star.map { r -> record(id: r.id, files: [r.samtools.stats, r.samtools.flagstat, r.samtools.idxstats]) }
             )
@@ -305,10 +300,6 @@ workflow RNASEQ {
         ch_mqc_files = ch_mqc_files.mix(ch_hisat2.map { r -> record(id: r.id, files: [r.hisat2.summary]) })
 
         if (!params.with_umi && params.skip_markduplicates) {
-            // The deduplicated stats should take priority for MultiQC, but use
-            // them straight out of the aligner otherwise. If mark duplicates
-            // will run, those stats will be added later instead to avoid
-            // duplicate flagstat files in MultiQC.
             ch_mqc_files = ch_mqc_files.mix(
                 ch_hisat2.map { r -> record(id: r.id, files: [r.samtools.stats, r.samtools.flagstat, r.samtools.idxstats]) }
             )
@@ -430,22 +421,19 @@ workflow RNASEQ {
         }
     }
 
-    // Filter bam and index by percent mapped being present in the meta
-
     ch_mapped = ch_genome_bam.map { r ->
         r + record(pass: r.percent_mapped != null ? r.percent_mapped >= params.min_mapped_reads.toFloat() : null)
     }
 
     ch_percent_mapped = ch_mapped.map { r -> record(id: r.id, percent_mapped: r.percent_mapped) }
 
-    // Save mapping status for workflow summary where present
     ch_map_status = ch_mapped
         .filter { r -> r.pass != null }
         .map { r -> record(id: r.id, pass: r.pass as Boolean) }
 
     ch_percent_mapped_pass = ch_mapped.map { r -> record(id: r.id, percent_mapped: r.percent_mapped, pass: r.pass) }
 
-    // Where a percent mapping is present, use it to filter bam and index
+    // Samples without a mapping percentage are never filtered
     ch_genome_bam = ch_mapped.filter { r -> r.pass == null || r.pass }
 
     //
@@ -823,38 +811,38 @@ workflow RNASEQ {
     }
 
     emit:
-    trim_status:         Channel<TrimStatus> = ch_trim_status                  // pass: meets min_trimmed_reads
-    map_status:          Channel<MapStatus> = ch_map_status                    // pass: meets min_mapped_reads; samples with a mapping percentage only
-    strand_status:       Channel<StrandStatus> = ch_strand_status             // pass: strandedness check passed
-    multiqc_report:      Channel<Path> = ch_multiqc_report                        // multiqc_report.html
-    reads:               Channel<SampleRuns> = ch_fastq
-    percent_mapped:      Channel<PercentMapped> = ch_percent_mapped
+    trim_status:           Channel<TrimStatus>                       = ch_trim_status           // pass: meets min_trimmed_reads
+    map_status:            Channel<MapStatus>                        = ch_map_status            // pass: meets min_mapped_reads; samples with a mapping percentage only
+    strand_status:         Channel<StrandStatus>                     = ch_strand_status         // pass: strandedness check passed
+    multiqc_report:        Channel<Path>                             = ch_multiqc_report
+    reads:                 Channel<SampleRuns>                       = ch_fastq
+    percent_mapped:        Channel<PercentMapped>                    = ch_percent_mapped
 
     // Stage result records, keyed on id
-    preprocessed:        Channel<FastqQcTrimFilterSetstrandedness> = ch_preprocessed
-    aligned:             Channel<AlignedSample> = ch_aligned                       // StarAligned | Bowtie2Aligned | Hisat2Aligned
-    umi_dedup:           Channel<UmiDedupBam> = ch_umi_dedup
-    markdup:             Channel<MarkdupBam> = ch_markdup
-    bam_qc:              Channel<BamQcRnaseq> = ch_bam_qc
-    bam_qc_rustqc:       Channel<RustqcResult> = ch_bam_qc_rustqc
-    quant:               Channel<RsemQuantSample> = ch_quant                       // RSEM
-    quant_salmon:        Channel<SalmonQuantSample> = ch_quant_salmon             // Salmon on the transcriptome BAM
-    quant_merged:        Channel<QuantMerged> = ch_quant_merged                   // alignment-based quantifier
-    quant_rsem_merge:    Channel<RsemMergeSample> = ch_quant_rsem_merge           // empty unless --aligner star_rsem
-    quant_pseudo:        Channel<SalmonQuantSample> = ch_quant_pseudo             // Salmon pseudo-alignment
-    quant_pseudo_kallisto: Channel<KallistoQuantSample> = ch_quant_pseudo_kallisto // Kallisto pseudo-alignment
-    quant_merged_pseudo: Channel<QuantMerged> = ch_quant_merged_pseudo            // pseudo-aligner
-    contaminants:        Channel<Contaminants> = ch_contaminants
-    stringtie:           Channel<StringtieSample> = ch_stringtie
-    bigwig:              Channel<BigwigSample> = ch_bigwig
+    preprocessed:          Channel<FastqQcTrimFilterSetstrandedness> = ch_preprocessed
+    aligned:               Channel<AlignedSample>                    = ch_aligned               // StarAligned | Bowtie2Aligned | Hisat2Aligned
+    umi_dedup:             Channel<UmiDedupBam>                      = ch_umi_dedup
+    markdup:               Channel<MarkdupBam>                       = ch_markdup
+    bam_qc:                Channel<BamQcRnaseq>                      = ch_bam_qc
+    bam_qc_rustqc:         Channel<RustqcResult>                     = ch_bam_qc_rustqc
+    quant:                 Channel<RsemQuantSample>                  = ch_quant
+    quant_salmon:          Channel<SalmonQuantSample>                = ch_quant_salmon          // Salmon on the transcriptome BAM
+    quant_merged:          Channel<QuantMerged>                      = ch_quant_merged          // alignment-based quantifier
+    quant_rsem_merge:      Channel<RsemMergeSample>                  = ch_quant_rsem_merge      // empty unless --aligner star_rsem
+    quant_pseudo:          Channel<SalmonQuantSample>                = ch_quant_pseudo          // Salmon pseudo-alignment
+    quant_pseudo_kallisto: Channel<KallistoQuantSample>              = ch_quant_pseudo_kallisto // Kallisto pseudo-alignment
+    quant_merged_pseudo:   Channel<QuantMerged>                      = ch_quant_merged_pseudo   // pseudo-aligner
+    contaminants:          Channel<Contaminants>                     = ch_contaminants
+    stringtie:             Channel<StringtieSample>                  = ch_stringtie
+    bigwig:                Channel<BigwigSample>                     = ch_bigwig
 
     // Run-level result records
-    stringtie_merged:    Channel<StringtieMerged> = ch_stringtie_merged
-    deseq2:              Channel<Deseq2Qc> = ch_deseq2                            // alignment-based quantifier
-    deseq2_pseudo:       Channel<Deseq2Qc> = ch_deseq2_pseudo                     // pseudo-aligner
-    rrna_references:     Value<RrnaReferences> = ch_rrna_references
-    multiqc:             Channel<MultiqcReport> = ch_multiqc                      // per sample under skip_quantification_merge
-    pipeline_info:       Channel<PipelineInfo> = ch_pipeline_info
+    stringtie_merged:      Channel<StringtieMerged>                  = ch_stringtie_merged
+    deseq2:                Channel<Deseq2Qc>                         = ch_deseq2                // alignment-based quantifier
+    deseq2_pseudo:         Channel<Deseq2Qc>                         = ch_deseq2_pseudo         // pseudo-aligner
+    rrna_references:       Value<RrnaReferences>                     = ch_rrna_references
+    multiqc:               Channel<MultiqcReport>                    = ch_multiqc               // per sample under skip_quantification_merge
+    pipeline_info:         Channel<PipelineInfo>                     = ch_pipeline_info
 }
 
 /*

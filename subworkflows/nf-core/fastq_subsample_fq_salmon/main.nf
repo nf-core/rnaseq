@@ -25,13 +25,9 @@ workflow FASTQ_SUBSAMPLE_FQ_SALMON {
     // Create Salmon index if required
     //
     if (make_index) {
-        // Only build the index when there are samples to quantify.
         ch_index_built = SALMON_INDEX(
-            ch_samples
-                .collect()
-                .flatMap { samples -> samples.isEmpty() ? [] : [true] }
-                .combine(ch_transcript_fasta)
-                .map { _any_sample, transcript_fasta -> record(id: 'salmon_index', meta: [:], transcript_fasta: transcript_fasta) }
+            ch_transcript_fasta
+                .map { transcript_fasta -> record(id: 'salmon_index', meta: [:], transcript_fasta: transcript_fasta) }
                 .combine(genome_fasta: ch_genome_fasta)
         )
         ch_index_ref = ch_index_built.map { r -> tuple(r.meta, r.index) }

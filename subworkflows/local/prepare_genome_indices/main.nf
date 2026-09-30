@@ -203,12 +203,12 @@ workflow PREPARE_GENOME_INDICES {
 
             if(use_sentieon_star){
                 SENTIEON_RSEM_PREPAREREFERENCE_GENOME(ch_fasta, ch_gtf)
-                ch_rsem_index            = SENTIEON_RSEM_PREPAREREFERENCE_GENOME.out.index
-                ch_rsem_transcript_fasta = SENTIEON_RSEM_PREPAREREFERENCE_GENOME.out.transcript_fasta
+                ch_rsem_index            = SENTIEON_RSEM_PREPAREREFERENCE_GENOME.out.map { r -> r.index }
+                ch_rsem_transcript_fasta = SENTIEON_RSEM_PREPAREREFERENCE_GENOME.out.map { r -> r.transcript_fasta }
             }else{
                 RSEM_PREPAREREFERENCE_GENOME(ch_fasta, ch_gtf)
-                ch_rsem_index            = RSEM_PREPAREREFERENCE_GENOME.out.index
-                ch_rsem_transcript_fasta = RSEM_PREPAREREFERENCE_GENOME.out.transcript_fasta
+                ch_rsem_index            = RSEM_PREPAREREFERENCE_GENOME.out.map { r -> r.index }
+                ch_rsem_transcript_fasta = RSEM_PREPAREREFERENCE_GENOME.out.map { r -> r.transcript_fasta }
             }
 
         }
@@ -282,16 +282,18 @@ workflow PREPARE_GENOME_INDICES {
         if (ch_transcript_fasta && fasta_provided) {
             // genome_fasta may be an empty list (no decoys); wrap before combine() so an
             // empty list contributes a position instead of being flattened away
-            ch_salmon_index = SALMON_INDEX(
+            SALMON_INDEX(
                 ch_transcript_fasta
                     .combine(ch_fasta.map { genome_fasta -> [genome_fasta] })
                     .map { items -> [ [:], items[0], items[1] ] }
-            ).index.first()
+            )
+            ch_salmon_index = SALMON_INDEX.out.map { r -> [ r.meta, r.index ] }.first()
         }
         else if (ch_transcript_fasta) {
-            ch_salmon_index = SALMON_INDEX(
-                ch_transcript_fasta.map { item -> [ [:], item, [] ] }
-            ).index.first()
+            SALMON_INDEX(
+                ch_transcript_fasta.map { item -> [ [:], item, null ] }
+            )
+            ch_salmon_index = SALMON_INDEX.out.map { r -> [ r.meta, r.index ] }.first()
         }
     }
 
@@ -307,7 +309,8 @@ workflow PREPARE_GENOME_INDICES {
         }
     } else {
         if ('kallisto' in prepare_tool_indices) {
-            ch_kallisto_index = KALLISTO_INDEX ( ch_transcript_fasta.map { item -> [ [:], item ] } ).index.first()
+            KALLISTO_INDEX ( ch_transcript_fasta.map { item -> [ [:], item ] } )
+            ch_kallisto_index = KALLISTO_INDEX.out.map { r -> [ r.meta, r.index ] }.first()
         }
     }
 

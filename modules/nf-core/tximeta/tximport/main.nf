@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process TXIMETA_TXIMPORT {
     tag "${meta.id}"
     label "process_medium"
@@ -8,24 +10,30 @@ process TXIMETA_TXIMPORT {
         'community.wave.seqera.io/library/bioconductor-tximeta_jq:78bccd386c46a07c' }"
 
     input:
-    tuple val(meta), path("quants/*")
-    tuple val(meta2), path(tx2gene)
-    val quant_type
+    tuple(meta: Map, quants: List<Path>)
+    tuple(meta2: Map, tx2gene: Path)
+    quant_type: String
+
+    stage:
+    stageAs quants, 'quants/*'
 
     output:
-    tuple val(meta), path("*gene_tpm.tsv")                 , emit: tpm_gene
-    tuple val(meta), path("*gene_counts.tsv")              , emit: counts_gene
-    tuple val(meta), path("*gene_counts_length_scaled.tsv"), emit: counts_gene_length_scaled
-    tuple val(meta), path("*gene_counts_scaled.tsv")       , emit: counts_gene_scaled
-    tuple val(meta), path("*gene_lengths.tsv")             , emit: lengths_gene
-    tuple val(meta), path("*transcript_tpm.tsv")           , emit: tpm_transcript
-    tuple val(meta), path("*transcript_counts.tsv")        , emit: counts_transcript
-    tuple val(meta), path("*transcript_lengths.tsv")       , emit: lengths_transcript
-    tuple val(meta), path("*tx2gene_augmented.tsv")        , emit: tx2gene_augmented
-    path "versions.yml"                                    , emit: versions, topic: versions
+    record(
+        id:                        meta.id,
+        meta:                      meta,
+        tpm_gene:                  file("*gene_tpm.tsv"),
+        counts_gene:               file("*gene_counts.tsv"),
+        lengths_gene:              file("*gene_lengths.tsv"),
+        counts_gene_length_scaled: file("*gene_counts_length_scaled.tsv"),
+        counts_gene_scaled:        file("*gene_counts_scaled.tsv"),
+        tpm_transcript:            file("*transcript_tpm.tsv"),
+        counts_transcript:         file("*transcript_counts.tsv"),
+        lengths_transcript:        file("*transcript_lengths.tsv"),
+        tx2gene_augmented:         file("*tx2gene_augmented.tsv")
+    )
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    file('versions.yml') >> 'versions'
 
     script:
     template 'tximport.r'

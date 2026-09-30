@@ -49,6 +49,8 @@ workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT {
         gtf_extra_attribute
     )
 
+    ch_tx2gene = CUSTOM_TX2GENE.out.map { r -> [ r.meta, r.tx2gene ] }
+
     //
     // Import and summarize quantifications with tximport
     // In per-sample mode, run once per sample instead of collecting all
@@ -67,7 +69,7 @@ workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT {
 
     TXIMETA_TXIMPORT (
         ch_tximport_input,
-        CUSTOM_TX2GENE.out.tx2gene,
+        ch_tx2gene,
         quant_type
     )
 
@@ -76,40 +78,36 @@ workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT {
     //
     ch_merged_gene_rds       = channel.empty()
     ch_merged_transcript_rds = channel.empty()
+    ch_se_gene               = channel.empty()
+    ch_se_transcript         = channel.empty()
 
     if (!skip_merge) {
         //
         // Build gene-level SummarizedExperiment
         //
-        ch_gene_unified = TXIMETA_TXIMPORT.out.counts_gene
-            .join(TXIMETA_TXIMPORT.out.counts_gene_length_scaled, failOnMismatch: true, failOnDuplicate: true)
-            .join(TXIMETA_TXIMPORT.out.counts_gene_scaled, failOnMismatch: true, failOnDuplicate: true)
-            .join(TXIMETA_TXIMPORT.out.lengths_gene, failOnMismatch: true, failOnDuplicate: true)
-            .join(TXIMETA_TXIMPORT.out.tpm_gene, failOnMismatch: true, failOnDuplicate: true)
-            .map { row -> tuple(row[0], row.tail()) }
-
         SE_GENE_UNIFIED (
-            ch_gene_unified,
-            CUSTOM_TX2GENE.out.tx2gene,
+            TXIMETA_TXIMPORT.out.map { r ->
+                [ r.meta, [ r.counts_gene, r.counts_gene_length_scaled, r.counts_gene_scaled, r.lengths_gene, r.tpm_gene ] ]
+            },
+            ch_tx2gene,
             samplesheet
         )
 
         //
         // Build transcript-level SummarizedExperiment
         //
-        ch_transcript_unified = TXIMETA_TXIMPORT.out.counts_transcript
-            .join(TXIMETA_TXIMPORT.out.lengths_transcript, failOnMismatch: true, failOnDuplicate: true)
-            .join(TXIMETA_TXIMPORT.out.tpm_transcript, failOnMismatch: true, failOnDuplicate: true)
-            .map { row -> tuple(row[0], row.tail()) }
-
         SE_TRANSCRIPT_UNIFIED (
-            ch_transcript_unified,
-            TXIMETA_TXIMPORT.out.tx2gene_augmented,
+            TXIMETA_TXIMPORT.out.map { r ->
+                [ r.meta, [ r.counts_transcript, r.lengths_transcript, r.tpm_transcript ] ]
+            },
+            TXIMETA_TXIMPORT.out.map { r -> [ r.meta, r.tx2gene_augmented ] },
             samplesheet
         )
 
-        ch_merged_gene_rds       = SE_GENE_UNIFIED.out.rds
-        ch_merged_transcript_rds = SE_TRANSCRIPT_UNIFIED.out.rds
+        ch_se_gene               = SE_GENE_UNIFIED.out.map { r -> [ r.id, r.rds ] }
+        ch_se_transcript         = SE_TRANSCRIPT_UNIFIED.out.map { r -> [ r.id, r.rds ] }
+        ch_merged_gene_rds       = SE_GENE_UNIFIED.out.map { r -> [ r.meta, r.rds ] }
+        ch_merged_transcript_rds = SE_TRANSCRIPT_UNIFIED.out.map { r -> [ r.meta, r.rds ] }
     }
 
     //
@@ -117,49 +115,41 @@ workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT {
     // merging, or one per sample under skip_merge. The SE outputs only exist
     // when merging, hence the remainder joins.
     //
-    ch_results = TXIMETA_TXIMPORT.out.counts_gene.map { meta, f -> [meta.id, meta, f] }
-        .join(TXIMETA_TXIMPORT.out.tpm_gene.map { meta, f -> [meta.id, f] }, failOnMismatch: true, failOnDuplicate: true)
-        .join(TXIMETA_TXIMPORT.out.lengths_gene.map { meta, f -> [meta.id, f] }, failOnMismatch: true, failOnDuplicate: true)
-        .join(TXIMETA_TXIMPORT.out.counts_gene_length_scaled.map { meta, f -> [meta.id, f] }, failOnMismatch: true, failOnDuplicate: true)
-        .join(TXIMETA_TXIMPORT.out.counts_gene_scaled.map { meta, f -> [meta.id, f] }, failOnMismatch: true, failOnDuplicate: true)
-        .join(TXIMETA_TXIMPORT.out.tpm_transcript.map { meta, f -> [meta.id, f] }, failOnMismatch: true, failOnDuplicate: true)
-        .join(TXIMETA_TXIMPORT.out.counts_transcript.map { meta, f -> [meta.id, f] }, failOnMismatch: true, failOnDuplicate: true)
-        .join(TXIMETA_TXIMPORT.out.lengths_transcript.map { meta, f -> [meta.id, f] }, failOnMismatch: true, failOnDuplicate: true)
-        .join(TXIMETA_TXIMPORT.out.tx2gene_augmented.map { meta, f -> [meta.id, f] }, failOnMismatch: true, failOnDuplicate: true)
-        .join(ch_merged_gene_rds.map { meta, f -> [meta.id, f] }, remainder: true)
-        .join(ch_merged_transcript_rds.map { meta, f -> [meta.id, f] }, remainder: true)
-        .combine(CUSTOM_TX2GENE.out.tx2gene.map { _meta, f -> f })
-        .map { id, meta, counts_gene, tpm_gene, lengths_gene, counts_gene_length_scaled, counts_gene_scaled, tpm_transcript, counts_transcript, lengths_transcript, tx2gene_augmented, merged_gene_rds, merged_transcript_rds, tx2gene ->
+    ch_results = TXIMETA_TXIMPORT.out.map { r -> [ r.id, r ] }
+        .join(ch_se_gene, remainder: true)
+        .join(ch_se_transcript, remainder: true)
+        .combine(ch_tx2gene.map { _meta, f -> f })
+        .map { id, r, merged_gene_rds, merged_transcript_rds, tx2gene ->
             record(
                 id: id,
-                meta: meta,
-                tpm_gene: tpm_gene,
-                counts_gene: counts_gene,
-                lengths_gene: lengths_gene,
-                counts_gene_length_scaled: counts_gene_length_scaled,
-                counts_gene_scaled: counts_gene_scaled,
-                tpm_transcript: tpm_transcript,
-                counts_transcript: counts_transcript,
-                lengths_transcript: lengths_transcript,
+                meta: r.meta,
+                tpm_gene: r.tpm_gene,
+                counts_gene: r.counts_gene,
+                lengths_gene: r.lengths_gene,
+                counts_gene_length_scaled: r.counts_gene_length_scaled,
+                counts_gene_scaled: r.counts_gene_scaled,
+                tpm_transcript: r.tpm_transcript,
+                counts_transcript: r.counts_transcript,
+                lengths_transcript: r.lengths_transcript,
                 tx2gene: tx2gene,
-                tx2gene_augmented: tx2gene_augmented,
+                tx2gene_augmented: r.tx2gene_augmented,
                 merged_gene_rds: merged_gene_rds,
                 merged_transcript_rds: merged_transcript_rds
             )
         }
 
     emit:
-    tx2gene                   = CUSTOM_TX2GENE.out.tx2gene                     // channel: [ val(meta), tx2gene.tsv ]
-    tx2gene_augmented         = TXIMETA_TXIMPORT.out.tx2gene_augmented         // channel: [ val(meta), tx2gene_augmented.tsv ]
+    tx2gene                   = ch_tx2gene                     // channel: [ val(meta), tx2gene.tsv ]
+    tx2gene_augmented         = TXIMETA_TXIMPORT.out.map { r -> [ r.meta, r.tx2gene_augmented ] }         // channel: [ val(meta), tx2gene_augmented.tsv ]
 
-    tpm_gene                  = TXIMETA_TXIMPORT.out.tpm_gene                  //    path: *gene_tpm.tsv
-    counts_gene               = TXIMETA_TXIMPORT.out.counts_gene               //    path: *gene_counts.tsv
-    lengths_gene              = TXIMETA_TXIMPORT.out.lengths_gene              //    path: *gene_lengths.tsv
-    counts_gene_length_scaled = TXIMETA_TXIMPORT.out.counts_gene_length_scaled //    path: *gene_counts_length_scaled.tsv
-    counts_gene_scaled        = TXIMETA_TXIMPORT.out.counts_gene_scaled        //    path: *gene_counts_scaled.tsv
-    tpm_transcript            = TXIMETA_TXIMPORT.out.tpm_transcript            //    path: *transcript_tpm.tsv
-    counts_transcript         = TXIMETA_TXIMPORT.out.counts_transcript         //    path: *transcript_counts.tsv
-    lengths_transcript        = TXIMETA_TXIMPORT.out.lengths_transcript        //    path: *transcript_lengths.tsv
+    tpm_gene                  = TXIMETA_TXIMPORT.out.map { r -> [ r.meta, r.tpm_gene ] }                  //    path: *gene_tpm.tsv
+    counts_gene               = TXIMETA_TXIMPORT.out.map { r -> [ r.meta, r.counts_gene ] }               //    path: *gene_counts.tsv
+    lengths_gene              = TXIMETA_TXIMPORT.out.map { r -> [ r.meta, r.lengths_gene ] }              //    path: *gene_lengths.tsv
+    counts_gene_length_scaled = TXIMETA_TXIMPORT.out.map { r -> [ r.meta, r.counts_gene_length_scaled ] } //    path: *gene_counts_length_scaled.tsv
+    counts_gene_scaled        = TXIMETA_TXIMPORT.out.map { r -> [ r.meta, r.counts_gene_scaled ] }        //    path: *gene_counts_scaled.tsv
+    tpm_transcript            = TXIMETA_TXIMPORT.out.map { r -> [ r.meta, r.tpm_transcript ] }            //    path: *transcript_tpm.tsv
+    counts_transcript         = TXIMETA_TXIMPORT.out.map { r -> [ r.meta, r.counts_transcript ] }         //    path: *transcript_counts.tsv
+    lengths_transcript        = TXIMETA_TXIMPORT.out.map { r -> [ r.meta, r.lengths_transcript ] }        //    path: *transcript_lengths.tsv
 
     merged_gene_rds           = ch_merged_gene_rds                             //    path: *.rds
     merged_transcript_rds     = ch_merged_transcript_rds                       //    path: *.rds

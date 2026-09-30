@@ -44,7 +44,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(process.out[0][0].meta, process.out[0][0].tx2gene).match() }
             )
         }
     }
@@ -83,7 +83,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(process.out[0][0].meta, process.out[0][0].tx2gene).match() }
             )
         }
     }
@@ -128,7 +128,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(process.out[0][0].meta, process.out[0][0].tx2gene).match() }
             )
         }
     }
@@ -169,7 +169,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(process.out[0][0].meta, process.out[0][0].tx2gene).match() }
             )
         }
     }

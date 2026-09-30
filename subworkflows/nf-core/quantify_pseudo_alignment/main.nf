@@ -33,28 +33,24 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
             reads,
             index.combine(gtf).combine(transcript_fasta).first()
         )
-        ch_pseudo_results = SALMON_QUANT.out.results
+        ch_pseudo_results = SALMON_QUANT.out.map { r -> [ r.meta, r.quant_dir ] }
         ch_pseudo_multiqc = ch_pseudo_results
 
         // Salmon writes its log inside the quant directory rather than as a
         // discrete file, so log is null. meta_info.json is an optional output.
-        ch_sample_fields = SALMON_QUANT.out.results.map { meta, dir -> [meta.id, meta, dir] }
-            .join(SALMON_QUANT.out.json_info.map { meta, f -> [meta.id, f] }, by: [0], remainder: true)
-            .map { id, meta, dir, json_info -> [id, [meta: meta, quant_dir: dir, json_info: json_info, log: null]] }
+        ch_sample_results = SALMON_QUANT.out.map { r ->
+            record(id: r.id, meta: r.meta, quant_dir: r.quant_dir, json_info: r.json_info, log: null)
+        }
     } else {
         KALLISTO_QUANT (
             reads,
-            index.combine(gtf.map { g -> [ g, [] ] }).first(),
+            index.combine(gtf.map { g -> [ g, null ] }).first(),
             kallisto_quant_fraglen,
             kallisto_quant_fraglen_sd
         )
-        ch_pseudo_results = KALLISTO_QUANT.out.results
-        ch_pseudo_multiqc = KALLISTO_QUANT.out.log
-
-        ch_sample_fields = KALLISTO_QUANT.out.results.map { meta, dir -> [meta.id, meta, dir] }
-            .join(KALLISTO_QUANT.out.json_info.map { meta, f -> [meta.id, f] }, by: [0], failOnMismatch: true, failOnDuplicate: true)
-            .join(KALLISTO_QUANT.out.log.map { meta, f -> [meta.id, f] }, by: [0], failOnMismatch: true, failOnDuplicate: true)
-            .map { id, meta, dir, json_info, log -> [id, [meta: meta, quant_dir: dir, json_info: json_info, log: log]] }
+        ch_pseudo_results = KALLISTO_QUANT.out.map { r -> [ r.meta, r.quant_dir ] }
+        ch_pseudo_multiqc = KALLISTO_QUANT.out.map { r -> [ r.meta, r.log ] }
+        ch_sample_results = KALLISTO_QUANT.out
     }
 
     //
@@ -69,16 +65,6 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
         pseudo_aligner,
         skip_merge
     )
-
-    ch_sample_results = ch_sample_fields.map { id, fields ->
-        record(
-            id:        id,
-            meta:      fields.meta,
-            quant_dir: fields.quant_dir,
-            json_info: fields.json_info,
-            log:       fields.log
-        )
-    }
 
     emit:
     results                       = ch_pseudo_results                                              // channel: [ val(meta), results_dir ]

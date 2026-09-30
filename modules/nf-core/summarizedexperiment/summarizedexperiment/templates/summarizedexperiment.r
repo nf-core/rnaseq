@@ -145,7 +145,7 @@ parse_metadata <- function(metadata_path, ids, metadata_id_col = NULL){
 # Matrices
 
 args_opt <- parse_args('$task.ext.args')
-matrix_files <- as.list(strsplit('$matrix_files', ' ')[[1]])
+matrix_files <- as.list(strsplit('${matrix_files.join(" ")}', ' ')[[1]])
 
 if ('assay_names' %in% names(args_opt)){
     names(matrix_files) <- unlist(strsplit(args_opt[['assay_names']], ',')[[1]])
@@ -169,7 +169,7 @@ se <- SummarizedExperiment(
 
 # Add column (sample) metadata if provided
 
-if ('$coldata' != ''){
+if ('$coldata' != '' && '$coldata' != 'null'){
     coldata <- parse_metadata(
         metadata_path = '$coldata',
         ids = colnames(assay_list[[1]]),
@@ -181,7 +181,7 @@ if ('$coldata' != ''){
 
 # Add row (feature) metadata if provided
 
-if ('$rowdata' != ''){
+if ('$rowdata' != '' && '$rowdata' != 'null'){
     rowdata <- parse_metadata(
         metadata_path = '$rowdata',
         ids = rownames(assay_list[[1]]),

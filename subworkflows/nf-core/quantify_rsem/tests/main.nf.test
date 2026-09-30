@@ -44,7 +44,7 @@ nextflow_workflow {
                     [ id: 'test', strandedness: 'forward' ],
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/rsem.transcript.bam', checkIfExists: true)
                 ]
-                input[2] = RSEM_PREPAREREFERENCE.out.index
+                input[2] = RSEM_PREPAREREFERENCE.out.map { r -> r.index }
                 input[3] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
                 input[4] = 'gene_id'
                 input[5] = 'gene_name'
@@ -107,7 +107,7 @@ nextflow_workflow {
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
                 ]
-                input[2] = RSEM_PREPAREREFERENCE.out.index
+                input[2] = RSEM_PREPAREREFERENCE.out.map { r -> r.index }
                 input[3] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
                 input[4] = 'gene_id'
                 input[5] = 'gene_name'
@@ -168,7 +168,7 @@ nextflow_workflow {
                     [ id: 'test', strandedness: 'forward' ],
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/rsem.transcript.bam', checkIfExists: true)
                 ]
-                input[2] = RSEM_PREPAREREFERENCE.out.index
+                input[2] = RSEM_PREPAREREFERENCE.out.map { r -> r.index }
                 input[3] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
                 input[4] = 'gene_id'
                 input[5] = 'gene_name'
@@ -217,7 +217,7 @@ nextflow_workflow {
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
                 ]
-                input[2] = RSEM_PREPAREREFERENCE.out.index
+                input[2] = RSEM_PREPAREREFERENCE.out.map { r -> r.index }
                 input[3] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
                 input[4] = 'gene_id'
                 input[5] = 'gene_name'

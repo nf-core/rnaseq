@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT {
     tag "$meta.id"
     label 'process_medium'
@@ -8,17 +10,20 @@ process SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT {
         'quay.io/biocontainers/bioconductor-summarizedexperiment:1.32.0--r43hdfd78af_0' }"
 
     input:
-    tuple val(meta), path(matrix_files)
-    tuple val(meta2), path(rowdata)
-    tuple val(meta3), path(coldata)
+    tuple(meta: Map, matrix_files: List<Path>)
+    tuple(meta2: Map, rowdata: Path?)
+    tuple(meta3: Map, coldata: Path?)
 
     output:
-    tuple val(meta), path("*.rds")              , emit: rds
-    tuple val(meta), path("*.R_sessionInfo.log"), emit: log
-    path "versions.yml"                         , emit: versions, topic: versions
+    record(
+        id:   meta.id,
+        meta: meta,
+        rds:  file("*.rds"),
+        log:  file("*.R_sessionInfo.log")
+    )
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    file('versions.yml') >> 'versions'
 
     script:
     template 'summarizedexperiment.r'

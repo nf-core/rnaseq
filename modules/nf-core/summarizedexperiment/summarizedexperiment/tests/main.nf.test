@@ -46,7 +46,7 @@ nextflow_process {
             process {
                 """
                 input[0] = UNTAR.out.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
-                input[1] = CUSTOM_TX2GENE.out.tx2gene
+                input[1] = CUSTOM_TX2GENE.out.map { r -> [ r.meta, r.tx2gene ] }
                 input[2] = 'kallisto'
                 """
             }
@@ -59,14 +59,9 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = TXIMETA_TXIMPORT.out.counts_gene
-                        .join(TXIMETA_TXIMPORT.out.counts_gene_length_scaled)
-                        .join(TXIMETA_TXIMPORT.out.counts_gene_scaled)
-                        .join(TXIMETA_TXIMPORT.out.lengths_gene)
-                        .join(TXIMETA_TXIMPORT.out.tpm_gene)
-                        .map{tuple(it[0], [it[1], it[2], it[3], it[4], it[5]])}
+                input[0] = TXIMETA_TXIMPORT.out[0].map { r -> [ r.meta, [ r.counts_gene, r.counts_gene_length_scaled, r.counts_gene_scaled, r.lengths_gene, r.tpm_gene ] ] }
 
-                input[1] = CUSTOM_TX2GENE.out.tx2gene
+                input[1] = CUSTOM_TX2GENE.out.map { r -> [ r.meta, r.tx2gene ] }
 		input[2] = [
                     [ id:'gene'], // meta map
                     file(params.modules_testdata_base_path + "genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv", checkIfExists: true)
@@ -77,12 +72,11 @@ nextflow_process {
 
         then {
             // Some of the log will vary between conda runs- but top bit should be fine
-            def loglines = path(process.out.log[0][1]).readLines()[0..14]
+            def loglines = path(process.out[0][0].log).readLines()[0..14]
 
             assertAll(
                 { assert process.success },
-                { assert snapshot(loglines).md5().match("gene_log_multi_matrix_rowdata_coldata_unify") },
-                { assert snapshot(process.out.versions).match('versions_multi_matrix_rowdata_coldata_unify') }
+                { assert snapshot(loglines).md5().match("gene_log_multi_matrix_rowdata_coldata_unify") }
             )
         }
     }
@@ -94,8 +88,8 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = TXIMETA_TXIMPORT.out.counts_gene.join(TXIMETA_TXIMPORT.out.tpm_gene).map{tuple(it[0], [it[1], it[2]])}
-                input[1] = CUSTOM_TX2GENE.out.tx2gene
+                input[0] = TXIMETA_TXIMPORT.out[0].map { r -> [ r.meta, [ r.counts_gene, r.tpm_gene ] ] }
+                input[1] = CUSTOM_TX2GENE.out.map { r -> [ r.meta, r.tx2gene ] }
 		input[2] = [
                     [ id:'gene'], // meta map
                     file(params.modules_testdata_base_path + "genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv", checkIfExists: true)
@@ -106,12 +100,11 @@ nextflow_process {
 
         then {
             // Some of the log will vary between conda runs- but top bit should be fine
-            def loglines = path(process.out.log[0][1]).readLines()[0..14]
+            def loglines = path(process.out[0][0].log).readLines()[0..14]
 
             assertAll(
                 { assert process.success },
-                { assert snapshot(loglines).md5().match("gene_log_multi_matrix_rowdata_coldata") },
-                { assert snapshot(process.out.versions).match('versions_multi_matrix_rowdata_coldata') }
+                { assert snapshot(loglines).md5().match("gene_log_multi_matrix_rowdata_coldata") }
             )
         }
     }
@@ -123,21 +116,20 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = TXIMETA_TXIMPORT.out.counts_gene.join(TXIMETA_TXIMPORT.out.tpm_gene).map{tuple(it[0], [it[1], it[2]])}
-                input[1] = CUSTOM_TX2GENE.out.tx2gene
-                input[2] = Channel.of([ [], [] ])
+                input[0] = TXIMETA_TXIMPORT.out[0].map { r -> [ r.meta, [ r.counts_gene, r.tpm_gene ] ] }
+                input[1] = CUSTOM_TX2GENE.out.map { r -> [ r.meta, r.tx2gene ] }
+                input[2] = Channel.of([ [:], null ])
                 """
             }
         }
 
         then {
             // Some of the log will vary between conda runs- but top bit should be fine
-            def loglines = path(process.out.log[0][1]).readLines()[0..14]
+            def loglines = path(process.out[0][0].log).readLines()[0..14]
 
             assertAll(
                 { assert process.success },
-                { assert snapshot(loglines).md5().match("gene_log_multi_matrix_rowdata") },
-                { assert snapshot(process.out.versions).match('versions_multi_matrix_rowdata') }
+                { assert snapshot(loglines).md5().match("gene_log_multi_matrix_rowdata") }
             )
         }
     }
@@ -149,21 +141,20 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = TXIMETA_TXIMPORT.out.counts_gene.join(TXIMETA_TXIMPORT.out.tpm_gene).map{tuple(it[0], [it[1], it[2]])}
-                input[1] = Channel.of([ [], [] ])
-                input[2] = Channel.of([ [], [] ])
+                input[0] = TXIMETA_TXIMPORT.out[0].map { r -> [ r.meta, [ r.counts_gene, r.tpm_gene ] ] }
+                input[1] = Channel.of([ [:], null ])
+                input[2] = Channel.of([ [:], null ])
                 """
             }
         }
 
         then {
             // Some of the log will vary between conda runs- but top bit should be fine
-            def loglines = path(process.out.log[0][1]).readLines()[0..14]
+            def loglines = path(process.out[0][0].log).readLines()[0..14]
 
             assertAll(
                 { assert process.success },
-                { assert snapshot(loglines).md5().match("gene_log_multi_matrix") },
-                { assert snapshot(process.out.versions).match('versions_multi_matrix') }
+                { assert snapshot(loglines).md5().match("gene_log_multi_matrix") }
             )
         }
     }
@@ -175,21 +166,20 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = TXIMETA_TXIMPORT.out.counts_gene
-                input[1] = Channel.of([ [], [] ])
-                input[2] = Channel.of([ [], [] ])
+                input[0] = TXIMETA_TXIMPORT.out[0].map { r -> [ r.meta, r.counts_gene ] }
+                input[1] = Channel.of([ [:], null ])
+                input[2] = Channel.of([ [:], null ])
                 """
             }
         }
 
         then {
             // Some of the log will vary between conda runs- but top bit should be fine
-            def loglines = path(process.out.log[0][1]).readLines()[0..14]
+            def loglines = path(process.out[0][0].log).readLines()[0..14]
 
             assertAll(
                 { assert process.success },
-                { assert snapshot(loglines).md5().match("gene_log_single_matrix") },
-                { assert snapshot(process.out.versions).match('versions_single_matrix') }
+                { assert snapshot(loglines).md5().match("gene_log_single_matrix") }
             )
         }
     }
@@ -202,8 +192,8 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = TXIMETA_TXIMPORT.out.counts_gene.join(TXIMETA_TXIMPORT.out.tpm_gene).map{tuple(it[0], [it[1], it[2]])}
-                input[1] = CUSTOM_TX2GENE.out.tx2gene
+                input[0] = TXIMETA_TXIMPORT.out[0].map { r -> [ r.meta, [ r.counts_gene, r.tpm_gene ] ] }
+                input[1] = CUSTOM_TX2GENE.out.map { r -> [ r.meta, r.tx2gene ] }
 		input[2] = [
                     [ id:'gene'], // meta map
                     file(params.modules_testdata_base_path + "genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv", checkIfExists: true)
@@ -215,8 +205,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out.log).match("gene_log_multi_matrix_rowdata_coldataa_stub") },
-                { assert snapshot(process.out.versions).match('versions_multi_matrix_rowdata_coldata_stub') }
+                { assert snapshot(process.out[0][0].log).match("gene_log_multi_matrix_rowdata_coldataa_stub") }
             )
         }
     }
@@ -229,9 +218,9 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = TXIMETA_TXIMPORT.out.counts_gene.join(TXIMETA_TXIMPORT.out.tpm_gene).map{tuple(it[0], [it[1], it[2]])}
-                input[1] = CUSTOM_TX2GENE.out.tx2gene
-                input[2] = Channel.of([ [], [] ])
+                input[0] = TXIMETA_TXIMPORT.out[0].map { r -> [ r.meta, [ r.counts_gene, r.tpm_gene ] ] }
+                input[1] = CUSTOM_TX2GENE.out.map { r -> [ r.meta, r.tx2gene ] }
+                input[2] = Channel.of([ [:], null ])
                 """
             }
         }
@@ -239,8 +228,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out.log).match("gene_log_multi_matrix_rowdata_stub") },
-                { assert snapshot(process.out.versions).match('versions_multi_matrix_rowdata_stub') }
+                { assert snapshot(process.out[0][0].log).match("gene_log_multi_matrix_rowdata_stub") }
             )
         }
     }
@@ -253,9 +241,9 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = TXIMETA_TXIMPORT.out.counts_gene.join(TXIMETA_TXIMPORT.out.tpm_gene).map{tuple(it[0], [it[1], it[2]])}
-                input[1] = Channel.of([ [], [] ])
-                input[2] = Channel.of([ [], [] ])
+                input[0] = TXIMETA_TXIMPORT.out[0].map { r -> [ r.meta, [ r.counts_gene, r.tpm_gene ] ] }
+                input[1] = Channel.of([ [:], null ])
+                input[2] = Channel.of([ [:], null ])
                 """
             }
         }
@@ -263,8 +251,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out.log).match("gene_log_multi_matrix_stub") },
-                { assert snapshot(process.out.versions).match('versions_multi_matrix_stub') }
+                { assert snapshot(process.out[0][0].log).match("gene_log_multi_matrix_stub") }
             )
         }
     }
@@ -277,9 +264,9 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = TXIMETA_TXIMPORT.out.counts_gene
-                input[1] = Channel.of([ [], [] ])
-                input[2] = Channel.of([ [], [] ])
+                input[0] = TXIMETA_TXIMPORT.out[0].map { r -> [ r.meta, r.counts_gene ] }
+                input[1] = Channel.of([ [:], null ])
+                input[2] = Channel.of([ [:], null ])
                 """
             }
         }
@@ -287,8 +274,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out.log).match("gene_log_single_matrix_stub") },
-                { assert snapshot(process.out.versions).match('versions_single_matrix_stub') }
+                { assert snapshot(process.out[0][0].log).match("gene_log_single_matrix_stub") }
             )
         }
     }

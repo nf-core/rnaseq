@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process CUSTOM_RSEMMERGECOUNTS {
     tag "$meta.id"
     label "process_medium"
@@ -8,20 +10,28 @@ process CUSTOM_RSEMMERGECOUNTS {
         'quay.io/nf-core/ubuntu:20.04' }"
 
     input:
-    tuple val(meta), path ('genes/*')
-    path ('isoforms/*')
+    tuple(meta: Map, genes: List<Path>)
+    isoforms: List<Path>
+
+    stage:
+    stageAs genes, 'genes/*'
+    stageAs isoforms, 'isoforms/*'
 
     output:
-    tuple val(meta), path("${prefix}.gene_counts.tsv")      , emit: counts_gene
-    tuple val(meta), path("${prefix}.gene_tpm.tsv")         , emit: tpm_gene
-    tuple val(meta), path("${prefix}.transcript_counts.tsv"), emit: counts_transcript
-    tuple val(meta), path("${prefix}.transcript_tpm.tsv")   , emit: tpm_transcript
-    tuple val(meta), path("${prefix}.genes_long.tsv")       , emit: genes_long
-    tuple val(meta), path("${prefix}.isoforms_long.tsv")    , emit: isoforms_long
-    tuple val("${task.process}"), val('sed'), eval("sed --version 2>&1 | sed '1!d;s/^.*) //'"), emit: versions_sed, topic: versions
+    record(
+        id: meta.id,
+        rsem_merge: record(
+            counts_gene:       file("${prefix}.gene_counts.tsv"),
+            tpm_gene:          file("${prefix}.gene_tpm.tsv"),
+            counts_transcript: file("${prefix}.transcript_counts.tsv"),
+            tpm_transcript:    file("${prefix}.transcript_tpm.tsv"),
+            genes_long:        file("${prefix}.genes_long.tsv"),
+            isoforms_long:     file("${prefix}.isoforms_long.tsv")
+        )
+    )
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'sed', eval("sed --version 2>&1 | sed '1!d;s/^.*) //'")) >> 'versions'
 
     script:
     prefix = task.ext.prefix ?: "${meta.id}"

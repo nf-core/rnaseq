@@ -49,7 +49,7 @@ nextflow_workflow {
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                     ]
                 ]
-                input[2]  = SALMON_INDEX.out.index
+                input[2]  = SALMON_INDEX.out.map { r -> [ r.meta, r.index ] }
                 input[3]  = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))
                 input[4]  = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true))
                 input[5]  = 'gene_id'
@@ -112,7 +112,7 @@ nextflow_workflow {
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                     ]
                 ]
-                input[2]  = KALLISTO_INDEX.out.index
+                input[2]  = KALLISTO_INDEX.out.map { r -> [ r.meta, r.index ] }
                 input[3]  = channel.of(file(params.modules_testdata_base_path +  "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))
                 input[4]  = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true))
                 input[5]  = 'gene_id'
@@ -177,7 +177,7 @@ nextflow_workflow {
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                     ]
                 ]
-                input[2]  = SALMON_INDEX.out.index
+                input[2]  = SALMON_INDEX.out.map { r -> [ r.meta, r.index ] }
                 input[3]  = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))
                 input[4]  = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true))
                 input[5]  = 'gene_id'
@@ -230,7 +230,7 @@ nextflow_workflow {
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                     ]
                 ]
-                input[2]  = KALLISTO_INDEX.out.index
+                input[2]  = KALLISTO_INDEX.out.map { r -> [ r.meta, r.index ] }
                 input[3]  = channel.of(file(params.modules_testdata_base_path +  "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))
                 input[4]  = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true))
                 input[5]  = 'gene_id'

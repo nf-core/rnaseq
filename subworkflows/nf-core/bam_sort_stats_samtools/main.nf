@@ -20,7 +20,13 @@ workflow BAM_SORT_STATS_SAMTOOLS {
     ch_sorted = SAMTOOLS_SORT(ch_bam, ch_fasta, ch_fai, '')
         .filter { r -> r.bam != null }
 
-    ch_indexed = ch_sorted.join(SAMTOOLS_INDEX(ch_sorted), by: 'id')
+    ch_sorted_indexed = ch_sorted.join(SAMTOOLS_INDEX(ch_sorted), by: 'id', remainder: true)
+    ch_sorted_indexed.subscribe { r ->
+        if( r.bam == null || r.bai == null ) {
+            error "Sample '${r.id}' is missing its samtools index result"
+        }
+    }
+    ch_indexed = ch_sorted_indexed.filter { r -> r.bam != null && r.bai != null }
 
     // SAMTOOLS_SORT also carries cram, sam, csi and crai fields; dropping them keeps them from
     // overwriting same-named fields when a caller joins this result onto its own record.

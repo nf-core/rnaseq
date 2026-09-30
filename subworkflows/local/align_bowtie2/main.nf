@@ -55,7 +55,7 @@ workflow ALIGN_BOWTIE2 {
 
     // The BAM is aligned to the transcriptome, and its unsorted form is what Salmon quantifies:
     // a coordinate-sorted BAM breaks paired-end quantification.
-    ch_results = ch_bowtie2
+    ch_bowtie2_sorted = ch_bowtie2
         .map { r ->
             r + record(
                 aligner:           'bowtie2',
@@ -63,7 +63,13 @@ workflow ALIGN_BOWTIE2 {
                 transcriptome_bam: r.raw_bams[0]
             )
         }
-        .join(ch_sorted, by: 'id')
+        .join(ch_sorted, by: 'id', remainder: true)
+    ch_bowtie2_sorted.subscribe { r ->
+        if( r.bowtie2 == null || r.samtools == null ) {
+            error "Sample '${r.id}' is missing its Bowtie2 sorted BAM result"
+        }
+    }
+    ch_results = ch_bowtie2_sorted.filter { r -> r.bowtie2 != null && r.samtools != null }
 
     emit:
     ch_results // channel: Bowtie2Aligned

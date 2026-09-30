@@ -155,7 +155,13 @@ workflow RNASEQ {
     // Index pre-aligned genome BAM files; a sample may supply only a transcriptome BAM
     ch_prealigned_genome = ch_bam_samples.filter { s -> s.bam != null }
     ch_bam_index = SAMTOOLS_INDEX(ch_prealigned_genome)
-    ch_prealigned = ch_prealigned_genome.join(ch_bam_index, by: 'id')
+    ch_prealigned_indexed = ch_prealigned_genome.join(ch_bam_index, by: 'id', remainder: true)
+    ch_prealigned_indexed.subscribe { r ->
+        if( r.bam == null || r.bai == null ) {
+            error "Sample '${r.id}' is missing its pre-aligned BAM index result"
+        }
+    }
+    ch_prealigned = ch_prealigned_indexed.filter { r -> r.bam != null && r.bai != null }
 
     //
     // Run RNA-seq FASTQ preprocessing subworkflow
@@ -344,7 +350,13 @@ workflow RNASEQ {
             params.umitools_dedup_primary_only
         )
 
-        ch_genome_bam = ch_genome_bam.join(ch_umi_dedup, by: 'id')
+        ch_genome_deduped = ch_genome_bam.join(ch_umi_dedup, by: 'id', remainder: true)
+        ch_genome_deduped.subscribe { r ->
+            if( r.genomic_dedup_log == null ) {
+                error "Sample '${r.id}' is missing its UMI deduplication result"
+            }
+        }
+        ch_genome_bam = ch_genome_deduped.filter { r -> r.genomic_dedup_log != null }
         ch_transcriptome_bam = ch_umi_dedup.filter { r -> r.transcriptome_bam != null }
 
         // Genome-side files only; MultiQC cannot tell transcriptome stats apart from genome stats

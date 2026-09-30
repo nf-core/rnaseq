@@ -59,8 +59,14 @@ workflow ALIGN_STAR {
     //
     ch_sorted = BAM_SORT_STATS_SAMTOOLS(ch_star, fasta, fai)
 
-    ch_results = ch_star
-        .join(ch_sorted, by: 'id')
+    ch_star_sorted = ch_star.join(ch_sorted, by: 'id', remainder: true)
+    ch_star_sorted.subscribe { r ->
+        if( r.star == null || r.samtools == null ) {
+            error "Sample '${r.id}' is missing its STAR sorted BAM result"
+        }
+    }
+    ch_results = ch_star_sorted
+        .filter { r -> r.star != null && r.samtools != null }
         .map { r -> r + record(aligner: 'star', percent_mapped: getStarPercentMapped(params, r.star.log_final)) }
 
     emit:

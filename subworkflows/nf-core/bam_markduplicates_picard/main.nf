@@ -32,8 +32,14 @@ workflow BAM_MARKDUPLICATES_PICARD {
     }
 
     // remainder keeps samples without samtools stats when the caller disabled them.
-    ch_results = ch_markdup
-        .join(ch_index, by: 'id')
+    ch_markdup_indexed = ch_markdup.join(ch_index, by: 'id', remainder: true)
+    ch_markdup_indexed.subscribe { r ->
+        if( r.metrics == null || r.bai == null ) {
+            error "Sample '${r.id}' is missing its samtools index result"
+        }
+    }
+    ch_results = ch_markdup_indexed
+        .filter { r -> r.metrics != null && r.bai != null }
         .join(ch_stats, by: 'id', remainder: true)
 
     emit:

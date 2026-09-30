@@ -57,7 +57,9 @@ workflow BAM_QC_RNASEQ {
     // Requires ext.args = '-n' to be set by the caller for SAMTOOLS_SORT_QUALIMAP
     //
     SAMTOOLS_SORT_QUALIMAP (
-        ch_genome_bam.filter { 'qualimap' in tools },
+        ch_genome_bam
+            .filter { 'qualimap' in tools }
+            .map { meta, bam -> record(id: meta.id, meta: meta, bam: bam) },
         ch_fasta_fai,
         ''
     )

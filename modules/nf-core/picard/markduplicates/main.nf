@@ -10,12 +10,12 @@ process PICARD_MARKDUPLICATES {
         : 'community.wave.seqera.io/library/picard:3.5.0--842d4c70c98af9b4'}"
 
     input:
-    tuple(meta: Map, reads: Path)
+    record(id: String, meta: Map, bam: Path)
     tuple(meta2: Map, fasta: Path?, fai: Path?)
 
     output:
     record(
-        id:      meta.id,
+        id:      id,
         meta:    meta,
         bam:     file('*.bam', optional: true),
         bai:     file('*.bai', optional: true),
@@ -29,7 +29,7 @@ process PICARD_MARKDUPLICATES {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def suffix = reads.getExtension()
+    def suffix = bam.getExtension()
     def reference = fasta ? "--REFERENCE_SEQUENCE ${fasta}" : ""
     def avail_mem = 3072
     if (!task.memory) {
@@ -39,7 +39,7 @@ process PICARD_MARKDUPLICATES {
         avail_mem = (task.memory.toMega() * 0.8).intValue()
     }
 
-    if ("${reads}" == "${prefix}.${suffix}") {
+    if ("${bam}" == "${prefix}.${suffix}") {
         error("Input and output names are the same, use \"task.ext.prefix\" to disambiguate!")
     }
     """
@@ -47,7 +47,7 @@ process PICARD_MARKDUPLICATES {
         -Xmx${avail_mem}M \\
         MarkDuplicates \\
         ${args} \\
-        --INPUT ${reads} \\
+        --INPUT ${bam} \\
         --OUTPUT ${prefix}.${suffix} \\
         ${reference} \\
         --METRICS_FILE ${prefix}.metrics.txt
@@ -55,8 +55,8 @@ process PICARD_MARKDUPLICATES {
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def suffix = reads.getExtension()
-    if ("${reads}" == "${prefix}.${suffix}") {
+    def suffix = bam.getExtension()
+    if ("${bam}" == "${prefix}.${suffix}") {
         error("Input and output names are the same, use \"task.ext.prefix\" to disambiguate!")
     }
     """

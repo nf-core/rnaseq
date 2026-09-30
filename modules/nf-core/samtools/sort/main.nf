@@ -10,7 +10,7 @@ process SAMTOOLS_SORT {
         : 'community.wave.seqera.io/library/htslib_samtools:1.24--d697cfb9dce007cd'}"
 
     input:
-    tuple(meta: Map, bam: List<Path>)
+    record(id: String, meta: Map, bam: List<Path>)
     tuple(meta2: Map, fasta: Path?, fai: Path?)
     index_format: String
 
@@ -19,6 +19,7 @@ process SAMTOOLS_SORT {
 
     output:
     record(
+        id:   id,
         meta: meta,
         bam:  file("${prefix}.bam", optional: true),
         cram: file("${prefix}.cram", optional: true),

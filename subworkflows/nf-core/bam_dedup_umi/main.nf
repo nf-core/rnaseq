@@ -66,11 +66,11 @@ workflow BAM_DEDUP_UMI {
     // 1. Coordinate sort
 
     BAM_SORT_STATS_SAMTOOLS(
-        ch_transcriptome_bam,
+        ch_transcriptome_bam.map { meta, bam -> record(id: meta.id, meta: meta, bam: bam) },
         ch_transcript_fasta_fai,
     )
-    ch_sorted_transcriptome_bam = BAM_SORT_STATS_SAMTOOLS.out.bam.join(BAM_SORT_STATS_SAMTOOLS.out.index)
-    ch_coord_sorted_transcriptome = BAM_SORT_STATS_SAMTOOLS.out.results.map { r -> [r.id, r] }
+    ch_sorted_transcriptome_bam = BAM_SORT_STATS_SAMTOOLS.out.map { r -> [r.meta, r.bam, r.bai] }
+    ch_coord_sorted_transcriptome = BAM_SORT_STATS_SAMTOOLS.out.map { r -> [r.id, r] }
 
     // 2. Transcriptome BAM deduplication
     if (umi_dedup_tool == "umicollapse") {
@@ -97,7 +97,7 @@ workflow BAM_DEDUP_UMI {
 
     // 3. Restore name sorting
     SAMTOOLS_SORT(
-        UMI_DEDUP_TRANSCRIPTOME.out.bam,
+        UMI_DEDUP_TRANSCRIPTOME.out.bam.map { meta, bam -> record(id: meta.id, meta: meta, bam: bam) },
         ch_fasta_fai,
         '',
     )

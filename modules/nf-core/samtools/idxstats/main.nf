@@ -10,10 +10,10 @@ process SAMTOOLS_IDXSTATS {
         : 'community.wave.seqera.io/library/htslib_samtools:1.24--d697cfb9dce007cd'}"
 
     input:
-    tuple(meta: Map, bam: Path, bai: Path)
+    record(id: String, meta: Map, bam: Path, bai: Path)
 
     output:
-    record(meta: meta, idxstats: file('*.idxstats'))
+    record(id: id, meta: meta, idxstats: file('*.idxstats'))
 
     topic:
     tuple(task.process, 'samtools', eval("samtools version | sed '1!d;s/.* //'")) >> 'versions'

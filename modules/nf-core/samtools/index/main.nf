@@ -10,10 +10,10 @@ process SAMTOOLS_INDEX {
         : 'community.wave.seqera.io/library/htslib_samtools:1.24--d697cfb9dce007cd'}"
 
     input:
-    tuple(meta: Map, input: Path)
+    record(id: String, meta: Map, bam: Path)
 
     output:
-    record(meta: meta, index: file('*.{bai,csi,crai}'))
+    record(id: id, meta: meta, bai: file('*.{bai,csi,crai}'))
 
     topic:
     tuple(task.process, 'samtools', eval("samtools version | sed '1!d;s/.* //'")) >> 'versions'
@@ -25,15 +25,15 @@ process SAMTOOLS_INDEX {
         index \\
         -@ ${task.cpus} \\
         ${args} \\
-        ${input}
+        ${bam}
     """
 
     stub:
     def args = task.ext.args ?: ''
-    def extension = input.getExtension() == 'cram'
+    def extension = bam.getExtension() == 'cram'
         ? "crai"
         : args.contains("-c") ? "csi" : "bai"
     """
-    touch ${input}.${extension}
+    touch ${bam}.${extension}
     """
 }

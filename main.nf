@@ -158,8 +158,8 @@ include { getGenomeAttribute         } from './subworkflows/local/utils_nfcore_r
 include { isStarIndexLegacy          } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { anySampleAutoStrandedness  } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 
-include { StringtieAssembly; AlignedSample; LintFile; SamplesheetRow; Contaminants; StringtieSample; BigwigSample; PipelineInfo; GenomeArtifact; UmiDedupBam; MarkdupBam; BamQcRnaseq; StringtieMerged; BigwigFiles; RrnaReferences; FastqQcTrimFilterSetstrandedness; QuantMerged; SampleRuns; TrimStatus; MapStatus; StrandStatus; PercentMapped } from './modules/nf-core/types'
-include { RsemMerge; RsemMergeSample } from './modules/nf-core/custom/rsemmergecounts/main'
+include { AlignedSample; LintFile; SamplesheetRow; Contaminants; StringtieSample; BigwigSample; PipelineInfo; GenomeArtifact; UmiDedupBam; MarkdupBam; BamQcRnaseq; StringtieMerged; RrnaReferences; FastqQcTrimFilterSetstrandedness; QuantMerged; TrimStatus; MapStatus; StrandStatus } from './modules/nf-core/types'
+include { RsemMergeSample } from './modules/nf-core/custom/rsemmergecounts/main'
 include { KallistoQuantSample } from './modules/nf-core/kallisto/quant/main'
 include { MultiqcReport } from './modules/nf-core/multiqc/main'
 include { RsemQuantSample } from './modules/nf-core/rsem/calculateexpression/main'
@@ -276,8 +276,7 @@ workflow NFCORE_RNASEQ {
         qc_tools
     )
 
-    // Matches current behavior: no task-workdir guard, so a user-supplied
-    // --bowtie2_rrna_index is republished here exactly as it is today.
+    // No task-workdir guard: a user-supplied --bowtie2_rrna_index is republished too.
     def ch_rrna_bowtie2_index: Channel<Path> = results.rrna_references
         .map { r -> r.bowtie2_index }
         .flatMap { index -> index == null ? [] : [index] }
@@ -296,12 +295,11 @@ workflow NFCORE_RNASEQ {
     // coordinate-sorted BAM; bowtie2_salmon aligns to the transcriptome, so its unsorted bowtie2 BAM is the transcriptome_bam.
     // The BAMs are published by the `aligned` output, so the row carries their published location
     // as a string; routing the Paths through `samplesheet` too would copy each file twice.
-    ch_runs           = results.reads.map { r -> record(id: r.id, runs: r.runs) }
-    ch_percent_mapped = results.percent_mapped.map { r -> record(id: r.id, percent_mapped: r.percent_mapped) }
+    ch_runs = results.reads.map { r -> record(id: r.id, runs: r.runs) }
 
     def ch_samplesheet_rows: Channel<SamplesheetRow> = results.aligned
         .join(ch_runs, by: 'id')
-        .join(ch_percent_mapped, by: 'id')
+        .join(results.percent_mapped, by: 'id')
         .flatMap { r ->
             r.runs.collect { run ->
                 record(
@@ -319,45 +317,45 @@ workflow NFCORE_RNASEQ {
         }
 
     emit:
-    trim_status:          Channel<TrimStatus>   = results.trim_status
-    map_status:           Channel<MapStatus>    = results.map_status
-    strand_status:        Channel<StrandStatus> = results.strand_status
-    multiqc_report:       Channel<Path>                             = results.multiqc_report
-    genome_references:    Channel<GenomeArtifact>                   = references.references
-    genome_intermediates: Channel<GenomeArtifact>                   = references.intermediates
-    genome_indices:       Channel<GenomeArtifact>                   = indices.indices
-    rrna_bowtie2_index:   Channel<Path>                             = ch_rrna_bowtie2_index
-    rrna_seqkit:          Channel<RrnaReferences>                   = ch_rrna_seqkit
+    trim_status:           Channel<TrimStatus>                       = results.trim_status
+    map_status:            Channel<MapStatus>                        = results.map_status
+    strand_status:         Channel<StrandStatus>                     = results.strand_status
+    multiqc_report:        Channel<Path>                             = results.multiqc_report
+    genome_references:     Channel<GenomeArtifact>                   = references.references
+    genome_intermediates:  Channel<GenomeArtifact>                   = references.intermediates
+    genome_indices:        Channel<GenomeArtifact>                   = indices.indices
+    rrna_bowtie2_index:    Channel<Path>                             = ch_rrna_bowtie2_index
+    rrna_seqkit:           Channel<RrnaReferences>                   = ch_rrna_seqkit
 
     // Stage result records, keyed on id
-    preprocessed:         Channel<FastqQcTrimFilterSetstrandedness> = results.preprocessed
-    lint_raw:             Channel<LintFile>                         = ch_lint_raw
-    lint_trimmed:         Channel<LintFile>                         = ch_lint_trimmed
-    lint_bbsplit:         Channel<LintFile>                         = ch_lint_bbsplit
-    lint_ribo:            Channel<LintFile>                         = ch_lint_ribo
-    aligned:              Channel<AlignedSample>                    = results.aligned
-    umi_dedup:            Channel<UmiDedupBam>                      = results.umi_dedup
-    markdup:              Channel<MarkdupBam>                       = results.markdup
-    bam_qc:               Channel<BamQcRnaseq>                      = results.bam_qc
-    bam_qc_rustqc:        Channel<RustqcResult>                     = results.bam_qc_rustqc
-    samplesheet:          Channel<SamplesheetRow>                   = ch_samplesheet_rows
-    quant:                Channel<RsemQuantSample>                  = results.quant
-    quant_salmon:         Channel<SalmonQuantSample>                = results.quant_salmon
-    quant_merged:         Channel<QuantMerged>                      = results.quant_merged
-    quant_rsem_merge:     Channel<RsemMergeSample>                  = results.quant_rsem_merge
-    quant_pseudo:         Channel<SalmonQuantSample>                = results.quant_pseudo
-    quant_pseudo_kallisto: Channel<KallistoQuantSample>             = results.quant_pseudo_kallisto
-    quant_merged_pseudo:  Channel<QuantMerged>                      = results.quant_merged_pseudo
-    contaminants:         Channel<Contaminants>               = results.contaminants
-    stringtie:            Channel<StringtieSample>                  = results.stringtie
-    bigwig:               Channel<BigwigSample>                     = results.bigwig
+    preprocessed:          Channel<FastqQcTrimFilterSetstrandedness> = results.preprocessed
+    lint_raw:              Channel<LintFile>                         = ch_lint_raw
+    lint_trimmed:          Channel<LintFile>                         = ch_lint_trimmed
+    lint_bbsplit:          Channel<LintFile>                         = ch_lint_bbsplit
+    lint_ribo:             Channel<LintFile>                         = ch_lint_ribo
+    aligned:               Channel<AlignedSample>                    = results.aligned
+    umi_dedup:             Channel<UmiDedupBam>                      = results.umi_dedup
+    markdup:               Channel<MarkdupBam>                       = results.markdup
+    bam_qc:                Channel<BamQcRnaseq>                      = results.bam_qc
+    bam_qc_rustqc:         Channel<RustqcResult>                     = results.bam_qc_rustqc
+    samplesheet:           Channel<SamplesheetRow>                   = ch_samplesheet_rows
+    quant:                 Channel<RsemQuantSample>                  = results.quant
+    quant_salmon:          Channel<SalmonQuantSample>                = results.quant_salmon
+    quant_merged:          Channel<QuantMerged>                      = results.quant_merged
+    quant_rsem_merge:      Channel<RsemMergeSample>                  = results.quant_rsem_merge
+    quant_pseudo:          Channel<SalmonQuantSample>                = results.quant_pseudo
+    quant_pseudo_kallisto: Channel<KallistoQuantSample>              = results.quant_pseudo_kallisto
+    quant_merged_pseudo:   Channel<QuantMerged>                      = results.quant_merged_pseudo
+    contaminants:          Channel<Contaminants>                     = results.contaminants
+    stringtie:             Channel<StringtieSample>                  = results.stringtie
+    bigwig:                Channel<BigwigSample>                     = results.bigwig
 
     // Run-level result records
-    stringtie_merged:     Channel<StringtieMerged>                  = results.stringtie_merged
-    deseq2:               Channel<Deseq2Qc>                    = results.deseq2
-    deseq2_pseudo:        Channel<Deseq2Qc>                    = results.deseq2_pseudo
-    multiqc:              Channel<MultiqcReport>                    = results.multiqc
-    pipeline_info:        Channel<PipelineInfo>                     = results.pipeline_info
+    stringtie_merged:      Channel<StringtieMerged>                  = results.stringtie_merged
+    deseq2:                Channel<Deseq2Qc>                         = results.deseq2
+    deseq2_pseudo:         Channel<Deseq2Qc>                         = results.deseq2_pseudo
+    multiqc:               Channel<MultiqcReport>                    = results.multiqc
+    pipeline_info:         Channel<PipelineInfo>                     = results.pipeline_info
 }
 
 /*
@@ -447,7 +445,7 @@ def samplePrefix(id: String) -> String { params.skip_quantification_merge ? "${i
 def alignedDir(id: String) -> String { "${samplePrefix(id)}${params.aligner}/" }
 
 output {
-    contaminants: Channel<Contaminants> {   // record(id, meta, kraken2, bracken, sylph, sylphtax); exactly one tool branch is populated per run
+    contaminants: Channel<Contaminants> {   // exactly one tool branch is populated per run
         enabled !params.skip_qc && params.contaminant_screening
         path { s ->
             def dir     = "${alignedDir(s.id)}contaminants/"
@@ -466,7 +464,7 @@ output {
         }
     }
 
-    stringtie: Channel<StringtieSample> {   // record(id, meta, transcript_gtf, abundance, coverage_gtf, ballgown, denovo: StringtieAssembly?)
+    stringtie: Channel<StringtieSample> {
         enabled !params.skip_stringtie
         path { s ->
             def dir = "${alignedDir(s.id)}stringtie/"
@@ -477,46 +475,47 @@ output {
         }
     }
 
-    stringtie_merged: Channel<StringtieMerged> {   // record(id, merged_gtf); cross-sample, only under --stringtie_ignore_gtf, never sample-prefixed
+    stringtie_merged: Channel<StringtieMerged> {   // cross-sample, never sample-prefixed
         enabled !params.skip_stringtie && params.stringtie_ignore_gtf
         path { s -> s.merged_gtf >> "${params.aligner}/stringtie/" }
     }
 
-    bigwig: Channel<BigwigSample> {   // record(id, meta, combined, forward, reverse), each BigwigFiles { bigwig, bedgraph }; bedgraph stays unrouted
+    bigwig: Channel<BigwigSample> {   // bedgraph stays unrouted
         enabled !params.skip_bigwig
         path { s ->
             [([s.combined?.bigwig, s.forward?.bigwig, s.reverse?.bigwig]): "${alignedDir(s.id)}bigwig/"]
         }
     }
 
-    genome_references: Channel<GenomeArtifact> {   // GenomeArtifact stream, one record per top-level reference file; never sample-prefixed
+    // The genome targets route on GenomeArtifact.kind: 'kraken_db' (genome_references) and 'sortmerna' (genome_indices).
+    genome_references: Channel<GenomeArtifact> {   // never sample-prefixed
         enabled params.save_reference
         path { r -> r.file >> (r.kind == 'kraken_db' ? 'genome/index/' : 'genome/') }
     }
 
-    genome_intermediates: Channel<GenomeArtifact> {   // GenomeArtifact stream, one record per superseded/incidental reference file; never sample-prefixed
+    genome_intermediates: Channel<GenomeArtifact> {   // never sample-prefixed
         enabled params.save_reference
         path { r -> r.file >> 'genome/' }
     }
 
-    genome_indices: Channel<GenomeArtifact> {   // GenomeArtifact stream, one record per index/log; never sample-prefixed
+    genome_indices: Channel<GenomeArtifact> {   // never sample-prefixed
         enabled params.save_reference
         path { r -> r.file >> (r.kind == 'sortmerna' ? 'genome/sortmerna/' : 'genome/index/') }
     }
 
-    rrna_bowtie2_index: Channel<Path> {   // path(bowtie2_rrna/index/); never sample-prefixed
+    rrna_bowtie2_index: Channel<Path> {   // never sample-prefixed
         enabled params.save_reference
         path { p -> p >> 'bowtie2_rrna/index/' }
     }
 
-    rrna_seqkit: Channel<RrnaReferences> {   // record(bowtie2_index, seqkit_prefixed, seqkit_converted); ch_rrna_seqkit guarantees at least one FASTA list is non-empty
+    rrna_seqkit: Channel<RrnaReferences> {   // ch_rrna_seqkit guarantees at least one FASTA list is non-empty
         path { r ->
             r.seqkit_prefixed >> 'seqkit/'
             r.seqkit_converted >> 'seqkit/'
         }
     }
 
-    preprocessed: Channel<FastqQcTrimFilterSetstrandedness> {   // FastqQcTrimFilterSetstrandedness; no single anchor field survives every skip combination
+    preprocessed: Channel<FastqQcTrimFilterSetstrandedness> {   // no single anchor field survives every skip combination
         path { s ->
             def sp       = samplePrefix(s.id)
             def fastqc   = "${sp}fastqc/"
@@ -560,23 +559,23 @@ output {
     }
 
     // One target per FQ_LINT stage: same basename, avoids the >> collision (nextflow-io/nextflow#6617).
-    lint_raw: Channel<LintFile> {   // record(id, file); file is guaranteed non-null, ch_lint_raw filters out nulls before this target
+    lint_raw: Channel<LintFile> {   // file is non-null: ch_lint_raw filters nulls
         path { s -> s.file >> "${samplePrefix(s.id)}fq_lint/raw/" }
     }
 
-    lint_trimmed: Channel<LintFile> {   // record(id, file); file is guaranteed non-null, ch_lint_trimmed filters out nulls before this target
+    lint_trimmed: Channel<LintFile> {   // file is non-null: ch_lint_trimmed filters nulls
         path { s -> s.file >> "${samplePrefix(s.id)}fq_lint/trimmed/" }
     }
 
-    lint_bbsplit: Channel<LintFile> {   // record(id, file); file is guaranteed non-null, ch_lint_bbsplit filters out nulls before this target
+    lint_bbsplit: Channel<LintFile> {   // file is non-null: ch_lint_bbsplit filters nulls
         path { s -> s.file >> "${samplePrefix(s.id)}fq_lint/bbsplit/" }
     }
 
-    lint_ribo: Channel<LintFile> {   // record(id, file); file is guaranteed non-null, ch_lint_ribo filters out nulls before this target
+    lint_ribo: Channel<LintFile> {   // file is non-null: ch_lint_ribo filters nulls
         path { s -> s.file >> "${samplePrefix(s.id)}fq_lint/${params.ribo_removal_tool ?: 'sortmerna'}/" }
     }
 
-    aligned: Channel<AlignedSample> {   // STAR, Bowtie2 or HISAT2 result; anchor: samtools.stats
+    aligned: Channel<AlignedSample> {
         path { s ->
             def dir         = alignedDir(s.id)
             def logDir      = "${dir}log/"
@@ -593,7 +592,7 @@ output {
         }
     }
 
-    samplesheet: Channel<SamplesheetRow> {   // record(sample, fastq_1, fastq_2, strandedness, seq_platform, seq_center, genome_bam, percent_mapped, transcriptome_bam); field order is the CSV column order
+    samplesheet: Channel<SamplesheetRow> {   // field order is the CSV column order
         enabled params.save_align_intermeds && !params.skip_alignment
         index {
             path 'samplesheets/samplesheet_with_bams.csv'
@@ -601,7 +600,7 @@ output {
         }
     }
 
-    umi_dedup: Channel<UmiDedupBam> {   // UmiDedupBam; anchor: samtools.stats
+    umi_dedup: Channel<UmiDedupBam> {
         path { s ->
             def dir      = alignedDir(s.id)
             def stats    = "${dir}samtools_stats/"
@@ -625,7 +624,7 @@ output {
         }
     }
 
-    markdup: Channel<MarkdupBam> {   // MarkdupBam; anchor: metrics
+    markdup: Channel<MarkdupBam> {
         path { s ->
             def dir = alignedDir(s.id)
             [
@@ -636,7 +635,7 @@ output {
         }
     }
 
-    quant: Channel<RsemQuantSample> {   // RSEM result
+    quant: Channel<RsemQuantSample> {
         path { s ->
             def dir = alignedDir(s.id)
             [
@@ -646,11 +645,11 @@ output {
         }
     }
 
-    quant_salmon: Channel<SalmonQuantSample> {   // Salmon on the transcriptome BAM
+    quant_salmon: Channel<SalmonQuantSample> {
         path { s -> [(s.quant_dir): alignedDir(s.id)] }
     }
 
-    quant_merged: Channel<QuantMerged> {   // QuantMerged; never sample-prefixed except under --skip_quantification_merge
+    quant_merged: Channel<QuantMerged> {   // never sample-prefixed except under --skip_quantification_merge
         path { r ->
             def top = "${params.aligner}/"
             def dir = "${samplePrefix(r.id)}${top}"
@@ -665,7 +664,7 @@ output {
     }
 
     // CUSTOM_RSEMMERGECOUNTS and tximport both write rsem.merged.* basenames, so they need separate targets (nextflow-io/nextflow#6617).
-    quant_rsem_merge: Channel<RsemMergeSample> {   // record(id, rsem_merge: RsemMerge); empty channel unless --aligner star_rsem, rsem_merge is always non-null in every record it carries
+    quant_rsem_merge: Channel<RsemMergeSample> {   // rsem_merge is non-null in every record
         path { r ->
             def m = r.rsem_merge
             [
@@ -674,16 +673,16 @@ output {
         }
     }
 
-    quant_pseudo: Channel<SalmonQuantSample> {   // Salmon pseudo-alignment
+    quant_pseudo: Channel<SalmonQuantSample> {
         path { s -> s.quant_dir >> "${samplePrefix(s.id)}${params.pseudo_aligner}/" }
     }
 
     // The Kallisto log lives inside quant_dir already and is not routed separately.
-    quant_pseudo_kallisto: Channel<KallistoQuantSample> {   // Kallisto pseudo-alignment
+    quant_pseudo_kallisto: Channel<KallistoQuantSample> {
         path { s -> s.quant_dir >> "${samplePrefix(s.id)}${params.pseudo_aligner}/" }
     }
 
-    quant_merged_pseudo: Channel<QuantMerged> {   // QuantMerged, pseudo-aligner
+    quant_merged_pseudo: Channel<QuantMerged> {
         path { r ->
             def top = "${params.pseudo_aligner}/"
             def dir = "${samplePrefix(r.id)}${top}"
@@ -697,19 +696,19 @@ output {
         }
     }
 
-    deseq2: Channel<Deseq2Qc> {   // record(rdata, pca_vals, plots_pdf, sample_dists, size_factors, log); anchor: rdata; never sample-prefixed
+    deseq2: Channel<Deseq2Qc> {   // never sample-prefixed
         path { d ->
             [([d.rdata, d.pca_vals, d.plots_pdf, d.sample_dists, d.size_factors, d.log]): "${params.aligner}/deseq2_qc/"]
         }
     }
 
-    deseq2_pseudo: Channel<Deseq2Qc> {   // same shape, pseudo-aligner; never sample-prefixed
+    deseq2_pseudo: Channel<Deseq2Qc> {   // never sample-prefixed
         path { d ->
             [([d.rdata, d.pca_vals, d.plots_pdf, d.sample_dists, d.size_factors, d.log]): "${params.pseudo_aligner}/deseq2_qc/"]
         }
     }
 
-    bam_qc: Channel<BamQcRnaseq> {   // BamQcRnaseq: preseq, featurecounts, biotype, qualimap, dupradar, rseqc
+    bam_qc: Channel<BamQcRnaseq> {
         enabled defineQcTools(params).size() > 0   // same check that decides whether any of these tools ran
         path { s ->
             def dir      = alignedDir(s.id)
@@ -751,7 +750,7 @@ output {
         }
     }
 
-    bam_qc_rustqc: Channel<RustqcResult> {   // RUSTQC record (meta, samtools, preseq, dupradar, featurecounts, biotype, rseqc, qualimap); --use_rustqc alternative to bam_qc, never sample-prefixed
+    bam_qc_rustqc: Channel<RustqcResult> {   // never sample-prefixed
         path { s ->
             def dir      = "${params.aligner}/rustqc/"
             def dupradar = "${dir}dupradar/"
@@ -797,13 +796,13 @@ output {
         }
     }
 
-    multiqc: Channel<MultiqcReport> {   // MultiqcReport; anchor: report
+    multiqc: Channel<MultiqcReport> {
         path { m ->
             [([m.report, m.data, m.plots]): "${samplePrefix(m.id)}multiqc${params.skip_alignment ? '' : "/${params.aligner}"}/"]
         }
     }
 
-    pipeline_info: Channel<PipelineInfo> {   // record(versions); anchor: versions
+    pipeline_info: Channel<PipelineInfo> {
         path { p -> p.versions >> 'pipeline_info/' }
     }
 }

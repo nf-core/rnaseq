@@ -40,21 +40,23 @@ workflow ALIGN_STAR {
     //
     // Map reads with STAR
     //
+    // Single-end reads arrive as a lone path; the aligner processes take a list.
+    ch_reads = reads.map { meta, fastqs -> [ meta, [ fastqs ].flatten() ] }
     ch_star_out = null
     if (use_sentieon_star) {
 
-        SENTIEON_STAR_ALIGN(reads, index, gtf, star_ignore_sjdbgtf)
+        SENTIEON_STAR_ALIGN(ch_reads, index, gtf, star_ignore_sjdbgtf)
         ch_star_out = SENTIEON_STAR_ALIGN
         // SENTIEON_STAR_ALIGN uses topic-based version reporting
 
     } else if (use_parabricks_star) {
 
-        PARABRICKS_RNA_FQ2BAM(reads, fasta_fai.map { meta, fasta, _fai -> [ meta, fasta ] }, index, true, !skip_markduplicates)
+        PARABRICKS_RNA_FQ2BAM(ch_reads, fasta_fai.map { meta, fasta, _fai -> [ meta, fasta ] }, index, true, !skip_markduplicates)
         ch_star_out = PARABRICKS_RNA_FQ2BAM
 
     } else {
 
-        STAR_ALIGN(reads, index, gtf, star_ignore_sjdbgtf)
+        STAR_ALIGN(ch_reads, index, gtf, star_ignore_sjdbgtf)
         ch_star_out = STAR_ALIGN
 
     }

@@ -14,7 +14,8 @@ workflow FASTQ_ALIGN_HISAT2 {
     //
     // Map reads with HISAT2
     //
-    HISAT2_ALIGN(reads, index, splicesites, save_unaligned)
+    ch_reads = reads.map { meta, fastqs -> [ meta, [ fastqs ].flatten() ] }
+    HISAT2_ALIGN(ch_reads, index, splicesites, save_unaligned)
 
     //
     // Sort, index BAM file and run samtools stats, flagstat and idxstats

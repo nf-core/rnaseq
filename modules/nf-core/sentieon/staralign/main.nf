@@ -54,9 +54,9 @@ process SENTIEON_STARALIGN {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def read_idx = (0..<reads.size()).toList()
-    def reads1 = read_idx.findAll { i -> meta.single_end || i % 2 == 0 }.collect { i -> reads[i] }.toList()
-    def reads2 = read_idx.findAll { i -> !meta.single_end && i % 2 == 1 }.collect { i -> reads[i] }.toList()
+    def read_pairs = reads.collate(2)
+    def reads1 = meta.single_end ? reads : read_pairs.collect { pair -> pair[0] }.toList()
+    def reads2 = meta.single_end ? [] : read_pairs.collect { pair -> pair[1] }.toList()
     def ignore_gtf = star_ignore_sjdbgtf ? '' : "--sjdbGTFfile ${gtf}"
     def attrRG = args.contains("--outSAMattrRGline") ? "" : "--outSAMattrRGline 'ID:${prefix}' 'SM:${prefix}'"
     def out_sam_type = args.contains('--outSAMtype') ? '' : '--outSAMtype BAM Unsorted'

@@ -30,7 +30,7 @@ nextflow_process {
                 """
                 def fasta_file = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
                 def gtf_file = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
-                input[0] = HISAT2_EXTRACTSPLICESITES.out.map { meta, txt -> [meta, fasta_file, gtf_file, txt] }
+                input[0] = HISAT2_EXTRACTSPLICESITES.out.map { r -> [r.meta, fasta_file, gtf_file, r.splicesites] }
                 input[1] = false
                 """
             }
@@ -39,7 +39,7 @@ nextflow_process {
         then {
             assert process.success
             assertAll(
-                { assert snapshot(process.out[0][0][0], file(process.out[0][0][1]).listFiles().collect { f -> f.name }.sort()).match() }
+                { assert snapshot(process.out[0][0].meta, file(process.out[0][0].index).listFiles().collect { f -> f.name }.sort()).match() }
             )
         }
     }
@@ -68,7 +68,7 @@ nextflow_process {
                 """
                 def fasta_file = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
                 def gtf_file = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
-                input[0] = HISAT2_EXTRACTSPLICESITES.out.map { meta, txt -> [meta, fasta_file, gtf_file, txt] }
+                input[0] = HISAT2_EXTRACTSPLICESITES.out.map { r -> [r.meta, fasta_file, gtf_file, r.splicesites] }
                 input[1] = false
                 """
             }
@@ -103,7 +103,7 @@ nextflow_process {
                 """
                 def fasta_file = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
                 def gtf_file = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
-                input[0] = HISAT2_EXTRACTSPLICESITES.out.map { meta, txt -> [meta, fasta_file, gtf_file, txt] }
+                input[0] = HISAT2_EXTRACTSPLICESITES.out.map { r -> [r.meta, fasta_file, gtf_file, r.splicesites] }
                 input[1] = '3.GB'
                 """
             }
@@ -112,7 +112,7 @@ nextflow_process {
         then {
             assert process.success
             assertAll(
-                { assert snapshot(process.out[0][0][0], file(process.out[0][0][1]).listFiles().collect { f -> f.name }.sort()).match() }
+                { assert snapshot(process.out[0][0].meta, file(process.out[0][0].index).listFiles().collect { f -> f.name }.sort()).match() }
             )
         }
     }

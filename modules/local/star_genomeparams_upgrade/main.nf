@@ -16,7 +16,7 @@ process STAR_GENOMEPARAMS_UPGRADE {
     stageAs index, 'input_index'
 
     output:
-    tuple(meta, file('star'))
+    record(meta: meta, index: file('star'))
 
     topic:
     tuple(task.process, 'gawk', eval("awk -Wversion | sed '1!d; s/.*Awk //; s/,.*//'")) >> 'versions'

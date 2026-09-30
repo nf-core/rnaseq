@@ -49,11 +49,11 @@ nextflow_workflow {
                 script "../../../../modules/nf-core/hisat2/build/main.nf"
                 process {
                     """
-                    input[0] = HISAT2_EXTRACTSPLICESITES.out.map { meta, txt ->
-                        [ meta,
+                    input[0] = HISAT2_EXTRACTSPLICESITES.out.map { r ->
+                        [ r.meta,
                             file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true),
                             file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true),
-                            txt
+                            r.splicesites
                         ]}
                     input[1] = false
                     """
@@ -64,11 +64,11 @@ nextflow_workflow {
                 script "../../../../modules/nf-core/hisat2/build/main.nf"
                 process {
                     """
-                    input[0] = HISAT2_EXTRACTSPLICESITES_STUB.out.map { meta, txt ->
-                        [ meta,
+                    input[0] = HISAT2_EXTRACTSPLICESITES_STUB.out.map { r ->
+                        [ r.meta,
                             file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true),
                             file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true),
-                            txt
+                            r.splicesites
                         ]}
                     input[1] = false
                     """
@@ -87,8 +87,8 @@ nextflow_workflow {
                         file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true)
                     ]
                 ])
-                input[1] = HISAT2_BUILD.out
-                input[2] = HISAT2_EXTRACTSPLICESITES.out
+                input[1] = HISAT2_BUILD.out.map { r -> [r.meta, r.index] }
+                input[2] = HISAT2_EXTRACTSPLICESITES.out.map { r -> [r.meta, r.splicesites] }
                 input[3] = channel.of([
                     [ id:'test' ],
                     file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true),
@@ -118,8 +118,8 @@ nextflow_workflow {
                         file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_2.fastq.gz", checkIfExists: true)
                     ]
                 ])
-                input[1] = HISAT2_BUILD.out
-                input[2] = HISAT2_EXTRACTSPLICESITES.out
+                input[1] = HISAT2_BUILD.out.map { r -> [r.meta, r.index] }
+                input[2] = HISAT2_EXTRACTSPLICESITES.out.map { r -> [r.meta, r.splicesites] }
                 input[3] = channel.of([
                     [ id:'test' ],
                     file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true),
@@ -149,8 +149,8 @@ nextflow_workflow {
                     [ id:'test', single_end:true ],
                     [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true) ]
                 ])
-                input[1] = HISAT2_BUILD_STUB.out
-                input[2] = HISAT2_EXTRACTSPLICESITES_STUB.out
+                input[1] = HISAT2_BUILD_STUB.out.map { r -> [r.meta, r.index] }
+                input[2] = HISAT2_EXTRACTSPLICESITES_STUB.out.map { r -> [r.meta, r.splicesites] }
                 input[3] = channel.of([
                     [ id:'test' ],
                     file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true),
@@ -182,8 +182,8 @@ nextflow_workflow {
                         file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_2.fastq.gz", checkIfExists: true)
                     ]
                 ])
-                input[1] = HISAT2_BUILD_STUB.out
-                input[2] = HISAT2_EXTRACTSPLICESITES_STUB.out
+                input[1] = HISAT2_BUILD_STUB.out.map { r -> [r.meta, r.index] }
+                input[2] = HISAT2_EXTRACTSPLICESITES_STUB.out.map { r -> [r.meta, r.splicesites] }
                 input[3] = channel.of([
                     [ id:'test' ],
                     file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true),

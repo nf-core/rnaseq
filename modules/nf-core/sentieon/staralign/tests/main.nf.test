@@ -37,7 +37,7 @@ nextflow_process {
                     [ id:'test', single_end:true ], // meta map
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true) ]
                 ])
-                input[1] = STAR_GENOMEGENERATE.out
+                input[1] = STAR_GENOMEGENERATE.out.map { r -> [r.meta, r.index] }
                 input[2] = Channel.of([
                     [ id:'test_gtf' ],
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
@@ -99,7 +99,7 @@ nextflow_process {
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
                 ])
-                input[1] = STAR_GENOMEGENERATE.out
+                input[1] = STAR_GENOMEGENERATE.out.map { r -> [r.meta, r.index] }
                 input[2] = Channel.of([
                     [ id:'test_gtf' ],
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
@@ -161,7 +161,7 @@ nextflow_process {
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
                 ])
-                input[1] = STAR_GENOMEGENERATE.out
+                input[1] = STAR_GENOMEGENERATE.out.map { r -> [r.meta, r.index] }
                 input[2] = Channel.of([
                     [ id:'test_gtf' ],
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
@@ -222,7 +222,7 @@ nextflow_process {
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
                 ])
-                input[1] = STAR_GENOMEGENERATE.out
+                input[1] = STAR_GENOMEGENERATE.out.map { r -> [r.meta, r.index] }
                 input[2] = Channel.of([
                     [ id:'test_gtf' ],
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
@@ -286,7 +286,7 @@ nextflow_process {
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
                 ])
-                input[1] = STAR_GENOMEGENERATE.out
+                input[1] = STAR_GENOMEGENERATE.out.map { r -> [r.meta, r.index] }
                 input[2] = Channel.of([
                     [ id:'test_gtf' ],
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
@@ -346,7 +346,7 @@ nextflow_process {
                     [ id:'test', single_end:true ], // meta map
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true) ]
                 ])
-                input[1] = STAR_GENOMEGENERATE.out
+                input[1] = STAR_GENOMEGENERATE.out.map { r -> [r.meta, r.index] }
                 input[2] = Channel.of([
                     [ id:'test_gtf' ],
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
@@ -396,7 +396,7 @@ nextflow_process {
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
                 ])
-                input[1] = STAR_GENOMEGENERATE.out
+                input[1] = STAR_GENOMEGENERATE.out.map { r -> [r.meta, r.index] }
                 input[2] = Channel.of([
                     [ id:'test_gtf' ],
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
@@ -446,7 +446,7 @@ nextflow_process {
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
                 ])
-                input[1] = STAR_GENOMEGENERATE.out
+                input[1] = STAR_GENOMEGENERATE.out.map { r -> [r.meta, r.index] }
                 input[2] = Channel.of([
                     [ id:'test_gtf' ],
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
@@ -496,7 +496,7 @@ nextflow_process {
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
                 ])
-                input[1] = STAR_GENOMEGENERATE.out
+                input[1] = STAR_GENOMEGENERATE.out.map { r -> [r.meta, r.index] }
                 input[2] = Channel.of([
                     [ id:'test_gtf' ],
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
@@ -548,7 +548,7 @@ nextflow_process {
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
                 ])
-                input[1] = STAR_GENOMEGENERATE.out
+                input[1] = STAR_GENOMEGENERATE.out.map { r -> [r.meta, r.index] }
                 input[2] = Channel.of([
                     [ id:'test_gtf' ],
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)

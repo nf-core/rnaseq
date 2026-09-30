@@ -151,8 +151,8 @@ workflow FASTQ_REMOVE_RRNA {
                 .set { ch_combined_fasta }
 
             BOWTIE2_BUILD(ch_combined_fasta)
-            ch_bowtie2_index = BOWTIE2_BUILD.out.first()
-            ch_bowtie2_index_out = BOWTIE2_BUILD.out
+            ch_bowtie2_index = BOWTIE2_BUILD.out.map { r -> [r.meta, r.index] }.first()
+            ch_bowtie2_index_out = BOWTIE2_BUILD.out.map { r -> [r.meta, r.index] }
         }
 
         // Branch reads by single-end vs paired-end for different filtering strategies

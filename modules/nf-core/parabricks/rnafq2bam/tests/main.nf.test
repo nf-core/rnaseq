@@ -48,7 +48,7 @@ nextflow_process {
                     [ id:'test' ], // meta map
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
                 ])
-                input[2] = STAR_GENOMEGENERATE.out
+                input[2] = STAR_GENOMEGENERATE.out.map { r -> [r.meta, r.index] }
                 input[3] = false
                 input[4] = false
                 """
@@ -85,7 +85,7 @@ nextflow_process {
                     [ id:'test' ], // meta map
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/minigenome.fa', checkIfExists: true)
                 ])
-                input[2] = STAR_GENOMEGENERATE.out
+                input[2] = STAR_GENOMEGENERATE.out.map { r -> [r.meta, r.index] }
                 input[3] = false
                 input[4] = false
                 """
@@ -116,7 +116,7 @@ nextflow_process {
                     [ id:'test' ], // meta map
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
                 ])
-                input[2] = STAR_GENOMEGENERATE.out
+                input[2] = STAR_GENOMEGENERATE.out.map { r -> [r.meta, r.index] }
                 input[3] = false
                 input[4] = false
                 """
@@ -154,7 +154,7 @@ nextflow_process {
                     [ id:'test' ], // meta map
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
                 ])
-                input[2] = STAR_GENOMEGENERATE.out
+                input[2] = STAR_GENOMEGENERATE.out.map { r -> [r.meta, r.index] }
                 input[3] = false
                 input[4] = false
                 """

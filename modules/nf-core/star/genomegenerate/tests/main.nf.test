@@ -29,7 +29,7 @@ nextflow_process {
             assertAll(
                 { assert process.success },
                 { assert snapshot(
-                    file(process.out[0][0][1]).listFiles().collect { it.getName() }.sort().toString())
+                    file(process.out[0][0].index).listFiles().collect { it.getName() }.sort().toString())
                 .match() }
             )
         }
@@ -53,7 +53,7 @@ nextflow_process {
             assertAll(
                 { assert process.success },
                 { assert snapshot(
-                    file(process.out[0][0][1]).listFiles().collect { it.getName() }.sort().toString()
+                    file(process.out[0][0].index).listFiles().collect { it.getName() }.sort().toString()
                 ).match() }
             )
         }

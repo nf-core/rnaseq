@@ -14,7 +14,7 @@ process HISAT2_BUILD {
     hisat2_memory_input: String?
 
     output:
-    tuple(meta, file('hisat2'))
+    record(meta: meta, index: file('hisat2'))
 
     topic:
     tuple(task.process, 'hisat2', eval("hisat2 --version | sed -n 's/.*version \\([^ ]*\\).*/\\1/p'")) >> 'versions'

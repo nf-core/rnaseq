@@ -40,7 +40,7 @@ nextflow_workflow {
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
                 ])
-                input[1] = PARABRICKS_STARGENOMEGENERATE.out
+                input[1] = PARABRICKS_STARGENOMEGENERATE.out.map { r -> [r.meta, r.index] }
                 input[2] = channel.of([
                     [ id:'test_gtf' ],
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
@@ -102,7 +102,7 @@ nextflow_workflow {
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
                 ])
-                input[1] = PARABRICKS_STARGENOMEGENERATE.out
+                input[1] = PARABRICKS_STARGENOMEGENERATE.out.map { r -> [r.meta, r.index] }
                 input[2] = channel.of([
                     [ id:'test_gtf' ],
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)

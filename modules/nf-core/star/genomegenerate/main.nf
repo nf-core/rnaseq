@@ -14,7 +14,7 @@ process STAR_GENOMEGENERATE {
     tuple(meta2: Map, gtf: Path?)
 
     output:
-    tuple(meta, file('star'))
+    record(meta: meta, index: file('star'))
 
     topic:
     tuple(task.process, 'star', eval('STAR --version | sed -e "s/STAR_//g"')) >> 'versions'

@@ -13,7 +13,7 @@ process BOWTIE2_BUILD {
     tuple(meta: Map, fasta: Path)
 
     output:
-    tuple(meta, file('bowtie2'))
+    record(meta: meta, index: file('bowtie2'))
 
     topic:
     tuple(task.process, 'bowtie2', eval("bowtie2 --version 2>&1 | sed -n 's/.*bowtie2-align-s version //p'")) >> 'versions'

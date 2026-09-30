@@ -24,7 +24,7 @@ nextflow_process {
         then {
             assert process.success
             assertAll(
-                { assert snapshot(process.out[0][0][0], file(process.out[0][0][1]).name).match() }
+                { assert snapshot(process.out[0][0].meta, file(process.out[0][0].splicesites).name).match() }
             )
         }
     }

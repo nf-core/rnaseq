@@ -40,7 +40,7 @@ nextflow_workflow {
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
                 ])
-                input[1] = STAR_GENOMEGENERATE.out
+                input[1] = STAR_GENOMEGENERATE.out.map { r -> [r.meta, r.index] }
                 input[2] = channel.of([
                     [ id:'test_gtf' ],
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
@@ -112,7 +112,7 @@ nextflow_workflow {
                 script "../../../../modules/local/star_genomeparams_upgrade/main.nf"
                 process {
                     """
-                    input[0] = STAR_GENOMEGENERATE.out
+                    input[0] = STAR_GENOMEGENERATE.out.map { r -> [r.meta, r.index] }
                     """
                 }
             }
@@ -133,7 +133,7 @@ nextflow_workflow {
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
                 ])
-                input[1] = STAR_GENOMEPARAMS_UPGRADE.out
+                input[1] = STAR_GENOMEPARAMS_UPGRADE.out.map { r -> [r.meta, r.index] }
                 input[2] = channel.of([
                     [ id:'test_gtf' ],
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
@@ -214,7 +214,7 @@ nextflow_workflow {
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
                 ])
-                input[1] = STAR_GENOMEGENERATE.out
+                input[1] = STAR_GENOMEGENERATE.out.map { r -> [r.meta, r.index] }
                 input[2] = channel.of([
                     [ id:'test_gtf' ],
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)

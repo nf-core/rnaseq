@@ -13,7 +13,7 @@ process HISAT2_EXTRACTSPLICESITES {
     tuple(meta: Map, gtf: Path)
 
     output:
-    tuple(meta, file('*.splice_sites.txt'))
+    record(meta: meta, splicesites: file('*.splice_sites.txt'))
 
     topic:
     tuple(task.process, 'hisat2', eval('hisat2 --version | grep -o "version [^ ]*" | cut -d " " -f 2')) >> 'versions'

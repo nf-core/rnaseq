@@ -517,7 +517,7 @@ workflow RNASEQ {
 
     def ch_bam_qc                                       = channel.empty()
     def ch_bam_qc_rustqc: Channel<RustqcResult>         = channel.empty()
-    def ch_inferexperiment: Channel<Tuple<Map, Path>>   = channel.empty()
+    def ch_inferexperiment: Channel<Tuple2<Map, Path>>   = channel.empty()
 
     if (!params.skip_qc) {
         if (params.use_rustqc) {
@@ -823,12 +823,12 @@ workflow RNASEQ {
     }
 
     emit:
-    trim_status:         Channel<Tuple<String, Boolean>> = ch_trim_status         // [ id, passes min_trimmed_reads ]
-    map_status:          Channel<Tuple<String, Boolean>> = ch_map_status          // [ id, passes min_mapped_reads ], samples with a mapping percentage only
-    strand_status:       Channel<Tuple<String, Boolean>> = ch_strand_status       // [ id, strandedness check passed ]
+    trim_status:         Channel<Tuple2<String, Boolean>> = ch_trim_status         // [ id, passes min_trimmed_reads ]
+    map_status:          Channel<Tuple2<String, Boolean>> = ch_map_status          // [ id, passes min_mapped_reads ], samples with a mapping percentage only
+    strand_status:       Channel<Tuple2<String, Boolean>> = ch_strand_status       // [ id, strandedness check passed ]
     multiqc_report:      Channel<Path> = ch_multiqc_report                        // multiqc_report.html
-    reads:               Channel<Tuple<Map, List<List<Path>>>> = ch_fastq         // [ meta, [ [fastq_1, fastq_2?], ... ] ], one entry per sequencing run of a sample
-    percent_mapped:      Channel<Tuple<String, Float?>> = ch_percent_mapped       // [ id, percent mapped ]
+    reads:               Channel<Tuple2<Map, List<List<Path>>>> = ch_fastq         // [ meta, [ [fastq_1, fastq_2?], ... ] ], one entry per sequencing run of a sample
+    percent_mapped:      Channel<Tuple2<String, Float?>> = ch_percent_mapped       // [ id, percent mapped ]
 
     // Stage result records, keyed on id
     preprocessed:        Channel<FastqQcTrimFilterSetstrandedness> = ch_preprocessed

@@ -25,11 +25,11 @@ workflow MULTIQC_RNASEQ {
     ch_mqc_files: Channel<MultiqcFiles>           // per-sample files from each stage, for both report modes
     ch_mqc_sample_only: Channel<MultiqcFiles>     // per-sample files for the per-sample reports only
     ch_mqc_report_only: Channel<Path>             // files for the merged report only
-    ch_strand_data: Channel<Tuple<Map, String, String, Map, Map>> // [ meta, provided, status, salmon, rseqc ] - per-sample strand classification, used for the Strandedness checks section
-    ch_trim_read_count: Channel<Tuple<Map, Float>> // [ meta, num_reads ] - for fail_trimmed section
-    ch_percent_mapped_pass: Channel<Tuple<String, Float, Boolean>> // [ id, percent_mapped, pass ] - for fail_mapped section
+    ch_strand_data: Channel<Tuple5<Map, String, String, Map, Map>> // [ meta, provided, status, salmon, rseqc ] - per-sample strand classification, used for the Strandedness checks section
+    ch_trim_read_count: Channel<Tuple2<Map, Float>> // [ meta, num_reads ] - for fail_trimmed section
+    ch_percent_mapped_pass: Channel<Tuple3<String, Float, Boolean>> // [ id, percent_mapped, pass ] - for fail_mapped section
     aligner_display_name: String                  // display name of the aligner used for the percent_mapped metric, e.g. 'STAR uniquely mapped reads' or 'Bowtie2 overall alignment rate'
-    ch_fastq: Channel<Tuple<Map, List<List<Path>>>> // [ meta, [ [ fastq_1, fastq_2? ], ... ] ]
+    ch_fastq: Channel<Tuple2<Map, List<List<Path>>>> // [ meta, [ [ fastq_1, fastq_2? ], ... ] ]
     ch_collated_versions: Channel<Path>           // versions yaml
     samplesheet_path: Path?                       // pipeline input samplesheet
     samplesheet_schema: String                    // samplesheet JSON schema

@@ -319,9 +319,9 @@ workflow NFCORE_RNASEQ {
         }
 
     emit:
-    trim_status:          Channel<Tuple<String, Boolean>>           = results.trim_status
-    map_status:           Channel<Tuple<String, Boolean>>           = results.map_status
-    strand_status:        Channel<Tuple<String, Boolean>>           = results.strand_status
+    trim_status:          Channel<Tuple2<String, Boolean>>           = results.trim_status
+    map_status:           Channel<Tuple2<String, Boolean>>           = results.map_status
+    strand_status:        Channel<Tuple2<String, Boolean>>           = results.strand_status
     multiqc_report:       Channel<Path>                             = results.multiqc_report
     genome_references:    Channel<GenomeArtifact>                   = references.references
     genome_intermediates: Channel<GenomeArtifact>                   = references.intermediates

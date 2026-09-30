@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process SENTIEON_RSEMPREPAREREFERENCE {
     tag "$fasta"
     label 'process_high'
@@ -9,30 +11,34 @@ process SENTIEON_RSEMPREPAREREFERENCE {
         'community.wave.seqera.io/library/rsem_sentieon:3e4315fa0b636313' }"
 
     input:
-    path fasta, stageAs: "rsem/*"
-    path gtf
+    fasta: Path
+    gtf: Path
+
+    stage:
+    stageAs fasta, 'rsem/*'
 
     output:
-    path "rsem"           , emit: index
-    path "*transcripts.fa", emit: transcript_fasta
-    tuple val("${task.process}"), val('rsem'), eval('rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g"'), topic: versions, emit: versions_rsem
-    tuple val("${task.process}"), val('star'), eval('STAR --version | sed -e "s/STAR_//g"'), topic: versions, emit: versions_star
-    tuple val("${task.process}"), val('sentieon'), eval('sentieon driver --version 2>&1 | sed -e "s/sentieon-genomics-//g"'), topic: versions, emit: versions_sentieon
+    record(
+        index:            file("rsem"),
+        transcript_fasta: file("*transcripts.fa")
+    )
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'rsem', eval('rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g"')) >> 'versions'
+    tuple(task.process, 'star', eval('STAR --version | sed -e "s/STAR_//g"')) >> 'versions'
+    tuple(task.process, 'sentieon', eval('sentieon driver --version 2>&1 | sed -e "s/sentieon-genomics-//g"')) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''
     def args2 = task.ext.args2 ?: ''
     def args_list = args.tokenize()
+    def args_no_star = args_list.findAll { arg -> !arg.contains('--star') }.join(' ')
     def star_symlink = """
         # Create symlink to sentieon in PATH for version detection
         ln -sf \$(which sentieon) ./STAR
         export PATH=".:\$PATH"
         """
     if (args_list.contains('--star')) {
-        args_list.removeIf { arg -> arg.contains('--star') }
         def memory = task.memory ? "--limitGenomeGenerateRAM ${task.memory.toBytes() - 100000000}" : ''
         """
         $star_symlink
@@ -49,7 +55,7 @@ process SENTIEON_RSEMPREPAREREFERENCE {
         rsem-prepare-reference \\
             --gtf $gtf \\
             --num-threads $task.cpus \\
-            ${args_list.join(' ')} \\
+            ${args_no_star} \\
             $fasta \\
             rsem/genome
 

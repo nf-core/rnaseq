@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process RSEM_PREPAREREFERENCE {
     tag "$fasta"
     label 'process_high'
@@ -8,23 +10,27 @@ process RSEM_PREPAREREFERENCE {
         'community.wave.seqera.io/library/rsem_star:5acb4e8c03239c32' }"
 
     input:
-    path fasta, stageAs: "rsem/*"
-    path gtf
+    fasta: Path
+    gtf: Path
+
+    stage:
+    stageAs fasta, 'rsem/*'
 
     output:
-    path "rsem"           , emit: index
-    path "*transcripts.fa", emit: transcript_fasta
-    tuple val("${task.process}"), val('rsem'), eval('rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g"'), topic: versions, emit: versions_rsem
+    record(
+        index:            file("rsem"),
+        transcript_fasta: file("*transcripts.fa")
+    )
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'rsem', eval('rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g"')) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''
     def args2 = task.ext.args2 ?: ''
     def args_list = args.tokenize()
+    def args_no_star = args_list.findAll { arg -> !arg.contains('--star') }.join(' ')
     if (args_list.contains('--star')) {
-        args_list.removeIf { arg -> arg.contains('--star') }
         def memory = task.memory ? "--limitGenomeGenerateRAM ${task.memory.toBytes() - 100000000}" : ''
         """
         STAR \\
@@ -39,7 +45,7 @@ process RSEM_PREPAREREFERENCE {
         rsem-prepare-reference \\
             --gtf $gtf \\
             --num-threads $task.cpus \\
-            ${args_list.join(' ')} \\
+            ${args_no_star} \\
             $fasta \\
             rsem/genome
 

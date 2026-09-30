@@ -2,7 +2,7 @@ nextflow.enable.types = true
 
 include { STRINGTIE_STRINGTIE } from '../../../modules/nf-core/stringtie/stringtie/main'
 include { STRINGTIE_MERGE     } from '../../../modules/nf-core/stringtie/merge/main'
-include { StringtieInput; StringtieMerged } from './types'
+include { StringtieInput; StringtieMergeResult; StringtieResult; StringtieMerged } from '../../../modules/nf-core/types'
 
 workflow BAM_STRINGTIE_MERGE {
     take:
@@ -12,7 +12,7 @@ workflow BAM_STRINGTIE_MERGE {
 
     main:
 
-    ch_assemblies = STRINGTIE_STRINGTIE(
+    def ch_assemblies: Channel<StringtieResult> = STRINGTIE_STRINGTIE(
         ch_bams,
         mode,
         chrgtf
@@ -29,9 +29,9 @@ workflow BAM_STRINGTIE_MERGE {
             )
         }
 
-    ch_merged = STRINGTIE_MERGE(ch_to_merge, chrgtf)
+    def ch_merged: Value<StringtieMergeResult> = STRINGTIE_MERGE(ch_to_merge, chrgtf)
 
-    ch_results = ch_to_merge.combine(merged_gtf: ch_merged.map { r -> r.merged_gtf })
+    def ch_results: Value<StringtieMerged> = ch_to_merge.combine(merged_gtf: ch_merged.map { r -> r.merged_gtf })
 
     emit:
     ch_results

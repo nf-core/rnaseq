@@ -12,8 +12,7 @@ include { BAM_SORT_STATS_SAMTOOLS                                               
 
 include { UMITOOLS_PREPAREFORRSEM                                                                    } from '../../../modules/nf-core/umitools/prepareforrsem'
 include { SAMTOOLS_SORT                                                                              } from '../../../modules/nf-core/samtools/sort/main'
-include { Bam                                                                                        } from '../../local/types'
-include { UmiDedupBam                                                                                } from './types'
+include { SamtoolsSortResult; UmitoolsPrepareforrsemResult; Bam; UmiDedupBam } from '../../../modules/nf-core/types'
 
 workflow BAM_DEDUP_UMI {
     take:
@@ -60,7 +59,7 @@ workflow BAM_DEDUP_UMI {
     // to prepare for rsem or salmon
 
     // 1. Coordinate sort
-    ch_coord_sorted = BAM_SORT_STATS_SAMTOOLS(
+    def ch_coord_sorted: Channel<Bam> = BAM_SORT_STATS_SAMTOOLS(
         ch_transcriptome_bam.map { r -> record(id: r.id, meta: r.meta, raw_bams: [r.transcriptome_bam]) },
         transcript_fasta,
         null
@@ -88,7 +87,7 @@ workflow BAM_DEDUP_UMI {
     }
 
     // 3. Restore name sorting
-    ch_name_sorted = SAMTOOLS_SORT(
+    def ch_name_sorted: Channel<SamtoolsSortResult> = SAMTOOLS_SORT(
         ch_transcriptome_dedup.map { r -> record(id: r.id, meta: r.meta, raw_bams: [r.bam]) },
         fasta,
         fai,
@@ -99,7 +98,7 @@ workflow BAM_DEDUP_UMI {
     // 4. Run prepare_for_rsem.py on paired-end BAM files
     // This fixes paired-end reads in name sorted BAM files
     // See: https://github.com/nf-core/rnaseq/issues/828
-    ch_prepared = UMITOOLS_PREPAREFORRSEM(ch_name_sorted.filter { r -> !r.meta.single_end })
+    def ch_prepared: Channel<UmitoolsPrepareforrsemResult> = UMITOOLS_PREPAREFORRSEM(ch_name_sorted.filter { r -> !r.meta.single_end })
 
     // Only paired-end samples pass through UMITOOLS_PREPAREFORRSEM, so the remainder
     // join leaves `prepared` null for single-end samples.
@@ -130,7 +129,7 @@ workflow BAM_DEDUP_UMI {
         }
 
     // The transcriptome side is absent when there is no transcriptome BAM (e.g. HISAT2).
-    ch_results = ch_genome_dedup
+    def ch_results: Channel<UmiDedupBam> = ch_genome_dedup
         .map { r ->
             record(
                 id:                r.id,

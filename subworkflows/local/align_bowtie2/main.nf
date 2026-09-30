@@ -11,7 +11,7 @@ nextflow.enable.types = true
 
 include { BOWTIE2_ALIGN           } from '../../../modules/nf-core/bowtie2/align'
 include { BAM_SORT_STATS_SAMTOOLS } from '../../nf-core/bam_sort_stats_samtools'
-include { Reads; Bowtie2Aligned   } from './types'
+include { ReadsInput; Bowtie2AlignResult; Bowtie2Aligned; Bam } from '../../../modules/nf-core/types'
 
 //
 // Function that parses and returns the alignment rate from the Bowtie2 log output
@@ -30,7 +30,7 @@ def getBowtie2PercentMapped(align_log) {
 
 workflow ALIGN_BOWTIE2 {
     take:
-    ch_samples: Channel<Reads>
+    ch_samples: Channel<ReadsInput>
     index: Value<Path> // /path/to/bowtie2/index/
     fasta: Value<Path?>
     fai: Value<Path?>
@@ -40,7 +40,7 @@ workflow ALIGN_BOWTIE2 {
     //
     // Map reads with Bowtie2
     //
-    ch_bowtie2 = BOWTIE2_ALIGN(
+    def ch_bowtie2: Channel<Bowtie2AlignResult> = BOWTIE2_ALIGN(
         ch_samples,
         index,
         null,                   // No fasta needed for BAM output
@@ -51,7 +51,7 @@ workflow ALIGN_BOWTIE2 {
     //
     // Sort, index BAM file and run samtools stats, flagstat and idxstats
     //
-    ch_sorted = BAM_SORT_STATS_SAMTOOLS(ch_bowtie2, fasta, fai)
+    def ch_sorted: Channel<Bam> = BAM_SORT_STATS_SAMTOOLS(ch_bowtie2, fasta, fai)
 
     // The BAM is aligned to the transcriptome, and its unsorted form is what Salmon quantifies:
     // a coordinate-sorted BAM breaks paired-end quantification.
@@ -69,8 +69,8 @@ workflow ALIGN_BOWTIE2 {
             error "Sample '${r.id}' is missing its Bowtie2 sorted BAM result"
         }
     }
-    ch_results = ch_bowtie2_sorted.filter { r -> r.bowtie2 != null && r.samtools != null }
+    def ch_results: Channel<Bowtie2Aligned> = ch_bowtie2_sorted.filter { r -> r.bowtie2 != null && r.samtools != null }
 
     emit:
-    ch_results // channel: Bowtie2Aligned
+    ch_results
 }

@@ -7,7 +7,7 @@ nextflow.enable.types = true
 include { FASTQC           } from '../../../modules/nf-core/fastqc/main'
 include { UMITOOLS_EXTRACT } from '../../../modules/nf-core/umitools/extract/main'
 include { TRIMGALORE       } from '../../../modules/nf-core/trimgalore/main'
-include { Reads; FastqFastqcUmitoolsTrimgalore } from './types'
+include { ReadsInput; FastqcResult; FastqFastqcUmitoolsTrimgalore } from '../../../modules/nf-core/types'
 
 //
 // Function that parses TrimGalore log output file to get total number of reads after trimming
@@ -30,7 +30,7 @@ def getTrimGaloreReadsAfterFiltering(log_file) {
 
 workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
     take:
-    ch_reads: Channel<Reads>
+    ch_reads: Channel<ReadsInput>
     skip_fastqc: Boolean // true/false
     with_umi: Boolean // true/false
     skip_umi_extract: Boolean // true/false
@@ -41,7 +41,7 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
     main:
     // Each stage that runs joins its outputs onto this per-sample record, overwriting
     // the null placeholders of the fields it owns.
-    ch_results = ch_reads.map { r ->
+    def ch_results: Channel<FastqFastqcUmitoolsTrimgalore> = ch_reads.map { r ->
         record(
             id:                r.id,
             meta:              r.meta,
@@ -55,7 +55,7 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
     }
 
     if (!skip_fastqc) {
-        ch_fastqc = FASTQC(ch_reads)
+        def ch_fastqc: Channel<FastqcResult> = FASTQC(ch_reads)
         ch_results = ch_results.join(
             ch_fastqc.map { r -> record(id: r.id, fastqc_raw_html: r.html, fastqc_raw_zip: r.zip) },
             by: 'id'
@@ -108,5 +108,5 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
     }
 
     emit:
-    ch_results // channel: FastqFastqcUmitoolsTrimgalore
+    ch_results
 }

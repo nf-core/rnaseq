@@ -8,11 +8,11 @@ nextflow.enable.types = true
 include { SALMON_INDEX } from '../../../modules/nf-core/salmon/index/main'
 include { FQ_SUBSAMPLE } from '../../../modules/nf-core/fq/subsample/main'
 include { SALMON_QUANT } from '../../../modules/nf-core/salmon/quant/main'
-include { Reads; SalmonSubsampled } from './types'
+include { ReadsInput; FqSubsampleResult; SalmonQuantSample; SalmonIndexResult; SalmonSubsampled } from '../../../modules/nf-core/types'
 
 workflow FASTQ_SUBSAMPLE_FQ_SALMON {
     take:
-    ch_samples: Channel<Reads>
+    ch_samples: Channel<ReadsInput>
     ch_genome_fasta: Value<Path?> // decoys for the Salmon index, absent when the genome is not provided
     ch_transcript_fasta: Value<Path>
     ch_gtf: Value<Path>
@@ -25,7 +25,7 @@ workflow FASTQ_SUBSAMPLE_FQ_SALMON {
     // Create Salmon index if required
     //
     if (make_index) {
-        ch_index_built = SALMON_INDEX(
+        def ch_index_built: Value<SalmonIndexResult> = SALMON_INDEX(
             ch_transcript_fasta
                 .map { transcript_fasta -> record(id: 'salmon_index', meta: [:], transcript_fasta: transcript_fasta) }
                 .combine(genome_fasta: ch_genome_fasta)
@@ -41,16 +41,16 @@ workflow FASTQ_SUBSAMPLE_FQ_SALMON {
     //
     // Sub-sample FastQ files with fq
     //
-    ch_subsampled = FQ_SUBSAMPLE(ch_samples)
+    def ch_subsampled: Channel<FqSubsampleResult> = FQ_SUBSAMPLE(ch_samples)
 
     //
     // Pseudo-alignment with Salmon
     //
-    ch_quant = SALMON_QUANT(ch_subsampled, ch_index_ref, ch_gtf, ch_transcript_fasta)
+    def ch_quant: Channel<SalmonQuantSample> = SALMON_QUANT(ch_subsampled, ch_index_ref, ch_gtf, ch_transcript_fasta)
 
-    ch_results = ch_subsampled.join(ch_quant, by: 'id')
+    def ch_results: Channel<SalmonSubsampled> = ch_subsampled.join(ch_quant, by: 'id')
 
     emit:
-    samples     = ch_results
-    index_built = ch_index_file // null unless the index was built here
+    samples:     Channel<SalmonSubsampled> = ch_results
+    index_built: Value<Path?>              = ch_index_file // null unless the index was built here
 }

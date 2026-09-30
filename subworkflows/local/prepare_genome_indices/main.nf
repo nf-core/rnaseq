@@ -29,7 +29,7 @@ include { SENTIEON_RSEMPREPAREREFERENCE as SENTIEON_RSEM_PREPAREREFERENCE_GENOME
 include { STAR_GENOMEPARAMS_UPGRADE         } from '../../../modules/local/star_genomeparams_upgrade'
 
 include { taskOutputOrNull                  } from '../utils_nfcore_rnaseq_pipeline'
-include { GenomeArtifact                     } from '../utils_nfcore_rnaseq_pipeline/types'
+include { BbmapBbsplitResult; KallistoIndexResult; SalmonIndexResult; SortmernaResult; StarGenomegenerateResult; GenomeArtifact } from '../../../modules/nf-core/types'
 
 workflow PREPARE_GENOME_INDICES {
 
@@ -100,7 +100,7 @@ workflow PREPARE_GENOME_INDICES {
         )
 
         // Index-only run: no reads
-        ch_bbsplit = BBMAP_BBSPLIT(
+        def ch_bbsplit: Value<BbmapBbsplitResult> = BBMAP_BBSPLIT(
             channel.value(record(id: 'bbsplit_index', meta: [:], reads: [])),
             ch_no_path,
             ch_fasta,
@@ -126,7 +126,7 @@ workflow PREPARE_GENOME_INDICES {
     } else if ('sortmerna' in prepare_tool_indices) {
         // Build new SortMeRNA index from the rRNA references
         // Index-only run: no reads
-        ch_sortmerna_built = SORTMERNA_INDEX(
+        def ch_sortmerna_built: Value<SortmernaResult> = SORTMERNA_INDEX(
             channel.value(record(id: 'rrna_refs', meta: [:], reads: [])),
             ch_rrna_fastas.collect().map { refs -> refs.toList() },
             ch_no_path
@@ -159,7 +159,7 @@ workflow PREPARE_GENOME_INDICES {
     def build_star = prepare_tool_indices.intersect(['star_salmon', 'star_rsem']) ? true : false
     if (build_star && use_parabricks_star && fasta_provided) {
         // Parabricks needs its own STAR index built with its bundled STAR version
-        ch_star_generated = PARABRICKS_STARGENOMEGENERATE(
+        def ch_star_generated: Value<StarGenomegenerateResult> = PARABRICKS_STARGENOMEGENERATE(
             ch_fasta.map { item -> record(id: 'genome', meta: [:], fasta: item) },
             ch_gtf
         )
@@ -273,7 +273,7 @@ workflow PREPARE_GENOME_INDICES {
         ch_salmon_index = channel.value(file(salmon_index))
     } else if ('salmon' in prepare_tool_indices && fasta_provided) {
         // genome_fasta may be null (no decoys)
-        ch_salmon_built = SALMON_INDEX(
+        def ch_salmon_built: Value<SalmonIndexResult> = SALMON_INDEX(
             ch_transcript_fasta
                 .map { transcript_fasta_file -> record(id: 'salmon_index', meta: [:], transcript_fasta: transcript_fasta_file) }
                 .combine(genome_fasta: ch_fasta)
@@ -296,7 +296,7 @@ workflow PREPARE_GENOME_INDICES {
     } else if (kallisto_index) {
         ch_kallisto_index = channel.value(file(kallisto_index))
     } else if ('kallisto' in prepare_tool_indices) {
-        ch_kallisto_built = KALLISTO_INDEX(ch_transcript_fasta.map { item -> record(id: 'kallisto_index', meta: [:], fasta: item) })
+        def ch_kallisto_built: Value<KallistoIndexResult> = KALLISTO_INDEX(ch_transcript_fasta.map { item -> record(id: 'kallisto_index', meta: [:], fasta: item) })
         ch_kallisto_index = ch_kallisto_built.map { r -> r.index }
     } else {
         ch_kallisto_index = ch_no_path

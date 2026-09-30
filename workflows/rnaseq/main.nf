@@ -25,19 +25,7 @@ include { BAM_QC_RNASEQ                         } from '../../subworkflows/nf-co
 include { QUANTIFY_RSEM                         } from '../../subworkflows/nf-core/quantify_rsem'
 include { BAM_DEDUP_UMI                         } from '../../subworkflows/nf-core/bam_dedup_umi'
 
-include { StarAligned                                                                    } from '../../subworkflows/local/align_star/types'
-include { Bowtie2Aligned                                                                 } from '../../subworkflows/local/align_bowtie2/types'
-include { Hisat2Aligned                                                                  } from '../../subworkflows/nf-core/fastq_align_hisat2/types'
-include { UmiDedupBam                                                                    } from '../../subworkflows/nf-core/bam_dedup_umi/types'
-include { MarkdupBam                                                                     } from '../../subworkflows/nf-core/bam_markduplicates_picard/types'
-include { BamQcRnaseq                                                                    } from '../../subworkflows/nf-core/bam_qc_rnaseq/types'
-include { QuantMerged                                                                    } from '../../subworkflows/nf-core/quant_tximport_summarizedexperiment/types'
-include { SalmonQuantSample; KallistoQuantSample                                        } from '../../subworkflows/nf-core/quantify_pseudo_alignment/types'
-include { RsemQuantSample                                                                } from '../../subworkflows/nf-core/quantify_rsem/types'
-include { StringtieMerged                                                                } from '../../subworkflows/nf-core/bam_stringtie_merge/types'
-include { FastqQcTrimFilterSetstrandedness; RrnaReferences                               } from '../../subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness/types'
-include { MultiqcReport; MultiqcFiles                                                                  } from '../../subworkflows/local/multiqc_rnaseq/types'
-include { AlignedSample; Bam; RsemMergeSample; Contaminants; StringtieSample; BigwigSample; Deseq2Qc; PipelineInfo; RustqcResult } from '../../subworkflows/local/types'
+include { RsemMergeSample; KallistoQuantSample; MultiqcReport; RsemQuantSample; RustqcResult; SalmonQuantSample; SamtoolsIndexResult; StringtieResult; Deseq2Qc; Bowtie2Aligned; StarAligned; MultiqcFiles; AlignedSample; Bam; Contaminants; StringtieSample; BigwigSample; PipelineInfo; UmiDedupBam; MarkdupBam; BamQcRnaseq; StringtieMerged; Hisat2Aligned; RrnaReferences; FastqQcTrimFilterSetstrandedness; QuantMerged } from '../../modules/nf-core/types'
 
 include { readSamplesheet                } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline/samplesheet'
 include { classifyStrand                 } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
@@ -154,7 +142,7 @@ workflow RNASEQ {
 
     // Index pre-aligned genome BAM files; a sample may supply only a transcriptome BAM
     ch_prealigned_genome = ch_bam_samples.filter { s -> s.bam != null }
-    ch_bam_index = SAMTOOLS_INDEX(ch_prealigned_genome)
+    def ch_bam_index: Channel<SamtoolsIndexResult> = SAMTOOLS_INDEX(ch_prealigned_genome)
     ch_prealigned_indexed = ch_prealigned_genome.join(ch_bam_index, by: 'id', remainder: true)
     ch_prealigned_indexed.subscribe { r ->
         if( r.bam == null || r.bai == null ) {
@@ -201,11 +189,11 @@ workflow RNASEQ {
         params.unstranded_threshold                 // unstranded_threshold
     )
 
-    ch_preprocessed = fastq_preprocessed.samples
+    def ch_preprocessed: Channel<FastqQcTrimFilterSetstrandedness> = fastq_preprocessed.samples
 
     // Run-level rRNA references, built by FASTQ_REMOVE_RRNA from the rRNA
     // FASTAs only when no bowtie2 rRNA index was supplied
-    ch_rrna_references = fastq_preprocessed.rrna_references
+    def ch_rrna_references: Value<RrnaReferences> = fastq_preprocessed.rrna_references
 
     // Samples that fail min_trimmed_reads have no filtered reads and go no further
     ch_reads_ok = ch_preprocessed.filter { r -> r.reads != null }
@@ -497,7 +485,7 @@ workflow RNASEQ {
         } else {
             ch_stringtie_gtf = ch_gtf
         }
-        ch_stringtie_samples = STRINGTIE_STRINGTIE(
+        def ch_stringtie_samples: Channel<StringtieResult> = STRINGTIE_STRINGTIE(
             ch_stringtie_input,
             channel.value(['expression-estimation']),
             ch_stringtie_gtf

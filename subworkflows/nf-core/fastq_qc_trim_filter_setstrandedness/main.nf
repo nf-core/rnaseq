@@ -11,7 +11,7 @@ include { FASTQ_REMOVE_RRNA                     } from '../fastq_remove_rrna'
 include { FASTQ_SUBSAMPLE_FQ_SALMON             } from '../fastq_subsample_fq_salmon'
 include { FASTQ_FASTQC_UMITOOLS_TRIMGALORE      } from '../fastq_fastqc_umitools_trimgalore'
 include { FASTQ_FASTQC_UMITOOLS_FASTP           } from '../fastq_fastqc_umitools_fastp'
-include { Reads; FastqQcTrimFilterSetstrandedness; RrnaReferences } from './types'
+include { ReadsInput; BbmapBbsplitResult; FastqcResult; FqLintResult; RrnaReferences; FastqQcTrimFilterSetstrandedness } from '../../../modules/nf-core/types'
 
 //
 // Function to determine library type by comparing type counts.
@@ -78,7 +78,7 @@ def getSalmonInferredStrandedness(json_file, stranded_threshold = 0.8, unstrande
 workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     take:
     // Input channels
-    ch_reads: Channel<Reads>
+    ch_reads: Channel<ReadsInput>
     ch_fasta: Value<Path> // genome.fasta
     ch_transcript_fasta: Value<Path> // transcript.fasta
     ch_gtf: Value<Path> // genome.gtf
@@ -168,7 +168,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     // MODULE: Lint FastQ files
     //
     if (!skip_linting) {
-        ch_lint_raw = FQ_LINT(ch_cat)
+        def ch_lint_raw: Channel<FqLintResult> = FQ_LINT(ch_cat)
         ch_samples = ch_samples.join(ch_lint_raw.map { r -> record(id: r.id, lint_raw: r.lint) }, by: 'id')
     }
 
@@ -230,7 +230,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     }
 
     if (!skip_linting && !skip_trimming) {
-        ch_lint_trimmed = FQ_LINT_AFTER_TRIMMING(ch_samples.filter { r -> r.reads != null })
+        def ch_lint_trimmed: Channel<FqLintResult> = FQ_LINT_AFTER_TRIMMING(ch_samples.filter { r -> r.reads != null })
         ch_samples = ch_samples.join(
             ch_lint_trimmed.map { r -> record(id: r.id, lint_trimmed: r.lint) },
             by: 'id',
@@ -244,7 +244,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     // MODULE: Remove genome contaminant reads
     //
     if (!skip_bbsplit) {
-        ch_bbsplit = BBMAP_BBSPLIT(
+        def ch_bbsplit: Channel<BbmapBbsplitResult> = BBMAP_BBSPLIT(
             ch_samples.filter { r -> r.reads != null },
             ch_bbsplit_index,
             null,
@@ -271,7 +271,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         )
 
         if (!skip_linting) {
-            ch_lint_bbsplit = FQ_LINT_AFTER_BBSPLIT(ch_samples.filter { r -> r.reads != null })
+            def ch_lint_bbsplit: Channel<FqLintResult> = FQ_LINT_AFTER_BBSPLIT(ch_samples.filter { r -> r.reads != null })
             ch_samples = ch_samples.join(
                 ch_lint_bbsplit.map { r -> record(id: r.id, lint_bbsplit: r.lint) },
                 by: 'id',
@@ -317,7 +317,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         )
 
         if (!skip_linting) {
-            ch_lint_ribo = FQ_LINT_AFTER_RIBO_REMOVAL(ch_samples.filter { r -> r.reads != null })
+            def ch_lint_ribo: Channel<FqLintResult> = FQ_LINT_AFTER_RIBO_REMOVAL(ch_samples.filter { r -> r.reads != null })
             ch_samples = ch_samples.join(
                 ch_lint_ribo.map { r -> record(id: r.id, lint_ribo: r.lint) },
                 by: 'id',
@@ -330,7 +330,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     // MODULE: Run FastQC on filtered reads (after BBSplit and/or rRNA removal)
     //
     if (!skip_fastqc && (!skip_bbsplit || remove_ribo_rna)) {
-        ch_fastqc_filtered = FASTQC_FILTERED(ch_samples.filter { r -> r.reads != null })
+        def ch_fastqc_filtered: Channel<FastqcResult> = FASTQC_FILTERED(ch_samples.filter { r -> r.reads != null })
         ch_samples = ch_samples.join(
             ch_fastqc_filtered.map { r -> record(id: r.id, fastqc_filtered_html: r.html, fastqc_filtered_zip: r.zip) },
             by: 'id',

@@ -8,7 +8,7 @@ include { MULTIQC                    } from '../../../modules/nf-core/multiqc'
 include { MULTIQC_WRITE_FILE         } from '../../../modules/local/multiqc_write_file'
 include { MULTIQC_CONCATENATE_TABLES } from '../../../modules/local/multiqc_concatenate_tables'
 include { workflowVersionToYAML      } from '../../nf-core/utils_nfcore_pipeline'
-include { MultiqcFiles               } from './types'
+include { Sample; MultiqcReport; MultiqcFiles } from '../../../modules/nf-core/types'
 include { methodsDescriptionText     } from '../utils_nfcore_rnaseq_pipeline'
 include { workflowSummaryMultiqcYaml } from './helpers'
 include { multiqcNameReplacementLines } from './helpers'
@@ -329,7 +329,7 @@ workflow MULTIQC_RNASEQ {
     // One record per MULTIQC task: a single 'multiqc_report' row when
     // merged, or one per sample under skip_quantification_merge.
     //
-    ch_results = MULTIQC(ch_multiqc_input)
+    def ch_results: Channel<MultiqcReport> = MULTIQC(ch_multiqc_input)
 
     emit:
     ch_results // channel: MultiqcReport

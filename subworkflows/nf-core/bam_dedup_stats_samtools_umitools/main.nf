@@ -9,12 +9,11 @@ include { SAMTOOLS_INDEX                           } from '../../../modules/nf-c
 include { SAMTOOLS_VIEW as SAMTOOLS_VIEW_PRIMARY   } from '../../../modules/nf-core/samtools/view'
 include { SAMTOOLS_INDEX as SAMTOOLS_INDEX_PRIMARY } from '../../../modules/nf-core/samtools/index/main'
 include { BAM_STATS_SAMTOOLS                       } from '../bam_stats_samtools/main'
-include { Bam                                   } from '../../local/types'
-include { UmitoolsDedupBam                         } from './types'
+include { BamBaiInput; SamtoolsIndexResult; SamtoolsViewResult; UmitoolsDedupResult; UmitoolsDedupBam } from '../../../modules/nf-core/types'
 
 workflow BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS {
     take:
-    ch_bam_bai: Channel<Bam>
+    ch_bam_bai: Channel<BamBaiInput>
     val_get_dedup_stats: Boolean
     val_primary_only: Boolean
 
@@ -24,7 +23,7 @@ workflow BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS {
     //
     ch_dedup_input = ch_bam_bai
     if (val_primary_only) {
-        ch_primary = SAMTOOLS_VIEW_PRIMARY(
+        def ch_primary: Channel<SamtoolsViewResult> = SAMTOOLS_VIEW_PRIMARY(
             ch_bam_bai,
             null,
             null,
@@ -39,14 +38,15 @@ workflow BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS {
     //
     // UMI-tools dedup
     //
-    ch_dedup = UMITOOLS_DEDUP(ch_dedup_input, val_get_dedup_stats)
+    def ch_dedup: Channel<UmitoolsDedupResult> = UMITOOLS_DEDUP(ch_dedup_input, val_get_dedup_stats)
 
     //
     // Index BAM file and run samtools stats, flagstat and idxstats
     //
-    ch_indexed = ch_dedup.join(SAMTOOLS_INDEX(ch_dedup), by: 'id')
+    def ch_index: Channel<SamtoolsIndexResult> = SAMTOOLS_INDEX(ch_dedup)
+    ch_indexed = ch_dedup.join(ch_index, by: 'id')
 
-    ch_results = ch_indexed.join(BAM_STATS_SAMTOOLS(ch_indexed, null, null), by: 'id')
+    def ch_results: Channel<UmitoolsDedupBam> = ch_indexed.join(BAM_STATS_SAMTOOLS(ch_indexed, null, null), by: 'id')
 
     emit:
     ch_results

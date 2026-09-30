@@ -7,24 +7,22 @@ nextflow.enable.types = true
 include { PICARD_MARKDUPLICATES } from '../../../modules/nf-core/picard/markduplicates/main'
 include { SAMTOOLS_INDEX        } from '../../../modules/nf-core/samtools/index/main'
 include { BAM_STATS_SAMTOOLS    } from '../bam_stats_samtools/main'
-include { SamtoolsStats         } from '../bam_stats_samtools/types'
-include { Bam                     } from '../../local/types'
-include { MarkdupBam              } from './types'
+include { BamInput; PicardMarkduplicatesResult; SamtoolsStats; SamtoolsIndexResult; MarkdupBam } from '../../../modules/nf-core/types'
 
 workflow BAM_MARKDUPLICATES_PICARD {
     take:
-    ch_bam: Channel<Bam>
+    ch_bam: Channel<BamInput>
     ch_fasta: Value<Path?>
     ch_fai: Value<Path?>
     run_stats: Boolean
 
     main:
-    ch_markdup = PICARD_MARKDUPLICATES(ch_bam, ch_fasta, ch_fai)
+    def ch_markdup: Channel<PicardMarkduplicatesResult> = PICARD_MARKDUPLICATES(ch_bam, ch_fasta, ch_fai)
 
     // Picard writes exactly one of bam/cram per sample, matching the input format.
     ch_marked = ch_markdup.map { r -> record(id: r.id, meta: r.meta, bam: r.bam ?: r.cram) }
 
-    ch_index = SAMTOOLS_INDEX(ch_marked)
+    def ch_index: Channel<SamtoolsIndexResult> = SAMTOOLS_INDEX(ch_marked)
 
     def ch_stats: Channel<SamtoolsStats> = channel.empty()
     if (run_stats) {
@@ -38,7 +36,7 @@ workflow BAM_MARKDUPLICATES_PICARD {
             error "Sample '${r.id}' is missing its samtools index result"
         }
     }
-    ch_results = ch_markdup_indexed
+    def ch_results: Channel<MarkdupBam> = ch_markdup_indexed
         .filter { r -> r.metrics != null && r.bai != null }
         .join(ch_stats, by: 'id', remainder: true)
 

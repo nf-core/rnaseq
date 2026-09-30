@@ -9,12 +9,12 @@ include { TXIMETA_TXIMPORT } from '../../../modules/nf-core/tximeta/tximport'
 
 include { SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT as SE_GENE_UNIFIED       } from '../../../modules/nf-core/summarizedexperiment/summarizedexperiment'
 include { SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT as SE_TRANSCRIPT_UNIFIED } from '../../../modules/nf-core/summarizedexperiment/summarizedexperiment'
-include { QuantFiles; QuantMerged                                            } from './types'
+include { QuantsInput; CustomTx2geneResult; TximetaTximportResult; QuantMerged } from '../../../modules/nf-core/types'
 
 workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT {
     take:
     samplesheet: Value<Path>
-    ch_quants: Channel<QuantFiles> // per-sample quantification results
+    ch_quants: Channel<QuantsInput> // per-sample quantification results
     gtf: Value<Path>
     gtf_id_attribute: String // GTF gene ID attribute
     gtf_extra_attribute: String // GTF alternative gene attribute (e.g. gene_name)
@@ -42,7 +42,7 @@ workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT {
         .collect()
         .flatMap { rs -> rs.isEmpty() ? [] : [ record(id: 'tx2gene', meta: [:], quants: [ rs.collect { r -> r.quants[0] }.toSorted { f -> f.name }.first() ]) ] }
 
-    ch_tx2gene = CUSTOM_TX2GENE(
+    def ch_tx2gene: Channel<CustomTx2geneResult> = CUSTOM_TX2GENE(
         ch_tx2gene_quants,
         gtf,
         quant_type,
@@ -68,7 +68,7 @@ workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT {
             .flatMap { rs -> rs.isEmpty() ? [] : [ record(id: 'all_samples', meta: [id: 'all_samples'], quants: rs.collect { r -> r.quants[0] }.toSorted { f -> f.name }) ] }
     }
 
-    ch_tximport = TXIMETA_TXIMPORT(ch_tximport_input, ch_tx2gene_file, quant_type)
+    def ch_tximport: Channel<TximetaTximportResult> = TXIMETA_TXIMPORT(ch_tximport_input, ch_tx2gene_file, quant_type)
 
     //
     // Build SummarizedExperiment objects (only when merging)
@@ -105,7 +105,7 @@ workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT {
     // merging, or one per sample under skip_merge. The SE outputs only exist
     // when merging and are null otherwise.
     //
-    ch_results = ch_tximport
+    def ch_results: Channel<QuantMerged> = ch_tximport
         .join(ch_se_gene, by: 'id')
         .join(ch_se_transcript, by: 'id')
         .combine(tx2gene: ch_tx2gene_file)

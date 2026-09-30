@@ -51,15 +51,12 @@ workflow ALIGN_STAR {
     }
 
     // A run that produced no BAM drops out of the downstream channels.
-    ch_star = ch_star_out.filter { r -> !r.orig_bam.isEmpty() }
+    ch_star = ch_star_out.filter { r -> !r.raw_bams.isEmpty() }
 
     //
     // Sort, index BAM file and run samtools stats, flagstat and idxstats
     //
-    ch_sorted = BAM_SORT_STATS_SAMTOOLS(
-        ch_star.map { r -> record(id: r.id, meta: r.meta, bam: r.orig_bam) },
-        fasta_fai
-    )
+    ch_sorted = BAM_SORT_STATS_SAMTOOLS(ch_star, fasta_fai)
 
     ch_results = ch_star
         .join(ch_sorted, by: 'id')

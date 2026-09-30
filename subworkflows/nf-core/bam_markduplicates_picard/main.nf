@@ -8,11 +8,12 @@ include { PICARD_MARKDUPLICATES } from '../../../modules/nf-core/picard/markdupl
 include { SAMTOOLS_INDEX        } from '../../../modules/nf-core/samtools/index/main'
 include { BAM_STATS_SAMTOOLS    } from '../bam_stats_samtools/main'
 include { SamtoolsStats         } from '../bam_stats_samtools/types'
-include { BamToMarkdup; MarkdupBam } from './types'
+include { Bam                     } from '../../local/types'
+include { MarkdupBam              } from './types'
 
 workflow BAM_MARKDUPLICATES_PICARD {
     take:
-    ch_bam: Channel<BamToMarkdup>
+    ch_bam: Channel<Bam>
     ch_fasta_fai: Value<Tuple<Map, Path?, Path?>>
     run_stats: Boolean
 

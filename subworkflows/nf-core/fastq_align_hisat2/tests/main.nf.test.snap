@@ -41,7 +41,7 @@
                         "test.sorted.bam.bai"
                     ]
                 ],
-                "orig_bam": [
+                "raw_bams": [
                     [
                         {
                             "id": "test",
@@ -118,7 +118,7 @@
                         "test.sorted.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "orig_bam": [
+                "raw_bams": [
                     [
                         {
                             "id": "test",
@@ -195,7 +195,7 @@
                         "test.sorted.bam.bai"
                     ]
                 ],
-                "orig_bam": [
+                "raw_bams": [
                     [
                         {
                             "id": "test",
@@ -272,7 +272,7 @@
                         "test.sorted.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "orig_bam": [
+                "raw_bams": [
                     [
                         {
                             "id": "test",

@@ -106,7 +106,7 @@ nextflow_workflow {
         then {
             assert workflow.success
             assertAll(
-                { assert snapshot(sanitizeOutput(workflow.out, readsMD5Keys: ["bam"], unstableKeys: ["bai", "orig_bam"])).match()}
+                { assert snapshot(sanitizeOutput(workflow.out, readsMD5Keys: ["bam"], unstableKeys: ["bai", "raw_bams"])).match()}
             )
         }
     }
@@ -138,7 +138,7 @@ nextflow_workflow {
         then {
             assert workflow.success
             assertAll(
-                { assert snapshot(sanitizeOutput(workflow.out, readsMD5Keys: ["bam"], unstableKeys: ["bai", "orig_bam"])).match()}
+                { assert snapshot(sanitizeOutput(workflow.out, readsMD5Keys: ["bam"], unstableKeys: ["bai", "raw_bams"])).match()}
             )
         }
     }

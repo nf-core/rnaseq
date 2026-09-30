@@ -21,7 +21,7 @@ process BOWTIE2_ALIGN {
         id:       id,
         meta:     meta,
         sam:      file('*.sam',  optional: true),
-        orig_bam: files('*.bam', optional: true).toSorted { f -> f.name },
+        raw_bams: files('*.bam', optional: true).toSorted { f -> f.name },
         cram:     file('*.cram', optional: true),
         csi:      file('*.csi',  optional: true),
         crai:     file('*.crai', optional: true),

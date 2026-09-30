@@ -19,7 +19,7 @@ input:
       description: |
         BAM/CRAM/SAM file.
 
-        Structure: [ val(meta), path(bam) ]
+        Structure: [ val(meta), path(raw_bams) ]
       pattern: "*.{bam,cram,sam}"
 
   - ch_fasta_fai:

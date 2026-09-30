@@ -63,7 +63,7 @@ nextflow_process {
                 { assert process.success },
                 { assert snapshot(
                     file(aln.star.log_final).name,
-                    bam(aln.orig_bam[0]).getReadsMD5()
+                    bam(aln.raw_bams[0]).getReadsMD5()
                 ).match() }
             )
         }
@@ -132,7 +132,7 @@ nextflow_process {
             assertAll(
                 { assert process.success },
                 { assert snapshot(
-                    bam(aln.orig_bam[0]).getReadsMD5(),
+                    bam(aln.raw_bams[0]).getReadsMD5(),
                     file(aln.orig_bai).name,
                     file(aln.junction).name,
                 ).match() }

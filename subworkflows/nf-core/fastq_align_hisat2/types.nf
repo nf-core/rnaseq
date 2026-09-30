@@ -15,7 +15,7 @@ record Hisat2Aligned {
     id:       String
     meta:     Map
     aligner:  String
-    orig_bam: List<Path>
+    raw_bams: List<Path>
     unmapped: List<Path>
     hisat2:   Hisat2Logs
     bam:      Path

@@ -72,7 +72,7 @@ nextflow_workflow {
                     workflow.out[0][0].unmapped,
                     workflow.out[0][0].samtools.flagstat,
                     workflow.out[0][0].samtools.idxstats,
-                    bam(workflow.out[0][0].orig_bam[0]).getReadsMD5(),
+                    bam(workflow.out[0][0].raw_bams[0]).getReadsMD5(),
                     workflow.out[0][0].samtools.stats,
                     workflow.out[0][0].star.tab).match()}
             )
@@ -167,7 +167,7 @@ nextflow_workflow {
                     workflow.out[0][0].unmapped,
                     workflow.out[0][0].samtools.flagstat,
                     workflow.out[0][0].samtools.idxstats,
-                    bam(workflow.out[0][0].orig_bam[0]).getReadsMD5(),
+                    bam(workflow.out[0][0].raw_bams[0]).getReadsMD5(),
                     workflow.out[0][0].samtools.stats,
                     workflow.out[0][0].star.tab).match()}
             )
@@ -251,7 +251,7 @@ nextflow_workflow {
                     workflow.out[0][0].star.log_final,
                     workflow.out[0][0].star.log_out,
                     workflow.out[0][0].star.log_progress,
-                    workflow.out[0][0].orig_bam,
+                    workflow.out[0][0].raw_bams,
                     workflow.out[0][0].samtools.stats,
                     workflow.out[0][0].star.tab).match()}
             )

@@ -7,12 +7,12 @@ nextflow.enable.types = true
 include { UMICOLLAPSE        } from '../../../modules/nf-core/umicollapse/main'
 include { SAMTOOLS_INDEX     } from '../../../modules/nf-core/samtools/index/main'
 include { BAM_STATS_SAMTOOLS } from '../bam_stats_samtools/main'
-include { BamBai             } from '../bam_stats_samtools/types'
+include { Bam             } from '../../local/types'
 include { UmicollapseDedupBam } from './types'
 
 workflow BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE {
     take:
-    ch_bam_bai: Channel<BamBai>
+    ch_bam_bai: Channel<Bam>
 
     main:
     ch_no_fasta = channel.value(tuple([:], null, null))

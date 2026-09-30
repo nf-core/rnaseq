@@ -72,7 +72,7 @@ nextflow_workflow {
                     workflow.out[0][0].unmapped,
                     workflow.out[0][0].samtools.flagstat,
                     workflow.out[0][0].samtools.idxstats,
-                    bam(workflow.out[0][0].orig_bam[0]).getReadsMD5(),
+                    bam(workflow.out[0][0].raw_bams[0]).getReadsMD5(),
                     workflow.out[0][0].samtools.stats,
                     workflow.out[0][0].star.tab).match()}
             )

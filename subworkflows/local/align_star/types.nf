@@ -19,7 +19,7 @@ record StarLogs {
 record StarAlignResult {
     id:                 String
     meta:               Map
-    orig_bam:           List<Path>
+    raw_bams:           List<Path>
     bam_sorted:         Path?
     bam_sorted_aligned: Path?
     bam_unsorted:       Path?
@@ -42,7 +42,7 @@ record StarAligned {
     id:                 String
     meta:               Map
     aligner:            String
-    orig_bam:           List<Path>
+    raw_bams:           List<Path>
     bam_sorted:         Path?
     bam_sorted_aligned: Path?
     bam_unsorted:       Path?
@@ -57,7 +57,7 @@ record StarAligned {
     orig_bai:           Path?
     qc_metrics:         Path?
     duplicate_metrics:  Path?
-    percent_mapped:     Float
+    percent_mapped:     Float?
     star:               StarLogs
     bam:                Path
     bai:                Path

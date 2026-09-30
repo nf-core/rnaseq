@@ -17,7 +17,7 @@ record AlignedSample {
     id:                String
     meta:              Map
     aligner:           String
-    orig_bam:          List<Path>
+    raw_bams:          List<Path>
     bam:               Path
     bai:               Path
     transcriptome_bam: Path?
@@ -60,14 +60,18 @@ record SamplesheetRow {
     transcriptome_bam: String?
 }
 
-// A genome-aligned BAM with its index, from an aligner or a pre-aligned samplesheet entry.
-// percent_mapped is null when the samplesheet does not provide it.
-record GenomeBam {
-    id:             String
-    meta:           Map
-    bam:            Path
-    bai:            Path
-    percent_mapped: Float?
+// A coordinate-sorted BAM, from an aligner, a stage that rewrites it, or a pre-aligned samplesheet
+// entry. Stage records that add fields of their own (metrics, dedup logs, aligner logs) keep these
+// names and types. percent_mapped is null when the samplesheet does not provide it, and
+// transcriptome_bam is set only where a transcriptome-aligned BAM exists.
+record Bam {
+    id:                String
+    meta:              Map
+    bam:               Path
+    bai:               Path?
+    samtools:          SamtoolsStatsFiles?
+    percent_mapped:    Float?
+    transcriptome_bam: Path?
 }
 
 // CUSTOM_RSEMMERGECOUNTS outputs, a single 'all_samples' row

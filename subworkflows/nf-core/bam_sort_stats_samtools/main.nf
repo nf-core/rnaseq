@@ -7,11 +7,12 @@ nextflow.enable.types = true
 include { SAMTOOLS_SORT      } from '../../../modules/nf-core/samtools/sort/main'
 include { SAMTOOLS_INDEX     } from '../../../modules/nf-core/samtools/index/main'
 include { BAM_STATS_SAMTOOLS } from '../bam_stats_samtools/main'
-include { BamsToSort; SortedBam } from './types'
+include { Bam                    } from '../../local/types'
+include { RawBams                } from './types'
 
 workflow BAM_SORT_STATS_SAMTOOLS {
     take:
-    ch_bam: Channel<BamsToSort>
+    ch_bam: Channel<RawBams>
     ch_fasta_fai: Value<Tuple<Map, Path?, Path?>>
 
     main:

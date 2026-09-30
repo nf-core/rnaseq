@@ -12,16 +12,16 @@ include { BAM_SORT_STATS_SAMTOOLS                                               
 
 include { UMITOOLS_PREPAREFORRSEM                                                                    } from '../../../modules/nf-core/umitools/prepareforrsem'
 include { SAMTOOLS_SORT                                                                              } from '../../../modules/nf-core/samtools/sort/main'
-include { BamBai                                                                                     } from '../bam_stats_samtools/types'
-include { TranscriptomeBam; UmiDedupBam                                                              } from './types'
+include { Bam                                                                                        } from '../../local/types'
+include { UmiDedupBam                                                                                } from './types'
 
 workflow BAM_DEDUP_UMI {
     take:
-    ch_genome_bam: Channel<BamBai>
+    ch_genome_bam: Channel<Bam>
     fasta_fai: Value<Tuple<Map, Path?, Path?>>
     umi_dedup_tool: String // 'umicollapse' or 'umitools'
     umitools_dedup_stats: Boolean // whether to generate UMI-tools dedup stats
-    ch_transcriptome_bam: Channel<TranscriptomeBam>
+    ch_transcriptome_bam: Channel<Bam> // records with transcriptome_bam set
     transcript_fasta_fai: Value<Tuple<Map, Path?, Path?>>
     umitools_dedup_primary_only: Boolean // whether to filter to primary alignments before dedup
 
@@ -59,7 +59,10 @@ workflow BAM_DEDUP_UMI {
     // to prepare for rsem or salmon
 
     // 1. Coordinate sort
-    ch_coord_sorted = BAM_SORT_STATS_SAMTOOLS(ch_transcriptome_bam, transcript_fasta_fai)
+    ch_coord_sorted = BAM_SORT_STATS_SAMTOOLS(
+        ch_transcriptome_bam.map { r -> record(id: r.id, meta: r.meta, raw_bams: [r.transcriptome_bam]) },
+        transcript_fasta_fai
+    )
 
     // 2. Transcriptome BAM deduplication
     if (umi_dedup_tool == "umicollapse") {
@@ -84,7 +87,7 @@ workflow BAM_DEDUP_UMI {
 
     // 3. Restore name sorting
     ch_name_sorted = SAMTOOLS_SORT(
-        ch_transcriptome_dedup.map { r -> record(id: r.id, meta: r.meta, bam: [r.bam]) },
+        ch_transcriptome_dedup.map { r -> record(id: r.id, meta: r.meta, raw_bams: [r.bam]) },
         fasta_fai,
         '',
     )
@@ -107,8 +110,9 @@ workflow BAM_DEDUP_UMI {
                 id:                       r.id,
                 transcriptomic_dedup_log: r.dedup.log,
                 prepare_for_rsem_log:     r.prepared?.log,
+                transcriptome_bam:        r.prepared?.bam ?: r.name_sorted.bam,
                 transcriptome:            record(
-                    bam:                    r.bam,
+                    transcriptome_bam:      r.transcriptome_bam,
                     dedup_bam:              r.dedup.bam,
                     sorted_bam:             r.name_sorted.bam,
                     sorted_bam_index:       r.dedup.bai,
@@ -130,8 +134,8 @@ workflow BAM_DEDUP_UMI {
                 meta:              r.meta,
                 bam:               r.bam,
                 bai:               r.bai,
+                samtools:          r.samtools,
                 genomic_dedup_log: r.log,
-                genome:            r.samtools,
                 tsv:               r.tsv
             )
         }

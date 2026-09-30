@@ -18,7 +18,7 @@ nextflow_process {
                 input[0] = channel.of(record(
                     id: 'test',
                     meta: [ id:'test', single_end:false ],
-                    bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true)
+                    raw_bams: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true)
                 ))
                 input[1] = channel.of([
                     [ id:'fasta' ], // meta map
@@ -51,7 +51,7 @@ nextflow_process {
                 input[0] = channel.of(record(
                     id: 'test',
                     meta: [ id:'test', single_end:false ],
-                    bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true)
+                    raw_bams: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true)
                 ))
                 input[1] = channel.of([
                     [ id:'fasta' ], // meta map
@@ -84,7 +84,7 @@ nextflow_process {
                 input[0] = channel.of(record(
                     id: 'test',
                     meta: [ id:'test', single_end:false ],
-                    bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true)
+                    raw_bams: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true)
                 ))
                 input[1] = channel.of([
                     [ id:'fasta' ], // meta map
@@ -117,7 +117,7 @@ nextflow_process {
                 input[0] = channel.of(record(
                     id: 'test',
                     meta: [ id:'test', single_end:false ],
-                    bam: [
+                    raw_bams: [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.sorted.bam', checkIfExists: true)
                     ]
@@ -153,7 +153,7 @@ nextflow_process {
                 input[0] = channel.of(record(
                     id: 'test',
                     meta: [ id:'test', single_end:false ],
-                    bam: [
+                    raw_bams: [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.sorted.bam', checkIfExists: true)
                     ]
@@ -189,7 +189,7 @@ nextflow_process {
                 input[0] = channel.of(record(
                     id: 'test',
                     meta: [ id:'test', single_end:false ],
-                    bam: [
+                    raw_bams: [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.sorted.bam', checkIfExists: true)
                     ]
@@ -225,7 +225,7 @@ nextflow_process {
                 input[0] = channel.of(record(
                     id: 'test',
                     meta: [ id:'test', single_end:false ],
-                    bam: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true)
+                    raw_bams: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true)
                 ))
                 input[1] = channel.of([
                     [ id:'fasta' ], // meta map
@@ -259,7 +259,7 @@ nextflow_process {
                 input[0] = channel.of(record(
                     id: 'test',
                     meta: [ id:'test', single_end:false ],
-                    bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true)
+                    raw_bams: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true)
                 ))
                 input[1] = channel.of([
                     [ id:'fasta' ], // meta map
@@ -289,7 +289,7 @@ nextflow_process {
                 input[0] = channel.of(record(
                     id: 'test',
                     meta: [ id:'test', single_end:false ],
-                    bam: [
+                    raw_bams: [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.sorted.bam', checkIfExists: true)
                     ]
@@ -323,7 +323,7 @@ nextflow_process {
                 input[0] = channel.of(record(
                     id: 'test',
                     meta: [ id:'test', single_end:false ],
-                    bam: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true)
+                    raw_bams: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true)
                 ))
                 input[1] = channel.of([
                     [ id:'fasta' ], // meta map
@@ -353,7 +353,7 @@ nextflow_process {
                 input[0] = channel.of(record(
                     id: 'test',
                     meta: [ id:'test', single_end:false ],
-                    bam: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/pairtools/mock.sam', checkIfExists: true)
+                    raw_bams: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/pairtools/mock.sam', checkIfExists: true)
                 ))
                 input[1] = channel.of([
                     [ id:'fasta' ], // meta map

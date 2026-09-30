@@ -24,7 +24,7 @@ nextflow_workflow {
                 input[0] = Channel.of(record(
                     id: 'test',
                     meta: [ id:'test', single_end:false ],
-                    bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.single_end.bam', checkIfExists: true)
+                    raw_bams: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.single_end.bam', checkIfExists: true)
                 ))
                 input[1] = Channel.of([
                     [ id:'genome' ],
@@ -56,7 +56,7 @@ nextflow_workflow {
                 input[0] = Channel.of(record(
                     id: 'test',
                     meta: [ id:'test', single_end:false ],
-                    bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true)
+                    raw_bams: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true)
                 ))
                 input[1] = Channel.of([
                     [ id:'genome' ],
@@ -90,7 +90,7 @@ nextflow_workflow {
                 input[0] = Channel.of(record(
                     id: 'test',
                     meta: [ id:'test', single_end:false ],
-                    bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.single_end.bam', checkIfExists: true)
+                    raw_bams: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.single_end.bam', checkIfExists: true)
                 ))
                 input[1] = Channel.of([
                     [ id:'genome' ],
@@ -119,7 +119,7 @@ nextflow_workflow {
                 input[0] = Channel.of(record(
                     id: 'test',
                     meta: [ id:'test', single_end:false ],
-                    bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true)
+                    raw_bams: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true)
                 ))
                 input[1] = Channel.of([
                     [ id:'genome' ],

@@ -22,7 +22,7 @@ process STAR_ALIGN {
     record(
         id:                id,
         meta:              meta,
-        orig_bam:          files('*d.out.bam', optional: true).toSorted { f -> f.name },
+        raw_bams:          files('*d.out.bam', optional: true).toSorted { f -> f.name },
         bam_sorted:        file("${prefix}.sortedByCoord.out.bam", optional: true),
         bam_sorted_aligned: file("${prefix}.Aligned.sortedByCoord.out.bam", optional: true),
         bam_unsorted:      file('*Aligned.unsort.out.bam', optional: true),

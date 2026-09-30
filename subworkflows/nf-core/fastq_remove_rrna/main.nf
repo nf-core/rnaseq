@@ -180,7 +180,7 @@ workflow FASTQ_REMOVE_RRNA {
         // Filter BAM for read pairs where BOTH mates are unmapped (flag 12 = 4 + 8)
         // This removes any pair where at least one mate aligned to rRNA
         ch_view = SAMTOOLS_VIEW_BOWTIE2(
-            ch_bowtie2_pe.filter { r -> !r.orig_bam.isEmpty() }.map { r -> record(id: r.id, meta: r.meta, bam: r.orig_bam[0], bai: null) },
+            ch_bowtie2_pe.filter { r -> !r.raw_bams.isEmpty() }.map { r -> record(id: r.id, meta: r.meta, bam: r.raw_bams[0], bai: null) },
             tuple([:], null, null), // No reference fasta
             tuple([:], null),       // No qname file
             tuple([:], null),       // No bed file

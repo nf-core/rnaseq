@@ -12,14 +12,15 @@ record Bowtie2Logs {
 }
 
 record Bowtie2Aligned {
-    id:             String
-    meta:           Map
-    aligner:        String
-    orig_bam:       List<Path>
-    unmapped:       List<Path>?
-    percent_mapped: Float
-    bowtie2:        Bowtie2Logs
-    bam:            Path
-    bai:            Path
-    samtools:       SamtoolsStatsFiles
+    id:                String
+    meta:              Map
+    aligner:           String
+    raw_bams:          List<Path>
+    transcriptome_bam: Path
+    unmapped:          List<Path>?
+    percent_mapped:    Float?
+    bowtie2:           Bowtie2Logs
+    bam:               Path
+    bai:               Path
+    samtools:          SamtoolsStatsFiles
 }

@@ -12,12 +12,12 @@ include { RSEQC_JUNCTIONSATURATION } from '../../../modules/nf-core/rseqc/juncti
 include { RSEQC_READDISTRIBUTION   } from '../../../modules/nf-core/rseqc/readdistribution/main'
 include { RSEQC_READDUPLICATION    } from '../../../modules/nf-core/rseqc/readduplication/main'
 include { RSEQC_TIN                } from '../../../modules/nf-core/rseqc/tin/main'
-include { BamBai                   } from '../bam_stats_samtools/types'
+include { Bam                   } from '../../local/types'
 include { Rseqc                    } from './types'
 
 workflow BAM_RSEQC {
     take:
-    ch_bam_bai: Channel<BamBai>
+    ch_bam_bai: Channel<Bam>
     bed: Value<Path>
     rseqc_modules: List<String>
 

@@ -40,7 +40,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "orig_bam": "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "raw_bams": "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
                         "unmapped": [
                             
                         ]
@@ -81,7 +81,7 @@
                             "id": "test",
                             "single_end": true
                         },
-                        "orig_bam": "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "raw_bams": "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
                         "unmapped": [
                             
                         ]
@@ -108,7 +108,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "orig_bam": "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "raw_bams": "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
                         "unmapped": [
                             
                         ]
@@ -149,7 +149,7 @@
                             "id": "test",
                             "single_end": true
                         },
-                        "orig_bam": "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "raw_bams": "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
                         "unmapped": [
                             
                         ]

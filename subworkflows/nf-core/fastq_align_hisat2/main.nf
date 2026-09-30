@@ -21,10 +21,7 @@ workflow FASTQ_ALIGN_HISAT2 {
     //
     // Sort, index BAM file and run samtools stats, flagstat and idxstats
     //
-    ch_sorted = BAM_SORT_STATS_SAMTOOLS(
-        ch_hisat2.map { r -> record(id: r.id, meta: r.meta, bam: r.orig_bam) },
-        ch_fasta_fai
-    )
+    ch_sorted = BAM_SORT_STATS_SAMTOOLS(ch_hisat2, ch_fasta_fai)
 
     ch_results = ch_hisat2
         .map { r -> r + record(aligner: 'hisat2') }

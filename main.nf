@@ -303,7 +303,6 @@ workflow NFCORE_RNASEQ {
         .join(ch_percent_mapped, by: 'id')
         .flatMap { r ->
             r.runs.collect { run ->
-                def transcriptome_bam = params.aligner == 'bowtie2_salmon' ? r.orig_bam[0] : r.transcriptome_bam
                 record(
                     sample:            r.id,
                     fastq_1:           run[0],
@@ -313,7 +312,7 @@ workflow NFCORE_RNASEQ {
                     seq_center:        r.meta.seq_center ?: params.seq_center,
                     genome_bam:        r.bam != null ? "${params.outdir}/${alignedDir(r.id)}${r.bam.name}" : null,
                     percent_mapped:    r.percent_mapped,
-                    transcriptome_bam: transcriptome_bam != null ? "${params.outdir}/${alignedDir(r.id)}${transcriptome_bam.name}" : null
+                    transcriptome_bam: r.transcriptome_bam != null ? "${params.outdir}/${alignedDir(r.id)}${r.transcriptome_bam.name}" : null
                 )
             }
         }
@@ -581,8 +580,7 @@ output {
             [
                 ([s.samtools?.stats, s.samtools?.flagstat, s.samtools?.idxstats]): "${dir}samtools_stats/",
                 ([s.bam, s.bai]):                                                   bamDir,
-                (s.orig_bam):                                                       intermedDir,
-                (s.transcriptome_bam):                                              intermedDir,
+                ((s.raw_bams + [s.transcriptome_bam]).toSet()):                     intermedDir,
                 (s.unmapped):                                                       params.save_unaligned ? "${dir}unmapped/" : null,
                 ([s.star?.log_final, s.star?.log_out, s.star?.log_progress, s.hisat2?.summary, s.bowtie2?.log]): logDir,
                 (s.star?.tab):                                                      logDir,
@@ -598,7 +596,7 @@ output {
         }
     }
 
-    umi_dedup: Channel<UmiDedupBam> {   // UmiDedupBam; anchor: genome.stats
+    umi_dedup: Channel<UmiDedupBam> {   // UmiDedupBam; anchor: samtools.stats
         path { s ->
             def dir      = alignedDir(s.id)
             def stats    = "${dir}samtools_stats/"
@@ -607,7 +605,7 @@ output {
             def saveBam  = params.save_align_intermeds || params.save_umi_intermeds
             def t        = s.transcriptome
             [
-                ([s.genome?.stats, s.genome?.flagstat, s.genome?.idxstats,
+                ([s.samtools?.stats, s.samtools?.flagstat, s.samtools?.idxstats,
                   t?.samtools?.stats, t?.samtools?.flagstat, t?.samtools?.idxstats]): stats,
                 ([s.bam, s.bai, t?.coord_sorted_bam, t?.coord_sorted_bam_index,
                   t?.sorted_bam, t?.sorted_bam_index, t?.filtered_bam, t?.dedup_bam]): saveBam ? dir : null,

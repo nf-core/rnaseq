@@ -54,8 +54,8 @@ nextflow_process {
                     // Conda and docker version of bowtie2 produce different
                     // hashes. Therefore, testing whether file exists and bam
                     // statistics.
-                    file(aln.orig_bam[0]).name,
-                    bam(aln.orig_bam[0], stringency: "silent").getStatistics(exclude:["sorted"]),
+                    file(aln.raw_bams[0]).name,
+                    bam(aln.raw_bams[0], stringency: "silent").getStatistics(exclude:["sorted"]),
                     aln.bowtie2.log,
                     aln.unmapped,
                 ).match() }
@@ -213,8 +213,8 @@ nextflow_process {
                     // Conda and docker version of bowtie2 produce different
                     // hashes. Therefore, testing whether file exists and bam
                     // statistics.
-                    file(aln.orig_bam[0]).name,
-                    bam(aln.orig_bam[0], stringency: "silent").getStatistics(exclude:["sorted"]),
+                    file(aln.raw_bams[0]).name,
+                    bam(aln.raw_bams[0], stringency: "silent").getStatistics(exclude:["sorted"]),
                     aln.bowtie2.log,
                     aln.unmapped,
                 ).match() }
@@ -271,8 +271,8 @@ nextflow_process {
                     // Conda and docker version of bowtie2 produce different
                     // hashes. Therefore, testing whether file exists and bam
                     // statistics.
-                    file(aln.orig_bam[0]).name,
-                    bam(aln.orig_bam[0], stringency: "silent").getStatistics(exclude:["sorted"]),
+                    file(aln.raw_bams[0]).name,
+                    bam(aln.raw_bams[0], stringency: "silent").getStatistics(exclude:["sorted"]),
                     aln.bowtie2.log,
                     aln.unmapped,
                 ).match() }
@@ -329,8 +329,8 @@ nextflow_process {
                     // Conda and docker version of bowtie2 produce different
                     // hashes. Therefore, testing whether file exists and bam
                     // statistics.
-                    file(aln.orig_bam[0]).name,
-                    bam(aln.orig_bam[0], stringency: "silent").getStatistics(exclude:["sorted"]),
+                    file(aln.raw_bams[0]).name,
+                    bam(aln.raw_bams[0], stringency: "silent").getStatistics(exclude:["sorted"]),
                     aln.bowtie2.log,
                     aln.unmapped,
                 ).match() }
@@ -384,8 +384,8 @@ nextflow_process {
                     // Conda and docker version of bowtie2 produce different
                     // hashes. Therefore, testing whether file exists and bam
                     // statistics.
-                    file(aln.orig_bam[0]).name,
-                    bam(aln.orig_bam[0], stringency: "silent").getStatistics(exclude:["sorted"]),
+                    file(aln.raw_bams[0]).name,
+                    bam(aln.raw_bams[0], stringency: "silent").getStatistics(exclude:["sorted"]),
                     aln.bowtie2.log,
                     aln.unmapped,
                 ).match() }
@@ -442,8 +442,8 @@ nextflow_process {
                     // Conda and docker version of bowtie2 produce different
                     // hashes. Therefore, testing whether file exists and bam
                     // statistics.
-                    file(aln.orig_bam[0]).name,
-                    bam(aln.orig_bam[0], stringency: "silent").getStatistics(exclude:["sorted"]),
+                    file(aln.raw_bams[0]).name,
+                    bam(aln.raw_bams[0], stringency: "silent").getStatistics(exclude:["sorted"]),
                     aln.bowtie2.log,
                     aln.unmapped,
                 ).match() }
@@ -554,7 +554,7 @@ nextflow_process {
             assertAll (
                 { assert process.success },
                 { assert snapshot(
-                    file(aln.orig_bam[0]).name,
+                    file(aln.raw_bams[0]).name,
                     file(aln.csi).name,
                     file(aln.bowtie2.log).name,
                     aln.unmapped,
@@ -606,7 +606,7 @@ nextflow_process {
             assertAll (
                 { assert process.success },
                 { assert snapshot(
-                    file(aln.orig_bam[0]).name,
+                    file(aln.raw_bams[0]).name,
                     file(aln.csi).name,
                     file(aln.bowtie2.log).name,
                     aln.unmapped,

@@ -58,7 +58,7 @@ nextflow_process {
             def aln = process.out[0][0]
             assert process.success
             assertAll(
-                { assert snapshot(file(aln.orig_bam).name, aln.hisat2.summary, aln.unmapped).match() }
+                { assert snapshot(file(aln.raw_bams).name, aln.hisat2.summary, aln.unmapped).match() }
             )
         }
     }
@@ -165,7 +165,7 @@ nextflow_process {
             def aln = process.out[0][0]
             assert process.success
             assertAll(
-                { assert snapshot(file(aln.orig_bam).name, aln.hisat2.summary, aln.unmapped).match() }
+                { assert snapshot(file(aln.raw_bams).name, aln.hisat2.summary, aln.unmapped).match() }
             )
         }
     }
@@ -263,7 +263,7 @@ nextflow_process {
             def aln = process.out[0][0]
             assert process.success
             assertAll(
-                { assert snapshot(file(aln.orig_bam).name, aln.hisat2.summary, aln.unmapped).match() }
+                { assert snapshot(file(aln.raw_bams).name, aln.hisat2.summary, aln.unmapped).match() }
             )
         }
     }
@@ -352,7 +352,7 @@ nextflow_process {
             def aln = process.out[0][0]
             assert process.success
             assertAll(
-                { assert snapshot(file(aln.orig_bam).name, aln.hisat2.summary, aln.unmapped).match() }
+                { assert snapshot(file(aln.raw_bams).name, aln.hisat2.summary, aln.unmapped).match() }
             )
         }
     }

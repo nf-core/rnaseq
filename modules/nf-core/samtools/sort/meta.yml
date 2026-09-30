@@ -22,7 +22,7 @@ input:
         description: |
           Groovy Map containing sample information
           e.g. [ id:'test', single_end:false ]
-    - bam:
+    - raw_bams:
         type: file
         description: BAM/CRAM/SAM file(s)
         pattern: "*.{bam,cram,sam}"

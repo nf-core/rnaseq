@@ -7,11 +7,12 @@ nextflow.enable.types = true
 include { SAMTOOLS_STATS    } from '../../../modules/nf-core/samtools/stats/main'
 include { SAMTOOLS_IDXSTATS } from '../../../modules/nf-core/samtools/idxstats/main'
 include { SAMTOOLS_FLAGSTAT } from '../../../modules/nf-core/samtools/flagstat/main'
-include { BamBai; SamtoolsStats } from './types'
+include { Bam                } from '../../local/types'
+include { SamtoolsStats      } from './types'
 
 workflow BAM_STATS_SAMTOOLS {
     take:
-    ch_bam_bai: Channel<BamBai>
+    ch_bam_bai: Channel<Bam>
     ch_fasta_fai: Value<Tuple<Map, Path?, Path?>>
 
     main:

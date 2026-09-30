@@ -10,12 +10,12 @@ process SAMTOOLS_SORT {
         : 'community.wave.seqera.io/library/htslib_samtools:1.24--d697cfb9dce007cd'}"
 
     input:
-    record(id: String, meta: Map, bam: List<Path>)
+    record(id: String, meta: Map, raw_bams: List<Path>)
     tuple(meta2: Map, fasta: Path?, fai: Path?)
     index_format: String
 
     stage:
-    stageAs bam, '?/*'
+    stageAs raw_bams, '?/*'
 
     output:
     record(
@@ -51,7 +51,7 @@ process SAMTOOLS_SORT {
         output_file = "${prefix}.${extension}##idx##${prefix}.${extension}.${index_format}"
     }
     // A lone file arrives as a Path, which iterates over its name components.
-    def bam_names = bam instanceof Path ? "${bam}" : bam.join(' ')
+    def bam_names = raw_bams instanceof Path ? "${raw_bams}" : raw_bams.join(' ')
     def is_sam = bam_names.replaceAll(' .*', '').endsWith('.sam')
     if (index_format) {
         if (!(index_format in ['bai', 'csi', 'crai'])) {

@@ -19,7 +19,7 @@ process HISAT2_ALIGN {
     record(
         id:       id,
         meta:     meta,
-        orig_bam: files('*.bam').toSorted { f -> f.name },
+        raw_bams: files('*.bam').toSorted { f -> f.name },
         unmapped: files('*fastq.gz', optional: true).toSorted { f -> f.name },
         hisat2:   record(summary: file('*.log'))
     )

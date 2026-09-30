@@ -35,7 +35,7 @@ nextflow_workflow {
                 input[4] = record(
                     id: 'test',
                     meta: [ id:'test'],
-                    bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam', checkIfExists: true)
+                    transcriptome_bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam', checkIfExists: true)
                 )
                 input[5] = [
                     [id:'genome'],

@@ -36,7 +36,7 @@ include { PseudoQuantSample                                                     
 include { StringtieMerged                                                                } from '../../subworkflows/nf-core/bam_stringtie_merge/types'
 include { FastqQcTrimFilterSetstrandedness; RrnaReferences                               } from '../../subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness/types'
 include { MultiqcReport                                                                  } from '../../subworkflows/local/multiqc_rnaseq/types'
-include { AlignedSample; QuantSample; GenomeBam; RsemMergeSample; Contaminants; StringtieSample; BigwigSample; Deseq2Qc; PipelineInfo; RustqcResult } from '../../subworkflows/local/types'
+include { AlignedSample; QuantSample; Bam; RsemMergeSample; Contaminants; StringtieSample; BigwigSample; Deseq2Qc; PipelineInfo; RustqcResult } from '../../subworkflows/local/types'
 
 include { readSamplesheet                } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline/samplesheet'
 include { classifyStrand                 } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
@@ -366,18 +366,15 @@ workflow RNASEQ {
     //
     // Genome-aligned BAMs with their index and mapping percentage, from the aligner or the samplesheet
     //
-    def ch_genome_bam: Channel<GenomeBam> = ch_prealigned
+    def ch_genome_bam: Channel<Bam> = ch_prealigned
         .mix(ch_star)
         .mix(ch_bowtie2)
         .mix(ch_hisat2.map { r -> r + record(percent_mapped: getHisat2PercentMapped(r.hisat2.summary)) })
 
-    // For Bowtie2+Salmon, the BAM is aligned to transcriptome so it's the "transcriptome_bam".
-    // Use orig_bam (query-grouped) for Salmon - coordinate-sorted BAM breaks paired-end quantification
-    ch_transcriptome_bam = ch_star
+    def ch_transcriptome_bam: Channel<Bam> = ch_star
+        .mix(ch_bowtie2)
+        .mix(ch_bam_samples)
         .filter { r -> r.transcriptome_bam != null }
-        .map { r -> record(id: r.id, meta: r.meta, bam: r.transcriptome_bam) }
-        .mix(ch_bowtie2.map { r -> record(id: r.id, meta: r.meta, bam: r.orig_bam[0]) })
-        .mix(ch_bam_samples.filter { s -> s.transcriptome_bam != null }.map { s -> record(id: s.id, meta: s.meta, bam: s.transcriptome_bam) })
 
     //
     // SUBWORKFLOW: Remove duplicate reads from BAM file based on UMIs
@@ -395,18 +392,16 @@ workflow RNASEQ {
         )
 
         ch_genome_bam = ch_genome_bam.join(ch_umi_dedup, by: 'id')
-        ch_transcriptome_bam = ch_umi_dedup
-            .filter { r -> r.transcriptome != null && (r.transcriptome.filtered_bam != null || r.transcriptome.sorted_bam != null) }
-            .map { r -> record(id: r.id, meta: r.meta, bam: r.transcriptome.filtered_bam ?: r.transcriptome.sorted_bam) }
+        ch_transcriptome_bam = ch_umi_dedup.filter { r -> r.transcriptome_bam != null }
 
         // Genome-side files only; MultiQC cannot tell transcriptome stats apart from genome stats
         ch_multiqc_files = ch_multiqc_files.mix(
             ch_umi_dedup.flatMap { r ->
-                [r.genomic_dedup_log, r.genome.stats, r.genome.flagstat, r.genome.idxstats].collect { f -> tuple(r.meta, f) }
+                [r.genomic_dedup_log, r.samtools.stats, r.samtools.flagstat, r.samtools.idxstats].collect { f -> tuple(r.meta, f) }
             }
         )
         ch_mqc_bundle = ch_mqc_bundle.join(
-            ch_umi_dedup.map { r -> record(id: r.id, umi_dedup: [r.genomic_dedup_log, r.genome.stats, r.genome.flagstat, r.genome.idxstats]) },
+            ch_umi_dedup.map { r -> record(id: r.id, umi_dedup: [r.genomic_dedup_log, r.samtools.stats, r.samtools.flagstat, r.samtools.idxstats]) },
             by: 'id', remainder: true
         )
     }
@@ -414,7 +409,7 @@ workflow RNASEQ {
     //
     // Quantification
     //
-    ch_transcriptome_reads = ch_transcriptome_bam.map { r -> record(id: r.id, meta: r.meta, reads: [r.bam]) }
+    ch_transcriptome_reads = ch_transcriptome_bam.map { r -> record(id: r.id, meta: r.meta, reads: [r.transcriptome_bam]) }
 
     def run_deseq2_qc = !params.skip_qc && !params.skip_deseq2_qc && !params.skip_quantification_merge
 

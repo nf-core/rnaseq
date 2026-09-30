@@ -18,7 +18,7 @@
                             "single_end": true
                         },
                         "orig_bai": null,
-                        "orig_bam": [
+                        "raw_bams": [
                             "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "testXd.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
@@ -74,7 +74,7 @@
                             "single_end": false
                         },
                         "orig_bai": null,
-                        "orig_bam": [
+                        "raw_bams": [
                             "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "testXd.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
@@ -190,7 +190,7 @@
                             "single_end": false
                         },
                         "orig_bai": null,
-                        "orig_bam": [
+                        "raw_bams": [
                             "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "testXd.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
@@ -276,7 +276,7 @@
                             "single_end": false
                         },
                         "orig_bai": null,
-                        "orig_bam": [
+                        "raw_bams": [
                             "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "testXd.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
@@ -389,7 +389,7 @@
                             "single_end": false
                         },
                         "orig_bai": null,
-                        "orig_bam": [
+                        "raw_bams": [
                             "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "testXd.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"

@@ -2,14 +2,8 @@
 include { SamtoolsStatsFiles } from '../bam_stats_samtools/types'
 include { UmitoolsDedupStats } from '../bam_dedup_stats_samtools_umitools/types'
 
-record TranscriptomeBam {
-    id:   String
-    meta: Map
-    bam:  Path
-}
-
 record UmiDedupTranscriptome {
-    bam:                    Path
+    transcriptome_bam:      Path
     dedup_bam:              Path
     sorted_bam:             Path
     sorted_bam_index:       Path
@@ -27,10 +21,11 @@ record UmiDedupBam {
     meta:                     Map
     bam:                      Path
     bai:                      Path
+    samtools:                 SamtoolsStatsFiles
     genomic_dedup_log:        Path
     transcriptomic_dedup_log: Path?
     prepare_for_rsem_log:     Path?
-    genome:                   SamtoolsStatsFiles
+    transcriptome_bam:        Path?
     transcriptome:            UmiDedupTranscriptome?
     tsv:                      UmitoolsDedupStats?
 }

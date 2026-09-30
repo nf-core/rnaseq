@@ -11,13 +11,13 @@ include { SUBREAD_FEATURECOUNTS           } from '../../../modules/nf-core/subre
 include { CUSTOM_MULTIQCCUSTOMBIOTYPE     } from '../../../modules/nf-core/custom/multiqccustombiotype/main'
 include { SAMTOOLS_SORT as SAMTOOLS_SORT_QUALIMAP } from '../../../modules/nf-core/samtools/sort/main'
 include { BAM_RSEQC                       } from '../bam_rseqc/main'
-include { BamBai                          } from '../bam_stats_samtools/types'
+include { Bam                          } from '../../local/types'
 include { BamQcRnaseq                     } from './types'
 
 workflow BAM_QC_RNASEQ {
 
     take:
-    ch_bam_bai: Channel<BamBai>
+    ch_bam_bai: Channel<Bam>
     ch_gtf: Value<Tuple<Map, Path>>
     ch_gene_bed: Value<Path>
     ch_fasta_fai: Value<Tuple<Map, Path?, Path?>>
@@ -62,8 +62,7 @@ workflow BAM_QC_RNASEQ {
     }
 
     if ('qualimap' in tools) {
-        // SEAM(alignment): adapter removed when SAMTOOLS_SORT takes a single-BAM record
-        ch_sort_in = ch_bam_bai.map { r -> record(id: r.id, meta: r.meta, bam: [ r.bam ]) }
+        ch_sort_in = ch_bam_bai.map { r -> record(id: r.id, meta: r.meta, raw_bams: [ r.bam ]) }
 
         // Name-sorted BAM via samtools sort; requires ext.args = '-n' to be set by the caller for SAMTOOLS_SORT_QUALIMAP
         ch_name_sorted = SAMTOOLS_SORT_QUALIMAP(ch_sort_in, ch_fasta_fai, '')

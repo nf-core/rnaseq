@@ -27,7 +27,7 @@ process UMITOOLS_PREPAREFORRSEM {
         meta: sample.meta,
         bam:  file('*.bam'),
         log:  file('*.log')
-    )
+    ) as UmitoolsPrepareforrsemResult
 
     topic:
     tuple(task.process, 'umitools', eval("umi_tools --version | sed 's/UMI-tools version: //'")) >> 'versions'

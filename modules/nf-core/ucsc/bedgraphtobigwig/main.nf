@@ -22,7 +22,7 @@ process UCSC_BEDGRAPHTOBIGWIG {
     sizes: Path
 
     output:
-    record(id: sample.id, meta: sample.meta, bigwig: file("*.bigWig"))
+    record(id: sample.id, meta: sample.meta, bigwig: file("*.bigWig")) as UcscBedgraphtobigwigResult
 
     topic:
     // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.

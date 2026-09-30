@@ -34,7 +34,7 @@ process UMITOOLS_DEDUP {
         tsv_edit_distance:    file('*edit_distance.tsv', optional: true),
         tsv_per_umi:          file('*per_umi.tsv', optional: true),
         tsv_umi_per_position: file('*per_position.tsv', optional: true)
-    )
+    ) as UmitoolsDedupResult
 
     topic:
     tuple(task.process, 'umitools', eval("umi_tools --version | sed 's/UMI-tools version: //'")) >> 'versions'

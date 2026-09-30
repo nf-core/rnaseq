@@ -22,7 +22,7 @@ process UCSC_BEDCLIP {
     sizes: Path
 
     output:
-    record(id: sample.id, meta: sample.meta, bedgraph: file("*.bedGraph"))
+    record(id: sample.id, meta: sample.meta, bedgraph: file("*.bedGraph")) as UcscBedclipResult
 
     topic:
     // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.

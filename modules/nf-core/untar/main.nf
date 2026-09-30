@@ -2,6 +2,12 @@ nextflow.enable.types = true
 
 include { ArchiveInput } from '../types'
 
+record UntarResult {
+    id:   String
+    meta: Map
+    dir:  Path
+}
+
 process UNTAR {
     tag "${sample.archive}"
     label 'process_single'
@@ -15,7 +21,7 @@ process UNTAR {
     sample: ArchiveInput
 
     output:
-    record(id: sample.id, meta: sample.meta, dir: file("${prefix}"))
+    record(id: sample.id, meta: sample.meta, dir: file("${prefix}")) as UntarResult
 
     topic:
     tuple(task.process, 'untar', eval('tar --version 2>&1 | head -1 | sed "s/tar (GNU tar) //; s/ Copyright.*//"')) >> 'versions'

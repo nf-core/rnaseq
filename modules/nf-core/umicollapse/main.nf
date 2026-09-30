@@ -31,7 +31,7 @@ process UMICOLLAPSE {
         bam:   file('*.bam', optional: true),
         fastq: file('*dedup*fastq.gz', optional: true),
         log:   file('*_UMICollapse.log')
-    )
+    ) as UmicollapseResult
 
     topic:
     // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.

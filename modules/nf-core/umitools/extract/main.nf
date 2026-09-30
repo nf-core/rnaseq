@@ -2,6 +2,13 @@ nextflow.enable.types = true
 
 include { ReadsInput } from '../../types'
 
+record UmitoolsExtractResult {
+    id:    String
+    meta:  Map
+    reads: List<Path>
+    log:   Path
+}
+
 process UMITOOLS_EXTRACT {
     tag "${sample.meta.id}"
     label "process_single"
@@ -21,7 +28,7 @@ process UMITOOLS_EXTRACT {
         meta:  sample.meta,
         reads: files('*.fastq.gz').toSorted { f -> f.name },
         log:   file('*.log')
-    )
+    ) as UmitoolsExtractResult
 
     topic:
     tuple(task.process, 'umitools', eval("umi_tools --version | sed -n '/version:/s/.*: //p'")) >> 'versions'

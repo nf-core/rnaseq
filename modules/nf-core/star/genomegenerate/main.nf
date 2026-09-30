@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process STAR_GENOMEGENERATE {
     tag "$fasta"
     label 'process_high'
@@ -8,17 +10,16 @@ process STAR_GENOMEGENERATE {
         'community.wave.seqera.io/library/htslib_samtools_star_gawk:ae438e9a604351a4' }"
 
     input:
-    tuple val(meta), path(fasta)
-    tuple val(meta2), path(gtf)
+    tuple(meta: Map, fasta: Path)
+    tuple(meta2: Map, gtf: Path?)
 
     output:
-    tuple val(meta), path("star")  , emit: index
-    tuple val("${task.process}"), val('star'), eval('STAR --version | sed -e "s/STAR_//g"'), emit: versions_star, topic: versions
-    tuple val("${task.process}"), val('samtools'), eval("samtools --version | sed -n '1s/samtools //p'"), emit: versions_samtools, topic: versions
-    tuple val("${task.process}"), val('gawk'), eval("gawk --version | sed -n '1{s/GNU Awk //;s/,.*//;p}'"), emit: versions_gawk, topic: versions
+    tuple(meta, file('star'))
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'star', eval('STAR --version | sed -e "s/STAR_//g"')) >> 'versions'
+    tuple(task.process, 'samtools', eval("samtools --version | sed -n '1s/samtools //p'")) >> 'versions'
+    tuple(task.process, 'gawk', eval("gawk --version | sed -n '1{s/GNU Awk //;s/,.*//;p}'")) >> 'versions'
 
     script:
     def args        = task.ext.args ?: ''

@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process STAR_GENOMEPARAMS_UPGRADE {
     tag "${meta.id ?: index.name}"
     label 'process_single'
@@ -8,14 +10,16 @@ process STAR_GENOMEPARAMS_UPGRADE {
         'community.wave.seqera.io/library/gawk:5.3.1--e09efb5dfc4b8156' }"
 
     input:
-    tuple val(meta), path(index, stageAs: 'input_index')
+    tuple(meta: Map, index: Path)
+
+    stage:
+    stageAs index, 'input_index'
 
     output:
-    tuple val(meta), path('star'), emit: index
-    tuple val("${task.process}"), val('gawk'), eval("awk -Wversion | sed '1!d; s/.*Awk //; s/,.*//'"), topic: versions, emit: versions_gawk
+    tuple(meta, file('star'))
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'gawk', eval("awk -Wversion | sed '1!d; s/.*Awk //; s/,.*//'")) >> 'versions'
 
     script:
     """

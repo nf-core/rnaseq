@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process HISAT2_BUILD {
     tag "${meta.id}"
     label 'process_high'
@@ -8,15 +10,14 @@ process HISAT2_BUILD {
         : 'community.wave.seqera.io/library/hisat2:2.2.3--2616fa83d3b9d8f8'}"
 
     input:
-    tuple val(meta), path(fasta), path(gtf), path(splicesites)
-    val hisat2_memory_input
+    tuple(meta: Map, fasta: Path, gtf: Path?, splicesites: Path?)
+    hisat2_memory_input: String?
 
     output:
-    tuple val(meta), path("hisat2"), emit: index
-    tuple val("${task.process}"), val('hisat2'), eval("hisat2 --version | sed -n 's/.*version \\([^ ]*\\).*/\\1/p'"), emit: versions_hisat2, topic: versions
+    tuple(meta, file('hisat2'))
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'hisat2', eval("hisat2 --version | sed -n 's/.*version \\([^ ]*\\).*/\\1/p'")) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''
@@ -25,7 +26,7 @@ process HISAT2_BUILD {
         error("[HISAT2 index build] No memory specified for process. Please configure memory for 'process_high' label.")
     }
     def avail_mem = task.memory.toGiga()
-    def hisat2_build_memory = hisat2_memory_input ? (hisat2_memory_input as MemoryUnit).toGiga() : Integer.MAX_VALUE
+    def hisat2_build_memory = hisat2_memory_input ? (hisat2_memory_input as MemoryUnit).toGiga() : 2147483647
 
     def ss = ''
     def exon = ''

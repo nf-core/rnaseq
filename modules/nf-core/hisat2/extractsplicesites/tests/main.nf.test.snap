@@ -2,67 +2,33 @@
     "test - stub": {
         "content": [
             {
-                "txt": [
+                "0": [
                     [
                         {
                             "id": "genome"
                         },
                         "genome.splice_sites.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
-                ],
-                "versions_hisat2": [
-                    [
-                        "HISAT2_EXTRACTSPLICESITES",
-                        "hisat2",
-                        "2.2.3"
-                    ]
-                ],
-                "versions_samtools": [
-                    [
-                        "HISAT2_EXTRACTSPLICESITES",
-                        "samtools",
-                        "1.24"
-                    ]
                 ]
             }
         ],
-        "timestamp": "2026-09-01T14:27:57.496546312",
+        "timestamp": "2026-09-29T20:56:42.336246181",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.08.0"
+            "nextflow": "26.09.1"
         }
     },
     "Should run without failures": {
         "content": [
             {
-                "txt": [
-                    [
-                        {
-                            "id": "genome"
-                        },
-                        "genome.splice_sites.txt"
-                    ]
-                ],
-                "versions_hisat2": [
-                    [
-                        "HISAT2_EXTRACTSPLICESITES",
-                        "hisat2",
-                        "2.2.3"
-                    ]
-                ],
-                "versions_samtools": [
-                    [
-                        "HISAT2_EXTRACTSPLICESITES",
-                        "samtools",
-                        "1.24"
-                    ]
-                ]
-            }
+                "id": "genome"
+            },
+            "genome.splice_sites.txt"
         ],
-        "timestamp": "2026-09-01T14:27:14.726466124",
+        "timestamp": "2026-09-29T20:56:30.231204275",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.08.0"
+            "nextflow": "26.09.1"
         }
     }
 }

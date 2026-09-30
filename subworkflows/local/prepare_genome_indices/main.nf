@@ -160,7 +160,7 @@ workflow PREPARE_GENOME_INDICES {
             ch_star_index = PARABRICKS_STARGENOMEGENERATE(
                 ch_fasta.map { item -> [ [:], item ] },
                 ch_gtf.map   { item -> [ [:], item ] }
-            ).index.map { tuple -> tuple[1] }
+            ).map { tuple -> tuple[1] }
             ch_star_index_publish = ch_star_index
         } else if (star_index) {
             // Pre-built STAR index supplied by the user. When star_index_legacy is set
@@ -173,14 +173,14 @@ workflow PREPARE_GENOME_INDICES {
                 : channel.value([ [:], file(star_index, checkIfExists: true) ])
             ch_star_index_publish = ch_star_raw.map { tuple -> tuple[1] }
             ch_star_index = star_index_legacy
-                ? STAR_GENOMEPARAMS_UPGRADE(ch_star_raw).index.map { tuple -> tuple[1] }
+                ? STAR_GENOMEPARAMS_UPGRADE(ch_star_raw).map { tuple -> tuple[1] }
                 : ch_star_index_publish
         }
         else if (fasta_provided) {
             ch_star_index = STAR_GENOMEGENERATE(
                 ch_fasta.map { item -> [ [:], item ] },
                 ch_gtf.map { item -> [ [:], item ] }
-            ).index.map { tuple -> tuple[1] }
+            ).map { tuple -> tuple[1] }
             ch_star_index_publish = ch_star_index
         }
     }
@@ -225,7 +225,7 @@ workflow PREPARE_GENOME_INDICES {
             ch_splicesites = channel.value(file(splicesites, checkIfExists: true))
         }
         else if (fasta_provided) {
-            ch_splicesites = HISAT2_EXTRACTSPLICESITES(ch_gtf.map { item -> [ [:], item ] }).txt.map { tuple -> tuple[1] }
+            ch_splicesites = HISAT2_EXTRACTSPLICESITES(ch_gtf.map { item -> [ [:], item ] }).map { tuple -> tuple[1] }
         }
         // the index
         if (hisat2_index) {
@@ -242,7 +242,7 @@ workflow PREPARE_GENOME_INDICES {
                     .combine(ch_splicesites)
                     .map { fasta_file, gtf_file, ss_file -> [ [:], fasta_file, gtf_file, ss_file ] },
                 hisat2_build_memory
-            ).index.map { tuple -> tuple[1] }
+            ).map { tuple -> tuple[1] }
         }
     }
 
@@ -263,7 +263,7 @@ workflow PREPARE_GENOME_INDICES {
             BOWTIE2_BUILD(
                 ch_transcript_fasta.map { fasta_file -> [ [id: 'transcripts'], fasta_file ] }
             )
-            ch_bowtie2_index = BOWTIE2_BUILD.out.index.map { _meta, index -> index }
+            ch_bowtie2_index = BOWTIE2_BUILD.out.map { _meta, index -> index }
         }
     }
 

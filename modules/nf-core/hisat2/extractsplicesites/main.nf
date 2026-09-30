@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process HISAT2_EXTRACTSPLICESITES {
     tag "${meta.id}"
     label 'process_medium'
@@ -8,15 +10,14 @@ process HISAT2_EXTRACTSPLICESITES {
         : 'community.wave.seqera.io/library/hisat2_samtools:a0c9b8ccf8116a89'}"
 
     input:
-    tuple val(meta), path(gtf)
+    tuple(meta: Map, gtf: Path)
 
     output:
-    tuple val(meta), path("*.splice_sites.txt"), emit: txt
-    tuple val("${task.process}"), val('hisat2'), eval('hisat2 --version | grep -o "version [^ ]*" | cut -d " " -f 2'), topic: versions, emit: versions_hisat2
-    tuple val("${task.process}"), val('samtools'), eval("samtools --version | sed -n '1s/samtools //p'"), emit: versions_samtools, topic: versions
+    tuple(meta, file('*.splice_sites.txt'))
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'hisat2', eval('hisat2 --version | grep -o "version [^ ]*" | cut -d " " -f 2')) >> 'versions'
+    tuple(task.process, 'samtools', eval("samtools --version | sed -n '1s/samtools //p'")) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''

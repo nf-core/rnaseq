@@ -15,11 +15,11 @@ nextflow_process {
                     """
                     input[0] = channel.of([
                         [ id:'test_fasta' ],
-                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
                     ])
                     input[1] = channel.of([
                         [ id:'test_gtf' ],
-                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
                     ])
                     """
                 }
@@ -29,13 +29,13 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = STAR_GENOMEGENERATE.out.index.map { _meta, idx -> [ [ id:'star_index' ], idx ] }
+                input[0] = STAR_GENOMEGENERATE.out.map { _meta, idx -> [ [ id:'star_index' ], idx ] }
                 """
             }
         }
 
         then {
-            def patched = path("${process.out.index[0][1]}/genomeParameters.txt").text
+            def patched = path("${process.out[0][0][1]}/genomeParameters.txt").text
             assertAll(
                 { assert process.success },
                 { assert patched.contains('versionGenome\t2.7.4a') },
@@ -44,7 +44,7 @@ nextflow_process {
                 { assert patched.contains('genomeTransformVCF\t-') },
                 { assert !patched.contains('versionGenome\t20201') },
                 { assert snapshot(
-                    process.out.index.collect { meta, idx -> [ meta, file(idx).list().sort() ] }
+                    process.out[0].collect { meta, idx -> [ meta, file(idx).list().sort() ] }
                 ).match() }
             )
         }
@@ -67,11 +67,11 @@ nextflow_process {
                     """
                     input[0] = channel.of([
                         [ id:'test_fasta' ],
-                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
                     ])
                     input[1] = channel.of([
                         [ id:'test_gtf' ],
-                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
                     ])
                     """
                 }
@@ -81,13 +81,13 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = STAR_GENOMEGENERATE.out.index.map { _meta, idx -> [ [ id:'star_index' ], idx ] }
+                input[0] = STAR_GENOMEGENERATE.out.map { _meta, idx -> [ [ id:'star_index' ], idx ] }
                 """
             }
         }
 
         then {
-            def patched = path("${process.out.index[0][1]}/genomeParameters.txt").text
+            def patched = path("${process.out[0][0][1]}/genomeParameters.txt").text
             assertAll(
                 { assert process.success },
                 { assert patched.contains('versionGenome\t2.7.4a') },
@@ -112,11 +112,11 @@ nextflow_process {
                     """
                     input[0] = channel.of([
                         [ id:'test_fasta' ],
-                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
                     ])
                     input[1] = channel.of([
                         [ id:'test_gtf' ],
-                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
                     ])
                     """
                 }
@@ -126,7 +126,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = STAR_GENOMEGENERATE.out.index.map { _meta, idx -> [ [ id:'star_index' ], idx ] }
+                input[0] = STAR_GENOMEGENERATE.out.map { _meta, idx -> [ [ id:'star_index' ], idx ] }
                 """
             }
         }

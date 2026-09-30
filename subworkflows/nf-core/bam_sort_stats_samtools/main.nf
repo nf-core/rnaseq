@@ -32,7 +32,7 @@ workflow BAM_SORT_STATS_SAMTOOLS {
 
     // SAMTOOLS_SORT also carries cram, sam, csi and crai fields; dropping them keeps them from
     // overwriting same-named fields when a caller joins this result onto its own record.
-    def ch_results: Channel<Bam> = ch_indexed
+    ch_results = ch_indexed
         .join(BAM_STATS_SAMTOOLS(ch_indexed, ch_fasta, ch_fai), by: 'id')
         .map { r -> record(id: r.id, meta: r.meta, bam: r.bam, bai: r.bai, samtools: r.samtools) }
 

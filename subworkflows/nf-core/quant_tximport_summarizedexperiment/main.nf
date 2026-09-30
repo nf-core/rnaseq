@@ -107,7 +107,7 @@ workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT {
     // merging, or one per sample under skip_merge. The SE outputs only exist
     // when merging and are null otherwise.
     //
-    def ch_results: Channel<QuantMerged> = ch_tximport
+    ch_results = ch_tximport
         .join(ch_se_gene, by: 'id')
         .join(ch_se_transcript, by: 'id')
         .combine(tx2gene: ch_tx2gene_file)

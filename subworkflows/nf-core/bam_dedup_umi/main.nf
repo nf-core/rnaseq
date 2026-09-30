@@ -131,7 +131,7 @@ workflow BAM_DEDUP_UMI {
         }
 
     // The transcriptome side is absent when there is no transcriptome BAM (e.g. HISAT2).
-    def ch_results: Channel<UmiDedupBam> = ch_genome_dedup
+    ch_results = ch_genome_dedup
         .map { r ->
             record(
                 id:                r.id,

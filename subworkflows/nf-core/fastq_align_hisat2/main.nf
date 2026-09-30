@@ -25,7 +25,7 @@ workflow FASTQ_ALIGN_HISAT2 {
     //
     def ch_sorted: Channel<Bam> = BAM_SORT_STATS_SAMTOOLS(ch_hisat2, ch_fasta, ch_fai)
 
-    def ch_results: Channel<Hisat2Aligned> = ch_hisat2
+    ch_results = ch_hisat2
         .map { r -> r + record(aligner: 'hisat2') }
         .join(ch_sorted, by: 'id')
 

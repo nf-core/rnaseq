@@ -66,7 +66,7 @@ workflow ALIGN_STAR {
             error "Sample '${r.id}' is missing its STAR sorted BAM result"
         }
     }
-    def ch_results: Channel<StarAligned> = ch_star_sorted
+    ch_results = ch_star_sorted
         .filter { r -> r.star != null && r.samtools != null }
         .map { r -> r + record(aligner: 'star', percent_mapped: getStarPercentMapped(params, r.star.log_final)) }
 

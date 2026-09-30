@@ -27,7 +27,7 @@ workflow BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG {
     //
     def ch_bigwig: Channel<UcscBedgraphtobigwigResult> = UCSC_BEDGRAPHTOBIGWIG(ch_clipped, sizes)
 
-    def ch_results: Channel<BigwigFiles> = ch_clipped.join(ch_bigwig, by: 'id')
+    ch_results = ch_clipped.join(ch_bigwig, by: 'id')
 
     emit:
     ch_results

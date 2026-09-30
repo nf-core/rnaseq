@@ -23,7 +23,7 @@ workflow BAM_RSEQC {
     main:
     // Every field starts null and is overwritten by the join of the tool that ran, so
     // skipped tools leave a null field and no join is made against an empty channel.
-    def ch_results: Channel<Rseqc> = ch_bam_bai.map { r ->
+    ch_results = ch_bam_bai.map { r ->
         record(
             id:                 r.id,
             meta:               r.meta,

@@ -37,7 +37,7 @@ workflow BAM_MARKDUPLICATES_PICARD {
             error "Sample '${r.id}' is missing its samtools index result"
         }
     }
-    def ch_results: Channel<MarkdupBam> = ch_markdup_indexed
+    ch_results = ch_markdup_indexed
         .filter { r -> r.metrics != null && r.bai != null }
         // remainder keeps samples without samtools stats when the caller disabled them.
         .join(ch_stats, by: 'id', remainder: true)

@@ -37,7 +37,7 @@ workflow BAM_STATS_SAMTOOLS {
             error "Sample '${r.id}' is missing its samtools idxstats result"
         }
     }
-    def ch_results: Channel<SamtoolsStats> = ch_stats_idxstats
+    ch_results = ch_stats_idxstats
         .filter { r -> r.flagstat != null && r.idxstats != null }
         .map { r -> record(id: r.id, meta: r.meta, samtools: record(stats: r.stats, flagstat: r.flagstat, idxstats: r.idxstats)) }
 

@@ -70,7 +70,7 @@ workflow ALIGN_BOWTIE2 {
             error "Sample '${r.id}' is missing its Bowtie2 sorted BAM result"
         }
     }
-    def ch_results: Channel<Bowtie2Aligned> = ch_bowtie2_sorted.filter { r -> r.bowtie2 != null && r.samtools != null }
+    ch_results = ch_bowtie2_sorted.filter { r -> r.bowtie2 != null && r.samtools != null }
 
     emit:
     ch_results

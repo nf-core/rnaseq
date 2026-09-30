@@ -28,7 +28,7 @@ workflow BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE {
     def ch_index: Channel<SamtoolsIndexResult> = SAMTOOLS_INDEX(ch_dedup)
     ch_indexed = ch_dedup.join(ch_index, by: 'id')
 
-    def ch_results: Channel<UmicollapseDedupBam> = ch_indexed.join(BAM_STATS_SAMTOOLS(ch_indexed, null, null), by: 'id')
+    ch_results = ch_indexed.join(BAM_STATS_SAMTOOLS(ch_indexed, null, null), by: 'id')
 
     emit:
     ch_results

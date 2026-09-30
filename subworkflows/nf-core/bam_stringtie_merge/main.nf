@@ -33,7 +33,7 @@ workflow BAM_STRINGTIE_MERGE {
 
     def ch_merged: Value<StringtieMergeResult> = STRINGTIE_MERGE(ch_to_merge, chrgtf)
 
-    def ch_results: Value<StringtieMerged> = ch_to_merge.combine(merged_gtf: ch_merged.map { r -> r.merged_gtf })
+    ch_results = ch_to_merge.combine(merged_gtf: ch_merged.map { r -> r.merged_gtf })
 
     emit:
     ch_results

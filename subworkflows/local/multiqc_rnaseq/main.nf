@@ -328,7 +328,7 @@ workflow MULTIQC_RNASEQ {
     // One record per MULTIQC task: a single 'multiqc_report' row when
     // merged, or one per sample under skip_quantification_merge.
     //
-    def ch_results: Channel<MultiqcReport> = MULTIQC(ch_multiqc_input)
+    ch_results = MULTIQC(ch_multiqc_input)
 
     emit:
     ch_results // channel: MultiqcReport

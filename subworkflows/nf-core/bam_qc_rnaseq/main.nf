@@ -101,7 +101,7 @@ workflow BAM_QC_RNASEQ {
     }
 
     // Files MultiQC reads for each sample, in the order the tools report them.
-    def ch_results: Channel<BamQcRnaseq> = ch_qc.map { r ->
+    ch_results = ch_qc.map { r ->
         r + record(
             mqc_files: [
                 r.preseq?.lc_extrap,

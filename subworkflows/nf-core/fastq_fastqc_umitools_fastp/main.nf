@@ -54,7 +54,7 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
     main:
     // Each stage that runs joins its outputs onto this per-sample record, overwriting
     // the null placeholders of the fields it owns.
-    def ch_results: Channel<FastqFastqcUmitoolsFastp> = ch_reads.map { r ->
+    ch_results = ch_reads.map { r ->
         record(
             id:                r.id,
             meta:              r.meta,

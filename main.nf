@@ -158,12 +158,14 @@ include { getGenomeAttribute         } from './subworkflows/local/utils_nfcore_r
 include { isStarIndexLegacy          } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { anySampleAutoStrandedness  } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 
-include { AlignedSample; Contaminants; StringtieSample; BigwigSample; QuantSample; RsemMergeSample; Deseq2Qc; RustqcResult; LintFile; PipelineInfo; SamplesheetRow } from './subworkflows/local/types'
+include { AlignedSample; Contaminants; StringtieSample; BigwigSample; RsemMergeSample; Deseq2Qc; RustqcResult; LintFile; PipelineInfo; SamplesheetRow } from './subworkflows/local/types'
 include { GenomeArtifact                                   } from './subworkflows/local/utils_nfcore_rnaseq_pipeline/types'
 include { FastqQcTrimFilterSetstrandedness; RrnaReferences } from './subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness/types'
 include { UmiDedupBam                                      } from './subworkflows/nf-core/bam_dedup_umi/types'
 include { MarkdupBam                                       } from './subworkflows/nf-core/bam_markduplicates_picard/types'
 include { BamQcRnaseq                                      } from './subworkflows/nf-core/bam_qc_rnaseq/types'
+include { RsemQuantSample                                     } from './subworkflows/nf-core/quantify_rsem/types'
+include { SalmonQuantSample; KallistoQuantSample           } from './subworkflows/nf-core/quantify_pseudo_alignment/types'
 include { QuantMerged                                      } from './subworkflows/nf-core/quant_tximport_summarizedexperiment/types'
 include { StringtieMerged                                  } from './subworkflows/nf-core/bam_stringtie_merge/types'
 include { MultiqcReport                                    } from './subworkflows/local/multiqc_rnaseq/types'
@@ -342,10 +344,12 @@ workflow NFCORE_RNASEQ {
     bam_qc:               Channel<BamQcRnaseq>                      = results.bam_qc
     bam_qc_rustqc:        Channel<RustqcResult>                     = results.bam_qc_rustqc
     samplesheet:          Channel<SamplesheetRow>                   = ch_samplesheet_rows
-    quant:                Channel<QuantSample>                      = results.quant
+    quant:                Channel<RsemQuantSample>                  = results.quant
+    quant_salmon:         Channel<SalmonQuantSample>                = results.quant_salmon
     quant_merged:         Channel<QuantMerged>                      = results.quant_merged
     quant_rsem_merge:     Channel<RsemMergeSample>                  = results.quant_rsem_merge
-    quant_pseudo:         Channel<QuantSample>                      = results.quant_pseudo
+    quant_pseudo:         Channel<SalmonQuantSample>                = results.quant_pseudo
+    quant_pseudo_kallisto: Channel<KallistoQuantSample>             = results.quant_pseudo_kallisto
     quant_merged_pseudo:  Channel<QuantMerged>                      = results.quant_merged_pseudo
     contaminants:         Channel<Contaminants>               = results.contaminants
     stringtie:            Channel<StringtieSample>                  = results.stringtie
@@ -423,9 +427,11 @@ workflow {
     markdup              = results.markdup
     samplesheet          = results.samplesheet
     quant                = results.quant
+    quant_salmon         = results.quant_salmon
     quant_merged         = results.quant_merged
     quant_rsem_merge     = results.quant_rsem_merge
     quant_pseudo         = results.quant_pseudo
+    quant_pseudo_kallisto = results.quant_pseudo_kallisto
     quant_merged_pseudo  = results.quant_merged_pseudo
     deseq2               = results.deseq2
     deseq2_pseudo        = results.deseq2_pseudo
@@ -633,14 +639,18 @@ output {
         }
     }
 
-    quant: Channel<QuantSample> {   // RSEM or Salmon-on-BAM result (bam-salmon reuses the pseudo-alignment shape)
+    quant: Channel<RsemQuantSample> {   // RSEM result
         path { s ->
             def dir = alignedDir(s.id)
             [
-                ([s.counts_gene, s.counts_transcript, s.stat, s.quant_dir]): dir,
-                (s.log):                                                     "${dir}log/",
+                ([s.counts_gene, s.counts_transcript, s.stat]): dir,
+                (s.log):                                        "${dir}log/",
             ]
         }
+    }
+
+    quant_salmon: Channel<SalmonQuantSample> {   // Salmon on the transcriptome BAM
+        path { s -> [(s.quant_dir): alignedDir(s.id)] }
     }
 
     quant_merged: Channel<QuantMerged> {   // QuantMerged; never sample-prefixed except under --skip_quantification_merge
@@ -667,12 +677,13 @@ output {
         }
     }
 
-    quant_pseudo: Channel<QuantSample> {   // pseudo-aligner result
-        path { s ->
-            // s.log (kallisto only; always null for salmon) lives inside
-            // quant_dir already and is not routed separately.
-            s.quant_dir >> "${samplePrefix(s.id)}${params.pseudo_aligner}/"
-        }
+    quant_pseudo: Channel<SalmonQuantSample> {   // Salmon pseudo-alignment
+        path { s -> s.quant_dir >> "${samplePrefix(s.id)}${params.pseudo_aligner}/" }
+    }
+
+    // The Kallisto log lives inside quant_dir already and is not routed separately.
+    quant_pseudo_kallisto: Channel<KallistoQuantSample> {   // Kallisto pseudo-alignment
+        path { s -> s.quant_dir >> "${samplePrefix(s.id)}${params.pseudo_aligner}/" }
     }
 
     quant_merged_pseudo: Channel<QuantMerged> {   // QuantMerged, pseudo-aligner

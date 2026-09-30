@@ -8,7 +8,7 @@ include { SALMON_QUANT     } from '../../../modules/nf-core/salmon/quant'
 include { KALLISTO_QUANT   } from '../../../modules/nf-core/kallisto/quant'
 
 include { QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT } from '../quant_tximport_summarizedexperiment'
-include { Reads                               } from './types'
+include { Reads; SalmonQuantSample; KallistoQuantSample } from './types'
 
 workflow QUANTIFY_PSEUDO_ALIGNMENT {
     take:
@@ -29,15 +29,11 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
     //
     // Quantify and merge counts across samples
     //
-    // NOTE: MultiQC needs Salmon outputs, but Kallisto logs
+    def ch_salmon: Channel<SalmonQuantSample>     = channel.empty()
+    def ch_kallisto: Channel<KallistoQuantSample> = channel.empty()
     if (pseudo_aligner == 'salmon') {
         ch_salmon = SALMON_QUANT(ch_samples, index, gtf, transcript_fasta)
-
-        // Salmon writes its log inside the quant directory rather than as a
-        // discrete file, so log is null. meta_info.json is an optional output.
-        ch_sample_results = ch_salmon.map { r ->
-            record(id: r.id, meta: r.meta, quant_dir: r.quant_dir, json_info: r.json_info, log: null, multiqc: r.quant_dir)
-        }
+        ch_quant_dirs = ch_salmon.map { r -> record(id: r.id, meta: r.meta, quants: [ r.quant_dir ]) }
     } else {
         ch_kallisto = KALLISTO_QUANT(
             ch_samples,
@@ -47,9 +43,7 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
             kallisto_quant_fraglen,
             kallisto_quant_fraglen_sd
         )
-        ch_sample_results = ch_kallisto.map { r ->
-            record(id: r.id, meta: r.meta, quant_dir: r.quant_dir, json_info: r.json_info, log: r.log, multiqc: r.log)
-        }
+        ch_quant_dirs = ch_kallisto.map { r -> record(id: r.id, meta: r.meta, quants: [ r.quant_dir ]) }
     }
 
     //
@@ -57,7 +51,7 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
     //
     ch_quant_merged = QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT(
         samplesheet,
-        ch_sample_results.map { r -> record(id: r.id, meta: r.meta, quants: [ r.quant_dir ]) },
+        ch_quant_dirs,
         gtf,
         gtf_id_attribute,
         gtf_extra_attribute,
@@ -66,6 +60,7 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
     )
 
     emit:
-    samples = ch_sample_results // per sample
-    merged  = ch_quant_merged   // one row per sample under skip_merge, a single 'all_samples' row otherwise
+    salmon   = ch_salmon        // per sample, when pseudo_aligner is salmon
+    kallisto = ch_kallisto      // per sample, when pseudo_aligner is kallisto
+    merged   = ch_quant_merged  // one row per sample under skip_merge, a single 'all_samples' row otherwise
 }

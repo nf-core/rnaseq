@@ -5,12 +5,18 @@ record Reads {
     reads: List<Path>
 }
 
-// multiqc is the file MultiQC parses: the quant directory for Salmon, the log for Kallisto.
-record PseudoQuantSample {
+record SalmonQuantSample {
+    id:                String
+    meta:              Map
+    quant_dir:         Path
+    json_info:         Path?
+    lib_format_counts: Path?
+}
+
+record KallistoQuantSample {
     id:        String
     meta:      Map
     quant_dir: Path
-    json_info: Path?
-    log:       Path?
-    multiqc:   Path
+    json_info: Path
+    log:       Path
 }

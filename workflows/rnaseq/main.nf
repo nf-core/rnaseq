@@ -32,11 +32,12 @@ include { UmiDedupBam                                                           
 include { MarkdupBam                                                                     } from '../../subworkflows/nf-core/bam_markduplicates_picard/types'
 include { BamQcRnaseq                                                                    } from '../../subworkflows/nf-core/bam_qc_rnaseq/types'
 include { QuantMerged                                                                    } from '../../subworkflows/nf-core/quant_tximport_summarizedexperiment/types'
-include { PseudoQuantSample                                                              } from '../../subworkflows/nf-core/quantify_pseudo_alignment/types'
+include { SalmonQuantSample; KallistoQuantSample                                        } from '../../subworkflows/nf-core/quantify_pseudo_alignment/types'
+include { RsemQuantSample                                                                } from '../../subworkflows/nf-core/quantify_rsem/types'
 include { StringtieMerged                                                                } from '../../subworkflows/nf-core/bam_stringtie_merge/types'
 include { FastqQcTrimFilterSetstrandedness; RrnaReferences                               } from '../../subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness/types'
 include { MultiqcReport                                                                  } from '../../subworkflows/local/multiqc_rnaseq/types'
-include { AlignedSample; QuantSample; Bam; RsemMergeSample; Contaminants; StringtieSample; BigwigSample; Deseq2Qc; PipelineInfo; RustqcResult } from '../../subworkflows/local/types'
+include { AlignedSample; Bam; RsemMergeSample; Contaminants; StringtieSample; BigwigSample; Deseq2Qc; PipelineInfo; RustqcResult } from '../../subworkflows/local/types'
 
 include { readSamplesheet                } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline/samplesheet'
 include { classifyStrand                 } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
@@ -414,8 +415,8 @@ workflow RNASEQ {
 
     def run_deseq2_qc = !params.skip_qc && !params.skip_deseq2_qc && !params.skip_quantification_merge
 
-    // Alignment-based quantifiers emit different per-sample shapes (RsemQuantSample or PseudoQuantSample), so the channel is left untyped
-    def ch_quant                                       = channel.empty()
+    def ch_quant: Channel<RsemQuantSample>             = channel.empty()
+    def ch_quant_salmon: Channel<SalmonQuantSample>    = channel.empty()
     def ch_quant_merged: Channel<QuantMerged>          = channel.empty()
     def ch_quant_rsem_merge: Channel<RsemMergeSample>  = channel.empty()
     def ch_deseq2: Channel<Deseq2Qc>                   = channel.empty()
@@ -467,7 +468,7 @@ workflow RNASEQ {
             params.skip_quantification_merge
         )
 
-        ch_quant        = bam_salmon.samples
+        ch_quant_salmon = bam_salmon.salmon
         ch_quant_merged = bam_salmon.merged
 
         if (run_deseq2_qc) {
@@ -794,7 +795,8 @@ workflow RNASEQ {
     //
     // SUBWORKFLOW: Pseudoalignment and quantification with Salmon
     //
-    def ch_quant_pseudo: Channel<PseudoQuantSample>        = channel.empty()
+    def ch_quant_pseudo: Channel<SalmonQuantSample>        = channel.empty()
+    def ch_quant_pseudo_kallisto: Channel<KallistoQuantSample> = channel.empty()
     def ch_quant_merged_pseudo: Channel<QuantMerged>       = channel.empty()
     def ch_deseq2_pseudo: Channel<Deseq2Qc>                = channel.empty()
     if (!params.skip_pseudo_alignment && params.pseudo_aligner) {
@@ -819,12 +821,17 @@ workflow RNASEQ {
             params.skip_quantification_merge
         )
 
-        ch_quant_pseudo        = pseudo.samples
-        ch_quant_merged_pseudo = pseudo.merged
+        ch_quant_pseudo          = pseudo.salmon
+        ch_quant_pseudo_kallisto = pseudo.kallisto
+        ch_quant_merged_pseudo   = pseudo.merged
 
-        ch_multiqc_files = ch_multiqc_files.mix(ch_quant_pseudo.map { r -> tuple(r.meta, r.multiqc) })
+        // MultiQC parses the Salmon quant directory and the Kallisto log
+        ch_pseudo_mqc = ch_quant_pseudo
+            .map { r -> record(id: r.id, meta: r.meta, file: r.quant_dir) }
+            .mix(ch_quant_pseudo_kallisto.map { r -> record(id: r.id, meta: r.meta, file: r.log) })
+        ch_multiqc_files = ch_multiqc_files.mix(ch_pseudo_mqc.map { r -> tuple(r.meta, r.file) })
         ch_mqc_bundle = ch_mqc_bundle.join(
-            ch_quant_pseudo.map { r -> record(id: r.id, pseudo: r.multiqc) },
+            ch_pseudo_mqc.map { r -> record(id: r.id, pseudo: r.file) },
             by: 'id', remainder: true
         )
 
@@ -917,10 +924,12 @@ workflow RNASEQ {
     markdup:             Channel<MarkdupBam> = ch_markdup
     bam_qc:              Channel<BamQcRnaseq> = ch_bam_qc
     bam_qc_rustqc:       Channel<RustqcResult> = ch_bam_qc_rustqc
-    quant:               Channel<QuantSample> = ch_quant                           // RsemQuantSample | PseudoQuantSample, alignment-based quantifier
+    quant:               Channel<RsemQuantSample> = ch_quant                       // RSEM
+    quant_salmon:        Channel<SalmonQuantSample> = ch_quant_salmon             // Salmon on the transcriptome BAM
     quant_merged:        Channel<QuantMerged> = ch_quant_merged                   // alignment-based quantifier
     quant_rsem_merge:    Channel<RsemMergeSample> = ch_quant_rsem_merge           // empty unless --aligner star_rsem
-    quant_pseudo:        Channel<PseudoQuantSample> = ch_quant_pseudo             // pseudo-aligner
+    quant_pseudo:        Channel<SalmonQuantSample> = ch_quant_pseudo             // Salmon pseudo-alignment
+    quant_pseudo_kallisto: Channel<KallistoQuantSample> = ch_quant_pseudo_kallisto // Kallisto pseudo-alignment
     quant_merged_pseudo: Channel<QuantMerged> = ch_quant_merged_pseudo            // pseudo-aligner
     contaminants:        Channel<Contaminants> = ch_contaminants
     stringtie:           Channel<StringtieSample> = ch_stringtie

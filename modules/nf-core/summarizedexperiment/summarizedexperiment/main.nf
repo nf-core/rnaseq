@@ -14,7 +14,7 @@ record SummarizedexperimentSummarizedexperimentResult {
 }
 
 process SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT {
-    tag "${sample.meta.id}"
+    tag "$sample.meta.id"
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"

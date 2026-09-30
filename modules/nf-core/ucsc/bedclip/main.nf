@@ -9,7 +9,7 @@ record UcscBedclipResult {
 }
 
 process UCSC_BEDCLIP {
-    tag "${sample.meta.id}"
+    tag "$sample.meta.id"
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
@@ -34,7 +34,7 @@ process UCSC_BEDCLIP {
     """
     bedClip \\
         $args \\
-        ${sample.bedgraph} \\
+        $sample.bedgraph \\
         $sizes \\
         ${prefix}.bedGraph
     """

@@ -24,7 +24,7 @@ process SUBREAD_FEATURECOUNTS {
 
     output:
     record(
-        id:    sample.id,
+        id:      sample.id,
         meta:    sample.meta,
         counts:  file("*featureCounts.tsv"),
         summary: file("*featureCounts.tsv.summary")

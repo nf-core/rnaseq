@@ -10,7 +10,7 @@ record UmitoolsPrepareforrsemResult {
 }
 
 process UMITOOLS_PREPAREFORRSEM {
-    tag "${sample.meta.id}"
+    tag "$sample.meta.id"
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
@@ -35,10 +35,10 @@ process UMITOOLS_PREPAREFORRSEM {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${sample.meta.id}"
-    if ("${sample.bam}" == "${prefix}.bam") error "Input and output names are the same, use \"task.ext.prefix\" to disambiguate!"
+    if ("$sample.bam" == "${prefix}.bam") error "Input and output names are the same, use \"task.ext.prefix\" to disambiguate!"
     """
     umi_tools prepare-for-rsem \\
-        --stdin=${sample.bam} \\
+        --stdin=$sample.bam \\
         --stdout=${prefix}.bam \\
         --log=${prefix}.prepare_for_rsem.log \\
         $args

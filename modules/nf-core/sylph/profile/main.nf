@@ -35,7 +35,7 @@ process SYLPH_PROFILE {
     sylph profile \\
         -t ${task.cpus} \\
         ${args} \\
-        ${database.join(' ')} \\
+        ${database.join(' ')}\\
         ${input} \\
         -o ${prefix}.tsv
     """

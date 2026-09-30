@@ -11,7 +11,7 @@ record SortmernaResult {
 }
 
 process SORTMERNA {
-    tag "${sample.meta.id}"
+    tag "$sample.meta.id"
     label 'process_high'
 
     conda "${moduleDir}/environment.yml"

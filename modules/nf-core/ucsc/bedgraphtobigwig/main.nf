@@ -9,7 +9,7 @@ record UcscBedgraphtobigwigResult {
 }
 
 process UCSC_BEDGRAPHTOBIGWIG {
-    tag "${sample.meta.id}"
+    tag "$sample.meta.id"
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
@@ -34,7 +34,7 @@ process UCSC_BEDGRAPHTOBIGWIG {
     """
     bedGraphToBigWig \\
         $args \\
-        ${sample.bedgraph} \\
+        $sample.bedgraph \\
         $sizes \\
         ${prefix}.bigWig
     """

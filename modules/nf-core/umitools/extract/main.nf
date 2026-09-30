@@ -10,7 +10,7 @@ record UmitoolsExtractResult {
 }
 
 process UMITOOLS_EXTRACT {
-    tag "${sample.meta.id}"
+    tag "$sample.meta.id"
     label "process_single"
     label "process_long"
 
@@ -61,9 +61,12 @@ process UMITOOLS_EXTRACT {
 
     stub:
     def prefix = task.ext.prefix ?: "${sample.meta.id}"
-    output_command = sample.meta.single_end
-        ? "echo '' | gzip > ${prefix}.umi_extract.fastq.gz"
-        : "echo '' | gzip > ${prefix}.umi_extract_1.fastq.gz ;echo '' | gzip > ${prefix}.umi_extract_2.fastq.gz"
+    if (sample.meta.single_end) {
+        output_command = "echo '' | gzip > ${prefix}.umi_extract.fastq.gz"
+    } else {
+        output_command = "echo '' | gzip > ${prefix}.umi_extract_1.fastq.gz ;"
+        output_command += "echo '' | gzip > ${prefix}.umi_extract_2.fastq.gz"
+    }
     """
     touch ${prefix}.umi_extract.log
     ${output_command}

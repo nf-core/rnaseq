@@ -1,11 +1,5 @@
 nextflow.enable.types = true
 
-record SeqkitReplaceInput {
-    id:    String
-    meta:  Map
-    fastx: Path
-}
-
 record SeqkitReplaceResult {
     id:    String
     meta:  Map
@@ -22,7 +16,7 @@ process SEQKIT_REPLACE {
         : 'community.wave.seqera.io/library/seqkit:2.13.0--05c0a96bf9fb2751'}"
 
     input:
-    sample: SeqkitReplaceInput
+    sample: SeqkitReplaceResult
     out_ext: String
 
     output:

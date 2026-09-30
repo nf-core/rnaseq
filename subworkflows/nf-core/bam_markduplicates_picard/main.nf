@@ -31,7 +31,6 @@ workflow BAM_MARKDUPLICATES_PICARD {
         ch_stats = BAM_STATS_SAMTOOLS(ch_marked.join(ch_index, by: 'id'), ch_fasta, ch_fai)
     }
 
-    // remainder keeps samples without samtools stats when the caller disabled them.
     ch_markdup_indexed = ch_markdup.join(ch_index, by: 'id', remainder: true)
     ch_markdup_indexed.subscribe { r ->
         if( r.metrics == null || r.bai == null ) {
@@ -40,6 +39,7 @@ workflow BAM_MARKDUPLICATES_PICARD {
     }
     def ch_results: Channel<MarkdupBam> = ch_markdup_indexed
         .filter { r -> r.metrics != null && r.bai != null }
+        // remainder keeps samples without samtools stats when the caller disabled them.
         .join(ch_stats, by: 'id', remainder: true)
 
     emit:

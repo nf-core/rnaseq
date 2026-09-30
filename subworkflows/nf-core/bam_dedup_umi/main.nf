@@ -37,7 +37,7 @@ workflow BAM_DEDUP_UMI {
     // Genome BAM deduplication
     if (umi_dedup_tool == "umicollapse") {
         ch_genome_dedup = BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_GENOME(ch_genome_bam)
-            .map { r -> record(id: r.id, meta: r.meta, bam: r.bam, bai: r.bai, log: r.log, samtools: r.samtools, tsv: null) }
+            .map { r -> r + record(tsv: null) }
     }
     else {
         ch_genome_dedup = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME(
@@ -70,7 +70,7 @@ workflow BAM_DEDUP_UMI {
     // 2. Transcriptome BAM deduplication
     if (umi_dedup_tool == "umicollapse") {
         ch_transcriptome_dedup = BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_TRANSCRIPTOME(ch_coord_sorted)
-            .map { r -> record(id: r.id, meta: r.meta, bam: r.bam, bai: r.bai, log: r.log, samtools: r.samtools, tsv: null) }
+            .map { r -> r + record(tsv: null) }
     }
     else {
         ch_transcriptome_dedup = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME(

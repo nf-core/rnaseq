@@ -45,6 +45,9 @@ workflow BAM_QC_RNASEQ {
         )
     }
 
+    //
+    // MODULE: Preseq library complexity
+    //
     if ('preseq' in tools) {
         // Remainder join: preseq can fail on low-duplication BAMs, and callers
         // may set errorStrategy 'ignore' rather than lose the sample.
@@ -55,6 +58,9 @@ workflow BAM_QC_RNASEQ {
         )
     }
 
+    //
+    // MODULE: Feature biotype QC using featureCounts
+    //
     if ('biotype_qc' in tools && biotype) {
         def ch_featurecounts: Channel<BamQcFeaturecounts> = SUBREAD_FEATURECOUNTS(ch_bam_bai, ch_gtf)
         def ch_biotype: Channel<CustomMultiqccustombiotypeResult> = CUSTOM_MULTIQCCUSTOMBIOTYPE(ch_featurecounts, biotypes_header)
@@ -63,6 +69,9 @@ workflow BAM_QC_RNASEQ {
             .join(ch_biotype.map { r -> record(id: r.id, biotype: record(tsv: r.tsv, rrna: r.rrna)) }, by: 'id')
     }
 
+    //
+    // MODULE: Qualimap
+    //
     if ('qualimap' in tools) {
         ch_sort_in = ch_bam_bai.map { r -> record(id: r.id, meta: r.meta, raw_bams: [ r.bam ]) }
 
@@ -71,6 +80,9 @@ workflow BAM_QC_RNASEQ {
         ch_qc = ch_qc.join(QUALIMAP_RNASEQ(ch_name_sorted, ch_gtf), by: 'id')
     }
 
+    //
+    // MODULE: dupRadar
+    //
     if ('dupradar' in tools) {
         ch_qc = ch_qc.join(
             DUPRADAR(ch_bam_bai, ch_gtf).map { r -> record(id: r.id, dupradar: r) },
@@ -78,6 +90,9 @@ workflow BAM_QC_RNASEQ {
         )
     }
 
+    //
+    // SUBWORKFLOW: RSeQC
+    //
     if (rseqc_modules.size() > 0) {
         ch_qc = ch_qc.join(
             BAM_RSEQC(ch_bam_bai, ch_gene_bed, rseqc_modules).map { r -> record(id: r.id, rseqc: r) },

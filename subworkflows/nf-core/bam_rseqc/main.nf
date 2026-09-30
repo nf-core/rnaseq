@@ -38,10 +38,16 @@ workflow BAM_RSEQC {
         )
     }
 
+    //
+    // Run RSeQC bam_stat.py
+    //
     if ('bam_stat' in rseqc_modules) {
         ch_results = ch_results.join(RSEQC_BAMSTAT(ch_bam_bai), by: 'id')
     }
 
+    //
+    // Run RSeQC inner_distance.py
+    //
     if ('inner_distance' in rseqc_modules) {
         ch_results = ch_results.join(
             RSEQC_INNERDISTANCE(ch_bam_bai, bed).map { r -> record(id: r.id, innerdistance: r) },
@@ -49,10 +55,16 @@ workflow BAM_RSEQC {
         )
     }
 
+    //
+    // Run RSeQC infer_experiment.py
+    //
     if ('infer_experiment' in rseqc_modules) {
         ch_results = ch_results.join(RSEQC_INFEREXPERIMENT(ch_bam_bai, bed), by: 'id')
     }
 
+    //
+    // Run RSeQC junction_annotation.py
+    //
     if ('junction_annotation' in rseqc_modules) {
         ch_results = ch_results.join(
             RSEQC_JUNCTIONANNOTATION(ch_bam_bai, bed).map { r -> record(id: r.id, junctionannotation: r) },
@@ -60,6 +72,9 @@ workflow BAM_RSEQC {
         )
     }
 
+    //
+    // Run RSeQC junction_saturation.py
+    //
     if ('junction_saturation' in rseqc_modules) {
         ch_results = ch_results.join(
             RSEQC_JUNCTIONSATURATION(ch_bam_bai, bed).map { r -> record(id: r.id, junctionsaturation: r) },
@@ -67,10 +82,16 @@ workflow BAM_RSEQC {
         )
     }
 
+    //
+    // Run RSeQC read_distribution.py
+    //
     if ('read_distribution' in rseqc_modules) {
         ch_results = ch_results.join(RSEQC_READDISTRIBUTION(ch_bam_bai, bed), by: 'id')
     }
 
+    //
+    // Run RSeQC read_duplication.py
+    //
     if ('read_duplication' in rseqc_modules) {
         ch_results = ch_results.join(
             RSEQC_READDUPLICATION(ch_bam_bai).map { r -> record(id: r.id, readduplication: r) },
@@ -78,6 +99,9 @@ workflow BAM_RSEQC {
         )
     }
 
+    //
+    // Run RSeQC tin.py
+    //
     if ('tin' in rseqc_modules) {
         ch_results = ch_results.join(
             RSEQC_TIN(ch_bam_bai, bed).map { r -> record(id: r.id, tin: r) },

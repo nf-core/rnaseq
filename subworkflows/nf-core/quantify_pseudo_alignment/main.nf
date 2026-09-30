@@ -35,7 +35,6 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
     def ch_kallisto: Channel<KallistoQuantSample> = channel.empty()
     if (pseudo_aligner == 'salmon') {
         ch_salmon = SALMON_QUANT(ch_samples, index, gtf, transcript_fasta)
-        ch_quant_dirs = ch_salmon.map { r -> record(id: r.id, meta: r.meta, quants: [ r.quant_dir ]) }
     } else {
         ch_kallisto = KALLISTO_QUANT(
             ch_samples,
@@ -45,8 +44,8 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
             kallisto_quant_fraglen,
             kallisto_quant_fraglen_sd
         )
-        ch_quant_dirs = ch_kallisto.map { r -> record(id: r.id, meta: r.meta, quants: [ r.quant_dir ]) }
     }
+    def ch_quant_dirs = ch_salmon.mix(ch_kallisto).map { r -> record(id: r.id, meta: r.meta, quants: [ r.quant_dir ]) }
 
     //
     // Post-process quantifications with tximport and SummarizedExperiment

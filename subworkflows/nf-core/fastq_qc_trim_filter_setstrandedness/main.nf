@@ -170,6 +170,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     //
     // MODULE: Lint FastQ files
     //
+
     if (!skip_linting) {
         def ch_lint_raw: Channel<FqLintResult> = FQ_LINT(ch_cat)
         ch_samples = ch_samples.join(ch_lint_raw.map { r -> record(id: r.id, lint_raw: r.lint) }, by: 'id')
@@ -371,9 +372,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
             if (strandedness == 'undetermined') {
                 strandedness = 'unstranded'
             }
-            def meta = r.meta
-            meta = r.meta + [strandedness: strandedness, salmon_strand_analysis: salmon_strand_analysis]
-            record(id: r.id, meta: meta)
+            record(id: r.id, meta: r.meta + [strandedness: strandedness, salmon_strand_analysis: salmon_strand_analysis])
         }
 
     ch_inferred = ch_auto_strand.join(ch_inferred_meta, by: 'id')

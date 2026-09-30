@@ -194,6 +194,7 @@ workflow FASTQ_REMOVE_RRNA {
             null, // No bed file
             ''    // No index format
         )
+        // Note: samtools/view versions collected via topic
         ch_view_bam = ch_view.filter { r -> r.bam != null }
 
         // Convert filtered BAM back to paired FASTQ

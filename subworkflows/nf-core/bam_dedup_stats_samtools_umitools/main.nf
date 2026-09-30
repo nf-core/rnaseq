@@ -21,10 +21,10 @@ workflow BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS {
     val_primary_only: Boolean
 
     main:
+
     //
     // Optionally filter to primary alignments before deduplication
     //
-    ch_dedup_input = ch_bam_bai
     if (val_primary_only) {
         def ch_primary: Channel<SamtoolsViewResult> = SAMTOOLS_VIEW_PRIMARY(
             ch_bam_bai,
@@ -36,6 +36,9 @@ workflow BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS {
         ).filter { r -> r.bam != null }
 
         ch_dedup_input = ch_primary.join(SAMTOOLS_INDEX_PRIMARY(ch_primary), by: 'id')
+    }
+    else {
+        ch_dedup_input = ch_bam_bai
     }
 
     //

@@ -7,18 +7,19 @@ nextflow_pipeline {
 
     test("Params: use_rustqc") {
 
+        options "-output-dir $outputDir"
+
         when {
             params {
-                outdir      = "$outputDir"
                 use_rustqc  = true
             }
         }
 
         then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore_rustqc')
+            // stable_name: All files + folders in the output directory with a stable name
+            def stable_name = getAllFilesFromDir(outputDir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in the output directory with stable content
+            def stable_path = getAllFilesFromDir(outputDir, ignoreFile: 'tests/.nftignore_rustqc')
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -48,9 +49,10 @@ nextflow_pipeline {
 
     test("Params: use_rustqc --with_umi") {
 
+        options "-output-dir $outputDir"
+
         when {
             params {
-                outdir                  = "$outputDir"
                 use_rustqc              = true
                 with_umi                = true
                 umitools_extract_method = "regex"
@@ -65,10 +67,10 @@ nextflow_pipeline {
         }
 
         then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore_rustqc')
+            // stable_name: All files + folders in the output directory with a stable name
+            def stable_name = getAllFilesFromDir(outputDir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in the output directory with stable content
+            def stable_path = getAllFilesFromDir(outputDir, ignoreFile: 'tests/.nftignore_rustqc')
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -98,20 +100,19 @@ nextflow_pipeline {
 
     test("Params: use_rustqc - stub") {
 
-        options "-stub"
+        options "-stub -output-dir $outputDir"
 
         when {
             params {
-                outdir      = "$outputDir"
                 use_rustqc  = true
             }
         }
 
         then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore_rustqc')
+            // stable_name: All files + folders in the output directory with a stable name
+            def stable_name = getAllFilesFromDir(outputDir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in the output directory with stable content
+            def stable_path = getAllFilesFromDir(outputDir, ignoreFile: 'tests/.nftignore_rustqc')
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(

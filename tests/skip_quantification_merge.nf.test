@@ -6,9 +6,10 @@ nextflow_pipeline {
 
     test("Params: --skip_quantification_merge --skip_qc --skip_bigwig --skip_stringtie --skip_pseudo_alignment") {
 
+        options "-output-dir $outputDir"
+
         when {
             params {
-                outdir = "$outputDir"
                 skip_quantification_merge = true
                 skip_qc = true
                 skip_bigwig = true
@@ -18,10 +19,10 @@ nextflow_pipeline {
         }
 
         then {
-            // stable_path: All files + folders in ${params.outdir}/ with a stable path (including file name)
-            def stable_path = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_content: All files in ${params.outdir}/ with stable content
-            def stable_content = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // stable_path: All files + folders in the output directory with a stable path (including file name)
+            def stable_path = getAllFilesFromDir(outputDir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_content: All files in the output directory with stable content
+            def stable_content = getAllFilesFromDir(outputDir, ignoreFile: 'tests/.nftignore')
             assert workflow.success
             assertAll(
                 { assert snapshot(

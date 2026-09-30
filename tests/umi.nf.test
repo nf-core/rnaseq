@@ -6,6 +6,8 @@ nextflow_pipeline {
 
     test("Params: --aligner hisat2 --umi_dedup_tool 'umicollapse'") {
 
+        options "-output-dir $outputDir"
+
         when {
             params {
                 with_umi = true
@@ -15,7 +17,6 @@ nextflow_pipeline {
                 skip_bbsplit = true
                 umi_dedup_tool = 'umicollapse'
                 aligner = 'hisat2'
-                outdir = "$outputDir"
                 save_umi_intermeds = true
                 // Skip processes not affected by UMI deduplication
                 // Keep QC as deduplicated BAMs have different characteristics worth integration testing
@@ -27,10 +28,10 @@ nextflow_pipeline {
         }
 
         then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // stable_name: All files + folders in the output directory with a stable name
+            def stable_name = getAllFilesFromDir(outputDir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in the output directory with stable content
+            def stable_path = getAllFilesFromDir(outputDir, ignoreFile: 'tests/.nftignore')
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -60,6 +61,8 @@ nextflow_pipeline {
 
     test("--umi_dedup_tool 'umitools'") {
 
+        options "-output-dir $outputDir"
+
         when {
             params {
                 with_umi = true
@@ -67,7 +70,6 @@ nextflow_pipeline {
                 umitools_bc_pattern = "^(?P<umi_1>CGA.{8}){s<=2}.*"
                 umitools_dedup_stats = true
                 skip_bbsplit = true
-                outdir = "$outputDir"
                 save_umi_intermeds = true
                 // Skip processes not affected by UMI deduplication
                 // Keep QC as deduplicated BAMs have different characteristics worth integration testing
@@ -79,10 +81,10 @@ nextflow_pipeline {
         }
 
         then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // stable_name: All files + folders in the output directory with a stable name
+            def stable_name = getAllFilesFromDir(outputDir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in the output directory with stable content
+            def stable_path = getAllFilesFromDir(outputDir, ignoreFile: 'tests/.nftignore')
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -112,6 +114,8 @@ nextflow_pipeline {
 
     test("Params: --aligner star_rsem --with_umi") {
 
+        options "-output-dir $outputDir"
+
         when {
             params {
                 aligner = 'star_rsem'
@@ -120,7 +124,6 @@ nextflow_pipeline {
                 umitools_bc_pattern = "^(?P<umi_1>CGA.{8}){s<=2}.*"
                 umitools_dedup_stats = true
                 skip_bbsplit = true
-                outdir = "$outputDir"
                 save_umi_intermeds = true
                 // Skip processes not affected by UMI deduplication
                 // Keep QC as deduplicated BAMs have different characteristics worth integration testing
@@ -132,10 +135,10 @@ nextflow_pipeline {
         }
 
         then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // stable_name: All files + folders in the output directory with a stable name
+            def stable_name = getAllFilesFromDir(outputDir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in the output directory with stable content
+            def stable_path = getAllFilesFromDir(outputDir, ignoreFile: 'tests/.nftignore')
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -165,7 +168,7 @@ nextflow_pipeline {
 
     test("--umi_dedup_tool 'umitools - stub") {
 
-        options "-stub"
+        options "-stub -output-dir $outputDir"
 
         when {
             params {
@@ -173,7 +176,6 @@ nextflow_pipeline {
                 umitools_extract_method = "regex"
                 umitools_bc_pattern = "^(?P<umi_1>CGA.{8}){s<=2}.*"
                 umitools_dedup_stats = true
-                outdir = "$outputDir"
                 // Skip processes not affected by UMI deduplication
                 // Keep QC as deduplicated BAMs have different characteristics worth integration testing
                 skip_stringtie = true
@@ -184,10 +186,10 @@ nextflow_pipeline {
         }
 
         then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // stable_name: All files + folders in the output directory with a stable name
+            def stable_name = getAllFilesFromDir(outputDir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in the output directory with stable content
+            def stable_path = getAllFilesFromDir(outputDir, ignoreFile: 'tests/.nftignore')
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(

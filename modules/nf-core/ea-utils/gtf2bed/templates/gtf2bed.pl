@@ -30,7 +30,7 @@ use Getopt::Long;
 my \$extended;
 GetOptions("x"=>\\\$extended);
 
-\$in = "${gtf}";
+\$in = "${sample.gtf}";
 
 my \$in_cmd =(\$in =~ /\\.gz\$/ ? "gunzip -c \$in|" : \$in =~ /\\.zip\$/ ? "unzip -p \$in|" : "\$in") || die "Can't open \$in: \$!\\n";
 open IN, \$in_cmd;
@@ -72,7 +72,7 @@ while (<IN>) {
     }
 }
 
-my \$out_file = "${task.ext.prefix ?: meta.id}.bed";
+my \$out_file = "${task.ext.prefix ?: sample.meta.id}.bed";
 open OUT, ">", \$out_file or die "Can't open \$out_file: \$!\\n";
 
 for \$id (

@@ -19,10 +19,10 @@ logger = logging.getLogger(__file__)
 logger.setLevel(logging.INFO)
 
 # Template variables from Nextflow
-count_file = "${counts}"
+count_file = "${sample.counts}"
 header_file = "${header}"
-prefix = "${task.ext.prefix}" if "${task.ext.prefix}" != "null" else "${meta.id}"
-sample_name = "${meta.id}"
+prefix = "${task.ext.prefix}" if "${task.ext.prefix}" != "null" else "${sample.meta.id}"
+sample_name = "${sample.meta.id}"
 
 
 def parse_ext_args(args_string):

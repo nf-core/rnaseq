@@ -1,7 +1,9 @@
 nextflow.enable.types = true
 
+include { FastaInput } from '../../types'
+
 process BOWTIE2_BUILD {
-    tag "$fasta"
+    tag "${sample.fasta}"
     label 'process_high'
 
     conda "${moduleDir}/environment.yml"
@@ -10,10 +12,10 @@ process BOWTIE2_BUILD {
         'community.wave.seqera.io/library/bowtie2_htslib_samtools_pigz:edeb13799090a2a6' }"
 
     input:
-    record(id: String, meta: Map, fasta: Path)
+    sample: FastaInput
 
     output:
-    record(id: id, meta: meta, index: file('bowtie2'))
+    record(id: sample.id, meta: sample.meta, index: file('bowtie2'))
 
     topic:
     tuple(task.process, 'bowtie2', eval("bowtie2 --version 2>&1 | sed -n 's/.*bowtie2-align-s version //p'")) >> 'versions'
@@ -22,13 +24,13 @@ process BOWTIE2_BUILD {
     def args = task.ext.args ?: ''
     """
     mkdir bowtie2
-    bowtie2-build $args --threads $task.cpus $fasta bowtie2/${fasta.baseName}
+    bowtie2-build $args --threads $task.cpus ${sample.fasta} bowtie2/${sample.fasta.baseName}
     """
 
     stub:
     """
     mkdir bowtie2
-    touch bowtie2/${fasta.baseName}.{1..4}.bt2
-    touch bowtie2/${fasta.baseName}.rev.{1,2}.bt2
+    touch bowtie2/${sample.fasta.baseName}.{1..4}.bt2
+    touch bowtie2/${sample.fasta.baseName}.rev.{1,2}.bt2
     """
 }

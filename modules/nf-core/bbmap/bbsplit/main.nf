@@ -1,7 +1,9 @@
 nextflow.enable.types = true
 
+include { ReadsInput } from '../../types'
+
 process BBMAP_BBSPLIT {
-    tag "$meta.id"
+    tag "${sample.meta.id}"
     label 'process_high'
     label 'error_retry'
 
@@ -11,7 +13,7 @@ process BBMAP_BBSPLIT {
         'community.wave.seqera.io/library/bbmap_pigz:07416fe99b090fa9' }"
 
     input:
-    record(id: String, meta: Map, reads: List<Path>)
+    sample: ReadsInput
     index: Path?
     primary_ref: Path?
     tuple(other_ref_names: List<String>, other_ref_paths: List<Path>)
@@ -22,8 +24,8 @@ process BBMAP_BBSPLIT {
 
     output:
     record(
-        id:                 id,
-        meta:               meta,
+        id:                 sample.id,
+        meta:               sample.meta,
         index:              file('bbsplit_index', optional: true),
         reads:              files('*primary*fastq.gz', optional: true).toSorted { f -> f.name },
         other_genome_reads: files('*fastq.gz', optional: true).findAll { f -> !f.name.contains('primary') }.toSorted { f -> f.name },
@@ -36,7 +38,7 @@ process BBMAP_BBSPLIT {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
 
     def avail_mem = 3072
     if (!task.memory) {
@@ -67,8 +69,8 @@ process BBMAP_BBSPLIT {
         } else {
             log.error 'ERROR: Please either specify a BBSplit index as input or a primary fasta file along with names and paths to non-primary fasta files.'
         }
-        fastq_in  = meta.single_end ? "in=${reads[0]}" : "in=${reads[0]} in2=${reads[1]}"
-        fastq_out = meta.single_end ? "basename=${prefix}_%.fastq.gz" : "basename=${prefix}_%_#.fastq.gz"
+        fastq_in  = sample.meta.single_end ? "in=${sample.reads[0]}" : "in=${sample.reads[0]} in2=${sample.reads[1]}"
+        fastq_out = sample.meta.single_end ? "basename=${prefix}_%.fastq.gz" : "basename=${prefix}_%_#.fastq.gz"
         refstats_cmd = 'refstats=' + prefix + '.stats.txt'
     }
     """
@@ -111,7 +113,7 @@ process BBMAP_BBSPLIT {
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     def other_refs = other_ref_names.collect { name -> "echo '' | gzip > ${prefix}_${name}.fastq.gz" }.join('')
     def will_build_index = only_build_index || (!index && primary_ref && other_ref_names && other_ref_paths)
     """

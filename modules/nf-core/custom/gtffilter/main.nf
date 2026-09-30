@@ -1,7 +1,9 @@
 nextflow.enable.types = true
 
+include { GtfInput } from '../../types'
+
 process CUSTOM_GTFFILTER {
-    tag "$meta.id"
+    tag "${sample.meta.id}"
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
@@ -10,18 +12,18 @@ process CUSTOM_GTFFILTER {
 :         'community.wave.seqera.io/library/python:3.14.5--dc8358b3c5eeb927' }"
 
     input:
-    record(id: String, meta: Map, gtf: Path)
+    sample: GtfInput
     fasta: Path?
 
     output:
-    record(id: id, meta: meta, gtf: file("${prefix}.${suffix}"))
+    record(id: sample.id, meta: sample.meta, gtf: file("${prefix}.${suffix}"))
 
     topic:
     file('versions.yml') >> 'versions'
 
     script:
-    prefix = task.ext.prefix ?: "${meta.id}"
-    suffix = "gtf" + (gtf.extension == 'gz' ? '.gz' : '')
+    prefix = task.ext.prefix ?: "${sample.meta.id}"
+    suffix = "gtf" + (sample.gtf.extension == 'gz' ? '.gz' : '')
     args   = task.ext.args ?: ''
 
     """
@@ -31,8 +33,8 @@ process CUSTOM_GTFFILTER {
     template 'gtffilter.py'
 
     stub:
-    prefix = task.ext.prefix ?: "${meta.id}"
-    suffix = "gtf" + (gtf.extension == 'gz' ? '.gz' : '')
+    prefix = task.ext.prefix ?: "${sample.meta.id}"
+    suffix = "gtf" + (sample.gtf.extension == 'gz' ? '.gz' : '')
     """
     touch ${prefix}.${suffix}
 

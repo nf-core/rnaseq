@@ -1,7 +1,9 @@
 nextflow.enable.types = true
 
+include { CustomRsemmergecountsInput } from '../../types'
+
 process CUSTOM_RSEMMERGECOUNTS {
-    tag "$meta.id"
+    tag "${sample.meta.id}"
     label "process_medium"
 
     conda "${moduleDir}/environment.yml"
@@ -10,16 +12,16 @@ process CUSTOM_RSEMMERGECOUNTS {
         'quay.io/nf-core/ubuntu:20.04' }"
 
     input:
-    record(id: String, meta: Map, genes: List<Path>, isoforms: List<Path>)
+    sample: CustomRsemmergecountsInput
 
     stage:
-    stageAs genes, 'genes/*'
-    stageAs isoforms, 'isoforms/*'
+    stageAs sample.genes, 'genes/*'
+    stageAs sample.isoforms, 'isoforms/*'
 
     output:
     record(
-        id: id,
-        meta: meta,
+        id: sample.id,
+        meta: sample.meta,
         rsem_merge: record(
             counts_gene:       file("${prefix}.gene_counts.tsv"),
             tpm_gene:          file("${prefix}.gene_tpm.tsv"),
@@ -34,7 +36,7 @@ process CUSTOM_RSEMMERGECOUNTS {
     tuple(task.process, 'sed', eval("sed --version 2>&1 | sed '1!d;s/^.*) //'")) >> 'versions'
 
     script:
-    prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     mkdir -p tmp/genes
     cut -f 1,2 `ls ./genes/* | head -n 1` > gene_ids.txt
@@ -77,7 +79,7 @@ process CUSTOM_RSEMMERGECOUNTS {
     """
 
     stub:
-    prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     touch ${prefix}.gene_counts.tsv
     touch ${prefix}.gene_tpm.tsv

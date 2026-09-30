@@ -1,7 +1,9 @@
 nextflow.enable.types = true
 
+include { ReadsInput } from '../../types'
+
 process BOWTIE2_ALIGN {
-    tag "$meta.id"
+    tag "${sample.meta.id}"
     label 'process_high'
 
     conda "${moduleDir}/environment.yml"
@@ -10,7 +12,7 @@ process BOWTIE2_ALIGN {
         'community.wave.seqera.io/library/bowtie2_htslib_samtools_pigz:edeb13799090a2a6' }"
 
     input:
-    record(id: String, meta: Map, reads: List<Path>)
+    sample: ReadsInput
     index: Path
     fasta: Path?
     save_unaligned: Boolean
@@ -18,8 +20,8 @@ process BOWTIE2_ALIGN {
 
     output:
     record(
-        id:       id,
-        meta:     meta,
+        id:       sample.id,
+        meta:     sample.meta,
         sam:      file('*.sam',  optional: true),
         raw_bams: files('*.bam', optional: true).toSorted { f -> f.name },
         cram:     file('*.cram', optional: true),
@@ -37,17 +39,17 @@ process BOWTIE2_ALIGN {
     script:
     def args = task.ext.args ?: ""
     def args2 = task.ext.args2 ?: ""
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     def rg = args.contains("--rg-id") ? "" : "--rg-id ${prefix} --rg SM:${prefix}"
 
     def unaligned = ""
     def reads_args = ""
-    if (meta.single_end) {
+    if (sample.meta.single_end) {
         unaligned = save_unaligned ? "--un-gz ${prefix}.unmapped.fastq.gz" : ""
-        reads_args = "-U ${reads.join(' ')}"
+        reads_args = "-U ${sample.reads.join(' ')}"
     } else {
         unaligned = save_unaligned ? "--un-conc-gz ${prefix}.unmapped.fastq.gz" : ""
-        reads_args = "-1 ${reads[0]} -2 ${reads[1]}"
+        reads_args = "-1 ${sample.reads[0]} -2 ${sample.reads[1]}"
     }
 
     def samtools_command = sort_bam ? 'sort' : 'view'
@@ -83,11 +85,11 @@ process BOWTIE2_ALIGN {
 
     stub:
     def args2 = task.ext.args2 ?: ""
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     def extension_pattern = /(--output-fmt|-O)+\s+(\S+)/
     def extension = (args2 ==~ extension_pattern) ? ((args2 =~ extension_pattern)[0][2] as String).toLowerCase() : "bam"
     def create_unmapped = ""
-    if (meta.single_end) {
+    if (sample.meta.single_end) {
         create_unmapped = save_unaligned ? "echo | gzip > ${prefix}.unmapped.fastq.gz" : ""
     } else {
         create_unmapped = save_unaligned ? "echo | gzip > ${prefix}.unmapped_1.fastq.gz && echo | gzip > ${prefix}.unmapped_2.fastq.gz" : ""

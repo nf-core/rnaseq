@@ -1,7 +1,9 @@
 nextflow.enable.types = true
 
+include { CustomMultiqccustombiotypeInput } from '../../types'
+
 process CUSTOM_MULTIQCCUSTOMBIOTYPE {
-    tag "$meta.id"
+    tag "${sample.meta.id}"
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
@@ -10,13 +12,13 @@ process CUSTOM_MULTIQCCUSTOMBIOTYPE {
         'quay.io/biocontainers/python:3.12.12' }"
 
     input:
-    record(id: String, meta: Map, counts: Path)
+    sample: CustomMultiqccustombiotypeInput
     header: Path
 
     output:
     record(
-        id: id,
-        meta: meta,
+        id: sample.id,
+        meta: sample.meta,
         tsv:  file('*biotype_counts_mqc.tsv'),
         rrna: file('*biotype_counts_rrna_mqc.tsv')
     )
@@ -28,7 +30,7 @@ process CUSTOM_MULTIQCCUSTOMBIOTYPE {
     template 'mqc_features_stat.py'
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     touch ${prefix}.biotype_counts_mqc.tsv
     touch ${prefix}.biotype_counts_rrna_mqc.tsv

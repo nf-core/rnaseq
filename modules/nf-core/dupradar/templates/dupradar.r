@@ -26,22 +26,22 @@ parse_args <- function(x){
 ################################################
 ################################################
 
-input_bam <- '$bam'
-output_prefix = ifelse('$task.ext.prefix' == 'null', '$meta.id', '$task.ext.prefix')
+input_bam <- '${sample.bam}'
+output_prefix = ifelse('$task.ext.prefix' == 'null', '${sample.meta.id}', '$task.ext.prefix')
 annotation_gtf <- '$gtf'
 threads <- $task.cpus
 args_opt <- parse_args('$task.ext.args')
 feature_type <- ifelse('feature_type' %in% names(args_opt), args_opt[['feature_type']], 'exon')
 
 stranded <- 0
-if ('${meta.strandedness}' == 'forward') {
+if ('${sample.meta.strandedness}' == 'forward') {
     stranded <- 1
-} else if ('${meta.strandedness}' == 'reverse') {
+} else if ('${sample.meta.strandedness}' == 'reverse') {
     stranded <- 2
 }
 
 paired_end <- TRUE
-if ('${meta.single_end}' == 'true'){
+if ('${sample.meta.single_end}' == 'true'){
     paired_end <- FALSE
 }
 

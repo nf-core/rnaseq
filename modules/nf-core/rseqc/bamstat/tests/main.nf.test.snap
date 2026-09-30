@@ -3,16 +3,16 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
+                    {
+                        "bamstat": "test.bam_stat.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "meta": {
                             "id": "test"
-                        },
-                        "test.bam_stat.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
+                        }
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-09-29T17:27:48.825555314",
+        "timestamp": "2026-09-30T08:41:39.600476891",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -22,16 +22,16 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
+                    {
+                        "bamstat": "test.bam_stat.txt:md5,2675857864c1d1139b2a19d25dc36b09",
+                        "meta": {
                             "id": "test"
-                        },
-                        "test.bam_stat.txt:md5,2675857864c1d1139b2a19d25dc36b09"
-                    ]
+                        }
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-09-29T17:27:35.08138182",
+        "timestamp": "2026-09-30T08:41:18.812833004",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"

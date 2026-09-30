@@ -35,9 +35,9 @@ workflow BAM_RSEQC {
 
     if ('bam_stat' in rseqc_modules) {
         RSEQC_BAMSTAT(bam)
-        bamstat_txt = RSEQC_BAMSTAT.out
+        bamstat_txt = RSEQC_BAMSTAT.out.map { r -> [r.meta, r.bamstat] }
         ch_results = ch_results
-            .join(bamstat_txt.map { meta, txt -> [meta.id, txt] }, by: [0])
+            .join(RSEQC_BAMSTAT.out.map { r -> [r.meta.id, r.bamstat] }, by: [0])
             .map { id, fields, txt -> [id, fields + [bamstat: txt]] }
     }
 
@@ -71,9 +71,9 @@ workflow BAM_RSEQC {
     inferexperiment_txt = channel.empty()
     if ('infer_experiment' in rseqc_modules) {
         RSEQC_INFEREXPERIMENT(bam, bed)
-        inferexperiment_txt = RSEQC_INFEREXPERIMENT.out
+        inferexperiment_txt = RSEQC_INFEREXPERIMENT.out.map { r -> [r.meta, r.inferexperiment] }
         ch_results = ch_results
-            .join(inferexperiment_txt.map { meta, txt -> [meta.id, txt] }, by: [0])
+            .join(RSEQC_INFEREXPERIMENT.out.map { r -> [r.meta.id, r.inferexperiment] }, by: [0])
             .map { id, fields, txt -> [id, fields + [inferexperiment: txt]] }
     }
 
@@ -130,9 +130,9 @@ workflow BAM_RSEQC {
 
     if ('read_distribution' in rseqc_modules) {
         RSEQC_READDISTRIBUTION(bam, bed)
-        readdistribution_txt = RSEQC_READDISTRIBUTION.out
+        readdistribution_txt = RSEQC_READDISTRIBUTION.out.map { r -> [r.meta, r.readdistribution] }
         ch_results = ch_results
-            .join(readdistribution_txt.map { meta, txt -> [meta.id, txt] }, by: [0])
+            .join(RSEQC_READDISTRIBUTION.out.map { r -> [r.meta.id, r.readdistribution] }, by: [0])
             .map { id, fields, txt -> [id, fields + [readdistribution: txt]] }
     }
 

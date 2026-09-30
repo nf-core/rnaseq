@@ -29,7 +29,7 @@ nextflow_process {
             def q = process.out[0][0]
             assertAll (
                 { assert process.success },
-                { assert snapshot(q[0], file(q[1]).name).match() }
+                { assert snapshot(q.meta, file(q.qualimap).name).match() }
             )
         }
     }
@@ -57,7 +57,7 @@ nextflow_process {
             def q = process.out[0][0]
             assertAll (
                 { assert process.success },
-                { assert snapshot(q[0], file(q[1]).name).match() }
+                { assert snapshot(q.meta, file(q.qualimap).name).match() }
             )
         }
     }

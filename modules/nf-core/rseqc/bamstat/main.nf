@@ -13,7 +13,7 @@ process RSEQC_BAMSTAT {
     tuple(meta: Map, bam: Path, bai: Path)
 
     output:
-    tuple(meta, file("*.bam_stat.txt"))
+    record(meta: meta, bamstat: file("*.bam_stat.txt"))
 
     topic:
     tuple(task.process, 'rseqc', eval('bam_stat.py --version | sed "s/bam_stat.py //"')) >> 'versions'

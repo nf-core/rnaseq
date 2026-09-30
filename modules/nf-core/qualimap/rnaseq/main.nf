@@ -14,7 +14,7 @@ process QUALIMAP_RNASEQ {
     tuple(meta2: Map, gtf: Path)
 
     output:
-    tuple(meta, file("${prefix}"))
+    record(meta: meta, qualimap: file("${prefix}"))
 
     topic:
     tuple(task.process, 'qualimap', eval("qualimap -h | sed -n 's/^QualiMap v.//p'")) >> 'versions'

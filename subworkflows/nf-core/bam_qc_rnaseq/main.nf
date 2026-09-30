@@ -66,6 +66,7 @@ workflow BAM_QC_RNASEQ {
         SAMTOOLS_SORT_QUALIMAP.out.map { r -> [r.meta, r.bam] },
         ch_gtf
     )
+    ch_qualimap_results = QUALIMAP_RNASEQ.out.map { r -> [r.meta, r.qualimap] }
 
     //
     // MODULE: dupRadar
@@ -118,7 +119,7 @@ workflow BAM_QC_RNASEQ {
 
     if ('qualimap' in tools) {
         ch_results = ch_results
-            .join(QUALIMAP_RNASEQ.out.map { meta, dir -> [meta.id, dir] }, by: [0])
+            .join(QUALIMAP_RNASEQ.out.map { r -> [r.meta.id, r.qualimap] }, by: [0])
             .map { id, fields, dir -> [id, fields + [qualimap: dir]] }
     }
 
@@ -150,7 +151,7 @@ workflow BAM_QC_RNASEQ {
     ch_multiqc_files = channel.empty()
         .mix(ch_preseq_lc_extrap)
         .mix(ch_biotype_tsv)
-        .mix(QUALIMAP_RNASEQ.out)
+        .mix(ch_qualimap_results)
         .mix(ch_dupradar_multiqc)
         .mix(BAM_RSEQC.out.bamstat_txt)
         .mix(BAM_RSEQC.out.inferexperiment_txt)
@@ -165,7 +166,7 @@ workflow BAM_QC_RNASEQ {
     // `tools` / `rseqc_modules`.
     ch_per_sample_mqc_bundle = ch_preseq_lc_extrap
         .join(ch_biotype_tsv,                              remainder: true)
-        .join(QUALIMAP_RNASEQ.out,                         remainder: true)
+        .join(ch_qualimap_results,                         remainder: true)
         .join(ch_dupradar_multiqc,                         remainder: true)
         .join(BAM_RSEQC.out.bamstat_txt,                   remainder: true)
         .join(BAM_RSEQC.out.inferexperiment_txt,           remainder: true)
@@ -192,7 +193,7 @@ workflow BAM_QC_RNASEQ {
     biotype_rrna          = ch_biotype_rrna             // channel: [ val(meta), path(tsv) ]
 
     // Qualimap
-    qualimap_results = QUALIMAP_RNASEQ.out // channel: [ val(meta), path(dir) ]
+    qualimap_results = ch_qualimap_results // channel: [ val(meta), path(dir) ]
 
     // dupRadar
     dupradar_scatter2d       = DUPRADAR.out.map { r -> [r.meta, r.scatter2d] }       // channel: [ val(meta), path(pdf) ]

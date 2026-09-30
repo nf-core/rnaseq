@@ -14,7 +14,7 @@ process RSEQC_READDISTRIBUTION {
     bed: Path
 
     output:
-    tuple(meta, file("*.read_distribution.txt"))
+    record(meta: meta, readdistribution: file("*.read_distribution.txt"))
 
     topic:
     tuple(task.process, 'rseqc', eval('read_distribution.py --version | sed "s/read_distribution.py //"')) >> 'versions'

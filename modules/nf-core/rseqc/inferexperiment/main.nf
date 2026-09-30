@@ -14,7 +14,7 @@ process RSEQC_INFEREXPERIMENT {
     bed: Path
 
     output:
-    tuple(meta, file("*.infer_experiment.txt"))
+    record(meta: meta, inferexperiment: file("*.infer_experiment.txt"))
 
     topic:
     tuple(task.process, 'rseqc', eval('infer_experiment.py --version | sed "s/infer_experiment.py //"')) >> 'versions'

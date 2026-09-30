@@ -10,10 +10,12 @@ process SUBREAD_FEATURECOUNTS {
         : 'quay.io/biocontainers/subread:2.1.1--h577a1d6_0'}"
 
     input:
-    tuple(meta: Map, bams: List<Path>, annotation: Path)
+    record(id: String, meta: Map, bam: Path)
+    tuple(meta2: Map, annotation: Path)
 
     output:
     record(
+        id:    id,
         meta:    meta,
         counts:  file("*featureCounts.tsv"),
         summary: file("*featureCounts.tsv.summary")
@@ -42,7 +44,7 @@ process SUBREAD_FEATURECOUNTS {
         -a ${annotation} \\
         -s ${strandedness} \\
         -o ${prefix}.featureCounts.tsv \\
-        ${bams.join(' ')}
+        ${bam}
     """
 
     stub:

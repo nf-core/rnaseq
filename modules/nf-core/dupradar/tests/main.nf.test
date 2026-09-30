@@ -15,10 +15,11 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                    [ id:'test', single_end:true, strandedness:'forward' ], // meta map
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.single_end.bam", checkIfExists: true)
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:true, strandedness:'forward' ],
+                    bam: file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.single_end.bam", checkIfExists: true)
+                )
                 input[1] = [
                     [ id:'sarscov2' ], // meta map
                     file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
@@ -53,10 +54,11 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                    [ id:'test', single_end:true, strandedness:'forward' ], // meta map
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.single_end.bam", checkIfExists: true)
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:true, strandedness:'forward' ],
+                    bam: file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.single_end.bam", checkIfExists: true)
+                )
                 input[1] = [
                     [ id:'sarscov2' ], // meta map
                     file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
@@ -81,10 +83,11 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                    [ id:'test', single_end:false, strandedness:'forward' ], // meta map
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.bam", checkIfExists: true)
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false, strandedness:'forward' ],
+                    bam: file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.bam", checkIfExists: true)
+                )
                 input[1] = [
                     [ id:'sarscov2' ], // meta map
                     file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
@@ -119,10 +122,11 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                    [ id:'test', single_end:false, strandedness:'forward' ], // meta map
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.bam", checkIfExists: true)
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false, strandedness:'forward' ],
+                    bam: file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.bam", checkIfExists: true)
+                )
                 input[1] = [
                     [ id:'sarscov2' ], // meta map
                     file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)

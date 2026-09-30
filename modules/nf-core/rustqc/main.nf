@@ -10,11 +10,12 @@ process RUSTQC {
         : 'community.wave.seqera.io/library/rustqc:0.2.1--00df1502b490e005'}"
 
     input:
-    tuple(meta: Map, bam: Path, bai: Path)
+    record(id: String, meta: Map, bam: Path, bai: Path)
     tuple(meta2: Map, gtf: Path)
 
     output:
     record(
+        id: id,
         meta: meta,
         samtools: record(
             stats:    file("*.stats", optional: true),

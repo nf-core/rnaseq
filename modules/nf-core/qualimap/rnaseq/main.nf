@@ -10,11 +10,11 @@ process QUALIMAP_RNASEQ {
         'quay.io/biocontainers/qualimap:2.3--hdfd78af_0' }"
 
     input:
-    tuple(meta: Map, bam: Path)
+    record(id: String, meta: Map, bam: Path)
     tuple(meta2: Map, gtf: Path)
 
     output:
-    record(meta: meta, qualimap: file("${prefix}"))
+    record(id: id, meta: meta, qualimap: file("${prefix}"))
 
     topic:
     tuple(task.process, 'qualimap', eval("qualimap -h | sed -n 's/^QualiMap v.//p'")) >> 'versions'

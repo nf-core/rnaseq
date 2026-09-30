@@ -11,10 +11,11 @@ process PRESEQ_LCEXTRAP {
         'quay.io/biocontainers/preseq:3.2.0--hdcf5f25_6' }"
 
     input:
-    tuple(meta: Map, bam: Path)
+    record(id: String, meta: Map, bam: Path)
 
     output:
     record(
+        id:      id,
         meta:      meta,
         lc_extrap: file("*.lc_extrap.txt"),
         log:       file("*.log")

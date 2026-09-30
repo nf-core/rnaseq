@@ -10,11 +10,12 @@ process DUPRADAR {
         'community.wave.seqera.io/library/bioconductor-dupradar:1.38.0--831da16eb40a64ab' }"
 
     input:
-    tuple(meta: Map, bam: Path)
+    record(id: String, meta: Map, bam: Path)
     tuple(meta2: Map, gtf: Path)
 
     output:
     record(
+        id:            id,
         meta:            meta,
         scatter2d:       file("*_duprateExpDens.pdf"),
         boxplot:         file("*_duprateExpBoxplot.pdf"),

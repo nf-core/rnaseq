@@ -10,11 +10,11 @@ process RSEQC_READDISTRIBUTION {
         'community.wave.seqera.io/library/rseqc_r-base:2e29d2dfda9cef15' }"
 
     input:
-    tuple(meta: Map, bam: Path, bai: Path)
+    record(id: String, meta: Map, bam: Path, bai: Path)
     bed: Path
 
     output:
-    record(meta: meta, readdistribution: file("*.read_distribution.txt"))
+    record(id: id, meta: meta, readdistribution: file("*.read_distribution.txt"))
 
     topic:
     tuple(task.process, 'rseqc', eval('read_distribution.py --version | sed "s/read_distribution.py //"')) >> 'versions'

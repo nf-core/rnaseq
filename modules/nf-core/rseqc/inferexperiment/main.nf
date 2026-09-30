@@ -10,11 +10,11 @@ process RSEQC_INFEREXPERIMENT {
         'community.wave.seqera.io/library/rseqc_r-base:2e29d2dfda9cef15' }"
 
     input:
-    tuple(meta: Map, bam: Path, bai: Path)
+    record(id: String, meta: Map, bam: Path, bai: Path)
     bed: Path
 
     output:
-    record(meta: meta, inferexperiment: file("*.infer_experiment.txt"))
+    record(id: id, meta: meta, inferexperiment: file("*.infer_experiment.txt"))
 
     topic:
     tuple(task.process, 'rseqc', eval('infer_experiment.py --version | sed "s/infer_experiment.py //"')) >> 'versions'

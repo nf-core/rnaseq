@@ -10,10 +10,10 @@ process RSEQC_BAMSTAT {
         'community.wave.seqera.io/library/rseqc_r-base:2e29d2dfda9cef15' }"
 
     input:
-    tuple(meta: Map, bam: Path, bai: Path)
+    record(id: String, meta: Map, bam: Path, bai: Path)
 
     output:
-    record(meta: meta, bamstat: file("*.bam_stat.txt"))
+    record(id: id, meta: meta, bamstat: file("*.bam_stat.txt"))
 
     topic:
     tuple(task.process, 'rseqc', eval('bam_stat.py --version | sed "s/bam_stat.py //"')) >> 'versions'

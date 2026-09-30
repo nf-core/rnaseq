@@ -10,11 +10,12 @@ process RSEQC_TIN {
         'community.wave.seqera.io/library/rseqc_r-base:2e29d2dfda9cef15' }"
 
     input:
-    tuple(meta: Map, bam: Path, bai: Path)
+    record(id: String, meta: Map, bam: Path, bai: Path)
     bed: Path
 
     output:
     record(
+        id: id,
         meta: meta,
         txt:  file("*.txt"),
         xls:  file("*.xls")

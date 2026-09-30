@@ -32,7 +32,8 @@ workflow FASTQ_SUBSAMPLE_FQ_SALMON {
             .map { items -> [ [:], items[0], items[1] ] }
             .set { ch_index_input }
 
-        ch_index = SALMON_INDEX ( ch_index_input ).index
+        SALMON_INDEX ( ch_index_input )
+        ch_index = SALMON_INDEX.out.map { r -> [ r.meta, r.index ] }
         ch_index_built = ch_index
     }
     else {
@@ -57,7 +58,7 @@ workflow FASTQ_SUBSAMPLE_FQ_SALMON {
 
     reads             = ch_subsampled                // channel: [ val(meta), fastq ]
 
-    results           = SALMON_QUANT.out.results           // channel: [ val(meta), results_dir ]
-    json_info         = SALMON_QUANT.out.json_info         // channel: [ val(meta), json_info
-    lib_format_counts = SALMON_QUANT.out.lib_format_counts // channel: [ val(meta), json_info
+    results           = SALMON_QUANT.out.map { r -> [ r.meta, r.quant_dir ] } // channel: [ val(meta), results_dir ]
+    json_info         = SALMON_QUANT.out.filter { r -> r.json_info }.map { r -> [ r.meta, r.json_info ] } // channel: [ val(meta), json_info ]
+    lib_format_counts = SALMON_QUANT.out.filter { r -> r.lib_format_counts }.map { r -> [ r.meta, r.lib_format_counts ] } // channel: [ val(meta), lib_format_counts ]
 }

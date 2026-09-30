@@ -5,19 +5,6 @@ nextflow.enable.types = true
 //
 
 include { MULTIQC                    } from '../../../modules/nf-core/multiqc'
-include { MULTIQC_WRITE_FILE as MULTIQC_WRITE_FAIL_TRIMMED } from '../../../modules/local/multiqc_write_file'
-include { MULTIQC_WRITE_FILE as MULTIQC_WRITE_FAIL_MAPPED } from '../../../modules/local/multiqc_write_file'
-include { MULTIQC_WRITE_FILE as MULTIQC_WRITE_DYNAMIC_CONFIG } from '../../../modules/local/multiqc_write_file'
-include { MULTIQC_WRITE_FILE as MULTIQC_WRITE_WORKFLOW_SUMMARY } from '../../../modules/local/multiqc_write_file'
-include { MULTIQC_WRITE_FILE as MULTIQC_WRITE_METHODS_DESCRIPTION } from '../../../modules/local/multiqc_write_file'
-include { MULTIQC_WRITE_FILE as MULTIQC_WRITE_STRAND_SUMMARY_SAMPLE } from '../../../modules/local/multiqc_write_file'
-include { MULTIQC_WRITE_FILE as MULTIQC_WRITE_STRAND_COMPOSITION_SAMPLE } from '../../../modules/local/multiqc_write_file'
-include { MULTIQC_WRITE_FILE as MULTIQC_WRITE_MANIFEST_VERSIONS } from '../../../modules/local/multiqc_write_file'
-include { MULTIQC_WRITE_FILE as MULTIQC_WRITE_STRAND_SUMMARY } from '../../../modules/local/multiqc_write_file'
-include { MULTIQC_WRITE_FILE as MULTIQC_WRITE_STRAND_COMPOSITION } from '../../../modules/local/multiqc_write_file'
-include { MULTIQC_WRITE_FILE as MULTIQC_WRITE_NAME_REPLACEMENTS } from '../../../modules/local/multiqc_write_file'
-include { MULTIQC_CONCATENATE_TABLES as MULTIQC_CONCATENATE_FAIL_TRIMMED } from '../../../modules/local/multiqc_concatenate_tables'
-include { MULTIQC_CONCATENATE_TABLES as MULTIQC_CONCATENATE_FAIL_MAPPED } from '../../../modules/local/multiqc_concatenate_tables'
 include { workflowVersionToYAML      } from '../../nf-core/utils_nfcore_pipeline'
 include { Sample; MultiqcFiles; SampleRuns; TrimReadCount; PercentMappedPass; StrandData } from '../../../modules/nf-core/types'
 include { MultiqcReport } from '../../../modules/nf-core/multiqc/main'
@@ -68,63 +55,45 @@ workflow MULTIQC_RNASEQ {
     status_header_lines = sample_status_header.readLines().size() + 1  // parent header + one column row
     status_header_text  = sample_status_header.text
 
-    ch_fail_trimmed_by_id = MULTIQC_WRITE_FAIL_TRIMMED(
-        ch_trim_read_count
-            .filter { r -> r.num_reads <= min_trimmed_reads }
-            .map { r ->
-                record(
-                    id:      r.id,
-                    meta:    r.meta,
-                    name:    "${r.id}_fail_trimmed_samples_mqc.tsv",
-                    content: "Sample\tReads after trimming\n${r.id}\t${r.num_reads}\n"
-                )
-            }
-    ).map { r -> record(id: r.id, fail_trimmed: r.file) }
+    ch_fail_trimmed_rows = ch_trim_read_count
+        .filter { r -> r.num_reads <= min_trimmed_reads }
+        .map { r ->
+            record(
+                id:      r.id,
+                name:    "${r.id}_fail_trimmed_samples_mqc.tsv",
+                content: "Sample\tReads after trimming\n${r.id}\t${r.num_reads}\n"
+            )
+        }
 
-    ch_fail_trimmed_merged = MULTIQC_CONCATENATE_FAIL_TRIMMED(
-        ch_fail_trimmed_by_id
-            .collect()
-            .flatMap { rows ->
-                rows.isEmpty() ? [] : [
-                    record(
-                        id:    'fail_trimmed_samples',
-                        meta:  [:],
-                        name:  'fail_trimmed_samples_mqc.tsv',
-                        skip:  1,
-                        files: rows.toSorted { r -> r.id }.collect { r -> r.fail_trimmed }.toList()
-                    )
-                ]
-            }
-    ).map { r -> r.file }
+    ch_fail_trimmed_by_id = ch_fail_trimmed_rows
+        .collectFile { r -> [r.name, r.content] }
+        .map { p -> p as Path }
+        .map { f -> record(id: f.name.replace('_fail_trimmed_samples_mqc.tsv', ''), fail_trimmed: f) }
 
-    ch_fail_mapped_by_id = MULTIQC_WRITE_FAIL_MAPPED(
-        ch_percent_mapped_pass
-            .filter { r -> r.pass != null && !r.pass }
-            .map { r ->
-                record(
-                    id:      r.id,
-                    meta:    [id: r.id],
-                    name:    "${r.id}_fail_mapped_samples_mqc.tsv",
-                    content: status_header_text + "Sample\t${aligner_display_name} (%)\n${r.id}\t${r.percent_mapped}\n"
-                )
-            }
-    ).map { r -> record(id: r.id, fail_mapped: r.file) }
+    ch_fail_trimmed_merged = ch_fail_trimmed_rows
+        .map { r -> r.content }
+        .collectFile(name: 'fail_trimmed_samples_mqc.tsv', keepHeader: true, sort: true)
+        .map { p -> p as Path }
 
-    ch_fail_mapped_merged = MULTIQC_CONCATENATE_FAIL_MAPPED(
-        ch_fail_mapped_by_id
-            .collect()
-            .flatMap { rows ->
-                rows.isEmpty() ? [] : [
-                    record(
-                        id:    'fail_mapped_samples',
-                        meta:  [:],
-                        name:  'fail_mapped_samples_mqc.tsv',
-                        skip:  status_header_lines,
-                        files: rows.toSorted { r -> r.id }.collect { r -> r.fail_mapped }.toList()
-                    )
-                ]
-            }
-    ).map { r -> r.file }
+    ch_fail_mapped_rows = ch_percent_mapped_pass
+        .filter { r -> r.pass != null && !r.pass }
+        .map { r ->
+            record(
+                id:      r.id,
+                name:    "${r.id}_fail_mapped_samples_mqc.tsv",
+                content: status_header_text + "Sample\t${aligner_display_name} (%)\n${r.id}\t${r.percent_mapped}\n"
+            )
+        }
+
+    ch_fail_mapped_by_id = ch_fail_mapped_rows
+        .collectFile { r -> [r.name, r.content] }
+        .map { p -> p as Path }
+        .map { f -> record(id: f.name.replace('_fail_mapped_samples_mqc.tsv', ''), fail_mapped: f) }
+
+    ch_fail_mapped_merged = ch_fail_mapped_rows
+        .map { r -> r.content }
+        .collectFile(name: 'fail_mapped_samples_mqc.tsv', keepHeader: true, skip: status_header_lines, sort: true)
+        .map { p -> p as Path }
 
     //
     // Strandedness checks custom-content section. Two MultiQC
@@ -140,33 +109,21 @@ workflow MULTIQC_RNASEQ {
     // Per-run table_sample_merge config: only PE samples from the
     // samplesheet get their _1 / _2 rows grouped in the General Stats
     // table.
-    ch_mqc_dynamic_config = MULTIQC_WRITE_DYNAMIC_CONFIG(
-        record(
-            id:      'multiqc_sample_merge',
-            meta:    [:],
-            name:    'multiqc_sample_merge.yml',
-            content: multiqcSampleMergeYaml(samplesheet_path, samplesheet_schema)
-        )
-    ).map { r -> r.file }
+    ch_mqc_dynamic_config = channel.of(multiqcSampleMergeYaml(samplesheet_path, samplesheet_schema))
+        .collectFile(name: 'multiqc_sample_merge.yml')
+        .collect()
+        .map { files -> files.toList().first() as Path }
 
     // Workflow summary and methods description rendered as MultiQC sections.
-    ch_workflow_summary = MULTIQC_WRITE_WORKFLOW_SUMMARY(
-        record(
-            id:      'workflow_summary',
-            meta:    [:],
-            name:    'workflow_summary_mqc.yaml',
-            content: workflowSummaryMultiqcYaml()
-        )
-    ).map { r -> r.file }
+    ch_workflow_summary = channel.of(workflowSummaryMultiqcYaml())
+        .collectFile(name: 'workflow_summary_mqc.yaml')
+        .collect()
+        .map { files -> files.toList().first() as Path }
 
-    ch_methods_description = MULTIQC_WRITE_METHODS_DESCRIPTION(
-        record(
-            id:      'methods_description',
-            meta:    [:],
-            name:    'methods_description_mqc.yaml',
-            content: methodsDescriptionText(methods_description_yml)
-        )
-    ).map { r -> r.file }
+    ch_methods_description = channel.of(methodsDescriptionText(methods_description_yml))
+        .collectFile(name: 'methods_description_mqc.yaml')
+        .collect()
+        .map { files -> files.toList().first() as Path }
 
     //
     // Two execution modes for MULTIQC:
@@ -180,27 +137,15 @@ workflow MULTIQC_RNASEQ {
     // contract (id, meta, files, configs, logo, replace_names, sample_names).
     //
     if (skip_quantification_merge) {
-        ch_strand_summary_by_id = MULTIQC_WRITE_STRAND_SUMMARY_SAMPLE(
-            ch_strand_data.map { r ->
-                record(
-                    id:      r.id,
-                    meta:    r.meta,
-                    name:    "${r.id}_strand_check_summary_mqc.json",
-                    content: strandCheckSummaryYaml(strand_summary_static, [r])
-                )
-            }
-        ).map { r -> record(id: r.id, strand_summary: r.file) }
+        ch_strand_summary_by_id = ch_strand_data
+            .collectFile { r -> ["${r.id}_strand_check_summary_mqc.json", strandCheckSummaryYaml(strand_summary_static, [r]) as String] }
+            .map { p -> p as Path }
+            .map { f -> record(id: f.name.replace('_strand_check_summary_mqc.json', ''), strand_summary: f) }
 
-        ch_strand_composition_by_id = MULTIQC_WRITE_STRAND_COMPOSITION_SAMPLE(
-            ch_strand_data.map { r ->
-                record(
-                    id:      r.id,
-                    meta:    r.meta,
-                    name:    "${r.id}_strand_check_composition_mqc.json",
-                    content: strandCheckCompositionYaml(strand_composition_static, [r])
-                )
-            }
-        ).map { r -> record(id: r.id, strand_composition: r.file) }
+        ch_strand_composition_by_id = ch_strand_data
+            .collectFile { r -> ["${r.id}_strand_check_composition_mqc.json", strandCheckCompositionYaml(strand_composition_static, [r]) as String] }
+            .map { p -> p as Path }
+            .map { f -> record(id: f.name.replace('_strand_check_composition_mqc.json', ''), strand_composition: f) }
 
         // One empty contribution per sample keeps samples that no stage contributed files for.
         def ch_no_files: Channel<MultiqcFiles> = ch_sample_ids.map { id -> record(id: id, files: []) }
@@ -219,14 +164,10 @@ workflow MULTIQC_RNASEQ {
                 }
             }
 
-        ch_manifest_versions = MULTIQC_WRITE_MANIFEST_VERSIONS(
-            record(
-                id:      'manifest_versions',
-                meta:    [:],
-                name:    'nf_core_rnaseq_software_mqc_versions.yml',
-                content: workflowVersionToYAML()
-            )
-        ).map { r -> r.file }
+        ch_manifest_versions = channel.of(workflowVersionToYAML())
+            .collectFile(name: 'nf_core_rnaseq_software_mqc_versions.yml')
+            .collect()
+            .map { files -> files.toList().first() as Path }
 
         ch_static_globals = ch_workflow_summary
             .combine(ch_methods_description)
@@ -257,49 +198,22 @@ workflow MULTIQC_RNASEQ {
         // the section cleanly.
         ch_strand_rows = ch_strand_data.collect()
 
-        ch_strand_summary_merged = MULTIQC_WRITE_STRAND_SUMMARY(
-            ch_strand_rows.flatMap { rows ->
-                rows.isEmpty() ? [] : [
-                    record(
-                        id:      'strand_check_summary',
-                        meta:    [:],
-                        name:    'strand_check_summary_mqc.json',
-                        content: strandCheckSummaryYaml(strand_summary_static, rows)
-                    )
-                ]
-            }
-        ).map { r -> r.file }
+        ch_strand_summary_merged = ch_strand_rows
+            .flatMap { rows -> rows.isEmpty() ? [] : [strandCheckSummaryYaml(strand_summary_static, rows)] }
+            .collectFile(name: 'strand_check_summary_mqc.json')
+            .map { p -> p as Path }
 
-        ch_strand_composition_merged = MULTIQC_WRITE_STRAND_COMPOSITION(
-            ch_strand_rows.flatMap { rows ->
-                rows.isEmpty() ? [] : [
-                    record(
-                        id:      'strand_check_composition',
-                        meta:    [:],
-                        name:    'strand_check_composition_mqc.json',
-                        content: strandCheckCompositionYaml(strand_composition_static, rows)
-                    )
-                ]
-            }
-        ).map { r -> r.file }
+        ch_strand_composition_merged = ch_strand_rows
+            .flatMap { rows -> rows.isEmpty() ? [] : [strandCheckCompositionYaml(strand_composition_static, rows)] }
+            .collectFile(name: 'strand_check_composition_mqc.json')
+            .map { p -> p as Path }
 
         // --replace-names TSV so MultiQC uses sample IDs rather than FASTQ basenames.
-        ch_name_replacements = MULTIQC_WRITE_NAME_REPLACEMENTS(
-            ch_fastq
-                .collect()
-                .flatMap { rows ->
-                    def lines = multiqcNameReplacementLines(rows)
-                    lines.isEmpty() ? [] : [
-                        record(
-                            id:      'name_replacement',
-                            meta:    [:],
-                            name:    'name_replacement.txt',
-                            content: lines.collect { line -> "${line}\n" }.join('')
-                        )
-                    ]
-                }
-        )
-            .map { r -> r.file }
+        ch_name_replacements = ch_fastq
+            .collect()
+            .flatMap { rows -> multiqcNameReplacementLines(rows) }
+            .collectFile(name: 'name_replacement.txt', newLine: true)
+            .map { p -> p as Path }
             .collect()
             .map { files -> files.isEmpty() ? null : files.toList().first() }
 

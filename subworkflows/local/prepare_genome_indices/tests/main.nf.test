@@ -65,10 +65,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -185,10 +185,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -299,10 +299,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -413,10 +413,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -527,10 +527,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -641,10 +641,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -755,10 +755,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -862,10 +862,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -976,10 +976,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -1090,10 +1090,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -1204,10 +1204,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -1318,10 +1318,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -1432,10 +1432,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -1546,10 +1546,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -1661,10 +1661,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -1766,10 +1766,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -1880,10 +1880,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -1994,10 +1994,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -2108,10 +2108,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -2222,10 +2222,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -2336,10 +2336,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -2450,10 +2450,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -2567,10 +2567,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -2689,10 +2689,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -2806,10 +2806,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -2923,10 +2923,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -3028,10 +3028,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -3145,10 +3145,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -3262,10 +3262,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -3372,10 +3372,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -3489,10 +3489,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -3606,10 +3606,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -3723,10 +3723,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -3840,10 +3840,10 @@ nextflow_workflow {
                 use_sentieon_star         = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -3957,10 +3957,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -4074,10 +4074,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -4192,10 +4192,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -4301,10 +4301,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -4418,10 +4418,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -4535,10 +4535,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -4652,10 +4652,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -4769,10 +4769,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -4874,10 +4874,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -4991,10 +4991,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta  // fasta channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)

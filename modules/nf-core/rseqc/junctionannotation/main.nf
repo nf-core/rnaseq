@@ -1,7 +1,9 @@
 nextflow.enable.types = true
 
+include { BamBaiInput } from '../../types'
+
 process RSEQC_JUNCTIONANNOTATION {
-    tag "$meta.id"
+    tag "$sample.meta.id"
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
@@ -10,13 +12,13 @@ process RSEQC_JUNCTIONANNOTATION {
         'community.wave.seqera.io/library/rseqc_r-base:2e29d2dfda9cef15' }"
 
     input:
-    record(id: String, meta: Map, bam: Path, bai: Path)
+    sample: BamBaiInput
     bed: Path
 
     output:
     record(
-        id:         id,
-        meta:         meta,
+        id:         sample.id,
+        meta:         sample.meta,
         bed:          file("*.junction.bed", optional: true),
         interact_bed: file("*.Interact.bed", optional: true),
         xls:          file("*.xls"),
@@ -31,10 +33,10 @@ process RSEQC_JUNCTIONANNOTATION {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     junction_annotation.py \\
-        -i $bam \\
+        -i $sample.bam \\
         -r $bed \\
         -o $prefix \\
         $args \\
@@ -42,7 +44,7 @@ process RSEQC_JUNCTIONANNOTATION {
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     touch ${prefix}.junction.xls
     touch ${prefix}.junction_plot.r

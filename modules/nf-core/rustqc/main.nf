@@ -1,7 +1,9 @@
 nextflow.enable.types = true
 
+include { BamBaiInput } from '../types'
+
 process RUSTQC {
-    tag "$meta.id"
+    tag "$sample.meta.id"
     label 'process_high'
 
     conda "${moduleDir}/environment.yml"
@@ -10,13 +12,13 @@ process RUSTQC {
         : 'community.wave.seqera.io/library/rustqc:0.2.1--00df1502b490e005'}"
 
     input:
-    record(id: String, meta: Map, bam: Path, bai: Path)
+    sample: BamBaiInput
     gtf: Path
 
     output:
     record(
-        id: id,
-        meta: meta,
+        id: sample.id,
+        meta: sample.meta,
         samtools: record(
             stats:    file("*.stats", optional: true),
             flagstat: file("*.flagstat", optional: true),
@@ -86,9 +88,9 @@ process RUSTQC {
     tuple(task.process, 'rustqc', eval("rustqc --version 2>&1 | sed -n '1s/rustqc //; 1s/ .*//p'")) >> 'versions'
 
     script:
-    prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${sample.meta.id}"
     def args = task.ext.args ?: ''
-    def paired = meta.single_end ? '' : '--paired'
+    def paired = sample.meta.single_end ? '' : '--paired'
     // Flatten the tool subdirectories into the task root so every record field is a plain file,
     // keeping qualimap's own directory structure under the sample-named directory (the tool's
     // --outdir stays ${prefix} because featureCounts records it in its output header).
@@ -102,7 +104,7 @@ process RUSTQC {
     """
     """
     rustqc rna \\
-        ${bam} \\
+        ${sample.bam} \\
         --gtf ${gtf} \\
         ${paired} \\
         --threads ${task.cpus} \\
@@ -113,7 +115,7 @@ process RUSTQC {
     """
 
     stub:
-    prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${sample.meta.id}"
     // Flatten the tool subdirectories into the task root so every record field is a plain file,
     // keeping qualimap's own directory structure under the sample-named directory (the tool's
     // --outdir stays ${prefix} because featureCounts records it in its output header).

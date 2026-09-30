@@ -1,7 +1,9 @@
 nextflow.enable.types = true
 
+include { SalmonIndexInput } from '../../types'
+
 process SALMON_INDEX {
-    tag "$meta.id"
+    tag "$sample.meta.id"
     label "process_medium"
 
     conda "${moduleDir}/environment.yml"
@@ -10,10 +12,10 @@ process SALMON_INDEX {
         'community.wave.seqera.io/library/salmon:2.7.0--74784226202c61b9' }"
 
     input:
-    record(id: String, meta: Map, transcript_fasta: Path, genome_fasta: Path?)
+    sample: SalmonIndexInput
 
     output:
-    record(id: id, meta: meta, index: file('salmon'))
+    record(id: sample.id, meta: sample.meta, index: file('salmon'))
 
     topic:
     tuple(task.process, 'salmon', eval("salmon --version | sed 's/salmon //'")) >> 'versions'
@@ -24,18 +26,18 @@ process SALMON_INDEX {
     script:
     def args = task.ext.args ?: ''
     def decoys = ''
-    def fasta = "${transcript_fasta}"
-    def genome = genome_fasta ? "${genome_fasta}" : ''
-    def transcripts = "${transcript_fasta}"
-    if (genome_fasta) {
-        if ("${genome_fasta}".endsWith('.gz')) {
-            genome = "<(gunzip -c ${genome_fasta})"
+    def fasta = "${sample.transcript_fasta}"
+    def genome = sample.genome_fasta ? "${sample.genome_fasta}" : ''
+    def transcripts = "${sample.transcript_fasta}"
+    if (sample.genome_fasta) {
+        if ("${sample.genome_fasta}".endsWith('.gz')) {
+            genome = "<(gunzip -c ${sample.genome_fasta})"
         }
         decoys='-d decoys.txt'
         fasta='gentrome.fa'
     }
-    if ("${transcript_fasta}".endsWith('.gz')) {
-        transcripts = "<(gunzip -c ${transcript_fasta})"
+    if ("${sample.transcript_fasta}".endsWith('.gz')) {
+        transcripts = "<(gunzip -c ${sample.transcript_fasta})"
     }
     """
     if [ -n '$genome' ]; then

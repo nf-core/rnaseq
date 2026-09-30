@@ -1,7 +1,9 @@
 nextflow.enable.types = true
 
+include { BamBaiInput } from '../../types'
+
 process RSEQC_READDUPLICATION {
-    tag "$meta.id"
+    tag "$sample.meta.id"
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
@@ -10,12 +12,12 @@ process RSEQC_READDUPLICATION {
         'community.wave.seqera.io/library/rseqc_r-base:2e29d2dfda9cef15' }"
 
     input:
-    record(id: String, meta: Map, bam: Path, bai: Path)
+    sample: BamBaiInput
 
     output:
     record(
-        id:    id,
-        meta:    meta,
+        id:    sample.id,
+        meta:    sample.meta,
         seq_xls: file("*seq.DupRate.xls"),
         pos_xls: file("*pos.DupRate.xls"),
         pdf:     file("*.pdf"),
@@ -27,16 +29,16 @@ process RSEQC_READDUPLICATION {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     read_duplication.py \\
-        -i $bam \\
+        -i $sample.bam \\
         -o $prefix \\
         $args
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     touch ${prefix}.seq.DupRate.xls
     touch ${prefix}.pos.DupRate.xls

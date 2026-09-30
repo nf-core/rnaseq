@@ -20,10 +20,7 @@ nextflow_process {
                     fasta: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
                     gtf: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
                 ))
-                input[1] = channel.of([
-                    [ id:'transcriptome' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true)
-                ])
+                input[1] = channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true))
                 input[2] = 'test_biotype'
                 """
             }
@@ -50,10 +47,7 @@ nextflow_process {
                     fasta: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
                     gtf: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
                 ))
-                input[1] = channel.of([
-                    [ id:'transcriptome' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true)
-                ])
+                input[1] = channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true))
                 input[2] = 'test_biotype'
                 """
             }

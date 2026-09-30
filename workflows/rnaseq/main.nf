@@ -85,7 +85,8 @@ workflow RNASEQ {
 
     take:
     ch_samplesheet: Value<Path>                        // sample_sheet.csv
-    ch_fasta_fai: Value<Tuple<Map, Path?, Path?>>      // [ meta, genome.fasta, genome.fai ]
+    ch_fasta: Value<Path?>                             // genome.fasta
+    ch_fai: Value<Path?>                               // genome.fai
     ch_gtf: Value<Path?>                               // genome.gtf
     ch_chrom_sizes: Value<Path?>                       // genome.sizes
     ch_gene_bed: Value<Path?>                          // gene.bed
@@ -94,12 +95,12 @@ workflow RNASEQ {
     ch_rsem_index: Value<Path?>                        // rsem/index/
     ch_hisat2_index: Value<Path?>                      // hisat2/index/
     ch_bowtie2_index: Value<Path?>                     // bowtie2/index/ for alignment
-    ch_salmon_index: Value<Tuple<Map, Path?>>          // [ meta, salmon/index/ ]
-    ch_kallisto_index: Value<Tuple<Map, Path?>>        // [ meta, kallisto/index/ ]
+    ch_salmon_index: Value<Path?>                      // salmon/index/
+    ch_kallisto_index: Value<Path?>                    // kallisto/index/
     ch_bbsplit_index: Value<Path?>                     // bbsplit/index/
     ch_ribo_db: Channel<Path>                          // sortmerna_fasta_list
-    ch_sortmerna_index: Value<Tuple<Map, Path?>>       // [ meta, sortmerna/index/ ]
-    ch_bowtie2_rrna_index: Value<Tuple<Map, Path?>>    // [ meta, bowtie2/index/ ] for rRNA removal
+    ch_sortmerna_index: Value<Path?>                   // sortmerna/index/
+    ch_bowtie2_rrna_index: Value<Path?>                // bowtie2/index/ for rRNA removal
     ch_splicesites: Value<Path?>                       // genome.splicesites.txt
     ch_kraken_db: Value<Path?>                         // kraken2/db/
     qc_tools: List<String>                             // QC tools to run, e.g. ['preseq', 'qualimap', 'rseqc_bam_stat', ...]
@@ -111,7 +112,6 @@ workflow RNASEQ {
     def sample_status_header_multiqc = file("$projectDir/assets/sample_status_header.txt", checkIfExists: true)
     def ch_clustering_header_multiqc = file("$projectDir/assets/deseq2_clustering_header.txt", checkIfExists: true)
     def ch_biotypes_header_multiqc   = file("$projectDir/assets/biotypes_header.txt", checkIfExists: true)
-    def ch_transcript_fasta_placeholder = ch_pca_header_multiqc
 
     // Match the General Statistics column the active aligner emits so the
     // MultiQC fail_mapped row reads consistently with the rest of the report.
@@ -121,9 +121,6 @@ workflow RNASEQ {
         'hisat2'         : 'HISAT2 overall alignment rate',
         'bowtie2_salmon' : 'Bowtie2 overall alignment rate',
     ][params.aligner as String] ?: 'Aligned reads'
-
-    ch_fasta                = ch_fasta_fai.map { _meta, fasta, _fai -> fasta }
-    ch_transcript_fasta_fai = ch_transcript_fasta.map { fasta -> tuple([:], fasta, null) }
 
     // Flat [ meta, file ] contributions to the merged MultiQC report
     ch_multiqc_files = channel.empty()
@@ -193,7 +190,7 @@ workflow RNASEQ {
         ch_fasta,                                   // ch_fasta
         ch_transcript_fasta,                        // ch_transcript_fasta
         ch_gtf,                                     // ch_gtf
-        ch_salmon_index.map { _meta, index -> index }, // ch_salmon_index
+        ch_salmon_index,                            // ch_salmon_index
         ch_sortmerna_index,                         // ch_sortmerna_index
         ch_bowtie2_rrna_index,                      // ch_bowtie2_index (for rRNA removal)
         ch_bbsplit_index,                           // ch_bbsplit_index
@@ -266,10 +263,11 @@ workflow RNASEQ {
     if (!params.skip_alignment && (params.aligner == 'star_salmon' || params.aligner == 'star_rsem')) {
         ch_star = ALIGN_STAR (
             ch_reads_ok,
-            ch_star_index.map { index -> tuple([:], index) },
-            ch_gtf.map { gtf -> tuple([:], gtf) },
+            ch_star_index,
+            ch_gtf,
             params.star_ignore_sjdbgtf,
-            ch_fasta_fai,
+            ch_fasta,
+            ch_fai,
             params.use_sentieon_star,
             params.use_parabricks_star,
             params.skip_markduplicates
@@ -306,7 +304,8 @@ workflow RNASEQ {
         ch_bowtie2 = ALIGN_BOWTIE2 (
             ch_reads_ok,
             ch_bowtie2_index,
-            ch_fasta_fai
+            ch_fasta,
+            ch_fai
         )
 
         ch_multiqc_files = ch_multiqc_files.mix(ch_bowtie2.map { r -> tuple(r.meta, r.bowtie2.log) })
@@ -333,9 +332,10 @@ workflow RNASEQ {
     if (!params.skip_alignment && params.aligner == 'hisat2') {
         ch_hisat2 = FASTQ_ALIGN_HISAT2 (
             ch_reads_ok,
-            ch_hisat2_index.map { index -> tuple([:], index) },
-            ch_splicesites.map { splicesites -> tuple([:], splicesites) },
-            ch_fasta_fai,
+            ch_hisat2_index,
+            ch_splicesites,
+            ch_fasta,
+            ch_fai,
             params.save_unaligned || (params.contaminant_screening && params.contaminant_screening_input == 'unmapped')
         )
 
@@ -383,11 +383,12 @@ workflow RNASEQ {
     if (!params.skip_alignment && params.with_umi) {
         ch_umi_dedup = BAM_DEDUP_UMI(
             ch_genome_bam,
-            ch_fasta_fai,
+            ch_fasta,
+            ch_fai,
             params.umi_dedup_tool,
             params.umitools_dedup_stats,
             ch_transcriptome_bam,
-            ch_transcript_fasta_fai,
+            ch_transcript_fasta,
             params.umitools_dedup_primary_only
         )
 
@@ -455,7 +456,7 @@ workflow RNASEQ {
         bam_salmon = QUANTIFY_BAM_SALMON (
             ch_samplesheet,
             ch_transcriptome_reads,
-            channel.value(tuple([:], ch_transcript_fasta_placeholder)),
+            null,
             ch_transcript_fasta,
             ch_gtf,
             params.gtf_group_features,
@@ -506,7 +507,8 @@ workflow RNASEQ {
     if (!params.skip_markduplicates && !params.with_umi && !markdups_done) {
         ch_markdup = BAM_MARKDUPLICATES_PICARD (
             ch_genome_bam,
-            ch_fasta_fai,
+            ch_fasta,
+            ch_fai,
             !params.use_rustqc
         )
 
@@ -538,7 +540,7 @@ workflow RNASEQ {
             stringtie_merge = BAM_STRINGTIE_MERGE(
                 ch_stringtie_input,
                 channel.value([]),
-                ch_gtf.map { gtf -> tuple([:], gtf) }
+                ch_gtf
             )
             ch_stringtie_merged = channel.empty().mix(stringtie_merge)
             ch_stringtie_gtf = stringtie_merge.map { r -> r.merged_gtf }
@@ -577,7 +579,7 @@ workflow RNASEQ {
             //
             ch_bam_qc_rustqc = RUSTQC (
                 ch_genome_bam,
-                ch_gtf.map { gtf -> tuple([:], gtf) },
+                ch_gtf,
             )
 
             // Drop non-MultiQC files. Excluding `*.featureCounts.tsv.summary`
@@ -612,10 +614,11 @@ workflow RNASEQ {
             //
             ch_bam_qc = BAM_QC_RNASEQ (
                 ch_genome_bam,
-                ch_gtf.map { gtf -> tuple([:], gtf) },
+                ch_gtf,
                 ch_gene_bed,
-                ch_fasta_fai,
-                channel.value(tuple([:], ch_biotypes_header_multiqc)),
+                ch_fasta,
+                ch_fai,
+                ch_biotypes_header_multiqc,
                 qc_tools,
                 biotype
             )
@@ -806,7 +809,7 @@ workflow RNASEQ {
             ch_samplesheet,
             ch_reads_ok,
             ch_pseudo_index,
-            channel.value(ch_transcript_fasta_placeholder),
+            null,
             ch_gtf,
             params.gtf_group_features,
             params.gtf_extra_attributes,

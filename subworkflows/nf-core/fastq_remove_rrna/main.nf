@@ -41,8 +41,8 @@ workflow FASTQ_REMOVE_RRNA {
     take:
     ch_reads: Channel<Reads>
     ch_rrna_fastas: Channel<Path> // one or more fasta files containing rrna sequences
-    ch_sortmerna_index: Value<Tuple<Map, Path>> // sortmerna index (optional)
-    ch_bowtie2_index: Value<Tuple<Map, Path>> // bowtie2 index (optional)
+    ch_sortmerna_index: Value<Path> // sortmerna index (optional)
+    ch_bowtie2_index: Value<Path> // bowtie2 index (optional)
     ribo_removal_tool: String // 'sortmerna', 'ribodetector', or 'bowtie2'
     make_sortmerna_index: Boolean // Whether to create a sortmerna index before running sortmerna
     make_bowtie2_index: Boolean // Whether to create a bowtie2 index before running bowtie2
@@ -55,18 +55,16 @@ workflow FASTQ_REMOVE_RRNA {
     )
 
     if (ribo_removal_tool == 'sortmerna') {
-        ch_sortmerna_fastas = ch_rrna_fastas
-            .collect()
-            .map { fastas -> tuple([id: 'rrna_refs'], fastas) }
+        ch_sortmerna_fastas = ch_rrna_fastas.collect().map { refs -> refs.toList() }
 
         ch_sortmerna_idx = ch_sortmerna_index
         if (make_sortmerna_index) {
             ch_sortmerna_built = SORTMERNA_INDEX(
                 record(id: 'rrna_refs', meta: [:], reads: []),
                 ch_sortmerna_fastas,
-                tuple([:], null),
+                channel.value(null as Path),
             )
-            ch_sortmerna_idx = ch_sortmerna_built.map { r -> tuple([id: 'rrna_refs'], r.index) }
+            ch_sortmerna_idx = ch_sortmerna_built.map { r -> r.index }
             val_refs = ch_sortmerna_built.map { r ->
                 record(sortmerna_index: r.index, bowtie2_index: null, seqkit_prefixed: null, seqkit_converted: null)
             }
@@ -141,7 +139,7 @@ workflow FASTQ_REMOVE_RRNA {
             )
 
             ch_bowtie2_built = BOWTIE2_BUILD(ch_combined_fasta)
-            ch_bowtie2_idx = ch_bowtie2_built.map { built -> tuple(built.meta, built.index) }
+            ch_bowtie2_idx = ch_bowtie2_built.map { built -> built.index }
             val_seqkit_prefixed = ch_seqkit_prefixed
                 .collect()
                 .map { built -> built.collect { r -> r.fastx }.toSorted { f -> f.name } }
@@ -161,7 +159,7 @@ workflow FASTQ_REMOVE_RRNA {
         ch_bowtie2_se = BOWTIE2_ALIGN(
             ch_reads.filter { r -> r.meta.single_end },
             ch_bowtie2_idx,
-            tuple([:], null), // No reference fasta needed
+            null,             // No reference fasta needed
             true,             // save_unaligned - for single-end this works correctly
             false,            // sort_bam - not needed
         )
@@ -172,7 +170,7 @@ workflow FASTQ_REMOVE_RRNA {
         ch_bowtie2_pe = BOWTIE2_ALIGN_PE(
             ch_reads.filter { r -> !r.meta.single_end },
             ch_bowtie2_idx,
-            tuple([:], null), // No reference fasta needed for BAM output
+            null,             // No reference fasta needed for BAM output
             false,            // save_unaligned - we'll extract from BAM instead
             false,            // sort_bam - not needed
         )
@@ -181,10 +179,11 @@ workflow FASTQ_REMOVE_RRNA {
         // This removes any pair where at least one mate aligned to rRNA
         ch_view = SAMTOOLS_VIEW_BOWTIE2(
             ch_bowtie2_pe.filter { r -> !r.raw_bams.isEmpty() }.map { r -> record(id: r.id, meta: r.meta, bam: r.raw_bams[0], bai: null) },
-            tuple([:], null, null), // No reference fasta
-            tuple([:], null),       // No qname file
-            tuple([:], null),       // No bed file
-            ''                      // No index format
+            null, // No reference fasta
+            null, // No reference index
+            null, // No qname file
+            null, // No bed file
+            ''    // No index format
         )
         ch_view_bam = ch_view.filter { r -> r.bam != null }
 

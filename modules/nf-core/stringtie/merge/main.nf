@@ -12,7 +12,7 @@ process STRINGTIE_MERGE {
 
     input:
     record(id: String, meta: Map, gtf: List<Path>)
-    tuple(meta2: Map, annotation_gtf: Path?)
+    annotation_gtf: Path?
 
     output:
     record(

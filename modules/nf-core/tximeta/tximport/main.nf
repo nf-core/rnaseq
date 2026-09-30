@@ -11,7 +11,7 @@ process TXIMETA_TXIMPORT {
 
     input:
     record(id: String, meta: Map, quants: List<Path>)
-    tuple(meta2: Map, tx2gene: Path)
+    tx2gene: Path
     quant_type: String
 
     stage:

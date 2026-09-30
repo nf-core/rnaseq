@@ -46,7 +46,7 @@ nextflow_process {
             process {
                 """
                 input[0] = UNTAR.out.map { r -> [ r.meta, r.untar ] }.map { meta, dir -> record(id: meta.id, meta: meta, quants: dir.listFiles().collect()) }
-                input[1] = CUSTOM_TX2GENE.out.map { r -> [ r.meta, r.tx2gene ] }
+                input[1] = CUSTOM_TX2GENE.out.map { r -> r.tx2gene }
                 input[2] = 'kallisto'
                 """
             }
@@ -61,11 +61,8 @@ nextflow_process {
                 """
                 input[0] = TXIMETA_TXIMPORT.out[0].map { r -> record(id: r.id, meta: r.meta, matrix_files: [ r.counts_gene, r.counts_gene_length_scaled, r.counts_gene_scaled, r.lengths_gene, r.tpm_gene ]) }
 
-                input[1] = CUSTOM_TX2GENE.out.map { r -> [ r.meta, r.tx2gene ] }
-		input[2] = [
-                    [ id:'gene'], // meta map
-                    file(params.modules_testdata_base_path + "genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv", checkIfExists: true)
-                ]
+                input[1] = CUSTOM_TX2GENE.out.map { r -> r.tx2gene }
+		input[2] = file(params.modules_testdata_base_path + "genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv", checkIfExists: true)
                 """
             }
         }
@@ -89,11 +86,8 @@ nextflow_process {
             process {
                 """
                 input[0] = TXIMETA_TXIMPORT.out[0].map { r -> record(id: r.id, meta: r.meta, matrix_files: [ r.counts_gene, r.tpm_gene ]) }
-                input[1] = CUSTOM_TX2GENE.out.map { r -> [ r.meta, r.tx2gene ] }
-		input[2] = [
-                    [ id:'gene'], // meta map
-                    file(params.modules_testdata_base_path + "genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv", checkIfExists: true)
-                ]
+                input[1] = CUSTOM_TX2GENE.out.map { r -> r.tx2gene }
+		input[2] = file(params.modules_testdata_base_path + "genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv", checkIfExists: true)
                 """
             }
         }
@@ -117,8 +111,8 @@ nextflow_process {
             process {
                 """
                 input[0] = TXIMETA_TXIMPORT.out[0].map { r -> record(id: r.id, meta: r.meta, matrix_files: [ r.counts_gene, r.tpm_gene ]) }
-                input[1] = CUSTOM_TX2GENE.out.map { r -> [ r.meta, r.tx2gene ] }
-                input[2] = Channel.of([ [:], null ])
+                input[1] = CUSTOM_TX2GENE.out.map { r -> r.tx2gene }
+                input[2] = null
                 """
             }
         }
@@ -142,8 +136,8 @@ nextflow_process {
             process {
                 """
                 input[0] = TXIMETA_TXIMPORT.out[0].map { r -> record(id: r.id, meta: r.meta, matrix_files: [ r.counts_gene, r.tpm_gene ]) }
-                input[1] = Channel.of([ [:], null ])
-                input[2] = Channel.of([ [:], null ])
+                input[1] = null
+                input[2] = null
                 """
             }
         }
@@ -167,8 +161,8 @@ nextflow_process {
             process {
                 """
                 input[0] = TXIMETA_TXIMPORT.out[0].map { r -> record(id: r.id, meta: r.meta, matrix_files: [ r.counts_gene ]) }
-                input[1] = Channel.of([ [:], null ])
-                input[2] = Channel.of([ [:], null ])
+                input[1] = null
+                input[2] = null
                 """
             }
         }
@@ -193,11 +187,8 @@ nextflow_process {
             process {
                 """
                 input[0] = TXIMETA_TXIMPORT.out[0].map { r -> record(id: r.id, meta: r.meta, matrix_files: [ r.counts_gene, r.tpm_gene ]) }
-                input[1] = CUSTOM_TX2GENE.out.map { r -> [ r.meta, r.tx2gene ] }
-		input[2] = [
-                    [ id:'gene'], // meta map
-                    file(params.modules_testdata_base_path + "genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv", checkIfExists: true)
-                ]
+                input[1] = CUSTOM_TX2GENE.out.map { r -> r.tx2gene }
+		input[2] = file(params.modules_testdata_base_path + "genomics/eukaryotes/saccharomyces_cerevisiae/samplesheet.csv", checkIfExists: true)
                 """
             }
         }
@@ -219,8 +210,8 @@ nextflow_process {
             process {
                 """
                 input[0] = TXIMETA_TXIMPORT.out[0].map { r -> record(id: r.id, meta: r.meta, matrix_files: [ r.counts_gene, r.tpm_gene ]) }
-                input[1] = CUSTOM_TX2GENE.out.map { r -> [ r.meta, r.tx2gene ] }
-                input[2] = Channel.of([ [:], null ])
+                input[1] = CUSTOM_TX2GENE.out.map { r -> r.tx2gene }
+                input[2] = null
                 """
             }
         }
@@ -242,8 +233,8 @@ nextflow_process {
             process {
                 """
                 input[0] = TXIMETA_TXIMPORT.out[0].map { r -> record(id: r.id, meta: r.meta, matrix_files: [ r.counts_gene, r.tpm_gene ]) }
-                input[1] = Channel.of([ [:], null ])
-                input[2] = Channel.of([ [:], null ])
+                input[1] = null
+                input[2] = null
                 """
             }
         }
@@ -265,8 +256,8 @@ nextflow_process {
             process {
                 """
                 input[0] = TXIMETA_TXIMPORT.out[0].map { r -> record(id: r.id, meta: r.meta, matrix_files: [ r.counts_gene ]) }
-                input[1] = Channel.of([ [:], null ])
-                input[2] = Channel.of([ [:], null ])
+                input[1] = null
+                input[2] = null
                 """
             }
         }

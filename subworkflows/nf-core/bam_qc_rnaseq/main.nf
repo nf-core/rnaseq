@@ -18,10 +18,11 @@ workflow BAM_QC_RNASEQ {
 
     take:
     ch_bam_bai: Channel<Bam>
-    ch_gtf: Value<Tuple<Map, Path>>
+    ch_gtf: Value<Path>
     ch_gene_bed: Value<Path>
-    ch_fasta_fai: Value<Tuple<Map, Path?, Path?>>
-    ch_biotypes_header: Value<Tuple<Map, Path>>
+    ch_fasta: Value<Path?>
+    ch_fai: Value<Path?>
+    biotypes_header: Path
     tools: List<String>  // e.g. ['preseq', 'biotype_qc', 'qualimap', 'dupradar', 'rseqc_bam_stat', 'rseqc_infer_experiment', ...]
     biotype: String      // e.g. "gene_type" or "gene_biotype"
 
@@ -55,7 +56,7 @@ workflow BAM_QC_RNASEQ {
 
     if ('biotype_qc' in tools && biotype) {
         ch_featurecounts = SUBREAD_FEATURECOUNTS(ch_bam_bai, ch_gtf)
-        ch_biotype = CUSTOM_MULTIQCCUSTOMBIOTYPE(ch_featurecounts, ch_biotypes_header)
+        ch_biotype = CUSTOM_MULTIQCCUSTOMBIOTYPE(ch_featurecounts, biotypes_header)
         ch_results = ch_results
             .join(ch_featurecounts.map { r -> record(id: r.id, featurecounts: r) }, by: 'id')
             .join(ch_biotype.map { r -> record(id: r.id, biotype: record(tsv: r.tsv, rrna: r.rrna)) }, by: 'id')
@@ -65,7 +66,7 @@ workflow BAM_QC_RNASEQ {
         ch_sort_in = ch_bam_bai.map { r -> record(id: r.id, meta: r.meta, raw_bams: [ r.bam ]) }
 
         // Name-sorted BAM via samtools sort; requires ext.args = '-n' to be set by the caller for SAMTOOLS_SORT_QUALIMAP
-        ch_name_sorted = SAMTOOLS_SORT_QUALIMAP(ch_sort_in, ch_fasta_fai, '')
+        ch_name_sorted = SAMTOOLS_SORT_QUALIMAP(ch_sort_in, ch_fasta, ch_fai, '')
         ch_results = ch_results.join(QUALIMAP_RNASEQ(ch_name_sorted, ch_gtf), by: 'id')
     }
 

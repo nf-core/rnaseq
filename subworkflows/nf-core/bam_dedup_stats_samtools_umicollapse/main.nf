@@ -15,8 +15,6 @@ workflow BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE {
     ch_bam_bai: Channel<Bam>
 
     main:
-    ch_no_fasta = channel.value(tuple([:], null, null))
-
     //
     // umicollapse in bam mode (thus hardcode mode input to 'bam')
     //
@@ -28,7 +26,7 @@ workflow BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE {
     //
     ch_indexed = ch_dedup.join(SAMTOOLS_INDEX(ch_dedup), by: 'id')
 
-    ch_results = ch_indexed.join(BAM_STATS_SAMTOOLS(ch_indexed, ch_no_fasta), by: 'id')
+    ch_results = ch_indexed.join(BAM_STATS_SAMTOOLS(ch_indexed, null, null), by: 'id')
 
     emit:
     ch_results

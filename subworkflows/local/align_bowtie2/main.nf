@@ -32,7 +32,8 @@ workflow ALIGN_BOWTIE2 {
     take:
     ch_samples: Channel<Reads>
     index: Value<Path> // /path/to/bowtie2/index/
-    fasta_fai: Value<Tuple<Map, Path?, Path?>>
+    fasta: Value<Path?>
+    fai: Value<Path?>
 
     main:
 
@@ -41,8 +42,8 @@ workflow ALIGN_BOWTIE2 {
     //
     ch_bowtie2 = BOWTIE2_ALIGN(
         ch_samples,
-        index.map { index_path -> tuple([id: 'genome'], index_path) },
-        tuple([:], null),       // No fasta needed for BAM output
+        index,
+        null,                   // No fasta needed for BAM output
         params.save_unaligned,  // save_unaligned - enable for downstream analysis of unmapped reads
         false                   // sort_bam - we'll sort with samtools for consistency
     ).filter { r -> !r.raw_bams.isEmpty() }
@@ -50,7 +51,7 @@ workflow ALIGN_BOWTIE2 {
     //
     // Sort, index BAM file and run samtools stats, flagstat and idxstats
     //
-    ch_sorted = BAM_SORT_STATS_SAMTOOLS(ch_bowtie2, fasta_fai)
+    ch_sorted = BAM_SORT_STATS_SAMTOOLS(ch_bowtie2, fasta, fai)
 
     // The BAM is aligned to the transcriptome, and its unsorted form is what Salmon quantifies:
     // a coordinate-sorted BAM breaks paired-end quantification.

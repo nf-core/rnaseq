@@ -46,7 +46,7 @@ nextflow_process {
             process {
                 """
                 input[0] = UNTAR.out.map { r -> [ r.meta, r.untar ] }.map { meta, dir -> record(id: meta.id, meta: meta, quants: dir.listFiles().collect()) }
-                input[1] = CUSTOM_TX2GENE.out.map { r -> [ r.meta, r.tx2gene ] }
+                input[1] = CUSTOM_TX2GENE.out.map { r -> r.tx2gene }
                 input[2] = 'kallisto'
                 """
             }
@@ -106,7 +106,7 @@ nextflow_process {
             process {
                 """
                 input[0] = UNTAR.out.map { r -> [ r.meta, r.untar ] }.map { meta, dir -> record(id: meta.id, meta: meta, quants: dir.listFiles().collect()) }
-                input[1] = CUSTOM_TX2GENE.out.map { r -> [ r.meta, r.tx2gene ] }
+                input[1] = CUSTOM_TX2GENE.out.map { r -> r.tx2gene }
                 input[2] = 'kallisto'
                 """
             }
@@ -138,7 +138,7 @@ nextflow_process {
             process {
                 """
                 input[0] = Channel.of(record(id: 'test', meta: [ id:'test' ], quants: [ file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true) ]))
-                input[1] = Channel.of([ [ id:'test' ], file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true) ])
+                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
                 input[2] = 'kallisto'
                 """
             }
@@ -188,7 +188,7 @@ nextflow_process {
             process {
                 """
                 input[0] = UNTAR.out.map { r -> [ r.meta, r.untar ] }.map { meta, dir -> record(id: meta.id, meta: meta, quants: dir.listFiles().collect()) }
-                input[1] = CUSTOM_TX2GENE.out.map { r -> [ r.meta, r.tx2gene ] }
+                input[1] = CUSTOM_TX2GENE.out.map { r -> r.tx2gene }
                 input[2] = 'salmon'
                 """
             }
@@ -330,7 +330,7 @@ nextflow_process {
             process {
                 """
                 input[0] = Channel.of(record(id: 'test', meta: [ id:'test' ], quants: [ file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true) ]))
-                input[1] = Channel.of([ [ id:'test' ], file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true) ])
+                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
                 input[2] = 'salmon'
                 """
             }
@@ -392,7 +392,7 @@ nextflow_process {
                     }
                     [ meta, results ]
                 }
-                input[1] = CUSTOM_TX2GENE.out.map { r -> [ r.meta, r.tx2gene ] }
+                input[1] = CUSTOM_TX2GENE.out.map { r -> r.tx2gene }
                 input[2] = 'rsem'
                 """
             }
@@ -424,7 +424,7 @@ nextflow_process {
             process {
                 """
                 input[0] = Channel.of([ [id:'test'], [ file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true) ] ])
-                input[1] = Channel.of([ [id:'test'], file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true) ])
+                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
                 input[2] = 'rsem'
                 """
             }
@@ -478,7 +478,7 @@ nextflow_process {
                 """
                 // Uses ext.args = '--gene_name_col gene_biotype' from nextflow.config
                 input[0] = UNTAR.out.map { r -> [ r.meta, r.untar ] }.map { meta, dir -> record(id: meta.id, meta: meta, quants: dir.listFiles().collect()) }
-                input[1] = CUSTOM_TX2GENE.out.map { r -> [ r.meta, r.tx2gene ] }
+                input[1] = CUSTOM_TX2GENE.out.map { r -> r.tx2gene }
                 input[2] = 'kallisto'
                 """
             }

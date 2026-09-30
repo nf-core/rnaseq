@@ -29,10 +29,11 @@ def getStarPercentMapped(_params, align_log) {
 workflow ALIGN_STAR {
     take:
     ch_samples: Channel<Reads>
-    index: Value<Tuple<Map, Path>>
-    gtf: Value<Tuple<Map, Path?>>
+    index: Value<Path>
+    gtf: Value<Path?>
     star_ignore_sjdbgtf: Boolean // when using pre-built STAR indices do not re-extract and use splice junctions from the GTF file
-    fasta_fai: Value<Tuple<Map, Path?, Path?>>
+    fasta: Value<Path?>
+    fai: Value<Path?>
     use_sentieon_star: Boolean // whether star alignment is accelerated with Sentieon
     use_parabricks_star: Boolean // whether star alignment (and mark duplicates) is accelerated with Parabricks
     skip_markduplicates: Boolean // whether to skip marking duplicates
@@ -45,7 +46,7 @@ workflow ALIGN_STAR {
     if (use_sentieon_star) {
         ch_star_out = SENTIEON_STAR_ALIGN(ch_samples, index, gtf, star_ignore_sjdbgtf)
     } else if (use_parabricks_star) {
-        ch_star_out = PARABRICKS_RNA_FQ2BAM(ch_samples, fasta_fai.map { meta, fasta, _fai -> tuple(meta, fasta) }, index, true, !skip_markduplicates)
+        ch_star_out = PARABRICKS_RNA_FQ2BAM(ch_samples, fasta, index, true, !skip_markduplicates)
     } else {
         ch_star_out = STAR_ALIGN(ch_samples, index, gtf, star_ignore_sjdbgtf)
     }
@@ -56,7 +57,7 @@ workflow ALIGN_STAR {
     //
     // Sort, index BAM file and run samtools stats, flagstat and idxstats
     //
-    ch_sorted = BAM_SORT_STATS_SAMTOOLS(ch_star, fasta_fai)
+    ch_sorted = BAM_SORT_STATS_SAMTOOLS(ch_star, fasta, fai)
 
     ch_results = ch_star
         .join(ch_sorted, by: 'id')

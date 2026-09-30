@@ -47,8 +47,8 @@ nextflow_process {
                     meta: [ id:'test', single_end:true ],
                     reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)]
                 ))
-                input[1] = HISAT2_BUILD.out.map { r -> [r.meta, r.index] }
-                input[2] = HISAT2_EXTRACTSPLICESITES.out.map { r -> [r.meta, r.splicesites] }
+                input[1] = HISAT2_BUILD.out.map { r -> r.index }
+                input[2] = HISAT2_EXTRACTSPLICESITES.out.map { r -> r.splicesites }
                 input[3] = false
                 """
             }
@@ -101,8 +101,8 @@ nextflow_process {
                     meta: [ id:'test', single_end:true ],
                     reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)]
                 ))
-                input[1] = HISAT2_BUILD.out.map { r -> [r.meta, r.index] }
-                input[2] = HISAT2_EXTRACTSPLICESITES.out.map { r -> [r.meta, r.splicesites] }
+                input[1] = HISAT2_BUILD.out.map { r -> r.index }
+                input[2] = HISAT2_EXTRACTSPLICESITES.out.map { r -> r.splicesites }
                 input[3] = false
                 """
             }
@@ -154,8 +154,8 @@ nextflow_process {
                     reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
                 ))
-                input[1] = HISAT2_BUILD.out.map { r -> [r.meta, r.index] }
-                input[2] = HISAT2_EXTRACTSPLICESITES.out.map { r -> [r.meta, r.splicesites] }
+                input[1] = HISAT2_BUILD.out.map { r -> r.index }
+                input[2] = HISAT2_EXTRACTSPLICESITES.out.map { r -> r.splicesites }
                 input[3] = false
                 """
             }
@@ -209,8 +209,8 @@ nextflow_process {
                     reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
                 ))
-                input[1] = HISAT2_BUILD.out.map { r -> [r.meta, r.index] }
-                input[2] = HISAT2_EXTRACTSPLICESITES.out.map { r -> [r.meta, r.splicesites] }
+                input[1] = HISAT2_BUILD.out.map { r -> r.index }
+                input[2] = HISAT2_EXTRACTSPLICESITES.out.map { r -> r.splicesites }
                 input[3] = false
                 """
             }
@@ -252,8 +252,8 @@ nextflow_process {
                     meta: [ id:'test', single_end:true ],
                     reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
                 ))
-                input[1] = HISAT2_BUILD.out.map { r -> [r.meta, r.index] }
-                input[2] = [[:],[]]
+                input[1] = HISAT2_BUILD.out.map { r -> r.index }
+                input[2] = []
                 input[3] = false
                 """
             }
@@ -297,8 +297,8 @@ nextflow_process {
                     meta: [ id:'test', single_end:true ],
                     reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
                 ))
-                input[1] = HISAT2_BUILD.out.map { r -> [r.meta, r.index] }
-                input[2] = [[:],[]]
+                input[1] = HISAT2_BUILD.out.map { r -> r.index }
+                input[2] = []
                 input[3] = false
                 """
             }
@@ -341,8 +341,8 @@ nextflow_process {
                     reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
                 ))
-                input[1] = HISAT2_BUILD.out.map { r -> [r.meta, r.index] }
-                input[2] = [[:],[]]
+                input[1] = HISAT2_BUILD.out.map { r -> r.index }
+                input[2] = []
                 input[3] = false
                 """
             }
@@ -387,8 +387,8 @@ nextflow_process {
                     reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
                 ))
-                input[1] = HISAT2_BUILD.out.map { r -> [r.meta, r.index] }
-                input[2] = [[:],[]]
+                input[1] = HISAT2_BUILD.out.map { r -> r.index }
+                input[2] = []
                 input[3] = false
                 """
             }

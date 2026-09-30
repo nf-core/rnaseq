@@ -13,8 +13,8 @@ process SENTIEON_STARALIGN {
 
     input:
     record(id: String, meta: Map, reads: List<Path>)
-    tuple(meta2: Map, index: Path)
-    tuple(meta3: Map, gtf: Path?)
+    index: Path
+    gtf: Path?
     star_ignore_sjdbgtf: Boolean
 
     stage:

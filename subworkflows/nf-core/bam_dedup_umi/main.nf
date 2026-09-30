@@ -18,11 +18,12 @@ include { UmiDedupBam                                                           
 workflow BAM_DEDUP_UMI {
     take:
     ch_genome_bam: Channel<Bam>
-    fasta_fai: Value<Tuple<Map, Path?, Path?>>
+    fasta: Value<Path?>
+    fai: Value<Path?>
     umi_dedup_tool: String // 'umicollapse' or 'umitools'
     umitools_dedup_stats: Boolean // whether to generate UMI-tools dedup stats
     ch_transcriptome_bam: Channel<Bam> // records with transcriptome_bam set
-    transcript_fasta_fai: Value<Tuple<Map, Path?, Path?>>
+    transcript_fasta: Value<Path?>
     umitools_dedup_primary_only: Boolean // whether to filter to primary alignments before dedup
 
     main:
@@ -61,7 +62,8 @@ workflow BAM_DEDUP_UMI {
     // 1. Coordinate sort
     ch_coord_sorted = BAM_SORT_STATS_SAMTOOLS(
         ch_transcriptome_bam.map { r -> record(id: r.id, meta: r.meta, raw_bams: [r.transcriptome_bam]) },
-        transcript_fasta_fai
+        transcript_fasta,
+        null
     )
 
     // 2. Transcriptome BAM deduplication
@@ -88,7 +90,8 @@ workflow BAM_DEDUP_UMI {
     // 3. Restore name sorting
     ch_name_sorted = SAMTOOLS_SORT(
         ch_transcriptome_dedup.map { r -> record(id: r.id, meta: r.meta, raw_bams: [r.bam]) },
-        fasta_fai,
+        fasta,
+        fai,
         '',
     )
         .filter { r -> r.bam != null }

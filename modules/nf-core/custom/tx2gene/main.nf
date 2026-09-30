@@ -11,7 +11,7 @@ process CUSTOM_TX2GENE {
 
     input:
     record(id: String, meta: Map, quants: List<Path>)
-    tuple(meta2: Map, gtf: Path)
+    gtf: Path
     quant_type: String
     gtf_id_attribute: String
     extra: String?

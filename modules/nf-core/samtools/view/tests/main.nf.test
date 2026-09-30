@@ -23,10 +23,11 @@ nextflow_process {
                     bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true),
                     bai: null
                 )
-                input[1] = [[:],[],[]]
-                input[2] = [[:], []]
-                input[3] = [[:], []]
-                input[4] = ''
+                input[1] = []
+                input[2] = []
+                input[3] = []
+                input[4] = []
+                input[5] = ''
                 """
             }
         }
@@ -52,10 +53,11 @@ nextflow_process {
                     bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
                     bai: null
                 )
-                input[1] = [[:],[],[]]
-                input[2] = [[:], []]
-                input[3] = [[:], []]
-                input[4] = 'csi'
+                input[1] = []
+                input[2] = []
+                input[3] = []
+                input[4] = []
+                input[5] = 'csi'
                 """
             }
         }
@@ -81,10 +83,11 @@ nextflow_process {
                     bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
                     bai: null
                 )
-                input[1] = [[:],[],[]]
-                input[2] = [[:], []]
-                input[3] = [[:], []]
-                input[4] = 'bai'
+                input[1] = []
+                input[2] = []
+                input[3] = []
+                input[4] = []
+                input[5] = 'bai'
                 """
             }
         }
@@ -110,12 +113,12 @@ nextflow_process {
                     bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
                     bai: null
                 )
-                input[1] = [[:],[],[]]
-                input[2] = channel.of('testN:1')
+                input[1] = []
+                input[2] = []
+                input[3] = channel.of('testN:1')
                     .collectFile(name: 'selected_reads.txt')
-                    .map { file -> [[:], file] }
-                input[3] = [[:], []]
-                input[4] = 'bai'
+                input[4] = []
+                input[5] = 'bai'
                 """
             }
         }
@@ -142,12 +145,12 @@ nextflow_process {
                     bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
                     bai: null
                 )
-                input[1] = [[:],[],[]]
-                input[2] = channel.of('testN:1')
+                input[1] = []
+                input[2] = []
+                input[3] = channel.of('testN:1')
                     .collectFile(name: 'selected_reads.txt')
-                    .map { file -> [[:], file] }
-                input[3] = [[:], []]
-                input[4] = 'crai'
+                input[4] = []
+                input[5] = 'crai'
                 """
             }
         }
@@ -174,14 +177,11 @@ nextflow_process {
                     bam: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true),
                     bai: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram.crai', checkIfExists: true)
                 )
-                input[1] = [
-                    [ id:'genome' ],
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
-                ]
-                input[2] = [[:], []]
-                input[3] = [[:], []]
-                input[4] = ''
+                input[1] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                input[2] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
+                input[3] = []
+                input[4] = []
+                input[5] = ''
                 """
             }
         }
@@ -207,14 +207,11 @@ nextflow_process {
                     bam: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true),
                     bai: null
                 )
-                input[1] = [
-                    [ id:'genome' ],
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
-                ]
-                input[2] = [[:], []]
-                input[3] = [[:], []]
-                input[4] = ''
+                input[1] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                input[2] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
+                input[3] = []
+                input[4] = []
+                input[5] = ''
                 """
             }
         }
@@ -240,14 +237,11 @@ nextflow_process {
                     bam: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true),
                     bai: null
                 )
-                input[1] = [
-                    [ id:'genome' ],
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
-                ]
-                input[2] = [[:], []]
-                input[3] = [[:], []]
-                input[4] = ''
+                input[1] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                input[2] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
+                input[3] = []
+                input[4] = []
+                input[5] = ''
                 """
             }
         }
@@ -273,16 +267,12 @@ nextflow_process {
                     bam: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true),
                     bai: null
                 )
-                input[1] = [
-                    [ id:'genome' ],
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
-                ]
-                input[2] = channel.of("testN:2817", "testN:2814")
+                input[1] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                input[2] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
+                input[3] = channel.of("testN:2817", "testN:2814")
                     .collectFile(name: "readnames.list", newLine: true)
-                    .map { file -> [[:], file] }
-                input[3] = [[:], []]
-                input[4] = ''
+                input[4] = []
+                input[5] = ''
                 """
             }
         }
@@ -309,13 +299,11 @@ nextflow_process {
                     bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
                     bai: null
                 )
-                input[1] = [[:],[],[]]
-                input[2] = [[:], []]
-                input[3] = [
-                    [:],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/bed/test.bed', checkIfExists: true)
-                ]
-                input[4] = ''
+                input[1] = []
+                input[2] = []
+                input[3] = []
+                input[4] = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/bed/test.bed', checkIfExists: true)
+                input[5] = ''
                 """
             }
         }
@@ -344,10 +332,11 @@ nextflow_process {
                     bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true),
                     bai: null
                 )
-                input[1] = [[:],[],[]]
-                input[2] = [[:], []]
-                input[3] = [[:], []]
-                input[4] = ''
+                input[1] = []
+                input[2] = []
+                input[3] = []
+                input[4] = []
+                input[5] = ''
                 """
             }
         }
@@ -376,10 +365,11 @@ nextflow_process {
                     bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
                     bai: null
                 )
-                input[1] = [[:],[],[]]
-                input[2] = [[:], []]
-                input[3] = [[:], []]
-                input[4] = 'csi'
+                input[1] = []
+                input[2] = []
+                input[3] = []
+                input[4] = []
+                input[5] = 'csi'
                 """
             }
         }
@@ -408,10 +398,11 @@ nextflow_process {
                     bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
                     bai: null
                 )
-                input[1] = [[:],[],[]]
-                input[2] = [[:], []]
-                input[3] = [[:], []]
-                input[4] = 'bai'
+                input[1] = []
+                input[2] = []
+                input[3] = []
+                input[4] = []
+                input[5] = 'bai'
                 """
             }
         }
@@ -440,12 +431,12 @@ nextflow_process {
                     bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
                     bai: null
                 )
-                input[1] = [[:],[],[]]
-                input[2] = channel.of('testN:1')
+                input[1] = []
+                input[2] = []
+                input[3] = channel.of('testN:1')
                     .collectFile(name: 'selected_reads.txt')
-                    .map { file -> [[:], file] }
-                input[3] = [[:], []]
-                input[4] = 'bai'
+                input[4] = []
+                input[5] = 'bai'
                 """
             }
         }
@@ -474,12 +465,12 @@ nextflow_process {
                     bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
                     bai: null
                 )
-                input[1] = [[:],[],[]]
-                input[2] = channel.of('testN:1')
+                input[1] = []
+                input[2] = []
+                input[3] = channel.of('testN:1')
                     .collectFile(name: 'selected_reads.txt')
-                    .map { file -> [[:], file] }
-                input[3] = [[:], []]
-                input[4] = 'crai'
+                input[4] = []
+                input[5] = 'crai'
                 """
             }
         }

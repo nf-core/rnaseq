@@ -19,8 +19,6 @@ workflow BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS {
     val_primary_only: Boolean
 
     main:
-    ch_no_fasta = channel.value(tuple([:], null, null))
-
     //
     // Optionally filter to primary alignments before deduplication
     //
@@ -28,9 +26,10 @@ workflow BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS {
     if (val_primary_only) {
         ch_primary = SAMTOOLS_VIEW_PRIMARY(
             ch_bam_bai,
-            tuple([:], null, null),
-            tuple([:], null),
-            tuple([:], null),
+            null,
+            null,
+            null,
+            null,
             '',
         ).filter { r -> r.bam != null }
 
@@ -47,7 +46,7 @@ workflow BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS {
     //
     ch_indexed = ch_dedup.join(SAMTOOLS_INDEX(ch_dedup), by: 'id')
 
-    ch_results = ch_indexed.join(BAM_STATS_SAMTOOLS(ch_indexed, ch_no_fasta), by: 'id')
+    ch_results = ch_indexed.join(BAM_STATS_SAMTOOLS(ch_indexed, null, null), by: 'id')
 
     emit:
     ch_results

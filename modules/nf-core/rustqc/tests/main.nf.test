@@ -21,10 +21,7 @@ nextflow_process {
                     bam: file(params.modules_testdata_base_path + "genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true),
                     bai: file(params.modules_testdata_base_path + "genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam.bai", checkIfExists: true)
                 ))
-                input[1] = channel.of([
-                    [ id:'homo_sapiens' ],
-                    file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true)
-                ])
+                input[1] = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true))
                 """
             }
         }
@@ -101,10 +98,7 @@ nextflow_process {
                     bam: file(params.modules_testdata_base_path + "genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true),
                     bai: file(params.modules_testdata_base_path + "genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam.bai", checkIfExists: true)
                 ))
-                input[1] = channel.of([
-                    [ id:'homo_sapiens' ],
-                    file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true)
-                ])
+                input[1] = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true))
                 """
             }
         }

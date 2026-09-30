@@ -11,7 +11,7 @@ process STAR_GENOMEGENERATE {
 
     input:
     record(id: String, meta: Map, fasta: Path)
-    tuple(meta2: Map, gtf: Path?)
+    gtf: Path?
 
     output:
     record(id: id, meta: meta, index: file('star'))

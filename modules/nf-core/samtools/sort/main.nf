@@ -11,7 +11,8 @@ process SAMTOOLS_SORT {
 
     input:
     record(id: String, meta: Map, raw_bams: List<Path>)
-    tuple(meta2: Map, fasta: Path?, fai: Path?)
+    fasta: Path?
+    fai: Path?
     index_format: String
 
     stage:

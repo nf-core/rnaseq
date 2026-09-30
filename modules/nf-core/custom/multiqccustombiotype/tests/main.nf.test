@@ -35,7 +35,7 @@ nextflow_process {
                 ].join('\\n') + '\\n'
 
                 input[0] = channel.of(record(id: 'test', meta: [ id:'test' ], counts: count_file))
-                input[1] = channel.of([ [:], header_file ])
+                input[1] = channel.of(header_file)
                 """
             }
         }
@@ -73,7 +73,7 @@ nextflow_process {
                 ].join('\\n') + '\\n'
 
                 input[0] = channel.of(record(id: 'test', meta: [ id:'test' ], counts: count_file))
-                input[1] = channel.of([ [:], header_file ])
+                input[1] = channel.of(header_file)
                 """
             }
         }
@@ -113,7 +113,7 @@ nextflow_process {
                 ].join('\\n') + '\\n'
 
                 input[0] = channel.of(record(id: 'test', meta: [ id:'test' ], counts: count_file))
-                input[1] = channel.of([ [:], header_file ])
+                input[1] = channel.of(header_file)
                 """
             }
         }
@@ -139,7 +139,7 @@ nextflow_process {
                 header_file.text = 'stub'
 
                 input[0] = channel.of(record(id: 'test', meta: [ id:'test' ], counts: count_file))
-                input[1] = channel.of([ [:], header_file ])
+                input[1] = channel.of(header_file)
                 """
             }
         }

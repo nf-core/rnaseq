@@ -11,8 +11,8 @@ process BOWTIE2_ALIGN {
 
     input:
     record(id: String, meta: Map, reads: List<Path>)
-    tuple(meta2: Map, index: Path)
-    tuple(meta3: Map, fasta: Path?)
+    index: Path
+    fasta: Path?
     save_unaligned: Boolean
     sort_bam: Boolean
 

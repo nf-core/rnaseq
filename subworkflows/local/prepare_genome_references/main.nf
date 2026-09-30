@@ -56,13 +56,14 @@ workflow PREPARE_GENOME_REFERENCES {
     main:
     // Absent artifacts are Values holding null so every stream keeps one type; steps that
     // dereference an artifact are guarded by the plain booleans below.
+    ch_no_path = channel.value(null as Path)
     def has_gtf = (gtf || gff) ? true : false
     def fasta_provided = (fasta ? true : false)
 
     //---------------------------
     // 1) Uncompress GTF or GFF -> GTF
     //---------------------------
-    ch_gff_uncompressed = channel.value(null as Path)
+    ch_gff_uncompressed = ch_no_path
     if (gtf) {
         if (gtf.endsWith('.gz')) {
             ch_gtf = GUNZIP_GTF(record(id: 'gtf', meta: [:], archive: file(gtf, checkIfExists: true))).map { r -> r.gunzip }
@@ -77,9 +78,9 @@ workflow PREPARE_GENOME_REFERENCES {
         } else {
             ch_gff = channel.value(record(id: 'gff', meta: [:], gff: file(gff, checkIfExists: true)))
         }
-        ch_gtf = GFFREAD(ch_gff, channel.value(null as Path)).map { r -> r.gtf }
+        ch_gtf = GFFREAD(ch_gff, ch_no_path).map { r -> r.gtf }
     } else {
-        ch_gtf = channel.value(null as Path)
+        ch_gtf = ch_no_path
     }
 
     //-------------------------------------
@@ -90,7 +91,7 @@ workflow PREPARE_GENOME_REFERENCES {
     } else if (fasta_provided) {
         ch_fasta = channel.value(file(fasta, checkIfExists: true))
     } else {
-        ch_fasta = channel.value(null as Path)
+        ch_fasta = ch_no_path
     }
 
     //----------------------------------------
@@ -103,12 +104,12 @@ workflow PREPARE_GENOME_REFERENCES {
     ) && !skip_gtf_filter
 
     // Set at the first step that supersedes ch_gtf (if any).
-    ch_gtf_pre_filter = channel.value(null as Path)
+    ch_gtf_pre_filter = ch_no_path
     if (filter_gtf_needed && has_gtf) {
         ch_gtf_pre_filter = ch_gtf
         ch_gtf_filtered = CUSTOM_GTFFILTER(
             ch_gtf.map { item -> record(id: 'gtf', meta: [id: item.baseName + '.filtered'], gtf: item) },
-            ch_fasta.map { item -> tuple([id: item != null ? 'genome' : 'no_fasta'], item) }
+            ch_fasta
         )
         ch_gtf = ch_gtf_filtered.map { r -> r.gtf }
     }
@@ -116,9 +117,9 @@ workflow PREPARE_GENOME_REFERENCES {
     //---------------------------------------------------
     // 4) Concatenate additional FASTA (if both are given)
     //---------------------------------------------------
-    ch_additional_fasta_uncompressed = channel.value(null as Path)
-    ch_fasta_pre_concat = channel.value(null as Path)
-    ch_gtf_pre_concat   = channel.value(null as Path)
+    ch_additional_fasta_uncompressed = ch_no_path
+    ch_fasta_pre_concat = ch_no_path
+    ch_gtf_pre_concat   = ch_no_path
     if (fasta_provided && additional_fasta && has_gtf) {
         if (additional_fasta.endsWith('.gz')) {
             ch_add_fasta = GUNZIP_ADDITIONAL_FASTA(record(id: 'additional_fasta', meta: [:], archive: file(additional_fasta, checkIfExists: true))).map { r -> r.gunzip }
@@ -139,7 +140,7 @@ workflow PREPARE_GENOME_REFERENCES {
             ch_fasta
                 .combine(ch_gtf)
                 .map { fasta_file, gtf_file -> record(id: 'genome_transcriptome', meta: [id: 'genome_transcriptome'], fasta: fasta_file, gtf: gtf_file) },
-            ch_add_fasta.map { item -> tuple([id: 'genome_transcriptome'], item) },
+            ch_add_fasta,
             gencode ? "gene_type" : featurecounts_group_type
         )
         ch_fasta = ch_catfasta.map { r -> r.fasta }
@@ -165,12 +166,12 @@ workflow PREPARE_GENOME_REFERENCES {
         // gffread --bed derives intervals from any feature type.
         ch_gene_bed = GFFREAD_GENE_BED(
             ch_gtf.map { item -> record(id: item.baseName, meta: [id: item.baseName], gff: item) },
-            channel.value(null as Path)
+            ch_no_path
         ).map { r -> r.bed }
     } else if (has_gtf) {
         ch_gene_bed = EAUTILS_GTF2BED(ch_gtf.map { item -> record(id: item.baseName, meta: [id: item.baseName], gtf: item) }).map { r -> r.bed }
     } else {
-        ch_gene_bed = channel.value(null as Path)
+        ch_gene_bed = ch_no_path
     }
 
     //----------------------------------------------------------------------
@@ -178,8 +179,8 @@ workflow PREPARE_GENOME_REFERENCES {
     //    - If provided, decompress (optionally preprocess if GENCODE)
     //    - If not provided but have genome+GTF, create from them
     //----------------------------------------------------------------------
-    ch_transcript_fasta_pre_gencode = channel.value(null as Path)
-    ch_transcript_fasta_rsem_dir = channel.value(null as Path)
+    ch_transcript_fasta_pre_gencode = ch_no_path
+    ch_transcript_fasta_rsem_dir = ch_no_path
     if (transcript_fasta) {
         // Use user-provided transcript FASTA
         if (transcript_fasta.endsWith('.gz')) {
@@ -217,7 +218,7 @@ workflow PREPARE_GENOME_REFERENCES {
         ch_transcript_fasta          = ch_rsem_reference.map { r -> r.transcript_fasta }
         ch_transcript_fasta_rsem_dir = ch_rsem_reference.map { r -> r.index } // unused here; published via the genome record's transcript_fasta_rsem_dir field
     } else {
-        ch_transcript_fasta = channel.value(null as Path)
+        ch_transcript_fasta = ch_no_path
     }
 
     //-------------------------------------------------------
@@ -226,12 +227,10 @@ workflow PREPARE_GENOME_REFERENCES {
     if (fasta_provided) {
         ch_faidx       = SAMTOOLS_FAIDX(ch_fasta.map { item -> record(id: 'genome', meta: [:], fasta: item, fai: null) }, true)
         ch_chrom_sizes = ch_faidx.map { r -> r.sizes }
-        ch_fasta_fai   = ch_fasta
-            .combine(ch_faidx.map { r -> r.fai })
-            .map { fasta_file, fai_file -> tuple([:], fasta_file, fai_file) }
+        ch_fai         = ch_faidx.map { r -> r.fai }
     } else {
-        ch_chrom_sizes = channel.value(null as Path)
-        ch_fasta_fai   = channel.value(tuple([:], null as Path, null as Path))
+        ch_chrom_sizes = ch_no_path
+        ch_fai         = ch_no_path
     }
 
     //-------------------------------------------------------------
@@ -266,7 +265,7 @@ workflow PREPARE_GENOME_REFERENCES {
     } else if (contaminant_screening && kraken_db) {
         ch_kraken_db = channel.value(file(kraken_db, checkIfExists: true))
     } else {
-        ch_kraken_db = channel.value(null as Path)
+        ch_kraken_db = ch_no_path
     }
 
     //---------------------------------------------------------
@@ -274,7 +273,8 @@ workflow PREPARE_GENOME_REFERENCES {
     //---------------------------------------------------------
     // Each field is an independent, optionally user-supplied producer with no shared
     // key, so they stream as tagged records via mix() rather than fusing into one row.
-    ch_references = ch_fasta_fai.flatMap { _meta, fasta_file, fai_file -> [ record(kind: 'fasta', file: fasta_file), record(kind: 'fai', file: fai_file) ] }
+    ch_references = ch_fasta.flatMap { p -> [ record(kind: 'fasta', file: p) ] }
+        .mix(ch_fai.flatMap              { p -> [ record(kind: 'fai', file: p) ] })
         .mix(ch_gtf.flatMap              { p -> [ record(kind: 'gtf', file: p) ] })
         .mix(ch_gene_bed.flatMap         { p -> [ record(kind: 'gene_bed', file: p) ] })
         .mix(ch_transcript_fasta.flatMap { p -> [ record(kind: 'transcript_fasta', file: p) ] })
@@ -295,7 +295,8 @@ workflow PREPARE_GENOME_REFERENCES {
     // The genome streams stay separate named emits: RNASEQ and the output block consume each
     // artifact independently, and no per-sample key exists to fuse them into one record.
     emit:
-    fasta_fai:        Value<Tuple<Map, Path?, Path?>> = ch_fasta_fai     // [ meta, genome.fasta, genome.fai ], null paths when no FASTA is given
+    fasta:            Value<Path?> = ch_fasta                            // genome.fasta, null when absent
+    fai:              Value<Path?> = ch_fai                              // genome.fai, null when no FASTA is given
     gtf:              Value<Path?> = ch_gtf                              // genome.gtf, null when absent
     gene_bed:         Value<Path?> = ch_gene_bed                         // gene.bed, null when absent
     transcript_fasta: Value<Path?> = ch_transcript_fasta                 // transcript.fasta, null when absent

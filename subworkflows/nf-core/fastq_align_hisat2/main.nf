@@ -7,9 +7,10 @@ include { Hisat2Reads; Hisat2Aligned } from './types'
 workflow FASTQ_ALIGN_HISAT2 {
     take:
     ch_samples: Channel<Hisat2Reads>
-    index: Value<Tuple<Map, Path>>
-    splicesites: Value<Tuple<Map, Path?>>
-    ch_fasta_fai: Value<Tuple<Map, Path?, Path?>>
+    index: Value<Path>
+    splicesites: Value<Path?>
+    ch_fasta: Value<Path?>
+    ch_fai: Value<Path?>
     save_unaligned: Boolean
 
     main:
@@ -21,7 +22,7 @@ workflow FASTQ_ALIGN_HISAT2 {
     //
     // Sort, index BAM file and run samtools stats, flagstat and idxstats
     //
-    ch_sorted = BAM_SORT_STATS_SAMTOOLS(ch_hisat2, ch_fasta_fai)
+    ch_sorted = BAM_SORT_STATS_SAMTOOLS(ch_hisat2, ch_fasta, ch_fai)
 
     ch_results = ch_hisat2
         .map { r -> r + record(aligner: 'hisat2') }

@@ -31,10 +31,7 @@ nextflow_process {
             process {
                 """
                 input[0] = UNTAR.out.map { r -> [ r.meta, r.untar ] }.map { meta, dir -> record(id: meta.id, meta: meta, quants: dir.listFiles().collect()) }
-                input[1] = Channel.of([
-                    [ id:'test'], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
-                ])
+                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
                 input[2] = 'kallisto'
                 input[3] = 'gene_id'
                 input[4] = 'gene_name'
@@ -71,10 +68,7 @@ nextflow_process {
             process {
                 """
                 input[0] = UNTAR.out.map { r -> [ r.meta, r.untar ] }.map { meta, dir -> record(id: meta.id, meta: meta, quants: dir.listFiles().collect()) }
-                input[1] = Channel.of([
-                    [ id:'test'], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
-                ])
+                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
                 input[2] = 'kallisto'
                 input[3] = 'gene_id'
                 input[4] = 'gene_name,gene_biotype'
@@ -117,10 +111,7 @@ nextflow_process {
                     }
                     record(id: meta.id, meta: meta, quants: results)
                 }
-                input[1] = Channel.of([
-                    [ id:'test'], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
-                ])
+                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
                 input[2] = 'rsem'
                 input[3] = 'gene_id'
                 input[4] = 'gene_name'
@@ -159,10 +150,7 @@ nextflow_process {
             process {
                 """
                 input[0] = UNTAR.out.map { r -> [ r.meta, r.untar ] }.map { meta, dir -> record(id: meta.id, meta: meta, quants: dir.listFiles().collect()) }
-                input[1] = Channel.of([
-                    [ id:'test'], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
-                ])
+                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
                 input[2] = 'kallisto'
                 input[3] = 'gene_id'
                 input[4] = 'gene_name'

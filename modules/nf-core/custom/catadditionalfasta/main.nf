@@ -10,7 +10,7 @@ process CUSTOM_CATADDITIONALFASTA {
 
     input:
     record(id: String, meta: Map, fasta: Path, gtf: Path)
-    tuple(meta2: Map, add_fasta: Path)
+    add_fasta: Path
     biotype: String
 
     output:

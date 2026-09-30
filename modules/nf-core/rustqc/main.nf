@@ -11,7 +11,7 @@ process RUSTQC {
 
     input:
     record(id: String, meta: Map, bam: Path, bai: Path)
-    tuple(meta2: Map, gtf: Path)
+    gtf: Path
 
     output:
     record(

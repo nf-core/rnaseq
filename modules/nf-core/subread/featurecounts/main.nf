@@ -11,7 +11,7 @@ process SUBREAD_FEATURECOUNTS {
 
     input:
     record(id: String, meta: Map, bam: Path)
-    tuple(meta2: Map, annotation: Path)
+    annotation: Path
 
     output:
     record(

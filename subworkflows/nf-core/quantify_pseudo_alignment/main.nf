@@ -14,8 +14,8 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
     take:
     samplesheet: Value<Path>
     ch_samples: Channel<Reads>
-    index: Value<Tuple<Map, Path>>
-    transcript_fasta: Value<Path>
+    index: Value<Path?>
+    transcript_fasta: Value<Path?>
     gtf: Value<Path>
     gtf_id_attribute: String // GTF gene ID attribute
     gtf_extra_attribute: String // GTF alternative gene attribute (e.g. gene_name)
@@ -31,7 +31,7 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
     //
     // NOTE: MultiQC needs Salmon outputs, but Kallisto logs
     if (pseudo_aligner == 'salmon') {
-        ch_salmon = SALMON_QUANT(ch_samples, index.combine(gtf).combine(transcript_fasta))
+        ch_salmon = SALMON_QUANT(ch_samples, index, gtf, transcript_fasta)
 
         // Salmon writes its log inside the quant directory rather than as a
         // discrete file, so log is null. meta_info.json is an optional output.
@@ -41,7 +41,9 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
     } else {
         ch_kallisto = KALLISTO_QUANT(
             ch_samples,
-            index.combine(gtf).map { meta, idx, gtf_file -> tuple(meta, idx, gtf_file, null) },
+            index,
+            gtf,
+            null,
             kallisto_quant_fraglen,
             kallisto_quant_fraglen_sd
         )

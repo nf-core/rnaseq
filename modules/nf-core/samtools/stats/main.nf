@@ -11,7 +11,8 @@ process SAMTOOLS_STATS {
 
     input:
     record(id: String, meta: Map, bam: Path, bai: Path)
-    tuple(meta2: Map, fasta: Path?, fai: Path?)
+    fasta: Path?
+    fai: Path?
 
     output:
     record(id: id, meta: meta, stats: file('*.stats'))

@@ -8,14 +8,14 @@ workflow BAM_STRINGTIE_MERGE {
     take:
     ch_bams: Channel<StringtieInput>
     mode: Value<List<String>>
-    chrgtf: Value<Tuple<Map, Path?>>
+    chrgtf: Value<Path?>
 
     main:
 
     ch_assemblies = STRINGTIE_STRINGTIE(
         ch_bams,
         mode,
-        chrgtf.map { _meta, gtf -> gtf }
+        chrgtf
     )
 
     ch_to_merge = ch_assemblies

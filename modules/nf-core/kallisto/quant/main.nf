@@ -11,7 +11,9 @@ process KALLISTO_QUANT {
 
     input:
     record(id: String, meta: Map, reads: List<Path>)
-    tuple(meta2: Map, index: Path, gtf: Path?, chromosomes: Path?)
+    index: Path
+    gtf: Path?
+    chromosomes: Path?
     fragment_length: Integer?
     fragment_length_sd: Integer?
 

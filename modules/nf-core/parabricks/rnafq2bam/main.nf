@@ -11,8 +11,8 @@ process PARABRICKS_RNAFQ2BAM {
 
     input:
     record(id: String, meta: Map, reads: List<Path>)
-    tuple(meta2: Map, fasta: Path)
-    tuple(meta3: Map, index: Path)
+    fasta: Path
+    index: Path
     qc_metrics: Boolean
     mark_duplicates: Boolean
 

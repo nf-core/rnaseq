@@ -38,25 +38,25 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0]  = [
+                input[0] = [
                     [ id: 'samplesheet' ],
                     file(params.modules_testdata_base_path + '/genomics/sarscov2/illumina/csv/samplesheet_micro.csv', checkIfExists: true)
                 ]
-                input[1]  = [
+                input[1] = [
                     [ id: 'test' ],
                     [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                     ]
                 ]
-                input[2]  = SALMON_INDEX.out.map { r -> [ r.meta, r.index ] }
-                input[3]  = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))
-                input[4]  = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true))
-                input[5]  = 'gene_id'
-                input[6]  = 'gene_name'
-                input[7]  = 'salmon'
-                input[8]  = null
-                input[9]  = null
+                input[2] = SALMON_INDEX.out.map { r -> r.index }
+                input[3] = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))
+                input[4] = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true))
+                input[5] = 'gene_id'
+                input[6] = 'gene_name'
+                input[7] = 'salmon'
+                input[8] = null
+                input[9] = null
                 input[10] = false
                 """
             }
@@ -101,25 +101,25 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0]  = [
+                input[0] = [
                     [ id: 'samplesheet' ],
                     file(params.modules_testdata_base_path + '/genomics/sarscov2/illumina/csv/samplesheet_micro.csv', checkIfExists: true)
                 ]
-                input[1]  = [
+                input[1] = [
                     [ id: 'test' ],
                     [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                     ]
                 ]
-                input[2]  = KALLISTO_INDEX.out.map { r -> [ r.meta, r.index ] }
-                input[3]  = channel.of(file(params.modules_testdata_base_path +  "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))
-                input[4]  = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true))
-                input[5]  = 'gene_id'
-                input[6]  = 'gene_name'
-                input[7]  = 'kallisto'
-                input[8]  = []
-                input[9]  = []
+                input[2] = KALLISTO_INDEX.out.map { r -> r.index }
+                input[3] = channel.of(file(params.modules_testdata_base_path +  "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))
+                input[4] = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true))
+                input[5] = 'gene_id'
+                input[6] = 'gene_name'
+                input[7] = 'kallisto'
+                input[8] = []
+                input[9] = []
                 input[10] = false
                 """
             }
@@ -166,25 +166,25 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0]  = [
+                input[0] = [
                     [ id: 'samplesheet' ],
                     file(params.modules_testdata_base_path + '/genomics/sarscov2/illumina/csv/samplesheet_micro.csv', checkIfExists: true)
                 ]
-                input[1]  = [
+                input[1] = [
                     [ id: 'test' ],
                     [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                     ]
                 ]
-                input[2]  = SALMON_INDEX.out.map { r -> [ r.meta, r.index ] }
-                input[3]  = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))
-                input[4]  = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true))
-                input[5]  = 'gene_id'
-                input[6]  = 'gene_name'
-                input[7]  = 'salmon'
-                input[8]  = null
-                input[9]  = null
+                input[2] = SALMON_INDEX.out.map { r -> r.index }
+                input[3] = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))
+                input[4] = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true))
+                input[5] = 'gene_id'
+                input[6] = 'gene_name'
+                input[7] = 'salmon'
+                input[8] = null
+                input[9] = null
                 input[10] = false
                 """
             }
@@ -219,25 +219,25 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0]  = [
+                input[0] = [
                     [ id: 'samplesheet' ],
                     file(params.modules_testdata_base_path + '/genomics/sarscov2/illumina/csv/samplesheet_micro.csv', checkIfExists: true)
                 ]
-                input[1]  = [
+                input[1] = [
                     [ id: 'test' ],
                     [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                     ]
                 ]
-                input[2]  = KALLISTO_INDEX.out.map { r -> [ r.meta, r.index ] }
-                input[3]  = channel.of(file(params.modules_testdata_base_path +  "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))
-                input[4]  = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true))
-                input[5]  = 'gene_id'
-                input[6]  = 'gene_name'
-                input[7]  = 'kallisto'
-                input[8]  = []
-                input[9]  = []
+                input[2] = KALLISTO_INDEX.out.map { r -> r.index }
+                input[3] = channel.of(file(params.modules_testdata_base_path +  "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))
+                input[4] = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true))
+                input[5] = 'gene_id'
+                input[6] = 'gene_name'
+                input[7] = 'kallisto'
+                input[8] = []
+                input[9] = []
                 input[10] = false
                 """
             }

@@ -22,10 +22,7 @@ nextflow_workflow {
                     lrbam: file(params.modules_testdata_base_path + "genomics/homo_sapiens/pacbio/bam/test.sorted.bam", checkIfExists: true)
                 ))
                 input[1] = Channel.value(["mix-reads-assembly"])
-                input[2] = Channel.of([
-                                [ id:'annotation' ],
-                                file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true)
-                            ])
+                input[2] = Channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true))
                 """
             }
         }
@@ -46,10 +43,7 @@ nextflow_workflow {
                 """
                 input[0] = Channel.empty()
                 input[1] = Channel.value(["mix-reads-assembly"])
-                input[2] = Channel.of([
-                                [ id:'annotation' ],
-                                file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true)
-                            ])
+                input[2] = Channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true))
                 """
             }
         }

@@ -11,7 +11,8 @@ process PICARD_MARKDUPLICATES {
 
     input:
     record(id: String, meta: Map, bam: Path)
-    tuple(meta2: Map, fasta: Path?, fai: Path?)
+    fasta: Path?
+    fai: Path?
 
     output:
     record(

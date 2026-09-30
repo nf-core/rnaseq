@@ -213,7 +213,7 @@ workflow NFCORE_RNASEQ {
     // SUBWORKFLOW: Build or load aligner / pseudo-aligner / filtering indices
     //
     indices = PREPARE_GENOME_INDICES (
-        references.fasta_fai,
+        references.fasta,
         references.gtf,
         references.transcript_fasta,
         references.rrna_fastas,
@@ -244,7 +244,7 @@ workflow NFCORE_RNASEQ {
 
     // Check if contigs in genome fasta file > 512 Mbp
     if (!params.skip_alignment && !params.bam_csi_index) {
-        references.fasta_fai.map { _meta, _fasta, fai -> fai != null ? checkMaxContigSize(fai) : null }
+        references.fai.map { fai -> fai != null ? checkMaxContigSize(fai) : null }
     }
 
     //
@@ -255,7 +255,8 @@ workflow NFCORE_RNASEQ {
 
     results = RNASEQ (
         ch_samplesheet,
-        references.fasta_fai,
+        references.fasta,
+        references.fai,
         references.gtf,
         references.chrom_sizes,
         references.gene_bed,

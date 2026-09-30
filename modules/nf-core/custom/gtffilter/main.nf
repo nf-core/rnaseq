@@ -11,7 +11,7 @@ process CUSTOM_GTFFILTER {
 
     input:
     record(id: String, meta: Map, gtf: Path)
-    tuple(meta2: Map, fasta: Path?)
+    fasta: Path?
 
     output:
     record(id: id, meta: meta, gtf: file("${prefix}.${suffix}"))

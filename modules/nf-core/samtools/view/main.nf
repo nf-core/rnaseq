@@ -11,9 +11,10 @@ process SAMTOOLS_VIEW {
 
     input:
     record(id: String, meta: Map, bam: Path, bai: Path?)
-    tuple(meta2: Map, fasta: Path?, fai: Path?)
-    tuple(meta3: Map, qname: Path?)
-    tuple(meta4: Map, bed: Path?)
+    fasta: Path?
+    fai: Path?
+    qname: Path?
+    bed: Path?
     index_format: String
 
     output:

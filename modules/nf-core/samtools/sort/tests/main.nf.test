@@ -20,12 +20,9 @@ nextflow_process {
                     meta: [ id:'test', single_end:false ],
                     raw_bams: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true)
                 ))
-                input[1] = channel.of([
-                    [ id:'fasta' ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)
-                ])
-                input[2] = ''
+                input[1] = channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true))
+                input[2] = channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true))
+                input[3] = ''
                 """
             }
         }
@@ -53,12 +50,9 @@ nextflow_process {
                     meta: [ id:'test', single_end:false ],
                     raw_bams: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true)
                 ))
-                input[1] = channel.of([
-                    [ id:'fasta' ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)
-                ])
-                input[2] = 'bai'
+                input[1] = channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true))
+                input[2] = channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true))
+                input[3] = 'bai'
                 """
             }
         }
@@ -86,12 +80,9 @@ nextflow_process {
                     meta: [ id:'test', single_end:false ],
                     raw_bams: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true)
                 ))
-                input[1] = channel.of([
-                    [ id:'fasta' ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)
-                ])
-                input[2] = 'csi'
+                input[1] = channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true))
+                input[2] = channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true))
+                input[3] = 'csi'
                 """
             }
         }
@@ -122,12 +113,9 @@ nextflow_process {
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.sorted.bam', checkIfExists: true)
                     ]
                 ))
-                input[1] = channel.of([
-                    [ id:'fasta' ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
-                ])
-                input[2] = ''
+                input[1] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
+                input[2] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true))
+                input[3] = ''
                 """
             }
         }
@@ -158,12 +146,9 @@ nextflow_process {
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.sorted.bam', checkIfExists: true)
                     ]
                 ))
-                input[1] = channel.of([
-                    [ id:'fasta' ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
-                ])
-                input[2] = 'bai'
+                input[1] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
+                input[2] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true))
+                input[3] = 'bai'
                 """
             }
         }
@@ -194,12 +179,9 @@ nextflow_process {
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.sorted.bam', checkIfExists: true)
                     ]
                 ))
-                input[1] = channel.of([
-                    [ id:'fasta' ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
-                ])
-                input[2] = 'csi'
+                input[1] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
+                input[2] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true))
+                input[3] = 'csi'
                 """
             }
         }
@@ -227,12 +209,9 @@ nextflow_process {
                     meta: [ id:'test', single_end:false ],
                     raw_bams: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true)
                 ))
-                input[1] = channel.of([
-                    [ id:'fasta' ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
-                ])
-                input[2] = ''
+                input[1] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
+                input[2] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true))
+                input[3] = ''
                 """
             }
         }
@@ -261,12 +240,9 @@ nextflow_process {
                     meta: [ id:'test', single_end:false ],
                     raw_bams: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true)
                 ))
-                input[1] = channel.of([
-                    [ id:'fasta' ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)
-                ])
-                input[2] = ''
+                input[1] = channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true))
+                input[2] = channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true))
+                input[3] = ''
                 """
             }
         }
@@ -294,12 +270,9 @@ nextflow_process {
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.sorted.bam', checkIfExists: true)
                     ]
                 ))
-                input[1] = channel.of([
-                    [ id:'fasta' ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
-                ])
-                input[2] = ''
+                input[1] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
+                input[2] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true))
+                input[3] = ''
                 """
             }
         }
@@ -325,12 +298,9 @@ nextflow_process {
                     meta: [ id:'test', single_end:false ],
                     raw_bams: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true)
                 ))
-                input[1] = channel.of([
-                    [ id:'fasta' ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
-                ])
-                input[2] = ''
+                input[1] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
+                input[2] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true))
+                input[3] = ''
                 """
             }
         }
@@ -355,12 +325,9 @@ nextflow_process {
                     meta: [ id:'test', single_end:false ],
                     raw_bams: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/pairtools/mock.sam', checkIfExists: true)
                 ))
-                input[1] = channel.of([
-                    [ id:'fasta' ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
-                ])
-                input[2] = ''
+                input[1] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
+                input[2] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true))
+                input[3] = ''
                 """
             }
         }

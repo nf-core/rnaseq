@@ -19,10 +19,8 @@ nextflow_process {
                     meta: [:],
                     reads: []
                 )
-                input[1] = [ [id:'test2'], // meta map
-                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true) ]
-                ]
-                input[2] = [[:], null]
+                input[1] = [ file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true) ]
+                input[2] = null
                 """
             }
         }
@@ -53,10 +51,8 @@ nextflow_process {
                     meta: [:],
                     reads: []
                 )
-                input[1] = [ [id:'test2'], // meta map
-                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true) ]
-                ]
-                input[2] = [[:], null]
+                input[1] = [ file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true) ]
+                input[2] = null
                 """
             }
         }
@@ -82,10 +78,8 @@ nextflow_process {
                     meta: [ id:'test' ],
                     reads: [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true) ]
                 )
-                input[1] = [ [id:'test2'], // meta map
-                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true) ]
-                ]
-                input[2] = [[:], null]
+                input[1] = [ file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true) ]
+                input[2] = null
                 """
             }
         }
@@ -125,10 +119,8 @@ nextflow_process {
                     meta: [ id:'test' ],
                     reads: [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true) ]
                 )
-                input[1] = [ [id:'test2'], // meta map
-                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true) ]
-                ]
-                input[2] = [[:], null]
+                input[1] = [ file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true) ]
+                input[2] = null
                 """
             }
         }
@@ -165,10 +157,8 @@ nextflow_process {
                         file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_2.fastq.gz", checkIfExists: true)
                     ]
                 )
-                input[1] = [ [id:'test2'], // meta map
-                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true) ]
-                ]
-                input[2] = [[:], null]
+                input[1] = [ file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true) ]
+                input[2] = null
                 """
             }
         }
@@ -212,10 +202,8 @@ nextflow_process {
                         file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_2.fastq.gz", checkIfExists: true)
                     ]
                 )
-                input[1] = [ [id:'test2'], // meta map
-                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true) ]
-                ]
-                input[2] = [[:], null]
+                input[1] = [ file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true) ]
+                input[2] = null
                 """
             }
         }
@@ -254,10 +242,8 @@ nextflow_process {
                         meta: [:],
                         reads: []
                     )
-                    input[1] = [ [id:'test2'], // meta map
-                        [ file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true) ]
-                    ]
-                    input[2] = [[:], null]
+                    input[1] = [ file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true) ]
+                    input[2] = null
                     """
                 }
             }
@@ -271,10 +257,8 @@ nextflow_process {
                     meta: [ id:'test' ],
                     reads: [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true) ]
                 )
-                input[1] = [ [id:'test2'], // meta map
-                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true) ]
-                ]
-                input[2] = SORTMERNA_INDEX.out.map { r -> [[:], r.index] }
+                input[1] = [ file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true) ]
+                input[2] = SORTMERNA_INDEX.out.map { r -> r.index }
                 """
             }
         }
@@ -317,10 +301,8 @@ nextflow_process {
                         meta: [:],
                         reads: []
                     )
-                    input[1] = [ [id:'test2'], // meta map
-                        [ file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true) ]
-                    ]
-                    input[2] = [[:], null]
+                    input[1] = [ file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true) ]
+                    input[2] = null
                     """
                 }
             }
@@ -334,10 +316,8 @@ nextflow_process {
                     meta: [ id:'test' ],
                     reads: [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true) ]
                 )
-                input[1] = [ [id:'test2'], // meta map
-                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true) ]
-                ]
-                input[2] = SORTMERNA_INDEX.out.map { r -> [[:], r.index] }
+                input[1] = [ file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true) ]
+                input[2] = SORTMERNA_INDEX.out.map { r -> r.index }
                 """
             }
         }

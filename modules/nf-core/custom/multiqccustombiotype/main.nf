@@ -11,7 +11,7 @@ process CUSTOM_MULTIQCCUSTOMBIOTYPE {
 
     input:
     record(id: String, meta: Map, counts: Path)
-    tuple(meta2: Map, header: Path)
+    header: Path
 
     output:
     record(

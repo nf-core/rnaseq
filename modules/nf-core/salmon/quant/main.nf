@@ -11,7 +11,9 @@ process SALMON_QUANT {
 
     input:
     record(id: String, meta: Map, reads: List<Path>)
-    tuple(meta2: Map, index: Path?, gtf: Path, transcript_fasta: Path?)
+    index: Path?
+    gtf: Path
+    transcript_fasta: Path?
 
     output:
     record(

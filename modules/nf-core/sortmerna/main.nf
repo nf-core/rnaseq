@@ -11,8 +11,8 @@ process SORTMERNA {
 
     input:
     record(id: String, meta: Map, reads: List<Path>)
-    tuple(meta2: Map, fastas: List<Path>)
-    tuple(meta3: Map, index: Path?)
+    fastas: List<Path>
+    index: Path?
 
     output:
     record(

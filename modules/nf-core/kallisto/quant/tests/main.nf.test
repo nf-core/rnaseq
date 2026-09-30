@@ -49,9 +49,11 @@ nextflow_process {
                     meta: [ id:'test', single_end:true ],
                     reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
                 ))
-                input[1] = KALLISTO_INDEX.out.map { r -> [ r.meta, r.index ] }.combine(channel.of([ null, null ]))
-                input[2] = fragment_length
-                input[3] = fragment_length_sd
+                input[1] = KALLISTO_INDEX.out.map { r -> r.index }
+                input[2] = null
+                input[3] = null
+                input[4] = fragment_length
+                input[5] = fragment_length_sd
                 """
             }
         }
@@ -79,9 +81,11 @@ nextflow_process {
                     meta: [ id:'test', single_end:false ],
                     reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true), file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
                 ))
-                input[1] = KALLISTO_INDEX.out.map { r -> [ r.meta, r.index ] }.combine(channel.of([ null, null ]))
-                input[2] = fragment_length
-                input[3] = fragment_length_sd
+                input[1] = KALLISTO_INDEX.out.map { r -> r.index }
+                input[2] = null
+                input[3] = null
+                input[4] = fragment_length
+                input[5] = fragment_length_sd
                 """
             }
         }
@@ -110,9 +114,11 @@ nextflow_process {
                     meta: [ id:'test', single_end:true ],
                     reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
                 ))
-                input[1] = KALLISTO_INDEX.out.map { r -> [ r.meta, r.index ] }.combine(channel.of([ null, null ]))
-                input[2] = fragment_length
-                input[3] = fragment_length_sd
+                input[1] = KALLISTO_INDEX.out.map { r -> r.index }
+                input[2] = null
+                input[3] = null
+                input[4] = fragment_length
+                input[5] = fragment_length_sd
                 """
             }
         }
@@ -144,9 +150,11 @@ nextflow_process {
                     meta: [ id:'test', single_end:true ],
                     reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
                 ))
-                input[1] = KALLISTO_INDEX_STUB.out.map { r -> [ r.meta, r.index ] }.combine(channel.of([ null, null ]))
-                input[2] = fragment_length
-                input[3] = fragment_length_sd
+                input[1] = KALLISTO_INDEX_STUB.out.map { r -> r.index }
+                input[2] = null
+                input[3] = null
+                input[4] = fragment_length
+                input[5] = fragment_length_sd
                 """
             }
         }
@@ -177,9 +185,11 @@ nextflow_process {
                     meta: [ id:'test', single_end:false ],
                     reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true), file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
                 ))
-                input[1] = KALLISTO_INDEX_STUB.out.map { r -> [ r.meta, r.index ] }.combine(channel.of([ null, null ]))
-                input[2] = fragment_length
-                input[3] = fragment_length_sd
+                input[1] = KALLISTO_INDEX_STUB.out.map { r -> r.index }
+                input[2] = null
+                input[3] = null
+                input[4] = fragment_length
+                input[5] = fragment_length_sd
                 """
             }
         }

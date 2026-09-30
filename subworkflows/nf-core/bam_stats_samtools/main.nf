@@ -13,10 +13,11 @@ include { SamtoolsStats      } from './types'
 workflow BAM_STATS_SAMTOOLS {
     take:
     ch_bam_bai: Channel<Bam>
-    ch_fasta_fai: Value<Tuple<Map, Path?, Path?>>
+    ch_fasta: Value<Path?>
+    ch_fai: Value<Path?>
 
     main:
-    ch_stats = SAMTOOLS_STATS(ch_bam_bai, ch_fasta_fai)
+    ch_stats = SAMTOOLS_STATS(ch_bam_bai, ch_fasta, ch_fai)
     ch_flagstat = SAMTOOLS_FLAGSTAT(ch_bam_bai)
     ch_idxstats = SAMTOOLS_IDXSTATS(ch_bam_bai)
 

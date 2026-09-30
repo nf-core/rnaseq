@@ -44,12 +44,11 @@ workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT {
 
     ch_tx2gene = CUSTOM_TX2GENE(
         ch_tx2gene_quants,
-        gtf.map { gtf_file -> tuple([:], gtf_file) },
+        gtf,
         quant_type,
         gtf_id_attribute,
         gtf_extra_attribute
     )
-    ch_tx2gene_ref = ch_tx2gene.collect().map { rs -> rs.isEmpty() ? null : tuple([:], rs.toSorted { r -> r.id }.first().tx2gene) }
     ch_tx2gene_file = ch_tx2gene.collect().map { rs -> rs.isEmpty() ? null : rs.toSorted { r -> r.id }.first().tx2gene }
 
     //
@@ -69,7 +68,7 @@ workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT {
             .flatMap { rs -> rs.isEmpty() ? [] : [ record(id: 'all_samples', meta: [id: 'all_samples'], quants: rs.collect { r -> r.quants[0] }.toSorted { f -> f.name }) ] }
     }
 
-    ch_tximport = TXIMETA_TXIMPORT(ch_tximport_input, ch_tx2gene_ref, quant_type)
+    ch_tximport = TXIMETA_TXIMPORT(ch_tximport_input, ch_tx2gene_file, quant_type)
 
     //
     // Build SummarizedExperiment objects (only when merging)
@@ -78,8 +77,6 @@ workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT {
         ch_se_gene       = ch_tximport.map { r -> record(id: r.id, merged_gene_rds: null) }
         ch_se_transcript = ch_tximport.map { r -> record(id: r.id, merged_transcript_rds: null) }
     } else {
-        ch_samplesheet_ref = samplesheet.map { f -> tuple([:], f) }
-
         //
         // Build gene-level SummarizedExperiment
         //
@@ -87,8 +84,8 @@ workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT {
             ch_tximport.map { r ->
                 record(id: r.id, meta: r.meta, matrix_files: [ r.counts_gene, r.counts_gene_length_scaled, r.counts_gene_scaled, r.lengths_gene, r.tpm_gene ])
             },
-            ch_tx2gene_ref,
-            ch_samplesheet_ref
+            ch_tx2gene_file,
+            samplesheet
         ).map { r -> record(id: r.id, merged_gene_rds: r.rds) }
 
         //
@@ -98,8 +95,8 @@ workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT {
             ch_tximport.map { r ->
                 record(id: r.id, meta: r.meta, matrix_files: [ r.counts_transcript, r.lengths_transcript, r.tpm_transcript ])
             },
-            ch_tximport.collect().map { rs -> rs.isEmpty() ? null : tuple(rs.toSorted { r -> r.id }.first().meta, rs.toSorted { r -> r.id }.first().tx2gene_augmented) },
-            ch_samplesheet_ref
+            ch_tximport.collect().map { rs -> rs.isEmpty() ? null : rs.toSorted { r -> r.id }.first().tx2gene_augmented },
+            samplesheet
         ).map { r -> record(id: r.id, merged_transcript_rds: r.rds) }
     }
 

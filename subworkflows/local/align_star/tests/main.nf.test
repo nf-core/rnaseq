@@ -17,10 +17,7 @@ nextflow_workflow {
                         meta: [ id:'test_fasta' ],
                         fasta: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
                     ))
-                    input[1] = channel.of([
-                        [ id:'test_gtf' ],
-                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
-                    ])
+                    input[1] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
                     """
                 }
             }
@@ -42,20 +39,14 @@ nextflow_workflow {
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
                 ))
-                input[1] = STAR_GENOMEGENERATE.out.map { r -> [r.meta, r.index] }
-                input[2] = channel.of([
-                    [ id:'test_gtf' ],
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
-                ])
+                input[1] = STAR_GENOMEGENERATE.out.map { r -> r.index }
+                input[2] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
                 input[3] = star_ignore_sjdbgtf
-                input[4] = channel.of([
-                    [ id:'test_fasta' ],
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
-                ])
-                input[5] = use_sentieon_star
-                input[6] = use_parabricks_star
-                input[7] = skip_markduplicates
+                input[4] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
+                input[5] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true))
+                input[6] = use_sentieon_star
+                input[7] = use_parabricks_star
+                input[8] = skip_markduplicates
                 """
             }
         }
@@ -104,10 +95,7 @@ nextflow_workflow {
                         meta: [ id:'test_fasta' ],
                         fasta: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
                     ))
-                    input[1] = channel.of([
-                        [ id:'test_gtf' ],
-                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
-                    ])
+                    input[1] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
                     """
                 }
             }
@@ -137,20 +125,14 @@ nextflow_workflow {
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
                 ))
-                input[1] = STAR_GENOMEPARAMS_UPGRADE.out.map { r -> [r.meta, r.index] }
-                input[2] = channel.of([
-                    [ id:'test_gtf' ],
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
-                ])
+                input[1] = STAR_GENOMEPARAMS_UPGRADE.out.map { r -> r.index }
+                input[2] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
                 input[3] = star_ignore_sjdbgtf
-                input[4] = channel.of([
-                    [ id:'test_fasta' ],
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
-                ])
-                input[5] = use_sentieon_star
-                input[6] = use_parabricks_star
-                input[7] = skip_markduplicates
+                input[4] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
+                input[5] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true))
+                input[6] = use_sentieon_star
+                input[7] = use_parabricks_star
+                input[8] = skip_markduplicates
                 """
             }
         }
@@ -195,10 +177,7 @@ nextflow_workflow {
                         meta: [ id:'test_fasta' ],
                         fasta: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
                     ))
-                    input[1] = channel.of([
-                        [ id:'test_gtf' ],
-                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
-                    ])
+                    input[1] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
                     """
                 }
             }
@@ -220,20 +199,14 @@ nextflow_workflow {
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
                 ))
-                input[1] = STAR_GENOMEGENERATE.out.map { r -> [r.meta, r.index] }
-                input[2] = channel.of([
-                    [ id:'test_gtf' ],
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
-                ])
+                input[1] = STAR_GENOMEGENERATE.out.map { r -> r.index }
+                input[2] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
                 input[3] = star_ignore_sjdbgtf
-                input[4] = channel.of([
-                    [ id:'test_fasta' ],
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
-                ])
-                input[5] = use_sentieon_star
-                input[6] = use_parabricks_star
-                input[7] = skip_markduplicates
+                input[4] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
+                input[5] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true))
+                input[6] = use_sentieon_star
+                input[7] = use_parabricks_star
+                input[8] = skip_markduplicates
                 """
             }
         }

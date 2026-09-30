@@ -11,8 +11,8 @@ process HISAT2_ALIGN {
 
     input:
     record(id: String, meta: Map, reads: List<Path>)
-    tuple(meta2: Map, index: Path)
-    tuple(meta3: Map, splicesites: Path?)
+    index: Path
+    splicesites: Path?
     save_unaligned: Boolean
 
     output:

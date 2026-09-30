@@ -14,11 +14,12 @@ include { MarkdupBam              } from './types'
 workflow BAM_MARKDUPLICATES_PICARD {
     take:
     ch_bam: Channel<Bam>
-    ch_fasta_fai: Value<Tuple<Map, Path?, Path?>>
+    ch_fasta: Value<Path?>
+    ch_fai: Value<Path?>
     run_stats: Boolean
 
     main:
-    ch_markdup = PICARD_MARKDUPLICATES(ch_bam, ch_fasta_fai)
+    ch_markdup = PICARD_MARKDUPLICATES(ch_bam, ch_fasta, ch_fai)
 
     // Picard writes exactly one of bam/cram per sample, matching the input format.
     ch_marked = ch_markdup.map { r -> record(id: r.id, meta: r.meta, bam: r.bam ?: r.cram) }
@@ -27,7 +28,7 @@ workflow BAM_MARKDUPLICATES_PICARD {
 
     def ch_stats: Channel<SamtoolsStats> = channel.empty()
     if (run_stats) {
-        ch_stats = BAM_STATS_SAMTOOLS(ch_marked.join(ch_index, by: 'id'), ch_fasta_fai)
+        ch_stats = BAM_STATS_SAMTOOLS(ch_marked.join(ch_index, by: 'id'), ch_fasta, ch_fai)
     }
 
     // remainder keeps samples without samtools stats when the caller disabled them.

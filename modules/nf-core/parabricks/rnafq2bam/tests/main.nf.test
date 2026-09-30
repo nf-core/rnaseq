@@ -22,10 +22,7 @@ nextflow_process {
                     meta: [ id:'minigenome_fasta' ],
                     fasta: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/minigenome.fa')
                 )
-                input[1] = [
-                    [ id:'minigenome_gtf' ],
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/minigenome.gtf')
-                ]
+                input[1] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/minigenome.gtf')
                 """
             }
         }
@@ -46,11 +43,8 @@ nextflow_process {
                     meta: [ id:'test', single_end:true ],
                     reads: [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/test_starfusion_rnaseq_1.fastq.gz', checkIfExists: true) ]
                 ))
-                input[1] = Channel.of([
-                    [ id:'test' ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
-                ])
-                input[2] = STAR_GENOMEGENERATE.out.map { r -> [r.meta, r.index] }
+                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
+                input[2] = STAR_GENOMEGENERATE.out.map { r -> r.index }
                 input[3] = false
                 input[4] = false
                 """
@@ -84,11 +78,8 @@ nextflow_process {
                     meta: [ id:'test', single_end:true ],
                     reads: [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/test_starfusion_rnaseq_1.fastq.gz', checkIfExists: true) ]
                 ))
-                input[1] = Channel.of([
-                    [ id:'test' ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/minigenome.fa', checkIfExists: true)
-                ])
-                input[2] = STAR_GENOMEGENERATE.out.map { r -> [r.meta, r.index] }
+                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/minigenome.fa', checkIfExists: true))
+                input[2] = STAR_GENOMEGENERATE.out.map { r -> r.index }
                 input[3] = false
                 input[4] = false
                 """
@@ -116,11 +107,8 @@ nextflow_process {
                      meta: [ id:'test', single_end:true ],
                      reads: [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/test_starfusion_rnaseq_1.fastq.gz', checkIfExists: true) ]
                  ))
-                input[1] = Channel.of([
-                    [ id:'test' ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
-                ])
-                input[2] = STAR_GENOMEGENERATE.out.map { r -> [r.meta, r.index] }
+                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
+                input[2] = STAR_GENOMEGENERATE.out.map { r -> r.index }
                 input[3] = false
                 input[4] = false
                 """
@@ -155,11 +143,8 @@ nextflow_process {
                      meta: [ id:'test', single_end:true ],
                      reads: [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/test_starfusion_rnaseq_1.fastq.gz', checkIfExists: true) ]
                  ))
-                input[1] = Channel.of([
-                    [ id:'test' ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
-                ])
-                input[2] = STAR_GENOMEGENERATE.out.map { r -> [r.meta, r.index] }
+                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
+                input[2] = STAR_GENOMEGENERATE.out.map { r -> r.index }
                 input[3] = false
                 input[4] = false
                 """

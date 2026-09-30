@@ -11,8 +11,8 @@ process SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT {
 
     input:
     record(id: String, meta: Map, matrix_files: List<Path>)
-    tuple(meta2: Map, rowdata: Path?)
-    tuple(meta3: Map, coldata: Path?)
+    rowdata: Path?
+    coldata: Path?
 
     output:
     record(

@@ -25,24 +25,17 @@ nextflow_workflow {
                     bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam', checkIfExists: true),
                     bai: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam.bai', checkIfExists: true)
                 )
-                input[1] = [
-                    [id:'genome'],
-                    file(params.modules_testdata_base_path + '/genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
-                    file(params.modules_testdata_base_path + '/genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)
-                ]
-                input[2] = 'umitools'
-                input[3] = false
-                input[4] = record(
+                input[1] = file(params.modules_testdata_base_path + '/genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                input[2] = file(params.modules_testdata_base_path + '/genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)
+                input[3] = 'umitools'
+                input[4] = false
+                input[5] = record(
                     id: 'test',
                     meta: [ id:'test'],
                     transcriptome_bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam', checkIfExists: true)
                 )
-                input[5] = [
-                    [id:'genome'],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true),
-                    []
-                ]
-                input[6] = false
+                input[6] = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true)
+                input[7] = false
                 """
             }
         }
@@ -76,16 +69,13 @@ nextflow_workflow {
                     bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam', checkIfExists: true),
                     bai: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam.bai', checkIfExists: true)
                 )
-                input[1] = [
-                    [id:'genome'],
-                    file(params.modules_testdata_base_path + '/genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
-                    file(params.modules_testdata_base_path + '/genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)
-                ]
-                input[2] = 'umicollapse'
-                input[3] = false
-                input[4] = Channel.empty()
+                input[1] = file(params.modules_testdata_base_path + '/genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                input[2] = file(params.modules_testdata_base_path + '/genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)
+                input[3] = 'umicollapse'
+                input[4] = false
                 input[5] = Channel.empty()
-                input[6] = false
+                input[6] = null
+                input[7] = false
                 """
             }
         }

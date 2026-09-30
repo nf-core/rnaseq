@@ -19,10 +19,7 @@ nextflow_process {
                     meta: [ id:'test', single_end:true, strandedness:'forward' ],
                     bam: file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.single_end.bam", checkIfExists: true)
                 )
-                input[1] = [
-                    [ id:'sarscov2' ],
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
-                ]
+                input[1] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
                 """
             }
         }
@@ -52,10 +49,7 @@ nextflow_process {
                     meta: [ id:'test', single_end:true, strandedness:'forward' ],
                     bam: file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.single_end.bam", checkIfExists: true)
                 )
-                input[1] = [
-                    [ id:'sarscov2' ],
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
-                ]
+                input[1] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
                 """
             }
         }
@@ -79,10 +73,7 @@ nextflow_process {
                     meta: [ id:'test', single_end:true, strandedness:'reverse' ],
                     bam: file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.single_end.bam", checkIfExists: true)
                 )
-                input[1] = [
-                    [ id:'sarscov2' ],
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
-                ]
+                input[1] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
                 """
             }
         }
@@ -112,10 +103,7 @@ nextflow_process {
                     meta: [ id:'test', single_end:true, strandedness:'reverse' ],
                     bam: file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.single_end.bam", checkIfExists: true)
                 )
-                input[1] = [
-                    [ id:'sarscov2' ],
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
-                ]
+                input[1] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
                 """
             }
         }
@@ -139,10 +127,7 @@ nextflow_process {
                     meta: [ id:'test', single_end:true, strandedness:'unstranded' ],
                     bam: file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.single_end.bam", checkIfExists: true)
                 )
-                input[1] = [
-                    [ id:'sarscov2' ],
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
-                ]
+                input[1] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
                 """
             }
         }
@@ -172,10 +157,7 @@ nextflow_process {
                     meta: [ id:'test', single_end:true, strandedness:'unstranded' ],
                     bam: file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.single_end.bam", checkIfExists: true)
                 )
-                input[1] = [
-                    [ id:'sarscov2' ],
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
-                ]
+                input[1] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
                 """
             }
         }

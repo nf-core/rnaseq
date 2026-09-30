@@ -83,8 +83,8 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     ch_transcript_fasta: Value<Path> // transcript.fasta
     ch_gtf: Value<Path> // genome.gtf
     ch_salmon_index: Value<Path> // salmon/index/ (optional)
-    ch_sortmerna_index: Value<Tuple<Map, Path>> // sortmerna/index/ (optional)
-    ch_bowtie2_index: Value<Tuple<Map, Path>> // bowtie2/index/ (optional)
+    ch_sortmerna_index: Value<Path> // sortmerna/index/ (optional)
+    ch_bowtie2_index: Value<Path> // bowtie2/index/ (optional)
     ch_bbsplit_index: Value<Path> // bbsplit/index/ (optional)
     ch_rrna_fastas: Channel<Path> // one or more fasta files containing rrna sequences to be passed to SortMeRNA/Bowtie2 (optional)
 

@@ -1,9 +1,12 @@
-// Record types shared by modules, subworkflows and the pipeline.
+// Record types shared across modules, subworkflows and the pipeline: the common input vocabulary
+// (ReadsInput, BamBaiInput, ...), pipeline-level and subworkflow records, and the sub-records they
+// nest. Types specific to one module (its Input type and the Result type describing its output)
+// are declared in that module's main.nf and imported from there.
 // Documentation only: nothing casts a record(...) to these types (nextflow-io/nextflow#7680 corrupts remote Path fields on cast).
 //
-// A module takes its record input as `sample: <Type>` with a type from this file (bound as one
-// variable, so scripts and task.ext closures read sample.meta, sample.bam ...). The *Result types
-// describe module outputs, for annotating the channels a process call returns.
+// A module takes its record input as `sample: <Type>` (bound as one variable, so scripts and
+// task.ext closures read sample.meta, sample.bam ...). Result types annotate the channels a
+// process call returns.
 
 // ============================================================================
 // Shared vocabulary

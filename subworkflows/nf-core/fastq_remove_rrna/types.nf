@@ -6,9 +6,7 @@ record Reads {
 }
 
 // `reads` is null for samples with no reads left after rRNA removal. The tool
-// logs are set only for the selected tool. The last four fields are run-level
-// and repeated on every sample: each is set only when the reference is built
-// here, and empty otherwise.
+// logs are set only for the selected tool.
 record FastqRemoveRrna {
     id:               String
     meta:             Map
@@ -17,6 +15,10 @@ record FastqRemoveRrna {
     ribodetector_log: Path?
     seqkit_stats:     Path?
     bowtie2_log:      Path?
+}
+
+// Run-level references, each set only when it is built here.
+record RrnaReferences {
     sortmerna_index:  Path?
     bowtie2_index:    Path?
     seqkit_prefixed:  List<Path>?

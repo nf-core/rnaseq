@@ -11,7 +11,7 @@ include { FASTQ_REMOVE_RRNA                     } from '../fastq_remove_rrna'
 include { FASTQ_SUBSAMPLE_FQ_SALMON             } from '../fastq_subsample_fq_salmon'
 include { FASTQ_FASTQC_UMITOOLS_TRIMGALORE      } from '../fastq_fastqc_umitools_trimgalore'
 include { FASTQ_FASTQC_UMITOOLS_FASTP           } from '../fastq_fastqc_umitools_fastp'
-include { Reads; FastqQcTrimFilterSetstrandedness } from './types'
+include { Reads; FastqQcTrimFilterSetstrandedness; RrnaReferences } from './types'
 
 //
 // Function to determine library type by comparing type counts.
@@ -193,7 +193,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
                     id:                r.id,
                     meta:              r.meta,
                     reads:             r.reads,
-                    num_trimmed_reads: r.num_trimmed_reads != null ? r.num_trimmed_reads as Long : null,
+                    num_trimmed_reads: r.num_trimmed_reads,
                     fastqc_raw_html:   r.fastqc_raw_html,
                     fastqc_raw_zip:    r.fastqc_raw_zip,
                     fastqc_trim_html:  r.trim != null ? r.trim.html : null,
@@ -299,8 +299,11 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     //
     // SUBWORKFLOW: Remove ribosomal RNA reads
     //
+    val_rrna_references = channel.value(
+        record(sortmerna_index: null, bowtie2_index: null, seqkit_prefixed: null, seqkit_converted: null)
+    )
     if (remove_ribo_rna) {
-        ch_rrna = FASTQ_REMOVE_RRNA(
+        ch_rrna_removed = FASTQ_REMOVE_RRNA(
             ch_samples.filter { r -> r.reads != null },
             ch_rrna_fastas,
             ch_sortmerna_index,
@@ -310,8 +313,10 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
             make_bowtie2_index,
         )
 
+        val_rrna_references = ch_rrna_removed.references
+
         ch_samples = ch_samples.join(
-            ch_rrna.map { r ->
+            ch_rrna_removed.samples.map { r ->
                 record(
                     id:    r.id,
                     reads: r.reads,
@@ -319,11 +324,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
                         sortmerna_log:    r.sortmerna_log,
                         ribodetector_log: r.ribodetector_log,
                         seqkit_stats:     r.seqkit_stats,
-                        bowtie2_log:      r.bowtie2_log,
-                        sortmerna_index:  r.sortmerna_index,
-                        bowtie2_index:    r.bowtie2_index,
-                        seqkit_prefixed:  r.seqkit_prefixed,
-                        seqkit_converted: r.seqkit_converted
+                        bowtie2_log:      r.bowtie2_log
                     )
                 )
             },
@@ -431,9 +432,9 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
                 rrna:              r.rrna
             )
         }
-        .combine(ch_salmon_index_built)
-        .map { r, built -> r + record(salmon_index_built: built) }
 
     emit:
-    ch_results // channel: FastqQcTrimFilterSetstrandedness
+    samples: Channel<FastqQcTrimFilterSetstrandedness> = ch_results
+    rrna_references: Value<RrnaReferences> = val_rrna_references
+    salmon_index_built: Value<Path?> = ch_salmon_index_built
 }

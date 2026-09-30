@@ -45,13 +45,16 @@ record PreprocessedLint {
     ribo:    Path?
 }
 
-// The tool logs are set only for the selected tool. The last four fields are
-// run-level references, repeated on every sample and set only when built here.
+// The tool logs are set only for the selected tool.
 record PreprocessedRrna {
     sortmerna_log:    Path?
     ribodetector_log: Path?
     seqkit_stats:     Path?
     bowtie2_log:      Path?
+}
+
+// Run-level references, each set only when it is built here.
+record RrnaReferences {
     sortmerna_index:  Path?
     bowtie2_index:    Path?
     seqkit_prefixed:  List<Path>?
@@ -60,20 +63,17 @@ record PreprocessedRrna {
 
 // Samples that fail min_trimmed_reads keep their record with null reads and
 // reads_trimmed, and a meta that lacks the inferred strandedness.
-// salmon_index_built is run-level, repeated on every sample and set only when
-// the Salmon index is built here.
 record FastqQcTrimFilterSetstrandedness {
     id:                String
     meta:              Map
     reads:             List<Path>?
     reads_cat:         List<Path>
     reads_trimmed:     List<Path>?
-    num_trimmed_reads: Long?
+    num_trimmed_reads: Long?  // Float for TrimGalore, Long for fastp
     fastqc:            PreprocessedFastqc?
     trim:              PreprocessedTrim?
     umi:               PreprocessedUmi?
     bbsplit:           PreprocessedBbsplit?
     lint:              PreprocessedLint?
     rrna:              PreprocessedRrna?
-    salmon_index_built: Path?
 }

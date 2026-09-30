@@ -2,6 +2,7 @@ nextflow.enable.types = true
 
 include { BOWTIE2_ALIGN                            } from '../../../modules/nf-core/bowtie2/align'
 include { BOWTIE2_ALIGN as BOWTIE2_ALIGN_PE        } from '../../../modules/nf-core/bowtie2/align'
+include { CONCATENATE_FASTA                       } from '../../../modules/local/concatenate_fasta'
 include { BOWTIE2_BUILD                            } from '../../../modules/nf-core/bowtie2/build'
 include { RIBODETECTOR                             } from '../../../modules/nf-core/ribodetector'
 include { SAMTOOLS_FASTQ as SAMTOOLS_FASTQ_BOWTIE2 } from '../../../modules/nf-core/samtools/fastq'
@@ -11,7 +12,7 @@ include { SEQKIT_REPLACE as SEQKIT_REPLACE_U2T     } from '../../../modules/nf-c
 include { SEQKIT_STATS                             } from '../../../modules/nf-core/seqkit/stats'
 include { SORTMERNA                                } from '../../../modules/nf-core/sortmerna'
 include { SORTMERNA as SORTMERNA_INDEX             } from '../../../modules/nf-core/sortmerna'
-include { Reads; FastqRemoveRrna                   } from './types'
+include { Reads; FastqRemoveRrna; RrnaReferences   } from './types'
 
 //
 // Function that parses seqkit stats TSV output to extract the mean read length
@@ -36,21 +37,6 @@ def getReadLengthFromSeqkitStats(stats_file) {
     return Math.round(meanAvgLen) as int
 }
 
-process CONCATENATE_FASTA {
-    input:
-    fastas: List<Path>
-
-    output:
-    file('rrna_combined_dna.fasta')
-
-    exec:
-    def combined = task.workDir.resolve('rrna_combined_dna.fasta')
-    fastas.each { f ->
-        combined << f.text
-        combined << '\n'
-    }
-}
-
 workflow FASTQ_REMOVE_RRNA {
     take:
     ch_reads: Channel<Reads>
@@ -63,7 +49,7 @@ workflow FASTQ_REMOVE_RRNA {
 
     main:
 
-    // Run-level references built here, attached to every sample record at the end
+    // Run-level references built here, emitted separately from the per-sample results
     val_refs = channel.value(
         record(sortmerna_index: null, bowtie2_index: null, seqkit_prefixed: null, seqkit_converted: null)
     )
@@ -104,8 +90,6 @@ workflow FASTQ_REMOVE_RRNA {
                     bowtie2_log:      null
                 )
             }
-            .combine(val_refs)
-            .map { r, refs -> r + refs }
     }
     else if (ribo_removal_tool == 'ribodetector') {
         // Run seqkit stats to determine average read length
@@ -130,8 +114,6 @@ workflow FASTQ_REMOVE_RRNA {
                     bowtie2_log:      null
                 )
             }
-            .combine(val_refs)
-            .map { r, refs -> r + refs }
     }
     else {
         ch_bowtie2_idx = ch_bowtie2_index
@@ -153,12 +135,12 @@ workflow FASTQ_REMOVE_RRNA {
 
             // Collect processed files (already prefixed and U->T converted)
             ch_combined_fasta = CONCATENATE_FASTA(
-                ch_seqkit_converted.collect().map { built -> built.collect { r -> r.fastx }.toSorted { f -> f.name } }
-            ).map { fasta_file -> tuple([id: 'rrna_refs'], fasta_file) }
-
-            ch_bowtie2_built = BOWTIE2_BUILD(
-                ch_combined_fasta.map { meta, fasta_file -> record(id: meta.id, meta: meta, fasta: fasta_file) }
+                ch_seqkit_converted.collect().map { built ->
+                    record(id: 'rrna_refs', meta: [id: 'rrna_refs'], fastas: built.collect { r -> r.fastx }.toSorted { f -> f.name })
+                }
             )
+
+            ch_bowtie2_built = BOWTIE2_BUILD(ch_combined_fasta)
             ch_bowtie2_idx = ch_bowtie2_built.map { built -> tuple(built.meta, built.index) }
             val_seqkit_prefixed = ch_seqkit_prefixed
                 .collect()
@@ -234,10 +216,9 @@ workflow FASTQ_REMOVE_RRNA {
 
         ch_results = ch_bowtie2_logs
             .join(ch_filtered_reads, by: 'id', remainder: true)
-            .combine(val_refs)
-            .map { r, refs -> r + refs }
     }
 
     emit:
-    ch_results // channel: FastqRemoveRrna
+    samples: Channel<FastqRemoveRrna> = ch_results
+    references: Value<RrnaReferences> = val_refs
 }

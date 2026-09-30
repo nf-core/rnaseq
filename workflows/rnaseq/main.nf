@@ -259,7 +259,7 @@ workflow RNASEQ {
         params.unstranded_threshold                 // unstranded_threshold
     )
 
-    ch_preprocessed = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out
+    ch_preprocessed = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.samples
 
     // BEGIN adapters from the FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS record to legacy tuple channels; removed once the consumers below are typed
     ch_multiqc_files = ch_multiqc_files.mix(
@@ -303,13 +303,7 @@ workflow RNASEQ {
 
     // Run-level rRNA references, built by FASTQ_REMOVE_RRNA from the rRNA
     // FASTAs only when no bowtie2 rRNA index was supplied
-    ch_rrna_references = channel.value(record(bowtie2_index: null, seqkit_prefixed: null, seqkit_converted: null))
-    if (make_bowtie2_index) {
-        ch_rrna_references = ch_preprocessed
-            .filter { r -> r.rrna != null }
-            .map { r -> record(bowtie2_index: r.rrna.bowtie2_index, seqkit_prefixed: r.rrna.seqkit_prefixed, seqkit_converted: r.rrna.seqkit_converted) }
-            .first()
-    }
+    ch_rrna_references = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.rrna_references
 
     ch_trim_status = ch_trim_read_count
         .map {

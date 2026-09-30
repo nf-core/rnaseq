@@ -1,7 +1,9 @@
 nextflow.enable.types = true
 
+include { ReadsInput } from '../types'
+
 process TRIMGALORE {
-    tag "${meta.id}"
+    tag "${sample.meta.id}"
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
@@ -10,12 +12,12 @@ process TRIMGALORE {
         'community.wave.seqera.io/library/trim-galore:2.3.0--6a38a479b4972363'}"
 
     input:
-    record(id: String, meta: Map, reads: List<Path>)
+    sample: ReadsInput
 
     output:
     record(
-        id:       id,
-        meta:     meta,
+        id:       sample.id,
+        meta:     sample.meta,
         reads:    files("*{3prime,5prime,trimmed,val}{,_1,_2}.fq.gz").toSorted { f -> f.name },
         log:      files("*report.txt", optional: true).toSorted { f -> f.name },
         json:     files("*report.json", optional: true).toSorted { f -> f.name },
@@ -35,7 +37,7 @@ process TRIMGALORE {
     def cores = 1
     if (task.cpus) {
         cores = (task.cpus as int) - 4
-        if (meta.single_end) {
+        if (sample.meta.single_end) {
             cores = (task.cpus as int) - 3
         }
         if (cores < 1) {
@@ -47,11 +49,11 @@ process TRIMGALORE {
     }
 
     // Added soft-links to original fastqs for consistent naming in MultiQC
-    def prefix = task.ext.prefix ?: "${meta.id}"
-    if (meta.single_end) {
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
+    if (sample.meta.single_end) {
         def args_list = args.replaceAll('\\s(?=--)', '\u0001').tokenize('\u0001').findAll { arg -> !arg.toLowerCase().contains('_r2 ') }
         """
-        [ ! -f  ${prefix}.fastq.gz ] && ln -s ${reads[0]} ${prefix}.fastq.gz
+        [ ! -f  ${prefix}.fastq.gz ] && ln -s ${sample.reads[0]} ${prefix}.fastq.gz
         trim_galore \\
             ${args_list.join(' ')} \\
             --cores ${cores} \\
@@ -61,8 +63,8 @@ process TRIMGALORE {
     }
     else {
         """
-        [ ! -f  ${prefix}_1.fastq.gz ] && ln -s ${reads[0]} ${prefix}_1.fastq.gz
-        [ ! -f  ${prefix}_2.fastq.gz ] && ln -s ${reads[1]} ${prefix}_2.fastq.gz
+        [ ! -f  ${prefix}_1.fastq.gz ] && ln -s ${sample.reads[0]} ${prefix}_1.fastq.gz
+        [ ! -f  ${prefix}_2.fastq.gz ] && ln -s ${sample.reads[1]} ${prefix}_2.fastq.gz
         trim_galore \\
             ${args} \\
             --cores ${cores} \\
@@ -74,9 +76,9 @@ process TRIMGALORE {
     }
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     output_command = ''
-    if (meta.single_end) {
+    if (sample.meta.single_end) {
         output_command = "echo '' | gzip > ${prefix}_trimmed.fq.gz ;"
         output_command += "touch ${prefix}.fastq.gz_trimming_report.txt ;"
         output_command += "touch ${prefix}.fastq.gz_trimming_report.json"

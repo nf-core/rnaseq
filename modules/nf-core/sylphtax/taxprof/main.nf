@@ -1,7 +1,9 @@
 nextflow.enable.types = true
 
+include { SylphtaxTaxprofInput } from '../../types'
+
 process SYLPHTAX_TAXPROF {
-    tag "${meta.id}"
+    tag "${sample.meta.id}"
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
@@ -10,24 +12,24 @@ process SYLPHTAX_TAXPROF {
         : 'quay.io/biocontainers/sylph-tax:1.9.0--pyhdfd78af_0'}"
 
     input:
-    record(id: String, meta: Map, profile_out: Path)
+    sample: SylphtaxTaxprofInput
     taxonomy: List<Path>
 
     output:
-    record(id: id, meta: meta, taxprof_output: file('*.sylphmpa'))
+    record(id: sample.id, meta: sample.meta, taxprof_output: file('*.sylphmpa'))
 
     topic:
     tuple(task.process, 'sylph-tax', eval("sylph-tax --version 2>&1 | tail -1")) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
 
     """
     export SYLPH_TAXONOMY_CONFIG="/tmp/config.json"
     sylph-tax \\
         taxprof \\
-        ${profile_out} \\
+        ${sample.profile_out} \\
         ${args} \\
         -t ${taxonomy.join(' ')}
 
@@ -35,7 +37,7 @@ process SYLPHTAX_TAXPROF {
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     touch ${prefix}.sylphmpa
     """

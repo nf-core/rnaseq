@@ -1386,7 +1386,7 @@ record StringtieMerged {
     id:         String
     meta:       Map
     gtf:        List<Path>
-    assemblies: List<StringtieAssembly>
+    assemblies: Bag<StringtieAssembly>
     merged_gtf: Path
 }
 

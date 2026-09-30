@@ -6,7 +6,7 @@ nextflow.enable.types = true
 
 include { UCSC_BEDCLIP          } from '../../../modules/nf-core/ucsc/bedclip/main'
 include { UCSC_BEDGRAPHTOBIGWIG } from '../../../modules/nf-core/ucsc/bedgraphtobigwig/main'
-include { BedgraphInput; BigwigFiles } from '../../../modules/nf-core/types'
+include { BedgraphInput; BigwigFiles; UcscBedclipResult; UcscBedgraphtobigwigResult } from '../../../modules/nf-core/types'
 
 workflow BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG {
     take:
@@ -18,14 +18,14 @@ workflow BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG {
     //
     // Clip bedGraph file
     //
-    ch_clipped = UCSC_BEDCLIP(ch_bedgraph, sizes)
+    def ch_clipped: Channel<UcscBedclipResult> = UCSC_BEDCLIP(ch_bedgraph, sizes)
 
     //
     // Convert bedGraph to bigWig
     //
-    ch_bigwig = UCSC_BEDGRAPHTOBIGWIG(ch_clipped, sizes)
+    def ch_bigwig: Channel<UcscBedgraphtobigwigResult> = UCSC_BEDGRAPHTOBIGWIG(ch_clipped, sizes)
 
-    ch_results = ch_clipped.join(ch_bigwig, by: 'id')
+    def ch_results: Channel<BigwigFiles> = ch_clipped.join(ch_bigwig, by: 'id')
 
     emit:
     ch_results

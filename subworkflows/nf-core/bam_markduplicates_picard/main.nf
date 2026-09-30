@@ -7,7 +7,7 @@ nextflow.enable.types = true
 include { PICARD_MARKDUPLICATES } from '../../../modules/nf-core/picard/markduplicates/main'
 include { SAMTOOLS_INDEX        } from '../../../modules/nf-core/samtools/index/main'
 include { BAM_STATS_SAMTOOLS    } from '../bam_stats_samtools/main'
-include { SamtoolsStats; Bam; MarkdupBam } from '../../../modules/nf-core/types'
+include { SamtoolsStats; Bam; MarkdupBam; PicardMarkduplicatesResult; SamtoolsIndexResult } from '../../../modules/nf-core/types'
 
 workflow BAM_MARKDUPLICATES_PICARD {
     take:
@@ -17,12 +17,12 @@ workflow BAM_MARKDUPLICATES_PICARD {
     run_stats: Boolean
 
     main:
-    ch_markdup = PICARD_MARKDUPLICATES(ch_bam, ch_fasta, ch_fai)
+    def ch_markdup: Channel<PicardMarkduplicatesResult> = PICARD_MARKDUPLICATES(ch_bam, ch_fasta, ch_fai)
 
     // Picard writes exactly one of bam/cram per sample, matching the input format.
     ch_marked = ch_markdup.map { r -> record(id: r.id, meta: r.meta, bam: r.bam ?: r.cram) }
 
-    ch_index = SAMTOOLS_INDEX(ch_marked)
+    def ch_index: Channel<SamtoolsIndexResult> = SAMTOOLS_INDEX(ch_marked)
 
     def ch_stats: Channel<SamtoolsStats> = channel.empty()
     if (run_stats) {
@@ -30,7 +30,7 @@ workflow BAM_MARKDUPLICATES_PICARD {
     }
 
     // remainder keeps samples without samtools stats when the caller disabled them.
-    ch_results = ch_markdup
+    def ch_results: Channel<MarkdupBam> = ch_markdup
         .join(ch_index, by: 'id')
         .join(ch_stats, by: 'id', remainder: true)
 

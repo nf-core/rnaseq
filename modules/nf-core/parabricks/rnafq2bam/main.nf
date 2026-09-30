@@ -1,7 +1,9 @@
 nextflow.enable.types = true
 
+include { ReadsInput } from '../../types'
+
 process PARABRICKS_RNAFQ2BAM {
-    tag "${meta.id}"
+    tag "${sample.meta.id}"
     label 'process_high'
     label 'process_gpu'
     // needed by the module to work properly can be removed when fixed upstream - see: https://github.com/nf-core/modules/issues/7226
@@ -10,7 +12,7 @@ process PARABRICKS_RNAFQ2BAM {
     container "nvcr.io/nvidia/clara/clara-parabricks:4.7.1-1"
 
     input:
-    record(id: String, meta: Map, reads: List<Path>)
+    sample: ReadsInput
     fasta: Path
     index: Path
     qc_metrics: Boolean
@@ -18,8 +20,8 @@ process PARABRICKS_RNAFQ2BAM {
 
     output:
     record(
-        id:                id,
-        meta:              meta,
+        id:                sample.id,
+        meta:              sample.meta,
         raw_bams:          files("${prefix}.bam", optional: true).toSorted { f -> f.name },
         bam_sorted:        file("${prefix}.sortedByCoord.out.bam", optional: true),
         bam_sorted_aligned: file("${prefix}.Aligned.sortedByCoord.out.bam", optional: true),
@@ -52,9 +54,9 @@ process PARABRICKS_RNAFQ2BAM {
         error("Parabricks module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
     def args = task.ext.args ?: ''
-    prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${sample.meta.id}"
 
-    def in_fq_command = meta.single_end ? "--in-se-fq ${reads.join(' ')}" : "--in-fq ${reads.join(' ')}"
+    def in_fq_command = sample.meta.single_end ? "--in-se-fq ${sample.reads.join(' ')}" : "--in-fq ${sample.reads.join(' ')}"
     def num_gpus = task.accelerator ? "--num-gpus ${task.accelerator.request}" : ''
 
     def qc_metrics_command = qc_metrics ? "--out-qc-metrics-dir ${prefix}_qc_metrics" : ""
@@ -81,7 +83,7 @@ process PARABRICKS_RNAFQ2BAM {
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
         error("Parabricks module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
-    prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${sample.meta.id}"
     def qc_metrics_output = qc_metrics ? "mkdir ${prefix}_qc_metrics" : ""
     def duplicate_metrics_output = mark_duplicates ? "touch ${prefix}.duplicate-metrics.txt" : ""
     """

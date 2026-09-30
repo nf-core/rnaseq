@@ -25,7 +25,7 @@ process BBMAP_BBSPLIT {
         id:                 id,
         meta:               meta,
         index:              file('bbsplit_index', optional: true),
-        primary_reads:      files('*primary*fastq.gz', optional: true).toSorted { f -> f.name },
+        reads:              files('*primary*fastq.gz', optional: true).toSorted { f -> f.name },
         other_genome_reads: files('*fastq.gz', optional: true).findAll { f -> !f.name.contains('primary') }.toSorted { f -> f.name },
         stats:              file('*txt', optional: true),
         log:                file('*.log', optional: true)

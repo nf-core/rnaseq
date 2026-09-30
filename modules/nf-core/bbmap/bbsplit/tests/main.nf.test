@@ -116,7 +116,7 @@ nextflow_process {
                 { assert process.success },
                 { assert path(bb.log).text.contains("If you wish to regenerate the index") },
                 { assert snapshot(
-                    bb.primary_reads,
+                    bb.reads,
                     bb.stats
                 ).match()}
             )

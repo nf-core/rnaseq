@@ -198,7 +198,7 @@ workflow FASTQ_REMOVE_RRNA {
         ch_filtered_reads = ch_bowtie2_se
             .filter { r -> !r.unmapped.isEmpty() }
             .map { r -> record(id: r.id, reads: r.unmapped) }
-            .mix(ch_fastq_pe.filter { r -> !r.reads.isEmpty() }.map { r -> record(id: r.id, reads: r.reads) })
+            .mix(ch_fastq_pe.filter { r -> !r.reads.isEmpty() })
 
         ch_bowtie2_logs = ch_bowtie2_se
             .mix(ch_bowtie2_pe)

@@ -189,19 +189,12 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         // TrimGalore's own html and zip are FastQC reports on the trimmed reads
         ch_samples = ch_samples.join(
             ch_trimgalore.map { r ->
-                record(
-                    id:                r.id,
-                    meta:              r.meta,
-                    reads:             r.reads,
-                    num_trimmed_reads: r.num_trimmed_reads,
-                    fastqc_raw_html:   r.fastqc_raw_html,
-                    fastqc_raw_zip:    r.fastqc_raw_zip,
-                    fastqc_trim_html:  r.trim != null ? r.trim.html : null,
-                    fastqc_trim_zip:   r.trim != null ? r.trim.zip : null,
+                r + record(
+                    fastqc_trim_html: r.trim != null ? r.trim.html : null,
+                    fastqc_trim_zip:  r.trim != null ? r.trim.zip : null,
                     trim: r.trim != null
                         ? record(html: null, log: r.trim.log, json: r.trim.json, unpaired: r.trim.unpaired, reads_fail: null, reads_merged: null)
-                        : null,
-                    umi:               r.umi
+                        : null
                 )
             },
             by: 'id'
@@ -226,19 +219,10 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
 
         ch_samples = ch_samples.join(
             ch_fastp.map { r ->
-                record(
-                    id:                r.id,
-                    meta:              r.meta,
-                    reads:             r.reads,
-                    num_trimmed_reads: r.num_trimmed_reads,
-                    fastqc_raw_html:   r.fastqc_raw_html,
-                    fastqc_raw_zip:    r.fastqc_raw_zip,
-                    fastqc_trim_html:  r.fastqc_trim_html,
-                    fastqc_trim_zip:   r.fastqc_trim_zip,
+                r + record(
                     trim: r.trim != null
                         ? record(html: [r.trim.html], log: [r.trim.log], json: [r.trim.json], unpaired: null, reads_fail: r.trim.reads_fail, reads_merged: r.trim.reads_merged)
-                        : null,
-                    umi:               r.umi
+                        : null
                 )
             },
             by: 'id'
@@ -272,12 +256,12 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
             ch_bbsplit.map { r ->
                 record(
                     id:      r.id,
-                    reads:   r.primary_reads.isEmpty() ? null : r.primary_reads,
+                    reads:   r.reads.isEmpty() ? null : r.reads,
                     bbsplit: r.stats != null
                         ? record(
                             stats:              r.stats,
-                            primary_reads:      r.primary_reads.isEmpty() ? null : r.primary_reads,
-                            other_genome_reads: r.primary_reads.isEmpty() ? null : r.other_genome_reads
+                            primary_reads:      r.reads.isEmpty() ? null : r.reads,
+                            other_genome_reads: r.reads.isEmpty() ? null : r.other_genome_reads
                         )
                         : null
                 )

@@ -47,7 +47,7 @@ process RIBODETECTOR {
 
 	"""
 	${ribodetector_bin} \\
-		-i ${sample.reads} \\
+		-i ${sample.reads.join(' ')} \\
 		-o ${output} \\
 		-l ${sample.length} \\
 		-t ${task.cpus} \\

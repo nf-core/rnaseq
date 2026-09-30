@@ -204,7 +204,7 @@ if __name__ == "__main__":
     else:
         prefix = ""
 
-    if not map_transcripts_to_gene("$quant_type", "$gtf", "quants", "$gtf_id_attribute", "$extra", f"{prefix}tx2gene.tsv"):
+    if not map_transcripts_to_gene("$quant_type", "$gtf", "quants", "$id", "$extra", f"{prefix}tx2gene.tsv"):
         logger.error("Failed to map transcripts to genes.")
 
     # Write the versions

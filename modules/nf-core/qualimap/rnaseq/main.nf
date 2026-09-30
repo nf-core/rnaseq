@@ -3,8 +3,8 @@ nextflow.enable.types = true
 include { BamInput } from '../../types'
 
 record QualimapRnaseqResult {
-    id:   String
-    meta: Map
+    id:       String
+    meta:     Map
     qualimap: Path
 }
 

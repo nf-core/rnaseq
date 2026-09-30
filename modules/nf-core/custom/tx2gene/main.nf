@@ -21,7 +21,7 @@ process CUSTOM_TX2GENE {
     sample: QuantsInput
     gtf: Path
     quant_type: String
-    gtf_id_attribute: String
+    id: String
     extra: String?
 
     stage:

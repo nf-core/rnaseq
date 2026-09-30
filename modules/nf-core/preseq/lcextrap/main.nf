@@ -3,8 +3,8 @@ nextflow.enable.types = true
 include { BamInput } from '../../types'
 
 record PreseqLcextrapResult {
-    id:   String
-    meta: Map
+    id:        String
+    meta:      Map
     lc_extrap: Path
     log:       Path
 }
@@ -24,7 +24,7 @@ process PRESEQ_LCEXTRAP {
 
     output:
     record(
-        id:      sample.id,
+        id:        sample.id,
         meta:      sample.meta,
         lc_extrap: file("*.lc_extrap.txt"),
         log:       file("*.log")

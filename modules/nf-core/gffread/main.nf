@@ -7,8 +7,8 @@ record GffreadInput {
 }
 
 record GffreadResult {
-    id:   String
-    meta: Map
+    id:    String
+    meta:  Map
     gtf:   Path?
     gff:   Path?
     fasta: Path?
@@ -30,12 +30,12 @@ process GFFREAD {
 
     output:
     record(
-        id:            sample.id,
-        meta:          sample.meta,
-        gtf:           file('*.gtf', optional: true),
-        gff:           file('*.gff3', optional: true),
-        fasta:         file('*.fasta', optional: true),
-        bed:           file('*.bed', optional: true)
+        id:    sample.id,
+        meta:  sample.meta,
+        gtf:   file('*.gtf', optional: true),
+        gff:   file('*.gff3', optional: true),
+        fasta: file('*.fasta', optional: true),
+        bed:   file('*.bed', optional: true)
     ) as GffreadResult
 
     topic:

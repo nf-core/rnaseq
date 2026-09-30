@@ -3,8 +3,8 @@ nextflow.enable.types = true
 include { BamBaiInput } from '../../types'
 
 record RseqcInferexperimentResult {
-    id:   String
-    meta: Map
+    id:              String
+    meta:            Map
     inferexperiment: Path
 }
 

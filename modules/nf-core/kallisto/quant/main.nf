@@ -65,7 +65,7 @@ process KALLISTO_QUANT {
             ${single_end_params} \\
             ${args} \\
             -o $prefix \\
-            ${sample.reads instanceof Path ? "${sample.reads}" : sample.reads.join(' ')} 2>| >(tee -a ${prefix}/kallisto_quant.log >&2)
+            ${sample.reads.join(' ')} 2>| >(tee -a ${prefix}/kallisto_quant.log >&2)
 
     cp ${prefix}/kallisto_quant.log ${prefix}.log
     cp ${prefix}/run_info.json ${prefix}.run_info.json

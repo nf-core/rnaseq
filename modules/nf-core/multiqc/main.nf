@@ -47,7 +47,7 @@ process MULTIQC {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ? "--filename ${task.ext.prefix}.html" : ''
-    def config = sample.multiqc_config ? sample.multiqc_config instanceof List ? "--config ${sample.multiqc_config.join(' --config ')}" : "--config ${sample.multiqc_config}" : ""
+    def config = sample.multiqc_config ? "--config ${sample.multiqc_config.join(' --config ')}" : ""
     def logo = sample.multiqc_logo ? "--cl-config 'custom_logo: \"${sample.multiqc_logo}\"'" : ''
     def replace = sample.replace_names ? "--replace-names ${sample.replace_names}" : ''
     def samples = sample.sample_names ? "--sample-names ${sample.sample_names}" : ''

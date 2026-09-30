@@ -1,11 +1,5 @@
 nextflow.enable.types = true
 
-record StarGenomeparamsUpgradeInput {
-    id:    String
-    meta:  Map
-    index: Path
-}
-
 record StarGenomeparamsUpgradeResult {
     id:    String
     meta:  Map
@@ -22,7 +16,7 @@ process STAR_GENOMEPARAMS_UPGRADE {
         'community.wave.seqera.io/library/gawk:5.3.1--e09efb5dfc4b8156' }"
 
     input:
-    sample: StarGenomeparamsUpgradeInput
+    sample: StarGenomeparamsUpgradeResult
 
     stage:
     stageAs sample.index, 'input_index'

@@ -28,7 +28,7 @@ process CUSTOM_MULTIQCCUSTOMBIOTYPE {
 
     output:
     record(
-        id: sample.id,
+        id:   sample.id,
         meta: sample.meta,
         tsv:  file('*biotype_counts_mqc.tsv'),
         rrna: file('*biotype_counts_rrna_mqc.tsv')

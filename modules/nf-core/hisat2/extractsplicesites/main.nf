@@ -3,8 +3,8 @@ nextflow.enable.types = true
 include { GtfInput } from '../../types'
 
 record Hisat2ExtractsplicesitesResult {
-    id:   String
-    meta: Map
+    id:          String
+    meta:        Map
     splicesites: Path
 }
 

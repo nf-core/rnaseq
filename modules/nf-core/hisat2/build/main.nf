@@ -9,8 +9,8 @@ record Hisat2BuildInput {
 }
 
 record Hisat2BuildResult {
-    id:   String
-    meta: Map
+    id:    String
+    meta:  Map
     index: Path
 }
 

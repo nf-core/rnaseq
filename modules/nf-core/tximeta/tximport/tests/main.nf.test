@@ -30,10 +30,8 @@ nextflow_process {
                 script "../../../custom/tx2gene/main.nf"
                 process {
                     """
-                    input[0] = Channel.of([
-                        [ id:'test'], // meta map
-                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
-                    ])
+                    input[0] = UNTAR.out.map { r -> [ r.meta, r.dir ] }.map { meta, dir -> record(id: meta.id, meta: meta, quants: dir.listFiles().collect()) }
+                    input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
                     input[2] = 'kallisto'
                     input[3] = 'gene_id'
                     input[4] = 'gene_name'
@@ -90,10 +88,8 @@ nextflow_process {
                 script "../../../custom/tx2gene/main.nf"
                 process {
                     """
-                    input[0] = Channel.of([
-                        [ id:'test'], // meta map
-                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
-                    ])
+                    input[0] = UNTAR.out.map { r -> [ r.meta, r.dir ] }.map { meta, dir -> record(id: meta.id, meta: meta, quants: dir.listFiles().collect()) }
+                    input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
                     input[2] = 'kallisto'
                     input[3] = 'gene_id'
                     input[4] = 'gene_name,gene_biotype'
@@ -172,10 +168,8 @@ nextflow_process {
                 script "../../../custom/tx2gene/main.nf"
                 process {
                     """
-                    input[0] = Channel.of([
-                        [ id:'test'], // meta map
-                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
-                    ])
+                    input[0] = UNTAR.out.map { r -> [ r.meta, r.dir ] }.map { meta, dir -> record(id: meta.id, meta: meta, quants: dir.listFiles().collect()) }
+                    input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
                     input[2] = 'salmon'
                     input[3] = 'gene_id'
                     input[4] = 'gene_name'
@@ -233,10 +227,8 @@ nextflow_process {
                 script "../../../custom/tx2gene/main.nf"
                 process {
                     """
-                    input[0] = Channel.of([
-                        [ id:'test'], // meta map
-                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
-                    ])
+                    input[0] = UNTAR.out.map { r -> [ r.meta, r.dir ] }.map { meta, dir -> record(id: meta.id, meta: meta, quants: dir.listFiles().collect()) }
+                    input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
                     input[2] = 'salmon'
                     input[3] = 'gene_id'
                     input[4] = 'gene_name'
@@ -256,7 +248,7 @@ nextflow_process {
                     def kept = lines[1..Math.max(1, lines.size().intdiv(2))]
                     def modified = file("\${workDir}/truncated_tx2gene.tsv")
                     modified.text = ([header] + kept).join('\\n') + '\\n'
-                    [meta, modified]
+                    modified
                 }
                 input[2] = 'salmon'
                 """
@@ -314,10 +306,8 @@ nextflow_process {
                 script "../../../custom/tx2gene/main.nf"
                 process {
                     """
-                    input[0] = Channel.of([
-                        [ id:'test'], // meta map
-                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
-                    ])
+                    input[0] = UNTAR.out.map { r -> [ r.meta, r.dir ] }.map { meta, dir -> record(id: meta.id, meta: meta, quants: dir.listFiles().collect()) }
+                    input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
                     input[2] = 'salmon'
                     input[3] = 'gene_id'
                     input[4] = 'gene_name'
@@ -363,17 +353,14 @@ nextflow_process {
                 script "../../../custom/tx2gene/main.nf"
                 process {
                     """
-                    input[0] = Channel.of([
-                        [ id:'test'], // meta map
-                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
-                    ])
-                    input[1] = UNTAR.out.map { r -> [ r.meta, r.dir ] }.map { meta, dir ->
+                    input[0] = UNTAR.out.map { r -> [ r.meta, r.dir ] }.map { meta, dir ->
                         def results = []
                         dir.eachFileRecurse { f ->
                             if (f.name.endsWith('.isoforms.results')) results << f
                         }
-                        [ meta, results ]
+                        record(id: meta.id, meta: meta, quants: results)
                     }
+                    input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
                     input[2] = 'rsem'
                     input[3] = 'gene_id'
                     input[4] = 'gene_name'
@@ -390,7 +377,7 @@ nextflow_process {
                     dir.eachFileRecurse { f ->
                         if (f.name.endsWith('.isoforms.results')) results << f
                     }
-                    [ meta, results ]
+                    record(id: meta.id, meta: meta, quants: results)
                 }
                 input[1] = CUSTOM_TX2GENE.out.map { r -> r.tx2gene }
                 input[2] = 'rsem'
@@ -423,7 +410,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([ [id:'test'], [ file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true) ] ])
+                input[0] = Channel.of(record(id: 'test', meta: [ id:'test' ], quants: [ file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true) ]))
                 input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
                 input[2] = 'rsem'
                 """
@@ -461,10 +448,8 @@ nextflow_process {
                 script "../../../custom/tx2gene/main.nf"
                 process {
                     """
-                    input[0] = Channel.of([
-                        [ id:'test'], // meta map
-                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
-                    ])
+                    input[0] = UNTAR.out.map { r -> [ r.meta, r.dir ] }.map { meta, dir -> record(id: meta.id, meta: meta, quants: dir.listFiles().collect()) }
+                    input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
                     input[2] = 'kallisto'
                     input[3] = 'gene_id'
                     input[4] = 'gene_name,gene_biotype'

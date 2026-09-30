@@ -31,10 +31,8 @@ nextflow_process {
             script "../../../custom/tx2gene/main.nf"
             process {
                 """
-                input[0] = [
-                [ id:'test'], // meta map
-                file(params.modules_testdata_base_path + "genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf", checkIfExists: true)
-                ]
+                input[0] = UNTAR.out.map { r -> [ r.meta, r.dir ] }.map { meta, dir -> record(id: meta.id, meta: meta, quants: dir.listFiles().collect()) }
+                input[1] = Channel.of(file(params.modules_testdata_base_path + "genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf", checkIfExists: true))
                 input[2] = 'kallisto'
                 input[3] = 'gene_id'
                 input[4] = 'gene_name'

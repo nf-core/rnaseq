@@ -151,7 +151,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [[id: 'test'],file(params.modules_testdata_base_path + 'generic/txt/hello.txt', checkIfExists: true)]
+                input[0] = Channel.of(record(id: 'test', meta: [id: 'test'], report: file(params.modules_testdata_base_path + 'generic/txt/hello.txt', checkIfExists: true)))
                 input[1] = UNTAR.out.map { r -> [ r.meta, r.dir ] }.map{it[1]}
                 """
             }

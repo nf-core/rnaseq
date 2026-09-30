@@ -24,6 +24,7 @@ include { BAM_QC_RNASEQ                         } from '../../subworkflows/nf-co
 include { QUANTIFY_RSEM                         } from '../../subworkflows/nf-core/quantify_rsem'
 include { BAM_DEDUP_UMI                         } from '../../subworkflows/nf-core/bam_dedup_umi'
 
+include { ReadsInput; StringtieInput } from '../../modules/nf-core/types'
 include { Bowtie2Aligned; StarAligned; MultiqcFiles; AlignedSample; Bam; Contaminants; StringtieSample; BigwigSample; PipelineInfo; UmiDedupBam; MarkdupBam; BamQcRnaseq; StringtieMerged; Hisat2Aligned; RrnaReferences; FastqQcTrimFilterSetstrandedness; QuantMerged; SampleRuns; TrimReadCount; TrimStatus; PercentMapped; MapStatus; PercentMappedPass; InferExperimentLog; StrandData; StrandStatus } from '../../modules/nf-core/types'
 include { RsemMergeSample } from '../../modules/nf-core/custom/rsemmergecounts/main'
 include { KallistoQuantSample } from '../../modules/nf-core/kallisto/quant/main'
@@ -145,7 +146,7 @@ workflow RNASEQ {
     ch_bam_samples   = ch_input.filter { s -> s.prealigned }
 
     // One entry per sequencing run of each sample
-    ch_fastq = ch_fastq_samples.map { s -> record(id: s.id, meta: s.meta, runs: s.runs) }
+    def ch_fastq: Channel<SampleRuns> = ch_fastq_samples.map { s -> record(id: s.id, meta: s.meta, runs: s.runs) }
 
     // Index pre-aligned genome BAM files; a sample may supply only a transcriptome BAM
     ch_prealigned_genome = ch_bam_samples.filter { s -> s.bam != null }
@@ -225,11 +226,11 @@ workflow RNASEQ {
         )
     }
 
-    ch_trim_read_count = ch_preprocessed
+    def ch_trim_read_count: Channel<TrimReadCount> = ch_preprocessed
         .filter { r -> r.num_trimmed_reads != null }
         .map { r -> record(id: r.id, meta: r.meta, num_reads: r.num_trimmed_reads) }
 
-    ch_trim_status = ch_preprocessed
+    def ch_trim_status: Channel<TrimStatus> = ch_preprocessed
         .filter { r -> r.num_trimmed_reads != null }
         .map { r -> record(id: r.id, pass: r.num_trimmed_reads > params.min_trimmed_reads.toFloat()) }
 
@@ -356,7 +357,7 @@ workflow RNASEQ {
     //
     // Quantification
     //
-    ch_transcriptome_reads = ch_transcriptome_bam.map { r -> record(id: r.id, meta: r.meta, reads: [r.transcriptome_bam]) }
+    def ch_transcriptome_reads: Channel<ReadsInput> = ch_transcriptome_bam.map { r -> record(id: r.id, meta: r.meta, reads: [r.transcriptome_bam]) }
 
     def run_deseq2_qc = !params.skip_qc && !params.skip_deseq2_qc && !params.skip_quantification_merge
 
@@ -425,13 +426,13 @@ workflow RNASEQ {
         r + record(pass: r.percent_mapped != null ? r.percent_mapped >= params.min_mapped_reads.toFloat() : null)
     }
 
-    ch_percent_mapped = ch_mapped.map { r -> record(id: r.id, percent_mapped: r.percent_mapped) }
+    def ch_percent_mapped: Channel<PercentMapped> = ch_mapped.map { r -> record(id: r.id, percent_mapped: r.percent_mapped) }
 
-    ch_map_status = ch_mapped
+    def ch_map_status: Channel<MapStatus> = ch_mapped
         .filter { r -> r.pass != null }
         .map { r -> record(id: r.id, pass: r.pass as Boolean) }
 
-    ch_percent_mapped_pass = ch_mapped.map { r -> record(id: r.id, percent_mapped: r.percent_mapped, pass: r.pass) }
+    def ch_percent_mapped_pass: Channel<PercentMappedPass> = ch_mapped.map { r -> record(id: r.id, percent_mapped: r.percent_mapped, pass: r.pass) }
 
     // Samples without a mapping percentage are never filtered
     ch_genome_bam = ch_mapped.filter { r -> r.pass == null || r.pass }
@@ -480,7 +481,7 @@ workflow RNASEQ {
     def ch_stringtie: Channel<StringtieSample>          = channel.empty()
     def ch_stringtie_merged: Channel<StringtieMerged>   = channel.empty()
     if (!params.skip_stringtie) {
-        ch_stringtie_input = ch_genome_bam.map { r -> r + record(lrbam: null) }
+        def ch_stringtie_input: Channel<StringtieInput> = ch_genome_bam.map { r -> r + record(lrbam: null) }
 
         if (params.stringtie_ignore_gtf) {
             stringtie_merge = BAM_STRINGTIE_MERGE(
@@ -578,7 +579,8 @@ workflow RNASEQ {
     // of rseqc_modules.
     //
     def run_infer_experiment = !params.skip_qc && (params.use_rustqc || rseqc_modules.contains('infer_experiment'))
-    ch_strand_status = channel.empty()
+    def ch_strand_data: Channel<StrandData>     = channel.empty()
+    def ch_strand_status: Channel<StrandStatus> = channel.empty()
     if (run_infer_experiment) {
         ch_strand_data = ch_inferexperiment.map { r ->
             classifyStrand(r.meta, r.inferexperiment, params.stranded_threshold, params.unstranded_threshold)
@@ -744,7 +746,7 @@ workflow RNASEQ {
         ch_quant_merged_pseudo   = pseudo.merged
 
         // MultiQC parses the Salmon quant directory and the Kallisto log
-        ch_pseudo_mqc = ch_quant_pseudo
+        def ch_pseudo_mqc: Channel<MultiqcFiles> = ch_quant_pseudo
             .map { r -> record(id: r.id, files: [r.quant_dir]) }
             .mix(ch_quant_pseudo_kallisto.map { r -> record(id: r.id, files: [r.log]) })
         ch_mqc_files = ch_mqc_files.mix(ch_pseudo_mqc)
@@ -782,7 +784,7 @@ workflow RNASEQ {
         .collectFile(name: 'nf_core_rnaseq_software_mqc_versions.yml', sort: true, newLine: true)
         .map { p -> p as Path }
 
-    ch_pipeline_info = ch_collated_versions.map { versions -> record(versions: versions) }
+    def ch_pipeline_info: Channel<PipelineInfo> = ch_collated_versions.map { versions -> record(versions: versions) }
 
     //
     // SUBWORKFLOW: MultiQC

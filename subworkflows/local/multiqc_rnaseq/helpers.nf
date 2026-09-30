@@ -1,7 +1,7 @@
 //
 // Untyped helper functions for MULTIQC_RNASEQ. They live outside the typed
-// subworkflow script because they call nf-schema plugin functions and use
-// dynamic maps.
+// subworkflow script because `nextflow lint` rejects calls to nf-schema plugin functions in typed
+// scripts (nextflow-io/nextflow#7720) and because they use dynamic maps.
 //
 
 include { paramsSummaryMap     } from 'plugin/nf-schema'

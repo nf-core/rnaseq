@@ -1,6 +1,6 @@
 //
-// Samplesheet reading. Kept untyped because `samplesheetToList` comes from the nf-schema plugin,
-// which typed scripts cannot call.
+// Samplesheet reading. Kept untyped because `nextflow lint` rejects calls to plugin functions such
+// as `samplesheetToList` in typed scripts (nextflow-io/nextflow#7720).
 //
 
 include { samplesheetToList         } from 'plugin/nf-schema'

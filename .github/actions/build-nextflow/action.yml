@@ -10,7 +10,7 @@ runs:
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       with:
         repository: nextflow-io/nextflow
-        ref: 4745fb4cb059ccb0b7fabecb53543477549cdc33
+        ref: 508fe13c6d241cdea08ddbdcee62695d6d871fb9
         path: nextflow-src
 
     - name: Set up Java

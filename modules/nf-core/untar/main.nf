@@ -1,7 +1,9 @@
 nextflow.enable.types = true
 
+include { ArchiveInput } from '../types'
+
 process UNTAR {
-    tag "${archive}"
+    tag "${sample.archive}"
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
@@ -10,10 +12,10 @@ process UNTAR {
         : 'community.wave.seqera.io/library/coreutils_grep_gzip_lbzip2_pruned:838ba80435a629f8'}"
 
     input:
-    record(id: String, meta: Map, archive: Path)
+    sample: ArchiveInput
 
     output:
-    record(id: id, meta: meta, dir: file("${prefix}"))
+    record(id: sample.id, meta: sample.meta, dir: file("${prefix}"))
 
     topic:
     tuple(task.process, 'untar', eval('tar --version 2>&1 | head -1 | sed "s/tar (GNU tar) //; s/ Copyright.*//"')) >> 'versions'
@@ -21,38 +23,38 @@ process UNTAR {
     script:
     def args = task.ext.args ?: ''
     def args2 = task.ext.args2 ?: ''
-    prefix = task.ext.prefix ?: (meta.id ? "${meta.id}" : archive.baseName.replaceFirst(/\.tar$/, ""))
+    prefix = task.ext.prefix ?: (sample.meta.id ? "${sample.meta.id}" : sample.archive.baseName.replaceFirst(/\.tar$/, ""))
 
     """
     mkdir ${prefix}
 
     ## Ensures --strip-components only applied when top level of tar contents is a directory
     ## If just files or multiple directories, place all in prefix
-    if [[ \$(tar -taf ${archive} | grep -o -P "^.*?\\/" | uniq | wc -l) -eq 1 ]]; then
+    if [[ \$(tar -taf ${sample.archive} | grep -o -P "^.*?\\/" | uniq | wc -l) -eq 1 ]]; then
         tar \\
             -C ${prefix} --strip-components 1 \\
             -xavf \\
             ${args} \\
-            ${archive} \\
+            ${sample.archive} \\
             ${args2}
     else
         tar \\
             -C ${prefix} \\
             -xavf \\
             ${args} \\
-            ${archive} \\
+            ${sample.archive} \\
             ${args2}
     fi
 
     """
 
     stub:
-    prefix = task.ext.prefix ?: (meta.id ? "${meta.id}" : archive.name.replaceFirst(/\.[^\.]+(.gz)?$/, ""))
+    prefix = task.ext.prefix ?: (sample.meta.id ? "${sample.meta.id}" : sample.archive.name.replaceFirst(/\.[^\.]+(.gz)?$/, ""))
     """
     mkdir ${prefix}
     ## Dry-run untaring the archive to get the files and place all in prefix
-    if [[ \$(tar -taf ${archive} | grep -o -P "^.*?\\/" | uniq | wc -l) -eq 1 ]]; then
-        for i in `tar -tf ${archive}`;
+    if [[ \$(tar -taf ${sample.archive} | grep -o -P "^.*?\\/" | uniq | wc -l) -eq 1 ]]; then
+        for i in `tar -tf ${sample.archive}`;
         do
             if [[ \$(echo "\${i}" | grep -E "/\$") == "" ]];
             then
@@ -62,7 +64,7 @@ process UNTAR {
             fi
         done
     else
-        for i in `tar -tf ${archive}`;
+        for i in `tar -tf ${sample.archive}`;
         do
             if [[ \$(echo "\${i}" | grep -E "/\$") == "" ]];
             then

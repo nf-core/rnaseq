@@ -1,7 +1,9 @@
 nextflow.enable.types = true
 
+include { ReadsInput } from '../../types'
+
 process UMITOOLS_EXTRACT {
-    tag "$meta.id"
+    tag "${sample.meta.id}"
     label "process_single"
     label "process_long"
 
@@ -11,12 +13,12 @@ process UMITOOLS_EXTRACT {
         'community.wave.seqera.io/library/umi_tools_future_matplotlib_numpy_pruned:1ee668bafc8c9f81' }"
 
     input:
-    record(id: String, meta: Map, reads: List<Path>)
+    sample: ReadsInput
 
     output:
     record(
-        id:    id,
-        meta:  meta,
+        id:    sample.id,
+        meta:  sample.meta,
         reads: files('*.fastq.gz').toSorted { f -> f.name },
         log:   file('*.log')
     )
@@ -26,9 +28,9 @@ process UMITOOLS_EXTRACT {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
-    def reads_names = reads instanceof Path ? "${reads}" : reads.join(' ')
-    if (meta.single_end) {
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
+    def reads_names = sample.reads instanceof Path ? "${sample.reads}" : sample.reads.join(' ')
+    if (sample.meta.single_end) {
         """
         umi_tools \\
             extract \\
@@ -41,8 +43,8 @@ process UMITOOLS_EXTRACT {
         """
         umi_tools \\
             extract \\
-            -I ${reads[0]} \\
-            --read2-in=${reads[1]} \\
+            -I ${sample.reads[0]} \\
+            --read2-in=${sample.reads[1]} \\
             -S ${prefix}.umi_extract_1.fastq.gz \\
             --read2-out=${prefix}.umi_extract_2.fastq.gz \\
             $args \\
@@ -51,8 +53,8 @@ process UMITOOLS_EXTRACT {
     }
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
-    output_command = meta.single_end
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
+    output_command = sample.meta.single_end
         ? "echo '' | gzip > ${prefix}.umi_extract.fastq.gz"
         : "echo '' | gzip > ${prefix}.umi_extract_1.fastq.gz ;echo '' | gzip > ${prefix}.umi_extract_2.fastq.gz"
     """

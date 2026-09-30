@@ -1,7 +1,9 @@
 nextflow.enable.types = true
 
+include { BamInput } from '../types'
+
 process UMICOLLAPSE {
-    tag "${meta.id}"
+    tag "${sample.meta.id}"
     label "process_high"
     label "process_high_memory"
 
@@ -11,13 +13,13 @@ process UMICOLLAPSE {
         : 'quay.io/biocontainers/umicollapse:1.1.0--hdfd78af_0'}"
 
     input:
-    record(id: String, meta: Map, bam: Path)
+    sample: BamInput
     mode: String
 
     output:
     record(
-        id:    id,
-        meta:  meta,
+        id:    sample.id,
+        meta:  sample.meta,
         bam:   file('*.bam', optional: true),
         fastq: file('*dedup*fastq.gz', optional: true),
         log:   file('*_UMICollapse.log')
@@ -29,7 +31,7 @@ process UMICOLLAPSE {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     // Memory allocation: We need to make sure that both heap and stack size is sufficiently large for
     // umicollapse. We set the stack size to 5% of the available memory, the heap size to 90%
     // which leaves 5% for stuff happening outside of java without the scheduler killing the process.
@@ -49,13 +51,13 @@ process UMICOLLAPSE {
         -Xss${max_stack_size_mega}M \\
         -jar "\$UMICOLLAPSE_JAR" \\
         ${mode} \\
-        -i ${bam} \\
+        -i ${sample.bam} \\
         -o ${prefix}.${extension} \\
         ${args} | tee ${prefix}_UMICollapse.log
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     if (mode !in ['fastq', 'bam']) {
         error("Mode must be one of 'fastq' or 'bam'.")
     }

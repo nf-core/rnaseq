@@ -1,7 +1,9 @@
 nextflow.enable.types = true
 
+include { BedgraphInput } from '../../types'
+
 process UCSC_BEDGRAPHTOBIGWIG {
-    tag "$meta.id"
+    tag "${sample.meta.id}"
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
@@ -10,11 +12,11 @@ process UCSC_BEDGRAPHTOBIGWIG {
         'quay.io/biocontainers/ucsc-bedgraphtobigwig:482--hdc0a859_0' }"
 
     input:
-    record(id: String, meta: Map, bedgraph: Path)
+    sample: BedgraphInput
     sizes: Path
 
     output:
-    record(id: id, meta: meta, bigwig: file("*.bigWig"))
+    record(id: sample.id, meta: sample.meta, bigwig: file("*.bigWig"))
 
     topic:
     // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
@@ -22,17 +24,17 @@ process UCSC_BEDGRAPHTOBIGWIG {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     bedGraphToBigWig \\
         $args \\
-        $bedgraph \\
+        ${sample.bedgraph} \\
         $sizes \\
         ${prefix}.bigWig
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     touch ${prefix}.bigWig
     """

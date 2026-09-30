@@ -1,7 +1,9 @@
 nextflow.enable.types = true
 
+include { BamInput } from '../../types'
+
 process UMITOOLS_PREPAREFORRSEM {
-    tag "$meta.id"
+    tag "${sample.meta.id}"
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
@@ -10,12 +12,12 @@ process UMITOOLS_PREPAREFORRSEM {
         'community.wave.seqera.io/library/umi_tools_future_matplotlib_numpy_pruned:1ee668bafc8c9f81' }"
 
     input:
-    record(id: String, meta: Map, bam: Path)
+    sample: BamInput
 
     output:
     record(
-        id:   id,
-        meta: meta,
+        id:   sample.id,
+        meta: sample.meta,
         bam:  file('*.bam'),
         log:  file('*.log')
     )
@@ -25,11 +27,11 @@ process UMITOOLS_PREPAREFORRSEM {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
-    if ("$bam" == "${prefix}.bam") error "Input and output names are the same, use \"task.ext.prefix\" to disambiguate!"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
+    if ("${sample.bam}" == "${prefix}.bam") error "Input and output names are the same, use \"task.ext.prefix\" to disambiguate!"
     """
     umi_tools prepare-for-rsem \\
-        --stdin=$bam \\
+        --stdin=${sample.bam} \\
         --stdout=${prefix}.bam \\
         --log=${prefix}.prepare_for_rsem.log \\
         $args
@@ -37,7 +39,7 @@ process UMITOOLS_PREPAREFORRSEM {
 
     stub:
     """
-    touch ${meta.id}.bam
-    touch ${meta.id}.log
+    touch ${sample.meta.id}.bam
+    touch ${sample.meta.id}.log
     """
 }

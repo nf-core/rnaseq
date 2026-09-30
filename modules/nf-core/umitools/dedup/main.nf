@@ -1,7 +1,9 @@
 nextflow.enable.types = true
 
+include { BamBaiInput } from '../../types'
+
 process UMITOOLS_DEDUP {
-    tag "$meta.id"
+    tag "${sample.meta.id}"
     label "process_medium"
 
     conda "${moduleDir}/environment.yml"
@@ -10,13 +12,13 @@ process UMITOOLS_DEDUP {
         'community.wave.seqera.io/library/umi_tools_future_matplotlib_numpy_pruned:1ee668bafc8c9f81' }"
 
     input:
-    record(id: String, meta: Map, bam: Path, bai: Path)
+    sample: BamBaiInput
     get_output_stats: Boolean
 
     output:
     record(
-        id:                   id,
-        meta:                 meta,
+        id:                   sample.id,
+        meta:                 sample.meta,
         bam:                  file("${prefix}.bam"),
         log:                  file('*.log'),
         tsv_edit_distance:    file('*edit_distance.tsv', optional: true),
@@ -29,10 +31,10 @@ process UMITOOLS_DEDUP {
 
     script:
     def args = task.ext.args ?: ''
-    prefix = task.ext.prefix ?: "${meta.id}"
-    def paired = meta.single_end ? "" : "--paired"
+    prefix = task.ext.prefix ?: "${sample.meta.id}"
+    def paired = sample.meta.single_end ? "" : "--paired"
     stats = get_output_stats ? "--output-stats ${prefix}" : ""
-    if ("$bam" == "${prefix}.bam") error "Input and output names are the same, set prefix in module configuration to disambiguate!"
+    if ("${sample.bam}" == "${prefix}.bam") error "Input and output names are the same, set prefix in module configuration to disambiguate!"
 
     if (!(args ==~ /.*--random-seed.*/)) {args += " --random-seed=100"}
     """
@@ -41,7 +43,7 @@ process UMITOOLS_DEDUP {
 
     MPLCONFIGDIR=.tmp TMPDIR=.tmp PYTHONHASHSEED=0 umi_tools \\
         dedup \\
-        -I $bam \\
+        -I ${sample.bam} \\
         -S ${prefix}.bam \\
         -L ${prefix}.log \\
         $stats \\
@@ -50,7 +52,7 @@ process UMITOOLS_DEDUP {
     """
 
     stub:
-    prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     touch ${prefix}.bam
     touch ${prefix}.log

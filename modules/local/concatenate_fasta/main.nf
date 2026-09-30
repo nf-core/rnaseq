@@ -14,6 +14,7 @@ record ConcatenateFastaResult {
 
 process CONCATENATE_FASTA {
     tag "${sample.meta.id}"
+    label 'process_single'
 
     input:
     sample: ConcatenateFastaInput
@@ -21,10 +22,17 @@ process CONCATENATE_FASTA {
     output:
     record(id: sample.id, meta: sample.meta, fasta: file('rrna_combined_dna.fasta')) as ConcatenateFastaResult
 
-    exec:
-    def combined = task.workDir.resolve('rrna_combined_dna.fasta')
-    sample.fastas.each { f ->
-        combined << f.text
-        combined << '\n'
-    }
+    script:
+    def fastas = sample.fastas.collect { f -> f.name }.join(' ')
+    """
+    for f in ${fastas}; do
+        cat "\$f"
+        echo
+    done > rrna_combined_dna.fasta
+    """
+
+    stub:
+    """
+    touch rrna_combined_dna.fasta
+    """
 }

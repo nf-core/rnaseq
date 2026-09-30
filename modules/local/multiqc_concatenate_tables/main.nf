@@ -16,6 +16,7 @@ record MultiqcConcatenateTablesResult {
 
 process MULTIQC_CONCATENATE_TABLES {
     tag "${sample.id}"
+    label 'process_single'
 
     input:
     sample: MultiqcConcatenateTablesInput
@@ -23,11 +24,18 @@ process MULTIQC_CONCATENATE_TABLES {
     output:
     record(id: sample.id, meta: sample.meta, file: file(sample.name)) as MultiqcConcatenateTablesResult
 
-    exec:
-    def combined = task.workDir.resolve(sample.name)
-    combined << sample.files.first().text
-    sample.files.tail().each { f ->
-        def lines = f.readLines()
-        combined << lines.subList(sample.skip, lines.size()).collect { line -> "${line}\n" }.join('')
-    }
+    script:
+    def first = sample.files.first().name
+    def rest  = sample.files.tail().collect { f -> f.name }.join(' ')
+    """
+    cat ${first} > ${sample.name}
+    for f in ${rest}; do
+        tail -n +${sample.skip + 1} "\$f" >> ${sample.name}
+    done
+    """
+
+    stub:
+    """
+    touch ${sample.name}
+    """
 }

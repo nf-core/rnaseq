@@ -488,9 +488,14 @@ workflow RNASEQ {
     //
     if (params.aligner == 'star_rsem') {
 
+        // BEGIN adapters for QUANTIFY_RSEM inputs (removed when the transcriptome BAM is a record field)
+        // SEAM(alignment): the transcriptome BAM arrives as a [meta, bam] tuple
+        ch_rsem_reads = ch_transcriptome_bam.map { meta, bam -> record(id: meta.id, meta: meta, reads: [ bam ].flatten()) }
+        // END adapters
+
         QUANTIFY_RSEM (
-            ch_samplesheet.map { item -> [ [:], item ] },
-            ch_transcriptome_bam,
+            ch_samplesheet,
+            ch_rsem_reads,
             ch_rsem_index,
             ch_gtf,
             params.gtf_group_features,
@@ -498,16 +503,23 @@ workflow RNASEQ {
             params.use_sentieon_star,
             params.skip_quantification_merge
         )
-        ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_RSEM.out.stat)
-        ch_quant = QUANTIFY_RSEM.out.results
-        ch_quant_merged = QUANTIFY_RSEM.out.quant_merged
-        ch_quant_rsem_merge = QUANTIFY_RSEM.out.rsem_merge
+
+        // BEGIN adapters from the QUANTIFY_RSEM record to legacy channels; removed once the consumers below are typed
+        ch_rsem_samples = QUANTIFY_RSEM.out.filter { r -> r.sample != null }.map { r -> r.sample }
+        ch_rsem_merged  = QUANTIFY_RSEM.out.filter { r -> r.merged != null }
+        ch_rsem_stat    = ch_rsem_samples.map { r -> [ r.meta, r.stat ] }
+        // END adapters
+
+        ch_multiqc_files = ch_multiqc_files.mix(ch_rsem_stat)
+        ch_quant = ch_rsem_samples
+        ch_quant_merged = ch_rsem_merged.map { r -> r.merged }
+        ch_quant_rsem_merge = ch_rsem_merged.filter { r -> r.rsem_merge != null }.map { r -> record(id: r.id, rsem_merge: r.rsem_merge) }
         ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
-            .join(QUANTIFY_RSEM.out.stat.map { meta, f -> [meta.id, f] }, remainder: true)
+            .join(ch_rsem_stat.map { meta, f -> [meta.id, f] }, remainder: true)
 
         if (!params.skip_qc && !params.skip_deseq2_qc && !params.skip_quantification_merge) {
             DESEQ2_QC_RSEM (
-                QUANTIFY_RSEM.out.counts_gene_length_scaled.map { _meta, counts -> counts },
+                ch_rsem_merged.map { r -> record(id: r.id, meta: r.meta, counts: r.merged.counts_gene_length_scaled) },
                 ch_pca_header_multiqc,
                 ch_clustering_header_multiqc
             )
@@ -521,9 +533,14 @@ workflow RNASEQ {
         //
         // SUBWORKFLOW: Count reads from BAM alignments using Salmon
         //
+        // BEGIN adapters for QUANTIFY_BAM_SALMON inputs (removed when the transcriptome BAM is a record field)
+        // SEAM(alignment): the transcriptome BAM arrives as a [meta, bam] tuple
+        ch_salmon_bam_reads = ch_transcriptome_bam.map { meta, bam -> record(id: meta.id, meta: meta, reads: [ bam ].flatten()) }
+        // END adapters
+
         QUANTIFY_BAM_SALMON (
-            ch_samplesheet.map { item -> [ [:], item ] },
-            ch_transcriptome_bam,
+            ch_samplesheet,
+            ch_salmon_bam_reads,
             channel.value([ [:], ch_transcript_fasta_placeholder ]),
             ch_transcript_fasta,
             ch_gtf,
@@ -534,12 +551,17 @@ workflow RNASEQ {
             params.kallisto_quant_fraglen_sd,
             params.skip_quantification_merge
         )
-        ch_quant = QUANTIFY_BAM_SALMON.out.sample_results
-        ch_quant_merged = QUANTIFY_BAM_SALMON.out.quant_merged
+
+        // BEGIN adapters from the QUANTIFY_BAM_SALMON record to legacy channels; removed once the consumers below are typed
+        ch_salmon_bam_merged = QUANTIFY_BAM_SALMON.out.filter { r -> r.merged != null }
+        // END adapters
+
+        ch_quant = QUANTIFY_BAM_SALMON.out.filter { r -> r.sample != null }.map { r -> r.sample }
+        ch_quant_merged = ch_salmon_bam_merged.map { r -> r.merged }
 
         if (!params.skip_qc && !params.skip_deseq2_qc && !params.skip_quantification_merge) {
             DESEQ2_QC_BAM_SALMON (
-                QUANTIFY_BAM_SALMON.out.counts_gene_length_scaled.map { _meta, counts -> counts },
+                ch_salmon_bam_merged.map { r -> record(id: r.id, meta: r.meta, counts: r.merged.counts_gene_length_scaled) },
                 ch_pca_header_multiqc,
                 ch_clustering_header_multiqc
             )
@@ -918,9 +940,14 @@ workflow RNASEQ {
             ch_pseudo_index = ch_kallisto_index
         }
 
+        // BEGIN adapters for QUANTIFY_PSEUDO_ALIGNMENT inputs (removed when the reads are a record)
+        // SEAM(reads): the filtered FASTQs arrive as a [meta, fastq] tuple
+        ch_pseudo_reads = ch_strand_inferred_filtered_fastq.map { meta, fastqs -> record(id: meta.id, meta: meta, reads: [ fastqs ].flatten()) }
+        // END adapters
+
         QUANTIFY_PSEUDO_ALIGNMENT (
-            ch_samplesheet.map { item -> [ [:], item ] },
-            ch_strand_inferred_filtered_fastq,
+            ch_samplesheet,
+            ch_pseudo_reads,
             ch_pseudo_index,
             channel.value(ch_transcript_fasta_placeholder),
             ch_gtf,
@@ -931,16 +958,22 @@ workflow RNASEQ {
             params.kallisto_quant_fraglen_sd,
             params.skip_quantification_merge
         )
-        ch_counts_gene_length_scaled = QUANTIFY_PSEUDO_ALIGNMENT.out.counts_gene_length_scaled
-        ch_quant_pseudo = QUANTIFY_PSEUDO_ALIGNMENT.out.sample_results
-        ch_quant_merged_pseudo = QUANTIFY_PSEUDO_ALIGNMENT.out.quant_merged
-        ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_PSEUDO_ALIGNMENT.out.multiqc)
+
+        // BEGIN adapters from the QUANTIFY_PSEUDO_ALIGNMENT record to legacy channels; removed once the consumers below are typed
+        ch_pseudo_samples = QUANTIFY_PSEUDO_ALIGNMENT.out.filter { r -> r.sample != null }.map { r -> r.sample }
+        ch_pseudo_merged  = QUANTIFY_PSEUDO_ALIGNMENT.out.filter { r -> r.merged != null }
+        ch_pseudo_multiqc = ch_pseudo_samples.map { r -> [ r.meta, r.multiqc ] }
+        // END adapters
+
+        ch_quant_pseudo = ch_pseudo_samples
+        ch_quant_merged_pseudo = ch_pseudo_merged.map { r -> r.merged }
+        ch_multiqc_files = ch_multiqc_files.mix(ch_pseudo_multiqc)
         ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
-            .join(QUANTIFY_PSEUDO_ALIGNMENT.out.multiqc.map { meta, f -> [meta.id, f] }, remainder: true)
+            .join(ch_pseudo_multiqc.map { meta, f -> [meta.id, f] }, remainder: true)
 
         if (!params.skip_qc && !params.skip_deseq2_qc && !params.skip_quantification_merge) {
             DESEQ2_QC_PSEUDO (
-                ch_counts_gene_length_scaled.map { _meta, counts -> counts },
+                ch_pseudo_merged.map { r -> record(id: r.id, meta: r.meta, counts: r.merged.counts_gene_length_scaled) },
                 ch_pca_header_multiqc,
                 ch_clustering_header_multiqc
             )

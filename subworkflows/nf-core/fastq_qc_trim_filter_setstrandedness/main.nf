@@ -478,8 +478,13 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         .first()
         .set { ch_genome_fasta }
 
+    // BEGIN adapters for FASTQ_SUBSAMPLE_FQ_SALMON inputs (removed when this subworkflow is typed)
+    // SEAM(quant): the subsampling subworkflow takes reads records
+    ch_auto_strand_reads = ch_strand_fastq.auto_strand.map { meta, fastq -> record(id: meta.id, meta: meta, reads: [ fastq ].flatten()) }
+    // END adapters
+
     FASTQ_SUBSAMPLE_FQ_SALMON(
-        ch_strand_fastq.auto_strand,
+        ch_auto_strand_reads,
         ch_genome_fasta,
         ch_transcript_fasta,
         ch_gtf,
@@ -487,9 +492,13 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         make_salmon_index,
     )
 
-    ch_salmon_index_built = FASTQ_SUBSAMPLE_FQ_SALMON.out.index_built
+    // BEGIN adapters from the FASTQ_SUBSAMPLE_FQ_SALMON record to legacy channels (removed when this subworkflow is typed)
+    // SEAM(quant): index_built rides on every row; only the single built index is kept
+    ch_salmon_index_built = FASTQ_SUBSAMPLE_FQ_SALMON.out.filter { r -> r.index_built != null }.map { r -> r.index_built }.unique()
+    ch_lib_format_counts = FASTQ_SUBSAMPLE_FQ_SALMON.out.filter { r -> r.lib_format_counts != null }.map { r -> [ r.meta, r.lib_format_counts ] }
+    // END adapters
 
-    FASTQ_SUBSAMPLE_FQ_SALMON.out.lib_format_counts
+    ch_lib_format_counts
         .join(ch_strand_fastq.auto_strand, remainder: true)
         .map { meta, json, reads ->
             if (json == null) {

@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 //
 // Pseudoalignment and quantification with Salmon or Kallisto
 //
@@ -6,21 +8,21 @@ include { SALMON_QUANT     } from '../../../modules/nf-core/salmon/quant'
 include { KALLISTO_QUANT   } from '../../../modules/nf-core/kallisto/quant'
 
 include { QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT } from '../quant_tximport_summarizedexperiment'
-include { PseudoQuantSample                   } from './types'
+include { PseudoQuantified; Reads             } from './types'
 
 workflow QUANTIFY_PSEUDO_ALIGNMENT {
     take:
-    samplesheet               // channel: [ val(meta), /path/to/samplsheet ]
-    reads                     // channel: [ val(meta), [ reads ] ]
-    index                     // channel: [ val(meta2), /path/to/index/ ]
-    transcript_fasta          // channel: /path/to/transcript.fasta
-    gtf                       // channel: /path/to/genome.gtf
-    gtf_id_attribute          //     val: GTF gene ID attribute
-    gtf_extra_attribute       //     val: GTF alternative gene attribute (e.g. gene_name)
-    pseudo_aligner            //     val: kallisto or salmon
-    kallisto_quant_fraglen    //     val: Estimated fragment length required by Kallisto in single-end mode
-    kallisto_quant_fraglen_sd //     val: Estimated standard error for fragment length required by Kallisto in single-end mode
-    skip_merge                //    bool: skip cross-sample merging, run tximport per-sample
+    samplesheet: Value<Path>
+    ch_samples: Channel<Reads>
+    index: Value<Tuple<Map, Path>>
+    transcript_fasta: Value<Path>
+    gtf: Value<Path>
+    gtf_id_attribute: String // GTF gene ID attribute
+    gtf_extra_attribute: String // GTF alternative gene attribute (e.g. gene_name)
+    pseudo_aligner: String // kallisto or salmon
+    kallisto_quant_fraglen: Integer? // Estimated fragment length required by Kallisto in single-end mode
+    kallisto_quant_fraglen_sd: Integer? // Estimated standard error for fragment length required by Kallisto in single-end mode
+    skip_merge: Boolean // skip cross-sample merging, run tximport per-sample
 
     main:
 
@@ -29,36 +31,31 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
     //
     // NOTE: MultiQC needs Salmon outputs, but Kallisto logs
     if (pseudo_aligner == 'salmon') {
-        SALMON_QUANT (
-            reads,
-            index.combine(gtf).combine(transcript_fasta).first()
-        )
-        ch_pseudo_results = SALMON_QUANT.out.map { r -> [ r.meta, r.quant_dir ] }
-        ch_pseudo_multiqc = ch_pseudo_results
+        ch_salmon = SALMON_QUANT(ch_samples, index.combine(gtf).combine(transcript_fasta))
 
         // Salmon writes its log inside the quant directory rather than as a
         // discrete file, so log is null. meta_info.json is an optional output.
-        ch_sample_results = SALMON_QUANT.out.map { r ->
-            record(id: r.id, meta: r.meta, quant_dir: r.quant_dir, json_info: r.json_info, log: null)
+        ch_sample_results = ch_salmon.map { r ->
+            record(id: r.id, meta: r.meta, quant_dir: r.quant_dir, json_info: r.json_info, log: null, multiqc: r.quant_dir)
         }
     } else {
-        KALLISTO_QUANT (
-            reads,
-            index.combine(gtf.map { g -> [ g, null ] }).first(),
+        ch_kallisto = KALLISTO_QUANT(
+            ch_samples,
+            index.combine(gtf).map { meta, idx, gtf_file -> tuple(meta, idx, gtf_file, null) },
             kallisto_quant_fraglen,
             kallisto_quant_fraglen_sd
         )
-        ch_pseudo_results = KALLISTO_QUANT.out.map { r -> [ r.meta, r.quant_dir ] }
-        ch_pseudo_multiqc = KALLISTO_QUANT.out.map { r -> [ r.meta, r.log ] }
-        ch_sample_results = KALLISTO_QUANT.out
+        ch_sample_results = ch_kallisto.map { r ->
+            record(id: r.id, meta: r.meta, quant_dir: r.quant_dir, json_info: r.json_info, log: r.log, multiqc: r.log)
+        }
     }
 
     //
     // Post-process quantifications with tximport and SummarizedExperiment
     //
-    QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT (
+    ch_quant_merged = QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT(
         samplesheet,
-        ch_pseudo_results,
+        ch_sample_results.map { r -> record(id: r.id, meta: r.meta, quants: [ r.quant_dir ]) },
         gtf,
         gtf_id_attribute,
         gtf_extra_attribute,
@@ -66,27 +63,14 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
         skip_merge
     )
 
+    //
+    // Per-sample rows carry the quantification outputs; merged rows carry the tximport outputs:
+    // one per sample under skip_merge, a single 'all_samples' row otherwise.
+    //
+    ch_results = ch_sample_results
+        .map { r -> record(id: r.id, meta: r.meta, sample: r, merged: null) }
+        .mix(ch_quant_merged.map { m -> record(id: m.id, meta: m.meta, sample: null, merged: m) })
+
     emit:
-    results                       = ch_pseudo_results                                              // channel: [ val(meta), results_dir ]
-    multiqc                       = ch_pseudo_multiqc                                              // channel: [ val(meta), files_for_multiqc ]
-
-    // Merged quantification: a single row when merging, one per sample under skip_merge
-    quant_merged                  = QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT.out.results                // channel: QuantMerged
-
-    tx2gene                       = QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT.out.tx2gene                // channel: [ val(meta), tx2gene.tsv ]
-    tx2gene_augmented             = QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT.out.tx2gene_augmented      // channel: [ val(meta), tx2gene_augmented.tsv ]
-
-    tpm_gene                      = QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT.out.tpm_gene               //    path: *gene_tpm.tsv
-    counts_gene                   = QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT.out.counts_gene            //    path: *gene_counts.tsv
-    lengths_gene                  = QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT.out.lengths_gene           //    path: *gene_lengths.tsv
-    counts_gene_length_scaled     = QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT.out.counts_gene_length_scaled //    path: *gene_counts_length_scaled.tsv
-    counts_gene_scaled            = QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT.out.counts_gene_scaled     //    path: *gene_counts_scaled.tsv
-    tpm_transcript                = QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT.out.tpm_transcript         //    path: *transcript_tpm.tsv
-    counts_transcript             = QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT.out.counts_transcript      //    path: *transcript_counts.tsv
-    lengths_transcript            = QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT.out.lengths_transcript     //    path: *transcript_lengths.tsv
-
-    merged_gene_rds_unified       = QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT.out.merged_gene_rds       //    path: *.rds
-    merged_transcript_rds_unified = QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT.out.merged_transcript_rds //    path: *.rds
-
-    sample_results                = ch_sample_results                                              // channel: PseudoQuantSample
+    ch_results
 }

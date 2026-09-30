@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 //
 // Sub-sample FastQ files and pseudo-align with Salmon
 //      can be used to infer strandedness of library
@@ -6,59 +8,52 @@
 include { SALMON_INDEX } from '../../../modules/nf-core/salmon/index/main'
 include { FQ_SUBSAMPLE } from '../../../modules/nf-core/fq/subsample/main'
 include { SALMON_QUANT } from '../../../modules/nf-core/salmon/quant/main'
+include { Reads; SalmonSubsampled } from './types'
 
 workflow FASTQ_SUBSAMPLE_FQ_SALMON {
     take:
-    ch_reads            // channel: [ val(meta), [ reads ] ]
-    ch_genome_fasta     // channel: /path/to/genome.fasta
-    ch_transcript_fasta // channel: /path/to/transcript.fasta
-    ch_gtf              // channel: /path/to/genome.gtf
-    ch_index            // channel: /path/to/salmon/index/
-    make_index          // boolean: Whether to create salmon index before running salmon quant
+    ch_samples: Channel<Reads>
+    ch_genome_fasta: Value<Path?> // decoys for the Salmon index, absent when the genome is not provided
+    ch_transcript_fasta: Value<Path>
+    ch_gtf: Value<Path>
+    ch_index: Value<Path?> // prebuilt Salmon index, used when make_index is false
+    make_index: Boolean // Whether to create salmon index before running salmon quant
 
     main:
-
-    ch_gtf_transcript_fasta = ch_gtf.combine(ch_transcript_fasta)
 
     //
     // Create Salmon index if required
     //
-    ch_index_built = channel.empty()
     if (make_index) {
-        // genome_fasta may be an empty list (no decoys); wrap before combine() so an
-        // empty list contributes a position instead of being flattened away
-        ch_transcript_fasta
-            .combine(ch_genome_fasta.map { genome_fasta -> [genome_fasta] })
-            .map { items -> [ [:], items[0], items[1] ] }
-            .set { ch_index_input }
-
-        SALMON_INDEX ( ch_index_input )
-        ch_index = SALMON_INDEX.out.map { r -> [ r.meta, r.index ] }
-        ch_index_built = ch_index
+        ch_index_built = SALMON_INDEX(
+            ch_transcript_fasta
+                .map { transcript_fasta -> record(id: 'salmon_index', meta: [:], transcript_fasta: transcript_fasta) }
+                .combine(genome_fasta: ch_genome_fasta)
+        )
+        ch_index_ref = ch_index_built.map { r -> tuple(r.meta, r.index) }
     }
     else {
-        ch_index = ch_index.map { index -> [ [:], index ] }
+        ch_index_ref = ch_index.map { index -> tuple([:], index) }
     }
 
     //
     // Sub-sample FastQ files with fq
     //
-    FQ_SUBSAMPLE ( ch_reads )
+    ch_subsampled = FQ_SUBSAMPLE(ch_samples)
 
     //
     // Pseudo-alignment with Salmon
     //
-    ch_subsampled = FQ_SUBSAMPLE.out.map { r -> [r.meta, r.fastq] }
+    ch_quant = SALMON_QUANT(ch_subsampled, ch_index_ref.combine(ch_gtf).combine(ch_transcript_fasta))
 
-    SALMON_QUANT ( ch_subsampled, ch_index.combine(ch_gtf_transcript_fasta).first() )
+    ch_results = ch_subsampled.join(ch_quant, by: 'id')
+    if (make_index) {
+        ch_results = ch_results.combine(index_built: ch_index_built.map { r -> r.index })
+    }
+    else {
+        ch_results = ch_results.map { r -> r + record(index_built: null) }
+    }
 
     emit:
-    index             = ch_index                           // channel: [ val(meta), index ]
-    index_built       = ch_index_built.map { _meta, index -> index } // channel: path(salmon/index/), only set when built here
-
-    reads             = ch_subsampled                // channel: [ val(meta), fastq ]
-
-    results           = SALMON_QUANT.out.map { r -> [ r.meta, r.quant_dir ] } // channel: [ val(meta), results_dir ]
-    json_info         = SALMON_QUANT.out.filter { r -> r.json_info }.map { r -> [ r.meta, r.json_info ] } // channel: [ val(meta), json_info ]
-    lib_format_counts = SALMON_QUANT.out.filter { r -> r.lib_format_counts }.map { r -> [ r.meta, r.lib_format_counts ] } // channel: [ val(meta), lib_format_counts ]
+    ch_results
 }

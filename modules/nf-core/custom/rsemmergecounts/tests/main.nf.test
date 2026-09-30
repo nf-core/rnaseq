@@ -30,7 +30,7 @@ nextflow_process {
         when {
             process {
                 """
-                ch_genes = UNTAR.out.map { r -> [ r.meta, r.untar ] }.flatMap { meta, dir ->
+                ch_genes = UNTAR.out.map { r -> [ r.meta, r.dir ] }.flatMap { meta, dir ->
                     def files = []
                     dir.toFile().eachFileRecurse { f ->
                         if (f.name.endsWith('.genes.results')) {
@@ -39,7 +39,7 @@ nextflow_process {
                     }
                     files
                 }.collect()
-                ch_isoforms = UNTAR.out.map { r -> [ r.meta, r.untar ] }.flatMap { meta, dir ->
+                ch_isoforms = UNTAR.out.map { r -> [ r.meta, r.dir ] }.flatMap { meta, dir ->
                     def files = []
                     dir.toFile().eachFileRecurse { f ->
                         if (f.name.endsWith('.isoforms.results')) {

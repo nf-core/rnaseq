@@ -109,7 +109,7 @@ nextflow_process {
         then {
             assertAll(
             { assert process.success },
-            { assert file(process.out[0][0].gunzip).name == 'test.fa.v1.fa' }
+            { assert file(process.out[0][0].file).name == 'test.fa.v1.fa' }
             )
         }
 

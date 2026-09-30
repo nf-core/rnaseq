@@ -3,8 +3,8 @@
         "content": [
             {
                 "bed": null,
-                "gffread_fasta": null,
-                "gffread_gff": null,
+                "fasta": null,
+                "gff": null,
                 "gtf": "test.gtf:md5,1ea0ae98d3388e0576407dc4a24ef428",
                 "meta": {
                     "id": "test"
@@ -21,8 +21,8 @@
         "content": [
             {
                 "bed": null,
-                "gffread_fasta": null,
-                "gffread_gff": "test.gff3:md5,c4e5da6267c6bee5899a2c204ae1ad91",
+                "fasta": null,
+                "gff": "test.gff3:md5,c4e5da6267c6bee5899a2c204ae1ad91",
                 "gtf": null,
                 "meta": {
                     "id": "test"
@@ -39,8 +39,8 @@
         "content": [
             {
                 "bed": null,
-                "gffread_fasta": null,
-                "gffread_gff": null,
+                "fasta": null,
+                "gff": null,
                 "gtf": "test.gtf:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "meta": {
                     "id": "test"
@@ -57,8 +57,8 @@
         "content": [
             {
                 "bed": "test.bed:md5,96fd7117a706e7c2ccbe062beb635172",
-                "gffread_fasta": null,
-                "gffread_gff": null,
+                "fasta": null,
+                "gff": null,
                 "gtf": null,
                 "meta": {
                     "id": "test"
@@ -75,8 +75,8 @@
         "content": [
             {
                 "bed": "test.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "gffread_fasta": null,
-                "gffread_gff": null,
+                "fasta": null,
+                "gff": null,
                 "gtf": null,
                 "meta": {
                     "id": "test"
@@ -93,8 +93,8 @@
         "content": [
             {
                 "bed": null,
-                "gffread_fasta": "test.fasta:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "gffread_gff": null,
+                "fasta": "test.fasta:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "gff": null,
                 "gtf": null,
                 "meta": {
                     "id": "test"
@@ -111,8 +111,8 @@
         "content": [
             {
                 "bed": null,
-                "gffread_fasta": null,
-                "gffread_gff": "test.gff3:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "fasta": null,
+                "gff": "test.gff3:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "gtf": null,
                 "meta": {
                     "id": "test"
@@ -129,8 +129,8 @@
         "content": [
             {
                 "bed": null,
-                "gffread_fasta": "test.fasta:md5,5f8108fb51739a0588ccf0a251de919a",
-                "gffread_gff": null,
+                "fasta": "test.fasta:md5,5f8108fb51739a0588ccf0a251de919a",
+                "gff": null,
                 "gtf": null,
                 "meta": {
                     "id": "test"

@@ -66,15 +66,15 @@ workflow PREPARE_GENOME_REFERENCES {
     ch_gff_uncompressed = ch_no_path
     if (gtf) {
         if (gtf.endsWith('.gz')) {
-            ch_gtf = GUNZIP_GTF(record(id: 'gtf', meta: [:], archive: file(gtf, checkIfExists: true))).map { r -> r.gunzip }
+            ch_gtf = GUNZIP_GTF(record(id: 'gtf', meta: [:], archive: file(gtf, checkIfExists: true))).map { r -> r.file }
         } else {
             ch_gtf = channel.value(file(gtf, checkIfExists: true))
         }
     } else if (gff) {
         if (gff.endsWith('.gz')) {
             ch_gff_gunzipped    = GUNZIP_GFF(record(id: 'gff', meta: [:], archive: file(gff, checkIfExists: true)))
-            ch_gff_uncompressed = ch_gff_gunzipped.map { r -> r.gunzip }
-            ch_gff              = ch_gff_gunzipped.map { r -> record(id: r.id, meta: r.meta, gff: r.gunzip) }
+            ch_gff_uncompressed = ch_gff_gunzipped.map { r -> r.file }
+            ch_gff              = ch_gff_gunzipped.map { r -> record(id: r.id, meta: r.meta, gff: r.file) }
         } else {
             ch_gff = channel.value(record(id: 'gff', meta: [:], gff: file(gff, checkIfExists: true)))
         }
@@ -87,7 +87,7 @@ workflow PREPARE_GENOME_REFERENCES {
     // 2) Check if we actually have a FASTA
     //-------------------------------------
     if (fasta_provided && fasta.endsWith('.gz')) {
-        ch_fasta = GUNZIP_FASTA(record(id: 'fasta', meta: [:], archive: file(fasta, checkIfExists: true))).map { r -> r.gunzip }
+        ch_fasta = GUNZIP_FASTA(record(id: 'fasta', meta: [:], archive: file(fasta, checkIfExists: true))).map { r -> r.file }
     } else if (fasta_provided) {
         ch_fasta = channel.value(file(fasta, checkIfExists: true))
     } else {
@@ -122,7 +122,7 @@ workflow PREPARE_GENOME_REFERENCES {
     ch_gtf_pre_concat   = ch_no_path
     if (fasta_provided && additional_fasta && has_gtf) {
         if (additional_fasta.endsWith('.gz')) {
-            ch_add_fasta = GUNZIP_ADDITIONAL_FASTA(record(id: 'additional_fasta', meta: [:], archive: file(additional_fasta, checkIfExists: true))).map { r -> r.gunzip }
+            ch_add_fasta = GUNZIP_ADDITIONAL_FASTA(record(id: 'additional_fasta', meta: [:], archive: file(additional_fasta, checkIfExists: true))).map { r -> r.file }
             ch_additional_fasta_uncompressed = ch_add_fasta
         } else {
             ch_add_fasta = channel.value(file(additional_fasta, checkIfExists: true))
@@ -149,7 +149,7 @@ workflow PREPARE_GENOME_REFERENCES {
         // No GTF to concatenate against: the additional FASTA is only uncompressed for publishing.
         ch_fasta_pre_concat = ch_fasta
         if (additional_fasta.endsWith('.gz')) {
-            ch_additional_fasta_uncompressed = GUNZIP_ADDITIONAL_FASTA(record(id: 'additional_fasta', meta: [:], archive: file(additional_fasta, checkIfExists: true))).map { r -> r.gunzip }
+            ch_additional_fasta_uncompressed = GUNZIP_ADDITIONAL_FASTA(record(id: 'additional_fasta', meta: [:], archive: file(additional_fasta, checkIfExists: true))).map { r -> r.file }
         }
     }
 
@@ -157,7 +157,7 @@ workflow PREPARE_GENOME_REFERENCES {
     // 5) Uncompress gene BED or create from GTF if not given
     //------------------------------------------------------
     if (gene_bed && gene_bed.endsWith('.gz')) {
-        ch_gene_bed = GUNZIP_GENE_BED(record(id: 'gene_bed', meta: [:], archive: file(gene_bed, checkIfExists: true))).map { r -> r.gunzip }
+        ch_gene_bed = GUNZIP_GENE_BED(record(id: 'gene_bed', meta: [:], archive: file(gene_bed, checkIfExists: true))).map { r -> r.file }
     } else if (gene_bed) {
         ch_gene_bed = channel.value(file(gene_bed, checkIfExists: true))
     } else if (prokaryotic && has_gtf) {
@@ -184,7 +184,7 @@ workflow PREPARE_GENOME_REFERENCES {
     if (transcript_fasta) {
         // Use user-provided transcript FASTA
         if (transcript_fasta.endsWith('.gz')) {
-            ch_transcript_fasta_supplied = GUNZIP_TRANSCRIPT_FASTA(record(id: 'transcript_fasta', meta: [:], archive: file(transcript_fasta, checkIfExists: true))).map { r -> r.gunzip }
+            ch_transcript_fasta_supplied = GUNZIP_TRANSCRIPT_FASTA(record(id: 'transcript_fasta', meta: [:], archive: file(transcript_fasta, checkIfExists: true))).map { r -> r.file }
         } else {
             ch_transcript_fasta_supplied = channel.value(file(transcript_fasta, checkIfExists: true))
         }
@@ -202,7 +202,7 @@ workflow PREPARE_GENOME_REFERENCES {
         ch_transcript_fasta = GFFREAD_TRANSCRIPTS(
             ch_gtf.map { gtf_file -> record(id: 'transcripts', meta: [id: 'transcripts'], gff: gtf_file) },
             ch_fasta
-        ).map { r -> r.gffread_fasta }
+        ).map { r -> r.fasta }
     } else if (fasta_provided && has_gtf && use_sentieon_star) {
         // Build transcripts from genome if we have it
         ch_rsem_reference = SENTIEON_MAKE_TRANSCRIPTS_FASTA(
@@ -253,7 +253,7 @@ workflow PREPARE_GENOME_REFERENCES {
         )
 
         ch_rrna_fastas = ch_rrna_gunzipped
-            .map { r -> r.gunzip }
+            .map { r -> r.file }
             .mix(ch_rrna_inputs.filter { rrna_fasta -> !rrna_fasta.name.endsWith('.gz') })
     }
 
@@ -261,7 +261,7 @@ workflow PREPARE_GENOME_REFERENCES {
     // 9) Kraken2 database (for contaminant screening)
     //---------------------------------------------------------
     if (contaminant_screening && kraken_db && kraken_db.endsWith('.tar.gz')) {
-        ch_kraken_db = UNTAR_KRAKEN_DB(record(id: 'kraken_db', meta: [:], archive: file(kraken_db, checkIfExists: true))).map { r -> r.untar }
+        ch_kraken_db = UNTAR_KRAKEN_DB(record(id: 'kraken_db', meta: [:], archive: file(kraken_db, checkIfExists: true))).map { r -> r.dir }
     } else if (contaminant_screening && kraken_db) {
         ch_kraken_db = channel.value(file(kraken_db, checkIfExists: true))
     } else {

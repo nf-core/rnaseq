@@ -30,7 +30,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = UNTAR.out.map { r -> [ r.meta, r.untar ] }.map { meta, dir -> record(id: meta.id, meta: meta, quants: dir.listFiles().collect()) }
+                input[0] = UNTAR.out.map { r -> [ r.meta, r.dir ] }.map { meta, dir -> record(id: meta.id, meta: meta, quants: dir.listFiles().collect()) }
                 input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
                 input[2] = 'kallisto'
                 input[3] = 'gene_id'
@@ -67,7 +67,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = UNTAR.out.map { r -> [ r.meta, r.untar ] }.map { meta, dir -> record(id: meta.id, meta: meta, quants: dir.listFiles().collect()) }
+                input[0] = UNTAR.out.map { r -> [ r.meta, r.dir ] }.map { meta, dir -> record(id: meta.id, meta: meta, quants: dir.listFiles().collect()) }
                 input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
                 input[2] = 'kallisto'
                 input[3] = 'gene_id'
@@ -104,7 +104,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = UNTAR.out.map { r -> [ r.meta, r.untar ] }.map { meta, dir ->
+                input[0] = UNTAR.out.map { r -> [ r.meta, r.dir ] }.map { meta, dir ->
                     def results = []
                     dir.eachFileRecurse { f ->
                         if (f.name.endsWith('.isoforms.results')) results << f
@@ -149,7 +149,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = UNTAR.out.map { r -> [ r.meta, r.untar ] }.map { meta, dir -> record(id: meta.id, meta: meta, quants: dir.listFiles().collect()) }
+                input[0] = UNTAR.out.map { r -> [ r.meta, r.dir ] }.map { meta, dir -> record(id: meta.id, meta: meta, quants: dir.listFiles().collect()) }
                 input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
                 input[2] = 'kallisto'
                 input[3] = 'gene_id'

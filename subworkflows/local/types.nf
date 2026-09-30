@@ -30,6 +30,8 @@ record AlignedSample {
 }
 
 // Per-sample quantification of the alignment-based quantifier (RSEM or Salmon) or a pseudo-aligner.
+// json_info (Salmon meta_info.json or Kallisto run_info.json) and multiqc (the file MultiQC parses) are
+// only set for Salmon and Kallisto.
 record QuantSample {
     id:                String
     meta:              Map
@@ -37,7 +39,9 @@ record QuantSample {
     counts_transcript: Path?
     stat:              Path?
     quant_dir:         Path?
+    json_info:         Path?
     log:               Path?
+    multiqc:           Path?
 }
 
 // One FQ_LINT result. Raw, trimmed, BBSplit-filtered and rRNA-removed reads each publish through

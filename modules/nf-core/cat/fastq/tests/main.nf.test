@@ -132,7 +132,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = GUNZIP.out.map { r -> record(id: r.meta.id, meta: r.meta, reads: [ r.gunzip ]) }
+                input[0] = GUNZIP.out.map { r -> record(id: r.meta.id, meta: r.meta, reads: [ r.file ]) }
                     .toSortedList { a, b -> a[0].id <=> b[0].id }
                     .map { items -> [[ id: 'test', single_end: true ], items.collect { it[1] }] }
                 """
@@ -184,7 +184,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = GUNZIP.out.map { r -> record(id: r.meta.id, meta: r.meta, reads: [ r.gunzip ]) }
+                input[0] = GUNZIP.out.map { r -> record(id: r.meta.id, meta: r.meta, reads: [ r.file ]) }
                     .toSortedList { a, b -> a[0].id <=> b[0].id }
                     .map { items -> [[ id: 'test', single_end: false ], items.collect { it[1] }] }
                 """

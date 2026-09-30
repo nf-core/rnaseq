@@ -33,8 +33,8 @@ nextflow_process {
             assertAll (
                 { assert process.success },
                 { assert snapshot(process.out[0][0]).match() },
-                { assert process.out[0][0].gffread_gff == null },
-                { assert process.out[0][0].gffread_fasta == null }
+                { assert process.out[0][0].gff == null },
+                { assert process.out[0][0].fasta == null }
             )
         }
 
@@ -65,8 +65,8 @@ nextflow_process {
             assertAll (
                 { assert process.success },
                 { assert snapshot(process.out[0][0]).match() },
-                { assert process.out[0][0].gffread_gff == null },
-                { assert process.out[0][0].gffread_fasta == null }
+                { assert process.out[0][0].gff == null },
+                { assert process.out[0][0].fasta == null }
             )
         }
 
@@ -97,7 +97,7 @@ nextflow_process {
                 { assert process.success },
                 { assert snapshot(process.out[0][0]).match() },
                 { assert process.out[0][0].gtf == null },
-                { assert process.out[0][0].gffread_fasta == null }
+                { assert process.out[0][0].fasta == null }
             )
         }
 
@@ -129,7 +129,7 @@ nextflow_process {
                 { assert process.success },
                 { assert snapshot(process.out[0][0]).match() },
                 { assert process.out[0][0].gtf == null },
-                { assert process.out[0][0].gffread_fasta == null }
+                { assert process.out[0][0].fasta == null }
             )
         }
 
@@ -160,7 +160,7 @@ nextflow_process {
                 { assert process.success },
                 { assert snapshot(process.out[0][0]).match() },
                 { assert process.out[0][0].gtf == null },
-                { assert process.out[0][0].gffread_gff == null }
+                { assert process.out[0][0].gff == null }
             )
         }
 
@@ -192,7 +192,7 @@ nextflow_process {
                 { assert process.success },
                 { assert snapshot(process.out[0][0]).match() },
                 { assert process.out[0][0].gtf == null },
-                { assert process.out[0][0].gffread_gff == null }
+                { assert process.out[0][0].gff == null }
             )
         }
 

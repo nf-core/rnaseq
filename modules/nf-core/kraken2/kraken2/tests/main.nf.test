@@ -38,7 +38,7 @@ nextflow_process {
                         checkIfExists: true
                     )]
                 )
-                input[1] = UNTAR.out.map { r -> [ r.meta, r.untar ] }.map{ it[1] }
+                input[1] = UNTAR.out.map { r -> [ r.meta, r.dir ] }.map{ it[1] }
                 input[2] = true
                 input[3] = false
                 """
@@ -82,7 +82,7 @@ nextflow_process {
 
                         ]
                 )
-                input[1] = UNTAR.out.map { r -> [ r.meta, r.untar ] }.map{ it[1] }
+                input[1] = UNTAR.out.map { r -> [ r.meta, r.dir ] }.map{ it[1] }
                 input[2] = true
                 input[3] = false
                 """
@@ -125,7 +125,7 @@ nextflow_process {
                         checkIfExists: true
                     )]
                 )
-                input[1] = UNTAR.out.map { r -> [ r.meta, r.untar ] }.map{ it[1] }
+                input[1] = UNTAR.out.map { r -> [ r.meta, r.dir ] }.map{ it[1] }
                 input[2] = false
                 input[3] = true
                 """

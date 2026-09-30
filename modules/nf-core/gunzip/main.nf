@@ -13,7 +13,7 @@ process GUNZIP {
     record(id: String, meta: Map, archive: Path)
 
     output:
-    record(id: id, meta: meta, gunzip: file("${gunzip}"))
+    record(id: id, meta: meta, file: file("${gunzip}"))
 
     topic:
     tuple(task.process, 'gunzip', eval('gunzip --version 2>&1 | head -1 | sed "s/^.*(gzip) //; s/ Copyright.*//"')) >> 'versions'

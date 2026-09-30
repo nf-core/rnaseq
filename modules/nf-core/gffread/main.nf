@@ -18,8 +18,8 @@ process GFFREAD {
         id:            id,
         meta:          meta,
         gtf:           file('*.gtf', optional: true),
-        gffread_gff:   file('*.gff3', optional: true),
-        gffread_fasta: file('*.fasta', optional: true),
+        gff:           file('*.gff3', optional: true),
+        fasta:         file('*.fasta', optional: true),
         bed:           file('*.bed', optional: true)
     )
 

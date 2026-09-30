@@ -83,7 +83,7 @@ workflow PREPARE_GENOME_INDICES {
     //---------------------------------------------------------
     if ('bbsplit' in prepare_tool_indices && bbsplit_index && bbsplit_index.endsWith('.tar.gz')) {
         // Use user-provided bbsplit index
-        ch_bbsplit_index = UNTAR_BBSPLIT_INDEX(record(id: 'bbsplit_index', meta: [:], archive: file(bbsplit_index, checkIfExists: true))).map { r -> r.untar }
+        ch_bbsplit_index = UNTAR_BBSPLIT_INDEX(record(id: 'bbsplit_index', meta: [:], archive: file(bbsplit_index, checkIfExists: true))).map { r -> r.dir }
         ch_bbsplit_log   = ch_no_path
     } else if ('bbsplit' in prepare_tool_indices && bbsplit_index) {
         ch_bbsplit_index = channel.value(file(bbsplit_index, checkIfExists: true))
@@ -120,7 +120,7 @@ workflow PREPARE_GENOME_INDICES {
     //-------------------------------------------------------------
     // Build SortMeRNA index only when using sortmerna
     if ('sortmerna' in prepare_tool_indices && sortmerna_index && sortmerna_index.endsWith('.tar.gz')) {
-        ch_sortmerna_index = UNTAR_SORTMERNA_INDEX(record(id: 'sortmerna_index', meta: [:], archive: file(sortmerna_index, checkIfExists: true))).map { r -> r.untar }
+        ch_sortmerna_index = UNTAR_SORTMERNA_INDEX(record(id: 'sortmerna_index', meta: [:], archive: file(sortmerna_index, checkIfExists: true))).map { r -> r.dir }
     } else if ('sortmerna' in prepare_tool_indices && sortmerna_index) {
         ch_sortmerna_index = channel.value(file(sortmerna_index, checkIfExists: true))
     } else if ('sortmerna' in prepare_tool_indices) {
@@ -141,7 +141,7 @@ workflow PREPARE_GENOME_INDICES {
     //-------------------------------------------------------------
     // No need to build as that is handled in the fastq_remove_rrna subworkflow from nf-core
     if ('bowtie2_rrna' in prepare_tool_indices && bowtie2_rrna_index.endsWith('.tar.gz')) {
-        ch_bowtie2_rrna_index = UNTAR_BOWTIE2_RRNA_INDEX(record(id: 'bowtie2_rrna_index', meta: [:], archive: file(bowtie2_rrna_index, checkIfExists: true))).map { r -> r.untar }
+        ch_bowtie2_rrna_index = UNTAR_BOWTIE2_RRNA_INDEX(record(id: 'bowtie2_rrna_index', meta: [:], archive: file(bowtie2_rrna_index, checkIfExists: true))).map { r -> r.dir }
     } else if ('bowtie2_rrna' in prepare_tool_indices) {
         ch_bowtie2_rrna_index = channel.value(file(bowtie2_rrna_index, checkIfExists: true))
     } else {
@@ -169,7 +169,7 @@ workflow PREPARE_GENOME_INDICES {
         // Pre-built STAR index supplied by the user.
         if (star_index.endsWith('.tar.gz')) {
             ch_star_raw = UNTAR_STAR_INDEX(record(id: 'star_index', meta: [:], archive: file(star_index, checkIfExists: true)))
-                .map { r -> record(id: r.id, meta: r.meta, index: r.untar) }
+                .map { r -> record(id: r.id, meta: r.meta, index: r.dir) }
         } else {
             ch_star_raw = channel.value(record(id: 'star_index', meta: [:], index: file(star_index, checkIfExists: true)))
         }
@@ -197,7 +197,7 @@ workflow PREPARE_GENOME_INDICES {
     // ch_rsem_transcript_fasta is the incidental *transcripts.fa the index step also emits; unused by the pipeline, published under --save_reference.
     def build_rsem = 'star_rsem' in prepare_tool_indices
     if (build_rsem && rsem_index && rsem_index.endsWith('.tar.gz')) {
-        ch_rsem_index            = UNTAR_RSEM_INDEX(record(id: 'rsem_index', meta: [:], archive: file(rsem_index, checkIfExists: true))).map { r -> r.untar }
+        ch_rsem_index            = UNTAR_RSEM_INDEX(record(id: 'rsem_index', meta: [:], archive: file(rsem_index, checkIfExists: true))).map { r -> r.dir }
         ch_rsem_transcript_fasta = ch_no_path
     } else if (build_rsem && rsem_index) {
         ch_rsem_index            = channel.value(file(rsem_index, checkIfExists: true))
@@ -232,7 +232,7 @@ workflow PREPARE_GENOME_INDICES {
     }
     // the index
     if (build_hisat2 && hisat2_index && hisat2_index.endsWith('.tar.gz')) {
-        ch_hisat2_index = UNTAR_HISAT2_INDEX(record(id: 'hisat2_index', meta: [:], archive: file(hisat2_index, checkIfExists: true))).map { r -> r.untar }
+        ch_hisat2_index = UNTAR_HISAT2_INDEX(record(id: 'hisat2_index', meta: [:], archive: file(hisat2_index, checkIfExists: true))).map { r -> r.dir }
     } else if (build_hisat2 && hisat2_index) {
         ch_hisat2_index = channel.value(file(hisat2_index, checkIfExists: true))
     } else if (build_hisat2 && fasta_provided) {
@@ -252,7 +252,7 @@ workflow PREPARE_GENOME_INDICES {
     //---------------------------------------------------------
     def build_bowtie2 = 'bowtie2_salmon' in prepare_tool_indices
     if (build_bowtie2 && bowtie2_index && bowtie2_index.endsWith('.tar.gz')) {
-        ch_bowtie2_index = UNTAR_BOWTIE2_INDEX(record(id: 'bowtie2_index', meta: [:], archive: file(bowtie2_index, checkIfExists: true))).map { r -> r.untar }
+        ch_bowtie2_index = UNTAR_BOWTIE2_INDEX(record(id: 'bowtie2_index', meta: [:], archive: file(bowtie2_index, checkIfExists: true))).map { r -> r.dir }
     } else if (build_bowtie2 && bowtie2_index) {
         ch_bowtie2_index = channel.value(file(bowtie2_index, checkIfExists: true))
     } else if (build_bowtie2) {
@@ -268,7 +268,7 @@ workflow PREPARE_GENOME_INDICES {
     // 8) Salmon index -> can skip genome if transcript_fasta is enough
     //------------------------------------------------------
     if (salmon_index && salmon_index.endsWith('.tar.gz')) {
-        ch_salmon_index = UNTAR_SALMON_INDEX(record(id: 'salmon_index', meta: [:], archive: file(salmon_index))).map { r -> r.untar }
+        ch_salmon_index = UNTAR_SALMON_INDEX(record(id: 'salmon_index', meta: [:], archive: file(salmon_index))).map { r -> r.dir }
     } else if (salmon_index) {
         ch_salmon_index = channel.value(file(salmon_index))
     } else if ('salmon' in prepare_tool_indices && fasta_provided) {
@@ -292,7 +292,7 @@ workflow PREPARE_GENOME_INDICES {
     // 9) Kallisto index -> only needs transcript FASTA
     //--------------------------------------------------
     if (kallisto_index && kallisto_index.endsWith('.tar.gz')) {
-        ch_kallisto_index = UNTAR_KALLISTO_INDEX(record(id: 'kallisto_index', meta: [:], archive: file(kallisto_index))).map { r -> r.untar }
+        ch_kallisto_index = UNTAR_KALLISTO_INDEX(record(id: 'kallisto_index', meta: [:], archive: file(kallisto_index))).map { r -> r.dir }
     } else if (kallisto_index) {
         ch_kallisto_index = channel.value(file(kallisto_index))
     } else if ('kallisto' in prepare_tool_indices) {

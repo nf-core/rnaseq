@@ -2,15 +2,16 @@
     "homo_sapiens - gtf": {
         "content": [
             [
-                [
-                    {
+                {
+                    "bed": "test.bed:md5,ef93285cfee828e5f7b3301b2f49608f",
+                    "id": "test",
+                    "meta": {
                         "id": "test"
-                    },
-                    "test.bed:md5,ef93285cfee828e5f7b3301b2f49608f"
-                ]
+                    }
+                }
             ]
         ],
-        "timestamp": "2026-09-29T17:33:25.625695885",
+        "timestamp": "2026-09-30T18:14:50.581496365",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -19,15 +20,16 @@
     "homo_sapiens - gtf - extended": {
         "content": [
             [
-                [
-                    {
+                {
+                    "bed": "test.bed:md5,b39393c8f89e716cde121ae7da8c5fe5",
+                    "id": "test",
+                    "meta": {
                         "id": "test"
-                    },
-                    "test.bed:md5,b39393c8f89e716cde121ae7da8c5fe5"
-                ]
+                    }
+                }
             ]
         ],
-        "timestamp": "2026-09-29T17:33:43.034502774",
+        "timestamp": "2026-09-30T18:14:47.787915709",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -36,15 +38,16 @@
     "homo_sapiens - gtf - stub": {
         "content": [
             [
-                [
-                    {
+                {
+                    "bed": "test.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
+                    "id": "test",
+                    "meta": {
                         "id": "test"
-                    },
-                    "test.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
-                ]
+                    }
+                }
             ]
         ],
-        "timestamp": "2026-09-29T17:27:43.553292453",
+        "timestamp": "2026-09-30T18:14:27.541680934",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"

@@ -5,31 +5,22 @@
                 "bed": null,
                 "fasta": null,
                 "gff": null,
-                "gtf": "test.gtf:md5,1ea0ae98d3388e0576407dc4a24ef428",
+                "gtf": "genome.gtf:md5,1ea0ae98d3388e0576407dc4a24ef428",
+                "id": "test",
                 "meta": {
                     "id": "test"
                 }
             }
         ],
-        "timestamp": "2026-09-29T17:45:45.090028355",
+        "timestamp": "2026-09-30T18:15:21.353464263",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
         }
     },
     "sarscov2-gff3-gff3": {
-        "content": [
-            {
-                "bed": null,
-                "fasta": null,
-                "gff": "test.gff3:md5,c4e5da6267c6bee5899a2c204ae1ad91",
-                "gtf": null,
-                "meta": {
-                    "id": "test"
-                }
-            }
-        ],
-        "timestamp": "2026-09-29T17:46:13.070957192",
+        "content": null,
+        "timestamp": "2026-09-30T18:15:01.3128049",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -41,13 +32,14 @@
                 "bed": null,
                 "fasta": null,
                 "gff": null,
-                "gtf": "test.gtf:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "gtf": "genome.gtf:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "id": "test",
                 "meta": {
                     "id": "test"
                 }
             }
         ],
-        "timestamp": "2026-09-29T17:45:59.114748395",
+        "timestamp": "2026-09-30T18:15:06.608514147",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -56,16 +48,17 @@
     "sarscov2-gff3-bed": {
         "content": [
             {
-                "bed": "test.bed:md5,96fd7117a706e7c2ccbe062beb635172",
+                "bed": "genome.bed:md5,96fd7117a706e7c2ccbe062beb635172",
                 "fasta": null,
                 "gff": null,
                 "gtf": null,
+                "id": "test",
                 "meta": {
                     "id": "test"
                 }
             }
         ],
-        "timestamp": "2026-09-29T17:47:13.809129942",
+        "timestamp": "2026-09-30T18:16:06.423453417",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -74,70 +67,41 @@
     "sarscov2-gff3-bed-stub": {
         "content": [
             {
-                "bed": "test.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "bed": "genome.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "fasta": null,
                 "gff": null,
                 "gtf": null,
+                "id": "test",
                 "meta": {
                     "id": "test"
                 }
             }
         ],
-        "timestamp": "2026-09-29T17:47:27.25080005",
+        "timestamp": "2026-09-30T18:15:11.035834231",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
         }
     },
     "sarscov2-gff3-fasta-stub": {
-        "content": [
-            {
-                "bed": null,
-                "fasta": "test.fasta:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "gff": null,
-                "gtf": null,
-                "meta": {
-                    "id": "test"
-                }
-            }
-        ],
-        "timestamp": "2026-09-29T17:47:00.547433666",
+        "content": null,
+        "timestamp": "2026-09-30T18:16:06.297242257",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
         }
     },
     "sarscov2-gff3-gff3-stub": {
-        "content": [
-            {
-                "bed": null,
-                "fasta": null,
-                "gff": "test.gff3:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "gtf": null,
-                "meta": {
-                    "id": "test"
-                }
-            }
-        ],
-        "timestamp": "2026-09-29T17:46:26.745725555",
+        "content": null,
+        "timestamp": "2026-09-30T18:14:59.357388735",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
         }
     },
     "sarscov2-gff3-fasta": {
-        "content": [
-            {
-                "bed": null,
-                "fasta": "test.fasta:md5,5f8108fb51739a0588ccf0a251de919a",
-                "gff": null,
-                "gtf": null,
-                "meta": {
-                    "id": "test"
-                }
-            }
-        ],
-        "timestamp": "2026-09-29T17:46:42.302337479",
+        "content": null,
+        "timestamp": "2026-09-30T18:14:56.233496527",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"

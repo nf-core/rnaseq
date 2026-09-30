@@ -4,12 +4,13 @@
             {
                 "fasta": "genome_transcriptome.fasta:md5,6a20c1a2e465519320a0d01f338f5cb5",
                 "gtf": "genome_transcriptome.gtf:md5,bc88d95e7f27540e6b9906105d5be361",
+                "id": "genome",
                 "meta": {
                     "id": "genome"
                 }
             }
         ],
-        "timestamp": "2026-09-29T17:30:19.822533256",
+        "timestamp": "2026-09-30T18:14:51.197379581",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -20,12 +21,13 @@
             {
                 "fasta": "genome_transcriptome.fasta:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "gtf": "genome_transcriptome.gtf:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "id": "genome",
                 "meta": {
                     "id": "genome"
                 }
             }
         ],
-        "timestamp": "2026-09-29T17:26:02.905182419",
+        "timestamp": "2026-09-30T18:14:59.242234674",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"

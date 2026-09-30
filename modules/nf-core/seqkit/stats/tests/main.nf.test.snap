@@ -3,17 +3,18 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
+                    {
+                        "id": "test",
+                        "meta": {
                             "id": "test",
                             "single_end": true
                         },
-                        "test.tsv:md5,388047b0263b8d0a3041d6d80b316782"
-                    ]
+                        "stats": "test.tsv:md5,388047b0263b8d0a3041d6d80b316782"
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-09-29T17:50:59.590570229",
+        "timestamp": "2026-09-30T18:18:41.209142109",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -23,17 +24,18 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
+                    {
+                        "id": "test",
+                        "meta": {
                             "id": "test",
                             "single_end": false
                         },
-                        "test.tsv:md5,6f6f8b42abd183c6ab90346a311ca522"
-                    ]
+                        "stats": "test.tsv:md5,6f6f8b42abd183c6ab90346a311ca522"
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-09-29T17:51:15.467020685",
+        "timestamp": "2026-09-30T18:18:25.104359636",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -43,17 +45,18 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
+                    {
+                        "id": "test",
+                        "meta": {
                             "id": "test",
                             "single_end": false
                         },
-                        "test.tsv:md5,c79d860b2b0379810e4df3e8359fc8ed"
-                    ]
+                        "stats": "test.tsv:md5,c79d860b2b0379810e4df3e8359fc8ed"
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-09-29T17:51:28.492463382",
+        "timestamp": "2026-09-30T18:18:28.227169529",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -63,17 +66,18 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
+                    {
+                        "id": "test",
+                        "meta": {
                             "id": "test",
                             "single_end": true
                         },
-                        "test.tsv:md5,76d5ab444de880ef443f358841e44cf9"
-                    ]
+                        "stats": "test.tsv:md5,76d5ab444de880ef443f358841e44cf9"
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-09-29T17:50:30.826545838",
+        "timestamp": "2026-09-30T18:17:46.337492372",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -83,17 +87,18 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
+                    {
+                        "id": "test",
+                        "meta": {
                             "id": "test",
                             "single_end": false
                         },
-                        "test.tsv:md5,2d96d9f7d85456090e138b81bf97bcd5"
-                    ]
+                        "stats": "test.tsv:md5,2d96d9f7d85456090e138b81bf97bcd5"
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-09-29T17:50:45.787033225",
+        "timestamp": "2026-09-30T18:18:26.42331465",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -103,17 +108,18 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
+                    {
+                        "id": "test",
+                        "meta": {
                             "id": "test",
                             "single_end": true
                         },
-                        "test.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
+                        "stats": "test.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-09-29T17:51:42.773458859",
+        "timestamp": "2026-09-30T18:18:02.751280498",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"

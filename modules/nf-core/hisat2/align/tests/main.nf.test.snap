@@ -40,7 +40,9 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "raw_bams": "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "raw_bams": [
+                            "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ],
                         "unmapped": [
                             
                         ]
@@ -48,7 +50,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-29T20:54:45.385910755",
+        "timestamp": "2026-09-30T18:15:12.7213615",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -81,7 +83,9 @@
                             "id": "test",
                             "single_end": true
                         },
-                        "raw_bams": "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "raw_bams": [
+                            "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ],
                         "unmapped": [
                             
                         ]
@@ -89,7 +93,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-29T20:54:14.10794859",
+        "timestamp": "2026-09-30T18:15:29.825996587",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -108,7 +112,9 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "raw_bams": "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "raw_bams": [
+                            "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ],
                         "unmapped": [
                             
                         ]
@@ -116,7 +122,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-29T20:55:38.136185684",
+        "timestamp": "2026-09-30T18:15:20.029189264",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -149,7 +155,9 @@
                             "id": "test",
                             "single_end": true
                         },
-                        "raw_bams": "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "raw_bams": [
+                            "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ],
                         "unmapped": [
                             
                         ]
@@ -157,7 +165,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-29T20:55:10.668418267",
+        "timestamp": "2026-09-30T18:15:40.804243952",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"

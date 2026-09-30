@@ -2,16 +2,17 @@
     "bam - stub": {
         "content": [
             [
-                [
-                    {
+                {
+                    "id": "test",
+                    "idxstats": "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e",
+                    "meta": {
                         "id": "test",
                         "single_end": false
-                    },
-                    "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e"
-                ]
+                    }
+                }
             ]
         ],
-        "timestamp": "2026-09-29T17:33:18.205705962",
+        "timestamp": "2026-09-30T18:17:38.91321975",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -20,16 +21,17 @@
     "bam": {
         "content": [
             [
-                [
-                    {
+                {
+                    "id": "test",
+                    "idxstats": "test.idxstats:md5,df60a8c8d6621100d05178c93fb053a2",
+                    "meta": {
                         "id": "test",
                         "single_end": false
-                    },
-                    "test.idxstats:md5,df60a8c8d6621100d05178c93fb053a2"
-                ]
+                    }
+                }
             ]
         ],
-        "timestamp": "2026-09-29T17:33:00.890428577",
+        "timestamp": "2026-09-30T18:17:25.773288161",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"

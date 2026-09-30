@@ -2,6 +2,7 @@
     "featurecounts biotype counts - stub": {
         "content": [
             {
+                "id": "test",
                 "meta": {
                     "id": "test"
                 },
@@ -9,7 +10,7 @@
                 "tsv": "test.biotype_counts_mqc.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
             }
         ],
-        "timestamp": "2026-09-29T17:33:08.656002158",
+        "timestamp": "2026-09-30T18:15:31.666164158",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -18,6 +19,7 @@
     "featurecounts biotype counts": {
         "content": [
             {
+                "id": "test",
                 "meta": {
                     "id": "test"
                 },
@@ -25,7 +27,7 @@
                 "tsv": "test.biotype_counts_mqc.tsv:md5,6b122075c66e5565fd82804095dfd68a"
             }
         ],
-        "timestamp": "2026-09-29T17:32:27.26111277",
+        "timestamp": "2026-09-30T18:14:23.23887654",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"

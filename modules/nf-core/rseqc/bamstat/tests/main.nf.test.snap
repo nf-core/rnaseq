@@ -5,6 +5,7 @@
                 "0": [
                     {
                         "bamstat": "test.bam_stat.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "id": "test",
                         "meta": {
                             "id": "test"
                         }
@@ -12,7 +13,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-30T08:41:39.600476891",
+        "timestamp": "2026-09-30T18:16:54.473485867",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -24,6 +25,7 @@
                 "0": [
                     {
                         "bamstat": "test.bam_stat.txt:md5,2675857864c1d1139b2a19d25dc36b09",
+                        "id": "test",
                         "meta": {
                             "id": "test"
                         }
@@ -31,7 +33,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-30T08:41:18.812833004",
+        "timestamp": "2026-09-30T18:17:27.75946978",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"

@@ -2,17 +2,18 @@
     "test_untar_onlyfiles": {
         "content": [
             [
-                [
-                    {
-                        
-                    },
-                    [
+                {
+                    "dir": [
                         "hello.txt:md5,e59ff97941044f85df5297e1c302d260"
-                    ]
-                ]
+                    ],
+                    "id": "test",
+                    "meta": {
+                        
+                    }
+                }
             ]
         ],
-        "timestamp": "2026-09-29T17:42:51.575357465",
+        "timestamp": "2026-09-30T18:19:24.167123438",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -21,17 +22,18 @@
     "test_untar_onlyfiles - stub": {
         "content": [
             [
-                [
-                    {
-                        
-                    },
-                    [
+                {
+                    "dir": [
                         "hello.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ]
+                    ],
+                    "id": "test",
+                    "meta": {
+                        
+                    }
+                }
             ]
         ],
-        "timestamp": "2026-09-29T17:43:31.667883379",
+        "timestamp": "2026-09-30T18:19:02.288011365",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -40,19 +42,20 @@
     "test_untar - stub": {
         "content": [
             [
-                [
-                    {
-                        
-                    },
-                    [
+                {
+                    "dir": [
                         "hash.k2d:md5,d41d8cd98f00b204e9800998ecf8427e",
                         "opts.k2d:md5,d41d8cd98f00b204e9800998ecf8427e",
                         "taxo.k2d:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ]
+                    ],
+                    "id": "test",
+                    "meta": {
+                        
+                    }
+                }
             ]
         ],
-        "timestamp": "2026-09-29T17:43:09.330563163",
+        "timestamp": "2026-09-30T18:19:33.279581946",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -61,19 +64,20 @@
     "test_untar": {
         "content": [
             [
-                [
-                    {
-                        
-                    },
-                    [
+                {
+                    "dir": [
                         "hash.k2d:md5,8b8598468f54a7087c203ad0190555d9",
                         "opts.k2d:md5,a033d00cf6759407010b21700938f543",
                         "taxo.k2d:md5,094d5891cdccf2f1468088855c214b2c"
-                    ]
-                ]
+                    ],
+                    "id": "test",
+                    "meta": {
+                        
+                    }
+                }
             ]
         ],
-        "timestamp": "2026-09-29T17:42:36.07801455",
+        "timestamp": "2026-09-30T18:19:34.747491202",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"

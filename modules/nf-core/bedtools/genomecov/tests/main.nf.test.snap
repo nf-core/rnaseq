@@ -3,16 +3,17 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
+                    {
+                        "bedgraph": "test.coverage.txt:md5,01291b6e1beab72e046653e709eb0e10",
+                        "id": "test",
+                        "meta": {
                             "id": "test"
-                        },
-                        "test.coverage.txt:md5,01291b6e1beab72e046653e709eb0e10"
-                    ]
+                        }
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-09-29T17:32:20.118516898",
+        "timestamp": "2026-09-30T18:14:04.117234943",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -22,16 +23,17 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
+                    {
+                        "bedgraph": "test.coverage.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "id": "test",
+                        "meta": {
                             "id": "test"
-                        },
-                        "test.coverage.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
+                        }
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-09-29T17:32:53.190421906",
+        "timestamp": "2026-09-30T18:13:57.453912683",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -41,16 +43,17 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
+                    {
+                        "bedgraph": "test.coverage.txt:md5,de3c59c0ea123bcdbbad27bc0a0a601e",
+                        "id": "test",
+                        "meta": {
                             "id": "test"
-                        },
-                        "test.coverage.txt:md5,de3c59c0ea123bcdbbad27bc0a0a601e"
-                    ]
+                        }
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-09-29T17:32:37.035523086",
+        "timestamp": "2026-09-30T18:13:52.972847514",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -60,16 +63,17 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
+                    {
+                        "bedgraph": "test.coverage.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "id": "test",
+                        "meta": {
                             "id": "test"
-                        },
-                        "test.coverage.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
+                        }
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-09-29T17:33:26.910180616",
+        "timestamp": "2026-09-30T18:14:02.179099477",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -79,16 +83,17 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
+                    {
+                        "bedgraph": "test.coverage.txt:md5,66083198daca6c001d328ba9616e9b53",
+                        "id": "test",
+                        "meta": {
                             "id": "test"
-                        },
-                        "test.coverage.txt:md5,66083198daca6c001d328ba9616e9b53"
-                    ]
+                        }
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-09-29T17:32:03.324665575",
+        "timestamp": "2026-09-30T18:13:55.72543023",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -98,16 +103,17 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
+                    {
+                        "bedgraph": "test.coverage.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "id": "test",
+                        "meta": {
                             "id": "test"
-                        },
-                        "test.coverage.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
+                        }
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-09-29T17:33:09.825393681",
+        "timestamp": "2026-09-30T18:14:14.230563653",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"

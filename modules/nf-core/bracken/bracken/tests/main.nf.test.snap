@@ -3,6 +3,7 @@
         "content": [
             {
                 "abundance": "test.tsv:md5,4a21ae14ff8a0311d55f139af5247838",
+                "id": "test",
                 "meta": {
                     "id": "test",
                     "single_end": true
@@ -10,7 +11,7 @@
                 "report": "test.kraken2.report_bracken.txt:md5,ca0fbeedc4353b5fdd081688823a33df"
             }
         ],
-        "timestamp": "2026-09-29T17:29:17.85251691",
+        "timestamp": "2026-09-30T18:14:37.141482406",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -20,6 +21,7 @@
         "content": [
             {
                 "abundance": "test.tsv:md5,f609b09d6edb5ebc1ea1435d1dd46cde",
+                "id": "test",
                 "meta": {
                     "id": "test",
                     "single_end": false
@@ -27,7 +29,7 @@
                 "report": "test.kraken2.report_bracken.txt:md5,2ce58814420a3690da1f08e10e8d3a30"
             }
         ],
-        "timestamp": "2026-09-29T17:29:33.896446732",
+        "timestamp": "2026-09-30T18:14:46.541353378",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -37,6 +39,7 @@
         "content": [
             {
                 "abundance": "test.tsv:md5,4a21ae14ff8a0311d55f139af5247838",
+                "id": "test",
                 "meta": {
                     "id": "test",
                     "single_end": false
@@ -44,7 +47,7 @@
                 "report": "test.kraken2.report_bracken.txt:md5,ca0fbeedc4353b5fdd081688823a33df"
             }
         ],
-        "timestamp": "2026-09-29T17:29:50.023222745",
+        "timestamp": "2026-09-30T18:14:26.209793702",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -54,13 +57,14 @@
         "content": [
             {
                 "abundance": "test.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "id": "test",
                 "meta": {
                     "id": "test"
                 },
                 "report": "test.kraken2.report_bracken.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
             }
         ],
-        "timestamp": "2026-09-29T17:30:05.632101749",
+        "timestamp": "2026-09-30T18:14:24.231948896",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"

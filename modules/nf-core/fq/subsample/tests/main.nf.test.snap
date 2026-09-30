@@ -3,20 +3,21 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
+                    {
+                        "id": "test",
+                        "meta": {
                             "id": "test",
                             "single_end": false
                         },
-                        [
+                        "reads": [
                             "test_R1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
                             "test_R2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
                         ]
-                    ]
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-09-29T17:47:41.545215901",
+        "timestamp": "2026-09-30T18:15:30.754830854",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -26,20 +27,21 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
+                    {
+                        "id": "test",
+                        "meta": {
                             "id": "test",
                             "single_end": false
                         },
-                        [
+                        "reads": [
                             "test_R1.fastq.gz:md5,19326ff922a16c0cb81191f2a0a5c5fc",
                             "test_R2.fastq.gz:md5,ce7ff46296d89b68521ad55a3588bcfe"
                         ]
-                    ]
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-09-29T17:47:28.15507015",
+        "timestamp": "2026-09-30T18:15:33.494044606",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -49,20 +51,21 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
+                    {
+                        "id": "test",
+                        "meta": {
                             "id": "test",
                             "single_end": false
                         },
-                        [
+                        "reads": [
                             "test_R1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
                             "test_R2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
                         ]
-                    ]
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-09-29T17:48:28.118711717",
+        "timestamp": "2026-09-30T18:14:55.963280175",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -72,20 +75,21 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
+                    {
+                        "id": "test",
+                        "meta": {
                             "id": "test",
                             "single_end": false
                         },
-                        [
+                        "reads": [
                             "test_R1.fastq.gz:md5,394c7a233f1c1c1a167a34cf2895d26d",
                             "test_R2.fastq.gz:md5,32724cbdb5ab954a0a659ebcd56ca422"
                         ]
-                    ]
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-09-29T17:47:52.75593457",
+        "timestamp": "2026-09-30T18:15:43.95596174",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -95,19 +99,20 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
+                    {
+                        "id": "test",
+                        "meta": {
                             "id": "test",
                             "single_end": false
                         },
-                        [
+                        "reads": [
                             "test.fastq.gz:md5,19326ff922a16c0cb81191f2a0a5c5fc"
                         ]
-                    ]
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-09-29T18:09:03.820592037",
+        "timestamp": "2026-09-30T18:15:13.670520981",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -145,20 +150,21 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
+                    {
+                        "id": "test",
+                        "meta": {
                             "id": "test",
                             "single_end": false
                         },
-                        [
+                        "reads": [
                             "test_R1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
                             "test_R2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
                         ]
-                    ]
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-09-29T17:48:05.127459656",
+        "timestamp": "2026-09-30T18:15:11.888999026",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"

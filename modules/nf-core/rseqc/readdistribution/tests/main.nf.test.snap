@@ -4,6 +4,7 @@
             {
                 "0": [
                     {
+                        "id": "test",
                         "meta": {
                             "id": "test",
                             "single_end": false
@@ -13,7 +14,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-30T08:42:54.907421862",
+        "timestamp": "2026-09-30T18:17:19.77423672",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -24,6 +25,7 @@
             {
                 "0": [
                     {
+                        "id": "test",
                         "meta": {
                             "id": "test",
                             "single_end": false
@@ -33,7 +35,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-30T08:43:25.714594366",
+        "timestamp": "2026-09-30T18:18:35.645963595",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"

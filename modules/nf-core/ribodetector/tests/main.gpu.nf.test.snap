@@ -8350,81 +8350,25 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
+                    {
+                        "id": "test",
+                        "log": "test.log:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "meta": {
                             "id": "test",
                             "single_end": false
                         },
-                        [
+                        "reads": [
                             "test.nonrna.1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
                             "test.nonrna.2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
                         ]
-                    ]
-                ],
-                "1": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.log:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "2": [
-                    [
-                        "RIBODETECTOR",
-                        "ribodetector",
-                        "0.3.3"
-                    ]
-                ],
-                "3": [
-                    [
-                        "RIBODETECTOR",
-                        "cuda",
-                        "11.2"
-                    ]
-                ],
-                "fastq": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        [
-                            "test.nonrna.1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                            "test.nonrna.2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
-                        ]
-                    ]
-                ],
-                "log": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.log:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "versions_cuda": [
-                    [
-                        "RIBODETECTOR",
-                        "cuda",
-                        "11.2"
-                    ]
-                ],
-                "versions_ribodetector": [
-                    [
-                        "RIBODETECTOR",
-                        "ribodetector",
-                        "0.3.3"
-                    ]
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-04-22T13:16:06.36963835",
+        "timestamp": "2026-09-30T18:20:36.136818578",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.2"
+            "nextflow": "26.09.1"
         }
     }
 }

@@ -2,15 +2,16 @@
     "Should decompress file with extension appearing multiple times in filename - prefix": {
         "content": [
             [
-                [
-                    {
+                {
+                    "file": "test.xyz.fa:md5,4161df271f9bfcd25d5845a1e220dbec",
+                    "id": "test",
+                    "meta": {
                         "id": "test"
-                    },
-                    "test.xyz.fa:md5,4161df271f9bfcd25d5845a1e220dbec"
-                ]
+                    }
+                }
             ]
         ],
-        "timestamp": "2026-09-29T17:28:56.243534413",
+        "timestamp": "2026-09-30T18:15:46.138404111",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -19,15 +20,16 @@
     "Should run without failures - prefix - stub": {
         "content": [
             [
-                [
-                    {
+                {
+                    "file": "test.xyz.fastq:md5,d41d8cd98f00b204e9800998ecf8427e",
+                    "id": "test",
+                    "meta": {
                         "id": "test"
-                    },
-                    "test.xyz.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
-                ]
+                    }
+                }
             ]
         ],
-        "timestamp": "2026-09-29T17:29:13.737395097",
+        "timestamp": "2026-09-30T18:15:39.715620631",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -36,15 +38,16 @@
     "Should run without failures - stub": {
         "content": [
             [
-                [
-                    {
+                {
+                    "file": "test_1.fastq:md5,d41d8cd98f00b204e9800998ecf8427e",
+                    "id": "test",
+                    "meta": {
                         
-                    },
-                    "test_1.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
-                ]
+                    }
+                }
             ]
         ],
-        "timestamp": "2026-09-29T17:28:25.124693522",
+        "timestamp": "2026-09-30T18:15:12.744938439",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -53,15 +56,16 @@
     "Should run without failures": {
         "content": [
             [
-                [
-                    {
+                {
+                    "file": "test_1.fastq:md5,4161df271f9bfcd25d5845a1e220dbec",
+                    "id": "test",
+                    "meta": {
                         
-                    },
-                    "test_1.fastq:md5,4161df271f9bfcd25d5845a1e220dbec"
-                ]
+                    }
+                }
             ]
         ],
-        "timestamp": "2026-09-29T17:27:57.140419891",
+        "timestamp": "2026-09-30T18:15:04.773767385",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -70,15 +74,16 @@
     "Should run without failures - prefix": {
         "content": [
             [
-                [
-                    {
+                {
+                    "file": "test.xyz.fastq:md5,4161df271f9bfcd25d5845a1e220dbec",
+                    "id": "test",
+                    "meta": {
                         "id": "test"
-                    },
-                    "test.xyz.fastq:md5,4161df271f9bfcd25d5845a1e220dbec"
-                ]
+                    }
+                }
             ]
         ],
-        "timestamp": "2026-09-29T17:28:11.577971348",
+        "timestamp": "2026-09-30T18:14:55.309945676",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"

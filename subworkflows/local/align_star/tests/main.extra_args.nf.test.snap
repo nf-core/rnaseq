@@ -9,50 +9,18 @@
             [
                 
             ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.flagstat:md5,1a1e818e27089d8a9349b57b0fde6eea"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.idxstats:md5,854a921ff138202e70eaee613697dd54"
-                ]
-            ],
+            "test.flagstat:md5,1a1e818e27089d8a9349b57b0fde6eea",
+            "test.idxstats:md5,854a921ff138202e70eaee613697dd54",
             "87f62341c041d2e81b4b8e783b4e3ab3",
+            "test.stats:md5,200170da95807df316c7f0a44ad8c92c",
             [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.stats:md5,200170da95807df316c7f0a44ad8c92c"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    [
-                        "test.SJ.out.tab:md5,9864f53ee8de98e6b3dd5bf644c3650f"
-                    ]
-                ]
+                "test.SJ.out.tab:md5,9864f53ee8de98e6b3dd5bf644c3650f"
             ]
         ],
-        "timestamp": "2026-09-17T11:27:10.963996168",
+        "timestamp": "2026-09-30T18:18:51.548869447",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.09.1"
         }
     }
 }

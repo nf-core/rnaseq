@@ -4,6 +4,7 @@
             {
                 "0": [
                     {
+                        "id": "test",
                         "inferexperiment": "test.infer_experiment.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                         "meta": {
                             "id": "test"
@@ -12,7 +13,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-30T08:42:28.255593607",
+        "timestamp": "2026-09-30T18:17:28.462687328",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -23,6 +24,7 @@
             {
                 "0": [
                     {
+                        "id": "test",
                         "inferexperiment": "test.infer_experiment.txt:md5,f9d0bfc239df637cd8aeda40ade3c59a",
                         "meta": {
                             "id": "test"
@@ -31,7 +33,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-30T08:42:03.856528065",
+        "timestamp": "2026-09-30T18:16:55.959330549",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"

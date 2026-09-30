@@ -13,19 +13,20 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
+                    {
+                        "id": "test",
+                        "meta": {
                             "id": "test",
                             "single_end": true
                         },
-                        [
+                        "reads": [
                             "test.merged.fastq.gz:md5,4161df271f9bfcd25d5845a1e220dbec"
                         ]
-                    ]
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-09-29T17:35:29.846947547",
+        "timestamp": "2026-09-30T18:14:13.748189922",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -35,20 +36,21 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
+                    {
+                        "id": "test",
+                        "meta": {
                             "id": "test",
                             "single_end": false
                         },
-                        [
+                        "reads": [
                             "test_1.merged.fastq.gz:md5,3ad9406595fafec8172368f9cd0b6a22",
                             "test_2.merged.fastq.gz:md5,a52cab0b840c7178b0ea83df1fdbe8d5"
                         ]
-                    ]
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-09-29T17:34:35.30298356",
+        "timestamp": "2026-09-30T18:14:14.358179408",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -58,20 +60,21 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
+                    {
+                        "id": "test",
+                        "meta": {
                             "id": "test",
                             "single_end": false
                         },
-                        [
+                        "reads": [
                             "test_1.merged.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
                             "test_2.merged.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
                         ]
-                    ]
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-09-29T17:36:29.726253629",
+        "timestamp": "2026-09-30T18:14:42.258738137",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -81,19 +84,11 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        [
-                            "test.merged.fastq.gz:md5,ee314a9bd568d06617171b0c85f508da"
-                        ]
-                    ]
+                    
                 ]
             }
         ],
-        "timestamp": "2026-09-29T17:34:55.602705634",
+        "timestamp": "2026-09-30T18:14:11.136780623",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -103,20 +98,11 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        [
-                            "test_1.merged.fastq.gz:md5,3ad9406595fafec8172368f9cd0b6a22",
-                            "test_2.merged.fastq.gz:md5,a52cab0b840c7178b0ea83df1fdbe8d5"
-                        ]
-                    ]
+                    
                 ]
             }
         ],
-        "timestamp": "2026-09-29T17:35:13.298127879",
+        "timestamp": "2026-09-30T18:14:15.517218082",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -126,19 +112,20 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
+                    {
+                        "id": "test",
+                        "meta": {
                             "id": "test",
                             "single_end": true
                         },
-                        [
+                        "reads": [
                             "test.merged.fastq.gz:md5,ee314a9bd568d06617171b0c85f508da"
                         ]
-                    ]
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-09-29T17:33:44.019990121",
+        "timestamp": "2026-09-30T18:14:04.417504783",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -148,19 +135,20 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
+                    {
+                        "id": "test",
+                        "meta": {
                             "id": "test",
                             "single_end": true
                         },
-                        [
+                        "reads": [
                             "test.merged.fastq.gz:md5,3ad9406595fafec8172368f9cd0b6a22"
                         ]
-                    ]
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-09-29T17:34:17.927698792",
+        "timestamp": "2026-09-30T18:14:27.075869795",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -170,19 +158,20 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
+                    {
+                        "id": "test",
+                        "meta": {
                             "id": "test",
                             "single_end": true
                         },
-                        [
+                        "reads": [
                             "test.merged.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
                         ]
-                    ]
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-09-29T17:35:44.787741303",
+        "timestamp": "2026-09-30T18:15:22.443196026",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -190,9 +179,9 @@
     },
     "test_cat_fastq_paired_end_no_files": {
         "content": [
-            "  Cannot get property 'name' on null object"
+            "  Could not find any FASTQ file pairs to concatenate in the process input"
         ],
-        "timestamp": "2026-09-29T17:37:14.236824372",
+        "timestamp": "2026-09-30T18:14:28.396892463",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -212,19 +201,20 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
+                    {
+                        "id": "test",
+                        "meta": {
                             "id": "test",
                             "single_end": true
                         },
-                        [
+                        "reads": [
                             "test.merged.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
                         ]
-                    ]
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-09-29T17:36:14.049284417",
+        "timestamp": "2026-09-30T18:14:26.30721637",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -234,20 +224,21 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
+                    {
+                        "id": "test",
+                        "meta": {
                             "id": "test",
                             "single_end": false
                         },
-                        [
+                        "reads": [
                             "test_1.merged.fastq.gz:md5,3ad9406595fafec8172368f9cd0b6a22",
                             "test_2.merged.fastq.gz:md5,a52cab0b840c7178b0ea83df1fdbe8d5"
                         ]
-                    ]
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-09-29T17:34:00.858146561",
+        "timestamp": "2026-09-30T18:14:08.689123896",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -255,9 +246,9 @@
     },
     "test_cat_fastq_single_end_no_files": {
         "content": [
-            "  Cannot get property 'name' on null object"
+            "  Could not find any FASTQ files to concatenate in the process input"
         ],
-        "timestamp": "2026-09-29T17:37:00.176189902",
+        "timestamp": "2026-09-30T18:14:17.63809111",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -267,20 +258,21 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
+                    {
+                        "id": "test",
+                        "meta": {
                             "id": "test",
                             "single_end": false
                         },
-                        [
+                        "reads": [
                             "test_1.merged.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
                             "test_2.merged.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
                         ]
-                    ]
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-09-29T17:35:58.456978269",
+        "timestamp": "2026-09-30T18:15:23.699128312",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -290,19 +282,20 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
+                    {
+                        "id": "test",
+                        "meta": {
                             "id": "test",
                             "single_end": true
                         },
-                        [
+                        "reads": [
                             "test.merged.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
                         ]
-                    ]
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-09-29T17:36:48.402762065",
+        "timestamp": "2026-09-30T18:14:22.916035561",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"

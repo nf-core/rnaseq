@@ -2,6 +2,7 @@
     "pair end - stub": {
         "content": [
             {
+                "id": "test",
                 "log": "test.umi_extract.log:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "meta": {
                     "id": "test",
@@ -13,7 +14,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-29T17:51:10.206191072",
+        "timestamp": "2026-09-30T18:20:00.556851213",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -22,6 +23,7 @@
     "single end - stub": {
         "content": [
             {
+                "id": "test",
                 "log": "test.umi_extract.log:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "meta": {
                     "id": "test",
@@ -32,7 +34,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-29T17:50:38.974384861",
+        "timestamp": "2026-09-30T18:21:21.757307762",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -41,6 +43,7 @@
     "pair end": {
         "content": [
             {
+                "id": "test",
                 "log": "test.umi_extract.log",
                 "meta": {
                     "id": "test",
@@ -52,7 +55,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-29T17:50:54.658350471",
+        "timestamp": "2026-09-30T18:21:22.055981977",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -61,6 +64,7 @@
     "single end": {
         "content": [
             {
+                "id": "test",
                 "log": "test.umi_extract.log",
                 "meta": {
                     "id": "test",
@@ -71,7 +75,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-29T17:50:23.17707776",
+        "timestamp": "2026-09-30T18:21:47.1767317",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"

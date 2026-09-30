@@ -22,15 +22,16 @@
     "sarscov2 illumina paired-end [fastq_gz]-stub": {
         "content": [
             [
-                [
-                    {
+                {
+                    "id": "test",
+                    "meta": {
                         "id": "test"
                     },
-                    "test.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
-                ]
+                    "profile_out": "test.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                }
             ]
         ],
-        "timestamp": "2026-09-29T17:41:19.512668889",
+        "timestamp": "2026-09-30T18:19:03.373440274",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"

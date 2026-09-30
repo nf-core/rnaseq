@@ -33,6 +33,7 @@
                 "crai": null,
                 "cram": null,
                 "csi": null,
+                "id": "test",
                 "meta": {
                     "id": "test",
                     "single_end": false
@@ -40,7 +41,7 @@
                 "sam": null
             }
         ],
-        "timestamp": "2026-09-29T17:37:09.639655899",
+        "timestamp": "2026-09-30T18:17:57.814165079",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -67,6 +68,7 @@
                 "crai": null,
                 "cram": "test.sorted.cram",
                 "csi": null,
+                "id": "test",
                 "meta": {
                     "id": "test",
                     "single_end": false
@@ -74,7 +76,7 @@
                 "sam": null
             }
         ],
-        "timestamp": "2026-09-29T17:37:47.551348772",
+        "timestamp": "2026-09-30T18:17:27.362970595",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -101,6 +103,7 @@
                 "crai": null,
                 "cram": null,
                 "csi": null,
+                "id": "test",
                 "meta": {
                     "id": "test",
                     "single_end": false
@@ -108,7 +111,7 @@
                 "sam": null
             }
         ],
-        "timestamp": "2026-09-29T17:37:28.70463965",
+        "timestamp": "2026-09-30T18:17:26.064809221",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -143,10 +146,11 @@
     "sam": {
         "content": [
             [
+                "id:test",
                 "sam:test.sorted.sam"
             ]
         ],
-        "timestamp": "2026-09-29T18:01:31.221882419",
+        "timestamp": "2026-09-30T18:18:06.20485977",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"

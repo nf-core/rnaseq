@@ -25,18 +25,19 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
-                            "id": "genome"
-                        },
-                        [
+                    {
+                        "id": "genome",
+                        "index": [
                             
-                        ]
-                    ]
+                        ],
+                        "meta": {
+                            "id": "genome"
+                        }
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-09-29T20:56:05.126952306",
+        "timestamp": "2026-09-30T18:15:12.573925896",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"

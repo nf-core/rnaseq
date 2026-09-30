@@ -8335,21 +8335,21 @@
             {
                 "0": [
                     {
-                        "fastq": [
-                            "test.nonrna.1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                            "test.nonrna.2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
-                        ],
                         "id": "test",
                         "log": "test.log:md5,d41d8cd98f00b204e9800998ecf8427e",
                         "meta": {
                             "id": "test",
                             "single_end": false
-                        }
+                        },
+                        "reads": [
+                            "test.nonrna.1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test.nonrna.2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                        ]
                     }
                 ]
             }
         ],
-        "timestamp": "2026-09-29T17:49:17.580956624",
+        "timestamp": "2026-09-30T18:15:57.914153217",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"

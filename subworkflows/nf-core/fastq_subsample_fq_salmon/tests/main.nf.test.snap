@@ -19,92 +19,41 @@
                 "TTCCCCTCTCCAATTGAGTATTTTCCCTTCTCTTATTTAAGGGTCTCCACACAAACAGATACAATTTTAGGGACAGCTAGGAGAAAGAACGAAAATAATAA"
             ],
             1066944,
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test_lib_format_counts.json:md5,403fbb6ddaf6c8ed7c3613290c072015"
-                ]
-            ]
+            "test_lib_format_counts.json:md5,403fbb6ddaf6c8ed7c3613290c072015"
         ],
-        "timestamp": "2026-09-16T13:38:55.282502431",
+        "timestamp": "2026-09-30T18:24:48.403493062",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.09.1"
         }
     },
     "homo_sapiens paired-end [fastq] - stub": {
         "content": [
             {
-                "index": [
-                    [
-                        {
-                            
-                        },
-                        [
-                            "duplicate_clusters.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "index.ctab:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "index.ectab:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "index.refinfo:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "index.ssi:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "index.ssi.mphf:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "index.tct:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "index.tdct:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "info.json:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "refseq.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "refseq_offsets.json:md5,d41d8cd98f00b204e9800998ecf8427e"
-                        ]
-                    ]
-                ],
                 "index_built": [
-                    
+                    null
                 ],
-                "json_info": [
-                    [
-                        {
+                "samples": [
+                    {
+                        "id": "test",
+                        "json_info": "test_meta_info.json:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "lib_format_counts": "test_lib_format_counts.json:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "meta": {
                             "id": "test",
                             "single_end": false
                         },
-                        "test_meta_info.json:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "lib_format_counts": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test_lib_format_counts.json:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "reads": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        [
+                        "quant_dir": [
+                            
+                        ],
+                        "reads": [
                             "test_R1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
                             "test_R2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
                         ]
-                    ]
-                ],
-                "results": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        [
-                            
-                        ]
-                    ]
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-09-29T21:16:01.391432064",
+        "timestamp": "2026-09-30T18:28:37.150258212",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"

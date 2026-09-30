@@ -3,17 +3,18 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
+                    {
+                        "bedgraph": "test.clip.bedGraph:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "id": "test",
+                        "meta": {
                             "id": "test",
                             "single_end": false
-                        },
-                        "test.clip.bedGraph:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
+                        }
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-09-29T17:55:12.876094652",
+        "timestamp": "2026-09-30T18:19:14.523144694",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -23,17 +24,18 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
+                    {
+                        "bedgraph": "test.clip.bedGraph:md5,e02395e1f7c593b3f79563067159ebc2",
+                        "id": "test",
+                        "meta": {
                             "id": "test",
                             "single_end": false
-                        },
-                        "test.clip.bedGraph:md5,e02395e1f7c593b3f79563067159ebc2"
-                    ]
+                        }
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-09-29T17:54:56.403034916",
+        "timestamp": "2026-09-30T18:19:26.375017116",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"

@@ -160,6 +160,7 @@
                 "data": [
                     ".stub:md5,d41d8cd98f00b204e9800998ecf8427e"
                 ],
+                "id": "FASTQC",
                 "meta": {
                     "id": "FASTQC"
                 },
@@ -169,7 +170,7 @@
                 "report": "multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
             }
         ],
-        "timestamp": "2026-09-29T17:40:25.945181219",
+        "timestamp": "2026-09-30T18:15:32.427635037",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"

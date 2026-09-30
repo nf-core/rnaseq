@@ -5,7 +5,11 @@
                 "0": [
                     {
                         "dists_multiqc": null,
+                        "id": "all_samples",
                         "log": "R_sessionInfo.log:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "meta": {
+                            "id": "all_samples"
+                        },
                         "pca_multiqc": null,
                         "pca_vals": "deseq2.pca.vals.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                         "plots_pdf": "deseq2.plots.pdf:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -23,7 +27,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-29T16:24:46.118324293",
+        "timestamp": "2026-09-30T18:14:57.723182174",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"

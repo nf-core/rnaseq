@@ -3,6 +3,7 @@
         "content": [
             [
                 "test",
+                "test",
                 "test.DupRate_plot.png",
                 "test.DupRate_plot.r",
                 "test.bam_stat.txt",
@@ -45,7 +46,7 @@
                 "test_intercept_slope.txt"
             ]
         ],
-        "timestamp": "2026-09-29T17:03:15.649182365",
+        "timestamp": "2026-09-30T18:16:03.630563561",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"

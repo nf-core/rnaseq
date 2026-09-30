@@ -13,11 +13,9 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
-                            "id": "test_fasta"
-                        },
-                        [
+                    {
+                        "id": "test_fasta",
+                        "index": [
                             "Genome:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "Log.out:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "SA:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -34,12 +32,15 @@
                             "sjdbList.fromGTF.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "sjdbList.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "transcriptInfo.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
-                        ]
-                    ]
+                        ],
+                        "meta": {
+                            "id": "test_fasta"
+                        }
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-09-29T21:09:02.460194463",
+        "timestamp": "2026-09-30T18:17:19.98943052",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -49,11 +50,9 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
-                            "id": "test_fasta"
-                        },
-                        [
+                    {
+                        "id": "test_fasta",
+                        "index": [
                             "Genome:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "Log.out:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "SA:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -63,12 +62,15 @@
                             "chrNameLength.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "chrStart.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "genomeParameters.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
-                        ]
-                    ]
+                        ],
+                        "meta": {
+                            "id": "test_fasta"
+                        }
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-09-29T21:09:14.356680393",
+        "timestamp": "2026-09-30T18:17:49.956832541",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"

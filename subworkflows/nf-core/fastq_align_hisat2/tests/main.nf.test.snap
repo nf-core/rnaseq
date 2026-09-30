@@ -79,78 +79,38 @@
     "sarscov2 - bam - single_end - stub": {
         "content": [
             {
-                "bam": [
-                    [
-                        {
+                "ch_results": [
+                    {
+                        "aligner": "hisat2",
+                        "bai": "test.sorted.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "bam": "test.sorted.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "hisat2": {
+                            "summary": "test.hisat2.summary.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        },
+                        "id": "test",
+                        "meta": {
                             "id": "test",
                             "single_end": true
                         },
-                        "test.sorted.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "fastq": [
-                    
-                ],
-                "flagstat": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
+                        "raw_bams": [
+                            "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ],
+                        "samtools": {
+                            "flagstat": "test.flagstat:md5,67394650dbae96d1a4fcc70484822159",
+                            "idxstats": "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "stats": "test.stats:md5,d41d8cd98f00b204e9800998ecf8427e"
                         },
-                        "test.flagstat:md5,67394650dbae96d1a4fcc70484822159"
-                    ]
-                ],
-                "idxstats": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "index": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test.sorted.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "raw_bams": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "stats": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test.stats:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "summary": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test.hisat2.summary.log:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
+                        "unmapped": [
+                            
+                        ]
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-08-28T14:40:56.014856228",
+        "timestamp": "2026-09-30T18:22:50.913775037",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.08.0"
+            "nextflow": "26.09.1"
         }
     },
     "sarscov2 - bam - paired_end": {
@@ -233,78 +193,38 @@
     "sarscov2 - bam - paired_end - stub": {
         "content": [
             {
-                "bam": [
-                    [
-                        {
+                "ch_results": [
+                    {
+                        "aligner": "hisat2",
+                        "bai": "test.sorted.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "bam": "test.sorted.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "hisat2": {
+                            "summary": "test.hisat2.summary.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        },
+                        "id": "test",
+                        "meta": {
                             "id": "test",
                             "single_end": false
                         },
-                        "test.sorted.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "fastq": [
-                    
-                ],
-                "flagstat": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
+                        "raw_bams": [
+                            "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ],
+                        "samtools": {
+                            "flagstat": "test.flagstat:md5,67394650dbae96d1a4fcc70484822159",
+                            "idxstats": "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "stats": "test.stats:md5,d41d8cd98f00b204e9800998ecf8427e"
                         },
-                        "test.flagstat:md5,67394650dbae96d1a4fcc70484822159"
-                    ]
-                ],
-                "idxstats": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "index": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.sorted.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "raw_bams": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "stats": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.stats:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "summary": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.hisat2.summary.log:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
+                        "unmapped": [
+                            
+                        ]
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-08-28T14:41:08.120658558",
+        "timestamp": "2026-09-30T18:21:36.97700136",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.08.0"
+            "nextflow": "26.09.1"
         }
     }
 }

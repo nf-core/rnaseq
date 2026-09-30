@@ -5,13 +5,14 @@
                 "fa": "extract.fa:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "fai": null,
                 "gzi": null,
+                "id": "test",
                 "meta": {
                     "id": "test"
                 },
                 "sizes": null
             }
         ],
-        "timestamp": "2026-09-29T17:29:49.506267807",
+        "timestamp": "2026-09-30T18:17:29.585953828",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -23,13 +24,14 @@
                 "fa": null,
                 "fai": "genome.fasta.fai:md5,9da2a56e2853dc8c0b86a9e7229c9fe5",
                 "gzi": null,
+                "id": "test",
                 "meta": {
                     "id": "test"
                 },
                 "sizes": null
             }
         ],
-        "timestamp": "2026-09-29T17:29:06.134740362",
+        "timestamp": "2026-09-30T18:17:31.750573929",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -41,13 +43,14 @@
                 "fa": null,
                 "fai": "genome.fasta.gz.fai:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "gzi": "genome.fasta.gz.gzi:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "id": "test",
                 "meta": {
                     "id": "test"
                 },
                 "sizes": "genome.fasta.gz.sizes:md5,d41d8cd98f00b204e9800998ecf8427e"
             }
         ],
-        "timestamp": "2026-09-29T17:31:03.436727565",
+        "timestamp": "2026-09-30T18:16:52.415134956",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -59,13 +62,14 @@
                 "fa": null,
                 "fai": "genome.fasta.fai:md5,9da2a56e2853dc8c0b86a9e7229c9fe5",
                 "gzi": null,
+                "id": "test",
                 "meta": {
                     "id": "test"
                 },
                 "sizes": "genome.fasta.sizes:md5,a57c401f27ae5133823fb09fb21c8a3c"
             }
         ],
-        "timestamp": "2026-09-29T17:30:18.200206703",
+        "timestamp": "2026-09-30T18:17:16.850869472",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -77,13 +81,14 @@
                 "fa": null,
                 "fai": "genome.fasta.gz.fai:md5,9da2a56e2853dc8c0b86a9e7229c9fe5",
                 "gzi": "genome.fasta.gz.gzi:md5,7dea362b3fac8e00956a4952a3d4f474",
+                "id": "test",
                 "meta": {
                     "id": "test"
                 },
                 "sizes": null
             }
         ],
-        "timestamp": "2026-09-29T17:29:20.440570415",
+        "timestamp": "2026-09-30T18:18:46.302298543",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -95,13 +100,14 @@
                 "fa": "extract.fa:md5,6a0774a0ad937ba0bfd2ac7457d90f36",
                 "fai": null,
                 "gzi": null,
+                "id": "test",
                 "meta": {
                     "id": "test"
                 },
                 "sizes": null
             }
         ],
-        "timestamp": "2026-09-29T17:29:34.768383515",
+        "timestamp": "2026-09-30T18:21:22.319718086",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -113,13 +119,14 @@
                 "fa": null,
                 "fai": "genome.fasta.fai:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "gzi": null,
+                "id": "test",
                 "meta": {
                     "id": "test"
                 },
                 "sizes": "genome.fasta.sizes:md5,d41d8cd98f00b204e9800998ecf8427e"
             }
         ],
-        "timestamp": "2026-09-29T17:30:47.646961243",
+        "timestamp": "2026-09-30T18:16:14.519817839",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -131,13 +138,14 @@
                 "fa": null,
                 "fai": "genome.fasta.fai:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "gzi": null,
+                "id": "test",
                 "meta": {
                     "id": "test"
                 },
                 "sizes": null
             }
         ],
-        "timestamp": "2026-09-29T17:30:04.064701527",
+        "timestamp": "2026-09-30T18:17:39.915554101",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -149,13 +157,14 @@
                 "fa": null,
                 "fai": "genome.fasta.gz.fai:md5,9da2a56e2853dc8c0b86a9e7229c9fe5",
                 "gzi": "genome.fasta.gz.gzi:md5,7dea362b3fac8e00956a4952a3d4f474",
+                "id": "test",
                 "meta": {
                     "id": "test"
                 },
                 "sizes": "genome.fasta.gz.sizes:md5,a57c401f27ae5133823fb09fb21c8a3c"
             }
         ],
-        "timestamp": "2026-09-29T17:30:32.644303609",
+        "timestamp": "2026-09-30T18:18:01.066682333",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"

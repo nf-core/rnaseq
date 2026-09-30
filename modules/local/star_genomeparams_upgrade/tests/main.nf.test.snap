@@ -3,11 +3,9 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
-                            "id": "star_index"
-                        },
-                        [
+                    {
+                        "id": "star_index",
+                        "index": [
                             "Genome:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "Log.out:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "SA:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -24,12 +22,15 @@
                             "sjdbList.fromGTF.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "sjdbList.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
                             "transcriptInfo.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
-                        ]
-                    ]
+                        ],
+                        "meta": {
+                            "id": "star_index"
+                        }
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-09-29T20:51:02.796604313",
+        "timestamp": "2026-09-30T18:14:07.599348619",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"

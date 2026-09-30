@@ -2,15 +2,16 @@
     "stub sarscov2 illumina single-end [fastq_gz]": {
         "content": [
             [
-                [
-                    {
+                {
+                    "id": "test",
+                    "meta": {
                         "id": "test"
                     },
-                    "test.sylphmpa:md5,d41d8cd98f00b204e9800998ecf8427e"
-                ]
+                    "taxprof_output": "test.sylphmpa:md5,d41d8cd98f00b204e9800998ecf8427e"
+                }
             ]
         ],
-        "timestamp": "2026-09-29T17:42:18.427329636",
+        "timestamp": "2026-09-30T18:18:38.856049721",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -19,16 +20,17 @@
     "sarscov2 illumina single-end [fastq_gz]": {
         "content": [
             [
-                [
-                    {
+                {
+                    "id": "test",
+                    "meta": {
                         "id": "test",
                         "single_end": true
                     },
-                    "test.sylphmpa:md5,f2ad47a68ccab63d5ecc6841f47b195e"
-                ]
+                    "taxprof_output": "test.sylphmpa:md5,f2ad47a68ccab63d5ecc6841f47b195e"
+                }
             ]
         ],
-        "timestamp": "2026-09-29T17:42:03.266729957",
+        "timestamp": "2026-09-30T18:19:03.498494425",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"

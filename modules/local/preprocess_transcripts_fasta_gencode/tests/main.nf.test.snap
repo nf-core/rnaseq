@@ -2,10 +2,16 @@
     "gencode fasta": {
         "content": [
             [
-                "gencodeFasta.fixed.fa:md5,e9267fa40efc784cc92575b5ba8a441b"
+                {
+                    "fasta": "gencodeFasta.fixed.fa:md5,e9267fa40efc784cc92575b5ba8a441b",
+                    "id": "test",
+                    "meta": {
+                        
+                    }
+                }
             ]
         ],
-        "timestamp": "2026-09-29T17:28:47.564409655",
+        "timestamp": "2026-09-30T18:13:58.861574627",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"
@@ -14,10 +20,16 @@
     "gencode fasta - stub": {
         "content": [
             [
-                "gencodeFasta.fixed.fa:md5,d41d8cd98f00b204e9800998ecf8427e"
+                {
+                    "fasta": "gencodeFasta.fixed.fa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                    "id": "test",
+                    "meta": {
+                        
+                    }
+                }
             ]
         ],
-        "timestamp": "2026-09-29T17:28:59.130399658",
+        "timestamp": "2026-09-30T18:14:08.629307024",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"

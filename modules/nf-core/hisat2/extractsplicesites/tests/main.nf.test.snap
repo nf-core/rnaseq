@@ -3,16 +3,17 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
+                    {
+                        "id": "genome",
+                        "meta": {
                             "id": "genome"
                         },
-                        "genome.splice_sites.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
+                        "splicesites": "genome.splice_sites.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    }
                 ]
             }
         ],
-        "timestamp": "2026-09-29T20:56:42.336246181",
+        "timestamp": "2026-09-30T18:15:23.355363141",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.09.1"

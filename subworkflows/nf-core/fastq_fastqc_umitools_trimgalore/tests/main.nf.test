@@ -39,11 +39,11 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success},
-                { assert path(workflow.out.fastqc_html[0][1][0]).text.contains("<tr><td>File type</td><td>Conventional base calls</td></tr>") },
+                { assert path(workflow.out[0][0].fastqc_raw_html[0]).text.contains("<tr><td>File type</td><td>Conventional base calls</td></tr>") },
                 { assert snapshot(
-                    workflow.out.reads,
-                    workflow.out.trim_read_count,
-                    workflow.out.trim_unpaired,
+                    workflow.out[0][0].reads,
+                    workflow.out[0][0].num_trimmed_reads,
+                    workflow.out[0][0].trim?.unpaired,
 ).match() }
             )
         }
@@ -76,9 +76,9 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
-                    workflow.out.reads,
-                    workflow.out.trim_read_count,
-                    workflow.out.trim_unpaired,
+                    workflow.out[0][0].reads,
+                    workflow.out[0][0].num_trimmed_reads,
+                    workflow.out[0][0].trim?.unpaired,
 ).match() }
             )
         }
@@ -110,9 +110,9 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
-                    workflow.out.reads,
-                    workflow.out.trim_read_count,
-                    workflow.out.trim_unpaired,
+                    workflow.out[0][0].reads,
+                    workflow.out[0][0].num_trimmed_reads,
+                    workflow.out[0][0].trim?.unpaired,
 ).match() }
             )
         }
@@ -147,9 +147,9 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.reads,
-                    workflow.out.trim_read_count,
-                    workflow.out.trim_unpaired,
+                    workflow.out[0][0].reads,
+                    workflow.out[0][0].num_trimmed_reads,
+                    workflow.out[0][0].trim?.unpaired,
                 ).match() }
             )
         }
@@ -182,8 +182,8 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
-                    workflow.out.trim_read_count,
-                    workflow.out.trim_unpaired,
+                    workflow.out[0][0].num_trimmed_reads,
+                    workflow.out[0][0].trim?.unpaired,
 ).match() }
             )
         }

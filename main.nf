@@ -271,18 +271,18 @@ workflow NFCORE_RNASEQ {
 
     // Matches current behavior: no task-workdir guard, so a user-supplied
     // --bowtie2_rrna_index is republished here exactly as it is today.
-    ch_rrna_bowtie2_index = results.rrna_references
+    def ch_rrna_bowtie2_index: Channel<Path> = results.rrna_references
         .map { r -> r.bowtie2_index }
         .flatMap { index -> index == null ? [] : [index] }
 
     // Same-basename fields split out per stage to avoid a >> rename-key collision (nextflow-io/nextflow#6617).
-    ch_lint_raw     = results.preprocessed.map { r -> record(id: r.id, file: r.lint?.raw) }.filter { s -> s.file != null }
-    ch_lint_trimmed = results.preprocessed.map { r -> record(id: r.id, file: r.lint?.trimmed) }.filter { s -> s.file != null }
-    ch_lint_bbsplit = results.preprocessed.map { r -> record(id: r.id, file: r.lint?.bbsplit) }.filter { s -> s.file != null }
-    ch_lint_ribo    = results.preprocessed.map { r -> record(id: r.id, file: r.lint?.ribo) }.filter { s -> s.file != null }
+    def ch_lint_raw: Channel<LintFile>     = results.preprocessed.map { r -> record(id: r.id, file: r.lint?.raw) }.filter { s -> s.file != null }
+    def ch_lint_trimmed: Channel<LintFile> = results.preprocessed.map { r -> record(id: r.id, file: r.lint?.trimmed) }.filter { s -> s.file != null }
+    def ch_lint_bbsplit: Channel<LintFile> = results.preprocessed.map { r -> record(id: r.id, file: r.lint?.bbsplit) }.filter { s -> s.file != null }
+    def ch_lint_ribo: Channel<LintFile>    = results.preprocessed.map { r -> record(id: r.id, file: r.lint?.ribo) }.filter { s -> s.file != null }
 
     // The prepared rRNA FASTAs publish whether or not --save_reference is set, so they cannot ride the genome target.
-    ch_rrna_seqkit = results.rrna_references.flatMap { r -> (r.seqkit_prefixed ?: []).isEmpty() && (r.seqkit_converted ?: []).isEmpty() ? [] : [r] }
+    def ch_rrna_seqkit: Channel<RrnaReferences> = results.rrna_references.flatMap { r -> (r.seqkit_prefixed ?: []).isEmpty() && (r.seqkit_converted ?: []).isEmpty() ? [] : [r] }
 
     // samplesheet_with_bams.csv rows: one per sequencing run of a sample, with the aligned record's
     // meta so an inferred strandedness replaces 'auto'. genome_bam is the
@@ -292,7 +292,7 @@ workflow NFCORE_RNASEQ {
     ch_runs           = results.reads.map { meta, runs -> record(id: meta.id, runs: runs) }
     ch_percent_mapped = results.percent_mapped.map { id, percent_mapped -> record(id: id, percent_mapped: percent_mapped) }
 
-    ch_samplesheet_rows = results.aligned
+    def ch_samplesheet_rows: Channel<SamplesheetRow> = results.aligned
         .join(ch_runs, by: 'id')
         .join(ch_percent_mapped, by: 'id')
         .flatMap { r ->

@@ -183,11 +183,11 @@ workflow RNASEQ {
         params.unstranded_threshold                 // unstranded_threshold
     )
 
-    ch_preprocessed = fastq_preprocessed.samples
+    def ch_preprocessed: Channel<FastqQcTrimFilterSetstrandedness> = fastq_preprocessed.samples
 
     // Run-level rRNA references, built by FASTQ_REMOVE_RRNA from the rRNA
     // FASTAs only when no bowtie2 rRNA index was supplied
-    ch_rrna_references = fastq_preprocessed.rrna_references
+    def ch_rrna_references: Value<RrnaReferences> = fastq_preprocessed.rrna_references
 
     // Samples that fail min_trimmed_reads have no filtered reads and go no further
     ch_reads_ok = ch_preprocessed.filter { r -> r.reads != null }

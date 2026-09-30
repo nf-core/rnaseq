@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process SAMTOOLS_INDEX {
     tag "${meta.id}"
     label 'process_low'
@@ -8,14 +10,13 @@ process SAMTOOLS_INDEX {
         : 'community.wave.seqera.io/library/htslib_samtools:1.24--d697cfb9dce007cd'}"
 
     input:
-    tuple val(meta), path(input)
+    tuple(meta: Map, input: Path)
 
     output:
-    tuple val(meta), path("*.{bai,csi,crai}"), emit: index
-    tuple val("${task.process}"), val('samtools'), eval("samtools version | sed '1!d;s/.* //'"), emit: versions_samtools, topic: versions
+    tuple(meta, file('*.{bai,csi,crai}'))
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'samtools', eval("samtools version | sed '1!d;s/.* //'")) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''
@@ -29,7 +30,7 @@ process SAMTOOLS_INDEX {
 
     stub:
     def args = task.ext.args ?: ''
-    def extension = file(input).getExtension() == 'cram'
+    def extension = input.getExtension() == 'cram'
         ? "crai"
         : args.contains("-c") ? "csi" : "bai"
     """

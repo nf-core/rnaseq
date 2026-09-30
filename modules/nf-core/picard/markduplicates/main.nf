@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process PICARD_MARKDUPLICATES {
     tag "${meta.id}"
     label 'process_medium'
@@ -8,18 +10,21 @@ process PICARD_MARKDUPLICATES {
         : 'community.wave.seqera.io/library/picard:3.5.0--842d4c70c98af9b4'}"
 
     input:
-    tuple val(meta), path(reads)
-    tuple val(meta2), path(fasta), path(fai)
+    tuple(meta: Map, reads: Path)
+    tuple(meta2: Map, fasta: Path?, fai: Path?)
 
     output:
-    tuple val(meta), path("*.bam"), emit: bam, optional: true
-    tuple val(meta), path("*.bai"), emit: bai, optional: true
-    tuple val(meta), path("*.cram"), emit: cram, optional: true
-    tuple val(meta), path("*.metrics.txt"), emit: metrics
-    tuple val("${task.process}"), val('picard'), eval("picard MarkDuplicates --version 2>&1 | sed -n 's/.*Version://p'"), topic: versions, emit: versions_picard
+    record(
+        id:      meta.id,
+        meta:    meta,
+        bam:     file('*.bam', optional: true),
+        bai:     file('*.bai', optional: true),
+        cram:    file('*.cram', optional: true),
+        metrics: file('*.metrics.txt')
+    )
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'picard', eval("picard MarkDuplicates --version 2>&1 | sed -n 's/.*Version://p'")) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''
@@ -31,7 +36,7 @@ process PICARD_MARKDUPLICATES {
         log.info('[Picard MarkDuplicates] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.')
     }
     else {
-        avail_mem = (task.memory.mega * 0.8).intValue()
+        avail_mem = (task.memory.toMega() * 0.8).intValue()
     }
 
     if ("${reads}" == "${prefix}.${suffix}") {

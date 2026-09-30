@@ -17,33 +17,38 @@ workflow BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE {
     //
     UMICOLLAPSE(ch_bam_bai, channel.value('bam'))
 
+    ch_dedup_bam = UMICOLLAPSE.out
+        .filter { r -> r.bam }
+        .map { r -> [r.meta, r.bam] }
+
     //
     // Index BAM file and run samtools stats, flagstat and idxstats
     //
-    SAMTOOLS_INDEX(UMICOLLAPSE.out.bam)
+    SAMTOOLS_INDEX(ch_dedup_bam)
 
-    ch_bam_bai_dedup = UMICOLLAPSE.out.bam.join(SAMTOOLS_INDEX.out.index, by: [0])
+    ch_bam_bai_dedup = ch_dedup_bam.join(SAMTOOLS_INDEX.out, by: [0])
 
     BAM_STATS_SAMTOOLS(ch_bam_bai_dedup, [[:], [], []])
 
-    ch_results = ch_bam_bai_dedup
-        .join(UMICOLLAPSE.out.log, by: [0])
-        .map { meta, bam, bai, dedup_stats -> [meta.id, bam, bai, dedup_stats] }
+    ch_results = UMICOLLAPSE.out
+        .filter { r -> r.bam }
+        .map { r -> [r.id, r] }
+        .join(SAMTOOLS_INDEX.out.map { meta, bai -> [meta.id, bai] }, by: [0])
         .join(BAM_STATS_SAMTOOLS.out.results.map { r -> [r.id, r] }, by: [0])
-        .map { id, bam, bai, dedup_stats, samtools ->
+        .map { id, dedup, bai, samtools ->
             record(
                 id:          id,
-                bam:         bam,
+                bam:         dedup.bam,
                 bai:         bai,
-                dedup_stats: dedup_stats,
+                dedup_stats: dedup.log,
                 samtools:    record(stats: samtools.stats, flagstat: samtools.flagstat, idxstats: samtools.idxstats)
             )
         }
 
     emit:
-    bam         = UMICOLLAPSE.out.bam // channel: [ val(meta), path(bam) ]
-    index       = SAMTOOLS_INDEX.out.index // channel: [ val(meta), path(index) ]
-    dedup_stats = UMICOLLAPSE.out.log // channel: [ val(meta), path(stats) ]
+    bam         = ch_dedup_bam // channel: [ val(meta), path(bam) ]
+    index       = SAMTOOLS_INDEX.out // channel: [ val(meta), path(index) ]
+    dedup_stats = UMICOLLAPSE.out.map { r -> [r.meta, r.log] } // channel: [ val(meta), path(stats) ]
     stats       = BAM_STATS_SAMTOOLS.out.stats // channel: [ val(meta), path(stats) ]
     flagstat    = BAM_STATS_SAMTOOLS.out.flagstat // channel: [ val(meta), path(flagstat) ]
     idxstats    = BAM_STATS_SAMTOOLS.out.idxstats // channel: [ val(meta), path(idxstats) ]

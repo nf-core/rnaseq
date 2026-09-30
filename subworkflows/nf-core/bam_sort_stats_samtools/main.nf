@@ -15,10 +15,14 @@ workflow BAM_SORT_STATS_SAMTOOLS {
     main:
     SAMTOOLS_SORT(ch_bam, ch_fasta_fai, '')
 
-    SAMTOOLS_INDEX(SAMTOOLS_SORT.out.bam)
+    ch_sorted_bam = SAMTOOLS_SORT.out
+        .filter { r -> r.bam }
+        .map { r -> [r.meta, r.bam] }
 
-    SAMTOOLS_SORT.out.bam
-        .join(SAMTOOLS_INDEX.out.index, by: [0])
+    SAMTOOLS_INDEX(ch_sorted_bam)
+
+    ch_sorted_bam
+        .join(SAMTOOLS_INDEX.out, by: [0])
         .set { ch_bam_bai }
 
     BAM_STATS_SAMTOOLS(ch_bam_bai, ch_fasta_fai)
@@ -36,8 +40,8 @@ workflow BAM_SORT_STATS_SAMTOOLS {
         }
 
     emit:
-    bam      = SAMTOOLS_SORT.out.bam // channel: [ val(meta), [ bam ] ]
-    index    = SAMTOOLS_INDEX.out.index // channel: [ val(meta), [ index ] ]
+    bam      = ch_sorted_bam // channel: [ val(meta), [ bam ] ]
+    index    = SAMTOOLS_INDEX.out // channel: [ val(meta), [ index ] ]
     stats    = BAM_STATS_SAMTOOLS.out.stats // channel: [ val(meta), [ stats ] ]
     flagstat = BAM_STATS_SAMTOOLS.out.flagstat // channel: [ val(meta), [ flagstat ] ]
     idxstats = BAM_STATS_SAMTOOLS.out.idxstats // channel: [ val(meta), [ idxstats ] ]

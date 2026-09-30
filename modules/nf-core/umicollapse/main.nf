@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process UMICOLLAPSE {
     tag "${meta.id}"
     label "process_high"
@@ -9,18 +11,21 @@ process UMICOLLAPSE {
         : 'quay.io/biocontainers/umicollapse:1.1.0--hdfd78af_0'}"
 
     input:
-    tuple val(meta), path(input), path(bai)
-    val mode
+    tuple(meta: Map, input: Path, bai: Path?)
+    mode: String
 
     output:
-    tuple val(meta), path("*.bam"), emit: bam, optional: true
-    tuple val(meta), path("*dedup*fastq.gz"), emit: fastq, optional: true
-    tuple val(meta), path("*_UMICollapse.log"), emit: log
-    // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
-    tuple val("${task.process}"), val('umicollapse'), val("1.1.0-0"), emit: versions_umicollapse, topic: versions
+    record(
+        id:    meta.id,
+        meta:  meta,
+        bam:   file('*.bam', optional: true),
+        fastq: file('*dedup*fastq.gz', optional: true),
+        log:   file('*_UMICollapse.log')
+    )
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
+    tuple(task.process, 'umicollapse', '1.1.0-0') >> 'versions'
 
     script:
     def args = task.ext.args ?: ''
@@ -34,7 +39,7 @@ process UMICOLLAPSE {
     if (mode !in ['fastq', 'bam']) {
         error("Mode must be one of 'fastq' or 'bam'.")
     }
-    extension = mode.contains("fastq") ? "fastq.gz" : "bam"
+    def extension = mode.contains("fastq") ? "fastq.gz" : "bam"
     """
     # The generated launcher allows configuring heap size, but not stack size.
     UMICOLLAPSE_JAR=\$(find "\$(dirname "\$(command -v umicollapse)")/../share" -maxdepth 2 -name umicollapse.jar -print -quit)
@@ -54,7 +59,7 @@ process UMICOLLAPSE {
     if (mode !in ['fastq', 'bam']) {
         error("Mode must be one of 'fastq' or 'bam'.")
     }
-    extension = mode.contains("fastq") ? "fastq.gz" : "bam"
+    def extension = mode.contains("fastq") ? "fastq.gz" : "bam"
     """
     touch ${prefix}.dedup.${extension}
     touch ${prefix}_UMICollapse.log

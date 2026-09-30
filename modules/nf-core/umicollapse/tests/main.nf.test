@@ -28,8 +28,8 @@ nextflow_process {
             assertAll(
                 { assert process.success },
                 { assert snapshot(
-                    bam(process.out.bam[0][1]).getSamLinesMD5(),
-                    process.out.findAll { key, val -> key.startsWith('versions') }).match() }
+                    bam(process.out[0][0].bam).getSamLinesMD5()
+                    ).match() }
             )
         }
 
@@ -55,8 +55,8 @@ nextflow_process {
             assertAll(
                 { assert process.success },
                 { assert snapshot(
-                    bam(process.out.bam[0][1]).getSamLinesMD5(),
-                    process.out.findAll { key, val -> key.startsWith('versions') }).match() }
+                    bam(process.out[0][0].bam).getSamLinesMD5()
+                    ).match() }
             )
         }
 
@@ -82,8 +82,8 @@ nextflow_process {
                 assertAll(
                     { assert process.success },
                     { assert snapshot(
-                        process.out.fastq,
-                        process.out.findAll { key, val -> key.startsWith('versions') }).match() }
+                        process.out[0][0].fastq
+                    ).match() }
                 )
             }
     }
@@ -108,8 +108,8 @@ nextflow_process {
                 assertAll(
                     { assert process.success },
                     { assert snapshot(
-                        process.out.fastq,
-                        process.out.findAll { key, val -> key.startsWith('versions') }).match() }
+                        process.out[0][0].fastq
+                    ).match() }
                 )
             }
     }
@@ -138,8 +138,8 @@ nextflow_process {
             assertAll(
                 { assert process.success },
                 { assert snapshot(
-                    process.out.bam,
-                    process.out.findAll { key, val -> key.startsWith('versions') }).match() }
+                    process.out[0][0].bam
+                    ).match() }
             )
         }
 
@@ -167,8 +167,8 @@ nextflow_process {
             assertAll(
                 { assert process.success },
                 { assert snapshot(
-                    process.out.bam,
-                    process.out.findAll { key, val -> key.startsWith('versions') }).match() }
+                    process.out[0][0].bam
+                    ).match() }
             )
         }
 

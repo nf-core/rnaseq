@@ -19,16 +19,16 @@ workflow BAM_STATS_SAMTOOLS {
 
     SAMTOOLS_IDXSTATS(ch_bam_bai)
 
-    ch_results = SAMTOOLS_STATS.out.stats
-        .join(SAMTOOLS_FLAGSTAT.out.flagstat, by: [0])
-        .join(SAMTOOLS_IDXSTATS.out.idxstats, by: [0])
+    ch_results = SAMTOOLS_STATS.out
+        .join(SAMTOOLS_FLAGSTAT.out, by: [0])
+        .join(SAMTOOLS_IDXSTATS.out, by: [0])
         .map { meta, stats, flagstat, idxstats ->
             record(id: meta.id, stats: stats, flagstat: flagstat, idxstats: idxstats)
         }
 
     emit:
-    stats    = SAMTOOLS_STATS.out.stats // channel: [ val(meta), path(stats) ]
-    flagstat = SAMTOOLS_FLAGSTAT.out.flagstat // channel: [ val(meta), path(flagstat) ]
-    idxstats = SAMTOOLS_IDXSTATS.out.idxstats // channel: [ val(meta), path(idxstats) ]
+    stats    = SAMTOOLS_STATS.out // channel: [ val(meta), path(stats) ]
+    flagstat = SAMTOOLS_FLAGSTAT.out // channel: [ val(meta), path(flagstat) ]
+    idxstats = SAMTOOLS_IDXSTATS.out // channel: [ val(meta), path(idxstats) ]
     results  = ch_results // channel: SamtoolsStats
 }

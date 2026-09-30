@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process SAMTOOLS_IDXSTATS {
     tag "${meta.id}"
     label 'process_single'
@@ -8,14 +10,13 @@ process SAMTOOLS_IDXSTATS {
         : 'community.wave.seqera.io/library/htslib_samtools:1.24--d697cfb9dce007cd'}"
 
     input:
-    tuple val(meta), path(bam), path(bai)
+    tuple(meta: Map, bam: Path, bai: Path)
 
     output:
-    tuple val(meta), path("*.idxstats"), emit: idxstats
-    tuple val("${task.process}"), val('samtools'), eval("samtools version | sed '1!d;s/.* //'"), emit: versions_samtools, topic: versions
+    tuple(meta, file('*.idxstats'))
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'samtools', eval("samtools version | sed '1!d;s/.* //'")) >> 'versions'
 
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"

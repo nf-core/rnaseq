@@ -24,7 +24,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["log"])).match() }
+                { assert snapshot(process.out[0][0].collectEntries { k, v -> [k, v == null ? null : k in ["log"] ? file(v).name : v] }).match() }
             )
         }
     }
@@ -46,7 +46,7 @@ nextflow_process {
         then {
             assertAll (
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(process.out[0][0].collectEntries { k, v -> [k, v] }).match() }
             )
         }
     }
@@ -67,7 +67,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["log"])).match() }
+                { assert snapshot(process.out[0][0].collectEntries { k, v -> [k, v == null ? null : k in ["log"] ? file(v).name : v] }).match() }
             )
         }
     }
@@ -90,7 +90,7 @@ nextflow_process {
         then {
             assertAll (
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(process.out[0][0].collectEntries { k, v -> [k, v] }).match() }
             )
         }
     }

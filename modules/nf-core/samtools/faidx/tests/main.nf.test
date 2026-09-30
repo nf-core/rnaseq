@@ -31,7 +31,7 @@ nextflow_process {
         then {
             assert process.success
             assertAll(
-                { assert snapshot(sanitizeOutput(process.out)).match()}
+                { assert snapshot(process.out[0][0]).match()}
             )
         }
     }
@@ -57,7 +57,7 @@ nextflow_process {
         then {
             assert process.success
             assertAll(
-                { assert snapshot(sanitizeOutput(process.out)).match()}
+                { assert snapshot(process.out[0][0]).match()}
             )
         }
     }
@@ -83,7 +83,7 @@ nextflow_process {
         then {
             assert process.success
             assertAll(
-                { assert snapshot(sanitizeOutput(process.out)).match()}
+                { assert snapshot(process.out[0][0]).match()}
             )
         }
     }
@@ -111,7 +111,7 @@ nextflow_process {
         then {
             assert process.success
             assertAll(
-                { assert snapshot(sanitizeOutput(process.out)).match()}
+                { assert snapshot(process.out[0][0]).match()}
             )
         }
     }
@@ -139,7 +139,7 @@ nextflow_process {
         then {
             assert process.success
             assertAll(
-                { assert snapshot(sanitizeOutput(process.out)).match()}
+                { assert snapshot(process.out[0][0]).match()}
             )
         }
     }
@@ -165,7 +165,7 @@ nextflow_process {
         then {
             assert process.success
             assertAll(
-                { assert snapshot(sanitizeOutput(process.out)).match()}
+                { assert snapshot(process.out[0][0]).match()}
             )
         }
     }
@@ -191,7 +191,7 @@ nextflow_process {
         then {
             assert process.success
             assertAll(
-                { assert snapshot(sanitizeOutput(process.out)).match()}
+                { assert snapshot(process.out[0][0]).match()}
             )
         }
     }
@@ -219,7 +219,7 @@ nextflow_process {
         then {
             assert process.success
             assertAll(
-                { assert snapshot(sanitizeOutput(process.out)).match()}
+                { assert snapshot(process.out[0][0]).match()}
             )
         }
     }
@@ -247,7 +247,7 @@ nextflow_process {
         then {
             assert process.success
             assertAll(
-                { assert snapshot(sanitizeOutput(process.out)).match()}
+                { assert snapshot(process.out[0][0]).match()}
             )
         }
     }

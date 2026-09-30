@@ -195,22 +195,22 @@ workflow FASTQ_REMOVE_RRNA {
         // This removes any pair where at least one mate aligned to rRNA
         SAMTOOLS_VIEW_BOWTIE2(
             BOWTIE2_ALIGN_PE.out.filter { r -> r.orig_bam }.map { r -> [r.meta, r.orig_bam, []] },
-            [[], [], []], // No reference fasta
-            [[], []],     // No qname file
-            [[], []],     // No bed file
-            []            // No index format
+            [[:], [], []], // No reference fasta
+            [[:], []],     // No qname file
+            [[:], []],     // No bed file
+            ''             // No index format
         )
         // Note: samtools/view versions collected via topic
 
         // Convert filtered BAM back to paired FASTQ
         SAMTOOLS_FASTQ_BOWTIE2(
-            SAMTOOLS_VIEW_BOWTIE2.out.bam,
+            SAMTOOLS_VIEW_BOWTIE2.out.filter { r -> r.bam }.map { r -> [r.meta, r.bam] },
             false, // not interleaved
         )
 
         // Combine single-end and paired-end results
         BOWTIE2_ALIGN.out.filter { r -> r.unmapped }.map { r -> [r.meta, r.unmapped] }
-            .mix(SAMTOOLS_FASTQ_BOWTIE2.out.fastq)
+            .mix(SAMTOOLS_FASTQ_BOWTIE2.out.filter { r -> r.fastq }.map { r -> [r.meta, r.fastq] })
             .set { ch_filtered_reads }
 
         ch_results = ch_bowtie2_log.map { meta, log ->

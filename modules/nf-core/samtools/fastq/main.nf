@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process SAMTOOLS_FASTQ {
     tag "${meta.id}"
     label 'process_low'
@@ -8,18 +10,20 @@ process SAMTOOLS_FASTQ {
         : 'community.wave.seqera.io/library/htslib_samtools:1.24--d697cfb9dce007cd'}"
 
     input:
-    tuple val(meta), path(input)
-    val interleave
+    tuple(meta: Map, input: Path)
+    interleave: Boolean
 
     output:
-    tuple val(meta), path("*_{1,2}.fastq.gz"), optional: true, emit: fastq
-    tuple val(meta), path("*_interleaved.fastq"), optional: true, emit: interleaved
-    tuple val(meta), path("*_singleton.fastq.gz"), optional: true, emit: singleton
-    tuple val(meta), path("*_other.fastq.gz"), optional: true, emit: other
-    tuple val("${task.process}"), val('samtools'), eval("samtools version | sed '1!d;s/.* //'"), emit: versions_samtools, topic: versions
+    record(
+        meta:        meta,
+        fastq:       files('*_{1,2}.fastq.gz', optional: true).toSorted { f -> f.name },
+        interleaved: file('*_interleaved.fastq', optional: true),
+        singleton:   file('*_singleton.fastq.gz', optional: true),
+        other:       file('*_other.fastq.gz', optional: true)
+    )
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'samtools', eval("samtools version | sed '1!d;s/.* //'")) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''

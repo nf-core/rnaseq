@@ -27,9 +27,9 @@ nextflow_process {
             assertAll(
                 { assert process.success },
                 { assert snapshot(
-                    process.out.bam.collect{meta, bam_ ->  file(bam_).name + ':readsMD5,' + bam(bam_).getReadsMD5()},
-                    path(process.out.metrics.get(0).get(1)).readLines()[0..2],
-                    process.out.findAll { key, val -> key.startsWith("versions") })
+                    file(process.out[0][0].bam).name + ':readsMD5,' + bam(process.out[0][0].bam).getReadsMD5(),
+                    path(process.out[0][0].metrics).readLines()[0..2]
+                )
                 .match() }
             )
         }
@@ -53,9 +53,9 @@ nextflow_process {
             assertAll(
                 { assert process.success },
                 { assert snapshot(
-                    process.out.bam.collect{meta, bam_ ->  file(bam_).name + ':readsMD5,' + bam(bam_).getReadsMD5()},
-                    path(process.out.metrics.get(0).get(1)).readLines()[0..2],
-                    process.out.findAll { key, val -> key.startsWith("versions") })
+                    file(process.out[0][0].bam).name + ':readsMD5,' + bam(process.out[0][0].bam).getReadsMD5(),
+                    path(process.out[0][0].metrics).readLines()[0..2]
+                )
                 .match() }
             )
         }
@@ -84,9 +84,8 @@ nextflow_process {
             assertAll(
                 { assert process.success },
                 { assert snapshot(
-                    process.out.cram.collect{meta, cram_ ->  file(cram_).name + ':readsMD5,' + cram(cram_, fasta).getReadsMD5()},
-                    path(process.out.metrics.get(0).get(1)).readLines()[0..2],
-                    process.out.findAll { key, val -> key.startsWith("versions") }
+                    file(process.out[0][0].cram).name + ':readsMD5,' + cram(process.out[0][0].cram, fasta).getReadsMD5(),
+                    path(process.out[0][0].metrics).readLines()[0..2]
                 ).match() }
             )
         }
@@ -109,7 +108,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out)).match() }
+                { assert snapshot(process.out[0][0].collectEntries { k, v -> [k, v == null ? null : v] }).match() }
             )
         }
     }
@@ -131,7 +130,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out)).match() }
+                { assert snapshot(process.out[0][0].collectEntries { k, v -> [k, v == null ? null : v] }).match() }
             )
         }
     }
@@ -157,7 +156,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out)).match() }
+                { assert snapshot(process.out[0][0].collectEntries { k, v -> [k, v == null ? null : v] }).match() }
             )
         }
     }

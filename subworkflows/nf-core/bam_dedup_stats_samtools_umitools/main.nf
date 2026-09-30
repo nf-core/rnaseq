@@ -23,15 +23,19 @@ workflow BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS {
     if (val_primary_only) {
         SAMTOOLS_VIEW_PRIMARY(
             ch_bam_bai,
-            [[], [], []],
-            [[], []],
-            [[], []],
-            [],
+            [[:], [], []],
+            [[:], []],
+            [[:], []],
+            '',
         )
 
-        SAMTOOLS_INDEX_PRIMARY(SAMTOOLS_VIEW_PRIMARY.out.bam)
+        ch_primary_bam = SAMTOOLS_VIEW_PRIMARY.out
+            .filter { r -> r.bam }
+            .map { r -> [r.meta, r.bam] }
 
-        ch_dedup_input = SAMTOOLS_VIEW_PRIMARY.out.bam.join(SAMTOOLS_INDEX_PRIMARY.out.index, by: [0])
+        SAMTOOLS_INDEX_PRIMARY(ch_primary_bam)
+
+        ch_dedup_input = ch_primary_bam.join(SAMTOOLS_INDEX_PRIMARY.out, by: [0])
     }
     else {
         ch_dedup_input = ch_bam_bai
@@ -45,43 +49,40 @@ workflow BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS {
     //
     // Index BAM file and run samtools stats, flagstat and idxstats
     //
-    SAMTOOLS_INDEX(UMITOOLS_DEDUP.out.bam)
+    ch_dedup_bam = UMITOOLS_DEDUP.out.map { r -> [r.meta, r.bam] }
 
-    ch_bam_bai_dedup = UMITOOLS_DEDUP.out.bam.join(SAMTOOLS_INDEX.out.index, by: [0])
+    SAMTOOLS_INDEX(ch_dedup_bam)
+
+    ch_bam_bai_dedup = ch_dedup_bam.join(SAMTOOLS_INDEX.out, by: [0])
 
     BAM_STATS_SAMTOOLS(ch_bam_bai_dedup, [[:], [], []])
 
     // umi_tools writes all three stats tables together, so `tsv` is either
     // complete or absent.
-    ch_results = ch_bam_bai_dedup
-        .join(UMITOOLS_DEDUP.out.log, by: [0])
-        .join(UMITOOLS_DEDUP.out.tsv_edit_distance, by: [0], remainder: true)
-        .join(UMITOOLS_DEDUP.out.tsv_per_umi, by: [0], remainder: true)
-        .join(UMITOOLS_DEDUP.out.tsv_umi_per_position, by: [0], remainder: true)
-        .map { meta, bam, bai, dedup_log, edit_distance, per_umi, umi_per_position ->
-            [meta.id, bam, bai, dedup_log, edit_distance, per_umi, umi_per_position]
-        }
+    ch_results = UMITOOLS_DEDUP.out
+        .map { r -> [r.id, r] }
+        .join(SAMTOOLS_INDEX.out.map { meta, bai -> [meta.id, bai] }, by: [0])
         .join(BAM_STATS_SAMTOOLS.out.results.map { r -> [r.id, r] }, by: [0])
-        .map { id, bam, bai, dedup_log, edit_distance, per_umi, umi_per_position, samtools ->
+        .map { id, dedup, bai, samtools ->
             record(
                 id:        id,
-                bam:       bam,
+                bam:       dedup.bam,
                 bai:       bai,
-                dedup_log: dedup_log,
+                dedup_log: dedup.log,
                 samtools:  record(stats: samtools.stats, flagstat: samtools.flagstat, idxstats: samtools.idxstats),
-                tsv:       [edit_distance, per_umi, umi_per_position].any()
-                    ? record(edit_distance: edit_distance, per_umi: per_umi, umi_per_position: umi_per_position)
+                tsv:       [dedup.tsv_edit_distance, dedup.tsv_per_umi, dedup.tsv_umi_per_position].any()
+                    ? record(edit_distance: dedup.tsv_edit_distance, per_umi: dedup.tsv_per_umi, umi_per_position: dedup.tsv_umi_per_position)
                     : null
             )
         }
 
     emit:
-    bam                  = UMITOOLS_DEDUP.out.bam // channel: [ val(meta), path(bam) ]
-    deduplog             = UMITOOLS_DEDUP.out.log // channel: [ val(meta), path(log) ]
-    tsv_edit_distance    = UMITOOLS_DEDUP.out.tsv_edit_distance // channel: [ val(meta), path(tsv) ]
-    tsv_per_umi          = UMITOOLS_DEDUP.out.tsv_per_umi // channel: [ val(meta), path(tsv) ]
-    tsv_umi_per_position = UMITOOLS_DEDUP.out.tsv_umi_per_position // channel: [ val(meta), path(tsv) ]
-    index                = SAMTOOLS_INDEX.out.index // channel: [ val(meta), path(index) ]
+    bam                  = ch_dedup_bam // channel: [ val(meta), path(bam) ]
+    deduplog             = UMITOOLS_DEDUP.out.map { r -> [r.meta, r.log] } // channel: [ val(meta), path(log) ]
+    tsv_edit_distance    = UMITOOLS_DEDUP.out.filter { r -> r.tsv_edit_distance }.map { r -> [r.meta, r.tsv_edit_distance] } // channel: [ val(meta), path(tsv) ]
+    tsv_per_umi          = UMITOOLS_DEDUP.out.filter { r -> r.tsv_per_umi }.map { r -> [r.meta, r.tsv_per_umi] } // channel: [ val(meta), path(tsv) ]
+    tsv_umi_per_position = UMITOOLS_DEDUP.out.filter { r -> r.tsv_umi_per_position }.map { r -> [r.meta, r.tsv_umi_per_position] } // channel: [ val(meta), path(tsv) ]
+    index                = SAMTOOLS_INDEX.out // channel: [ val(meta), path(index) ]
     stats                = BAM_STATS_SAMTOOLS.out.stats // channel: [ val(meta), path(stats) ]
     flagstat             = BAM_STATS_SAMTOOLS.out.flagstat // channel: [ val(meta), path(flagstat) ]
     idxstats             = BAM_STATS_SAMTOOLS.out.idxstats // channel: [ val(meta), path(idxstats) ]

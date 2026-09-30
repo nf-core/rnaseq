@@ -214,9 +214,9 @@ workflow PREPARE_GENOME_REFERENCES {
     ch_chrom_sizes = channel.empty()
     if (fasta_provided) {
         SAMTOOLS_FAIDX(ch_fasta.map { item -> [ [:], item, [] ] }, true)
-        ch_chrom_sizes = SAMTOOLS_FAIDX.out.sizes.map { tuple -> tuple[1] }
+        ch_chrom_sizes = SAMTOOLS_FAIDX.out.map { r -> r.sizes }
         ch_fasta_fai   = ch_fasta
-            .combine(SAMTOOLS_FAIDX.out.fai.map { _meta, fai_file -> fai_file })
+            .combine(SAMTOOLS_FAIDX.out.map { r -> r.fai })
             .map { fasta_file, fai_file -> [ [:], fasta_file, fai_file ] }
             .first()
     }

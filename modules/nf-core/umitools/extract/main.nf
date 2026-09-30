@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process UMITOOLS_EXTRACT {
     tag "$meta.id"
     label "process_single"
@@ -9,15 +11,17 @@ process UMITOOLS_EXTRACT {
         'community.wave.seqera.io/library/umi_tools_future_matplotlib_numpy_pruned:1ee668bafc8c9f81' }"
 
     input:
-    tuple val(meta), path(reads)
+    tuple(meta: Map, reads: List<Path>)
 
     output:
-    tuple val(meta), path("*.fastq.gz"), emit: reads
-    tuple val(meta), path("*.log")     , emit: log
-    tuple val("${task.process}"), val('umitools'), eval("umi_tools --version | sed -n '/version:/s/.*: //p'"), emit: versions_umitools, topic: versions
+    record(
+        meta:  meta,
+        reads: files('*.fastq.gz').toSorted { f -> f.name },
+        log:   file('*.log')
+    )
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'umitools', eval("umi_tools --version | sed -n '/version:/s/.*: //p'")) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''
@@ -26,7 +30,7 @@ process UMITOOLS_EXTRACT {
         """
         umi_tools \\
             extract \\
-            -I $reads \\
+            -I ${[reads].flatten().join(' ')} \\
             -S ${prefix}.umi_extract.fastq.gz \\
             $args \\
             > ${prefix}.umi_extract.log
@@ -46,12 +50,9 @@ process UMITOOLS_EXTRACT {
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
-    if (meta.single_end) {
-        output_command = "echo '' | gzip > ${prefix}.umi_extract.fastq.gz"
-    } else {
-        output_command = "echo '' | gzip > ${prefix}.umi_extract_1.fastq.gz ;"
-        output_command += "echo '' | gzip > ${prefix}.umi_extract_2.fastq.gz"
-    }
+    def output_command = meta.single_end
+        ? "echo '' | gzip > ${prefix}.umi_extract.fastq.gz"
+        : "echo '' | gzip > ${prefix}.umi_extract_1.fastq.gz ;echo '' | gzip > ${prefix}.umi_extract_2.fastq.gz"
     """
     touch ${prefix}.umi_extract.log
     ${output_command}

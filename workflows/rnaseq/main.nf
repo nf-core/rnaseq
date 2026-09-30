@@ -209,7 +209,7 @@ workflow RNASEQ {
     SAMTOOLS_INDEX (
         ch_genome_bam
     )
-    ch_genome_bam_index = SAMTOOLS_INDEX.out.index
+    ch_genome_bam_index = SAMTOOLS_INDEX.out
 
     //
     // Run RNA-seq FASTQ preprocessing subworkflow
@@ -555,7 +555,8 @@ workflow RNASEQ {
     if (!params.skip_markduplicates && !params.with_umi && !markdups_done) {
         BAM_MARKDUPLICATES_PICARD (
             ch_genome_bam,
-            ch_fasta_fai
+            ch_fasta_fai,
+            !params.use_rustqc
         )
         ch_genome_bam       = BAM_MARKDUPLICATES_PICARD.out.bam
         ch_genome_bam_index = BAM_MARKDUPLICATES_PICARD.out.index

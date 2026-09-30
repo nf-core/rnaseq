@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process SAMTOOLS_SORT {
     tag "${meta.id}"
     label 'process_medium'
@@ -8,24 +10,31 @@ process SAMTOOLS_SORT {
         : 'community.wave.seqera.io/library/htslib_samtools:1.24--d697cfb9dce007cd'}"
 
     input:
-    tuple val(meta), path(bam, stageAs: "?/*")
-    tuple val(meta2), path(fasta), path(fai)
-    val index_format
+    tuple(meta: Map, bam: List<Path>)
+    tuple(meta2: Map, fasta: Path?, fai: Path?)
+    index_format: String
+
+    stage:
+    stageAs bam, '?/*'
 
     output:
-    tuple val(meta), path("${prefix}.bam"), emit: bam, optional: true
-    tuple val(meta), path("${prefix}.cram"), emit: cram, optional: true
-    tuple val(meta), path("${prefix}.sam"), emit: sam, optional: true
-    tuple val(meta), path("${prefix}.${extension}.{crai,csi,bai}"), emit: index, optional: true
-    tuple val("${task.process}"), val('samtools'), eval("samtools version | sed '1!d;s/.* //'"), topic: versions, emit: versions_samtools
+    record(
+        meta: meta,
+        bam:  file("${task.ext.prefix ?: meta.id}.bam", optional: true),
+        cram: file("${task.ext.prefix ?: meta.id}.cram", optional: true),
+        sam:  file("${task.ext.prefix ?: meta.id}.sam", optional: true),
+        bai:  file("${task.ext.prefix ?: meta.id}.{bam,cram,sam}.bai", optional: true),
+        csi:  file("${task.ext.prefix ?: meta.id}.{bam,cram,sam}.csi", optional: true),
+        crai: file("${task.ext.prefix ?: meta.id}.{bam,cram,sam}.crai", optional: true)
+    )
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'samtools', eval("samtools version | sed '1!d;s/.* //'")) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''
-    prefix = task.ext.prefix ?: "${meta.id}"
-    extension = args.contains("--output-fmt sam")
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def extension = args.contains("--output-fmt sam")
         ? "sam"
         : args.contains("--output-fmt cram")
             ? "cram"
@@ -40,24 +49,23 @@ process SAMTOOLS_SORT {
         write_index = "--write-index"
         output_file = "${prefix}.${extension}##idx##${prefix}.${extension}.${index_format}"
     }
-    def is_sam = (bam instanceof List ? bam[0] : bam).name.endsWith('.sam')
+    // A lone file arrives as a Path, which iterates over its name components.
+    def bams = [bam].flatten()
+    def is_sam = bams[0].name.endsWith('.sam')
     if (index_format) {
-        if (!index_format.matches('bai|csi|crai')) {
+        if (!(index_format in ['bai', 'csi', 'crai'])) {
             error("Index format not one of bai, csi, crai.")
         }
         else if (extension == "sam") {
             error("Indexing not compatible with SAM output")
         }
     }
-    if ("${bam}" == "${prefix}.bam") {
-        error("Input and output names are the same, use \"task.ext.prefix\" to disambiguate!")
-    }
-    if ("${bam}" == "${prefix}.bam") {
+    if (bams.join(' ') == "${prefix}.bam") {
         error("Input and output names are the same, use \"task.ext.prefix\" to disambiguate!")
     }
 
-    def input_source = is_sam ? "${bam}" : "-"
-    def pre_command = is_sam ? "" : "samtools cat ${bam} | "
+    def input_source = is_sam ? bams.join(' ') : "-"
+    def pre_command = is_sam ? "" : "samtools cat ${bams.join(' ')} | "
 
     """
     ${pre_command}samtools sort \\
@@ -72,15 +80,15 @@ process SAMTOOLS_SORT {
 
     stub:
     def args = task.ext.args ?: ''
-    prefix = task.ext.prefix ?: "${meta.id}"
-    extension = args.contains("--output-fmt sam")
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def extension = args.contains("--output-fmt sam")
         ? "sam"
         : args.contains("--output-fmt cram")
             ? "cram"
             : "bam"
 
     if (index_format) {
-        if (!index_format.matches('bai|csi|crai')) {
+        if (!(index_format in ['bai', 'csi', 'crai'])) {
             error("Index format not one of bai, csi, crai.")
         }
         else if (extension == "sam") {
@@ -88,7 +96,7 @@ process SAMTOOLS_SORT {
         }
     }
 
-    index = index_format ? "touch ${prefix}.${extension}.${index_format}" : ""
+    def index = index_format ? "touch ${prefix}.${extension}.${index_format}" : ""
 
     """
     touch ${prefix}.${extension}

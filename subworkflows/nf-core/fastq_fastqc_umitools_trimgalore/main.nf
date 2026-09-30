@@ -61,21 +61,19 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
     ch_umi_reads = channel.empty()
     if (with_umi && !skip_umi_extract) {
         UMITOOLS_EXTRACT(reads)
-        // Typed processes read a lone Path as its name components, so wrap single-end reads in a list
-        ch_trimmer_reads = UMITOOLS_EXTRACT.out.reads.map { meta, reads_ -> [meta, [reads_].flatten()] }
-        ch_umi_reads = UMITOOLS_EXTRACT.out.reads
-        ch_umi_log = UMITOOLS_EXTRACT.out.log
+        ch_umi_reads = UMITOOLS_EXTRACT.out.map { r -> [r.meta, r.reads] }
+        ch_trimmer_reads = ch_umi_reads
+        ch_umi_log = UMITOOLS_EXTRACT.out.map { r -> [r.meta, r.log] }
 
         ch_results = ch_results
-            .join(UMITOOLS_EXTRACT.out.log.map { meta, log -> [meta.id, log] }, by: [0])
-            .join(UMITOOLS_EXTRACT.out.reads.map { meta, reads_ -> [meta.id, reads_] }, by: [0])
-            .map { id, fields, log, reads_ ->
-                [id, fields + [umi: record(log: log, reads: [reads_].flatten())]]
+            .join(UMITOOLS_EXTRACT.out.map { r -> [r.meta.id, r] }, by: [0])
+            .map { id, fields, umi ->
+                [id, fields + [umi: record(log: umi.log, reads: umi.reads)]]
             }
 
         // Discard R1 / R2 if required
         if (umi_discard_read in [1, 2]) {
-            UMITOOLS_EXTRACT.out.reads
+            ch_umi_reads
                 .map { meta, reads_ ->
                     meta.single_end ? [meta, [reads_].flatten()] : [meta + ['single_end': true], [reads_[umi_discard_read % 2]]]
                 }

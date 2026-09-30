@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process UMITOOLS_PREPAREFORRSEM {
     tag "$meta.id"
     label 'process_medium'
@@ -8,15 +10,18 @@ process UMITOOLS_PREPAREFORRSEM {
         'community.wave.seqera.io/library/umi_tools_future_matplotlib_numpy_pruned:1ee668bafc8c9f81' }"
 
     input:
-    tuple val(meta), path(bam), path(bai)
+    tuple(meta: Map, bam: Path, bai: Path?)
 
     output:
-    tuple val(meta), path('*.bam'), emit: bam
-    tuple val(meta), path('*.log'), emit: log
-    tuple val("${task.process}"), val('umitools'), eval("umi_tools --version | sed 's/UMI-tools version: //'"), emit: versions_umitools, topic: versions
+    record(
+        id:   meta.id,
+        meta: meta,
+        bam:  file('*.bam'),
+        log:  file('*.log')
+    )
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'umitools', eval("umi_tools --version | sed 's/UMI-tools version: //'")) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''

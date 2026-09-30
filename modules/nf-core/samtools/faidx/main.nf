@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 process SAMTOOLS_FAIDX {
     tag "${fasta}"
     label 'process_single'
@@ -8,18 +10,20 @@ process SAMTOOLS_FAIDX {
         : 'community.wave.seqera.io/library/htslib_samtools:1.24--d697cfb9dce007cd'}"
 
     input:
-    tuple val(meta), path(fasta), path(fai)
-    val get_sizes
+    tuple(meta: Map, fasta: Path, fai: Path?)
+    get_sizes: Boolean
 
     output:
-    tuple val(meta), path("*.{fa,fasta}"), emit: fa, optional: true
-    tuple val(meta), path("*.sizes"), emit: sizes, optional: true
-    tuple val(meta), path("*.fai"), emit: fai, optional: true
-    tuple val(meta), path("*.gzi"), emit: gzi, optional: true
-    tuple val("${task.process}"), val('samtools'), eval("samtools version | sed '1!d;s/.* //'"), topic: versions, emit: versions_samtools
+    record(
+        meta:  meta,
+        fa:    file('*.{fa,fasta}', optional: true),
+        sizes: file('*.sizes', optional: true),
+        fai:   file('*.fai', optional: true),
+        gzi:   file('*.gzi', optional: true)
+    )
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'samtools', eval("samtools version | sed '1!d;s/.* //'")) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''

@@ -63,7 +63,7 @@ workflow BAM_QC_RNASEQ {
     )
 
     QUALIMAP_RNASEQ (
-        SAMTOOLS_SORT_QUALIMAP.out.bam,
+        SAMTOOLS_SORT_QUALIMAP.out.map { r -> [r.meta, r.bam] },
         ch_gtf
     )
 

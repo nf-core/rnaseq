@@ -2,7 +2,6 @@ nextflow.enable.types = true
 
 include { BOWTIE2_ALIGN                            } from '../../../modules/nf-core/bowtie2/align'
 include { BOWTIE2_ALIGN as BOWTIE2_ALIGN_PE        } from '../../../modules/nf-core/bowtie2/align'
-include { CONCATENATE_FASTA                       } from '../../../modules/local/concatenate_fasta'
 include { BOWTIE2_BUILD                            } from '../../../modules/nf-core/bowtie2/build'
 include { RIBODETECTOR                             } from '../../../modules/nf-core/ribodetector'
 include { SAMTOOLS_FASTQ as SAMTOOLS_FASTQ_BOWTIE2 } from '../../../modules/nf-core/samtools/fastq'
@@ -21,7 +20,6 @@ include { SamtoolsViewResult } from '../../../modules/nf-core/samtools/view/main
 include { SeqkitReplaceResult } from '../../../modules/nf-core/seqkit/replace/main'
 include { SeqkitStatsResult } from '../../../modules/nf-core/seqkit/stats/main'
 include { SortmernaResult } from '../../../modules/nf-core/sortmerna/main'
-include { ConcatenateFastaResult } from '../../../modules/local/concatenate_fasta/main'
 
 //
 // Function that parses seqkit stats TSV output to extract the mean read length
@@ -141,11 +139,11 @@ workflow FASTQ_REMOVE_RRNA {
             def ch_seqkit_converted: Channel<SeqkitReplaceResult> = SEQKIT_REPLACE_U2T(ch_prefixed_fastas, '')
 
             // Collect processed files (already prefixed and U->T converted)
-            def ch_combined_fasta: Value<ConcatenateFastaResult> = CONCATENATE_FASTA(
-                ch_seqkit_converted.collect().map { built ->
-                    record(id: 'rrna_refs', meta: [id: 'rrna_refs'], fastas: built.collect { r -> r.fastx }.toSorted { f -> f.name })
-                }
-            )
+            def ch_combined_fasta = ch_seqkit_converted
+                .map { r -> r.fastx }
+                .collectFile(name: 'rrna_combined_dna.fasta', sort: { a, b -> a.name <=> b.name }, newLine: true)
+                .collect()
+                .map { fastas -> record(id: 'rrna_refs', meta: [id: 'rrna_refs'], fasta: fastas.toList().first() as Path) }
 
             def ch_bowtie2_built: Value<Bowtie2BuildResult> = BOWTIE2_BUILD(ch_combined_fasta)
             ch_bowtie2_idx = ch_bowtie2_built.map { built -> built.index }

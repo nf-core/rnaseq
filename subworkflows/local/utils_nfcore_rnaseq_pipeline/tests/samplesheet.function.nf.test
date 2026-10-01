@@ -1,0 +1,260 @@
+nextflow_function {
+
+    name "Test samplesheet row validation"
+    script "../samplesheet.nf"
+
+    test("readSamplesheet groups the runs of a sample and keeps single-sample rows apart") {
+
+        function "readSamplesheet"
+
+        when {
+            function {
+                """
+                def fq1 = file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
+                def fq2 = file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                input[0] = [
+                    [ sample: 'a', fastq_1: fq1, fastq_2: fq2, strandedness: 'auto' ],
+                    [ sample: 'a', fastq_1: fq1, fastq_2: fq2, strandedness: 'auto' ],
+                    [ sample: 'b', fastq_1: fq1, fastq_2: null, strandedness: 'forward', seq_platform: 'ILLUMINA' ]
+                ]
+                input[1] = "\${projectDir}/assets/schema_input.json"
+                input[2] = false
+                """
+            }
+        }
+
+        then {
+            def samples = function.result.collectEntries { s -> [ (s.id): s ] }
+            assertAll(
+                { assert function.success },
+                { assert samples.keySet() == ['a', 'b'] as Set },
+                { assert samples.a.runs.size() == 2 },
+                { assert samples.a.meta.single_end == false },
+                { assert samples.a.meta.strandedness == 'auto' },
+                { assert samples.b.runs.size() == 1 },
+                { assert samples.b.meta.single_end == true },
+                { assert samples.b.meta.seq_platform == 'ILLUMINA' }
+            )
+        }
+
+    }
+
+    test("readSamplesheet rejects an empty samplesheet") {
+
+        function "readSamplesheet"
+
+        when {
+            function {
+                """
+                input[0] = []
+                input[1] = "\${projectDir}/assets/schema_input.json"
+                input[2] = false
+                """
+            }
+        }
+
+        then {
+            assert function.failed
+        }
+
+    }
+
+    test("readSamplesheet rejects an unknown strandedness") {
+
+        function "readSamplesheet"
+
+        when {
+            function {
+                """
+                def fq1 = file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
+                input[0] = [ [ sample: 'a', fastq_1: fq1, strandedness: 'sideways' ] ]
+                input[1] = "\${projectDir}/assets/schema_input.json"
+                input[2] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.failed },
+                { assert function.stderr.join('\n').contains('strandedness') }
+            )
+        }
+
+    }
+
+    test("readSamplesheet rejects a missing strandedness") {
+
+        function "readSamplesheet"
+
+        when {
+            function {
+                """
+                def fq1 = file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
+                input[0] = [ [ sample: 'a', fastq_1: fq1 ] ]
+                input[1] = "\${projectDir}/assets/schema_input.json"
+                input[2] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.failed },
+                { assert function.stderr.join('\n').contains('strandedness') }
+            )
+        }
+
+    }
+
+    test("readSamplesheet rejects a sample name with spaces") {
+
+        function "readSamplesheet"
+
+        when {
+            function {
+                """
+                def fq1 = file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
+                input[0] = [ [ sample: 'a b', fastq_1: fq1, strandedness: 'auto' ] ]
+                input[1] = "\${projectDir}/assets/schema_input.json"
+                input[2] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.failed },
+                { assert function.stderr.join('\n').contains('sample') }
+            )
+        }
+
+    }
+
+    test("readSamplesheet rejects a FASTQ file that does not exist") {
+
+        function "readSamplesheet"
+
+        when {
+            function {
+                """
+                input[0] = [ [ sample: 'a', fastq_1: file('/nonexistent/reads_1.fastq.gz'), strandedness: 'auto' ] ]
+                input[1] = "\${projectDir}/assets/schema_input.json"
+                input[2] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.failed },
+                { assert function.stderr.join('\n').contains('fastq_1') }
+            )
+        }
+
+    }
+
+    test("readSamplesheet rejects a FASTQ file with the wrong extension") {
+
+        function "readSamplesheet"
+
+        when {
+            function {
+                """
+                def fasta = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                input[0] = [ [ sample: 'a', fastq_1: fasta, strandedness: 'auto' ] ]
+                input[1] = "\${projectDir}/assets/schema_input.json"
+                input[2] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.failed },
+                { assert function.stderr.join('\n').contains('fastq_1') }
+            )
+        }
+
+    }
+
+    test("readSamplesheet rejects a percent_mapped outside 0 to 100") {
+
+        function "readSamplesheet"
+
+        when {
+            function {
+                """
+                def fq1 = file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
+                input[0] = [ [ sample: 'a', fastq_1: fq1, strandedness: 'auto', percent_mapped: 140 ] ]
+                input[1] = "\${projectDir}/assets/schema_input.json"
+                input[2] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.failed },
+                { assert function.stderr.join('\n').contains('percent_mapped') }
+            )
+        }
+
+    }
+
+    test("readSamplesheet rejects runs of a sample that mix single-end and paired-end") {
+
+        function "readSamplesheet"
+
+        when {
+            function {
+                """
+                def fq1 = file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
+                def fq2 = file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                input[0] = [
+                    [ sample: 'a', fastq_1: fq1, fastq_2: fq2, strandedness: 'auto' ],
+                    [ sample: 'a', fastq_1: fq1, fastq_2: null, strandedness: 'auto' ]
+                ]
+                input[1] = "\${projectDir}/assets/schema_input.json"
+                input[2] = false
+                """
+            }
+        }
+
+        then {
+            assert function.failed
+        }
+
+    }
+
+    test("samplesheetRowsToCsv writes only the columns that are set, with one row per run") {
+
+        function "samplesheetRowsToCsv"
+
+        when {
+            function {
+                """
+                def fq1 = file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
+                def fq2 = file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                input[0] = [
+                    [ sample: 'b', fastq_1: fq1, fastq_2: null, strandedness: 'forward' ],
+                    [ sample: 'a', fastq_1: fq1, fastq_2: fq2, strandedness: 'auto' ]
+                ]
+                """
+            }
+        }
+
+        then {
+            def lines = function.result.readLines()
+            assertAll(
+                { assert function.success },
+                { assert lines[0] == 'sample,fastq_1,fastq_2,strandedness' },
+                { assert lines.size() == 3 },
+                { assert lines[1].startsWith('a,') },
+                { assert lines[2].endsWith(',,forward') }
+            )
+        }
+
+    }
+
+}

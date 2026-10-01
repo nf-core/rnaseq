@@ -52,17 +52,7 @@ nextflow_function {
         when {
             function {
                 """
-                def sheet = file("\${workDir}/se_only_samplesheet.csv")
-                def fq1 = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357070_1.fastq.gz'
-                def fq2 = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357072_1.fastq.gz'
-                sheet.text = [
-                    'sample,fastq_1,fastq_2,strandedness',
-                    "sample_1,\${fq1},,auto",
-                    "sample_2,\${fq2},,auto",
-                ].join('\\n') + '\\n'
-
-                input[0] = sheet
-                input[1] = file("\${projectDir}/assets/schema_input.json", checkIfExists: true)
+                input[0] = [ [ id: 'sample_1', meta: [ single_end: true ] ], [ id: 'sample_2', meta: [ single_end: true ] ] ]
                 """
             }
         }
@@ -82,19 +72,7 @@ nextflow_function {
         when {
             function {
                 """
-                def sheet = file("\${workDir}/pe_samplesheet.csv")
-                def fq1a = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357070_1.fastq.gz'
-                def fq2a = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357070_2.fastq.gz'
-                def fq1b = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357072_1.fastq.gz'
-                def fq2b = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357072_2.fastq.gz'
-                sheet.text = [
-                    'sample,fastq_1,fastq_2,strandedness',
-                    "sample_1,\${fq1a},\${fq2a},auto",
-                    "foo.1,\${fq1b},\${fq2b},auto",
-                ].join('\\n') + '\\n'
-
-                input[0] = sheet
-                input[1] = file("\${projectDir}/assets/schema_input.json", checkIfExists: true)
+                input[0] = [ [ id: 'sample_1', meta: [ single_end: false ] ], [ id: 'foo.1', meta: [ single_end: false ] ] ]
                 """
             }
         }

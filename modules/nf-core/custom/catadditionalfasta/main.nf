@@ -46,7 +46,7 @@ process CUSTOM_CATADDITIONALFASTA {
     template 'fasta2gtf.py'
 
     stub:
-    prefix = task.ext.prefix ?: "${sample.meta.id}"
+    prefix = task.ext.prefix ?: sample.prefix ?: "${sample.meta.id}"
     """
     mkdir out
     touch out/${prefix}.fasta

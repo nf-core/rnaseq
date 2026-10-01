@@ -103,22 +103,26 @@ nextflow_function {
         function "validateInputParameters"
 
         when {
-            params {
-                fasta                  = "genome.fasta"
-                gtf                    = "genome.gtf"
-                gff                    = "genome.gff"
-                transcript_fasta       = "transcripts.fasta"
-                skip_bbsplit           = true
-                bbsplit_fasta_list     = null
-                remove_ribo_rna        = false
-                ribo_database_manifest = null
-                with_umi               = false
-                skip_umi_extract       = false
-                skip_alignment         = false
-                aligner                = "star"
-                skip_pseudo_alignment  = false
-                pseudo_aligner         = "salmon"
-                rsem_index             = "rsem_index"
+            function {
+                """
+                input[0] = [
+                    fasta                  : 'genome.fasta',
+                    gtf                    : 'genome.gtf',
+                    gff                    : 'genome.gff',
+                    transcript_fasta       : 'transcripts.fasta',
+                    skip_bbsplit           : true,
+                    bbsplit_fasta_list     : null,
+                    remove_ribo_rna        : false,
+                    ribo_database_manifest : null,
+                    with_umi               : false,
+                    skip_umi_extract       : false,
+                    skip_alignment         : false,
+                    aligner                : 'star',
+                    skip_pseudo_alignment  : false,
+                    pseudo_aligner         : 'salmon',
+                    rsem_index             : 'rsem_index'
+                ]
+                """
             }
         }
 
@@ -136,13 +140,10 @@ nextflow_function {
         function "genomeExistsError"
 
         when {
-            params {
-                genome = "myTest"
-                genomes {
-                    "myTest" {
-                        myAttribute = "myValue"
-                    }
-                }
+            function {
+                """
+                input[0] = [ genome: 'myTest', genomes: [ myTest: [ myAttribute: 'myValue' ] ] ]
+                """
             }
         }
 
@@ -160,13 +161,10 @@ nextflow_function {
         function "genomeExistsError"
 
         when {
-            params {
-                genome = "missingTest"
-                genomes {
-                    "myTest" {
-                        myAttribute = "myValue"
-                    }
-                }
+            function {
+                """
+                input[0] = [ genome: 'missingTest', genomes: [ myTest: [ myAttribute: 'myValue' ] ] ]
+                """
             }
         }
 

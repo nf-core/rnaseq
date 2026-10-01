@@ -63,7 +63,7 @@ ${colors.blue}  | \\| |       \\__, \\__/ |  \\ |___     ${colors.green}\\`-._,-
 ${colors.purple}  nf-core/rnaseq ${workflow.manifest.version}${colors.reset}
 -${colors.dim}----------------------------------------------------${colors.reset}-
 """
-    def after_text = """${workflow.manifest.doi ? "\n* The pipeline\n" : ""}${workflow.manifest.doi.tokenize(",").collect { doi -> "    https://doi.org/${doi.trim().replace('https://doi.org/','')}"}.join("\n")}${workflow.manifest.doi ? "\n" : ""}
+    def after_text = """${workflow.manifest.doi ? "\n* The pipeline\n" : ""}${(workflow.manifest.doi ?: "").tokenize(",").collect { doi -> "    https://doi.org/${doi.trim().replace('https://doi.org/','')}"}.join("\n")}${workflow.manifest.doi ? "\n" : ""}
 * The nf-core framework
     https://doi.org/10.1038/s41587-020-0439-x
 
@@ -79,7 +79,7 @@ ${colors.purple}  nf-core/rnaseq ${workflow.manifest.version}${colors.reset}
     UTILS_NFSCHEMA_PLUGIN (
         workflow,
         validate_params,
-        null,
+        pipelineSchema(),
         help,
         help_full,
         show_hidden,
@@ -126,7 +126,7 @@ workflow PIPELINE_COMPLETION {
     def pass_trimmed_reads = [:]
     def pass_strand_check  = [:]
 
-    summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
+    summary_params = paramsSummaryMap(workflow, parameters_schema: pipelineSchema())
     def multiqc_reports = multiqc_report.toList()
 
     trim_status
@@ -233,6 +233,13 @@ def checkSamplesAfterGrouping(input) {
         ]
         return [ meta_no_bams, fastqs ]
     }
+}
+
+//
+// The pipeline's own parameter schema: the project that runs is the including project when this pipeline is included
+//
+def pipelineSchema() {
+    return "${moduleDir}/../../../nextflow_schema.json"
 }
 
 //
@@ -490,7 +497,7 @@ def methodsDescriptionText(mqc_methods_yaml) {
         // Removing `https://doi.org/` to handle pipelines using DOIs vs DOI resolvers
         // Removing ` ` since the manifest.doi is a string and not a proper list
         def temp_doi_ref = ""
-        def manifest_doi = meta.manifest_map.doi.tokenize(",")
+        def manifest_doi = (meta.manifest_map.doi ?: "").tokenize(",")
         manifest_doi.each { doi_ref ->
             temp_doi_ref += "(doi: <a href=\'https://doi.org/${doi_ref.replace("https://doi.org/", "").replace(" ", "")}\'>${doi_ref.replace("https://doi.org/", "").replace(" ", "")}</a>), "
         }

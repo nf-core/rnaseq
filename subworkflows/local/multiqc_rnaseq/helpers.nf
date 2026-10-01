@@ -17,7 +17,7 @@ include { paramsSummaryMultiqc } from '../../nf-core/utils_nfcore_pipeline'
 // Workflow summary rendered as a MultiQC custom-content YAML section.
 //
 def workflowSummaryMultiqcYaml() {
-    return paramsSummaryMultiqc(paramsSummaryMap(workflow, parameters_schema: 'nextflow_schema.json'))
+    return paramsSummaryMultiqc(paramsSummaryMap(workflow, parameters_schema: "${moduleDir}/../../../nextflow_schema.json"))
 }
 
 //

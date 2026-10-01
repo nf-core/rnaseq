@@ -1,0 +1,24 @@
+nextflow_pipeline {
+
+    name "Test pipeline with an invalid samplesheet"
+    script "../main.nf"
+    tag "pipeline"
+
+    test("Samplesheet with an unknown strandedness is rejected") {
+
+        options "-output-dir $outputDir"
+
+        when {
+            params {
+                input = "$projectDir/tests/fixtures/samplesheet_invalid_strandedness.csv"
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.failed },
+                { assert (workflow.stdout + workflow.stderr).join('\n').contains('strandedness') }
+            )
+        }
+    }
+}

@@ -81,7 +81,17 @@ def dumpParametersToJSON(outdir) {
         .addConverter(MemoryUnit) { MemoryUnit memory -> memory.toBytes() }
         .addConverter(nextflow.script.types.VersionNumber) { nextflow.script.types.VersionNumber version -> version.toString() }
         .build()
-    def jsonStr   = jsonGenerator.toJson(params)
+    // Channel and Value params hold live dataflow objects that cannot be serialised, so the value
+    // they were created from (given on the command line, else set in the config) is dumped in their place
+    def cliParams = nextflow.Global.session.cliParams ?: [:]
+    def configParams = nextflow.Global.session.config?.params ?: [:]
+    def dumpableParams = params.collectEntries { name, value ->
+        def className = value?.getClass()?.name ?: ''
+        def isDataflow = className.startsWith('groovyx.gpars.dataflow.') || className.startsWith('nextflow.dataflow.')
+        def source = cliParams.containsKey(name) ? cliParams[name] : configParams[name]
+        isDataflow ? (source != null ? [(name): source] : [:]) : [(name): value]
+    }
+    def jsonStr   = jsonGenerator.toJson(dumpableParams)
     temp_pf.text  = groovy.json.JsonOutput.prettyPrint(jsonStr)
     if (outdir instanceof Path) {
         temp_pf.copyTo(outdir.resolve("pipeline_info/${filename}"))

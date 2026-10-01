@@ -5,7 +5,6 @@
 //
 
 include { paramsSummaryMap     } from 'plugin/nf-schema'
-include { samplesheetToList    } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc } from '../../nf-core/utils_nfcore_pipeline'
 
 /*
@@ -61,12 +60,10 @@ def multiqcSampleMergeYamlPattern(id, read) {
 // fixed-length lookbehind, so sample IDs ending in `_1` / `_2` aren't
 // wrongly collapsed.
 //
-def multiqcSampleMergeYaml(samplesheet_path, schema_path) {
-    // Row order comes from assets/schema_input.json: [0]=meta,
-    // [1]=fastq_1, [2]=fastq_2 (truthy => paired-end).
-    def pe_sample_ids = samplesheetToList(samplesheet_path, schema_path)
-        .findAll { row -> row[2] as boolean }
-        .collect { row -> row[0].id as String }
+def multiqcSampleMergeYaml(samples) {
+    def pe_sample_ids = samples
+        .findAll { s -> !s.meta.single_end }
+        .collect { s -> s.id as String }
         .unique()
         .sort()
     if (!pe_sample_ids) return 'table_sample_merge: {}\n'

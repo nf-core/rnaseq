@@ -24,7 +24,7 @@ include { BAM_QC_RNASEQ                         } from '../../subworkflows/nf-co
 include { QUANTIFY_RSEM                         } from '../../subworkflows/nf-core/quantify_rsem'
 include { BAM_DEDUP_UMI                         } from '../../subworkflows/nf-core/bam_dedup_umi'
 
-include { ReadsInput; StringtieInput } from '../../modules/nf-core/types'
+include { ReadsInput; SampleRow; StringtieInput } from '../../modules/nf-core/types'
 include { Bowtie2Aligned; StarAligned; MultiqcFiles; AlignedSample; Bam; Contaminants; StringtieSample; BigwigSample; PipelineInfo; UmiDedupBam; MarkdupBam; BamQcRnaseq; StringtieMerged; Hisat2Aligned; RrnaReferences; FastqQcTrimFilterSetstrandedness; QuantMerged; SampleRuns; TrimReadCount; TrimStatus; PercentMapped; MapStatus; PercentMappedPass; InferExperimentLog; StrandData; StrandStatus } from '../../modules/nf-core/types'
 include { RsemMergeSample } from '../../modules/nf-core/custom/rsemmergecounts/main'
 include { KallistoQuantSample } from '../../modules/nf-core/kallisto/quant/main'
@@ -36,7 +36,7 @@ include { SamtoolsIndexResult } from '../../modules/nf-core/samtools/index/main'
 include { StringtieResult } from '../../modules/nf-core/stringtie/stringtie/main'
 include { Deseq2Qc } from '../../modules/local/deseq2_qc/main'
 
-include { readSamplesheet                } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline/samplesheet'
+include { readSamplesheet; samplesheetRowsToCsv } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline/samplesheet'
 include { classifyStrand                 } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { getHisat2PercentMapped         } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 
@@ -82,7 +82,7 @@ include { FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS              } from '../../subwor
 workflow RNASEQ {
 
     take:
-    ch_samplesheet: Value<Path>                        // sample_sheet.csv
+    ch_sample_rows: Channel<SampleRow>                 // one row per sequencing run of each sample
     ch_fasta: Value<Path?>                             // genome.fasta
     ch_fai: Value<Path?>                               // genome.fai
     ch_gtf: Value<Path?>                               // genome.gtf
@@ -126,8 +126,11 @@ workflow RNASEQ {
     def ch_mqc_sample_only: Channel<MultiqcFiles> = channel.empty()
     def ch_mqc_report_only: Channel<Path>         = channel.empty()
 
-    def ch_input = channel
-        .fromList(readSamplesheet(params.input, "${projectDir}/assets/schema_input.json", params.skip_alignment) as List<Map>)
+    // The rows are validated and merged per sample as one batch, since a sample's runs can be
+    // spread over any rows.
+    def ch_input = ch_sample_rows
+        .collect()
+        .flatMap { rows -> readSamplesheet(rows, "${projectDir}/assets/schema_input.json", params.skip_alignment) as List<Map> }
         .map { s ->
             record(
                 id:                s.id,
@@ -140,6 +143,14 @@ workflow RNASEQ {
                 prealigned:        s.prealigned
             )
         }
+
+    // Samplesheet re-assembled from the validated rows, for the SummarizedExperiment sample metadata
+    def ch_samplesheet: Value<Path> = ch_sample_rows
+        .collect()
+        .flatMap { rows -> [ samplesheetRowsToCsv(rows) ] }
+        .collectFile(name: 'samplesheet.csv')
+        .collect()
+        .map { files -> files.toList().first() as Path }
 
     // Samples that go through FASTQ preprocessing and samples supplied as pre-aligned BAM files
     ch_fastq_samples = ch_input.filter { s -> !s.prealigned }
@@ -804,8 +815,6 @@ workflow RNASEQ {
             aligner_display_name,
             ch_fastq,
             ch_collated_versions,
-            params.input,
-            "${projectDir}/assets/schema_input.json",
             file("$projectDir/assets/multiqc_config.yml", checkIfExists: true),
             params.multiqc_config ? file(params.multiqc_config, checkIfExists: true) : null,
             params.multiqc_logo   ? file(params.multiqc_logo,   checkIfExists: true) : null,

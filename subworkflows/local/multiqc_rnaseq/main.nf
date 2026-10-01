@@ -29,8 +29,6 @@ workflow MULTIQC_RNASEQ {
     aligner_display_name: String                  // display name of the aligner used for the percent_mapped metric, e.g. 'STAR uniquely mapped reads' or 'Bowtie2 overall alignment rate'
     ch_fastq: Channel<SampleRuns>                 // one entry per sample, one run per sequencing run
     ch_collated_versions: Channel<Path>           // versions yaml
-    samplesheet_path: Path?                       // pipeline input samplesheet
-    samplesheet_schema: String                    // samplesheet JSON schema
     mqc_default_config: Path                      // pipeline-bundled MultiQC config
     mqc_custom_config: Path?                      // optional user MultiQC config
     mqc_logo: Path?                               // optional custom logo
@@ -107,9 +105,11 @@ workflow MULTIQC_RNASEQ {
     strand_composition_static = loadMultiqcAsset(strand_composition_asset) + strand_summary_static.subMap(['parent_id', 'parent_name', 'parent_description'])
 
     // Per-run table_sample_merge config: only PE samples from the
-    // samplesheet get their _1 / _2 rows grouped in the General Stats
+    // input get their _1 / _2 rows grouped in the General Stats
     // table.
-    ch_mqc_dynamic_config = channel.of(multiqcSampleMergeYaml(samplesheet_path, samplesheet_schema))
+    ch_mqc_dynamic_config = ch_fastq
+        .collect()
+        .flatMap { samples -> [ multiqcSampleMergeYaml(samples) ] }
         .collectFile(name: 'multiqc_sample_merge.yml')
         .collect()
         .map { files -> files.toList().first() as Path }

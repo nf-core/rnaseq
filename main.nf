@@ -22,7 +22,7 @@ nextflow.enable.types = true
 
 params {
     // Input/output options
-    input:                       Path? = null
+    input:                       Channel<SampleRow>
     email:                       String? = null
 
     // Reference genome options
@@ -155,9 +155,8 @@ include { checkMaxContigSize         } from './subworkflows/local/utils_nfcore_r
 include { defineQcTools              } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { getGenomeAttribute         } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { isStarIndexLegacy          } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
-include { anySampleAutoStrandedness  } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 
-include { AlignedSample; LintFile; SamplesheetRow; Contaminants; StringtieSample; BigwigSample; PipelineInfo; GenomeArtifact; UmiDedupBam; MarkdupBam; BamQcRnaseq; StringtieMerged; RrnaReferences; FastqQcTrimFilterSetstrandedness; QuantMerged; TrimStatus; MapStatus; StrandStatus } from './modules/nf-core/types'
+include { AlignedSample; LintFile; SampleRow; SamplesheetRow; Contaminants; StringtieSample; BigwigSample; PipelineInfo; GenomeArtifact; UmiDedupBam; MarkdupBam; BamQcRnaseq; StringtieMerged; RrnaReferences; FastqQcTrimFilterSetstrandedness; QuantMerged; TrimStatus; MapStatus; StrandStatus } from './modules/nf-core/types'
 include { RsemMergeSample } from './modules/nf-core/custom/rsemmergecounts/main'
 include { KallistoQuantSample } from './modules/nf-core/kallisto/quant/main'
 include { MultiqcReport } from './modules/nf-core/multiqc/main'
@@ -238,7 +237,7 @@ workflow NFCORE_RNASEQ {
         params.use_parabricks_star,
         isStarIndexLegacy() ? true : false,
         params.hisat2_build_memory,
-        anySampleAutoStrandedness()
+        params.input.collect().map { rows -> rows.any { row -> row.strandedness == 'auto' } }
     )
 
     // Check if contigs in genome fasta file > 512 Mbp
@@ -249,11 +248,10 @@ workflow NFCORE_RNASEQ {
     //
     // WORKFLOW: Run nf-core/rnaseq workflow
     //
-    ch_samplesheet = channel.value(file(params.input, checkIfExists: true))
     qc_tools = defineQcTools(params)
 
     results = RNASEQ (
-        ch_samplesheet,
+        params.input,
         references.fasta,
         references.fai,
         references.gtf,

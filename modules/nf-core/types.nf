@@ -361,6 +361,20 @@ record LintFile {
     file: Path
 }
 
+// One row of the input samplesheet, validated against assets/schema_input.json; a sample with
+// several sequencing runs has one row per run.
+record SampleRow {
+    sample:            String
+    fastq_1:           Path
+    fastq_2:           Path?
+    strandedness:      String
+    seq_platform:      String?
+    seq_center:        String?
+    genome_bam:        Path?
+    transcriptome_bam: Path?
+    percent_mapped:    Float?
+}
+
 // One row of samplesheet_with_bams.csv; field order is the CSV column order.
 record SamplesheetRow {
     sample:            String

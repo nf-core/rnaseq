@@ -65,7 +65,7 @@ workflow PREPARE_GENOME_INDICES {
     use_parabricks_star: Boolean                // whether to use parabricks STAR version
     star_index_legacy: Boolean                  // whether the supplied star_index was built with STAR 2.6.x and needs genomeParameters.txt upgraded to the 2.7.4a metadata schema
     hisat2_build_memory: String?                // memory threshold for HISAT2 index building with splice sites
-    any_auto_strandedness: Boolean              // whether any sample in the input samplesheet declares strandedness 'auto', requiring a Salmon index for strandedness inference
+    any_auto_strandedness: Value<Boolean>       // whether any sample in the input samplesheet declares strandedness 'auto', requiring a Salmon index for strandedness inference
 
     main:
     // Absent indices are Values holding null so every stream keeps one type.
@@ -79,9 +79,7 @@ workflow PREPARE_GENOME_INDICES {
         // If no index is provided, this subworkflow does not need to build an index as that is handled by the fastq_remove_rrna subworkflow.
         (ribo_removal_tool == 'bowtie2' && bowtie2_rrna_index ? ['bowtie2_rrna'] : []) +
         ((!skip_alignment && aligner) || aligner == 'star_rsem' ? [aligner as String] : []) +
-        (!skip_pseudo_alignment && pseudo_aligner ? [pseudo_aligner as String] : []) +
-        // needed to infer strandedness even without --pseudo_aligner salmon
-        (any_auto_strandedness ? ['salmon'] : [])
+        (!skip_pseudo_alignment && pseudo_aligner ? [pseudo_aligner as String] : [])
 
     //---------------------------------------------------------
     // 2) BBSplit index: uses FASTA only if we generate from scratch
@@ -282,7 +280,18 @@ workflow PREPARE_GENOME_INDICES {
         )
         ch_salmon_index = ch_salmon_built.map { r -> r.index }
     } else {
-        ch_salmon_index = ch_no_path
+        // Strandedness inference needs a Salmon index even without --pseudo_aligner salmon. Whether
+        // any sample asks for it is only known once the samplesheet has been read, so the build
+        // is gated on that value.
+        def ch_salmon_gated: Channel<SalmonIndexResult> = SALMON_INDEX(
+            ch_transcript_fasta
+                .combine(ch_fasta)
+                .combine(any_auto_strandedness)
+                .flatMap { transcript_fasta_file, genome_fasta_file, any_auto ->
+                    any_auto ? [ record(id: 'salmon_index', meta: [:], transcript_fasta: transcript_fasta_file, genome_fasta: fasta_provided ? genome_fasta_file : null) ] : []
+                }
+        )
+        ch_salmon_index = ch_salmon_gated.collect().map { rs -> rs.isEmpty() ? null : rs.toList().first().index }
     }
 
     //--------------------------------------------------

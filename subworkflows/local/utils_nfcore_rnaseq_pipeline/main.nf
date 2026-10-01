@@ -11,7 +11,6 @@
 include { UTILS_NFSCHEMA_PLUGIN     } from '../../nf-core/utils_nfschema_plugin'
 include { paramsSummaryMap          } from 'plugin/nf-schema'
 include { paramsHelp                } from 'plugin/nf-schema'
-include { samplesheetToList         } from 'plugin/nf-schema'
 include { completionEmail           } from '../../nf-core/utils_nfcore_pipeline'
 include { completionSummary         } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NFCORE_PIPELINE     } from '../../nf-core/utils_nfcore_pipeline'
@@ -693,14 +692,6 @@ def getGenomeAttribute(attribute) {
         }
     }
     return null
-}
-
-//
-// Check whether any sample declares strandedness 'auto'
-//
-def anySampleAutoStrandedness() {
-    samplesheetToList(params.input, "${projectDir}/assets/schema_input.json")
-        .any { meta, _fastq_1, _fastq_2, _genome_bam, _transcriptome_bam -> meta.strandedness == 'auto' }
 }
 
 //

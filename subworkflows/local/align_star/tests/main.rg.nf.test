@@ -34,7 +34,7 @@ nextflow_workflow {
                 input[0] = new nextflow.dataflow.ChannelImpl(channel.of(record(
                     id: 'test',
                     meta: [ id:'test', single_end:false, seq_platform:'ILLUMINA' ],
-                    args: '--quantMode TranscriptomeSAM --outSAMtype BAM Unsorted --outSAMattributes NH HI AS NM MD --readFilesCommand zcat --twopassMode Basic --runRNGseed 0 --outFilterMultimapNmax 20 --alignSJDBoverhangMin 1 --outSAMstrandField intronMotif --quantTranscriptomeSAMoutput BanSingleEnd --outSAMattrRGline 'ID:test' 'SM:test' 'PL:ILLUMINA' 'CN:GLOBAL_CENTER'',
+                    args: "--quantMode TranscriptomeSAM --outSAMtype BAM Unsorted --outSAMattributes NH HI AS NM MD --readFilesCommand zcat --twopassMode Basic --runRNGseed 0 --outFilterMultimapNmax 20 --alignSJDBoverhangMin 1 --outSAMstrandField intronMotif --quantTranscriptomeSAMoutput BanSingleEnd --outSAMattrRGline 'ID:test' 'SM:test' 'PL:ILLUMINA' 'CN:GLOBAL_CENTER'",
                     reads: [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
@@ -100,7 +100,7 @@ nextflow_workflow {
                 input[0] = new nextflow.dataflow.ChannelImpl(channel.of(record(
                     id: 'test',
                     meta: [ id:'test', single_end:false, seq_platform:'ILLUMINA', seq_center:'SAMPLE_CENTER' ],
-                    args: '--quantMode TranscriptomeSAM --outSAMtype BAM Unsorted --outSAMattributes NH HI AS NM MD --readFilesCommand zcat --twopassMode Basic --runRNGseed 0 --outFilterMultimapNmax 20 --alignSJDBoverhangMin 1 --outSAMstrandField intronMotif --quantTranscriptomeSAMoutput BanSingleEnd --outSAMattrRGline 'ID:test' 'SM:test' 'PL:ILLUMINA' 'CN:SAMPLE_CENTER'',
+                    args: "--quantMode TranscriptomeSAM --outSAMtype BAM Unsorted --outSAMattributes NH HI AS NM MD --readFilesCommand zcat --twopassMode Basic --runRNGseed 0 --outFilterMultimapNmax 20 --alignSJDBoverhangMin 1 --outSAMstrandField intronMotif --quantTranscriptomeSAMoutput BanSingleEnd --outSAMattrRGline 'ID:test' 'SM:test' 'PL:ILLUMINA' 'CN:SAMPLE_CENTER'",
                     reads: [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)

@@ -75,7 +75,7 @@ workflow QUANTIFY_RSEM {
         gtf_extra_attribute,
         'rsem',
         skip_merge,
-        null
+        record(se_prefix: null)
     )
 
     emit:

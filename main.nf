@@ -331,6 +331,7 @@ workflow NFCORE_RNASEQ {
         .join(ch_runs, by: 'id')
         .join(results.percent_mapped, by: 'id')
         .flatMap { r ->
+            def aligned_dir = "${params.skip_quantification_merge ? "${r.id}/" : ''}${params.aligner}/"
             r.runs.collect { run ->
                 record(
                     sample:            r.id,
@@ -339,9 +340,9 @@ workflow NFCORE_RNASEQ {
                     strandedness:      r.meta.strandedness,
                     seq_platform:      r.meta.seq_platform ?: params.seq_platform,
                     seq_center:        r.meta.seq_center ?: params.seq_center,
-                    genome_bam:        r.bam != null ? "${workflow.outputDir}/${alignedDir(r.id)}${r.bam.name}" : null,
+                    genome_bam:        r.bam != null ? "${workflow.outputDir}/${aligned_dir}${r.bam.name}" : null,
                     percent_mapped:    r.percent_mapped,
-                    transcriptome_bam: r.transcriptome_bam != null ? "${workflow.outputDir}/${alignedDir(r.id)}${r.transcriptome_bam.name}" : null
+                    transcriptome_bam: r.transcriptome_bam != null ? "${workflow.outputDir}/${aligned_dir}${r.transcriptome_bam.name}" : null
                 )
             }
         }

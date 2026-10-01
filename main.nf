@@ -178,9 +178,9 @@ include { checkMaxContigSize         } from './subworkflows/local/utils_nfcore_r
 include { defineQcTools              } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { getGenomeAttribute         } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { isStarIndexLegacy          } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
-include { kallistoIndexArgs; salmonIndexArgs } from './subworkflows/local/utils_nfcore_rnaseq_pipeline/tool_args'
+include { toolArgs } from './subworkflows/local/utils_nfcore_rnaseq_pipeline/tool_args'
 
-include { AlignedSample; LintFile; SampleRow; SamplesheetRow; Contaminants; StringtieSample; BigwigSample; PipelineInfo; GenomeArtifact; UmiDedupBam; MarkdupBam; BamQcRnaseq; StringtieMerged; RrnaReferences; FastqQcTrimFilterSetstrandedness; QuantMerged; TrimStatus; MapStatus; StrandStatus } from './modules/nf-core/types'
+include { AlignedSample; LintFile; SampleRow; ToolArgs; SamplesheetRow; Contaminants; StringtieSample; BigwigSample; PipelineInfo; GenomeArtifact; UmiDedupBam; MarkdupBam; BamQcRnaseq; StringtieMerged; RrnaReferences; FastqQcTrimFilterSetstrandedness; QuantMerged; TrimStatus; MapStatus; StrandStatus } from './modules/nf-core/types'
 include { RsemMergeSample } from './modules/nf-core/custom/rsemmergecounts/main'
 include { KallistoQuantSample } from './modules/nf-core/kallisto/quant/main'
 include { MultiqcReport } from './modules/nf-core/multiqc/main'
@@ -239,6 +239,8 @@ workflow NFCORE_RNASEQ {
     //
     // SUBWORKFLOW: Build or load aligner / pseudo-aligner / filtering indices
     //
+    def tool_args: ToolArgs = toolArgs(params)
+
     indices = PREPARE_GENOME_INDICES (
         references.fasta,
         references.gtf,
@@ -268,8 +270,7 @@ workflow NFCORE_RNASEQ {
         params.hisat2_build_memory,
         params.input.collect().map { rows -> rows.any { row -> row.strandedness == 'auto' } },
         params.prokaryotic,
-        salmonIndexArgs(params, true),
-        kallistoIndexArgs(params)
+        tool_args
     )
 
     // Check if contigs in genome fasta file > 512 Mbp
@@ -284,6 +285,7 @@ workflow NFCORE_RNASEQ {
 
     results = RNASEQ (
         params,
+        tool_args,
         params.input,
         references.fasta,
         references.fai,

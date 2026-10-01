@@ -95,8 +95,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -220,8 +219,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -339,8 +337,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -458,8 +455,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -577,8 +573,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -696,8 +691,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -815,8 +809,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(true)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -927,8 +920,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -1046,8 +1038,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -1165,8 +1156,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -1284,8 +1274,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -1403,8 +1392,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -1522,8 +1510,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -1641,8 +1628,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -1761,8 +1747,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -1871,8 +1856,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -1990,8 +1974,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -2109,8 +2092,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -2228,8 +2210,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -2347,8 +2328,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -2466,8 +2446,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -2585,8 +2564,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -2658,8 +2636,7 @@ nextflow_workflow {
                     input[18] = null  // contaminant_screening
                     input[19] = false  // prokaryotic
                     input[20] = false  // prokaryotic
-                    input[21] = ''  // salmon_index_args
-                    input[22] = ''  // kallisto_index_args
+                    input[21] = record(salmon_index: '', kallisto_index: '')  // tool_args
                     """
                 }
             }
@@ -2708,8 +2685,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -2786,8 +2762,7 @@ nextflow_workflow {
                     input[18] = null  // contaminant_screening
                     input[19] = false  // prokaryotic
                     input[20] = false  // prokaryotic
-                    input[21] = ''  // salmon_index_args
-                    input[22] = ''  // kallisto_index_args
+                    input[21] = record(salmon_index: '', kallisto_index: '')  // tool_args
                     """
                 }
             }
@@ -2836,8 +2811,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -2909,8 +2883,7 @@ nextflow_workflow {
                     input[18] = null  // contaminant_screening
                     input[19] = false  // prokaryotic
                     input[20] = false  // prokaryotic
-                    input[21] = ''  // salmon_index_args
-                    input[22] = ''  // kallisto_index_args
+                    input[21] = record(salmon_index: '', kallisto_index: '')  // tool_args
                     """
                 }
             }
@@ -2959,8 +2932,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -3032,8 +3004,7 @@ nextflow_workflow {
                     input[18] = null  // contaminant_screening
                     input[19] = false  // prokaryotic
                     input[20] = false  // prokaryotic
-                    input[21] = ''  // salmon_index_args
-                    input[22] = ''  // kallisto_index_args
+                    input[21] = record(salmon_index: '', kallisto_index: '')  // tool_args
                     """
                 }
             }
@@ -3082,8 +3053,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -3143,8 +3113,7 @@ nextflow_workflow {
                     input[18] = null  // contaminant_screening
                     input[19] = false  // prokaryotic
                     input[20] = false  // prokaryotic
-                    input[21] = ''  // salmon_index_args
-                    input[22] = ''  // kallisto_index_args
+                    input[21] = record(salmon_index: '', kallisto_index: '')  // tool_args
                     """
                 }
             }
@@ -3193,8 +3162,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -3266,8 +3234,7 @@ nextflow_workflow {
                     input[18] = null  // contaminant_screening
                     input[19] = false  // prokaryotic
                     input[20] = false  // prokaryotic
-                    input[21] = ''  // salmon_index_args
-                    input[22] = ''  // kallisto_index_args
+                    input[21] = record(salmon_index: '', kallisto_index: '')  // tool_args
                     """
                 }
             }
@@ -3316,8 +3283,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -3389,8 +3355,7 @@ nextflow_workflow {
                     input[18] = null  // contaminant_screening
                     input[19] = false  // prokaryotic
                     input[20] = false  // prokaryotic
-                    input[21] = ''  // salmon_index_args
-                    input[22] = ''  // kallisto_index_args
+                    input[21] = record(salmon_index: '', kallisto_index: '')  // tool_args
                     """
                 }
             }
@@ -3439,8 +3404,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(true)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -3505,8 +3469,7 @@ nextflow_workflow {
                     input[18] = null  // contaminant_screening
                     input[19] = false  // prokaryotic
                     input[20] = false  // prokaryotic
-                    input[21] = ''  // salmon_index_args
-                    input[22] = ''  // kallisto_index_args
+                    input[21] = record(salmon_index: '', kallisto_index: '')  // tool_args
                     """
                 }
             }
@@ -3555,8 +3518,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -3628,8 +3590,7 @@ nextflow_workflow {
                     input[18] = null  // contaminant_screening
                     input[19] = false  // prokaryotic
                     input[20] = false  // prokaryotic
-                    input[21] = ''  // salmon_index_args
-                    input[22] = ''  // kallisto_index_args
+                    input[21] = record(salmon_index: '', kallisto_index: '')  // tool_args
                     """
                 }
             }
@@ -3678,8 +3639,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -3751,8 +3711,7 @@ nextflow_workflow {
                     input[18] = null  // contaminant_screening
                     input[19] = false  // prokaryotic
                     input[20] = false  // prokaryotic
-                    input[21] = ''  // salmon_index_args
-                    input[22] = ''  // kallisto_index_args
+                    input[21] = record(salmon_index: '', kallisto_index: '')  // tool_args
                     """
                 }
             }
@@ -3801,8 +3760,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -3874,8 +3832,7 @@ nextflow_workflow {
                     input[18] = null  // contaminant_screening
                     input[19] = false  // prokaryotic
                     input[20] = false  // prokaryotic
-                    input[21] = ''  // salmon_index_args
-                    input[22] = ''  // kallisto_index_args
+                    input[21] = record(salmon_index: '', kallisto_index: '')  // tool_args
                     """
                 }
             }
@@ -3924,8 +3881,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -3997,8 +3953,7 @@ nextflow_workflow {
                     input[18] = null  // contaminant_screening
                     input[19] = false  // prokaryotic
                     input[20] = false  // prokaryotic
-                    input[21] = ''  // salmon_index_args
-                    input[22] = ''  // kallisto_index_args
+                    input[21] = record(salmon_index: '', kallisto_index: '')  // tool_args
                     """
                 }
             }
@@ -4047,8 +4002,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -4120,8 +4074,7 @@ nextflow_workflow {
                     input[18] = null  // contaminant_screening
                     input[19] = false  // prokaryotic
                     input[20] = false  // prokaryotic
-                    input[21] = ''  // salmon_index_args
-                    input[22] = ''  // kallisto_index_args
+                    input[21] = record(salmon_index: '', kallisto_index: '')  // tool_args
                     """
                 }
             }
@@ -4170,8 +4123,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -4243,8 +4195,7 @@ nextflow_workflow {
                     input[18] = null  // contaminant_screening
                     input[19] = false  // prokaryotic
                     input[20] = false  // prokaryotic
-                    input[21] = ''  // salmon_index_args
-                    input[22] = ''  // kallisto_index_args
+                    input[21] = record(salmon_index: '', kallisto_index: '')  // tool_args
                     """
                 }
             }
@@ -4293,8 +4244,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -4367,8 +4317,7 @@ nextflow_workflow {
                     input[18] = null  // contaminant_screening
                     input[19] = false  // prokaryotic
                     input[20] = false  // prokaryotic
-                    input[21] = ''  // salmon_index_args
-                    input[22] = ''  // kallisto_index_args
+                    input[21] = record(salmon_index: '', kallisto_index: '')  // tool_args
                     """
                 }
             }
@@ -4417,8 +4366,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -4482,8 +4430,7 @@ nextflow_workflow {
                     input[18] = null  // contaminant_screening
                     input[19] = false  // prokaryotic
                     input[20] = false  // prokaryotic
-                    input[21] = ''  // salmon_index_args
-                    input[22] = ''  // kallisto_index_args
+                    input[21] = record(salmon_index: '', kallisto_index: '')  // tool_args
                     """
                 }
             }
@@ -4532,8 +4479,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -4605,8 +4551,7 @@ nextflow_workflow {
                     input[18] = null  // contaminant_screening
                     input[19] = false  // prokaryotic
                     input[20] = false  // prokaryotic
-                    input[21] = ''  // salmon_index_args
-                    input[22] = ''  // kallisto_index_args
+                    input[21] = record(salmon_index: '', kallisto_index: '')  // tool_args
                     """
                 }
             }
@@ -4655,8 +4600,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -4728,8 +4672,7 @@ nextflow_workflow {
                     input[18] = null  // contaminant_screening
                     input[19] = false  // prokaryotic
                     input[20] = false  // prokaryotic
-                    input[21] = ''  // salmon_index_args
-                    input[22] = ''  // kallisto_index_args
+                    input[21] = record(salmon_index: '', kallisto_index: '')  // tool_args
                     """
                 }
             }
@@ -4778,8 +4721,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -4851,8 +4793,7 @@ nextflow_workflow {
                     input[18] = null  // contaminant_screening
                     input[19] = false  // prokaryotic
                     input[20] = false  // prokaryotic
-                    input[21] = ''  // salmon_index_args
-                    input[22] = ''  // kallisto_index_args
+                    input[21] = record(salmon_index: '', kallisto_index: '')  // tool_args
                     """
                 }
             }
@@ -4901,8 +4842,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -4974,8 +4914,7 @@ nextflow_workflow {
                     input[18] = null  // contaminant_screening
                     input[19] = false  // prokaryotic
                     input[20] = false  // prokaryotic
-                    input[21] = ''  // salmon_index_args
-                    input[22] = ''  // kallisto_index_args
+                    input[21] = record(salmon_index: '', kallisto_index: '')  // tool_args
                     """
                 }
             }
@@ -5024,8 +4963,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -5085,8 +5023,7 @@ nextflow_workflow {
                     input[18] = null  // contaminant_screening
                     input[19] = false  // prokaryotic
                     input[20] = false  // prokaryotic
-                    input[21] = ''  // salmon_index_args
-                    input[22] = ''  // kallisto_index_args
+                    input[21] = record(salmon_index: '', kallisto_index: '')  // tool_args
                     """
                 }
             }
@@ -5135,8 +5072,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -5208,8 +5144,7 @@ nextflow_workflow {
                     input[18] = null  // contaminant_screening
                     input[19] = false  // prokaryotic
                     input[20] = false  // prokaryotic
-                    input[21] = ''  // salmon_index_args
-                    input[22] = ''  // kallisto_index_args
+                    input[21] = record(salmon_index: '', kallisto_index: '')  // tool_args
                     """
                 }
             }
@@ -5258,8 +5193,7 @@ nextflow_workflow {
                 input[25] = params.hisat2_build_memory
                 input[26] = channel.value(false)  // any_auto_strandedness
                 input[27] = false  // prokaryotic
-                input[28] = ''  // salmon_index_args
-                input[29] = ''  // kallisto_index_args
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }

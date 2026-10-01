@@ -16,6 +16,10 @@ include { loadMultiqcAsset           } from './helpers'
 include { strandCheckSummaryYaml     } from './helpers'
 include { strandCheckCompositionYaml } from './helpers'
 
+record MultiqcArgs {
+    multiqc: String?
+}
+
 workflow MULTIQC_RNASEQ {
 
     take:
@@ -38,7 +42,7 @@ workflow MULTIQC_RNASEQ {
     sample_status_header: Path                    // MultiQC custom content header for fail_* tables
     min_trimmed_reads: Integer                    // threshold for fail_trimmed classification
     skip_quantification_merge: Boolean
-    multiqc_args: String? // MultiQC options
+    tool_args: MultiqcArgs // MultiQC options
 
     main:
 
@@ -187,7 +191,7 @@ workflow MULTIQC_RNASEQ {
                 record(
                     id:             r.id,
                     meta:           [id: r.id],
-                    args:           multiqc_args,
+                    args:           tool_args.multiqc,
                     multiqc_files:  r.files + r.static_globals + r.run_globals,
                     multiqc_config: [mqc_default_config, r.dyn, mqc_custom_config].findAll { cfg -> cfg != null }.toList(),
                     multiqc_logo:   mqc_logo,
@@ -241,7 +245,7 @@ workflow MULTIQC_RNASEQ {
                     record(
                         id:             'multiqc_report',
                         meta:           [id: 'multiqc_report'],
-                        args:           multiqc_args,
+                        args:           tool_args.multiqc,
                         multiqc_files:  r.files,
                         multiqc_config: [mqc_default_config, r.dyn, mqc_custom_config].findAll { cfg -> cfg != null }.toList(),
                         multiqc_logo:   mqc_logo,

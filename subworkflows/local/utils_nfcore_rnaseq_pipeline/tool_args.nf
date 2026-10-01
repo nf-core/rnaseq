@@ -257,3 +257,24 @@ def salmonIndexArgs(params, with_extra_args) {
 def kallistoIndexArgs(params) {
     return params.pseudo_aligner_kmer_size ? "-k ${params.pseudo_aligner_kmer_size}" : ''
 }
+
+// All the tool arguments that follow from the params and do not depend on the sample, as a ToolArgs record.
+// The Salmon index of the strandedness inference does not take the extra index options; se_prefix is set
+// per call by the quantification that uses it.
+def toolArgs(params) {
+    return record(
+        fq_lint:                   params.extra_fqlint_args,
+        umi_extract:               umiExtractArgs(params),
+        fastp:                     params.extra_fastp_args,
+        trimgalore:                params.extra_trimgalore_args,
+        use_gpu_ribodetector:      params.use_gpu_ribodetector ? true : false,
+        salmon_index:              salmonIndexArgs(params, true),
+        salmon_index_strandedness: salmonIndexArgs(params, false),
+        kallisto_index:            kallistoIndexArgs(params),
+        salmon_quant:              params.extra_salmon_quant_args,
+        kallisto_quant:            params.extra_kallisto_quant_args,
+        se_prefix:                 null,
+        samtools_index:            samtoolsIndexArgs(params),
+        multiqc:                   multiqcArgs(params)
+    )
+}

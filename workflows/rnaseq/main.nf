@@ -24,7 +24,7 @@ include { BAM_QC_RNASEQ                         } from '../../subworkflows/nf-co
 include { QUANTIFY_RSEM                         } from '../../subworkflows/nf-core/quantify_rsem'
 include { BAM_DEDUP_UMI                         } from '../../subworkflows/nf-core/bam_dedup_umi'
 
-include { ReadsInput; SampleRow; StringtieInput } from '../../modules/nf-core/types'
+include { ReadsInput; SampleRow; StringtieInput; ToolArgs } from '../../modules/nf-core/types'
 include { Bowtie2Aligned; StarAligned; MultiqcFiles; AlignedSample; Bam; Contaminants; StringtieSample; BigwigSample; PipelineInfo; UmiDedupBam; MarkdupBam; BamQcRnaseq; StringtieMerged; Hisat2Aligned; RrnaReferences; FastqQcTrimFilterSetstrandedness; QuantMerged; SampleRuns; TrimReadCount; TrimStatus; PercentMapped; MapStatus; PercentMappedPass; InferExperimentLog; StrandData; StrandStatus } from '../../modules/nf-core/types'
 include { RsemMergeSample } from '../../modules/nf-core/custom/rsemmergecounts/main'
 include { KallistoQuantSample } from '../../modules/nf-core/kallisto/quant/main'
@@ -36,7 +36,7 @@ include { SamtoolsIndexResult } from '../../modules/nf-core/samtools/index/main'
 include { StringtieResult } from '../../modules/nf-core/stringtie/stringtie/main'
 include { Deseq2Qc } from '../../modules/local/deseq2_qc/main'
 
-include { deseq2QcArgs; multiqcArgs; rustqcArgs; salmonIndexArgs; samtoolsIndexArgs; starAlignArgs; hisat2AlignArgs; bowtie2AlignArgs } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline/tool_args'
+include { deseq2QcArgs; rustqcArgs; salmonIndexArgs; samtoolsIndexArgs; starAlignArgs; hisat2AlignArgs; bowtie2AlignArgs } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline/tool_args'
 include { umiExtractArgs                        } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline/tool_args'
 include { readSamplesheet; samplesheetRowsToCsv } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline/samplesheet'
 include { classifyStrand                 } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
@@ -85,6 +85,7 @@ workflow RNASEQ {
 
     take:
     params: Record                                     // the pipeline's params
+    tool_args: ToolArgs                                // the tool arguments that follow from the params
     ch_sample_rows: Channel<SampleRow>                 // one row per sequencing run of each sample
     ch_fasta: Value<Path?>                             // genome.fasta
     ch_fai: Value<Path?>                               // genome.fai
@@ -853,7 +854,7 @@ workflow RNASEQ {
             sample_status_header_multiqc,
             params.min_trimmed_reads,
             params.skip_quantification_merge,
-            multiqcArgs(params)
+            tool_args
         )
         ch_multiqc_report = ch_multiqc.map { r -> r.report }
     }

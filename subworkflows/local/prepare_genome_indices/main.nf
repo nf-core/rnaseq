@@ -36,6 +36,11 @@ include { SalmonIndexResult } from '../../../modules/nf-core/salmon/index/main'
 include { SortmernaResult } from '../../../modules/nf-core/sortmerna/main'
 include { StarGenomegenerateResult } from '../../../modules/nf-core/star/genomegenerate/main'
 
+record GenomeIndexArgs {
+    salmon_index:   String?
+    kallisto_index: String?
+}
+
 workflow PREPARE_GENOME_INDICES {
 
     take:
@@ -67,8 +72,7 @@ workflow PREPARE_GENOME_INDICES {
     hisat2_build_memory: String?                // memory threshold for HISAT2 index building with splice sites
     any_auto_strandedness: Value<Boolean>       // whether any sample in the input samplesheet declares strandedness 'auto', requiring a Salmon index for strandedness inference
     prokaryotic: Boolean                        // whether the genome is prokaryotic, so that the STAR index is built from CDS features
-    salmon_index_args: String                   // Salmon index options
-    kallisto_index_args: String                 // Kallisto index options
+    tool_args: GenomeIndexArgs                  // Salmon and Kallisto index options
 
     main:
     // Absent indices are Values holding null so every stream keeps one type.
@@ -273,13 +277,13 @@ workflow PREPARE_GENOME_INDICES {
         // genome_fasta may be null (no decoys)
         def ch_salmon_built: Value<SalmonIndexResult> = SALMON_INDEX(
             ch_transcript_fasta
-                .map { transcript_fasta_file -> record(id: 'salmon_index', meta: [:], args: salmon_index_args, transcript_fasta: transcript_fasta_file) }
+                .map { transcript_fasta_file -> record(id: 'salmon_index', meta: [:], args: tool_args.salmon_index, transcript_fasta: transcript_fasta_file) }
                 .combine(genome_fasta: ch_fasta)
         )
         ch_salmon_index = ch_salmon_built.map { r -> r.index }
     } else if ('salmon' in prepare_tool_indices) {
         ch_salmon_built = SALMON_INDEX(
-            ch_transcript_fasta.map { item -> record(id: 'salmon_index', meta: [:], args: salmon_index_args, transcript_fasta: item, genome_fasta: null) }
+            ch_transcript_fasta.map { item -> record(id: 'salmon_index', meta: [:], args: tool_args.salmon_index, transcript_fasta: item, genome_fasta: null) }
         )
         ch_salmon_index = ch_salmon_built.map { r -> r.index }
     } else {
@@ -288,7 +292,7 @@ workflow PREPARE_GENOME_INDICES {
         // is gated on that value.
         def ch_salmon_gated: Channel<SalmonIndexResult> = SALMON_INDEX(
             ch_transcript_fasta
-                .map { transcript_fasta_file -> record(id: 'salmon_index', meta: [:], args: salmon_index_args, transcript_fasta: transcript_fasta_file) }
+                .map { transcript_fasta_file -> record(id: 'salmon_index', meta: [:], args: tool_args.salmon_index, transcript_fasta: transcript_fasta_file) }
                 .combine(genome_fasta: ch_fasta)
                 .combine(any_auto: any_auto_strandedness)
                 .flatMap { r ->
@@ -306,7 +310,7 @@ workflow PREPARE_GENOME_INDICES {
     } else if (kallisto_index) {
         ch_kallisto_index = channel.value(file(kallisto_index))
     } else if ('kallisto' in prepare_tool_indices) {
-        def ch_kallisto_built: Value<KallistoIndexResult> = KALLISTO_INDEX(ch_transcript_fasta.map { item -> record(id: 'kallisto_index', meta: [:], fasta: item, args: kallisto_index_args) })
+        def ch_kallisto_built: Value<KallistoIndexResult> = KALLISTO_INDEX(ch_transcript_fasta.map { item -> record(id: 'kallisto_index', meta: [:], fasta: item, args: tool_args.kallisto_index) })
         ch_kallisto_index = ch_kallisto_built.map { r -> r.index }
     } else {
         ch_kallisto_index = ch_no_path

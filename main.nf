@@ -316,11 +316,16 @@ workflow NFCORE_RNASEQ {
             }
         }
 
+    // Merged gene matrices of the primary quantifier: the alignment-based one unless alignment is skipped
+    def ch_gene_quant: Channel<QuantMerged> = params.skip_alignment ? results.quant_merged_pseudo : results.quant_merged
+
     emit:
     trim_status:           Channel<TrimStatus>                       = results.trim_status
     map_status:            Channel<MapStatus>                        = results.map_status
     strand_status:         Channel<StrandStatus>                     = results.strand_status
     multiqc_report:        Channel<Path>                             = results.multiqc_report
+    gtf:                   Value<Path?>                              = references.gtf
+    gene_quant:            Channel<QuantMerged>                      = ch_gene_quant
     genome_references:     Channel<GenomeArtifact>                   = references.references
     genome_intermediates:  Channel<GenomeArtifact>                   = references.intermediates
     genome_indices:        Channel<GenomeArtifact>                   = indices.indices
@@ -407,6 +412,8 @@ workflow {
     stringtie            = results.stringtie
     stringtie_merged     = results.stringtie_merged
     bigwig               = results.bigwig
+    gtf                  = results.gtf
+    gene_quant           = results.gene_quant
     genome_references    = results.genome_references
     genome_intermediates = results.genome_intermediates
     genome_indices       = results.genome_indices
@@ -492,6 +499,17 @@ output {
     }
 
     // The genome targets route on GenomeArtifact.kind: 'kraken_db' (genome_references) and 'sortmerna' (genome_indices).
+    // gtf and gene_quant are only returned to an including pipeline, never published
+    gtf: Path? {
+        enabled false
+        path { f -> f >> "genome/" }
+    }
+
+    gene_quant: Channel<QuantMerged> {
+        enabled false
+        path { s -> s.counts_gene >> "quant/" }
+    }
+
     genome_references: Channel<GenomeArtifact> {   // never sample-prefixed
         enabled params.save_reference
         path { r -> r.file >> (r.kind == 'kraken_db' ? 'genome/index/' : 'genome/') }

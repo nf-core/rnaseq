@@ -7,6 +7,7 @@ include { SENTIEON_STARALIGN as SENTIEON_STAR_ALIGN } from '../../../modules/nf-
 include { PARABRICKS_RNAFQ2BAM as PARABRICKS_RNA_FQ2BAM } from '../../../modules/nf-core/parabricks/rnafq2bam/main'
 include { STAR_ALIGN                                } from '../../../modules/nf-core/star/align'
 include { BAM_SORT_STATS_SAMTOOLS                   } from '../../nf-core/bam_sort_stats_samtools'
+include { SortStatsArgs                         } from '../../nf-core/bam_sort_stats_samtools'
 include { ReadsInput; StarAligned; StarAlignResult; Bam } from '../../../modules/nf-core/types'
 
 
@@ -37,7 +38,7 @@ workflow ALIGN_STAR {
     use_sentieon_star: Boolean // whether star alignment is accelerated with Sentieon
     use_parabricks_star: Boolean // whether star alignment (and mark duplicates) is accelerated with Parabricks
     skip_markduplicates: Boolean // whether to skip marking duplicates
-    tool_args: Record // the samtools index options, forwarded
+    tool_args: SortStatsArgs // the samtools index options, forwarded
 
     main:
 

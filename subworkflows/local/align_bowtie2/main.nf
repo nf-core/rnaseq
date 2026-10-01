@@ -11,6 +11,7 @@ nextflow.enable.types = true
 
 include { BOWTIE2_ALIGN           } from '../../../modules/nf-core/bowtie2/align'
 include { BAM_SORT_STATS_SAMTOOLS } from '../../nf-core/bam_sort_stats_samtools'
+include { SortStatsArgs                         } from '../../nf-core/bam_sort_stats_samtools'
 include { ReadsInput; Bowtie2Aligned; Bam } from '../../../modules/nf-core/types'
 include { Bowtie2AlignResult } from '../../../modules/nf-core/bowtie2/align/main'
 
@@ -36,7 +37,7 @@ workflow ALIGN_BOWTIE2 {
     fasta: Value<Path?>
     fai: Value<Path?>
     save_unaligned: Boolean
-    tool_args: Record // the samtools index options, forwarded
+    tool_args: SortStatsArgs // the samtools index options, forwarded
 
     main:
 

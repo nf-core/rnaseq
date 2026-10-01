@@ -46,6 +46,13 @@ def kallistoQuantArgs(extra_args: String?, meta: Map) -> String {
     return [ strandedness, extra ].join(' ').trim()
 }
 
+// The Salmon and Kallisto quant options, and the prefix of the merged SummarizedExperiment files
+record QuantPseudoArgs {
+    salmon_quant:   String?
+    kallisto_quant: String?
+    se_prefix:      String?
+}
+
 workflow QUANTIFY_PSEUDO_ALIGNMENT {
     take:
     samplesheet: Value<Path>
@@ -60,7 +67,7 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
     kallisto_quant_fraglen_sd: Integer? // Estimated standard error for fragment length required by Kallisto in single-end mode
     skip_merge: Boolean // skip cross-sample merging, run tximport per-sample
     salmon_libtype: String? // Salmon library type; derived from the sample strandedness when null
-    tool_args: Record // extra Salmon and Kallisto quant options (salmon_quant, kallisto_quant) and the prefix of the merged SummarizedExperiment files (se_prefix, default: the sample id)
+    tool_args: QuantPseudoArgs // extra Salmon and Kallisto quant options (salmon_quant, kallisto_quant) and the prefix of the merged SummarizedExperiment files (se_prefix, default: the sample id)
 
     main:
 

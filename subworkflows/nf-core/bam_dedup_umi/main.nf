@@ -16,6 +16,11 @@ include { Bam; UmiDedupBam } from '../../../modules/nf-core/types'
 include { SamtoolsSortResult } from '../../../modules/nf-core/samtools/sort/main'
 include { UmitoolsPrepareforrsemResult } from '../../../modules/nf-core/umitools/prepareforrsem/main'
 
+// The samtools index options that the UMI-tools and UMICollapse deduplication subworkflows read
+record DedupUmiArgs {
+    samtools_index: String?
+}
+
 workflow BAM_DEDUP_UMI {
     take:
     ch_genome_bam: Channel<Bam>
@@ -26,7 +31,7 @@ workflow BAM_DEDUP_UMI {
     ch_transcriptome_bam: Channel<Bam> // records with transcriptome_bam set
     transcript_fasta: Value<Path?>
     umitools_dedup_primary_only: Boolean // whether to filter to primary alignments before dedup
-    tool_args: Record // the samtools index options, forwarded
+    tool_args: DedupUmiArgs // the samtools index options, forwarded
     umi_grouping_method: String? // UMI grouping method
     umi_separator: String? // UMI separator
 

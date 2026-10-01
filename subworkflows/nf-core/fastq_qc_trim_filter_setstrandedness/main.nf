@@ -78,6 +78,16 @@ def getSalmonInferredStrandedness(json_file, stranded_threshold = 0.8, unstrande
     return calculateStrandedness(forwardFragments, reverseFragments, unstrandedFragments, stranded_threshold, unstranded_threshold)
 }
 
+// The tool arguments of this subworkflow and of the subworkflows it runs: each of those reads a subset of these fields
+record QcTrimFilterArgs {
+    fq_lint:                   String?
+    umi_extract:               String?
+    fastp:                     String?
+    trimgalore:                String?
+    use_gpu_ribodetector:      Boolean?
+    salmon_index_strandedness: String?
+}
+
 workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     take:
     // Input channels
@@ -125,7 +135,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     unstranded_threshold: Float // The difference in fraction of stranded reads assigned to 'forward' and 'reverse' below which a sample is classified as 'unstranded'
 
     // Tool options
-    tool_args: Record // fq_lint, plus the options of the subworkflows it runs
+    tool_args: QcTrimFilterArgs // fq_lint, plus the options of the subworkflows it runs
 
     main:
 

@@ -2,6 +2,7 @@ nextflow.enable.types = true
 
 include { HISAT2_ALIGN            } from '../../../modules/nf-core/hisat2/align/main'
 include { BAM_SORT_STATS_SAMTOOLS } from '../bam_sort_stats_samtools/main'
+include { SortStatsArgs         } from '../bam_sort_stats_samtools'
 include { ReadsInput; Bam; Hisat2Aligned } from '../../../modules/nf-core/types'
 include { Hisat2AlignResult } from '../../../modules/nf-core/hisat2/align/main'
 
@@ -13,7 +14,7 @@ workflow FASTQ_ALIGN_HISAT2 {
     ch_fasta: Value<Path?>
     ch_fai: Value<Path?>
     save_unaligned: Boolean
-    tool_args: Record // the samtools index options, forwarded
+    tool_args: SortStatsArgs // the samtools index options, forwarded
 
     main:
     //

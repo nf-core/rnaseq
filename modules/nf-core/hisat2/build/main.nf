@@ -40,7 +40,7 @@ process HISAT2_BUILD {
         error("[HISAT2 index build] No memory specified for process. Please configure memory for 'process_high' label.")
     }
     def avail_mem = task.memory.toGiga()
-    def hisat2_build_memory = hisat2_memory_input ? (hisat2_memory_input as MemoryUnit).toGiga() : 2147483647
+    def hisat2_build_memory = hisat2_memory_input ? (hisat2_memory_input as Memory).toGiga() : 2147483647L
 
     def ss = ''
     def exon = ''

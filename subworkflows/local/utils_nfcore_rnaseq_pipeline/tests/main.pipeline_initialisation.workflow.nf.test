@@ -38,6 +38,7 @@ nextflow_workflow {
                 input[5] = false                // help (boolean)
                 input[6] = false                // help_full (boolean)
                 input[7] = false                // show_hidden (boolean)
+                input[8] = params               // the pipeline's params
                 """
             }
         }

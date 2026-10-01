@@ -82,6 +82,7 @@ include { FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS              } from '../../subwor
 workflow RNASEQ {
 
     take:
+    params: Record                                     // the pipeline's params
     ch_sample_rows: Channel<SampleRow>                 // one row per sequencing run of each sample
     ch_fasta: Value<Path?>                             // genome.fasta
     ch_fai: Value<Path?>                               // genome.fai
@@ -105,10 +106,10 @@ workflow RNASEQ {
 
     main:
 
-    def ch_pca_header_multiqc        = file("$projectDir/assets/deseq2_pca_header.txt", checkIfExists: true)
-    def sample_status_header_multiqc = file("$projectDir/assets/sample_status_header.txt", checkIfExists: true)
-    def ch_clustering_header_multiqc = file("$projectDir/assets/deseq2_clustering_header.txt", checkIfExists: true)
-    def ch_biotypes_header_multiqc   = file("$projectDir/assets/biotypes_header.txt", checkIfExists: true)
+    def ch_pca_header_multiqc        = file("${moduleDir}/../../assets/deseq2_pca_header.txt", checkIfExists: true)
+    def sample_status_header_multiqc = file("${moduleDir}/../../assets/sample_status_header.txt", checkIfExists: true)
+    def ch_clustering_header_multiqc = file("${moduleDir}/../../assets/deseq2_clustering_header.txt", checkIfExists: true)
+    def ch_biotypes_header_multiqc   = file("${moduleDir}/../../assets/biotypes_header.txt", checkIfExists: true)
 
     // Match the General Statistics column the active aligner emits so the
     // MultiQC fail_mapped row reads consistently with the rest of the report.
@@ -130,7 +131,7 @@ workflow RNASEQ {
     // spread over any rows.
     def ch_input = ch_sample_rows
         .collect()
-        .flatMap { rows -> readSamplesheet(rows, "${projectDir}/assets/schema_input.json", params.skip_alignment) as List<Map> }
+        .flatMap { rows -> readSamplesheet(rows, "${moduleDir}/../../assets/schema_input.json", params.skip_alignment) as List<Map> }
         .map { s ->
             record(
                 id:                s.id,
@@ -282,7 +283,8 @@ workflow RNASEQ {
             ch_reads_ok,
             ch_bowtie2_index,
             ch_fasta,
-            ch_fai
+            ch_fai,
+            params.save_unaligned
         )
 
         ch_mqc_files = ch_mqc_files.mix(ch_bowtie2.map { r -> record(id: r.id, files: [r.bowtie2.log]) })
@@ -815,14 +817,14 @@ workflow RNASEQ {
             aligner_display_name,
             ch_fastq,
             ch_collated_versions,
-            file("$projectDir/assets/multiqc_config.yml", checkIfExists: true),
+            file("${moduleDir}/../../assets/multiqc_config.yml", checkIfExists: true),
             params.multiqc_config ? file(params.multiqc_config, checkIfExists: true) : null,
             params.multiqc_logo   ? file(params.multiqc_logo,   checkIfExists: true) : null,
             params.multiqc_methods_description
                 ? file(params.multiqc_methods_description)
-                : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true),
-            file("$projectDir/assets/strand_check_summary.yaml",     checkIfExists: true),
-            file("$projectDir/assets/strand_check_composition.yaml", checkIfExists: true),
+                : file("${moduleDir}/../../assets/methods_description_template.yml", checkIfExists: true),
+            file("${moduleDir}/../../assets/strand_check_summary.yaml",     checkIfExists: true),
+            file("${moduleDir}/../../assets/strand_check_composition.yaml", checkIfExists: true),
             sample_status_header_multiqc,
             params.min_trimmed_reads,
             params.skip_quantification_merge

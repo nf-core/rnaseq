@@ -35,6 +35,7 @@ workflow ALIGN_BOWTIE2 {
     index: Value<Path> // /path/to/bowtie2/index/
     fasta: Value<Path?>
     fai: Value<Path?>
+    save_unaligned: Boolean
 
     main:
 
@@ -45,7 +46,7 @@ workflow ALIGN_BOWTIE2 {
         ch_samples,
         index,
         null,                   // no fasta needed for BAM output
-        params.save_unaligned,
+        save_unaligned,
         false                   // sort_bam - we'll sort with samtools for consistency
     ).filter { r -> !r.raw_bams.isEmpty() }
 

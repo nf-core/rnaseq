@@ -35,6 +35,7 @@ workflow PIPELINE_INITIALISATION {
     help              // boolean: Display help message and exit
     help_full         // boolean: Show the full help message
     show_hidden       // boolean: Show hidden parameters in the help message
+    params            //  record: the pipeline's params, passed in because an including pipeline has its own
 
     main:
 
@@ -98,7 +99,7 @@ ${colors.purple}  nf-core/rnaseq ${workflow.manifest.version}${colors.reset}
     //
     // Custom validation for pipeline parameters
     //
-    validateInputParameters()
+    validateInputParameters(params)
 }
 
 /*
@@ -118,6 +119,7 @@ workflow PIPELINE_COMPLETION {
     trim_status        // channel: record(id, pass) for trimming
     map_status         // channel: record(id, pass) for mapping
     strand_status      // channel: record(id, pass) for the strandedness check
+    params             //  record: the pipeline's params, passed in because an including pipeline has its own
 
     main:
     def pass_mapped_reads  = [:]
@@ -152,7 +154,7 @@ workflow PIPELINE_COMPLETION {
             )
         }
 
-        rnaseqSummary(monochrome_logs, pass_mapped_reads, pass_trimmed_reads, pass_strand_check)
+        rnaseqSummary(params, monochrome_logs, pass_mapped_reads, pass_trimmed_reads, pass_strand_check)
     }
 
     workflow.onError {
@@ -236,9 +238,9 @@ def checkSamplesAfterGrouping(input) {
 //
 // Check and validate pipeline parameters
 //
-def validateInputParameters() {
+def validateInputParameters(params) {
 
-    genomeExistsError()
+    genomeExistsError(params)
 
     def pseudo_index_provided = (
         (params.pseudo_aligner == 'salmon' && params.salmon_index) ||
@@ -437,7 +439,7 @@ def validateInputParameters() {
 //
 // Exit pipeline if incorrect --genome key provided
 //
-def genomeExistsError() {
+def genomeExistsError(params) {
     if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
         def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
             "  Genome '${params.genome}' not found in any config files provided to the pipeline.\n" +
@@ -674,7 +676,7 @@ def additionaFastaIndexWarn(index) {
 // Sentieon and Parabricks branches bundle older STAR builds that already
 // accept versionGenome 20201).
 //
-def isStarIndexLegacy() {
+def isStarIndexLegacy(params) {
     def genome_entry = params.genomes && params.genome ? params.genomes[params.genome] : null
     return  genome_entry?.star_legacy &&
             params.star_index == genome_entry.star &&
@@ -882,7 +884,7 @@ def classifyStrand(meta, strand_log, stranded_threshold, unstranded_threshold) {
 //
 // Print pipeline summary on completion
 //
-def rnaseqSummary(monochrome_logs=true, pass_mapped_reads=[:], pass_trimmed_reads=[:], pass_strand_check=[:]) {
+def rnaseqSummary(params, monochrome_logs=true, pass_mapped_reads=[:], pass_trimmed_reads=[:], pass_strand_check=[:]) {
     def colors = logColours(monochrome_logs)
 
     def fail_mapped_count  = pass_mapped_reads.count  { _key, value -> value == false }

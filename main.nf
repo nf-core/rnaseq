@@ -57,7 +57,7 @@ params {
     remove_ribo_rna:             Boolean = false
     ribo_removal_tool:           String = 'sortmerna'
     bowtie2_rrna_index:          String? = null
-    ribo_database_manifest:      String = "${projectDir}/assets/rrna-db-defaults.txt"
+    ribo_database_manifest:      String = "${moduleDir}/assets/rrna-db-defaults.txt"
 
     // UMI options
     with_umi:                    Boolean = false
@@ -175,6 +175,9 @@ include { Deseq2Qc } from './modules/local/deseq2_qc/main'
 //
 workflow NFCORE_RNASEQ {
 
+    take:
+    params: Record   // the pipeline's params, passed in because an including pipeline has its own
+
     main:
 
     //
@@ -234,7 +237,7 @@ workflow NFCORE_RNASEQ {
         params.skip_pseudo_alignment,
         params.use_sentieon_star,
         params.use_parabricks_star,
-        isStarIndexLegacy() ? true : false,
+        isStarIndexLegacy(params) ? true : false,
         params.hisat2_build_memory,
         params.input.collect().map { rows -> rows.any { row -> row.strandedness == 'auto' } }
     )
@@ -250,6 +253,7 @@ workflow NFCORE_RNASEQ {
     qc_tools = defineQcTools(params)
 
     results = RNASEQ (
+        params,
         params.input,
         references.fasta,
         references.fai,
@@ -374,13 +378,14 @@ workflow {
         params.input,
         params.help,
         params.help_full,
-        params.show_hidden
+        params.show_hidden,
+        params
     )
 
     //
     // WORKFLOW: Run main workflow
     //
-    results = NFCORE_RNASEQ ()
+    results = NFCORE_RNASEQ (params)
 
     //
     // SUBWORKFLOW: Run completion tasks
@@ -393,7 +398,8 @@ workflow {
         results.multiqc_report,
         results.trim_status,
         results.map_status,
-        results.strand_status
+        results.strand_status,
+        params
     )
 
     publish:

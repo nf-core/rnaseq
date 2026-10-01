@@ -261,7 +261,8 @@ workflow RNASEQ {
             params.use_sentieon_star,
         def star_tool = params.use_sentieon_star ? 'sentieon' : (params.use_parabricks_star ? 'parabricks' : 'star')
             params.use_parabricks_star,
-            params.skip_markduplicates
+            params.skip_markduplicates,
+            samtoolsIndexArgs(params)
         )
 
         ch_mqc_files = ch_mqc_files.mix(ch_star.map { r -> record(id: r.id, files: [r.star.log_final]) })
@@ -285,7 +286,8 @@ workflow RNASEQ {
             ch_bowtie2_index,
             ch_fasta,
             ch_fai,
-            params.save_unaligned
+            params.save_unaligned,
+            samtoolsIndexArgs(params)
         )
 
         ch_mqc_files = ch_mqc_files.mix(ch_bowtie2.map { r -> record(id: r.id, files: [r.bowtie2.log]) })
@@ -308,7 +310,8 @@ workflow RNASEQ {
             ch_splicesites,
             ch_fasta,
             ch_fai,
-            params.save_unaligned || (params.contaminant_screening && params.contaminant_screening_input == 'unmapped')
+            params.save_unaligned || (params.contaminant_screening && params.contaminant_screening_input == 'unmapped'),
+            samtoolsIndexArgs(params)
         )
 
         ch_mqc_files = ch_mqc_files.mix(ch_hisat2.map { r -> record(id: r.id, files: [r.hisat2.summary]) })
@@ -349,7 +352,10 @@ workflow RNASEQ {
             params.umitools_dedup_stats,
             ch_transcriptome_bam,
             ch_transcript_fasta,
-            params.umitools_dedup_primary_only
+            params.umitools_dedup_primary_only,
+            samtoolsIndexArgs(params),
+            params.umitools_grouping_method,
+            params.umitools_umi_separator
         )
 
         // The right-hand record wins on every shared field, so the deduplicated bam, bai and samtools replace the aligner's
@@ -463,7 +469,8 @@ workflow RNASEQ {
             ch_genome_bam,
             ch_fasta,
             ch_fai,
-            !params.use_rustqc
+            !params.use_rustqc,
+            samtoolsIndexArgs(params)
         )
 
         // Only bam, bai and metrics are merged: joining the whole result would overwrite the aligner's samtools stats with null when RustQC skips them

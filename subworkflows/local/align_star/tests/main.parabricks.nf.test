@@ -34,6 +34,7 @@ nextflow_workflow {
                 input[0] = new nextflow.dataflow.ChannelImpl(channel.of(record(
                     id: 'test',
                     meta: [ id:'test', single_end:false ],
+                    args: '--quantMode TranscriptomeSAM --out-sam-attributes NH HI AS NM MD --read-files-command zcat --read-group-sm test --read-group-id-prefix test --two-pass-mode Basic --max-out-filter-multimap 20 --min-align-sjdb-overhang 1 --out-sam-strand-field intronMotif --low-memory --x3',
                     reads: [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
@@ -47,6 +48,7 @@ nextflow_workflow {
                 input[6] = use_sentieon_star
                 input[7] = use_parabricks_star
                 input[8] = skip_markduplicates
+                input[9] = ''  // index_args
                 """
             }
         }
@@ -91,6 +93,7 @@ nextflow_workflow {
                 input[0] = new nextflow.dataflow.ChannelImpl(channel.of(record(
                     id: 'test',
                     meta: [ id:'test', single_end:false ],
+                    args: '--quantMode TranscriptomeSAM --out-sam-attributes NH HI AS NM MD --read-files-command zcat --read-group-sm test --read-group-id-prefix test --two-pass-mode Basic --max-out-filter-multimap 20 --min-align-sjdb-overhang 1 --out-sam-strand-field intronMotif --low-memory --x3',
                     reads: [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
@@ -104,6 +107,7 @@ nextflow_workflow {
                 input[6] = use_sentieon_star
                 input[7] = use_parabricks_star
                 input[8] = skip_markduplicates
+                input[9] = ''  // index_args
                 """
             }
         }

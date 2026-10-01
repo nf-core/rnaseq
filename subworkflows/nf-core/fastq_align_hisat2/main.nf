@@ -13,6 +13,7 @@ workflow FASTQ_ALIGN_HISAT2 {
     ch_fasta: Value<Path?>
     ch_fai: Value<Path?>
     save_unaligned: Boolean
+    index_args: String // samtools index options
 
     main:
     //
@@ -23,7 +24,7 @@ workflow FASTQ_ALIGN_HISAT2 {
     //
     // Sort, index BAM file and run samtools stats, flagstat and idxstats
     //
-    def ch_sorted: Channel<Bam> = BAM_SORT_STATS_SAMTOOLS(ch_hisat2, ch_fasta, ch_fai)
+    def ch_sorted: Channel<Bam> = BAM_SORT_STATS_SAMTOOLS(ch_hisat2, ch_fasta, ch_fai, index_args)
 
     ch_results = ch_hisat2
         .map { r -> r + record(aligner: 'hisat2') }

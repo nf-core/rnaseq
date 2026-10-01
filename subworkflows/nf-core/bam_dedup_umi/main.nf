@@ -26,6 +26,9 @@ workflow BAM_DEDUP_UMI {
     ch_transcriptome_bam: Channel<Bam> // records with transcriptome_bam set
     transcript_fasta: Value<Path?>
     umitools_dedup_primary_only: Boolean // whether to filter to primary alignments before dedup
+    index_args: String // samtools index options
+    umi_grouping_method: String? // UMI grouping method
+    umi_separator: String? // UMI separator
 
     main:
     if (umi_dedup_tool != "umicollapse" && umi_dedup_tool != "umitools") {
@@ -36,7 +39,7 @@ workflow BAM_DEDUP_UMI {
 
     // Genome BAM deduplication
     if (umi_dedup_tool == "umicollapse") {
-        ch_genome_dedup = BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_GENOME(ch_genome_bam)
+        ch_genome_dedup = BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_GENOME(ch_genome_bam, index_args, umi_grouping_method, umi_separator)
             .map { r -> r + record(tsv: null) }
     }
     else {
@@ -44,6 +47,9 @@ workflow BAM_DEDUP_UMI {
             ch_genome_bam,
             umitools_dedup_stats,
             umitools_dedup_primary_only,
+            index_args,
+            umi_grouping_method,
+            umi_separator,
         )
             .map { r ->
                 record(
@@ -64,12 +70,13 @@ workflow BAM_DEDUP_UMI {
     def ch_coord_sorted: Channel<Bam> = BAM_SORT_STATS_SAMTOOLS(
         ch_transcriptome_bam.map { r -> record(id: r.id, meta: r.meta, raw_bams: [r.transcriptome_bam]) },
         transcript_fasta,
-        null
+        null,
+        index_args
     )
 
     // 2. Transcriptome BAM deduplication
     if (umi_dedup_tool == "umicollapse") {
-        ch_transcriptome_dedup = BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_TRANSCRIPTOME(ch_coord_sorted)
+        ch_transcriptome_dedup = BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_TRANSCRIPTOME(ch_coord_sorted, index_args, umi_grouping_method, umi_separator)
             .map { r -> r + record(tsv: null) }
     }
     else {
@@ -77,6 +84,9 @@ workflow BAM_DEDUP_UMI {
             ch_coord_sorted,
             umitools_dedup_stats,
             umitools_dedup_primary_only,
+            index_args,
+            umi_grouping_method,
+            umi_separator,
         )
             .map { r ->
                 record(

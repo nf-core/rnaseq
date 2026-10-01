@@ -208,3 +208,8 @@ def bowtie2AlignArgs(params, meta) {
 
     return args.join(' ')
 }
+
+// samtools index options
+def samtoolsIndexArgs(params) {
+    return params.bam_csi_index ? '-c' : ''
+}

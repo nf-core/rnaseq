@@ -1,6 +1,12 @@
 nextflow.enable.types = true
 
-include { BamInput } from '../types'
+
+record UmicollapseInput {
+    id:   String
+    meta: Map
+    bam:  Path
+    args: String?
+}
 
 record UmicollapseResult {
     id:    String
@@ -21,7 +27,7 @@ process UMICOLLAPSE {
         : 'quay.io/biocontainers/umicollapse:1.1.0--hdfd78af_0'}"
 
     input:
-    sample: BamInput
+    sample: UmicollapseInput
     mode: String
 
     output:
@@ -38,7 +44,7 @@ process UMICOLLAPSE {
     tuple(task.process, 'umicollapse', '1.1.0-0') >> 'versions'
 
     script:
-    def args = task.ext.args ?: ''
+    def args = [sample.args, task.ext.args].findAll { a -> a }.join(' ')
     def prefix = task.ext.prefix ?: "${sample.meta.id}"
     // Memory allocation: We need to make sure that both heap and stack size is sufficiently large for
     // umicollapse. We set the stack size to 5% of the available memory, the heap size to 90%

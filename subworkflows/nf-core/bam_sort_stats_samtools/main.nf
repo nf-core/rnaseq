@@ -16,12 +16,13 @@ workflow BAM_SORT_STATS_SAMTOOLS {
     ch_bam: Channel<RawBams>
     ch_fasta: Value<Path?>
     ch_fai: Value<Path?>
+    index_args: String // samtools index options
 
     main:
     def ch_sorted: Channel<SamtoolsSortResult> = SAMTOOLS_SORT(ch_bam, ch_fasta, ch_fai, '')
         .filter { r -> r.bam != null }
 
-    def ch_index: Channel<SamtoolsIndexResult> = SAMTOOLS_INDEX(ch_sorted)
+    def ch_index: Channel<SamtoolsIndexResult> = SAMTOOLS_INDEX(ch_sorted.map { r -> r + record(args: index_args) })
     ch_sorted_indexed = ch_sorted.join(ch_index, by: 'id', remainder: true)
     ch_sorted_indexed.subscribe { r ->
         if( r.bam == null || r.bai == null ) {

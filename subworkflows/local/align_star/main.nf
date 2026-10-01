@@ -37,6 +37,7 @@ workflow ALIGN_STAR {
     use_sentieon_star: Boolean // whether star alignment is accelerated with Sentieon
     use_parabricks_star: Boolean // whether star alignment (and mark duplicates) is accelerated with Parabricks
     skip_markduplicates: Boolean // whether to skip marking duplicates
+    index_args: String // samtools index options
 
     main:
 
@@ -58,7 +59,7 @@ workflow ALIGN_STAR {
     //
     // Sort, index BAM file and run samtools stats, flagstat and idxstats
     //
-    def ch_sorted: Channel<Bam> = BAM_SORT_STATS_SAMTOOLS(ch_star, fasta, fai)
+    def ch_sorted: Channel<Bam> = BAM_SORT_STATS_SAMTOOLS(ch_star, fasta, fai, index_args)
 
     ch_star_sorted = ch_star.join(ch_sorted, by: 'id', remainder: true)
     ch_star_sorted.subscribe { r ->

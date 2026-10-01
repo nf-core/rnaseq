@@ -36,8 +36,7 @@ include { SamtoolsIndexResult } from '../../modules/nf-core/samtools/index/main'
 include { StringtieResult } from '../../modules/nf-core/stringtie/stringtie/main'
 include { Deseq2Qc } from '../../modules/local/deseq2_qc/main'
 
-include { deseq2QcArgs; rustqcArgs; salmonIndexArgs; samtoolsIndexArgs; starAlignArgs; hisat2AlignArgs; bowtie2AlignArgs } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline/tool_args'
-include { umiExtractArgs                        } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline/tool_args'
+include { deseq2QcArgs; rustqcArgs; samtoolsIndexArgs; starAlignArgs; hisat2AlignArgs; bowtie2AlignArgs } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline/tool_args'
 include { readSamplesheet; samplesheetRowsToCsv } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline/samplesheet'
 include { classifyStrand                 } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { getHisat2PercentMapped         } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
@@ -210,12 +209,7 @@ workflow RNASEQ {
         params.save_merged_fastq,                   // save_merged_fastq
         params.stranded_threshold,                  // stranded_threshold
         params.unstranded_threshold,                // unstranded_threshold
-        params.extra_fqlint_args,                   // fq_lint_args
-        umiExtractArgs(params),                     // umi_extract_args
-        params.extra_fastp_args,                    // fastp_args
-        params.extra_trimgalore_args,               // trimgalore_args
-        params.use_gpu_ribodetector,                // use_gpu_ribodetector
-        salmonIndexArgs(params, false)              // salmon_index_args
+        tool_args                                   // tool_args
     )
 
     def ch_preprocessed: Channel<FastqQcTrimFilterSetstrandedness> = fastq_preprocessed.samples

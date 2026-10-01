@@ -13,6 +13,10 @@ include { FqSubsampleResult } from '../../../modules/nf-core/fq/subsample/main'
 include { SalmonQuantSample } from '../../../modules/nf-core/salmon/quant/main'
 include { SalmonIndexResult } from '../../../modules/nf-core/salmon/index/main'
 
+record SalmonIndexArgs {
+    salmon_index_strandedness: String?
+}
+
 workflow FASTQ_SUBSAMPLE_FQ_SALMON {
     take:
     ch_samples: Channel<ReadsInput>
@@ -21,7 +25,7 @@ workflow FASTQ_SUBSAMPLE_FQ_SALMON {
     ch_gtf: Value<Path>
     ch_index: Value<Path?> // prebuilt Salmon index, used when make_index is false
     make_index: Boolean // Whether to create salmon index before running salmon quant
-    index_args: String? // Salmon index options
+    tool_args: SalmonIndexArgs // Salmon index options for the index of the strandedness inference
 
     main:
 
@@ -31,7 +35,7 @@ workflow FASTQ_SUBSAMPLE_FQ_SALMON {
     if (make_index) {
         def ch_index_built: Value<SalmonIndexResult> = SALMON_INDEX(
             ch_transcript_fasta
-                .map { transcript_fasta -> record(id: 'salmon_index', meta: [:], transcript_fasta: transcript_fasta, args: index_args) }
+                .map { transcript_fasta -> record(id: 'salmon_index', meta: [:], transcript_fasta: transcript_fasta, args: tool_args.salmon_index_strandedness) }
                 .combine(genome_fasta: ch_genome_fasta)
         )
         ch_index_ref = ch_index_built.map { r -> r.index }

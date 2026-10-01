@@ -93,12 +93,7 @@ nextflow_workflow {
                 // Strandedness thresholds
                 input[26] = 0.8            // stranded_threshold
                 input[27] = 0.1            // unstranded_threshold
-                input[28] = ''  // fq_lint_args
-                input[29] = ''  // umi_extract_args
-                input[30] = null  // fastp_args
-                input[31] = null  // trimgalore_args
-                input[32] = false  // use_gpu_ribodetector
-                input[33] = null  // salmon_index_args
+                input[28] = record(fq_lint: '', umi_extract: '', fastp: null, trimgalore: null, use_gpu_ribodetector: false, salmon_index_strandedness: null)  // tool_args
                 """
             }
         }
@@ -195,12 +190,7 @@ nextflow_workflow {
                 // Strandedness thresholds
                 input[26] = 0.8            // stranded_threshold
                 input[27] = 0.1            // unstranded_threshold
-                input[28] = ''  // fq_lint_args
-                input[29] = ''  // umi_extract_args
-                input[30] = null  // fastp_args
-                input[31] = null  // trimgalore_args
-                input[32] = false  // use_gpu_ribodetector
-                input[33] = null  // salmon_index_args
+                input[28] = record(fq_lint: '', umi_extract: '', fastp: null, trimgalore: null, use_gpu_ribodetector: false, salmon_index_strandedness: null)  // tool_args
                 """
             }
         }
@@ -298,12 +288,7 @@ nextflow_workflow {
                 // Strandedness thresholds
                 input[26] = 0.8            // stranded_threshold
                 input[27] = 0.1            // unstranded_threshold
-                input[28] = ''  // fq_lint_args
-                input[29] = ''  // umi_extract_args
-                input[30] = null  // fastp_args
-                input[31] = null  // trimgalore_args
-                input[32] = false  // use_gpu_ribodetector
-                input[33] = null  // salmon_index_args
+                input[28] = record(fq_lint: '', umi_extract: '', fastp: null, trimgalore: null, use_gpu_ribodetector: false, salmon_index_strandedness: null)  // tool_args
                 """
             }
         }
@@ -400,12 +385,7 @@ nextflow_workflow {
                 // Strandedness thresholds
                 input[26] = 0.8            // stranded_threshold
                 input[27] = 0.1            // unstranded_threshold
-                input[28] = ''  // fq_lint_args
-                input[29] = ''  // umi_extract_args
-                input[30] = null  // fastp_args
-                input[31] = null  // trimgalore_args
-                input[32] = false  // use_gpu_ribodetector
-                input[33] = null  // salmon_index_args
+                input[28] = record(fq_lint: '', umi_extract: '', fastp: null, trimgalore: null, use_gpu_ribodetector: false, salmon_index_strandedness: null)  // tool_args
                 """
             }
         }
@@ -515,12 +495,7 @@ nextflow_workflow {
                 // Strandedness thresholds
                 input[26] = 0.8            // stranded_threshold
                 input[27] = 0.1            // unstranded_threshold
-                input[28] = ''  // fq_lint_args
-                input[29] = ''  // umi_extract_args
-                input[30] = null  // fastp_args
-                input[31] = null  // trimgalore_args
-                input[32] = false  // use_gpu_ribodetector
-                input[33] = null  // salmon_index_args
+                input[28] = record(fq_lint: '', umi_extract: '', fastp: null, trimgalore: null, use_gpu_ribodetector: false, salmon_index_strandedness: null)  // tool_args
                 """
             }
         }
@@ -588,12 +563,7 @@ nextflow_workflow {
                 // Strandedness thresholds
                 input[26] = 0.8            // stranded_threshold
                 input[27] = 0.1            // unstranded_threshold
-                input[28] = ''  // fq_lint_args
-                input[29] = ''  // umi_extract_args
-                input[30] = null  // fastp_args
-                input[31] = null  // trimgalore_args
-                input[32] = false  // use_gpu_ribodetector
-                input[33] = null  // salmon_index_args
+                input[28] = record(fq_lint: '', umi_extract: '', fastp: null, trimgalore: null, use_gpu_ribodetector: false, salmon_index_strandedness: null)  // tool_args
                 """
             }
         }
@@ -673,12 +643,7 @@ nextflow_workflow {
                 // Strandedness thresholds
                 input[26] = 0.8            // stranded_threshold
                 input[27] = 0.1            // unstranded_threshold
-                input[28] = ''  // fq_lint_args
-                input[29] = ''  // umi_extract_args
-                input[30] = null  // fastp_args
-                input[31] = null  // trimgalore_args
-                input[32] = false  // use_gpu_ribodetector
-                input[33] = null  // salmon_index_args
+                input[28] = record(fq_lint: '', umi_extract: '', fastp: null, trimgalore: null, use_gpu_ribodetector: false, salmon_index_strandedness: null)  // tool_args
                 """
             }
         }

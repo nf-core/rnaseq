@@ -125,12 +125,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     unstranded_threshold: Float // The difference in fraction of stranded reads assigned to 'forward' and 'reverse' below which a sample is classified as 'unstranded'
 
     // Tool options
-    fq_lint_args: String // fq lint options
-    umi_extract_args: String // UMI-tools extract options
-    fastp_args: String? // extra fastp options
-    trimgalore_args: String? // extra TrimGalore options
-    use_gpu_ribodetector: Boolean // Whether RiboDetector runs on a GPU
-    salmon_index_args: String? // Salmon index options for the index of the strandedness inference
+    tool_args: Record // fq_lint, plus the options of the subworkflows it runs
 
     main:
 
@@ -181,7 +176,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     //
 
     if (!skip_linting) {
-        def ch_lint_raw: Channel<FqLintResult> = FQ_LINT(ch_cat.map { r -> r + record(args: fq_lint_args) })
+        def ch_lint_raw: Channel<FqLintResult> = FQ_LINT(ch_cat.map { r -> r + record(args: tool_args.fq_lint) })
         ch_samples = ch_samples.join(ch_lint_raw.map { r -> record(id: r.id, lint_raw: r.lint) }, by: 'id')
     }
 
@@ -197,8 +192,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
             skip_trimming,
             umi_discard_read,
             min_trimmed_reads,
-            umi_extract_args,
-            trimgalore_args,
+            tool_args,
         )
 
         // TrimGalore's own html and zip are FastQC reports on the trimmed reads
@@ -230,8 +224,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
             save_trimmed,
             fastp_merge,
             min_trimmed_reads,
-            umi_extract_args,
-            fastp_args,
+            tool_args,
         )
 
         ch_samples = ch_samples.join(
@@ -247,7 +240,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     }
 
     if (!skip_linting && !skip_trimming) {
-        def ch_lint_trimmed: Channel<FqLintResult> = FQ_LINT_AFTER_TRIMMING(ch_samples.filter { r -> r.reads != null }.map { r -> r + record(args: fq_lint_args) })
+        def ch_lint_trimmed: Channel<FqLintResult> = FQ_LINT_AFTER_TRIMMING(ch_samples.filter { r -> r.reads != null }.map { r -> r + record(args: tool_args.fq_lint) })
         ch_samples = ch_samples.join(
             ch_lint_trimmed.map { r -> record(id: r.id, lint_trimmed: r.lint) },
             by: 'id',
@@ -288,7 +281,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         )
 
         if (!skip_linting) {
-            def ch_lint_bbsplit: Channel<FqLintResult> = FQ_LINT_AFTER_BBSPLIT(ch_samples.filter { r -> r.reads != null }.map { r -> r + record(args: fq_lint_args) })
+            def ch_lint_bbsplit: Channel<FqLintResult> = FQ_LINT_AFTER_BBSPLIT(ch_samples.filter { r -> r.reads != null }.map { r -> r + record(args: tool_args.fq_lint) })
             ch_samples = ch_samples.join(
                 ch_lint_bbsplit.map { r -> record(id: r.id, lint_bbsplit: r.lint) },
                 by: 'id',
@@ -312,7 +305,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
             ribo_removal_tool,
             make_sortmerna_index,
             make_bowtie2_index,
-            use_gpu_ribodetector,
+            tool_args,
         )
 
         val_rrna_references = ch_rrna_removed.references
@@ -335,7 +328,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         )
 
         if (!skip_linting) {
-            def ch_lint_ribo: Channel<FqLintResult> = FQ_LINT_AFTER_RIBO_REMOVAL(ch_samples.filter { r -> r.reads != null }.map { r -> r + record(args: fq_lint_args) })
+            def ch_lint_ribo: Channel<FqLintResult> = FQ_LINT_AFTER_RIBO_REMOVAL(ch_samples.filter { r -> r.reads != null }.map { r -> r + record(args: tool_args.fq_lint) })
             ch_samples = ch_samples.join(
                 ch_lint_ribo.map { r -> record(id: r.id, lint_ribo: r.lint) },
                 by: 'id',
@@ -368,7 +361,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         ch_gtf,
         ch_salmon_index,
         make_salmon_index,
-        salmon_index_args,
+        tool_args,
     )
     ch_lib_format_counts = ch_salmon.samples.map { r -> record(id: r.id, lib_format_counts: r.lib_format_counts) }
     ch_salmon_index_built = ch_salmon.index_built

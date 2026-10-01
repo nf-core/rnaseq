@@ -550,7 +550,7 @@ workflow RNASEQ {
             // MODULE: RustQC - single-pass replacement for multiple QC tools
             //
             ch_bam_qc_rustqc = RUSTQC (
-                ch_genome_bam,
+                ch_genome_bam.map { r -> r + record(args: rustqcArgs(params, r.meta)) },
                 ch_gtf,
             )
 
@@ -585,7 +585,8 @@ workflow RNASEQ {
                 ch_fai,
                 ch_biotypes_header_multiqc,
                 qc_tools,
-                biotype
+                biotype,
+                params.featurecounts_feature_type
             )
 
             ch_mqc_files = ch_mqc_files.mix(ch_bam_qc.map { r -> record(id: r.id, files: r.mqc_files) })
@@ -706,7 +707,7 @@ workflow RNASEQ {
                 ch_mqc_files = ch_mqc_files.mix(ch_kraken2.map { r -> record(id: r.id, files: [r.report]) })
             } else if (params.contaminant_screening == 'kraken2_bracken') {
                 ch_bracken = BRACKEN (
-                    ch_kraken2,
+                    ch_kraken2.map { r -> r + record(args: "-l ${params.bracken_precision}") },
                     ch_kraken_db
                 )
                 ch_mqc_files = ch_mqc_files.mix(ch_bracken.map { r -> record(id: r.id, files: [r.report]) })
@@ -843,7 +844,8 @@ workflow RNASEQ {
             file("${moduleDir}/../../assets/strand_check_composition.yaml", checkIfExists: true),
             sample_status_header_multiqc,
             params.min_trimmed_reads,
-            params.skip_quantification_merge
+            params.skip_quantification_merge,
+            multiqcArgs(params)
         )
         ch_multiqc_report = ch_multiqc.map { r -> r.report }
     }

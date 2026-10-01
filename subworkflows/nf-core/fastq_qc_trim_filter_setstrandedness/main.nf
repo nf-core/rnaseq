@@ -312,6 +312,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
             ch_rrna_removed.samples.map { r ->
                 record(
                     id:    r.id,
+            use_gpu_ribodetector,
                     reads: r.reads,
                     rrna:  record(
                         sortmerna_log:    r.sortmerna_log,

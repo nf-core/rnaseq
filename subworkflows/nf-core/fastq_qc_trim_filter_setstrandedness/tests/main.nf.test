@@ -97,6 +97,7 @@ nextflow_workflow {
                 input[29] = ''  // umi_extract_args
                 input[30] = null  // fastp_args
                 input[31] = null  // trimgalore_args
+                input[32] = false  // use_gpu_ribodetector
                 """
             }
         }
@@ -196,6 +197,7 @@ nextflow_workflow {
 
                 // Strandedness thresholds
                 input[26] = 0.8            // stranded_threshold
+                input[32] = false  // use_gpu_ribodetector
                 input[27] = 0.1            // unstranded_threshold
                 """
             }
@@ -296,6 +298,7 @@ nextflow_workflow {
                 input[25] = false          // save_merged_fastq
 
                 // Strandedness thresholds
+                input[32] = false  // use_gpu_ribodetector
                 input[26] = 0.8            // stranded_threshold
                 input[27] = 0.1            // unstranded_threshold
                 """
@@ -395,6 +398,7 @@ nextflow_workflow {
                 // Merging options
                 input[25] = false          // save_merged_fastq
 
+                input[32] = false  // use_gpu_ribodetector
                 // Strandedness thresholds
                 input[26] = 0.8            // stranded_threshold
                 input[27] = 0.1            // unstranded_threshold
@@ -507,6 +511,7 @@ nextflow_workflow {
 
                 // Merging options
                 input[25] = false          // save_merged_fastq
+                input[32] = false  // use_gpu_ribodetector
 
                 // Strandedness thresholds
                 input[26] = 0.8            // stranded_threshold
@@ -577,6 +582,7 @@ nextflow_workflow {
                 input[24] = 0              // umi_discard_read
 
                 // Merging options
+                input[32] = false  // use_gpu_ribodetector
                 input[25] = false          // save_merged_fastq
 
                 // Strandedness thresholds
@@ -659,6 +665,7 @@ nextflow_workflow {
                 input[23] = false          // with_umi
                 input[24] = 0              // umi_discard_read
 
+                input[32] = false  // use_gpu_ribodetector
                 // Merging options
                 input[25] = false          // save_merged_fastq
 

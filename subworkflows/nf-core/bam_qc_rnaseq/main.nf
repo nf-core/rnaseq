@@ -26,6 +26,7 @@ workflow BAM_QC_RNASEQ {
     biotypes_header: Path
     tools: List<String>  // e.g. ['preseq', 'biotype_qc', 'qualimap', 'dupradar', 'rseqc_bam_stat', 'rseqc_infer_experiment', ...]
     biotype: String      // e.g. "gene_type" or "gene_biotype"
+    featurecounts_feature_type: String // feature type counted by featureCounts, e.g. "exon"
 
     main:
     def rseqc_modules = tools.findAll { tool -> tool.startsWith('rseqc_') }.collect { tool -> tool.replace('rseqc_', '') }.toList()
@@ -62,7 +63,10 @@ workflow BAM_QC_RNASEQ {
     // MODULE: Feature biotype QC using featureCounts
     //
     if ('biotype_qc' in tools && biotype) {
-        def ch_featurecounts: Channel<BamQcFeaturecounts> = SUBREAD_FEATURECOUNTS(ch_bam_bai, ch_gtf)
+        def ch_featurecounts: Channel<BamQcFeaturecounts> = SUBREAD_FEATURECOUNTS(
+            ch_bam_bai.map { r -> r + record(args: ['-B -C', "-g ${biotype}", "-t ${featurecounts_feature_type}"].join(' ')) },
+            ch_gtf
+        )
         def ch_biotype: Channel<CustomMultiqccustombiotypeResult> = CUSTOM_MULTIQCCUSTOMBIOTYPE(ch_featurecounts, biotypes_header)
         ch_qc = ch_qc
             .join(ch_featurecounts.map { r -> record(id: r.id, featurecounts: r) }, by: 'id')

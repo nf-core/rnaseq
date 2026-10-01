@@ -53,6 +53,7 @@ workflow FASTQ_REMOVE_RRNA {
     ribo_removal_tool: String // 'sortmerna', 'ribodetector', or 'bowtie2'
     make_sortmerna_index: Boolean // Whether to create a sortmerna index before running sortmerna
     make_bowtie2_index: Boolean // Whether to create a bowtie2 index before running bowtie2
+    use_gpu_ribodetector: Boolean // Whether RiboDetector runs on a GPU
 
     main:
 
@@ -103,7 +104,7 @@ workflow FASTQ_REMOVE_RRNA {
         // Join stats with reads and calculate read length for RiboDetector
         ch_reads_with_stats = ch_reads.join(ch_seqkit_stats, by: 'id')
         def ch_ribodetector: Channel<RibodetectorResult> = RIBODETECTOR(
-            ch_reads_with_stats.map { r -> r + record(length: getReadLengthFromSeqkitStats(r.stats)) }
+            ch_reads_with_stats.map { r -> r + record(length: getReadLengthFromSeqkitStats(r.stats), gpu: use_gpu_ribodetector) }
         )
 
         ch_results = ch_ribodetector

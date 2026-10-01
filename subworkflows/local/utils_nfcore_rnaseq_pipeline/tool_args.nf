@@ -222,3 +222,24 @@ def deseq2QcArgs(params) {
         params.deseq2_vst ? '--vst TRUE' : ''
     ].join(' ').trim()
 }
+
+// RustQC options
+def rustqcArgs(params, meta) {
+    def biotype_attr = params.gencode ? "gene_type" : (params.featurecounts_group_type ?: '')
+    def strand_arg = meta.strandedness ? "--stranded ${meta.strandedness}" : ''
+    return [
+        strand_arg,
+        biotype_attr ? "--biotype-attribute ${biotype_attr}" : '',
+        '--preseq-seed 1 --preseq-seg-len 100000000',
+        '--tin-seed 1 --junction-saturation-seed 1',
+        // UMI dedup removes duplicate reads, so RustQC's duplicate-marking check doesn't apply
+        params.with_umi ? '--skip-dup-check' : '',
+    ].join(' ').trim()
+}
+
+// MultiQC options
+def multiqcArgs(params) {
+    return [
+        ((params.multiqc_title == null) ? '' : "--title \"${params.multiqc_title}\"")
+    ].join(' ').trim()
+}

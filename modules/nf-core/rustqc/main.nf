@@ -1,6 +1,13 @@
 nextflow.enable.types = true
 
-include { BamBaiInput } from '../types'
+
+record RustqcInput {
+    id:   String
+    meta: Map
+    bam:  Path
+    bai:  Path
+    args: String?
+}
 
 record RustqcResult {
     id:            String
@@ -116,7 +123,7 @@ process RUSTQC {
         : 'community.wave.seqera.io/library/rustqc:0.2.1--00df1502b490e005'}"
 
     input:
-    sample: BamBaiInput
+    sample: RustqcInput
     gtf: Path
 
     output:
@@ -193,7 +200,7 @@ process RUSTQC {
 
     script:
     prefix = task.ext.prefix ?: "${sample.meta.id}"
-    def args = task.ext.args ?: ''
+    def args = [sample.args, task.ext.args].findAll { a -> a }.join(' ')
     def paired = sample.meta.single_end ? '' : '--paired'
     """
     rustqc rna \\

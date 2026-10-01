@@ -22,10 +22,14 @@ def umicollapseArgs(grouping_method: String?, umi_separator: String?, single_end
     return ['--two-pass', paired_args, algo_arg, separator_arg].join(' ').trim()
 }
 
+record UmicollapseArgs {
+    samtools_index: String?
+}
+
 workflow BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE {
     take:
     ch_bam_bai: Channel<BamInput>
-    index_args: String // samtools index options
+    tool_args: UmicollapseArgs // samtools index options
     grouping_method: String? // UMI grouping method
     umi_separator: String? // UMI separator
 
@@ -39,7 +43,7 @@ workflow BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE {
     //
     // Index BAM file and run samtools stats, flagstat and idxstats
     //
-    def ch_index: Channel<SamtoolsIndexResult> = SAMTOOLS_INDEX(ch_dedup.map { r -> r + record(args: index_args) })
+    def ch_index: Channel<SamtoolsIndexResult> = SAMTOOLS_INDEX(ch_dedup.map { r -> r + record(args: tool_args.samtools_index) })
     ch_indexed = ch_dedup.join(ch_index, by: 'id')
 
     ch_results = ch_indexed.join(BAM_STATS_SAMTOOLS(ch_indexed, null, null), by: 'id')

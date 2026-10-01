@@ -34,7 +34,7 @@ nextflow_workflow {
                     meta: [ id:'test'],
                     bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam', checkIfExists: true)
                 )))
-                input[1] = ''  // index_args
+                input[1] = record(samtools_index: '')  // tool_args
                 input[2] = null  // grouping_method
                 input[3] = null  // umi_separator
                 """

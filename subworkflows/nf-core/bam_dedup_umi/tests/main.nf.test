@@ -43,7 +43,7 @@ nextflow_workflow {
                 )))
                 input[6] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true)))
                 input[7] = false
-                input[8] = ''  // index_args
+                input[8] = record(samtools_index: '')  // tool_args
                 input[9] = null  // umi_grouping_method
                 input[10] = null  // umi_separator
                 """
@@ -89,7 +89,7 @@ nextflow_workflow {
                 input[5] = new nextflow.dataflow.ChannelImpl(channel.empty())
                 input[6] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))
                 input[7] = false
-                input[8] = ''  // index_args
+                input[8] = record(samtools_index: '')  // tool_args
                 input[9] = null  // umi_grouping_method
                 input[10] = null  // umi_separator
                 """

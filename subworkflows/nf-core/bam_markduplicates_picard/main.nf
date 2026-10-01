@@ -11,13 +11,17 @@ include { BamInput; SamtoolsStats; MarkdupBam } from '../../../modules/nf-core/t
 include { PicardMarkduplicatesResult } from '../../../modules/nf-core/picard/markduplicates/main'
 include { SamtoolsIndexResult } from '../../../modules/nf-core/samtools/index/main'
 
+record MarkdupArgs {
+    samtools_index: String?
+}
+
 workflow BAM_MARKDUPLICATES_PICARD {
     take:
     ch_bam: Channel<BamInput>
     ch_fasta: Value<Path?>
     ch_fai: Value<Path?>
     run_stats: Boolean
-    index_args: String // samtools index options
+    tool_args: MarkdupArgs // samtools index options
 
     main:
     def ch_markdup: Channel<PicardMarkduplicatesResult> = PICARD_MARKDUPLICATES(ch_bam, ch_fasta, ch_fai)
@@ -25,7 +29,7 @@ workflow BAM_MARKDUPLICATES_PICARD {
     // Picard writes exactly one of bam/cram per sample, matching the input format.
     ch_marked = ch_markdup.map { r -> record(id: r.id, meta: r.meta, bam: r.bam ?: r.cram) }
 
-    def ch_index: Channel<SamtoolsIndexResult> = SAMTOOLS_INDEX(ch_marked.map { r -> r + record(args: index_args) })
+    def ch_index: Channel<SamtoolsIndexResult> = SAMTOOLS_INDEX(ch_marked.map { r -> r + record(args: tool_args.samtools_index) })
 
     def ch_stats: Channel<SamtoolsStats> = channel.empty()
     if (run_stats) {

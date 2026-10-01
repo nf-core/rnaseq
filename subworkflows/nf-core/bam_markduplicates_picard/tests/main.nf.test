@@ -32,7 +32,7 @@ nextflow_workflow {
                 input[1] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)))
                 input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)))
                 input[3] = true
-                input[4] = ''  // index_args
+                input[4] = record(samtools_index: '')  // tool_args
                 """
             }
         }
@@ -67,7 +67,7 @@ nextflow_workflow {
                 input[1] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)))
                 input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)))
                 input[3] = true
-                input[4] = ''  // index_args
+                input[4] = record(samtools_index: '')  // tool_args
                 """
             }
         }
@@ -105,7 +105,7 @@ nextflow_workflow {
                 input[1] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)))
                 input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)))
                 input[3] = true
-                input[4] = ''  // index_args
+                input[4] = record(samtools_index: '')  // tool_args
                 """
             }
         }
@@ -133,7 +133,7 @@ nextflow_workflow {
                 input[1] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)))
                 input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)))
                 input[3] = true
-                input[4] = ''  // index_args
+                input[4] = record(samtools_index: '')  // tool_args
                 """
             }
         }

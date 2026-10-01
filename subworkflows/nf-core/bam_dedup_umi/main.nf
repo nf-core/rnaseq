@@ -26,7 +26,7 @@ workflow BAM_DEDUP_UMI {
     ch_transcriptome_bam: Channel<Bam> // records with transcriptome_bam set
     transcript_fasta: Value<Path?>
     umitools_dedup_primary_only: Boolean // whether to filter to primary alignments before dedup
-    index_args: String // samtools index options
+    tool_args: Record // the samtools index options, forwarded
     umi_grouping_method: String? // UMI grouping method
     umi_separator: String? // UMI separator
 
@@ -39,7 +39,7 @@ workflow BAM_DEDUP_UMI {
 
     // Genome BAM deduplication
     if (umi_dedup_tool == "umicollapse") {
-        ch_genome_dedup = BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_GENOME(ch_genome_bam, index_args, umi_grouping_method, umi_separator)
+        ch_genome_dedup = BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_GENOME(ch_genome_bam, tool_args, umi_grouping_method, umi_separator)
             .map { r -> r + record(tsv: null) }
     }
     else {
@@ -47,7 +47,7 @@ workflow BAM_DEDUP_UMI {
             ch_genome_bam,
             umitools_dedup_stats,
             umitools_dedup_primary_only,
-            index_args,
+            tool_args,
             umi_grouping_method,
             umi_separator,
         )
@@ -71,12 +71,12 @@ workflow BAM_DEDUP_UMI {
         ch_transcriptome_bam.map { r -> record(id: r.id, meta: r.meta, raw_bams: [r.transcriptome_bam]) },
         transcript_fasta,
         null,
-        index_args
+        tool_args
     )
 
     // 2. Transcriptome BAM deduplication
     if (umi_dedup_tool == "umicollapse") {
-        ch_transcriptome_dedup = BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_TRANSCRIPTOME(ch_coord_sorted, index_args, umi_grouping_method, umi_separator)
+        ch_transcriptome_dedup = BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_TRANSCRIPTOME(ch_coord_sorted, tool_args, umi_grouping_method, umi_separator)
             .map { r -> r + record(tsv: null) }
     }
     else {
@@ -84,7 +84,7 @@ workflow BAM_DEDUP_UMI {
             ch_coord_sorted,
             umitools_dedup_stats,
             umitools_dedup_primary_only,
-            index_args,
+            tool_args,
             umi_grouping_method,
             umi_separator,
         )

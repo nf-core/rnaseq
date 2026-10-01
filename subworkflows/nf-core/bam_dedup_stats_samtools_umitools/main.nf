@@ -25,12 +25,16 @@ def umitoolsDedupArgs(grouping_method, umi_separator, meta) {
     ].join(' ').trim()
 }
 
+record UmitoolsDedupArgs {
+    samtools_index: String?
+}
+
 workflow BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS {
     take:
     ch_bam_bai: Channel<BamBaiInput>
     val_get_dedup_stats: Boolean
     val_primary_only: Boolean
-    index_args: String // samtools index options
+    tool_args: UmitoolsDedupArgs // samtools index options
     grouping_method: String? // UMI grouping method
     umi_separator: String? // UMI separator
 
@@ -49,7 +53,7 @@ workflow BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS {
             '',
         ).filter { r -> r.bam != null }
 
-        ch_dedup_input = ch_primary.join(SAMTOOLS_INDEX_PRIMARY(ch_primary.map { r -> r + record(args: index_args) }), by: 'id')
+        ch_dedup_input = ch_primary.join(SAMTOOLS_INDEX_PRIMARY(ch_primary.map { r -> r + record(args: tool_args.samtools_index) }), by: 'id')
     }
     else {
         ch_dedup_input = ch_bam_bai
@@ -66,7 +70,7 @@ workflow BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS {
     //
     // Index BAM file and run samtools stats, flagstat and idxstats
     //
-    def ch_index: Channel<SamtoolsIndexResult> = SAMTOOLS_INDEX(ch_dedup.map { r -> r + record(args: index_args) })
+    def ch_index: Channel<SamtoolsIndexResult> = SAMTOOLS_INDEX(ch_dedup.map { r -> r + record(args: tool_args.samtools_index) })
     ch_indexed = ch_dedup.join(ch_index, by: 'id')
 
     ch_results = ch_indexed.join(BAM_STATS_SAMTOOLS(ch_indexed, null, null), by: 'id')

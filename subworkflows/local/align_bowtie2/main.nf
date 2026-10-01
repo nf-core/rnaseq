@@ -36,7 +36,7 @@ workflow ALIGN_BOWTIE2 {
     fasta: Value<Path?>
     fai: Value<Path?>
     save_unaligned: Boolean
-    index_args: String // samtools index options
+    tool_args: Record // the samtools index options, forwarded
 
     main:
 
@@ -54,7 +54,7 @@ workflow ALIGN_BOWTIE2 {
     //
     // Sort, index BAM file and run samtools stats, flagstat and idxstats
     //
-    def ch_sorted: Channel<Bam> = BAM_SORT_STATS_SAMTOOLS(ch_bowtie2, fasta, fai, index_args)
+    def ch_sorted: Channel<Bam> = BAM_SORT_STATS_SAMTOOLS(ch_bowtie2, fasta, fai, tool_args)
 
     // The BAM is aligned to the transcriptome, and its unsorted form is what Salmon quantifies:
     // a coordinate-sorted BAM breaks paired-end quantification.

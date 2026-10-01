@@ -34,7 +34,7 @@ nextflow_workflow {
                 )))
                 input[1] = val_get_dedup_stats
                 input[2] = false
-                input[3] = ''  // index_args
+                input[3] = record(samtools_index: '')  // tool_args
                 input[4] = null  // grouping_method
                 input[5] = null  // umi_separator
                 """
@@ -64,7 +64,7 @@ nextflow_workflow {
                 )))
                 input[1] = val_get_dedup_stats
                 input[2] = true
-                input[3] = ''  // index_args
+                input[3] = record(samtools_index: '')  // tool_args
                 input[4] = null  // grouping_method
                 input[5] = null  // umi_separator
                 """
@@ -96,7 +96,7 @@ nextflow_workflow {
                 )))
                 input[1] = val_get_dedup_stats
                 input[2] = false
-                input[3] = ''  // index_args
+                input[3] = record(samtools_index: '')  // tool_args
                 input[4] = null  // grouping_method
                 input[5] = null  // umi_separator
                 """

@@ -47,7 +47,7 @@ nextflow_workflow {
                 input[6] = use_sentieon_star
                 input[7] = use_parabricks_star
                 input[8] = skip_markduplicates
-                input[9] = ''  // index_args
+                input[9] = record(samtools_index: '')  // tool_args
                 """
             }
         }
@@ -134,7 +134,7 @@ nextflow_workflow {
                 input[6] = use_sentieon_star
                 input[7] = use_parabricks_star
                 input[8] = skip_markduplicates
-                input[9] = ''  // index_args
+                input[9] = record(samtools_index: '')  // tool_args
                 """
             }
         }
@@ -209,7 +209,7 @@ nextflow_workflow {
                 input[6] = use_sentieon_star
                 input[7] = use_parabricks_star
                 input[8] = skip_markduplicates
-                input[9] = ''  // index_args
+                input[9] = record(samtools_index: '')  // tool_args
                 """
             }
         }

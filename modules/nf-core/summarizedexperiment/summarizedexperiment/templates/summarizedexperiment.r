@@ -196,6 +196,8 @@ if ('$rowdata' != '' && '$rowdata' != 'null'){
 prefix <- tools::file_path_sans_ext(matrix_files[1])
 if ('$task.ext.prefix' != 'null'){
     prefix = '$task.ext.prefix'
+} else if ('$sample.prefix' != 'null'){
+    prefix = '$sample.prefix'
 } else if ('$sample.meta.id' != 'null'){
     prefix = '$sample.meta.id'
 }

@@ -213,3 +213,12 @@ def bowtie2AlignArgs(params, meta) {
 def samtoolsIndexArgs(params) {
     return params.bam_csi_index ? '-c' : ''
 }
+
+// DESeq2 QC options
+def deseq2QcArgs(params) {
+    return [
+        '--id_col 1',
+        '--count_col 3',
+        params.deseq2_vst ? '--vst TRUE' : ''
+    ].join(' ').trim()
+}

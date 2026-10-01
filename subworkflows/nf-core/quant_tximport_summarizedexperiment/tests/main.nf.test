@@ -47,6 +47,7 @@ nextflow_workflow {
                 input[4] = 'gene_name'
                 input[5] = 'salmon'
                 input[6] = false
+                input[7] = null  // se_prefix
                 """
             }
         }
@@ -114,6 +115,7 @@ nextflow_workflow {
                 input[4] = 'gene_name'
                 input[5] = 'salmon'
                 input[6] = false
+                input[7] = null  // se_prefix
                 """
             }
         }
@@ -163,6 +165,7 @@ nextflow_workflow {
                 input[4] = 'gene_name'
                 input[5] = 'kallisto'
                 input[6] = false
+                input[7] = null  // se_prefix
                 """
             }
         }
@@ -224,6 +227,7 @@ nextflow_workflow {
                 input[4] = 'gene_name'
                 input[5] = 'rsem'
                 input[6] = false
+                input[7] = null  // se_prefix
                 """
             }
         }
@@ -264,6 +268,7 @@ nextflow_workflow {
                 input[4] = 'gene_name'
                 input[5] = 'salmon'
                 input[6] = false
+                input[7] = null  // se_prefix
                 """
             }
         }
@@ -290,6 +295,7 @@ nextflow_workflow {
                 input[4] = 'gene_name'
                 input[5] = 'kallisto'
                 input[6] = false
+                input[7] = null  // se_prefix
                 """
             }
         }
@@ -316,6 +322,7 @@ nextflow_workflow {
                 input[4] = 'gene_name'
                 input[5] = 'rsem'
                 input[6] = false
+                input[7] = null  // se_prefix
                 """
             }
         }

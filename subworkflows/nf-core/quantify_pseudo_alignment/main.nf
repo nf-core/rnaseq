@@ -12,6 +12,40 @@ include { ReadsInput; QuantMerged } from '../../../modules/nf-core/types'
 include { KallistoQuantSample } from '../../../modules/nf-core/kallisto/quant/main'
 include { SalmonQuantSample } from '../../../modules/nf-core/salmon/quant/main'
 
+//
+// Salmon quant options: the library type is the given one if it is valid, else derived from the sample strandedness
+//
+def salmonQuantArgs(libtype: String?, extra_args: String?, meta: Map) -> String {
+    def valid_libtypes = [ 'A', 'U', 'SF', 'SR', 'IS', 'IU', 'ISF', 'ISR', 'OS', 'OU', 'OSF', 'OSR', 'MS', 'MU', 'MSF', 'MSR' ]
+    def lib_type = 'A'
+    if (libtype) {
+        if (valid_libtypes.contains(libtype)) {
+            lib_type = libtype
+        }
+        else {
+            log.info("[Salmon Quant] Invalid library type specified '--libType=${libtype}', defaulting to auto-detection with '--libType=A'.")
+        }
+    }
+    else {
+        def strandedness = meta.strandedness
+        lib_type = meta.single_end
+            ? (strandedness == 'forward' ? 'SF' : strandedness == 'reverse' ? 'SR' : 'U')
+            : (strandedness == 'forward' ? 'ISF' : strandedness == 'reverse' ? 'ISR' : 'IU')
+    }
+    return [ "--libType=${lib_type}", extra_args ?: '' ].join(' ').trim()
+}
+
+//
+// Kallisto quant options: the strandedness of the sample unless the extra options set one
+//
+def kallistoQuantArgs(extra_args: String?, meta: Map) -> String {
+    def extra = extra_args ?: ''
+    def strandedness = (extra.contains('--fr-stranded') || extra.contains('--rf-stranded')) ? '' :
+        meta.strandedness == 'forward' ? '--fr-stranded' :
+        meta.strandedness == 'reverse' ? '--rf-stranded' : ''
+    return [ strandedness, extra ].join(' ').trim()
+}
+
 workflow QUANTIFY_PSEUDO_ALIGNMENT {
     take:
     samplesheet: Value<Path>
@@ -25,6 +59,10 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
     kallisto_quant_fraglen: Integer? // Estimated fragment length required by Kallisto in single-end mode
     kallisto_quant_fraglen_sd: Integer? // Estimated standard error for fragment length required by Kallisto in single-end mode
     skip_merge: Boolean // skip cross-sample merging, run tximport per-sample
+    salmon_libtype: String? // Salmon library type; derived from the sample strandedness when null
+    extra_salmon_args: String? // extra Salmon quant options
+    extra_kallisto_args: String? // extra Kallisto quant options
+    se_prefix: String? // prefix of the merged SummarizedExperiment files (default: the sample id)
 
     main:
 
@@ -34,10 +72,15 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
     def ch_salmon: Channel<SalmonQuantSample>     = channel.empty()
     def ch_kallisto: Channel<KallistoQuantSample> = channel.empty()
     if (pseudo_aligner == 'salmon') {
-        ch_salmon = SALMON_QUANT(ch_samples, index, gtf, transcript_fasta)
+        ch_salmon = SALMON_QUANT(
+            ch_samples.map { r -> r + record(args: salmonQuantArgs(salmon_libtype, extra_salmon_args, r.meta)) },
+            index,
+            gtf,
+            transcript_fasta
+        )
     } else {
         ch_kallisto = KALLISTO_QUANT(
-            ch_samples,
+            ch_samples.map { r -> r + record(args: kallistoQuantArgs(extra_kallisto_args, r.meta)) },
             index,
             gtf,
             null,
@@ -57,7 +100,8 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
         gtf_id_attribute,
         gtf_extra_attribute,
         pseudo_aligner,
-        skip_merge
+        skip_merge,
+        se_prefix
     )
 
     emit:

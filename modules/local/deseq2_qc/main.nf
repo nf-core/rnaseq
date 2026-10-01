@@ -4,6 +4,8 @@ record Deseq2QcInput {
     id:                        String
     meta:                      Map
     counts_gene_length_scaled: Path
+    args:                      String?
+    label:                     String?
 }
 
 record Deseq2Qc {

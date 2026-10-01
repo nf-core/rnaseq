@@ -406,7 +406,7 @@ workflow RNASEQ {
 
         if (run_deseq2_qc) {
             ch_deseq2 = DESEQ2_QC_RSEM (
-                ch_quant_merged,
+                ch_quant_merged.map { r -> r + record(args: deseq2QcArgs(params), label: params.aligner) },
                 ch_pca_header_multiqc,
                 ch_clustering_header_multiqc
             )
@@ -427,7 +427,11 @@ workflow RNASEQ {
             'salmon',
             params.kallisto_quant_fraglen,
             params.kallisto_quant_fraglen_sd,
-            params.skip_quantification_merge
+            params.skip_quantification_merge,
+            params.salmon_quant_libtype,
+            params.extra_salmon_quant_args,
+            params.extra_kallisto_quant_args,
+            null
         )
 
         ch_quant_salmon = bam_salmon.salmon
@@ -435,7 +439,7 @@ workflow RNASEQ {
 
         if (run_deseq2_qc) {
             ch_deseq2 = DESEQ2_QC_BAM_SALMON (
-                ch_quant_merged,
+                ch_quant_merged.map { r -> r + record(args: deseq2QcArgs(params), label: params.aligner) },
                 ch_pca_header_multiqc,
                 ch_clustering_header_multiqc
             )
@@ -759,7 +763,11 @@ workflow RNASEQ {
             params.pseudo_aligner,
             params.kallisto_quant_fraglen,
             params.kallisto_quant_fraglen_sd,
-            params.skip_quantification_merge
+            params.skip_quantification_merge,
+            params.salmon_quant_libtype,
+            params.extra_salmon_quant_args,
+            params.extra_kallisto_quant_args,
+            "${params.pseudo_aligner}.merged"
         )
 
         ch_quant_pseudo          = pseudo.salmon
@@ -774,7 +782,7 @@ workflow RNASEQ {
 
         if (run_deseq2_qc) {
             ch_deseq2_pseudo = DESEQ2_QC_PSEUDO (
-                ch_quant_merged_pseudo,
+                ch_quant_merged_pseudo.map { r -> r + record(args: deseq2QcArgs(params), label: params.pseudo_aligner) },
                 ch_pca_header_multiqc,
                 ch_clustering_header_multiqc
             )

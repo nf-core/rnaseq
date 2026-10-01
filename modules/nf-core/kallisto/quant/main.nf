@@ -1,6 +1,12 @@
 nextflow.enable.types = true
 
-include { ReadsInput } from '../../types'
+
+record KallistoQuantInput {
+    id:    String
+    meta:  Map
+    reads: List<Path>
+    args:  String?
+}
 
 record KallistoQuantSample {
     id:        String
@@ -20,7 +26,7 @@ process KALLISTO_QUANT {
         'community.wave.seqera.io/library/kallisto:0.52.0--31c771060d82d25c' }"
 
     input:
-    sample: ReadsInput
+    sample: KallistoQuantInput
     index: Path
     gtf: Path?
     chromosomes: Path?
@@ -40,7 +46,7 @@ process KALLISTO_QUANT {
     tuple(task.process, 'kallisto', eval("kallisto version | sed 's/.*version //'")) >> 'versions'
 
     script:
-    def args = task.ext.args ?: ''
+    def args = [sample.args, task.ext.args].findAll { a -> a }.join(' ')
     prefix = task.ext.prefix ?: "${sample.meta.id}"
     def gtf_input = gtf ? "--gtf ${gtf}" : ''
     def chromosomes_input = chromosomes ? "--chromosomes ${chromosomes}" : ''

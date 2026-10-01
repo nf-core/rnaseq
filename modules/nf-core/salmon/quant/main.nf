@@ -1,6 +1,12 @@
 nextflow.enable.types = true
 
-include { ReadsInput } from '../../types'
+
+record SalmonQuantInput {
+    id:    String
+    meta:  Map
+    reads: List<Path>
+    args:  String?
+}
 
 record SalmonQuantSample {
     id:                String
@@ -20,7 +26,7 @@ process SALMON_QUANT {
         : 'community.wave.seqera.io/library/salmon:2.7.0--74784226202c61b9'}"
 
     input:
-    sample: ReadsInput
+    sample: SalmonQuantInput
     index: Path?
     gtf: Path
     transcript_fasta: Path?
@@ -41,7 +47,7 @@ process SALMON_QUANT {
     task.ext.when == null || task.ext.when
 
     script:
-    def args = task.ext.args ?: ''
+    def args = [sample.args, task.ext.args].findAll { a -> a }.join(' ')
     prefix = task.ext.prefix ?: "${sample.meta.id}"
 
     // salmon's -a takes a BAM of reads already aligned to the transcriptome; anything else is reads mode

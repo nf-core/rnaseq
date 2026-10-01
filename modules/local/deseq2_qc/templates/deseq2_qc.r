@@ -63,7 +63,8 @@ opt <- list(
 opt_types <- lapply(opt, class)
 
 # Apply option overrides from task.ext.args
-args_opt <- parse_args('$task.ext.args')
+# sample.args holds the pipeline options and task.ext.args the user's, which come last
+args_opt <- parse_args(paste(setdiff(c('$sample.args', '$task.ext.args'), 'null'), collapse = ' '))
 for ( ao in names(args_opt)){
     if (! ao %in% names(opt)){
         stop(paste("Invalid option:", ao))
@@ -280,7 +281,7 @@ sink()
 ################################################
 
 # The PCA values and sample distances with the headers that MultiQC reads them with, labelled by aligner
-label       <- ifelse('$task.ext.args2' == 'null', '', '$task.ext.args2')
+label       <- c(setdiff(c('$sample.label', '$task.ext.args2'), 'null'), '')[1]
 label_lower <- tolower(label)
 label_upper <- toupper(label)
 

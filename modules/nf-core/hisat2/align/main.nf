@@ -1,6 +1,13 @@
 nextflow.enable.types = true
 
-include { ReadsInput; Hisat2Logs } from '../../types'
+include { Hisat2Logs } from '../../types'
+
+record Hisat2AlignInput {
+    id:    String
+    meta:  Map
+    reads: List<Path>
+    args:  String?
+}
 
 record Hisat2AlignResult {
     id:       String
@@ -20,7 +27,7 @@ process HISAT2_ALIGN {
         : 'community.wave.seqera.io/library/hisat2_samtools:a0c9b8ccf8116a89'}"
 
     input:
-    sample: ReadsInput
+    sample: Hisat2AlignInput
     index: Path
     splicesites: Path?
     save_unaligned: Boolean
@@ -39,7 +46,7 @@ process HISAT2_ALIGN {
     tuple(task.process, 'samtools', eval("samtools --version | sed -n '1s/samtools //p'")) >> 'versions'
 
     script:
-    def args = task.ext.args ?: ''
+    def args = [sample.args, task.ext.args].findAll { a -> a }.join(' ')
     def prefix = task.ext.prefix ?: "${sample.meta.id}"
 
     def ss = "${splicesites}" ? "--known-splicesite-infile ${splicesites}" : ''

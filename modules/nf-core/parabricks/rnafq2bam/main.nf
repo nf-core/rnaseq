@@ -1,6 +1,13 @@
 nextflow.enable.types = true
 
-include { ReadsInput; StarAlignResult } from '../../types'
+include { StarAlignResult } from '../../types'
+
+record ParabricksRnafq2bamInput {
+    id:    String
+    meta:  Map
+    reads: List<Path>
+    args:  String?
+}
 
 process PARABRICKS_RNAFQ2BAM {
     tag "${sample.meta.id}"
@@ -12,7 +19,7 @@ process PARABRICKS_RNAFQ2BAM {
     container "nvcr.io/nvidia/clara/clara-parabricks:4.7.1-1"
 
     input:
-    sample: ReadsInput
+    sample: ParabricksRnafq2bamInput
     fasta: Path
     index: Path
     qc_metrics: Boolean
@@ -53,7 +60,7 @@ process PARABRICKS_RNAFQ2BAM {
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
         error("Parabricks module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
-    def args = task.ext.args ?: ''
+    def args = [sample.args, task.ext.args].findAll { a -> a }.join(' ')
     prefix = task.ext.prefix ?: "${sample.meta.id}"
 
     def in_fq_command = sample.meta.single_end ? "--in-se-fq ${sample.reads.join(' ')}" : "--in-fq ${sample.reads.join(' ')}"

@@ -1,6 +1,13 @@
 nextflow.enable.types = true
 
-include { ReadsInput; StarAlignResult } from '../../types'
+include { StarAlignResult } from '../../types'
+
+record SentieonStaralignInput {
+    id:    String
+    meta:  Map
+    reads: List<Path>
+    args:  String?
+}
 
 process SENTIEON_STARALIGN {
     tag "$sample.meta.id"
@@ -14,7 +21,7 @@ process SENTIEON_STARALIGN {
         : 'community.wave.seqera.io/library/sentieon:202503.02--def60555294d04fa'}"
 
     input:
-    sample: ReadsInput
+    sample: SentieonStaralignInput
     index: Path
     gtf: Path?
     star_ignore_sjdbgtf: Boolean
@@ -54,7 +61,7 @@ process SENTIEON_STARALIGN {
     tuple(task.process, 'sentieon', eval('sentieon driver --version 2>&1 | sed -e "s/sentieon-genomics-//g"')) >> 'versions'
 
     script:
-    def args = task.ext.args ?: ''
+    def args = [sample.args, task.ext.args].findAll { a -> a }.join(' ')
     prefix = task.ext.prefix ?: "${sample.meta.id}"
     def read_pairs = sample.reads.collate(2)
     def reads1 = sample.meta.single_end ? sample.reads : read_pairs.collect { pair -> pair[0] }.toList()

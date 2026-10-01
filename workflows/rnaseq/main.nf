@@ -252,13 +252,14 @@ workflow RNASEQ {
     def ch_star: Channel<StarAligned> = channel.empty()
     if (!params.skip_alignment && (params.aligner == 'star_salmon' || params.aligner == 'star_rsem')) {
         ch_star = ALIGN_STAR (
-            ch_reads_ok,
+            ch_reads_ok.map { r -> r + record(args: starAlignArgs(params, star_tool, r.meta)) },
             ch_star_index,
             ch_gtf,
             params.star_ignore_sjdbgtf,
             ch_fasta,
             ch_fai,
             params.use_sentieon_star,
+        def star_tool = params.use_sentieon_star ? 'sentieon' : (params.use_parabricks_star ? 'parabricks' : 'star')
             params.use_parabricks_star,
             params.skip_markduplicates
         )
@@ -280,7 +281,7 @@ workflow RNASEQ {
     def ch_bowtie2: Channel<Bowtie2Aligned> = channel.empty()
     if (!params.skip_alignment && params.aligner == 'bowtie2_salmon') {
         ch_bowtie2 = ALIGN_BOWTIE2 (
-            ch_reads_ok,
+            ch_reads_ok.map { r -> r + record(args: bowtie2AlignArgs(params, r.meta)) },
             ch_bowtie2_index,
             ch_fasta,
             ch_fai,
@@ -302,7 +303,7 @@ workflow RNASEQ {
     def ch_hisat2: Channel<Hisat2Aligned> = channel.empty()
     if (!params.skip_alignment && params.aligner == 'hisat2') {
         ch_hisat2 = FASTQ_ALIGN_HISAT2 (
-            ch_reads_ok,
+            ch_reads_ok.map { r -> r + record(args: hisat2AlignArgs(params, r.meta)) },
             ch_hisat2_index,
             ch_splicesites,
             ch_fasta,

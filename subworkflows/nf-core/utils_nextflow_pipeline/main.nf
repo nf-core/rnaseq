@@ -68,6 +68,31 @@ def getWorkflowVersion() {
 }
 
 //
+// Replace dataflow values (Channel and Value params) by the value they were created from, and drop
+// those without one. Nested maps, such as the params of an included pipeline, are handled the same way.
+//
+def withoutDataflowValues(value, cliValue, configValue) {
+    def className = value?.getClass()?.name ?: ''
+    if (className.startsWith('groovyx.gpars.dataflow.') || className.startsWith('nextflow.dataflow.')) {
+        def source = cliValue != null ? cliValue : configValue
+        return source != null && !(source?.getClass()?.name ?: '').startsWith('groovyx.gpars.dataflow.') ? source : null
+    }
+    if (value instanceof Map) {
+        def result = [:]
+        value.each { name, entry ->
+            def replaced = withoutDataflowValues(entry, cliValue instanceof Map ? cliValue[name] : null, configValue instanceof Map ? configValue[name] : null)
+            def entryClass = entry?.getClass()?.name ?: ''
+            def entryIsDataflow = entryClass.startsWith('groovyx.gpars.dataflow.') || entryClass.startsWith('nextflow.dataflow.')
+            if (replaced != null || !entryIsDataflow) {
+                result[name] = replaced
+            }
+        }
+        return result
+    }
+    return value
+}
+
+//
 // Dump pipeline parameters to a JSON file
 //
 def dumpParametersToJSON(outdir) {
@@ -83,14 +108,7 @@ def dumpParametersToJSON(outdir) {
         .build()
     // Channel and Value params hold live dataflow objects that cannot be serialised, so the value
     // they were created from (given on the command line, else set in the config) is dumped in their place
-    def cliParams = nextflow.Global.session.cliParams ?: [:]
-    def configParams = nextflow.Global.session.config?.params ?: [:]
-    def dumpableParams = params.collectEntries { name, value ->
-        def className = value?.getClass()?.name ?: ''
-        def isDataflow = className.startsWith('groovyx.gpars.dataflow.') || className.startsWith('nextflow.dataflow.')
-        def source = cliParams.containsKey(name) ? cliParams[name] : configParams[name]
-        isDataflow ? (source != null ? [(name): source] : [:]) : [(name): value]
-    }
+    def dumpableParams = withoutDataflowValues(params, nextflow.Global.session.cliParams, nextflow.Global.session.config?.params)
     def jsonStr   = jsonGenerator.toJson(dumpableParams)
     temp_pf.text  = groovy.json.JsonOutput.prettyPrint(jsonStr)
     if (outdir instanceof Path) {

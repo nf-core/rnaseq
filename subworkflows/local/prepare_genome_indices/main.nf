@@ -285,10 +285,11 @@ workflow PREPARE_GENOME_INDICES {
         // is gated on that value.
         def ch_salmon_gated: Channel<SalmonIndexResult> = SALMON_INDEX(
             ch_transcript_fasta
-                .combine(ch_fasta)
-                .combine(any_auto_strandedness)
-                .flatMap { transcript_fasta_file, genome_fasta_file, any_auto ->
-                    any_auto ? [ record(id: 'salmon_index', meta: [:], transcript_fasta: transcript_fasta_file, genome_fasta: fasta_provided ? genome_fasta_file : null) ] : []
+                .map { transcript_fasta_file -> record(id: 'salmon_index', meta: [:], transcript_fasta: transcript_fasta_file) }
+                .combine(genome_fasta: ch_fasta)
+                .combine(any_auto: any_auto_strandedness)
+                .flatMap { r ->
+                    r.any_auto ? [ record(id: r.id, meta: r.meta, transcript_fasta: r.transcript_fasta, genome_fasta: fasta_provided ? r.genome_fasta : null) ] : []
                 }
         )
         ch_salmon_index = ch_salmon_gated.collect().map { rs -> rs.isEmpty() ? null : rs.toList().first().index }

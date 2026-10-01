@@ -50,6 +50,25 @@ nextflow_pipeline {
         }
     }
 
+    test("Params: --aligner hisat2 --min_mapped_reads 100") {
+
+        when {
+            params {
+                outdir = "$outputDir"
+                aligner = 'hisat2'
+                skip_qc = true
+                min_mapped_reads = 100
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.trace.succeeded().findAll { it.name.contains('STRINGTIE_STRINGTIE') }.isEmpty() }
+            )
+        }
+    }
+
     test("Params: --aligner hisat2 - stub") {
 
         options "-stub"

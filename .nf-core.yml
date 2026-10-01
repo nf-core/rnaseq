@@ -40,4 +40,4 @@ template:
   name: rnaseq
   org: nf-core
   outdir: .
-  version: 3.27.0
+  version: 3.28.0dev

@@ -98,6 +98,8 @@ runs:
         NFT_PROFILE: ${{ inputs.profile }}
         SENTIEON_LICSRVR_IP: ${{ env.SENTIEON_LICSRVR_IP }}
         SENTIEON_AUTH_MECH: "GitHub Actions - token"
+        # TEMPORARY: patched nf-schema (validateParameters blocks on Channel params), remove once released
+        NXF_PLUGINS_TEST_REPOSITORY: https://github.com/pinin4fjords/nf-schema/releases/download/2.7.2-channel.3/nf-schema-2.7.2-channel.3-meta.json
       run: |
         nf-test test \
           --profile=+${{ inputs.profile }} \

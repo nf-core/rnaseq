@@ -16,6 +16,29 @@ You will need to create a samplesheet with information about the samples you wou
 --input '[path to samplesheet file]'
 ```
 
+### Including the pipeline in another pipeline
+
+:::warning
+Pipeline composition is experimental and needs a Nextflow version that includes [nextflow-io/nextflow#7213](https://github.com/nextflow-io/nextflow/pull/7213).
+:::
+
+`--input` is a `Channel<SampleRow>` parameter: from the command line Nextflow loads the samplesheet into one record per row, and a pipeline that includes this one can pass its own channel of the same shape. The rows are validated against `assets/schema_input.json` either way, so a channel is held to the same checks as a samplesheet file.
+
+```groovy
+include { params as RnaseqParams ; workflow as NFCORE_RNASEQ } from './pipelines/nf-core/rnaseq'
+
+params {
+    rnaseq: RnaseqParams
+}
+
+workflow {
+    main:
+    rnaseq = NFCORE_RNASEQ( params.rnaseq + record(input: ch_samples) )
+}
+```
+
+The including pipeline receives the pipeline's outputs (for example `multiqc`, `quant_merged` and `genome_references`) as channels, and decides for itself what to publish. Only the script and its modules are included, so the including pipeline has to provide the rest of the configuration: the manifest, resource settings, the `ext` settings from `conf/modules/`, the executor and container profile, and the `nf-schema` plugin. Set `validate_params` to `false` for the included pipeline, since `nextflow_schema.json` validation applies to the params of the pipeline that is run. Genome shortcuts (`--genome`) and the completion email templates are not available when included; pass reference files explicitly.
+
 ### Multiple runs of the same sample
 
 The `sample` identifiers have to be the same when you have re-sequenced the same sample more than once e.g. to increase sequencing depth. The pipeline will concatenate the raw reads before performing any downstream analysis. Below is an example for the same sample sequenced across 3 lanes.

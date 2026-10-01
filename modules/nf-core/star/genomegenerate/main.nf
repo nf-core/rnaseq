@@ -1,6 +1,12 @@
 nextflow.enable.types = true
 
-include { FastaInput } from '../../types'
+
+record StarGenomegenerateInput {
+    id:    String
+    meta:  Map
+    fasta: Path
+    args:  String?
+}
 
 record StarGenomegenerateResult {
     id:    String
@@ -18,7 +24,7 @@ process STAR_GENOMEGENERATE {
         'community.wave.seqera.io/library/htslib_samtools_star_gawk:ae438e9a604351a4' }"
 
     input:
-    sample: FastaInput
+    sample: StarGenomegenerateInput
     gtf: Path?
 
     output:
@@ -30,7 +36,7 @@ process STAR_GENOMEGENERATE {
     tuple(task.process, 'gawk', eval("gawk --version | sed -n '1{s/GNU Awk //;s/,.*//;p}'")) >> 'versions'
 
     script:
-    def args        = task.ext.args ?: ''
+    def args        = [sample.args, task.ext.args].findAll { a -> a }.join(' ')
     def args_list   = args.tokenize()
     def memory      = task.memory ? "--limitGenomeGenerateRAM ${task.memory.toBytes() - 100000000}" : ''
     def include_gtf = gtf ? "--sjdbGTFfile $gtf" : ''

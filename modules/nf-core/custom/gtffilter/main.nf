@@ -1,6 +1,12 @@
 nextflow.enable.types = true
 
-include { GtfInput } from '../../types'
+
+record CustomGtffilterInput {
+    id:   String
+    meta: Map
+    gtf:  Path
+    args: String?
+}
 
 record CustomGtffilterResult {
     id:   String
@@ -18,7 +24,7 @@ process CUSTOM_GTFFILTER {
 :         'community.wave.seqera.io/library/python:3.14.5--dc8358b3c5eeb927' }"
 
     input:
-    sample: GtfInput
+    sample: CustomGtffilterInput
     fasta: Path?
 
     output:
@@ -30,7 +36,7 @@ process CUSTOM_GTFFILTER {
     script:
     prefix = task.ext.prefix ?: "${sample.meta.id}"
     suffix = "gtf" + (sample.gtf.extension == 'gz' ? '.gz' : '')
-    args   = task.ext.args ?: ''
+    args   = [sample.args, task.ext.args].findAll { a -> a }.join(' ')
 
     """
     echo $args

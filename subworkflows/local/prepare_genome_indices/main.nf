@@ -66,6 +66,9 @@ workflow PREPARE_GENOME_INDICES {
     star_index_legacy: Boolean                  // whether the supplied star_index was built with STAR 2.6.x and needs genomeParameters.txt upgraded to the 2.7.4a metadata schema
     hisat2_build_memory: String?                // memory threshold for HISAT2 index building with splice sites
     any_auto_strandedness: Value<Boolean>       // whether any sample in the input samplesheet declares strandedness 'auto', requiring a Salmon index for strandedness inference
+    prokaryotic: Boolean                        // whether the genome is prokaryotic, so that the STAR index is built from CDS features
+    salmon_index_args: String                   // Salmon index options
+    kallisto_index_args: String                 // Kallisto index options
 
     main:
     // Absent indices are Values holding null so every stream keeps one type.
@@ -158,7 +161,7 @@ workflow PREPARE_GENOME_INDICES {
     if (build_star && use_parabricks_star && fasta_provided) {
         // Parabricks needs its own STAR index built with its bundled STAR version
         def ch_star_generated: Value<StarGenomegenerateResult> = PARABRICKS_STARGENOMEGENERATE(
-            ch_fasta.map { item -> record(id: 'genome', meta: [:], fasta: item) },
+            ch_fasta.map { item -> record(id: 'genome', meta: [:], fasta: item, args: prokaryotic ? '--sjdbGTFfeatureExon CDS' : '') },
             ch_gtf
         )
         ch_star_index         = ch_star_generated.map { r -> r.index }
@@ -178,7 +181,7 @@ workflow PREPARE_GENOME_INDICES {
         }
     } else if (build_star && fasta_provided) {
         ch_star_generated = STAR_GENOMEGENERATE(
-            ch_fasta.map { item -> record(id: 'genome', meta: [:], fasta: item) },
+            ch_fasta.map { item -> record(id: 'genome', meta: [:], fasta: item, args: prokaryotic ? '--sjdbGTFfeatureExon CDS' : '') },
             ch_gtf
         )
         ch_star_index         = ch_star_generated.map { r -> r.index }
@@ -270,13 +273,13 @@ workflow PREPARE_GENOME_INDICES {
         // genome_fasta may be null (no decoys)
         def ch_salmon_built: Value<SalmonIndexResult> = SALMON_INDEX(
             ch_transcript_fasta
-                .map { transcript_fasta_file -> record(id: 'salmon_index', meta: [:], transcript_fasta: transcript_fasta_file) }
+                .map { transcript_fasta_file -> record(id: 'salmon_index', meta: [:], args: salmon_index_args, transcript_fasta: transcript_fasta_file) }
                 .combine(genome_fasta: ch_fasta)
         )
         ch_salmon_index = ch_salmon_built.map { r -> r.index }
     } else if ('salmon' in prepare_tool_indices) {
         ch_salmon_built = SALMON_INDEX(
-            ch_transcript_fasta.map { item -> record(id: 'salmon_index', meta: [:], transcript_fasta: item, genome_fasta: null) }
+            ch_transcript_fasta.map { item -> record(id: 'salmon_index', meta: [:], args: salmon_index_args, transcript_fasta: item, genome_fasta: null) }
         )
         ch_salmon_index = ch_salmon_built.map { r -> r.index }
     } else {
@@ -285,11 +288,11 @@ workflow PREPARE_GENOME_INDICES {
         // is gated on that value.
         def ch_salmon_gated: Channel<SalmonIndexResult> = SALMON_INDEX(
             ch_transcript_fasta
-                .map { transcript_fasta_file -> record(id: 'salmon_index', meta: [:], transcript_fasta: transcript_fasta_file) }
+                .map { transcript_fasta_file -> record(id: 'salmon_index', meta: [:], args: salmon_index_args, transcript_fasta: transcript_fasta_file) }
                 .combine(genome_fasta: ch_fasta)
                 .combine(any_auto: any_auto_strandedness)
                 .flatMap { r ->
-                    r.any_auto ? [ record(id: r.id, meta: r.meta, transcript_fasta: r.transcript_fasta, genome_fasta: fasta_provided ? r.genome_fasta : null) ] : []
+                    r.any_auto ? [ record(id: r.id, meta: r.meta, args: r.args, transcript_fasta: r.transcript_fasta, genome_fasta: fasta_provided ? r.genome_fasta : null) ] : []
                 }
         )
         ch_salmon_index = ch_salmon_gated.collect().map { rs -> rs.isEmpty() ? null : rs.toList().first().index }
@@ -303,7 +306,7 @@ workflow PREPARE_GENOME_INDICES {
     } else if (kallisto_index) {
         ch_kallisto_index = channel.value(file(kallisto_index))
     } else if ('kallisto' in prepare_tool_indices) {
-        def ch_kallisto_built: Value<KallistoIndexResult> = KALLISTO_INDEX(ch_transcript_fasta.map { item -> record(id: 'kallisto_index', meta: [:], fasta: item) })
+        def ch_kallisto_built: Value<KallistoIndexResult> = KALLISTO_INDEX(ch_transcript_fasta.map { item -> record(id: 'kallisto_index', meta: [:], fasta: item, args: kallisto_index_args) })
         ch_kallisto_index = ch_kallisto_built.map { r -> r.index }
     } else {
         ch_kallisto_index = ch_no_path

@@ -243,3 +243,17 @@ def multiqcArgs(params) {
         ((params.multiqc_title == null) ? '' : "--title \"${params.multiqc_title}\"")
     ].join(' ').trim()
 }
+
+// Salmon index options; the strandedness inference index does not take the extra options
+def salmonIndexArgs(params, with_extra_args) {
+    return [
+        params.gencode ? '--gencode' : '',
+        params.pseudo_aligner_kmer_size ? "-k ${params.pseudo_aligner_kmer_size}": '',
+        with_extra_args ? (params.extra_salmon_index_args ?: '') : ''
+    ].join(' ').trim()
+}
+
+// Kallisto index options
+def kallistoIndexArgs(params) {
+    return params.pseudo_aligner_kmer_size ? "-k ${params.pseudo_aligner_kmer_size}" : ''
+}

@@ -56,6 +56,8 @@ workflow PREPARE_GENOME_REFERENCES {
     use_sentieon_star: Boolean        // whether to use sentieon STAR version
     contaminant_screening: String?    // contaminant screening tool ('kraken2', 'kraken2_bracken', 'sylph', or null)
     prokaryotic: Boolean              // whether the genome is prokaryotic (CDS-only annotation - use gffread --bed for gene BED since ea-utils/gtf2bed only handles exon features)
+    skip_gtf_transcript_filter: Boolean // whether the GTF filter keeps transcripts without a transcript_id
+    genome: String?                   // iGenomes genome id, used in the name of the file with the additional sequences
 
     main:
     // Absent artifacts are Values holding null so every stream keeps one type; steps that
@@ -112,7 +114,7 @@ workflow PREPARE_GENOME_REFERENCES {
     if (filter_gtf_needed && has_gtf) {
         ch_gtf_pre_filter = ch_gtf
         def ch_gtf_filtered: Value<CustomGtffilterResult> = CUSTOM_GTFFILTER(
-            ch_gtf.map { item -> record(id: 'gtf', meta: [id: item.baseName + '.filtered'], gtf: item) },
+            ch_gtf.map { item -> record(id: 'gtf', meta: [id: item.baseName + '.filtered'], gtf: item, args: skip_gtf_transcript_filter ? '--skip_transcript_id_check' : '') },
             ch_fasta
         )
         ch_gtf = ch_gtf_filtered.map { r -> r.gtf }
@@ -143,7 +145,10 @@ workflow PREPARE_GENOME_REFERENCES {
         def ch_catfasta: Value<CustomCatadditionalfastaResult> = CUSTOM_CATADDITIONALFASTA(
             ch_fasta
                 .combine(ch_gtf)
-                .map { fasta_file, gtf_file -> record(id: 'genome_transcriptome', meta: [id: 'genome_transcriptome'], fasta: fasta_file, gtf: gtf_file) },
+                .combine(ch_add_fasta)
+                .map { fasta_file, gtf_file, add_fasta_file ->
+                    record(id: 'genome_transcriptome', meta: [id: 'genome_transcriptome'], fasta: fasta_file, gtf: gtf_file, prefix: "${genome ?: fasta_file.baseName}_${add_fasta_file.baseName}")
+                },
             ch_add_fasta,
             gencode ? "gene_type" : featurecounts_group_type
         )

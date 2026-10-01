@@ -36,6 +36,8 @@ include { SamtoolsIndexResult } from '../../modules/nf-core/samtools/index/main'
 include { StringtieResult } from '../../modules/nf-core/stringtie/stringtie/main'
 include { Deseq2Qc } from '../../modules/local/deseq2_qc/main'
 
+include { deseq2QcArgs; multiqcArgs; rustqcArgs; salmonIndexArgs; samtoolsIndexArgs; starAlignArgs; hisat2AlignArgs; bowtie2AlignArgs } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline/tool_args'
+include { umiExtractArgs                        } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline/tool_args'
 include { readSamplesheet; samplesheetRowsToCsv } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline/samplesheet'
 include { classifyStrand                 } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { getHisat2PercentMapped         } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
@@ -206,7 +208,13 @@ workflow RNASEQ {
         params.umi_discard_read,                    // umi_discard_read
         params.save_merged_fastq,                   // save_merged_fastq
         params.stranded_threshold,                  // stranded_threshold
-        params.unstranded_threshold                 // unstranded_threshold
+        params.unstranded_threshold,                // unstranded_threshold
+        params.extra_fqlint_args,                   // fq_lint_args
+        umiExtractArgs(params),                     // umi_extract_args
+        params.extra_fastp_args,                    // fastp_args
+        params.extra_trimgalore_args,               // trimgalore_args
+        params.use_gpu_ribodetector,                // use_gpu_ribodetector
+        salmonIndexArgs(params, false)              // salmon_index_args
     )
 
     def ch_preprocessed: Channel<FastqQcTrimFilterSetstrandedness> = fastq_preprocessed.samples
@@ -251,6 +259,7 @@ workflow RNASEQ {
     //
     def ch_star: Channel<StarAligned> = channel.empty()
     if (!params.skip_alignment && (params.aligner == 'star_salmon' || params.aligner == 'star_rsem')) {
+        def star_tool = params.use_sentieon_star ? 'sentieon' : (params.use_parabricks_star ? 'parabricks' : 'star')
         ch_star = ALIGN_STAR (
             ch_reads_ok.map { r -> r + record(args: starAlignArgs(params, star_tool, r.meta)) },
             ch_star_index,
@@ -259,7 +268,6 @@ workflow RNASEQ {
             ch_fasta,
             ch_fai,
             params.use_sentieon_star,
-        def star_tool = params.use_sentieon_star ? 'sentieon' : (params.use_parabricks_star ? 'parabricks' : 'star')
             params.use_parabricks_star,
             params.skip_markduplicates,
             samtoolsIndexArgs(params)

@@ -21,6 +21,7 @@ workflow FASTQ_SUBSAMPLE_FQ_SALMON {
     ch_gtf: Value<Path>
     ch_index: Value<Path?> // prebuilt Salmon index, used when make_index is false
     make_index: Boolean // Whether to create salmon index before running salmon quant
+    index_args: String? // Salmon index options
 
     main:
 
@@ -30,7 +31,7 @@ workflow FASTQ_SUBSAMPLE_FQ_SALMON {
     if (make_index) {
         def ch_index_built: Value<SalmonIndexResult> = SALMON_INDEX(
             ch_transcript_fasta
-                .map { transcript_fasta -> record(id: 'salmon_index', meta: [:], transcript_fasta: transcript_fasta) }
+                .map { transcript_fasta -> record(id: 'salmon_index', meta: [:], transcript_fasta: transcript_fasta, args: index_args) }
                 .combine(genome_fasta: ch_genome_fasta)
         )
         ch_index_ref = ch_index_built.map { r -> r.index }

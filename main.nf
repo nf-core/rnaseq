@@ -178,6 +178,7 @@ include { checkMaxContigSize         } from './subworkflows/local/utils_nfcore_r
 include { defineQcTools              } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { getGenomeAttribute         } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { isStarIndexLegacy          } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { kallistoIndexArgs; salmonIndexArgs } from './subworkflows/local/utils_nfcore_rnaseq_pipeline/tool_args'
 
 include { AlignedSample; LintFile; SampleRow; SamplesheetRow; Contaminants; StringtieSample; BigwigSample; PipelineInfo; GenomeArtifact; UmiDedupBam; MarkdupBam; BamQcRnaseq; StringtieMerged; RrnaReferences; FastqQcTrimFilterSetstrandedness; QuantMerged; TrimStatus; MapStatus; StrandStatus } from './modules/nf-core/types'
 include { RsemMergeSample } from './modules/nf-core/custom/rsemmergecounts/main'
@@ -230,7 +231,9 @@ workflow NFCORE_RNASEQ {
         params.skip_pseudo_alignment,
         params.use_sentieon_star,
         params.contaminant_screening,
-        params.prokaryotic
+        params.prokaryotic,
+        params.skip_gtf_transcript_filter,
+        params.genome
     )
 
     //
@@ -263,7 +266,10 @@ workflow NFCORE_RNASEQ {
         params.use_parabricks_star,
         isStarIndexLegacy(params) ? true : false,
         params.hisat2_build_memory,
-        params.input.collect().map { rows -> rows.any { row -> row.strandedness == 'auto' } }
+        params.input.collect().map { rows -> rows.any { row -> row.strandedness == 'auto' } },
+        params.prokaryotic,
+        salmonIndexArgs(params, true),
+        kallistoIndexArgs(params)
     )
 
     // Check if contigs in genome fasta file > 512 Mbp

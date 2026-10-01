@@ -98,6 +98,7 @@ nextflow_workflow {
                 input[30] = null  // fastp_args
                 input[31] = null  // trimgalore_args
                 input[32] = false  // use_gpu_ribodetector
+                input[33] = null  // salmon_index_args
                 """
             }
         }
@@ -190,15 +191,16 @@ nextflow_workflow {
 
                 // Merging options
                 input[25] = false          // save_merged_fastq
+
+                // Strandedness thresholds
+                input[26] = 0.8            // stranded_threshold
+                input[27] = 0.1            // unstranded_threshold
                 input[28] = ''  // fq_lint_args
                 input[29] = ''  // umi_extract_args
                 input[30] = null  // fastp_args
                 input[31] = null  // trimgalore_args
-
-                // Strandedness thresholds
-                input[26] = 0.8            // stranded_threshold
                 input[32] = false  // use_gpu_ribodetector
-                input[27] = 0.1            // unstranded_threshold
+                input[33] = null  // salmon_index_args
                 """
             }
         }
@@ -288,19 +290,20 @@ nextflow_workflow {
 
                 // UMI options
                 input[23] = false          // with_umi
-                input[28] = ''  // fq_lint_args
-                input[29] = ''  // umi_extract_args
-                input[30] = null  // fastp_args
-                input[31] = null  // trimgalore_args
                 input[24] = 0              // umi_discard_read
 
                 // Merging options
                 input[25] = false          // save_merged_fastq
 
                 // Strandedness thresholds
-                input[32] = false  // use_gpu_ribodetector
                 input[26] = 0.8            // stranded_threshold
                 input[27] = 0.1            // unstranded_threshold
+                input[28] = ''  // fq_lint_args
+                input[29] = ''  // umi_extract_args
+                input[30] = null  // fastp_args
+                input[31] = null  // trimgalore_args
+                input[32] = false  // use_gpu_ribodetector
+                input[33] = null  // salmon_index_args
                 """
             }
         }
@@ -385,10 +388,6 @@ nextflow_workflow {
 
                 // rRNA removal options
                 input[21] = true           // remove_ribo_rna
-                input[28] = ''  // fq_lint_args
-                input[29] = ''  // umi_extract_args
-                input[30] = null  // fastp_args
-                input[31] = null  // trimgalore_args
                 input[22] = 'bowtie2'      // ribo_removal_tool
 
                 // UMI options
@@ -398,10 +397,15 @@ nextflow_workflow {
                 // Merging options
                 input[25] = false          // save_merged_fastq
 
-                input[32] = false  // use_gpu_ribodetector
                 // Strandedness thresholds
                 input[26] = 0.8            // stranded_threshold
                 input[27] = 0.1            // unstranded_threshold
+                input[28] = ''  // fq_lint_args
+                input[29] = ''  // umi_extract_args
+                input[30] = null  // fastp_args
+                input[31] = null  // trimgalore_args
+                input[32] = false  // use_gpu_ribodetector
+                input[33] = null  // salmon_index_args
                 """
             }
         }
@@ -495,10 +499,6 @@ nextflow_workflow {
                 input[17] = 'fastp'        // trimmer
                 input[18] = 10             // min_trimmed_reads
                 input[19] = false          // save_trimmed
-                input[28] = ''  // fq_lint_args
-                input[29] = ''  // umi_extract_args
-                input[30] = null  // fastp_args
-                input[31] = null  // trimgalore_args
                 input[20] = false          // fastp_merge
 
                 // rRNA removal options
@@ -511,11 +511,16 @@ nextflow_workflow {
 
                 // Merging options
                 input[25] = false          // save_merged_fastq
-                input[32] = false  // use_gpu_ribodetector
 
                 // Strandedness thresholds
                 input[26] = 0.8            // stranded_threshold
                 input[27] = 0.1            // unstranded_threshold
+                input[28] = ''  // fq_lint_args
+                input[29] = ''  // umi_extract_args
+                input[30] = null  // fastp_args
+                input[31] = null  // trimgalore_args
+                input[32] = false  // use_gpu_ribodetector
+                input[33] = null  // salmon_index_args
                 """
             }
         }
@@ -563,10 +568,6 @@ nextflow_workflow {
                 input[15] = false          // make_sortmerna_index
                 input[16] = false          // make_bowtie2_index
 
-                input[28] = ''  // fq_lint_args
-                input[29] = ''  // umi_extract_args
-                input[30] = null  // fastp_args
-                input[31] = null  // trimgalore_args
                 // Trimming options
                 input[17] = 'fastp'        // trimmer
                 input[18] = 10             // min_trimmed_reads
@@ -582,12 +583,17 @@ nextflow_workflow {
                 input[24] = 0              // umi_discard_read
 
                 // Merging options
-                input[32] = false  // use_gpu_ribodetector
                 input[25] = false          // save_merged_fastq
 
                 // Strandedness thresholds
                 input[26] = 0.8            // stranded_threshold
                 input[27] = 0.1            // unstranded_threshold
+                input[28] = ''  // fq_lint_args
+                input[29] = ''  // umi_extract_args
+                input[30] = null  // fastp_args
+                input[31] = null  // trimgalore_args
+                input[32] = false  // use_gpu_ribodetector
+                input[33] = null  // salmon_index_args
                 """
             }
         }
@@ -643,10 +649,6 @@ nextflow_workflow {
                 input[13] = false          // skip_linting
 
                 // Index generation
-                input[28] = ''  // fq_lint_args
-                input[29] = ''  // umi_extract_args
-                input[30] = null  // fastp_args
-                input[31] = null  // trimgalore_args
                 input[14] = true           // make_salmon_index
                 input[15] = false          // make_sortmerna_index (not needed for bowtie2)
                 input[16] = true           // make_bowtie2_index
@@ -665,13 +667,18 @@ nextflow_workflow {
                 input[23] = false          // with_umi
                 input[24] = 0              // umi_discard_read
 
-                input[32] = false  // use_gpu_ribodetector
                 // Merging options
                 input[25] = false          // save_merged_fastq
 
                 // Strandedness thresholds
                 input[26] = 0.8            // stranded_threshold
                 input[27] = 0.1            // unstranded_threshold
+                input[28] = ''  // fq_lint_args
+                input[29] = ''  // umi_extract_args
+                input[30] = null  // fastp_args
+                input[31] = null  // trimgalore_args
+                input[32] = false  // use_gpu_ribodetector
+                input[33] = null  // salmon_index_args
                 """
             }
         }

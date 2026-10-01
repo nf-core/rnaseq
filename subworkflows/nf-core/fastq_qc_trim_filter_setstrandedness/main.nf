@@ -124,6 +124,14 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     stranded_threshold: Float // The fraction of stranded reads that must be assigned to a strandedness for confident assignment. Must be at least 0.5
     unstranded_threshold: Float // The difference in fraction of stranded reads assigned to 'forward' and 'reverse' below which a sample is classified as 'unstranded'
 
+    // Tool options
+    fq_lint_args: String // fq lint options
+    umi_extract_args: String // UMI-tools extract options
+    fastp_args: String? // extra fastp options
+    trimgalore_args: String? // extra TrimGalore options
+    use_gpu_ribodetector: Boolean // Whether RiboDetector runs on a GPU
+    salmon_index_args: String? // Salmon index options for the index of the strandedness inference
+
     main:
 
     //
@@ -189,6 +197,8 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
             skip_trimming,
             umi_discard_read,
             min_trimmed_reads,
+            umi_extract_args,
+            trimgalore_args,
         )
 
         // TrimGalore's own html and zip are FastQC reports on the trimmed reads
@@ -197,8 +207,6 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
                 r + record(
                     fastqc_trim_html: r.trim != null ? r.trim.html : null,
                     fastqc_trim_zip:  r.trim != null ? r.trim.zip : null,
-            umi_extract_args,
-            trimgalore_args,
                     trim: r.trim != null
                         ? record(html: null, log: r.trim.log, json: r.trim.json, unpaired: r.trim.unpaired, reads_fail: null, reads_merged: null)
                         : null
@@ -222,6 +230,8 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
             save_trimmed,
             fastp_merge,
             min_trimmed_reads,
+            umi_extract_args,
+            fastp_args,
         )
 
         ch_samples = ch_samples.join(
@@ -230,8 +240,6 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
                     trim: r.trim != null
                         ? record(html: [r.trim.html], log: [r.trim.log], json: [r.trim.json], unpaired: null, reads_fail: r.trim.reads_fail, reads_merged: r.trim.reads_merged)
                         : null
-            umi_extract_args,
-            fastp_args,
                 )
             },
             by: 'id'
@@ -304,6 +312,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
             ribo_removal_tool,
             make_sortmerna_index,
             make_bowtie2_index,
+            use_gpu_ribodetector,
         )
 
         val_rrna_references = ch_rrna_removed.references
@@ -312,7 +321,6 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
             ch_rrna_removed.samples.map { r ->
                 record(
                     id:    r.id,
-            use_gpu_ribodetector,
                     reads: r.reads,
                     rrna:  record(
                         sortmerna_log:    r.sortmerna_log,
@@ -360,6 +368,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         ch_gtf,
         ch_salmon_index,
         make_salmon_index,
+        salmon_index_args,
     )
     ch_lib_format_counts = ch_salmon.samples.map { r -> record(id: r.id, lib_format_counts: r.lib_format_counts) }
     ch_salmon_index_built = ch_salmon.index_built

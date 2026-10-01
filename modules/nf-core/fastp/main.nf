@@ -1,6 +1,13 @@
 nextflow.enable.types = true
 
-include { FastpReads } from '../types'
+
+record FastpInput {
+    id:            String
+    meta:          Map
+    reads:         List<Path>
+    adapter_fasta: Path?
+    args:          String?
+}
 
 record FastpResult {
     id:           String
@@ -23,7 +30,7 @@ process FASTP {
 :         'community.wave.seqera.io/library/fastp:1.3.6--4df8d6c11b471bde' }"
 
     input:
-    sample: FastpReads
+    sample: FastpInput
     discard_trimmed_pass: Boolean
     save_trimmed_fail: Boolean
     save_merged: Boolean
@@ -44,7 +51,7 @@ process FASTP {
     tuple(task.process, 'fastp', eval('fastp --version 2>&1 | sed -e "s/fastp //g"')) >> 'versions'
 
     script:
-    def args = task.ext.args ?: ''
+    def args = [sample.args, task.ext.args].findAll { a -> a }.join(' ')
     def prefix = task.ext.prefix ?: "${sample.meta.id}"
     def adapter_list = sample.adapter_fasta ? "--adapter_fasta ${sample.adapter_fasta}" : ""
     def fail_fastq = save_trimmed_fail && sample.meta.single_end ? "--failed_out ${prefix}.fail.fastq.gz" : save_trimmed_fail && !sample.meta.single_end ? "--failed_out ${prefix}.paired.fail.fastq.gz --unpaired1 ${prefix}_R1.fail.fastq.gz --unpaired2 ${prefix}_R2.fail.fastq.gz" : ''

@@ -50,6 +50,8 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
     save_trimmed_fail: Boolean // true/false
     save_merged: Boolean // true/false
     min_trimmed_reads: Integer // > 0
+    umi_extract_args: String // UMI-tools extract options
+    fastp_args: String? // extra fastp options
 
     main:
     // Each stage that runs joins its outputs onto this per-sample record, overwriting
@@ -83,7 +85,7 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
     }
     if (with_umi && !skip_umi_extract) {
         // The adapter fasta of the original input is re-attached by sample id, since UMI extraction does not carry it
-        ch_trimmer_reads = UMITOOLS_EXTRACT(ch_reads)
+        ch_trimmer_reads = UMITOOLS_EXTRACT(ch_reads.map { r -> r + record(args: umi_extract_args) })
             .join(ch_reads.map { r -> record(id: r.id, adapter_fasta: r.adapter_fasta) }, by: 'id')
             .map { r ->
                 // Discard R1 / R2 if required
@@ -110,7 +112,7 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
         //
         // Filter FastQ files based on minimum trimmed read count after adapter trimming
         //
-        ch_trim = FASTP(ch_trimmer_reads, false, save_trimmed_fail, save_merged).map { r ->
+        ch_trim = FASTP(ch_trimmer_reads.map { r -> r + record(args: fastp_args) }, false, save_trimmed_fail, save_merged).map { r ->
             // FASTP reads are optional, so a sample can lack a read count
             def num_reads = r.reads.isEmpty() ? null : getFastpReadsAfterFiltering(r.json, min_trimmed_reads as Long)
             record(

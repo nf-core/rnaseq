@@ -173,7 +173,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     //
 
     if (!skip_linting) {
-        def ch_lint_raw: Channel<FqLintResult> = FQ_LINT(ch_cat)
+        def ch_lint_raw: Channel<FqLintResult> = FQ_LINT(ch_cat.map { r -> r + record(args: fq_lint_args) })
         ch_samples = ch_samples.join(ch_lint_raw.map { r -> record(id: r.id, lint_raw: r.lint) }, by: 'id')
     }
 
@@ -197,6 +197,8 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
                 r + record(
                     fastqc_trim_html: r.trim != null ? r.trim.html : null,
                     fastqc_trim_zip:  r.trim != null ? r.trim.zip : null,
+            umi_extract_args,
+            trimgalore_args,
                     trim: r.trim != null
                         ? record(html: null, log: r.trim.log, json: r.trim.json, unpaired: r.trim.unpaired, reads_fail: null, reads_merged: null)
                         : null
@@ -228,6 +230,8 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
                     trim: r.trim != null
                         ? record(html: [r.trim.html], log: [r.trim.log], json: [r.trim.json], unpaired: null, reads_fail: r.trim.reads_fail, reads_merged: r.trim.reads_merged)
                         : null
+            umi_extract_args,
+            fastp_args,
                 )
             },
             by: 'id'
@@ -235,7 +239,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     }
 
     if (!skip_linting && !skip_trimming) {
-        def ch_lint_trimmed: Channel<FqLintResult> = FQ_LINT_AFTER_TRIMMING(ch_samples.filter { r -> r.reads != null })
+        def ch_lint_trimmed: Channel<FqLintResult> = FQ_LINT_AFTER_TRIMMING(ch_samples.filter { r -> r.reads != null }.map { r -> r + record(args: fq_lint_args) })
         ch_samples = ch_samples.join(
             ch_lint_trimmed.map { r -> record(id: r.id, lint_trimmed: r.lint) },
             by: 'id',
@@ -276,7 +280,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         )
 
         if (!skip_linting) {
-            def ch_lint_bbsplit: Channel<FqLintResult> = FQ_LINT_AFTER_BBSPLIT(ch_samples.filter { r -> r.reads != null })
+            def ch_lint_bbsplit: Channel<FqLintResult> = FQ_LINT_AFTER_BBSPLIT(ch_samples.filter { r -> r.reads != null }.map { r -> r + record(args: fq_lint_args) })
             ch_samples = ch_samples.join(
                 ch_lint_bbsplit.map { r -> record(id: r.id, lint_bbsplit: r.lint) },
                 by: 'id',
@@ -322,7 +326,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         )
 
         if (!skip_linting) {
-            def ch_lint_ribo: Channel<FqLintResult> = FQ_LINT_AFTER_RIBO_REMOVAL(ch_samples.filter { r -> r.reads != null })
+            def ch_lint_ribo: Channel<FqLintResult> = FQ_LINT_AFTER_RIBO_REMOVAL(ch_samples.filter { r -> r.reads != null }.map { r -> r + record(args: fq_lint_args) })
             ch_samples = ch_samples.join(
                 ch_lint_ribo.map { r -> record(id: r.id, lint_ribo: r.lint) },
                 by: 'id',

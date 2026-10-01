@@ -32,6 +32,8 @@ nextflow_workflow {
                 input[4] = false // skip_trimming
                 input[5] = 1     // umi_discard_read
                 input[6] = 1     // min_trimmed_reads
+                input[7] = ''  // umi_extract_args
+                input[8] = null  // trimgalore_args
                 """
             }
         }
@@ -68,6 +70,8 @@ nextflow_workflow {
                 input[4] = false // skip_trimming
                 input[5] = 1     // umi_discard_read
                 input[6] = 1     // min_trimmed_reads
+                input[7] = ''  // umi_extract_args
+                input[8] = null  // trimgalore_args
                 """
             }
         }
@@ -102,6 +106,8 @@ nextflow_workflow {
                 input[4] = false // skip_trimming
                 input[5] = 1     // umi_discard_read
                 input[6] = 1     // min_trimmed_reads
+                input[7] = ''  // umi_extract_args
+                input[8] = null  // trimgalore_args
                 """
             }
         }
@@ -139,6 +145,8 @@ nextflow_workflow {
                 input[4] = false // skip_trimming
                 input[5] = 0     // umi_discard_read
                 input[6] = 1     // min_trimmed_reads
+                input[7] = ''  // umi_extract_args
+                input[8] = null  // trimgalore_args
                 """
             }
         }
@@ -174,6 +182,8 @@ nextflow_workflow {
                 input[4] = true // skip_trimming
                 input[5] = 0    // umi_discard_read
                 input[6] = 1    // min_trimmed_reads
+                input[7] = ''  // umi_extract_args
+                input[8] = null  // trimgalore_args
                 """
             }
         }
@@ -207,6 +217,8 @@ nextflow_workflow {
                 input[4] = false // skip_trimming
                 input[5] = 1     // umi_discard_read
                 input[6] = 1     // min_trimmed_reads
+                input[7] = ''  // umi_extract_args
+                input[8] = null  // trimgalore_args
                 """
             }
         }
@@ -240,6 +252,8 @@ nextflow_workflow {
                 input[4] = false // skip_trimming
                 input[5] = 1     // umi_discard_read
                 input[6] = 1     // min_trimmed_reads
+                input[7] = ''  // umi_extract_args
+                input[8] = null  // trimgalore_args
                 """
             }
         }
@@ -272,6 +286,8 @@ nextflow_workflow {
                 input[4] = false // skip_trimming
                 input[5] = 1     // umi_discard_read
                 input[6] = 1     // min_trimmed_reads
+                input[7] = ''  // umi_extract_args
+                input[8] = null  // trimgalore_args
                 """
             }
         }
@@ -305,6 +321,8 @@ nextflow_workflow {
                 input[4] = true // skip_trimming
                 input[5] = 0    // umi_discard_read
                 input[6] = 1    // min_trimmed_reads
+                input[7] = ''  // umi_extract_args
+                input[8] = null  // trimgalore_args
                 """
             }
         }

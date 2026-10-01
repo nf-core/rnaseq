@@ -1,6 +1,12 @@
 nextflow.enable.types = true
 
-include { ReadsInput } from '../../types'
+
+record UmitoolsExtractInput {
+    id:    String
+    meta:  Map
+    reads: List<Path>
+    args:  String?
+}
 
 record UmitoolsExtractResult {
     id:    String
@@ -20,7 +26,7 @@ process UMITOOLS_EXTRACT {
         'community.wave.seqera.io/library/umi_tools_future_matplotlib_numpy_pruned:1ee668bafc8c9f81' }"
 
     input:
-    sample: ReadsInput
+    sample: UmitoolsExtractInput
 
     output:
     record(
@@ -34,7 +40,7 @@ process UMITOOLS_EXTRACT {
     tuple(task.process, 'umitools', eval("umi_tools --version | sed -n '/version:/s/.*: //p'")) >> 'versions'
 
     script:
-    def args = task.ext.args ?: ''
+    def args = [sample.args, task.ext.args].findAll { a -> a }.join(' ')
     def prefix = task.ext.prefix ?: "${sample.meta.id}"
     def reads_names = sample.reads instanceof Path ? "${sample.reads}" : sample.reads.join(' ')
     if (sample.meta.single_end) {

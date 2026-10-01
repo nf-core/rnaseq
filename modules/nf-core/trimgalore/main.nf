@@ -1,6 +1,12 @@
 nextflow.enable.types = true
 
-include { ReadsInput } from '../types'
+
+record TrimgaloreInput {
+    id:    String
+    meta:  Map
+    reads: List<Path>
+    args:  String?
+}
 
 record TrimgaloreResult {
     id:       String
@@ -23,7 +29,7 @@ process TRIMGALORE {
         'community.wave.seqera.io/library/trim-galore:2.3.0--6a38a479b4972363'}"
 
     input:
-    sample: ReadsInput
+    sample: TrimgaloreInput
 
     output:
     record(
@@ -41,7 +47,12 @@ process TRIMGALORE {
     tuple(task.process, "trimgalore", eval('trim_galore --version | grep -Eo "[0-9]+(\\.[0-9]+)+"')) >> 'versions'
 
     script:
-    def args = task.ext.args ?: ''
+    // sample.args replaces the options of task.ext.args that it repeats
+    def base_args  = task.ext.args ? task.ext.args.replaceAll('\\s(?=--)', '\u0001').tokenize('\u0001') : []
+    def extra_args = sample.args   ? sample.args.replaceAll('\\s(?=--)', '\u0001').tokenize('\u0001') : []
+    def extra_options = extra_args.collect { a -> a.trim().tokenize(' ')[0] }
+    def kept_args = base_args.findAll { a -> !extra_options.contains(a.trim().tokenize(' ')[0]) }.toList()
+    def args = (kept_args + extra_args).collect { a -> a.trim() }.join(' ')
     // Calculate number of --cores for TrimGalore based on value of task.cpus
     // See: https://github.com/FelixKrueger/TrimGalore/blob/master/CHANGELOG.md#version-060-release-on-1-mar-2019
     // See: https://github.com/nf-core/atacseq/pull/65

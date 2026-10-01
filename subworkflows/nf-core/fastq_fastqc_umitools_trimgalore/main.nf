@@ -38,6 +38,8 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
     skip_trimming: Boolean // true/false
     umi_discard_read: Integer // 0, 1 or 2
     min_trimmed_reads: Integer // > 0
+    umi_extract_args: String // UMI-tools extract options
+    trimgalore_args: String? // extra TrimGalore options
 
     main:
     // Each stage that runs joins its outputs onto this per-sample record, overwriting
@@ -65,7 +67,7 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
 
     ch_trimmer_reads = ch_reads.map { r -> record(id: r.id, meta: r.meta, reads: r.reads, umi: null) }
     if (with_umi && !skip_umi_extract) {
-        ch_trimmer_reads = UMITOOLS_EXTRACT(ch_reads).map { r ->
+        ch_trimmer_reads = UMITOOLS_EXTRACT(ch_reads.map { r -> r + record(args: umi_extract_args) }).map { r ->
             // Discard R1 / R2 if required
             def discard = umi_discard_read in [1, 2] && !r.meta.single_end
             def meta = r.meta
@@ -86,7 +88,7 @@ workflow FASTQ_FASTQC_UMITOOLS_TRIMGALORE {
         //
         // Filter FastQ files based on minimum trimmed read count after adapter trimming
         //
-        ch_trim = TRIMGALORE(ch_trimmer_reads).map { r ->
+        ch_trim = TRIMGALORE(ch_trimmer_reads.map { r -> r + record(args: trimgalore_args) }).map { r ->
             def num_reads = r.log.isEmpty()
                 ? (min_trimmed_reads as Float) + 1
                 : getTrimGaloreReadsAfterFiltering(r.log[-1]) as Float

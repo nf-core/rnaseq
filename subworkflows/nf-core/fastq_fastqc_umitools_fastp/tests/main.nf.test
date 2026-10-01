@@ -47,6 +47,8 @@ nextflow_workflow {
                 input[6] = params.save_trimmed_fail
                 input[7] = params.save_merged
                 input[8] = params.min_trimmed_reads
+                input[9] = ''  // umi_extract_args
+                input[10] = null  // fastp_args
                 """
             }
         }
@@ -106,6 +108,8 @@ nextflow_workflow {
                 input[6] = params.save_trimmed_fail
                 input[7] = params.save_merged
                 input[8] = params.min_trimmed_reads
+                input[9] = ''  // umi_extract_args
+                input[10] = null  // fastp_args
                 """
             }
         }
@@ -165,6 +169,8 @@ nextflow_workflow {
                 input[6] = params.save_trimmed_fail
                 input[7] = params.save_merged
                 input[8] = params.min_trimmed_reads
+                input[9] = ''  // umi_extract_args
+                input[10] = null  // fastp_args
                 """
             }
         }
@@ -222,6 +228,8 @@ nextflow_workflow {
                 input[6] = params.save_trimmed_fail
                 input[7] = params.save_merged
                 input[8] = params.min_trimmed_reads
+                input[9] = ''  // umi_extract_args
+                input[10] = null  // fastp_args
                 """
             }
         }
@@ -281,6 +289,8 @@ nextflow_workflow {
                 input[6] = params.save_trimmed_fail
                 input[7] = params.save_merged
                 input[8] = params.min_trimmed_reads
+                input[9] = ''  // umi_extract_args
+                input[10] = null  // fastp_args
                 """
             }
         }
@@ -340,6 +350,8 @@ nextflow_workflow {
                 input[6] = params.save_trimmed_fail
                 input[7] = params.save_merged
                 input[8] = params.min_trimmed_reads
+                input[9] = ''  // umi_extract_args
+                input[10] = null  // fastp_args
                 """
             }
         }
@@ -400,6 +412,8 @@ nextflow_workflow {
                 input[6] = params.save_trimmed_fail
                 input[7] = params.save_merged
                 input[8] = params.min_trimmed_reads
+                input[9] = ''  // umi_extract_args
+                input[10] = null  // fastp_args
                 """
             }
         }
@@ -459,6 +473,8 @@ nextflow_workflow {
                 input[6] = params.save_trimmed_fail
                 input[7] = params.save_merged
                 input[8] = params.min_trimmed_reads
+                input[9] = ''  // umi_extract_args
+                input[10] = null  // fastp_args
                 """
             }
         }
@@ -519,6 +535,8 @@ nextflow_workflow {
                 input[6] = params.save_trimmed_fail
                 input[7] = params.save_merged
                 input[8] = params.min_trimmed_reads
+                input[9] = ''  // umi_extract_args
+                input[10] = null  // fastp_args
                 """
             }
         }
@@ -579,6 +597,8 @@ nextflow_workflow {
                 input[6] = params.save_trimmed_fail
                 input[7] = params.save_merged
                 input[8] = params.min_trimmed_reads
+                input[9] = ''  // umi_extract_args
+                input[10] = null  // fastp_args
                 """
             }
         }
@@ -625,6 +645,8 @@ nextflow_workflow {
                 input[6] = params.save_trimmed_fail
                 input[7] = params.save_merged
                 input[8] = params.min_trimmed_reads
+                input[9] = ''  // umi_extract_args
+                input[10] = null  // fastp_args
                 """
             }
         }
@@ -671,6 +693,8 @@ nextflow_workflow {
                 input[6] = params.save_trimmed_fail
                 input[7] = params.save_merged
                 input[8] = params.min_trimmed_reads
+                input[9] = ''  // umi_extract_args
+                input[10] = null  // fastp_args
                 """
             }
         }
@@ -718,6 +742,8 @@ nextflow_workflow {
                 input[6] = params.save_trimmed_fail
                 input[7] = params.save_merged
                 input[8] = params.min_trimmed_reads
+                input[9] = ''  // umi_extract_args
+                input[10] = null  // fastp_args
                 """
             }
         }
@@ -764,6 +790,8 @@ nextflow_workflow {
                 input[6] = params.save_trimmed_fail
                 input[7] = params.save_merged
                 input[8] = params.min_trimmed_reads
+                input[9] = ''  // umi_extract_args
+                input[10] = null  // fastp_args
                 """
             }
         }
@@ -810,6 +838,8 @@ nextflow_workflow {
                 input[6] = params.save_trimmed_fail
                 input[7] = params.save_merged
                 input[8] = params.min_trimmed_reads
+                input[9] = ''  // umi_extract_args
+                input[10] = null  // fastp_args
                 """
             }
         }
@@ -868,6 +898,8 @@ nextflow_workflow {
                 input[6] = params.save_trimmed_fail
                 input[7] = params.save_merged
                 input[8] = params.min_trimmed_reads
+                input[9] = ''  // umi_extract_args
+                input[10] = null  // fastp_args
                 """
             }
         }
@@ -914,6 +946,8 @@ nextflow_workflow {
                 input[6] = params.save_trimmed_fail
                 input[7] = params.save_merged
                 input[8] = params.min_trimmed_reads
+                input[9] = ''  // umi_extract_args
+                input[10] = null  // fastp_args
                 """
             }
         }
@@ -961,6 +995,8 @@ nextflow_workflow {
                 input[6] = params.save_trimmed_fail
                 input[7] = params.save_merged
                 input[8] = params.min_trimmed_reads
+                input[9] = ''  // umi_extract_args
+                input[10] = null  // fastp_args
                 """
             }
         }

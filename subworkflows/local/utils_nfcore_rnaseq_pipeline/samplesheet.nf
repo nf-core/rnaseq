@@ -52,15 +52,17 @@ def samplesheetRowsToCsv(rows) {
 
 //
 // Validate the samplesheet rows and merge the rows of a sample that has several sequencing runs
-// into one plain map per sample. Keys: id, meta, reads (all FASTQ files), runs (one list of FASTQ
-// files per run), bam, transcriptome_bam, percent_mapped and prealigned. A sample is prealigned
-// when alignment is skipped and the samplesheet supplies BAM files for it; only prealigned samples
-// keep `percent_mapped` in their meta.
+// into one plain map per sample. Rows are ordered by file path first: the channel they come from
+// has no fixed order, and the order of the runs decides the order in which they are merged.
+// Keys: id, meta, reads (all FASTQ files), runs (one list of FASTQ files per run), bam,
+// transcriptome_bam, percent_mapped and prealigned. A sample is prealigned when alignment is
+// skipped and the samplesheet supplies BAM files for it; only prealigned samples keep
+// `percent_mapped` in their meta.
 //
 def readSamplesheet(sample_rows, schema, skip_alignment) {
     validateSamplesheetRows(sample_rows, schema)
 
-    def rows = sample_rows.collect { row ->
+    def rows = sample_rows.sort(false) { row -> "${row.fastq_1 ?: row.genome_bam ?: row.transcriptome_bam}" as String }.collect { row ->
         def meta = [ id: row.sample as String, strandedness: row.strandedness ] +
             [ seq_platform: row.seq_platform, seq_center: row.seq_center, percent_mapped: row.percent_mapped ].findAll { _key, value -> value != null }
         def m = meta + [ single_end: !row.fastq_2 ]

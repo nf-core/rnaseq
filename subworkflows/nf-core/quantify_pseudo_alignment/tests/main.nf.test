@@ -58,9 +58,7 @@ nextflow_workflow {
                 input[9] = null
                 input[10] = false
                 input[11] = null  // salmon_libtype
-                input[12] = null  // extra_salmon_args
-                input[13] = null  // extra_kallisto_args
-                input[14] = null  // se_prefix
+                input[12] = record(salmon_quant: null, kallisto_quant: null, se_prefix: null)  // tool_args
                 """
             }
         }
@@ -124,9 +122,7 @@ nextflow_workflow {
                 input[9] = null
                 input[10] = false
                 input[11] = null  // salmon_libtype
-                input[12] = null  // extra_salmon_args
-                input[13] = null  // extra_kallisto_args
-                input[14] = null  // se_prefix
+                input[12] = record(salmon_quant: null, kallisto_quant: null, se_prefix: null)  // tool_args
                 """
             }
         }
@@ -192,9 +188,7 @@ nextflow_workflow {
                 input[9] = null
                 input[10] = false
                 input[11] = null  // salmon_libtype
-                input[12] = null  // extra_salmon_args
-                input[13] = null  // extra_kallisto_args
-                input[14] = null  // se_prefix
+                input[12] = record(salmon_quant: null, kallisto_quant: null, se_prefix: null)  // tool_args
                 """
             }
         }
@@ -248,9 +242,7 @@ nextflow_workflow {
                 input[9] = null
                 input[10] = false
                 input[11] = null  // salmon_libtype
-                input[12] = null  // extra_salmon_args
-                input[13] = null  // extra_kallisto_args
-                input[14] = null  // se_prefix
+                input[12] = record(salmon_quant: null, kallisto_quant: null, se_prefix: null)  // tool_args
                 """
             }
         }

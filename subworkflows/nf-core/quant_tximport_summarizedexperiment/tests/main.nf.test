@@ -47,7 +47,7 @@ nextflow_workflow {
                 input[4] = 'gene_name'
                 input[5] = 'salmon'
                 input[6] = false
-                input[7] = null  // se_prefix
+                input[7] = record(se_prefix: null)  // tool_args
                 """
             }
         }
@@ -115,7 +115,7 @@ nextflow_workflow {
                 input[4] = 'gene_name'
                 input[5] = 'salmon'
                 input[6] = false
-                input[7] = null  // se_prefix
+                input[7] = record(se_prefix: null)  // tool_args
                 """
             }
         }
@@ -165,7 +165,7 @@ nextflow_workflow {
                 input[4] = 'gene_name'
                 input[5] = 'kallisto'
                 input[6] = false
-                input[7] = null  // se_prefix
+                input[7] = record(se_prefix: null)  // tool_args
                 """
             }
         }
@@ -227,7 +227,7 @@ nextflow_workflow {
                 input[4] = 'gene_name'
                 input[5] = 'rsem'
                 input[6] = false
-                input[7] = null  // se_prefix
+                input[7] = record(se_prefix: null)  // tool_args
                 """
             }
         }
@@ -268,7 +268,7 @@ nextflow_workflow {
                 input[4] = 'gene_name'
                 input[5] = 'salmon'
                 input[6] = false
-                input[7] = null  // se_prefix
+                input[7] = record(se_prefix: null)  // tool_args
                 """
             }
         }
@@ -295,7 +295,7 @@ nextflow_workflow {
                 input[4] = 'gene_name'
                 input[5] = 'kallisto'
                 input[6] = false
-                input[7] = null  // se_prefix
+                input[7] = record(se_prefix: null)  // tool_args
                 """
             }
         }
@@ -322,7 +322,7 @@ nextflow_workflow {
                 input[4] = 'gene_name'
                 input[5] = 'rsem'
                 input[6] = false
-                input[7] = null  // se_prefix
+                input[7] = record(se_prefix: null)  // tool_args
                 """
             }
         }

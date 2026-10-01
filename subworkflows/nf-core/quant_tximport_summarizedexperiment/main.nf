@@ -13,6 +13,10 @@ include { QuantsInput; QuantMerged } from '../../../modules/nf-core/types'
 include { CustomTx2geneResult } from '../../../modules/nf-core/custom/tx2gene/main'
 include { TximetaTximportResult } from '../../../modules/nf-core/tximeta/tximport/main'
 
+record SeArgs {
+    se_prefix: String?
+}
+
 workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT {
     take:
     samplesheet: Value<Path>
@@ -22,7 +26,7 @@ workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT {
     gtf_extra_attribute: String // GTF alternative gene attribute (e.g. gene_name)
     quant_type: String // 'salmon', 'kallisto', or 'rsem'
     skip_merge: Boolean // skip cross-sample merging, run tximport per-sample
-    se_prefix: String? // prefix of the SummarizedExperiment files (default: the sample id)
+    tool_args: SeArgs // prefix of the SummarizedExperiment files (default: the sample id)
 
     main:
 
@@ -85,7 +89,7 @@ workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT {
         //
         ch_se_gene = SE_GENE_UNIFIED(
             ch_tximport.map { r ->
-                record(id: r.id, meta: r.meta, matrix_files: [ r.counts_gene, r.counts_gene_length_scaled, r.counts_gene_scaled, r.lengths_gene, r.tpm_gene ], prefix: se_prefix ? "${se_prefix}.gene" : "${r.id}_gene")
+                record(id: r.id, meta: r.meta, matrix_files: [ r.counts_gene, r.counts_gene_length_scaled, r.counts_gene_scaled, r.lengths_gene, r.tpm_gene ], prefix: tool_args.se_prefix ? "${tool_args.se_prefix}.gene" : "${r.id}_gene")
             },
             ch_tx2gene_file,
             samplesheet
@@ -96,7 +100,7 @@ workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT {
         //
         ch_se_transcript = SE_TRANSCRIPT_UNIFIED(
             ch_tximport.map { r ->
-                record(id: r.id, meta: r.meta, matrix_files: [ r.counts_transcript, r.lengths_transcript, r.tpm_transcript ], prefix: se_prefix ? "${se_prefix}.transcript" : "${r.id}_transcript")
+                record(id: r.id, meta: r.meta, matrix_files: [ r.counts_transcript, r.lengths_transcript, r.tpm_transcript ], prefix: tool_args.se_prefix ? "${tool_args.se_prefix}.transcript" : "${r.id}_transcript")
             },
             ch_tximport.collect().map { rs -> rs.isEmpty() ? null : rs.toSorted { r -> r.id }.first().tx2gene_augmented },
             samplesheet

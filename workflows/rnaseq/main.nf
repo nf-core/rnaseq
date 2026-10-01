@@ -432,9 +432,7 @@ workflow RNASEQ {
             params.kallisto_quant_fraglen_sd,
             params.skip_quantification_merge,
             params.salmon_quant_libtype,
-            params.extra_salmon_quant_args,
-            params.extra_kallisto_quant_args,
-            null
+            tool_args
         )
 
         ch_quant_salmon = bam_salmon.salmon
@@ -769,9 +767,7 @@ workflow RNASEQ {
             params.kallisto_quant_fraglen_sd,
             params.skip_quantification_merge,
             params.salmon_quant_libtype,
-            params.extra_salmon_quant_args,
-            params.extra_kallisto_quant_args,
-            "${params.pseudo_aligner}.merged"
+            tool_args + record(se_prefix: "${params.pseudo_aligner}.merged")
         )
 
         ch_quant_pseudo          = pseudo.salmon

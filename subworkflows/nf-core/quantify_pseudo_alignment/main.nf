@@ -60,9 +60,7 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
     kallisto_quant_fraglen_sd: Integer? // Estimated standard error for fragment length required by Kallisto in single-end mode
     skip_merge: Boolean // skip cross-sample merging, run tximport per-sample
     salmon_libtype: String? // Salmon library type; derived from the sample strandedness when null
-    extra_salmon_args: String? // extra Salmon quant options
-    extra_kallisto_args: String? // extra Kallisto quant options
-    se_prefix: String? // prefix of the merged SummarizedExperiment files (default: the sample id)
+    tool_args: Record // extra Salmon and Kallisto quant options (salmon_quant, kallisto_quant) and the prefix of the merged SummarizedExperiment files (se_prefix, default: the sample id)
 
     main:
 
@@ -73,14 +71,14 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
     def ch_kallisto: Channel<KallistoQuantSample> = channel.empty()
     if (pseudo_aligner == 'salmon') {
         ch_salmon = SALMON_QUANT(
-            ch_samples.map { r -> r + record(args: salmonQuantArgs(salmon_libtype, extra_salmon_args, r.meta)) },
+            ch_samples.map { r -> r + record(args: salmonQuantArgs(salmon_libtype, tool_args.salmon_quant, r.meta)) },
             index,
             gtf,
             transcript_fasta
         )
     } else {
         ch_kallisto = KALLISTO_QUANT(
-            ch_samples.map { r -> r + record(args: kallistoQuantArgs(extra_kallisto_args, r.meta)) },
+            ch_samples.map { r -> r + record(args: kallistoQuantArgs(tool_args.kallisto_quant, r.meta)) },
             index,
             gtf,
             null,
@@ -101,7 +99,7 @@ workflow QUANTIFY_PSEUDO_ALIGNMENT {
         gtf_extra_attribute,
         pseudo_aligner,
         skip_merge,
-        se_prefix
+        tool_args
     )
 
     emit:

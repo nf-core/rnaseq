@@ -61,7 +61,7 @@ process SENTIEON_STARALIGN {
     tuple(task.process, 'sentieon', eval('sentieon driver --version 2>&1 | sed -e "s/sentieon-genomics-//g"')) >> 'versions'
 
     script:
-    def args = [sample.args, task.ext.args].findAll { a -> a }.join(' ')
+    def args = task.ext.args ?: sample.args ?: ''
     prefix = task.ext.prefix ?: "${sample.meta.id}"
     def read_pairs = sample.reads.collate(2)
     def reads1 = sample.meta.single_end ? sample.reads : read_pairs.collect { pair -> pair[0] }.toList()

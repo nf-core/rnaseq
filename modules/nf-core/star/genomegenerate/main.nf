@@ -36,7 +36,7 @@ process STAR_GENOMEGENERATE {
     tuple(task.process, 'gawk', eval("gawk --version | sed -n '1{s/GNU Awk //;s/,.*//;p}'")) >> 'versions'
 
     script:
-    def args        = [sample.args, task.ext.args].findAll { a -> a }.join(' ')
+    def args        = task.ext.args ?: sample.args ?: ''
     def args_list   = args.tokenize()
     def memory      = task.memory ? "--limitGenomeGenerateRAM ${task.memory.toBytes() - 100000000}" : ''
     def include_gtf = gtf ? "--sjdbGTFfile $gtf" : ''

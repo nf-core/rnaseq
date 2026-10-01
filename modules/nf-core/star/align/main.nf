@@ -60,7 +60,7 @@ process STAR_ALIGN {
     tuple(task.process, 'gawk', eval("gawk --version | sed -n '1s/GNU Awk \\([0-9.]*\\).*/\\1/p'")) >> 'versions'
 
     script:
-    def args = [sample.args, task.ext.args].findAll { a -> a }.join(' ')
+    def args = task.ext.args ?: sample.args ?: ''
     prefix = task.ext.prefix ?: "${sample.meta.id}"
     def read_pairs = sample.reads.collate(2)
     def reads1 = sample.meta.single_end ? sample.reads : read_pairs.collect { pair -> pair[0] }.toList()

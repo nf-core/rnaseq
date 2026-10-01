@@ -44,7 +44,7 @@ process UMICOLLAPSE {
     tuple(task.process, 'umicollapse', '1.1.0-0') >> 'versions'
 
     script:
-    def args = [sample.args, task.ext.args].findAll { a -> a }.join(' ')
+    def args = task.ext.args ?: sample.args ?: ''
     def prefix = task.ext.prefix ?: "${sample.meta.id}"
     // Memory allocation: We need to make sure that both heap and stack size is sufficiently large for
     // umicollapse. We set the stack size to 5% of the available memory, the heap size to 90%

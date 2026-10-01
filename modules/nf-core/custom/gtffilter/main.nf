@@ -36,7 +36,7 @@ process CUSTOM_GTFFILTER {
     script:
     prefix = task.ext.prefix ?: "${sample.meta.id}"
     suffix = "gtf" + (sample.gtf.extension == 'gz' ? '.gz' : '')
-    args   = [sample.args, task.ext.args].findAll { a -> a }.join(' ')
+    args   = task.ext.args ?: sample.args ?: ''
 
     """
     echo $args

@@ -36,7 +36,7 @@ process SALMON_INDEX {
     task.ext.when == null || task.ext.when
 
     script:
-    def args = [sample.args, task.ext.args].findAll { a -> a }.join(' ')
+    def args = task.ext.args ?: sample.args ?: ''
     def decoys = ''
     def fasta = "${sample.transcript_fasta}"
     def genome = sample.genome_fasta ? "${sample.genome_fasta}" : ''

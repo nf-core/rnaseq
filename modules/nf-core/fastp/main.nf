@@ -51,7 +51,7 @@ process FASTP {
     tuple(task.process, 'fastp', eval('fastp --version 2>&1 | sed -e "s/fastp //g"')) >> 'versions'
 
     script:
-    def args = [sample.args, task.ext.args].findAll { a -> a }.join(' ')
+    def args = task.ext.args ?: sample.args ?: ''
     def prefix = task.ext.prefix ?: "${sample.meta.id}"
     def adapter_list = sample.adapter_fasta ? "--adapter_fasta ${sample.adapter_fasta}" : ""
     def fail_fastq = save_trimmed_fail && sample.meta.single_end ? "--failed_out ${prefix}.fail.fastq.gz" : save_trimmed_fail && !sample.meta.single_end ? "--failed_out ${prefix}.paired.fail.fastq.gz --unpaired1 ${prefix}_R1.fail.fastq.gz --unpaired2 ${prefix}_R2.fail.fastq.gz" : ''

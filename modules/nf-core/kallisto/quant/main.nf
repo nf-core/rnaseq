@@ -46,7 +46,7 @@ process KALLISTO_QUANT {
     tuple(task.process, 'kallisto', eval("kallisto version | sed 's/.*version //'")) >> 'versions'
 
     script:
-    def args = [sample.args, task.ext.args].findAll { a -> a }.join(' ')
+    def args = task.ext.args ?: sample.args ?: ''
     prefix = task.ext.prefix ?: "${sample.meta.id}"
     def gtf_input = gtf ? "--gtf ${gtf}" : ''
     def chromosomes_input = chromosomes ? "--chromosomes ${chromosomes}" : ''

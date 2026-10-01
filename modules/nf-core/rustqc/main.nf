@@ -200,7 +200,7 @@ process RUSTQC {
 
     script:
     prefix = task.ext.prefix ?: "${sample.meta.id}"
-    def args = [sample.args, task.ext.args].findAll { a -> a }.join(' ')
+    def args = task.ext.args ?: sample.args ?: ''
     def paired = sample.meta.single_end ? '' : '--paired'
     """
     rustqc rna \\

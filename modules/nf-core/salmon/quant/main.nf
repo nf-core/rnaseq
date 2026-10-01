@@ -47,7 +47,7 @@ process SALMON_QUANT {
     task.ext.when == null || task.ext.when
 
     script:
-    def args = [sample.args, task.ext.args].findAll { a -> a }.join(' ')
+    def args = task.ext.args ?: sample.args ?: ''
     prefix = task.ext.prefix ?: "${sample.meta.id}"
 
     // salmon's -a takes a BAM of reads already aligned to the transcriptome; anything else is reads mode

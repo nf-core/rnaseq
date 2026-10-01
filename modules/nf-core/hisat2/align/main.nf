@@ -46,7 +46,7 @@ process HISAT2_ALIGN {
     tuple(task.process, 'samtools', eval("samtools --version | sed -n '1s/samtools //p'")) >> 'versions'
 
     script:
-    def args = [sample.args, task.ext.args].findAll { a -> a }.join(' ')
+    def args = task.ext.args ?: sample.args ?: ''
     def prefix = task.ext.prefix ?: "${sample.meta.id}"
 
     def ss = "${splicesites}" ? "--known-splicesite-infile ${splicesites}" : ''

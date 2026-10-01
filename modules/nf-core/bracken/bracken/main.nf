@@ -34,7 +34,7 @@ process BRACKEN_BRACKEN {
     tuple(task.process, 'bracken', eval('bracken -v | cut -f2 -d"v"')) >> 'versions'
 
     script:
-    def args = [sample.args, task.ext.args].findAll { a -> a }.join(' ')
+    def args = task.ext.args ?: sample.args ?: ''
     def prefix = task.ext.prefix ?: "${sample.meta.id}"
     bracken_report = "${prefix}.tsv"
     bracken_kraken_style_report = "${prefix}.kraken2.report_bracken.txt"

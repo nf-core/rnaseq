@@ -40,7 +40,7 @@ process UMITOOLS_EXTRACT {
     tuple(task.process, 'umitools', eval("umi_tools --version | sed -n '/version:/s/.*: //p'")) >> 'versions'
 
     script:
-    def args = [sample.args, task.ext.args].findAll { a -> a }.join(' ')
+    def args = task.ext.args ?: sample.args ?: ''
     def prefix = task.ext.prefix ?: "${sample.meta.id}"
     def reads_names = sample.reads instanceof Path ? "${sample.reads}" : sample.reads.join(' ')
     if (sample.meta.single_end) {

@@ -33,7 +33,7 @@ process FQ_LINT {
     tuple(task.process, 'fq', eval("fq lint --version | sed 's/fq-lint //; s/ .*//'")) >> 'versions'
 
     script:
-    def args   = [sample.args, task.ext.args].findAll { a -> a }.join(' ')
+    def args   = task.ext.args ?: sample.args ?: ''
     def prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     fq lint \\

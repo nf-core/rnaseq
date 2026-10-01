@@ -47,7 +47,7 @@ process UMITOOLS_DEDUP {
     tuple(task.process, 'umitools', eval("umi_tools --version | sed 's/UMI-tools version: //'")) >> 'versions'
 
     script:
-    def args = [sample.args, task.ext.args].findAll { a -> a }.join(' ')
+    def args = task.ext.args ?: sample.args ?: ''
     prefix = task.ext.prefix ?: "${sample.meta.id}"
     def paired = sample.meta.single_end ? "" : "--paired"
     stats = get_output_stats ? "--output-stats ${prefix}" : ""

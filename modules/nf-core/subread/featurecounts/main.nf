@@ -40,7 +40,7 @@ process SUBREAD_FEATURECOUNTS {
     tuple(task.process, 'subread', eval("featureCounts -v 2>&1 | sed 's/featureCounts v//'")) >> 'versions'
 
     script:
-    def args = [sample.args, task.ext.args].findAll { a -> a }.join(' ')
+    def args = task.ext.args ?: sample.args ?: ''
     def prefix = task.ext.prefix ?: "${sample.meta.id}"
     def paired_end = sample.meta.single_end ? '' : '-p'
 

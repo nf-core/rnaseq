@@ -56,7 +56,7 @@ process BOWTIE2_ALIGN {
     tuple(task.process, 'pigz', eval("pigz --version 2>&1 | sed 's/pigz //'")) >> 'versions'
 
     script:
-    def args = [sample.args, task.ext.args].findAll { a -> a }.join(' ')
+    def args = task.ext.args ?: sample.args ?: ''
     def args2 = task.ext.args2 ?: ""
     def prefix = task.ext.prefix ?: "${sample.meta.id}"
     def rg = args.contains("--rg-id") ? "" : "--rg-id ${prefix} --rg SM:${prefix}"

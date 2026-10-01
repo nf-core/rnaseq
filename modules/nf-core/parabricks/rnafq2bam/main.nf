@@ -60,7 +60,7 @@ process PARABRICKS_RNAFQ2BAM {
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
         error("Parabricks module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
-    def args = [sample.args, task.ext.args].findAll { a -> a }.join(' ')
+    def args = task.ext.args ?: sample.args ?: ''
     prefix = task.ext.prefix ?: "${sample.meta.id}"
 
     def in_fq_command = sample.meta.single_end ? "--in-se-fq ${sample.reads.join(' ')}" : "--in-fq ${sample.reads.join(' ')}"

@@ -33,7 +33,7 @@ process KALLISTO_INDEX {
     tuple(task.process, 'kallisto', eval('kallisto 2>&1 | head -1 | sed "s/^kallisto //; s/Usage.*//"')) >> 'versions'
 
     script:
-    def args = [sample.args, task.ext.args].findAll { a -> a }.join(' ')
+    def args = task.ext.args ?: sample.args ?: ''
     """
     kallisto \\
         index \\

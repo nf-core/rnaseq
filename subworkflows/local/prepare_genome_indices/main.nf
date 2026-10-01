@@ -29,6 +29,7 @@ include { SENTIEON_RSEMPREPAREREFERENCE as SENTIEON_RSEM_PREPAREREFERENCE_GENOME
 include { STAR_GENOMEPARAMS_UPGRADE         } from '../../../modules/local/star_genomeparams_upgrade'
 
 include { taskOutputOrNull                  } from '../utils_nfcore_rnaseq_pipeline'
+include { memoryToGiga                       } from '../utils_nfcore_rnaseq_pipeline/tool_args'
 include { GenomeArtifact } from '../../../modules/nf-core/types'
 include { BbmapBbsplitResult } from '../../../modules/nf-core/bbmap/bbsplit/main'
 include { KallistoIndexResult } from '../../../modules/nf-core/kallisto/index/main'
@@ -244,7 +245,7 @@ workflow PREPARE_GENOME_INDICES {
                 .combine(ch_gtf)
                 .combine(ch_splicesites)
                 .map { fasta_file, gtf_file, ss_file -> record(id: 'genome', meta: [:], fasta: fasta_file, gtf: gtf_file, splicesites: ss_file) },
-            hisat2_build_memory
+            channel.value(memoryToGiga(hisat2_build_memory))
         ).map { r -> r.index }
     } else {
         ch_hisat2_index = ch_no_path

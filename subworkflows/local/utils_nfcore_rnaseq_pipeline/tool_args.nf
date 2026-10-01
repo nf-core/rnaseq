@@ -278,3 +278,8 @@ def toolArgs(params) {
         multiqc:                   multiqcArgs(params)
     )
 }
+
+// Memory string such as '200.GB' as whole gigabytes, for processes that take a numeric threshold
+def memoryToGiga(memory) {
+    return memory ? (memory as nextflow.util.MemoryUnit).toGiga() as Integer : null
+}

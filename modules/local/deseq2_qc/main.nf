@@ -49,37 +49,10 @@ process DESEQ2_QC {
     ) as Deseq2Qc
 
     topic:
-    tuple(task.process, 'r-base', eval("Rscript -e 'cat(as.character(getRversion()))'")) >> 'versions'
-    tuple(task.process, 'bioconductor-deseq2', eval("Rscript -e \"library(DESeq2); cat(as.character(packageVersion('DESeq2')))\"")) >> 'versions'
+    file('versions.yml') >> 'versions'
 
     script:
-    def args  = task.ext.args  ?: ''
-    def args2 = task.ext.args2 ?: ''
-    def label_lower = args2.toLowerCase()
-    def label_upper = args2.toUpperCase()
-    prefix = task.ext.prefix ?: "deseq2"
-    """
-    deseq2_qc.r \\
-        --count_file ${sample.counts_gene_length_scaled} \\
-        --outdir ./ \\
-        --cores $task.cpus \\
-        --outprefix $prefix \\
-        $args
-
-    if [ -f "R_sessionInfo.log" ]; then
-        # Handle PCA files
-        sed "s/deseq2_pca/${label_lower}_deseq2_pca/g" <$pca_header_multiqc > pca_header.tmp
-        sed -i -e "s/DESeq2 PCA/${label_upper} DESeq2 PCA/g" pca_header.tmp
-        cat pca_header.tmp *.pca.vals.txt > ${label_lower}.pca.vals_mqc.tsv
-        rm pca_header.tmp
-
-        # Handle clustering files
-        sed "s/deseq2_clustering/${label_lower}_deseq2_clustering/g" <$clustering_header_multiqc > clustering_header.tmp
-        sed -i -e "s/DESeq2 sample/${label_upper} DESeq2 sample/g" clustering_header.tmp
-        cat clustering_header.tmp *.sample.dists.txt > ${label_lower}.sample.dists_mqc.tsv
-        rm clustering_header.tmp
-    fi
-    """
+    template 'deseq2_qc.r'
 
     stub:
     def args2 = task.ext.args2 ?: ''
@@ -93,6 +66,12 @@ process DESEQ2_QC {
     touch ${prefix}.plots.pdf
     touch ${prefix}.sample.dists.txt
     touch R_sessionInfo.log
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        r-base: \$(Rscript -e 'cat(as.character(getRversion()))')
+        bioconductor-deseq2: \$(Rscript -e "library(DESeq2); cat(as.character(packageVersion('DESeq2')))")
+    END_VERSIONS
 
     mkdir size_factors
     touch size_factors/${prefix}.size_factors.RData

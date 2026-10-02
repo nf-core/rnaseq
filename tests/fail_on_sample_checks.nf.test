@@ -1,0 +1,48 @@
+nextflow_pipeline {
+
+    name "Test pipeline failing on undetermined strandedness"
+    script "../main.nf"
+    tag "pipeline"
+
+    test("Params: fail_on_sample_checks strandedness stops the run") {
+
+        when {
+            params {
+                outdir                = "$outputDir"
+                fail_on_sample_checks = 'strandedness'
+                stranded_threshold    = 1.0
+                unstranded_threshold  = 0.0
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.failed },
+                { assert workflow.stdout.any { line -> line.contains("Sample 'WT_REP1' failed the strandedness check") } || workflow.stderr.any { line -> line.contains("Sample 'WT_REP1' failed the strandedness check") } }
+            )
+        }
+    }
+
+    test("Params: fail_on_sample_checks strandedness with ignore lets other samples finish") {
+
+        config "./fail_on_sample_checks.config"
+
+        when {
+            params {
+                outdir                = "$outputDir"
+                fail_on_sample_checks = 'strandedness'
+                stranded_threshold    = 1.0
+                unstranded_threshold  = 0.0
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.failed },
+                { assert workflow.trace.failed().any { task -> task.name.contains("SAMPLE_CHECK_FAILED (WT_REP1)") } },
+                { assert file("$outputDir/star_salmon/RAP1_IAA_30M_REP1").exists() },
+                { assert !file("$outputDir/star_salmon/WT_REP1").exists() }
+            )
+        }
+    }
+}

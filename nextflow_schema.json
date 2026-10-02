@@ -593,6 +593,14 @@
                     "maximum": 1,
                     "default": 0.1,
                     "description": "The difference in fraction of stranded reads assigned to 'forward' and 'reverse' below which a sample is classified as 'unstranded'. By default the forward and reverse fractions must differ by less than 0.1 for the sample to be called as unstranded."
+                },
+                "fail_on_sample_checks": {
+                    "type": "string",
+                    "description": "Comma-separated list of per-sample checks that fail the run, instead of only being reported, when a sample does not pass.",
+                    "help_text": "Available checks: trimmed_reads (fewer than --min_trimmed_reads after trimming), mapped_reads (mapping rate below --min_mapped_reads), strandedness (strandedness set to 'auto' but Salmon could not determine it). By default failing samples are skipped or treated as unstranded and the run still succeeds. Samples that fail a selected check are always excluded from downstream steps. To let other samples finish and still exit with an error, combine with `process.errorStrategy = 'ignore'` and `workflow.failOnIgnore = true`.",
+                    "errorMessage": "The sample checks must be a comma-separated list of valid check names.",
+                    "pattern": "^(trimmed_reads|mapped_reads|strandedness)(,(trimmed_reads|mapped_reads|strandedness))*$",
+                    "fa_icon": "fas fa-times-circle"
                 }
             }
         },

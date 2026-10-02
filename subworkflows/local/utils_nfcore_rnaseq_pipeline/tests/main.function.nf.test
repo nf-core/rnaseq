@@ -535,4 +535,51 @@ nextflow_function {
             )
         }
     }
+
+    test("Test Function undeterminedStrandednessMessage with inconclusive strand evidence") {
+
+        function "undeterminedStrandednessMessage"
+
+        when {
+            function {
+                """
+                input[0] = 'test'
+                input[1] = [inferred_strandedness: 'undetermined', forwardFragments: 65.0, reverseFragments: 35.0, unstrandedFragments: 0.0]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert function.result.contains("Sample 'test' failed the strandedness check") },
+                { assert function.result.contains("65.0% were forward and 35.0% reverse") },
+                { assert function.result.contains("genomic DNA contamination") },
+                { assert function.result.contains("Set strandedness explicitly in the samplesheet") }
+            )
+        }
+    }
+
+    test("Test Function undeterminedStrandednessMessage with no assigned fragments") {
+
+        function "undeterminedStrandednessMessage"
+
+        when {
+            function {
+                """
+                input[0] = 'test'
+                input[1] = [inferred_strandedness: 'undetermined', forwardFragments: Double.NaN, reverseFragments: Double.NaN, unstrandedFragments: Double.NaN]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert function.result.contains("Salmon assigned no fragments") },
+                { assert !function.result.contains("%") },
+                { assert function.result.contains("Set strandedness explicitly in the samplesheet") }
+            )
+        }
+    }
 }

@@ -5,5 +5,5 @@ process SAMPLE_CHECK_FAILED {
     tuple val(id), val(message)
 
     exec:
-    throw new IllegalStateException(message)
+    throw new nextflow.exception.ProcessFailedException(message)
 }

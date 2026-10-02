@@ -582,4 +582,48 @@ nextflow_function {
             )
         }
     }
+
+    test("Test Function trimmedReadsMessage") {
+
+        function "trimmedReadsMessage"
+
+        when {
+            function {
+                """
+                input[0] = 'test'
+                input[1] = 5
+                input[2] = 10000
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert function.result == "Sample 'test' failed the trimmed reads check: 5 reads remained after trimming, which is not above the --min_trimmed_reads threshold (10000)." }
+            )
+        }
+    }
+
+    test("Test Function mappedReadsMessage") {
+
+        function "mappedReadsMessage"
+
+        when {
+            function {
+                """
+                input[0] = 'test'
+                input[1] = 42.5
+                input[2] = 5
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert function.result == "Sample 'test' failed the mapped reads check: 42.5% of reads mapped, below the --min_mapped_reads threshold (5%)." }
+            )
+        }
+    }
 }

@@ -80,13 +80,13 @@ If RSeQC disagrees with the expected strandedness, or returns 'undetermined' (wh
 
 #### Failing the run on per-sample check failures
 
-By default, a sample with too few trimmed reads (`--min_trimmed_reads`) or a low mapping rate (`--min_mapped_reads`) is skipped downstream and reported in MultiQC, and a sample set to `auto` whose strandedness Salmon cannot determine is processed as `unstranded`. In all cases the run still completes successfully. To fail the run instead, list the checks to enforce with `--fail_on_sample_checks` (comma-separated):
+By default, a sample with too few trimmed reads (`--min_trimmed_reads`) or a low mapping rate (`--min_mapped_reads`) is skipped downstream and reported in MultiQC, and a sample set to `auto` whose strandedness Salmon cannot determine is processed as `unstranded`. In all cases the run still completes successfully. To fail the run instead, enable the matching option:
 
-- `trimmed_reads`: fewer reads than `--min_trimmed_reads` remain after trimming.
-- `mapped_reads`: the mapping rate is below `--min_mapped_reads`.
-- `strandedness`: strandedness is `auto` but could not be determined.
+- `--fail_on_low_trimmed_reads`: fewer reads than `--min_trimmed_reads` remain after trimming.
+- `--fail_on_low_mapped_reads`: the mapping rate is below `--min_mapped_reads`.
+- `--fail_on_undetermined_strandedness`: strandedness is `auto` but could not be determined.
 
-For example, `--fail_on_sample_checks strandedness,mapped_reads`. Samples that fail a selected check are excluded from downstream steps and reported as a failed `SAMPLE_CHECK_FAILED` task whose error explains why, so the failure follows your `errorStrategy`. With the default `finish` strategy the run stops once running tasks complete. To let all other samples finish and still exit with an error, add `process.errorStrategy = 'ignore'` and `workflow.failOnIgnore = true` to a custom config. For an undetermined strandedness, set `strandedness` explicitly for that sample in the samplesheet and rerun with `-resume`.
+Samples that fail an enabled check are excluded from downstream steps and reported as a failed `SAMPLE_CHECK_FAILED` task whose error explains why, so the failure follows your `errorStrategy`. With the default `finish` strategy the run stops once running tasks complete. To let all other samples finish and still exit with an error, add `process.errorStrategy = 'ignore'` and `workflow.failOnIgnore = true` to a custom config. For an undetermined strandedness, set `strandedness` explicitly for that sample in the samplesheet and rerun with `-resume`.
 
 The **Configure columns** dialog above the summary table lets you toggle the hidden per-component percentages on:
 

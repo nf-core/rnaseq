@@ -4,12 +4,12 @@ nextflow_pipeline {
     script "../main.nf"
     tag "pipeline"
 
-    test("Params: fail_on_sample_checks strandedness stops the run") {
+    test("Params: fail_on_undetermined_strandedness stops the run") {
 
         when {
             params {
                 outdir                = "$outputDir"
-                fail_on_sample_checks = 'strandedness'
+                fail_on_undetermined_strandedness = true
                 stranded_threshold    = 1.0
                 unstranded_threshold  = 0.0
             }
@@ -23,14 +23,14 @@ nextflow_pipeline {
         }
     }
 
-    test("Params: fail_on_sample_checks strandedness with ignore lets other samples finish") {
+    test("Params: fail_on_undetermined_strandedness with ignore lets other samples finish") {
 
         config "./fail_on_sample_checks.config"
 
         when {
             params {
                 outdir                = "$outputDir"
-                fail_on_sample_checks = 'strandedness'
+                fail_on_undetermined_strandedness = true
                 stranded_threshold    = 1.0
                 unstranded_threshold  = 0.0
             }

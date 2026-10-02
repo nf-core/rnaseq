@@ -425,13 +425,6 @@ def validateInputParameters() {
         error("Invalid option: ${params.rseqc_modules}. Valid options for '--rseqc_modules': ${valid_rseqc_modules.join(', ')}")
     }
 
-    // Check which per-sample checks should fail the run
-    def valid_sample_checks = ['trimmed_reads', 'mapped_reads', 'strandedness']
-    def sample_checks = params.fail_on_sample_checks ? params.fail_on_sample_checks.split(',').collect{ check -> check.trim() } : []
-    if ((valid_sample_checks + sample_checks).unique().size() != valid_sample_checks.size()) {
-        error("Invalid option: ${params.fail_on_sample_checks}. Valid options for '--fail_on_sample_checks': ${valid_sample_checks.join(', ')}")
-    }
-
     // Check rRNA databases for sortmerna
     if (params.remove_ribo_rna) {
         def ch_ribo_db = file(params.ribo_database_manifest)
@@ -901,6 +894,20 @@ def mapBamToPublishedPath(bam_path, sample_id, aligner, outdir) {
 
     // Fallback to original filename
     return "${base_dir}/${filename}"
+}
+
+//
+// Function to build the failure message for a sample with too few reads after trimming
+//
+def trimmedReadsMessage(sample_id, num_reads, min_trimmed_reads) {
+    return "Sample '${sample_id}' failed the trimmed reads check: ${num_reads} reads remained after trimming, which is not above the --min_trimmed_reads threshold (${min_trimmed_reads})."
+}
+
+//
+// Function to build the failure message for a sample with a low mapping rate
+//
+def mappedReadsMessage(sample_id, percent_mapped, min_mapped_reads) {
+    return "Sample '${sample_id}' failed the mapped reads check: ${percent_mapped}% of reads mapped, below the --min_mapped_reads threshold (${min_mapped_reads}%)."
 }
 
 //

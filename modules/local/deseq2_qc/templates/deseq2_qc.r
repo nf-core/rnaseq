@@ -311,4 +311,3 @@ writeLines(
         paste('    bioconductor-deseq2:', deseq2.version)
     ),
 'versions.yml')
-

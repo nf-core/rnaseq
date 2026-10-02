@@ -93,6 +93,9 @@ workflow RNASEQ {
     ch_splicesites          // channel: path(genome.splicesites.txt)
     ch_kraken_db            // channel: path(kraken2/db/)
     qc_tools                // val(list) - QC tools to run, e.g. ['preseq', 'qualimap', 'rseqc_bam_stat', ...]
+    fail_on_low_trimmed_reads         // val(boolean) - fail the run for samples below --min_trimmed_reads
+    fail_on_low_mapped_reads          // val(boolean) - fail the run for samples below --min_mapped_reads
+    fail_on_undetermined_strandedness // val(boolean) - fail the run for 'auto' samples whose strandedness could not be determined
 
     main:
 
@@ -240,15 +243,13 @@ workflow RNASEQ {
 
     ch_multiqc_files                  = ch_multiqc_files.mix(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.multiqc_files)
     ch_strand_inferred_filtered_fastq = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.reads
-    ch_strand_branched = ch_strand_inferred_filtered_fastq
-        .branch { meta, _reads ->
-            failed: params.fail_on_undetermined_strandedness && meta.salmon_strand_analysis?.inferred_strandedness == 'undetermined'
-            passed: true
-        }
     ch_failed_checks = ch_failed_checks.mix(
-        ch_strand_branched.failed.map { meta, _reads -> [ meta.id, undeterminedStrandednessMessage(meta.id, meta.salmon_strand_analysis) ] }
+        ch_strand_inferred_filtered_fastq
+            .filter { meta, _reads -> fail_on_undetermined_strandedness && meta.salmon_strand_analysis?.inferred_strandedness == 'undetermined' }
+            .map { meta, _reads -> [ meta.id, undeterminedStrandednessMessage(meta.id, meta.salmon_strand_analysis) ] }
     )
-    ch_strand_inferred_filtered_fastq = ch_strand_branched.passed
+    ch_strand_inferred_filtered_fastq = ch_strand_inferred_filtered_fastq
+        .filter { meta, _reads -> !(fail_on_undetermined_strandedness && meta.salmon_strand_analysis?.inferred_strandedness == 'undetermined') }
     ch_reads_cat                      = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.reads_cat
     ch_reads_trimmed                  = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.reads_trimmed
     ch_trim_read_count                = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.trim_read_count
@@ -261,7 +262,7 @@ workflow RNASEQ {
 
     ch_failed_checks = ch_failed_checks.mix(
         ch_trim_read_count
-            .filter { _meta, num_reads -> params.fail_on_low_trimmed_reads && num_reads <= params.min_trimmed_reads.toFloat() }
+            .filter { _meta, num_reads -> fail_on_low_trimmed_reads && num_reads <= params.min_trimmed_reads.toFloat() }
             .map { meta, num_reads -> [ meta.id, trimmedReadsMessage(meta.id, num_reads, params.min_trimmed_reads) ] }
     )
 
@@ -519,7 +520,7 @@ workflow RNASEQ {
 
     ch_failed_checks = ch_failed_checks.mix(
         ch_genome_bam_bai_mapping.percent_mapped_pass
-            .filter { _id, _percent_mapped, pass -> params.fail_on_low_mapped_reads && pass == false }
+            .filter { _id, _percent_mapped, pass -> fail_on_low_mapped_reads && pass == false }
             .map { id, percent_mapped, _pass -> [ id, mappedReadsMessage(id, percent_mapped, params.min_mapped_reads) ] }
     )
 

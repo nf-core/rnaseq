@@ -7,6 +7,7 @@
 //
 // MODULE: Loaded from modules/local/
 //
+include { SAMPLE_CHECK_FAILED                } from '../../modules/local/sample_check_failed'
 include { DESEQ2_QC as DESEQ2_QC_BAM_SALMON } from '../../modules/local/deseq2_qc'
 include { DESEQ2_QC as DESEQ2_QC_RSEM        } from '../../modules/local/deseq2_qc'
 include { DESEQ2_QC as DESEQ2_QC_PSEUDO      } from '../../modules/local/deseq2_qc'
@@ -24,6 +25,9 @@ include { BAM_DEDUP_UMI                         } from '../../subworkflows/nf-co
 
 include { checkSamplesAfterGrouping      } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { classifyStrand                 } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { undeterminedStrandednessMessage } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { trimmedReadsMessage            } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { mappedReadsMessage             } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { getHisat2PercentMapped         } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { mapBamToPublishedPath          } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 
@@ -89,6 +93,9 @@ workflow RNASEQ {
     ch_splicesites          // channel: path(genome.splicesites.txt)
     ch_kraken_db            // channel: path(kraken2/db/)
     qc_tools                // val(list) - QC tools to run, e.g. ['preseq', 'qualimap', 'rseqc_bam_stat', ...]
+    fail_on_low_trimmed_reads         // val(boolean) - fail the run for samples below --min_trimmed_reads
+    fail_on_low_mapped_reads          // val(boolean) - fail the run for samples below --min_mapped_reads
+    fail_on_undetermined_strandedness // val(boolean) - fail the run for 'auto' samples whose strandedness could not be determined
 
     main:
 
@@ -117,6 +124,8 @@ workflow RNASEQ {
     ch_strand_status = channel.empty()
     ch_percent_mapped = channel.empty()
     ch_unaligned_sequences = channel.empty()
+
+    ch_failed_checks = channel.empty()
 
     // Per-sample MultiQC bundle — `.join(..., remainder: true)` chains
     // fed to MULTIQC_RNASEQ. `collapseAgg` re-keys by meta.id at the end
@@ -234,6 +243,12 @@ workflow RNASEQ {
 
     ch_multiqc_files                  = ch_multiqc_files.mix(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.multiqc_files)
     ch_strand_inferred_filtered_fastq = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.reads
+    ch_failed_on_undetermined_strandedness = ch_strand_inferred_filtered_fastq
+        .filter { meta, _reads -> fail_on_undetermined_strandedness && meta.salmon_strand_analysis?.inferred_strandedness == 'undetermined' }
+        .map { meta, _reads -> [ meta.id, undeterminedStrandednessMessage(meta.id, meta.salmon_strand_analysis) ] }
+    ch_failed_checks = ch_failed_checks.mix(ch_failed_on_undetermined_strandedness)
+    ch_strand_inferred_filtered_fastq = ch_strand_inferred_filtered_fastq
+        .filter { meta, _reads -> !(fail_on_undetermined_strandedness && meta.salmon_strand_analysis?.inferred_strandedness == 'undetermined') }
     ch_reads_cat                      = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.reads_cat
     ch_reads_trimmed                  = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.reads_trimmed
     ch_trim_read_count                = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.trim_read_count
@@ -243,6 +258,11 @@ workflow RNASEQ {
             meta, num_reads ->
                 return [ meta.id, num_reads > params.min_trimmed_reads.toFloat() ]
         }
+
+    ch_failed_on_low_trimmed_reads = ch_trim_read_count
+        .filter { _meta, num_reads -> fail_on_low_trimmed_reads && num_reads <= params.min_trimmed_reads.toFloat() }
+        .map { meta, num_reads -> [ meta.id, trimmedReadsMessage(meta.id, num_reads, params.min_trimmed_reads) ] }
+    ch_failed_checks = ch_failed_checks.mix(ch_failed_on_low_trimmed_reads)
 
     // Seed the bundle with every input sample — fastq branch and pre-aligned
     // BAM branch — so both paths can accumulate per-sample MultiQC
@@ -496,6 +516,11 @@ workflow RNASEQ {
     ch_map_status = ch_genome_bam_bai_mapping.status
         .filter { _id, pass -> pass != null }
 
+    ch_failed_on_low_mapped_reads = ch_genome_bam_bai_mapping.percent_mapped_pass
+        .filter { _id, _percent_mapped, pass -> fail_on_low_mapped_reads && pass == false }
+        .map { id, percent_mapped, _pass -> [ id, mappedReadsMessage(id, percent_mapped, params.min_mapped_reads) ] }
+    ch_failed_checks = ch_failed_checks.mix(ch_failed_on_low_mapped_reads)
+
     // Where a percent mapping is present, use it to filter bam and index
 
     map_filtered_genome_bam_bai = ch_genome_bam_bai_mapping.bam
@@ -635,6 +660,11 @@ workflow RNASEQ {
                 .join(ch_bam_qc_rnaseq_bundle, remainder: true)
         }
     }
+
+    //
+    // MODULE: Fail the run for samples that did not pass a selected check
+    //
+    SAMPLE_CHECK_FAILED(ch_failed_checks)
 
     //
     // Build the per-sample strand-classification tuple consumed by the

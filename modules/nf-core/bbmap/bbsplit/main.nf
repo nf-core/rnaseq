@@ -1,5 +1,19 @@
+nextflow.enable.types = true
+
+include { ReadsInput } from '../../types'
+
+record BbmapBbsplitResult {
+    id:                 String
+    meta:               Map
+    index:              Path?
+    reads:              List<Path>
+    other_genome_reads: List<Path>
+    stats:              Path?
+    log:                Path?
+}
+
 process BBMAP_BBSPLIT {
-    tag "$meta.id"
+    tag "${sample.meta.id}"
     label 'process_high'
     label 'error_retry'
 
@@ -9,38 +23,41 @@ process BBMAP_BBSPLIT {
         'community.wave.seqera.io/library/bbmap_pigz:07416fe99b090fa9' }"
 
     input:
-    tuple val(meta), path(reads)
-    path  index, name: 'input_index'
-    path  primary_ref
-    tuple val(other_ref_names), path(other_ref_paths)
-    val   only_build_index
+    sample: ReadsInput
+    index: Path?
+    primary_ref: Path?
+    tuple(other_ref_names: List<String>, other_ref_paths: List<Path>)
+    only_build_index: Boolean
+
+    stage:
+    stageAs index, 'input_index'
 
     output:
-    path "bbsplit_index"                      , optional:true, emit: index
-    tuple val(meta), path('*primary*fastq.gz'), optional:true, emit: primary_fastq
-    tuple val(meta), path('*fastq.gz')        , optional:true, emit: all_fastq
-    tuple val(meta), path('*txt')             , optional:true, emit: stats
-    tuple val(meta), path('*.log')            , optional:true, emit: log
-    tuple val("${task.process}"), val('bbmap'), eval('bbversion.sh | grep -v "Duplicate cpuset"'), topic: versions, emit: versions_bbmap
+    record(
+        id:                 sample.id,
+        meta:               sample.meta,
+        index:              file('bbsplit_index', optional: true),
+        reads:              files('*primary*fastq.gz', optional: true).toSorted { f -> f.name },
+        other_genome_reads: files('*fastq.gz', optional: true).findAll { f -> !f.name.contains('primary') }.toSorted { f -> f.name },
+        stats:              file('*txt', optional: true),
+        log:                file('*.log', optional: true)
+    ) as BbmapBbsplitResult
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'bbmap', eval('bbversion.sh | grep -v "Duplicate cpuset"')) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
 
     def avail_mem = 3072
     if (!task.memory) {
         log.info '[BBSplit] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
     } else {
-        avail_mem = (task.memory.mega*0.8).intValue()
+        avail_mem = (task.memory.toMega()*0.8).intValue()
     }
 
-    def other_refs = []
-    other_ref_names.eachWithIndex { name, idx ->
-        other_refs << "ref_${name}=${other_ref_paths[idx]}"
-    }
+    def other_refs = other_ref_names.withIndex().collect { name, idx -> "ref_${name}=${other_ref_paths[idx]}" }
 
     def fastq_in=''
     def fastq_out=''
@@ -50,7 +67,7 @@ process BBMAP_BBSPLIT {
 
     if (only_build_index) {
         if (primary_ref && other_ref_names && other_ref_paths) {
-            index_files = 'ref_primary=' +primary_ref + ' ' + other_refs.join(' ') + ' path=bbsplit_build'
+            index_files = "ref_primary=${primary_ref} ${other_refs.join(' ')} path=bbsplit_build"
         } else {
             log.error 'ERROR: Please specify as input a primary fasta file along with names and paths to non-primary fasta files.'
         }
@@ -62,8 +79,8 @@ process BBMAP_BBSPLIT {
         } else {
             log.error 'ERROR: Please either specify a BBSplit index as input or a primary fasta file along with names and paths to non-primary fasta files.'
         }
-        fastq_in  = meta.single_end ? "in=${reads}" : "in=${reads[0]} in2=${reads[1]}"
-        fastq_out = meta.single_end ? "basename=${prefix}_%.fastq.gz" : "basename=${prefix}_%_#.fastq.gz"
+        fastq_in  = sample.meta.single_end ? "in=${sample.reads[0]}" : "in=${sample.reads[0]} in2=${sample.reads[1]}"
+        fastq_out = sample.meta.single_end ? "basename=${prefix}_%.fastq.gz" : "basename=${prefix}_%_#.fastq.gz"
         refstats_cmd = 'refstats=' + prefix + '.stats.txt'
     }
     """
@@ -106,11 +123,8 @@ process BBMAP_BBSPLIT {
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
-    def other_refs = ''
-    other_ref_names.eachWithIndex { name, _idx ->
-        other_refs += "echo '' | gzip > ${prefix}_${name}.fastq.gz"
-    }
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
+    def other_refs = other_ref_names.collect { name -> "echo '' | gzip > ${prefix}_${name}.fastq.gz" }.join('')
     def will_build_index = only_build_index || (!index && primary_ref && other_ref_names && other_ref_paths)
     """
     # Create index directory if building an index (either only_build_index or on-the-fly)

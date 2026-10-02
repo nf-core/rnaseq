@@ -1,146 +1,62 @@
 {
     "umicollapse single end test": {
         "content": [
-            "e1dbd5e6c9d4b9d27a24e5492ef7edca",
-            {
-                "versions_umicollapse": [
-                    [
-                        "UMICOLLAPSE",
-                        "umicollapse",
-                        "1.1.0-0"
-                    ]
-                ]
-            }
+            "9158ea6e7a0e54819e25cbac5fbc5cc0"
         ],
+        "timestamp": "2026-09-29T17:47:24.901525056",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-02-03T10:23:51.999374"
+            "nf-test": "0.9.5",
+            "nextflow": "26.09.1"
+        }
     },
     "umicollapse paired tests": {
         "content": [
-            "2ba8b456c322daac5b454a84b7568ad",
-            {
-                "versions_umicollapse": [
-                    [
-                        "UMICOLLAPSE",
-                        "umicollapse",
-                        "1.1.0-0"
-                    ]
-                ]
-            }
+            "b7be15ac7aae194b04bdbb56f3534495"
         ],
+        "timestamp": "2026-09-29T17:47:37.934761149",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-02-03T10:24:03.332834"
+            "nf-test": "0.9.5",
+            "nextflow": "26.09.1"
+        }
     },
     "umicollapse fastq test (paired-end)": {
         "content": [
-            [
-                [
-                    {
-                        "id": "test"
-                    },
-                    "test.dedup.fastq.gz:md5,721a84a2accac988d636e837c60e47bc"
-                ]
-            ],
-            {
-                "versions_umicollapse": [
-                    [
-                        "UMICOLLAPSE",
-                        "umicollapse",
-                        "1.1.0-0"
-                    ]
-                ]
-            }
+            "test.dedup.fastq.gz:md5,721a84a2accac988d636e837c60e47bc"
         ],
+        "timestamp": "2026-09-29T17:48:02.230084691",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-02-03T10:24:24.361959"
+            "nf-test": "0.9.5",
+            "nextflow": "26.09.1"
+        }
     },
     "umicollapse fastq test (single-end)": {
         "content": [
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": true
-                    },
-                    "test.dedup.fastq.gz:md5,2e602ed23eb87f434e4f0a9e491c0310"
-                ]
-            ],
-            {
-                "versions_umicollapse": [
-                    [
-                        "UMICOLLAPSE",
-                        "umicollapse",
-                        "1.1.0-0"
-                    ]
-                ]
-            }
+            "test.dedup.fastq.gz:md5,2e602ed23eb87f434e4f0a9e491c0310"
         ],
+        "timestamp": "2026-09-29T17:47:49.554207393",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-02-03T10:24:13.865095"
+            "nf-test": "0.9.5",
+            "nextflow": "26.09.1"
+        }
     },
     "umicollapse single end test - stub": {
         "content": [
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": true
-                    },
-                    "test.dedup.dedup.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                ]
-            ],
-            {
-                "versions_umicollapse": [
-                    [
-                        "UMICOLLAPSE",
-                        "umicollapse",
-                        "1.1.0-0"
-                    ]
-                ]
-            }
+            "test.dedup.dedup.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
         ],
+        "timestamp": "2026-09-29T17:48:14.777055762",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-02-03T10:24:31.739076"
+            "nf-test": "0.9.5",
+            "nextflow": "26.09.1"
+        }
     },
     "umicollapse paired tests - stub": {
         "content": [
-            [
-                [
-                    {
-                        "id": "test"
-                    },
-                    "test.dedup.dedup.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                ]
-            ],
-            {
-                "versions_umicollapse": [
-                    [
-                        "UMICOLLAPSE",
-                        "umicollapse",
-                        "1.1.0-0"
-                    ]
-                ]
-            }
+            "test.dedup.dedup.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
         ],
+        "timestamp": "2026-09-29T17:48:27.684356897",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-02-03T10:24:39.376789"
+            "nf-test": "0.9.5",
+            "nextflow": "26.09.1"
+        }
     }
 }

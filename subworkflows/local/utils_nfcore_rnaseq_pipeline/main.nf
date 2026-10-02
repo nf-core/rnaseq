@@ -31,7 +31,6 @@ workflow PIPELINE_INITIALISATION {
     validate_params   // boolean: Boolean whether to validate parameters against the schema at runtime
     monochrome_logs   // boolean: Do not use coloured log outputs
     nextflow_cli_args //   array: List of positional nextflow CLI args
-    outdir            //  string: The output directory where the results will be saved
     _input            //  string: Path to input samplesheet
     help              // boolean: Display help message and exit
     help_full         // boolean: Show the full help message
@@ -45,7 +44,7 @@ workflow PIPELINE_INITIALISATION {
     UTILS_NEXTFLOW_PIPELINE (
         version,
         true,
-        outdir,
+        workflow.outputDir,
         workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1
     )
 
@@ -74,7 +73,7 @@ ${colors.purple}  nf-core/rnaseq ${workflow.manifest.version}${colors.reset}
         before_text = before_text.replaceAll(/\033\[[0-9;]*m/, '')
     }
 
-    command = "nextflow run ${workflow.manifest.name} -profile <docker/singularity/.../institute> --input samplesheet.csv --outdir <OUTDIR>"
+    command = "nextflow run ${workflow.manifest.name} -profile <docker/singularity/.../institute> --input samplesheet.csv -output-dir <OUTDIR>"
 
     UTILS_NFSCHEMA_PLUGIN (
         workflow,
@@ -114,12 +113,11 @@ workflow PIPELINE_COMPLETION {
     email           //  string: email address
     email_on_fail   //  string: email address sent on pipeline failure
     plaintext_email // boolean: Send plain-text email instead of HTML
-    outdir          //    path: Path to output directory where results will be published
     monochrome_logs // boolean: Disable ANSI colour codes in log output
     multiqc_report  //  string: Path to MultiQC report
-    trim_status        // map: pass/fail status per sample for trimming
-    map_status         // map: pass/fail status per sample for mapping
-    strand_status      // map: pass/fail status per sample for strandedness check
+    trim_status        // channel: record(id, pass) for trimming
+    map_status         // channel: record(id, pass) for mapping
+    strand_status      // channel: record(id, pass) for the strandedness check
 
     main:
     def pass_mapped_reads  = [:]
@@ -130,19 +128,13 @@ workflow PIPELINE_COMPLETION {
     def multiqc_reports = multiqc_report.toList()
 
     trim_status
-        .map{
-            id, status -> pass_trimmed_reads[id] = status
-        }
+        .map{ r -> pass_trimmed_reads[r.id] = r.pass }
 
     map_status
-        .map{
-            id, status -> pass_mapped_reads[id] = status
-        }
+        .map{ r -> pass_mapped_reads[r.id] = r.pass }
 
     strand_status
-        .map{
-            id, status -> pass_strand_check[id] = status
-        }
+        .map{ r -> pass_strand_check[r.id] = r.pass }
 
     //
     // Completion email and summary
@@ -154,7 +146,7 @@ workflow PIPELINE_COMPLETION {
                 email,
                 email_on_fail,
                 plaintext_email,
-                outdir,
+                workflow.outputDir,
                 monochrome_logs,
                 multiqc_reports.getVal(),
             )
@@ -691,6 +683,37 @@ def isStarIndexLegacy() {
 }
 
 //
+// Get attribute from genome config file e.g. fasta
+//
+def getGenomeAttribute(attribute) {
+    if (params.genomes && params.genome && params.genomes.containsKey(params.genome)) {
+        if (params.genomes[ params.genome ].containsKey(attribute)) {
+            return params.genomes[ params.genome ][ attribute ]
+        }
+    }
+    return null
+}
+
+//
+// Check whether any sample declares strandedness 'auto'
+//
+def anySampleAutoStrandedness(samplesheet_rows) {
+    samplesheet_rows
+        .any { meta, _fastq_1, _fastq_2, _genome_bam, _transcriptome_bam -> meta.strandedness == 'auto' }
+}
+
+//
+// Reference and index params accept pre-built files that reach the genome
+// records untouched. Only files written by a task may be routed through the
+// output block, so anything outside the work directory is dropped to null.
+// Workaround for https://github.com/nextflow-io/nextflow/issues/7667 (routing a
+// non-task file with `>>` in a dynamic path closure crashes); remove once fixed.
+//
+def taskOutputOrNull(path) {
+    return path instanceof Path && path.startsWith(workflow.workDir) ? path : null
+}
+
+//
 // Function to generate an error if contigs in genome fasta file > 512 Mbp
 //
 def checkMaxContigSize(fai_file) {
@@ -834,15 +857,14 @@ def getInferexperimentStrandedness(inferexperiment_file, stranded_threshold = 0.
 
 //
 // Compare a sample's declared / Salmon-inferred strandedness against its
-// RSeQC infer_experiment result. Returns a per-sample tuple:
-//   [ meta, provided, status, salmon, rseqc ]
-// where
+// RSeQC infer_experiment result. Returns a per-sample record
+// (id, meta, provided, status, salmon, rseqc) where
 //   - provided = 'auto' when Salmon inferred the strand, else meta.strandedness
 //   - status   = 'pass' / 'fail' from comparing the two methods
 //   - salmon   = Salmon's calculateStrandedness map (or null if no auto-inference)
 //   - rseqc    = RSeQC's getInferexperimentStrandedness map
 // Both the summary table and the composition bargraph sections of the
-// MultiQC report are derived from this tuple.
+// MultiQC report are derived from this record.
 //
 def classifyStrand(meta, strand_log, stranded_threshold, unstranded_threshold) {
     def rseqc = getInferexperimentStrandedness(strand_log, stranded_threshold, unstranded_threshold)
@@ -862,38 +884,7 @@ def classifyStrand(meta, strand_log, stranded_threshold, unstranded_threshold) {
             status = 'pass'
         }
     }
-    return [ meta, provided, status, salmon, rseqc ]
-}
-
-
-//
-// Function to map work directory BAM paths to published paths
-//
-def mapBamToPublishedPath(bam_path, sample_id, aligner, outdir) {
-    if (!bam_path) return ''
-
-    def filename = file(bam_path).getName()
-    def base_dir = "${outdir}/${aligner}"
-
-    // Map based on aligner type and filename patterns
-    if (aligner == 'star_salmon') {
-        if (filename.contains('Aligned.out.bam')) {
-            return "${base_dir}/${sample_id}.Aligned.out.bam"
-        } else if (filename.contains('toTranscriptome')) {
-            return "${base_dir}/${sample_id}.Aligned.toTranscriptome.out.bam"
-        }
-    } else if (aligner == 'star_rsem') {
-        if (filename.contains('genome.bam')) {
-            return "${base_dir}/${sample_id}.STAR.genome.bam"
-        } else if (filename.contains('transcript.bam')) {
-            return "${base_dir}/${sample_id}.transcript.bam"
-        }
-    } else if (aligner == 'hisat2') {
-        return "${base_dir}/${sample_id}.bam"
-    }
-
-    // Fallback to original filename
-    return "${base_dir}/${filename}"
+    return record(id: meta.id, meta: meta, provided: provided, status: status, salmon: salmon, rseqc: rseqc)
 }
 
 //

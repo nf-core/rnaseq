@@ -299,12 +299,6 @@
                 "multiqc/multiqc_report_plots/svg/strand_check_summary_table.svg",
                 "pipeline_info",
                 "pipeline_info/nf_core_rnaseq_software_mqc_versions.yml",
-                "samtools",
-                "samtools/RAP1_IAA_30M_REP1.sorted.bam.bai",
-                "samtools/RAP1_UNINDUCED_REP1.sorted.bam.bai",
-                "samtools/RAP1_UNINDUCED_REP2.sorted.bam.bai",
-                "samtools/WT_REP1.sorted.bam.bai",
-                "samtools/WT_REP2.sorted.bam.bai",
                 "star_salmon",
                 "star_salmon/RAP1_IAA_30M_REP1",
                 "star_salmon/RAP1_IAA_30M_REP1.markdup.sorted.bam",
@@ -881,11 +875,6 @@
                 "samtools-idxstats-mapped-reads-plot_Observed_over_Expected_Counts.txt:md5,ae45731d8d4595f77e6b271004f3a070",
                 "samtools-idxstats-mapped-reads-plot_Raw_Counts.txt:md5,e01bbf77956371a68fecca913466ff25",
                 "samtools_insert_size.txt:md5,08afae0a9789f0d5bec616e85fb20fcb",
-                "RAP1_IAA_30M_REP1.sorted.bam.bai:md5,716f3475d26343177506f23d9ae0cfcc",
-                "RAP1_UNINDUCED_REP1.sorted.bam.bai:md5,89b3e69a5bea8a144112a15580687870",
-                "RAP1_UNINDUCED_REP2.sorted.bam.bai:md5,6e2ed96bd496e98bce89c4d69c31db5d",
-                "WT_REP1.sorted.bam.bai:md5,687b540b3b69b826968a2fb4a16e5609",
-                "WT_REP2.sorted.bam.bai:md5,fe846da56caf2cafb72d11a6070895e1",
                 "ambig_info.tsv:md5,e7e34e34b18bb137056f94647476d962",
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
@@ -955,10 +944,10 @@
                 "i_data.ctab:md5,041edee3193df311f621c09f4991892b"
             ]
         ],
-        "timestamp": "2026-09-18T22:53:31.46090663",
+        "timestamp": "2026-09-28T13:42:06.85996238",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.09.0"
         }
     },
     "BAM input for RSEM": {
@@ -1284,12 +1273,6 @@
                 "multiqc/multiqc_report_plots/svg/strand_check_summary_table.svg",
                 "pipeline_info",
                 "pipeline_info/nf_core_rnaseq_software_mqc_versions.yml",
-                "samtools",
-                "samtools/RAP1_IAA_30M_REP1.sorted.bam.bai",
-                "samtools/RAP1_UNINDUCED_REP1.sorted.bam.bai",
-                "samtools/RAP1_UNINDUCED_REP2.sorted.bam.bai",
-                "samtools/WT_REP1.sorted.bam.bai",
-                "samtools/WT_REP2.sorted.bam.bai",
                 "star_rsem",
                 "star_rsem/RAP1_IAA_30M_REP1.genes.results",
                 "star_rsem/RAP1_IAA_30M_REP1.isoforms.results",
@@ -1412,7 +1395,6 @@
                 "star_rsem/featurecounts/WT_REP2.biotype_counts_rrna_mqc.tsv",
                 "star_rsem/featurecounts/WT_REP2.featureCounts.tsv",
                 "star_rsem/featurecounts/WT_REP2.featureCounts.tsv.summary",
-                "star_rsem/log",
                 "star_rsem/picard_metrics",
                 "star_rsem/picard_metrics/RAP1_IAA_30M_REP1.markdup.sorted.metrics.txt",
                 "star_rsem/picard_metrics/RAP1_UNINDUCED_REP1.markdup.sorted.metrics.txt",
@@ -1824,11 +1806,6 @@
                 "samtools-idxstats-mapped-reads-plot_Observed_over_Expected_Counts.txt:md5,ae45731d8d4595f77e6b271004f3a070",
                 "samtools-idxstats-mapped-reads-plot_Raw_Counts.txt:md5,f84395a5a5aaeafac758a65f69e1fd8f",
                 "samtools_insert_size.txt:md5,cd3f9cd1240a4deed9727999a3b45325",
-                "RAP1_IAA_30M_REP1.sorted.bam.bai:md5,4460948fc194ba7c7fe7ad92e68132a0",
-                "RAP1_UNINDUCED_REP1.sorted.bam.bai:md5,ec51d038a5836721edc9f44d27c06542",
-                "RAP1_UNINDUCED_REP2.sorted.bam.bai:md5,21a49b49cd6afb56c387fb645d50c3e4",
-                "WT_REP1.sorted.bam.bai:md5,0ddc8843704fe1fc249cf1686674d6ee",
-                "WT_REP2.sorted.bam.bai:md5,f4d9589398b0cac3dfb3356c787ae6b5",
                 "RAP1_IAA_30M_REP1.biotype_counts_mqc.tsv:md5,5a7a4291e8ff6cc25a4eb72dfdf06b51",
                 "RAP1_IAA_30M_REP1.biotype_counts_rrna_mqc.tsv:md5,dde2de0cb90e10d0195c726f768e9941",
                 "RAP1_IAA_30M_REP1.featureCounts.tsv:md5,cb714180e8a4a8afe11e44e09086de53",
@@ -1887,10 +1864,10 @@
                 "i_data.ctab:md5,7e81ace0a68bfe42482420b7275de195"
             ]
         ],
-        "timestamp": "2026-09-16T14:45:14.086016029",
+        "timestamp": "2026-09-28T13:43:50.656386714",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.09.0"
         }
     }
 }

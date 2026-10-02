@@ -1,21 +1,36 @@
 {
     "Should merge transcripts across multiple samples": {
         "content": [
-            {
-                "stringtie_gtf": [
-                    [
-                        {
-                            "id": "stringtie_merge"
-                        },
-                        "stringtie_merge.gtf:md5,53e72decd9a087e267b42cc777c1581c"
-                    ]
-                ]
-            }
+            [
+                {
+                    "abundance": "sample1.gene.abundance.txt:md5,5fbb76e5efccfc314d94b10e72ebb01f",
+                    "ballgown": [
+                        "e2t.ctab:md5,9ae42e056c955a88a883e5e917840d77",
+                        "e_data.ctab:md5,fd8496d3957ade3b2c0853155f9a67da",
+                        "i2t.ctab:md5,658131af118cfb416939044fdb5411de",
+                        "i_data.ctab:md5,f01d94a7d0dcfad3bfab18ed50dad16c",
+                        "t_data.ctab:md5,92a98902784e7406ffe054d2adbabc7c"
+                    ],
+                    "coverage_gtf": "sample1.coverage.gtf:md5,d41d8cd98f00b204e9800998ecf8427e",
+                    "id": "sample1",
+                    "meta": {
+                        "id": "sample1",
+                        "strandedness": "reverse"
+                    },
+                    "transcript_gtf": "sample1.transcripts.gtf:md5,2ed500028c028c0acfe8be8b1874a416"
+                }
+            ],
+            [
+                {
+                    "id": "stringtie_merge",
+                    "merged_gtf": "stringtie_merge.gtf:md5,579099197aec424c85f158650f59835e"
+                }
+            ]
         ],
-        "timestamp": "2026-08-07T15:17:03.55785871",
+        "timestamp": "2026-09-29T16:57:48.999598966",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.3"
+            "nextflow": "26.09.1"
         }
     }
 }

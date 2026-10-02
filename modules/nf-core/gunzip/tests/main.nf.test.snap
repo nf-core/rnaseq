@@ -1,207 +1,92 @@
 {
     "Should decompress file with extension appearing multiple times in filename - prefix": {
         "content": [
-            {
-                "0": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.xyz.fa:md5,4161df271f9bfcd25d5845a1e220dbec"
-                    ]
-                ],
-                "1": [
-                    [
-                        "GUNZIP",
-                        "gunzip",
-                        "1.13"
-                    ]
-                ],
-                "gunzip": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.xyz.fa:md5,4161df271f9bfcd25d5845a1e220dbec"
-                    ]
-                ],
-                "versions_gunzip": [
-                    [
-                        "GUNZIP",
-                        "gunzip",
-                        "1.13"
-                    ]
-                ]
-            }
+            [
+                {
+                    "file": "test.xyz.fa:md5,4161df271f9bfcd25d5845a1e220dbec",
+                    "id": "test",
+                    "meta": {
+                        "id": "test"
+                    }
+                }
+            ]
         ],
-        "timestamp": "2026-04-15T15:20:52.59447",
+        "timestamp": "2026-09-30T18:15:46.138404111",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.09.1"
         }
     },
     "Should run without failures - prefix - stub": {
         "content": [
-            {
-                "0": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.xyz.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "1": [
-                    [
-                        "GUNZIP",
-                        "gunzip",
-                        "1.13"
-                    ]
-                ],
-                "gunzip": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.xyz.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "versions_gunzip": [
-                    [
-                        "GUNZIP",
-                        "gunzip",
-                        "1.13"
-                    ]
-                ]
-            }
+            [
+                {
+                    "file": "test.xyz.fastq:md5,d41d8cd98f00b204e9800998ecf8427e",
+                    "id": "test",
+                    "meta": {
+                        "id": "test"
+                    }
+                }
+            ]
         ],
-        "timestamp": "2026-01-19T17:21:56.633550769",
+        "timestamp": "2026-09-30T18:15:39.715620631",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nf-test": "0.9.5",
+            "nextflow": "26.09.1"
         }
     },
     "Should run without failures - stub": {
         "content": [
-            {
-                "0": [
-                    [
-                        [
-                            
-                        ],
-                        "test_1.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "1": [
-                    [
-                        "GUNZIP",
-                        "gunzip",
-                        "1.13"
-                    ]
-                ],
-                "gunzip": [
-                    [
-                        [
-                            
-                        ],
-                        "test_1.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "versions_gunzip": [
-                    [
-                        "GUNZIP",
-                        "gunzip",
-                        "1.13"
-                    ]
-                ]
-            }
+            [
+                {
+                    "file": "test_1.fastq:md5,d41d8cd98f00b204e9800998ecf8427e",
+                    "id": "test",
+                    "meta": {
+                        
+                    }
+                }
+            ]
         ],
-        "timestamp": "2026-01-19T17:21:51.435621199",
+        "timestamp": "2026-09-30T18:15:12.744938439",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nf-test": "0.9.5",
+            "nextflow": "26.09.1"
         }
     },
     "Should run without failures": {
         "content": [
-            {
-                "0": [
-                    [
-                        [
-                            
-                        ],
-                        "test_1.fastq:md5,4161df271f9bfcd25d5845a1e220dbec"
-                    ]
-                ],
-                "1": [
-                    [
-                        "GUNZIP",
-                        "gunzip",
-                        "1.13"
-                    ]
-                ],
-                "gunzip": [
-                    [
-                        [
-                            
-                        ],
-                        "test_1.fastq:md5,4161df271f9bfcd25d5845a1e220dbec"
-                    ]
-                ],
-                "versions_gunzip": [
-                    [
-                        "GUNZIP",
-                        "gunzip",
-                        "1.13"
-                    ]
-                ]
-            }
+            [
+                {
+                    "file": "test_1.fastq:md5,4161df271f9bfcd25d5845a1e220dbec",
+                    "id": "test",
+                    "meta": {
+                        
+                    }
+                }
+            ]
         ],
-        "timestamp": "2026-01-19T17:21:40.613975821",
+        "timestamp": "2026-09-30T18:15:04.773767385",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nf-test": "0.9.5",
+            "nextflow": "26.09.1"
         }
     },
     "Should run without failures - prefix": {
         "content": [
-            {
-                "0": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.xyz.fastq:md5,4161df271f9bfcd25d5845a1e220dbec"
-                    ]
-                ],
-                "1": [
-                    [
-                        "GUNZIP",
-                        "gunzip",
-                        "1.13"
-                    ]
-                ],
-                "gunzip": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.xyz.fastq:md5,4161df271f9bfcd25d5845a1e220dbec"
-                    ]
-                ],
-                "versions_gunzip": [
-                    [
-                        "GUNZIP",
-                        "gunzip",
-                        "1.13"
-                    ]
-                ]
-            }
+            [
+                {
+                    "file": "test.xyz.fastq:md5,4161df271f9bfcd25d5845a1e220dbec",
+                    "id": "test",
+                    "meta": {
+                        "id": "test"
+                    }
+                }
+            ]
         ],
-        "timestamp": "2026-01-19T17:21:46.086880414",
+        "timestamp": "2026-09-30T18:14:55.309945676",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nf-test": "0.9.5",
+            "nextflow": "26.09.1"
         }
     }
 }

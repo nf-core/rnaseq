@@ -277,8 +277,8 @@ if ("tx2gene" %in% names(transcript_info) && !is.null(transcript_info\$tx2gene))
 prefix <- ''
 if ('$task.ext.prefix' != 'null'){
     prefix = '$task.ext.prefix'
-} else if ('$meta.id' != 'null'){
-    prefix = '$meta.id'
+} else if ('$sample.meta.id' != 'null'){
+    prefix = '$sample.meta.id'
 }
 
 done <- lapply(params, write_se_table, prefix)

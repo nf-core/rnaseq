@@ -1,5 +1,15 @@
+nextflow.enable.types = true
+
+include { BedgraphInput } from '../../types'
+
+record UcscBedgraphtobigwigResult {
+    id:     String
+    meta:   Map
+    bigwig: Path
+}
+
 process UCSC_BEDGRAPHTOBIGWIG {
-    tag "$meta.id"
+    tag "$sample.meta.id"
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
@@ -8,29 +18,29 @@ process UCSC_BEDGRAPHTOBIGWIG {
         'quay.io/biocontainers/ucsc-bedgraphtobigwig:482--hdc0a859_0' }"
 
     input:
-    tuple val(meta), path(bedgraph)
-    path  sizes
+    sample: BedgraphInput
+    sizes: Path
 
     output:
-    tuple val(meta), path("*.bigWig"), emit: bigwig
-    tuple val("${task.process}"), val('ucsc'), val('482'), topic: versions, emit: versions_ucsc
+    record(id: sample.id, meta: sample.meta, bigwig: file("*.bigWig")) as UcscBedgraphtobigwigResult
+
+    topic:
     // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
-    when:
-    task.ext.when == null || task.ext.when
+    tuple(task.process, 'ucsc', '482') >> 'versions'
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     bedGraphToBigWig \\
         $args \\
-        $bedgraph \\
+        $sample.bedgraph \\
         $sizes \\
         ${prefix}.bigWig
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     touch ${prefix}.bigWig
     """

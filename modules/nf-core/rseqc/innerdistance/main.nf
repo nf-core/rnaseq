@@ -1,5 +1,9 @@
+nextflow.enable.types = true
+
+include { BamBaiInput; RseqcInnerDistance } from '../../types'
+
 process RSEQC_INNERDISTANCE {
-    tag "$meta.id"
+    tag "$sample.meta.id"
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
@@ -8,27 +12,30 @@ process RSEQC_INNERDISTANCE {
         'community.wave.seqera.io/library/rseqc_r-base:2e29d2dfda9cef15' }"
 
     input:
-    tuple val(meta), path(bam), path(bai)
-    path  bed
+    sample: BamBaiInput
+    bed: Path
 
     output:
-    tuple val(meta), path("*distance.txt"), optional:true, emit: distance
-    tuple val(meta), path("*freq.txt")    , optional:true, emit: freq
-    tuple val(meta), path("*mean.txt")    , optional:true, emit: mean
-    tuple val(meta), path("*.pdf")        , optional:true, emit: pdf
-    tuple val(meta), path("*.r")          , optional:true, emit: rscript
-    tuple val("${task.process}"), val('rseqc'), eval('inner_distance.py --version | sed "s/inner_distance.py //"'), emit: versions_rseqc, topic: versions
+    record(
+        id:       sample.id,
+        meta:     sample.meta,
+        distance: file("*distance.txt"),
+        freq:     file("*freq.txt", optional: true),
+        mean:     file("*mean.txt", optional: true),
+        pdf:      file("*.pdf", optional: true),
+        rscript:  file("*.r", optional: true)
+    ) as RseqcInnerDistance
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'rseqc', eval('inner_distance.py --version | sed "s/inner_distance.py //"')) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
-    if (!meta.single_end) {
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
+    if (!sample.meta.single_end) {
         """
         inner_distance.py \\
-            -i $bam \\
+            -i $sample.bam \\
             -r $bed \\
             -o $prefix \\
             $args \\
@@ -42,7 +49,7 @@ process RSEQC_INNERDISTANCE {
     }
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     touch ${prefix}.inner_distance.txt
     touch ${prefix}.inner_distance_freq.txt

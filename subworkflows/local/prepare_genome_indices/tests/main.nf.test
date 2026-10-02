@@ -65,10 +65,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -99,16 +99,21 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success },
+                { assert workflow.out.indices.collect { r -> [ r.kind, file(r.file).name ] }.sort { a, b -> a[0] <=> b[0] } == [
+                    [ 'bbsplit', 'bbsplit_index' ],
+                    [ 'bbsplit_log', 'genome_transcriptome.log' ],
+                    [ 'star', 'star' ]
+                ] },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.sortmerna_index,
-                    workflow.out.bowtie2_rrna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.splicesites.findAll { p -> p != null }.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.sortmerna_index.findAll { p -> p != null },
+                    workflow.out.bowtie2_rrna_index.findAll { p -> p != null },
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -180,10 +185,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -215,14 +220,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.splicesites.findAll { p -> p != null }.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.sortmerna_index.findAll { p -> p != null },
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -294,10 +299,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -329,14 +334,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.splicesites.findAll { p -> p != null }.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.sortmerna_index.findAll { p -> p != null },
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -408,10 +413,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -443,14 +448,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.splicesites.findAll { p -> p != null }.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.sortmerna_index.findAll { p -> p != null },
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -522,10 +527,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -557,14 +562,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.splicesites.findAll { p -> p != null }.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.sortmerna_index.findAll { p -> p != null },
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -636,10 +641,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -671,14 +676,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.splicesites.findAll { p -> p != null }.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.sortmerna_index.findAll { p -> p != null },
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -750,10 +755,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -785,7 +790,7 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -857,10 +862,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -892,14 +897,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.splicesites.findAll { p -> p != null }.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.sortmerna_index.findAll { p -> p != null },
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -971,10 +976,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -1006,14 +1011,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.splicesites.findAll { p -> p != null }.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.sortmerna_index.findAll { p -> p != null },
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -1085,10 +1090,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -1120,14 +1125,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.splicesites.findAll { p -> p != null }.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.sortmerna_index.findAll { p -> p != null },
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -1199,10 +1204,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -1234,14 +1239,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.splicesites.findAll { p -> p != null }.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.sortmerna_index.findAll { p -> p != null },
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -1313,10 +1318,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -1348,14 +1353,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.splicesites.findAll { p -> p != null }.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.sortmerna_index.findAll { p -> p != null },
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -1427,10 +1432,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -1462,14 +1467,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.splicesites.findAll { p -> p != null }.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.sortmerna_index.findAll { p -> p != null },
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -1541,10 +1546,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -1576,14 +1581,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.splicesites.findAll { p -> p != null }.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.sortmerna_index.findAll { p -> p != null },
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -1656,10 +1661,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -1690,7 +1695,7 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success },
-                { assert snapshot(sanitizeOutput(workflow.out, unstableKeys: ['bbsplit_index', 'hisat2_index', 'salmon_index'])).match() }
+                { assert snapshot(sanitizeOutput(workflow.out, unstableKeys: ['bbsplit_index', 'hisat2_index', 'salmon_index'], ignoreKeys: ['indices'])).match() }
             )
         }
 
@@ -1761,10 +1766,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -1796,14 +1801,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.splicesites.findAll { p -> p != null }.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.sortmerna_index.findAll { p -> p != null },
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -1875,10 +1880,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -1910,14 +1915,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.splicesites.findAll { p -> p != null }.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.sortmerna_index.findAll { p -> p != null },
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -1989,10 +1994,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -2024,14 +2029,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.splicesites.findAll { p -> p != null }.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.sortmerna_index.findAll { p -> p != null },
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -2103,10 +2108,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -2138,14 +2143,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.splicesites.findAll { p -> p != null }.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.sortmerna_index.findAll { p -> p != null },
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -2217,10 +2222,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -2252,14 +2257,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.splicesites.findAll { p -> p != null }.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.sortmerna_index.findAll { p -> p != null },
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -2331,10 +2336,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -2366,14 +2371,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.splicesites.findAll { p -> p != null }.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.sortmerna_index.findAll { p -> p != null },
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -2445,10 +2450,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -2480,14 +2485,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.sortmerna_index,
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.splicesites.findAll { p -> p != null }.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.sortmerna_index.findAll { p -> p != null },
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.hisat2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -2562,10 +2567,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -2596,15 +2601,20 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success },
+                { assert workflow.out.indices.collect { r -> [ r.kind, file(r.file).name ] }.sort { a, b -> a[0] <=> b[0] } == [
+                    [ 'bbsplit', 'bbsplit_index' ],
+                    [ 'bbsplit_log', 'genome_transcriptome.log' ],
+                    [ 'star', 'star' ]
+                ] },
                 { assert snapshot(
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.sortmerna_index,
-                    workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.hisat2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.sortmerna_index.findAll { p -> p != null },
+                    workflow.out.splicesites.findAll { p -> p != null }.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -2679,10 +2689,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -2714,14 +2724,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.sortmerna_index,
-                    workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.hisat2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.sortmerna_index.findAll { p -> p != null },
+                    workflow.out.splicesites.findAll { p -> p != null }.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -2796,10 +2806,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -2831,14 +2841,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.sortmerna_index,
-                    workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.hisat2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.sortmerna_index.findAll { p -> p != null },
+                    workflow.out.splicesites.findAll { p -> p != null }.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -2913,10 +2923,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -3018,10 +3028,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -3053,14 +3063,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.sortmerna_index,
-                    workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.hisat2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.sortmerna_index.findAll { p -> p != null },
+                    workflow.out.splicesites.findAll { p -> p != null }.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -3135,10 +3145,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -3170,14 +3180,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.sortmerna_index,
-                    workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.hisat2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.sortmerna_index.findAll { p -> p != null },
+                    workflow.out.splicesites.findAll { p -> p != null }.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -3252,10 +3262,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -3287,7 +3297,7 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -3362,10 +3372,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -3397,14 +3407,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.sortmerna_index,
-                    workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.hisat2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.sortmerna_index.findAll { p -> p != null },
+                    workflow.out.splicesites.findAll { p -> p != null }.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -3479,10 +3489,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -3514,14 +3524,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.sortmerna_index,
-                    workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.hisat2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.sortmerna_index.findAll { p -> p != null },
+                    workflow.out.splicesites.findAll { p -> p != null }.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -3596,10 +3606,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -3631,14 +3641,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.sortmerna_index,
-                    workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.hisat2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.sortmerna_index.findAll { p -> p != null },
+                    workflow.out.splicesites.findAll { p -> p != null }.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -3713,10 +3723,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -3748,14 +3758,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.sortmerna_index,
-                    workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.hisat2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.sortmerna_index.findAll { p -> p != null },
+                    workflow.out.splicesites.findAll { p -> p != null }.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -3830,10 +3840,10 @@ nextflow_workflow {
                 use_sentieon_star         = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -3865,14 +3875,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.sortmerna_index,
-                    workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.hisat2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.sortmerna_index.findAll { p -> p != null },
+                    workflow.out.splicesites.findAll { p -> p != null }.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -3947,10 +3957,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -3982,14 +3992,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.sortmerna_index,
-                    workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.hisat2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.sortmerna_index.findAll { p -> p != null },
+                    workflow.out.splicesites.findAll { p -> p != null }.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -4064,10 +4074,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -4099,14 +4109,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.sortmerna_index,
-                    workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.hisat2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.sortmerna_index.findAll { p -> p != null },
+                    workflow.out.splicesites.findAll { p -> p != null }.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -4182,10 +4192,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -4216,7 +4226,8 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success },
-                { assert snapshot(sanitizeOutput(workflow.out)).match() }
+                { assert snapshot(sanitizeOutput(workflow.out, ignoreKeys: ['indices'])).match("output") },
+                { assert snapshot(workflow.out.indices.sort { a, b -> a.kind <=> b.kind }).match("indices") }
             )
         }
 
@@ -4290,10 +4301,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -4325,14 +4336,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.sortmerna_index,
-                    workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.hisat2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.sortmerna_index.findAll { p -> p != null },
+                    workflow.out.splicesites.findAll { p -> p != null }.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -4407,10 +4418,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -4442,14 +4453,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.sortmerna_index,
-                    workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.hisat2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.sortmerna_index.findAll { p -> p != null },
+                    workflow.out.splicesites.findAll { p -> p != null }.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -4524,10 +4535,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -4559,14 +4570,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.sortmerna_index,
-                    workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.hisat2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.sortmerna_index.findAll { p -> p != null },
+                    workflow.out.splicesites.findAll { p -> p != null }.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -4641,10 +4652,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -4676,14 +4687,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.sortmerna_index,
-                    workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.hisat2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.sortmerna_index.findAll { p -> p != null },
+                    workflow.out.splicesites.findAll { p -> p != null }.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -4758,10 +4769,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -4863,10 +4874,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -4898,14 +4909,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.sortmerna_index,
-                    workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.hisat2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.sortmerna_index.findAll { p -> p != null },
+                    workflow.out.splicesites.findAll { p -> p != null }.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -4980,10 +4991,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = false
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)
                 input[4]  = true  // fasta_provided
                 input[5]  = null
                 input[6]  = file(params.pipelines_testdata_base_path + 'reference/bbsplit_fasta_list.txt', checkIfExists: true)
@@ -5015,14 +5026,14 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.hisat2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.bowtie2_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.kallisto_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.rsem_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.salmon_index.collect { meta, path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
-                    workflow.out.sortmerna_index,
-                    workflow.out.splicesites.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.hisat2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.bowtie2_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.kallisto_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.rsem_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.salmon_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() },
+                    workflow.out.sortmerna_index.findAll { p -> p != null },
+                    workflow.out.splicesites.findAll { p -> p != null }.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }

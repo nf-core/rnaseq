@@ -1,5 +1,9 @@
+nextflow.enable.types = true
+
+include { BamBaiInput; RseqcJunctionSaturation } from '../../types'
+
 process RSEQC_JUNCTIONSATURATION {
-    tag "$meta.id"
+    tag "$sample.meta.id"
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
@@ -8,30 +12,33 @@ process RSEQC_JUNCTIONSATURATION {
         'community.wave.seqera.io/library/rseqc_r-base:2e29d2dfda9cef15' }"
 
     input:
-    tuple val(meta), path(bam), path(bai)
-    path  bed
+    sample: BamBaiInput
+    bed: Path
 
     output:
-    tuple val(meta), path("*.pdf"), emit: pdf
-    tuple val(meta), path("*.r")  , emit: rscript
-    tuple val("${task.process}"), val('rseqc'), eval('junction_saturation.py --version | sed "s/junction_saturation.py //"'), emit: versions_rseqc, topic: versions
+    record(
+        id:      sample.id,
+        meta:    sample.meta,
+        pdf:     file("*.pdf"),
+        rscript: file("*.r")
+    ) as RseqcJunctionSaturation
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'rseqc', eval('junction_saturation.py --version | sed "s/junction_saturation.py //"')) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     junction_saturation.py \\
-        -i $bam \\
+        -i $sample.bam \\
         -r $bed \\
         -o $prefix \\
         $args
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     touch ${prefix}.junctionSaturation_plot.pdf
     touch ${prefix}.junctionSaturation_plot.r

@@ -26,8 +26,12 @@ nextflow_workflow {
                 script "../../../../modules/nf-core/rsem/preparereference/main.nf"
                 process {
                     """
-                    input[0] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
-                    input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
+                    input[0] = Channel.of(record(
+                        id: 'genome',
+                        meta: [ id:'genome' ],
+                        fasta: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true),
+                        gtf: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
+                    ))
                     """
                 }
             }
@@ -36,16 +40,14 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = [
-                    [ id: 'samplesheet' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/csv/samplesheet_micro.csv', checkIfExists: true)
-                ]
-                input[1] = [
-                    [ id: 'test', strandedness: 'forward' ],
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/rsem.transcript.bam', checkIfExists: true)
-                ]
-                input[2] = RSEM_PREPAREREFERENCE.out.index
-                input[3] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
+                input[0] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/csv/samplesheet_micro.csv', checkIfExists: true)))
+                input[1] = new nextflow.dataflow.ChannelImpl(channel.of(record(
+                    id: 'test',
+                    meta: [ id: 'test', strandedness: 'forward' ],
+                    reads: [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/rsem.transcript.bam', checkIfExists: true) ]
+                )))
+                input[2] = new nextflow.dataflow.ValueImpl(RSEM_PREPAREREFERENCE.out.map { r -> r.index }.first())
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)))
                 input[4] = 'gene_id'
                 input[5] = 'gene_name'
                 input[6] = false
@@ -58,20 +60,20 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    file(workflow.out.merged_gene_rds_unified[0][1]).name,
-                    file(workflow.out.merged_transcript_rds_unified[0][1]).name,
-                    workflow.out.tpm_gene,
-                    workflow.out.counts_gene,
-                    workflow.out.counts_gene_length_scaled,
-                    workflow.out.counts_gene_scaled,
-                    workflow.out.lengths_gene,
-                    workflow.out.tpm_transcript,
-                    workflow.out.counts_transcript,
-                    workflow.out.lengths_transcript,
-                    workflow.out.merged_counts_gene,
-                    workflow.out.merged_tpm_gene,
-                    workflow.out.merged_counts_transcript,
-                    workflow.out.merged_tpm_transcript
+                    file(workflow.out.merged[0].merged_gene_rds).name,
+                    file(workflow.out.merged[0].merged_transcript_rds).name,
+                    workflow.out.merged[0].tpm_gene,
+                    workflow.out.merged[0].counts_gene,
+                    workflow.out.merged[0].counts_gene_length_scaled,
+                    workflow.out.merged[0].counts_gene_scaled,
+                    workflow.out.merged[0].lengths_gene,
+                    workflow.out.merged[0].tpm_transcript,
+                    workflow.out.merged[0].counts_transcript,
+                    workflow.out.merged[0].lengths_transcript,
+                    workflow.out.rsem_merge[0].rsem_merge.counts_gene,
+                    workflow.out.rsem_merge[0].rsem_merge.tpm_gene,
+                    workflow.out.rsem_merge[0].rsem_merge.counts_transcript,
+                    workflow.out.rsem_merge[0].rsem_merge.tpm_transcript
                 ).match() }
             )
         }
@@ -86,8 +88,12 @@ nextflow_workflow {
                 script "../../../../modules/nf-core/rsem/preparereference/main.nf"
                 process {
                     """
-                    input[0] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
-                    input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
+                    input[0] = Channel.of(record(
+                        id: 'genome',
+                        meta: [ id:'genome' ],
+                        fasta: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true),
+                        gtf: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
+                    ))
                     """
                 }
             }
@@ -96,19 +102,17 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = [
-                    [ id: 'samplesheet' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/csv/samplesheet_micro.csv', checkIfExists: true)
-                ]
-                input[1] = [
-                    [ id: 'test', strandedness: 'forward' ],
-                    [
+                input[0] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/csv/samplesheet_micro.csv', checkIfExists: true)))
+                input[1] = new nextflow.dataflow.ChannelImpl(channel.of(record(
+                    id: 'test',
+                    meta: [ id: 'test', strandedness: 'forward' ],
+                    reads: [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
-                ]
-                input[2] = RSEM_PREPAREREFERENCE.out.index
-                input[3] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
+                )))
+                input[2] = new nextflow.dataflow.ValueImpl(RSEM_PREPAREREFERENCE.out.map { r -> r.index }.first())
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)))
                 input[4] = 'gene_id'
                 input[5] = 'gene_name'
                 input[6] = false
@@ -121,20 +125,20 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    file(workflow.out.merged_gene_rds_unified[0][1]).name,
-                    file(workflow.out.merged_transcript_rds_unified[0][1]).name,
-                    workflow.out.tpm_gene,
-                    workflow.out.counts_gene,
-                    workflow.out.counts_gene_length_scaled,
-                    workflow.out.counts_gene_scaled,
-                    workflow.out.lengths_gene,
-                    workflow.out.tpm_transcript,
-                    workflow.out.counts_transcript,
-                    workflow.out.lengths_transcript,
-                    workflow.out.merged_counts_gene,
-                    workflow.out.merged_tpm_gene,
-                    workflow.out.merged_counts_transcript,
-                    workflow.out.merged_tpm_transcript
+                    file(workflow.out.merged[0].merged_gene_rds).name,
+                    file(workflow.out.merged[0].merged_transcript_rds).name,
+                    workflow.out.merged[0].tpm_gene,
+                    workflow.out.merged[0].counts_gene,
+                    workflow.out.merged[0].counts_gene_length_scaled,
+                    workflow.out.merged[0].counts_gene_scaled,
+                    workflow.out.merged[0].lengths_gene,
+                    workflow.out.merged[0].tpm_transcript,
+                    workflow.out.merged[0].counts_transcript,
+                    workflow.out.merged[0].lengths_transcript,
+                    workflow.out.rsem_merge[0].rsem_merge.counts_gene,
+                    workflow.out.rsem_merge[0].rsem_merge.tpm_gene,
+                    workflow.out.rsem_merge[0].rsem_merge.counts_transcript,
+                    workflow.out.rsem_merge[0].rsem_merge.tpm_transcript
                 ).match() }
             )
         }
@@ -150,8 +154,12 @@ nextflow_workflow {
                 script "../../../../modules/nf-core/rsem/preparereference/main.nf"
                 process {
                     """
-                    input[0] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
-                    input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
+                    input[0] = Channel.of(record(
+                        id: 'genome',
+                        meta: [ id:'genome' ],
+                        fasta: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true),
+                        gtf: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
+                    ))
                     """
                 }
             }
@@ -160,16 +168,14 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = [
-                    [ id: 'samplesheet' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/csv/samplesheet_micro.csv', checkIfExists: true)
-                ]
-                input[1] = [
-                    [ id: 'test', strandedness: 'forward' ],
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/rsem.transcript.bam', checkIfExists: true)
-                ]
-                input[2] = RSEM_PREPAREREFERENCE.out.index
-                input[3] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
+                input[0] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/csv/samplesheet_micro.csv', checkIfExists: true)))
+                input[1] = new nextflow.dataflow.ChannelImpl(channel.of(record(
+                    id: 'test',
+                    meta: [ id: 'test', strandedness: 'forward' ],
+                    reads: [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/rsem.transcript.bam', checkIfExists: true) ]
+                )))
+                input[2] = new nextflow.dataflow.ValueImpl(RSEM_PREPAREREFERENCE.out.map { r -> r.index }.first())
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)))
                 input[4] = 'gene_id'
                 input[5] = 'gene_name'
                 input[6] = false
@@ -196,8 +202,12 @@ nextflow_workflow {
                 script "../../../../modules/nf-core/rsem/preparereference/main.nf"
                 process {
                     """
-                    input[0] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
-                    input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
+                    input[0] = Channel.of(record(
+                        id: 'genome',
+                        meta: [ id:'genome' ],
+                        fasta: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true),
+                        gtf: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
+                    ))
                     """
                 }
             }
@@ -206,19 +216,17 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = [
-                    [ id: 'samplesheet' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/csv/samplesheet_micro.csv', checkIfExists: true)
-                ]
-                input[1] = [
-                    [ id: 'test', strandedness: 'forward' ],
-                    [
+                input[0] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/csv/samplesheet_micro.csv', checkIfExists: true)))
+                input[1] = new nextflow.dataflow.ChannelImpl(channel.of(record(
+                    id: 'test',
+                    meta: [ id: 'test', strandedness: 'forward' ],
+                    reads: [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
                     ]
-                ]
-                input[2] = RSEM_PREPAREREFERENCE.out.index
-                input[3] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
+                )))
+                input[2] = new nextflow.dataflow.ValueImpl(RSEM_PREPAREREFERENCE.out.map { r -> r.index }.first())
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)))
                 input[4] = 'gene_id'
                 input[5] = 'gene_name'
                 input[6] = false

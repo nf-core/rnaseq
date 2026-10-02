@@ -1,5 +1,17 @@
+nextflow.enable.types = true
+
+include { BamInput } from '../types'
+
+record UmicollapseResult {
+    id:    String
+    meta:  Map
+    bam:   Path?
+    fastq: Path?
+    log:   Path
+}
+
 process UMICOLLAPSE {
-    tag "${meta.id}"
+    tag "${sample.meta.id}"
     label "process_high"
     label "process_high_memory"
 
@@ -9,22 +21,25 @@ process UMICOLLAPSE {
         : 'quay.io/biocontainers/umicollapse:1.1.0--hdfd78af_0'}"
 
     input:
-    tuple val(meta), path(input), path(bai)
-    val mode
+    sample: BamInput
+    mode: String
 
     output:
-    tuple val(meta), path("*.bam"), emit: bam, optional: true
-    tuple val(meta), path("*dedup*fastq.gz"), emit: fastq, optional: true
-    tuple val(meta), path("*_UMICollapse.log"), emit: log
-    // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
-    tuple val("${task.process}"), val('umicollapse'), val("1.1.0-0"), emit: versions_umicollapse, topic: versions
+    record(
+        id:    sample.id,
+        meta:  sample.meta,
+        bam:   file('*.bam', optional: true),
+        fastq: file('*dedup*fastq.gz', optional: true),
+        log:   file('*_UMICollapse.log')
+    ) as UmicollapseResult
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
+    tuple(task.process, 'umicollapse', '1.1.0-0') >> 'versions'
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     // Memory allocation: We need to make sure that both heap and stack size is sufficiently large for
     // umicollapse. We set the stack size to 5% of the available memory, the heap size to 90%
     // which leaves 5% for stuff happening outside of java without the scheduler killing the process.
@@ -44,13 +59,13 @@ process UMICOLLAPSE {
         -Xss${max_stack_size_mega}M \\
         -jar "\$UMICOLLAPSE_JAR" \\
         ${mode} \\
-        -i ${input} \\
+        -i ${sample.bam} \\
         -o ${prefix}.${extension} \\
         ${args} | tee ${prefix}_UMICollapse.log
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     if (mode !in ['fastq', 'bam']) {
         error("Mode must be one of 'fastq' or 'bam'.")
     }

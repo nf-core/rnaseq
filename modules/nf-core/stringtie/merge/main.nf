@@ -1,5 +1,19 @@
+nextflow.enable.types = true
+
+record StringtieMergeInput {
+    id:   String
+    meta: Map
+    gtf:  List<Path>
+}
+
+record StringtieMergeResult {
+    id:         String
+    meta:       Map
+    merged_gtf: Path
+}
+
 process STRINGTIE_MERGE {
-    tag "${meta.id}"
+    tag "${sample.meta.id}"
     label 'process_medium'
 
     // Note: 2.7X indices incompatible with AWS iGenomes.
@@ -9,24 +23,27 @@ process STRINGTIE_MERGE {
         'community.wave.seqera.io/library/stringtie:3.0.3--e8043d00caecd051' }"
 
     input:
-    tuple val(meta), path(gtf)
-    tuple val(meta2), path(annotation_gtf)
+    sample: StringtieMergeInput
+    annotation_gtf: Path?
 
     output:
-    tuple val(meta), path("${prefix}.gtf"), emit: merged_gtf
-    tuple val("${task.process}"), val('stringtie'), eval('stringtie --version'), emit: versions_stringtie, topic: versions
+    record(
+        id:         sample.id,
+        meta:       sample.meta,
+        merged_gtf: file("${prefix}.gtf")
+    ) as StringtieMergeResult
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'stringtie', eval('stringtie --version')) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''
-    prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${sample.meta.id}"
     def reference = annotation_gtf ? "-G ${annotation_gtf}" : ""
     """
     stringtie \\
         --merge \\
-        ${gtf} \\
+        ${sample.gtf.join(' ')} \\
         ${reference} \\
         -o ${prefix}.gtf \\
         -p ${task.cpus} \\
@@ -34,7 +51,7 @@ process STRINGTIE_MERGE {
     """
 
     stub:
-    prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     touch ${prefix}.gtf
     """

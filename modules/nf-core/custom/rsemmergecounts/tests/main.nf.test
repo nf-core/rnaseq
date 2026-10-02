@@ -17,10 +17,11 @@ nextflow_process {
                 script "../../../untar/main.nf"
                 process {
                     """
-                    input[0] = Channel.of([
-                        [ id: 'rsem_results' ],
-                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/rsem_results.tar.gz', checkIfExists: true)
-                    ])
+                    input[0] = Channel.of(record(
+                        id: 'rsem_results',
+                        meta: [ id: 'rsem_results' ],
+                        archive: file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/rsem_results.tar.gz', checkIfExists: true)
+                    ))
                     """
                 }
             }
@@ -29,7 +30,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = UNTAR.out.untar.flatMap { meta, dir ->
+                ch_genes = UNTAR.out.map { r -> [ r.meta, r.dir ] }.flatMap { meta, dir ->
                     def files = []
                     dir.toFile().eachFileRecurse { f ->
                         if (f.name.endsWith('.genes.results')) {
@@ -37,8 +38,8 @@ nextflow_process {
                         }
                     }
                     files
-                }.collect().map { files -> [ [ id: 'rsem_merged' ], files ] }
-                input[1] = UNTAR.out.untar.flatMap { meta, dir ->
+                }.collect()
+                ch_isoforms = UNTAR.out.map { r -> [ r.meta, r.dir ] }.flatMap { meta, dir ->
                     def files = []
                     dir.toFile().eachFileRecurse { f ->
                         if (f.name.endsWith('.isoforms.results')) {
@@ -47,6 +48,7 @@ nextflow_process {
                     }
                     files
                 }.collect()
+                input[0] = ch_genes.combine(ch_isoforms).map { genes, isoforms -> record(id: 'rsem_merged', meta: [ id: 'rsem_merged' ], genes: genes, isoforms: isoforms) }
                 """
             }
         }
@@ -54,15 +56,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(
-                    process.out.counts_gene,
-                    process.out.tpm_gene,
-                    process.out.counts_transcript,
-                    process.out.tpm_transcript,
-                    process.out.genes_long,
-                    process.out.isoforms_long,
-                    process.out.findAll { key, val -> key.startsWith('versions') }
-                ).match() }
+                { assert snapshot(process.out[0][0].id, process.out[0][0].rsem_merge).match() }
             )
         }
     }
@@ -74,12 +68,10 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of(
-                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
-                ).collect().map { files -> [ [ id: 'rsem_merged' ], files ] }
-                input[1] = Channel.of(
+                ch_files = Channel.of(
                     file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
                 ).collect()
+                input[0] = ch_files.map { files -> record(id: 'rsem_merged', meta: [ id: 'rsem_merged' ], genes: files, isoforms: files) }
                 """
             }
         }
@@ -87,7 +79,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(process.out[0][0].id, process.out[0][0].rsem_merge).match() }
             )
         }
     }

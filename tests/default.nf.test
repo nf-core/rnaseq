@@ -6,17 +6,13 @@ nextflow_pipeline {
 
     test("Params: default") {
 
-        when {
-            params {
-                outdir = "$outputDir"
-            }
-        }
+        options "-output-dir $outputDir"
 
         then {
-            // stable_path: All files + folders in ${params.outdir}/ with a stable path (including file name)
-            def stable_path = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_content: All files in ${params.outdir}/ with stable content
-            def stable_content = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // stable_path: All files + folders in the output directory with a stable path (including file name)
+            def stable_path = getAllFilesFromDir(outputDir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_content: All files in the output directory with stable content
+            def stable_content = getAllFilesFromDir(outputDir, ignoreFile: 'tests/.nftignore')
             assert workflow.success
             assertAll(
                 { assert snapshot(
@@ -46,19 +42,13 @@ nextflow_pipeline {
 
     test("Params: default - stub") {
 
-        options "-stub"
-
-        when {
-            params {
-                outdir = "$outputDir"
-            }
-        }
+        options "-stub -output-dir $outputDir"
 
         then {
-            // stable_path: All files + folders in ${params.outdir}/ with a stable path (including file name)
-            def stable_path = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_content: All files in ${params.outdir}/ with stable content
-            def stable_content = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // stable_path: All files + folders in the output directory with a stable path (including file name)
+            def stable_path = getAllFilesFromDir(outputDir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_content: All files in the output directory with stable content
+            def stable_content = getAllFilesFromDir(outputDir, ignoreFile: 'tests/.nftignore')
             assert workflow.success
             assertAll(
                 { assert snapshot(

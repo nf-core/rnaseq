@@ -1,7 +1,7 @@
 nextflow_function {
 
     name "Test Functions"
-    script "../main.nf"
+    script "../helpers.nf"
 
     test("Test Function multiqcSampleMergeYamlPattern plain id") {
 
@@ -52,17 +52,13 @@ nextflow_function {
         when {
             function {
                 """
-                def sheet = file("\${workDir}/se_only_samplesheet.csv")
                 def fq1 = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357070_1.fastq.gz'
                 def fq2 = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357072_1.fastq.gz'
-                sheet.text = [
-                    'sample,fastq_1,fastq_2,strandedness',
-                    "sample_1,\${fq1},,auto",
-                    "sample_2,\${fq2},,auto",
-                ].join('\\n') + '\\n'
 
-                input[0] = sheet
-                input[1] = file("\${projectDir}/assets/schema_input.json", checkIfExists: true)
+                input[0] = [
+                    [[id: 'sample_1', strandedness: 'auto'], fq1, null, null, null],
+                    [[id: 'sample_2', strandedness: 'auto'], fq2, null, null, null],
+                ]
                 """
             }
         }
@@ -82,19 +78,15 @@ nextflow_function {
         when {
             function {
                 """
-                def sheet = file("\${workDir}/pe_samplesheet.csv")
                 def fq1a = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357070_1.fastq.gz'
                 def fq2a = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357070_2.fastq.gz'
                 def fq1b = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357072_1.fastq.gz'
                 def fq2b = 'https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357072_2.fastq.gz'
-                sheet.text = [
-                    'sample,fastq_1,fastq_2,strandedness',
-                    "sample_1,\${fq1a},\${fq2a},auto",
-                    "foo.1,\${fq1b},\${fq2b},auto",
-                ].join('\\n') + '\\n'
 
-                input[0] = sheet
-                input[1] = file("\${projectDir}/assets/schema_input.json", checkIfExists: true)
+                input[0] = [
+                    [[id: 'sample_1', strandedness: 'auto'], fq1a, fq2a, null, null],
+                    [[id: 'foo.1', strandedness: 'auto'], fq1b, fq2b, null, null],
+                ]
                 """
             }
         }
@@ -416,13 +408,7 @@ headers:
                     ],
                 ]
                 input[1] = [
-                    [
-                        [id: 'WT_REP1'],
-                        'auto',
-                        'pass',
-                        [inferred_strandedness: 'reverse', forwardFragments: 10.0, reverseFragments: 85.0, unstrandedFragments: 5.0],
-                        [inferred_strandedness: 'reverse', forwardFragments:  9.1, reverseFragments: 86.3, unstrandedFragments: 4.6],
-                    ],
+                    [id: 'WT_REP1', meta: [id: 'WT_REP1'], provided: 'auto', status: 'pass', salmon: [inferred_strandedness: 'reverse', forwardFragments: 10.0, reverseFragments: 85.0, unstrandedFragments: 5.0], rseqc: [inferred_strandedness: 'reverse', forwardFragments:  9.1, reverseFragments: 86.3, unstrandedFragments: 4.6]],
                 ]
                 """
             }
@@ -463,24 +449,9 @@ headers:
                 // Rows supplied in shuffled order; the helper must emit the data
                 // map keyed by sample id in alphabetical order.
                 input[1] = [
-                    [
-                        [id: 'WT_REP2'],
-                        'auto', 'pass',
-                        [inferred_strandedness: 'reverse', forwardFragments: 10.0, reverseFragments: 85.0, unstrandedFragments: 5.0],
-                        [inferred_strandedness: 'reverse', forwardFragments:  9.1, reverseFragments: 86.3, unstrandedFragments: 4.6],
-                    ],
-                    [
-                        [id: 'RAP1_IAA_30M_REP1'],
-                        'auto', 'pass',
-                        [inferred_strandedness: 'reverse', forwardFragments: 11.0, reverseFragments: 84.0, unstrandedFragments: 5.0],
-                        [inferred_strandedness: 'reverse', forwardFragments:  9.5, reverseFragments: 85.0, unstrandedFragments: 5.5],
-                    ],
-                    [
-                        [id: 'WT_REP1'],
-                        'auto', 'pass',
-                        [inferred_strandedness: 'reverse', forwardFragments: 10.0, reverseFragments: 85.0, unstrandedFragments: 5.0],
-                        [inferred_strandedness: 'reverse', forwardFragments:  9.1, reverseFragments: 86.3, unstrandedFragments: 4.6],
-                    ],
+                    [id: 'WT_REP2', meta: [id: 'WT_REP2'], provided: 'auto', status: 'pass', salmon: [inferred_strandedness: 'reverse', forwardFragments: 10.0, reverseFragments: 85.0, unstrandedFragments: 5.0], rseqc: [inferred_strandedness: 'reverse', forwardFragments:  9.1, reverseFragments: 86.3, unstrandedFragments: 4.6]],
+                    [id: 'RAP1_IAA_30M_REP1', meta: [id: 'RAP1_IAA_30M_REP1'], provided: 'auto', status: 'pass', salmon: [inferred_strandedness: 'reverse', forwardFragments: 11.0, reverseFragments: 84.0, unstrandedFragments: 5.0], rseqc: [inferred_strandedness: 'reverse', forwardFragments:  9.5, reverseFragments: 85.0, unstrandedFragments: 5.5]],
+                    [id: 'WT_REP1', meta: [id: 'WT_REP1'], provided: 'auto', status: 'pass', salmon: [inferred_strandedness: 'reverse', forwardFragments: 10.0, reverseFragments: 85.0, unstrandedFragments: 5.0], rseqc: [inferred_strandedness: 'reverse', forwardFragments:  9.1, reverseFragments: 86.3, unstrandedFragments: 4.6]],
                 ]
                 """
             }
@@ -512,13 +483,7 @@ headers:
                 // strandSummaryCells is an undeclared column
                 input[0] = [id: 'demo', headers: [provided: [title: 'Provided']]]
                 input[1] = [
-                    [
-                        [id: 'WT_REP1'],
-                        'auto',
-                        '-',
-                        [inferred_strandedness: 'forward', forwardFragments: 90.0, reverseFragments: 10.0, unstrandedFragments: 0.0],
-                        null,
-                    ],
+                    [id: 'WT_REP1', meta: [id: 'WT_REP1'], provided: 'auto', status: '-', salmon: [inferred_strandedness: 'forward', forwardFragments: 90.0, reverseFragments: 10.0, unstrandedFragments: 0.0], rseqc: null],
                 ]
                 """
             }
@@ -589,13 +554,7 @@ headers:
                     pconfig: [id: 'demo_bar', title: 'Demo', ylab: '% of fragments'],
                 ]
                 input[1] = [
-                    [
-                        [id: 'WT_REP1'],
-                        'auto',
-                        '-',
-                        [inferred_strandedness: 'forward', forwardFragments: 82.0, reverseFragments: 13.0, unstrandedFragments: 5.0],
-                        null,
-                    ],
+                    [id: 'WT_REP1', meta: [id: 'WT_REP1'], provided: 'auto', status: '-', salmon: [inferred_strandedness: 'forward', forwardFragments: 82.0, reverseFragments: 13.0, unstrandedFragments: 5.0], rseqc: null],
                 ]
                 """
             }
@@ -621,13 +580,7 @@ headers:
                     pconfig: [id: 'demo_bar', title: 'Demo', ylab: '% of fragments'],
                 ]
                 input[1] = [
-                    [
-                        [id: 'WT_REP1'],
-                        'auto',
-                        'pass',
-                        [inferred_strandedness: 'reverse', forwardFragments: 10.0, reverseFragments: 85.0, unstrandedFragments: 5.0],
-                        [inferred_strandedness: 'reverse', forwardFragments:  9.1, reverseFragments: 86.3, unstrandedFragments: 4.6],
-                    ],
+                    [id: 'WT_REP1', meta: [id: 'WT_REP1'], provided: 'auto', status: 'pass', salmon: [inferred_strandedness: 'reverse', forwardFragments: 10.0, reverseFragments: 85.0, unstrandedFragments: 5.0], rseqc: [inferred_strandedness: 'reverse', forwardFragments:  9.1, reverseFragments: 86.3, unstrandedFragments: 4.6]],
                 ]
                 """
             }

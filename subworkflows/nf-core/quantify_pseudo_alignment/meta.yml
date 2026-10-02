@@ -76,6 +76,12 @@ output:
       description: |
         Channel containing those pseudoaligner outputs readable by MultiQC for
         passing to workflow-level reporting.
+  - quant_merged:
+      type: file
+      description: |
+        Merged quantification, keyed by id: a single row when merging, one per
+        sample when `skip_merge` is true. Fields as `quant_tximport_summarizedexperiment`'s
+        `results` output.
   - tx2gene:
       type: file
       description: |

@@ -1,5 +1,20 @@
+nextflow.enable.types = true
+
+record BedtoolsGenomecovInput {
+    id:        String
+    meta:      Map
+    intervals: Path
+    scale:     Float
+}
+
+record BedtoolsGenomecovResult {
+    id:       String
+    meta:     Map
+    bedgraph: Path
+}
+
 process BEDTOOLS_GENOMECOV {
-    tag "${meta.id}"
+    tag "${sample.meta.id}"
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
@@ -8,23 +23,22 @@ process BEDTOOLS_GENOMECOV {
         : 'community.wave.seqera.io/library/bedtools_coreutils:a623c13f66d5262b'}"
 
     input:
-    tuple val(meta), path(intervals), val(scale)
-    path sizes
-    val extension
-    val sort
+    sample: BedtoolsGenomecovInput
+    sizes: Path?
+    extension: String
+    sort: Boolean
 
     output:
-    tuple val(meta), path("*.${extension}"), emit: genomecov
-    tuple val("${task.process}"), val('bedtools'), eval("bedtools --version | sed -e 's/bedtools v//g'"), topic: versions, emit: versions_bedtools
+    record(id: sample.id, meta: sample.meta, bedgraph: file("*.${extension}")) as BedtoolsGenomecovResult
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'bedtools', eval("bedtools --version | sed -e 's/bedtools v//g'")) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''
     def args_list = args.tokenize()
-    args += scale > 0 && scale != 1 ? " -scale ${scale}" : ""
-    if (!args_list.contains('-bg') && (scale > 0 && scale != 1)) {
+    args += sample.scale > 0 && sample.scale != 1 ? " -scale ${sample.scale}" : ""
+    if (!args_list.contains('-bg') && (sample.scale > 0 && sample.scale != 1)) {
         args += " -bg"
     }
     // Sorts output file by chromosome and position using additional options for performance and consistency
@@ -32,12 +46,12 @@ process BEDTOOLS_GENOMECOV {
     def buffer = task.memory ? "--buffer-size=${task.memory.toGiga().intdiv(2)}G" : ''
     def sort_cmd = sort ? "| LC_ALL=C sort --parallel=${task.cpus} ${buffer} -k1,1 -k2,2n" : ''
 
-    def prefix = task.ext.prefix ?: "${meta.id}"
-    if (intervals.name =~ /\.bam/) {
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
+    if (sample.intervals.name =~ /\.bam/) {
         """
         bedtools \\
             genomecov \\
-            -ibam ${intervals} \\
+            -ibam ${sample.intervals} \\
             ${args} \\
             ${sort_cmd} \\
             > ${prefix}.${extension}
@@ -47,7 +61,7 @@ process BEDTOOLS_GENOMECOV {
         """
         bedtools \\
             genomecov \\
-            -i ${intervals} \\
+            -i ${sample.intervals} \\
             -g ${sizes} \\
             ${args} \\
             ${sort_cmd} \\
@@ -56,7 +70,7 @@ process BEDTOOLS_GENOMECOV {
     }
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     touch  ${prefix}.${extension}
     """

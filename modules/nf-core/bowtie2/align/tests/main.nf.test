@@ -17,10 +17,11 @@ nextflow_process {
                 script "../../build/main.nf"
                 process {
                     """
-                    input[0] = [
-                        [ id:'test'],
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
-                    ]
+                    input[0] = record(
+                        id: 'test',
+                        meta: [ id:'test'],
+                        fasta: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                    )
                     """
                 }
             }
@@ -29,15 +30,13 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                    [ id:'test', single_end:true ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
-                ]
-                input[1] = BOWTIE2_BUILD.out.index
-                input[2] = [
-                    [ id:'test' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:true ],
+                    reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                )
+                input[1] = BOWTIE2_BUILD.out.map { r -> r.index }
+                input[2] = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
                 input[3] = false //save_unaligned
                 input[4] = true //sort
                 """
@@ -45,17 +44,17 @@ nextflow_process {
         }
 
         then {
+            def aln = process.out[0][0]
             assertAll (
                 { assert process.success },
                 { assert snapshot(
                     // Conda and docker version of bowtie2 produce different
                     // hashes. Therefore, testing whether file exists and bam
                     // statistics.
-                    file(process.out.bam[0][1]).name,
-                    bam(process.out.bam[0][1], stringency: "silent").getStatistics(exclude:["sorted"]),
-                    process.out.log,
-                    process.out.fastq,
-                    process.out.findAll { key, val -> key.startsWith('versions') }
+                    file(aln.raw_bams[0]).name,
+                    bam(aln.raw_bams[0], stringency: "silent").getStatistics(exclude:["sorted"]),
+                    aln.bowtie2.log,
+                    aln.unmapped,
                 ).match() }
             )
         }
@@ -70,10 +69,11 @@ nextflow_process {
                 script "../../build/main.nf"
                 process {
                     """
-                    input[0] = [
-                        [ id:'test' ],
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
-                    ]
+                    input[0] = record(
+                        id: 'test',
+                        meta: [ id:'test' ],
+                        fasta: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                    )
                     """
                 }
             }
@@ -82,15 +82,13 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                    [ id:'test', single_end:true ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
-                ]
-                input[1] = BOWTIE2_BUILD.out.index
-                input[2] = [
-                    [ id:'test' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:true ],
+                    reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                )
+                input[1] = BOWTIE2_BUILD.out.map { r -> r.index }
+                input[2] = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
                 input[3] = false //save_unaligned
                 input[4] = true //sort
                 """
@@ -98,14 +96,14 @@ nextflow_process {
         }
 
         then {
+            def aln = process.out[0][0]
             assertAll (
                 { assert process.success },
                 { assert snapshot(
-                    file(process.out.sam[0][1]).name,
-                    bam(process.out.sam[0][1], stringency: "silent").getStatistics(exclude:["sorted"]),
-                    process.out.log,
-                    process.out.fastq,
-                    process.out.findAll { key, val -> key.startsWith('versions') }
+                    file(aln.sam).name,
+                    bam(aln.sam, stringency: "silent").getStatistics(exclude:["sorted"]),
+                    aln.bowtie2.log,
+                    aln.unmapped,
                 ).match() }
             )
         }
@@ -120,10 +118,11 @@ nextflow_process {
                 script "../../build/main.nf"
                 process {
                     """
-                    input[0] = [
-                        [ id:'test' ],
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
-                    ]
+                    input[0] = record(
+                        id: 'test',
+                        meta: [ id:'test' ],
+                        fasta: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                    )
                     """
                 }
             }
@@ -132,15 +131,13 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                    [ id:'test', single_end:true ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
-                ]
-                input[1] = BOWTIE2_BUILD.out.index
-                input[2] = [
-                    [ id:'test' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:true ],
+                    reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                )
+                input[1] = BOWTIE2_BUILD.out.map { r -> r.index }
+                input[2] = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
                 input[3] = false //save_unaligned
                 input[4] = true //sort
                 """
@@ -148,14 +145,14 @@ nextflow_process {
         }
 
         then {
+            def aln = process.out[0][0]
             assertAll (
                 { assert process.success },
                 { assert snapshot(
-                    file(process.out.sam[0][1]).name,
-                    bam(process.out.sam[0][1], stringency: "silent").getStatistics(exclude:["sorted"]),
-                    process.out.log,
-                    process.out.fastq,
-                    process.out.findAll { key, val -> key.startsWith('versions') }
+                    file(aln.sam).name,
+                    bam(aln.sam, stringency: "silent").getStatistics(exclude:["sorted"]),
+                    aln.bowtie2.log,
+                    aln.unmapped,
                 ).match() }
             )
         }
@@ -170,10 +167,11 @@ nextflow_process {
                 script "../../build/main.nf"
                 process {
                     """
-                    input[0] = [
-                        [ id:'test' ],
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
-                    ]
+                    input[0] = record(
+                        id: 'test',
+                        meta: [ id:'test' ],
+                        fasta: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                    )
                     """
                 }
             }
@@ -182,15 +180,13 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                    [ id:'test', single_end:true ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
-                ]
-                input[1] = BOWTIE2_BUILD.out.index
-                input[2] = [
-                    [ id:'test' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:true ],
+                    reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                )
+                input[1] = BOWTIE2_BUILD.out.map { r -> r.index }
+                input[2] = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
                 input[3] = true //save_unaligned
                 input[4] = true //sort
                 """
@@ -198,17 +194,17 @@ nextflow_process {
         }
 
         then {
+            def aln = process.out[0][0]
             assertAll (
                 { assert process.success },
                 { assert snapshot(
                     // Conda and docker version of bowtie2 produce different
                     // hashes. Therefore, testing whether file exists and bam
                     // statistics.
-                    file(process.out.bam[0][1]).name,
-                    bam(process.out.bam[0][1], stringency: "silent").getStatistics(exclude:["sorted"]),
-                    process.out.log,
-                    process.out.fastq,
-                    process.out.findAll { key, val -> key.startsWith('versions') }
+                    file(aln.raw_bams[0]).name,
+                    bam(aln.raw_bams[0], stringency: "silent").getStatistics(exclude:["sorted"]),
+                    aln.bowtie2.log,
+                    aln.unmapped,
                 ).match() }
             )
         }
@@ -223,10 +219,11 @@ nextflow_process {
                 script "../../build/main.nf"
                 process {
                     """
-                    input[0] = [
-                        [ id:'test'],
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
-                    ]
+                    input[0] = record(
+                        id: 'test',
+                        meta: [ id:'test'],
+                        fasta: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                    )
                     """
                 }
             }
@@ -235,18 +232,16 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                    [ id:'test', single_end:false ], // meta map
-                    [
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    reads: [
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                     ]
-                ]
-                input[1] = BOWTIE2_BUILD.out.index
-                input[2] = [
-                    [ id:'test' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
-                ]
+                )
+                input[1] = BOWTIE2_BUILD.out.map { r -> r.index }
+                input[2] = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
                 input[3] = false //save_unaligned
                 input[4] = true //sort
                 """
@@ -254,17 +249,17 @@ nextflow_process {
         }
 
         then {
+            def aln = process.out[0][0]
             assertAll (
                 { assert process.success },
                 { assert snapshot(
                     // Conda and docker version of bowtie2 produce different
                     // hashes. Therefore, testing whether file exists and bam
                     // statistics.
-                    file(process.out.bam[0][1]).name,
-                    bam(process.out.bam[0][1], stringency: "silent").getStatistics(exclude:["sorted"]),
-                    process.out.log,
-                    process.out.fastq,
-                    process.out.findAll { key, val -> key.startsWith('versions') }
+                    file(aln.raw_bams[0]).name,
+                    bam(aln.raw_bams[0], stringency: "silent").getStatistics(exclude:["sorted"]),
+                    aln.bowtie2.log,
+                    aln.unmapped,
                 ).match() }
             )
         }
@@ -279,10 +274,11 @@ nextflow_process {
                 script "../../build/main.nf"
                 process {
                     """
-                    input[0] = [
-                        [ id:'test'],
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
-                    ]
+                    input[0] = record(
+                        id: 'test',
+                        meta: [ id:'test'],
+                        fasta: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                    )
                     """
                 }
             }
@@ -291,18 +287,16 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                    [ id:'test', single_end:false ], // meta map
-                    [
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    reads: [
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                     ]
-                ]
-                input[1] = BOWTIE2_BUILD.out.index
-                input[2] = [
-                    [ id:'test'],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
-                ]
+                )
+                input[1] = BOWTIE2_BUILD.out.map { r -> r.index }
+                input[2] = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
                 input[3] = true //save_unaligned
                 input[4] = true //sort
                 """
@@ -310,17 +304,17 @@ nextflow_process {
         }
 
         then {
+            def aln = process.out[0][0]
             assertAll (
                 { assert process.success },
                 { assert snapshot(
                     // Conda and docker version of bowtie2 produce different
                     // hashes. Therefore, testing whether file exists and bam
                     // statistics.
-                    file(process.out.bam[0][1]).name,
-                    bam(process.out.bam[0][1], stringency: "silent").getStatistics(exclude:["sorted"]),
-                    process.out.log,
-                    process.out.fastq,
-                    process.out.findAll { key, val -> key.startsWith('versions') }
+                    file(aln.raw_bams[0]).name,
+                    bam(aln.raw_bams[0], stringency: "silent").getStatistics(exclude:["sorted"]),
+                    aln.bowtie2.log,
+                    aln.unmapped,
                 ).match() }
             )
         }
@@ -335,10 +329,11 @@ nextflow_process {
                 script "../../build/main.nf"
                 process {
                     """
-                    input[0] = [
-                        [ id:'test'],
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
-                    ]
+                    input[0] = record(
+                        id: 'test',
+                        meta: [ id:'test'],
+                        fasta: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                    )
                     """
                 }
             }
@@ -347,15 +342,13 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                    [ id:'test', single_end:true ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
-                ]
-                input[1] = BOWTIE2_BUILD.out.index
-                input[2] = [
-                    [ id:'test'],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:true ],
+                    reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                )
+                input[1] = BOWTIE2_BUILD.out.map { r -> r.index }
+                input[2] = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
                 input[3] = false //save_unaligned
                 input[4] = true //sort
                 """
@@ -363,17 +356,17 @@ nextflow_process {
         }
 
         then {
+            def aln = process.out[0][0]
             assertAll (
                 { assert process.success },
                 { assert snapshot(
                     // Conda and docker version of bowtie2 produce different
                     // hashes. Therefore, testing whether file exists and bam
                     // statistics.
-                    file(process.out.bam[0][1]).name,
-                    bam(process.out.bam[0][1], stringency: "silent").getStatistics(exclude:["sorted"]),
-                    process.out.log,
-                    process.out.fastq,
-                    process.out.findAll { key, val -> key.startsWith('versions') }
+                    file(aln.raw_bams[0]).name,
+                    bam(aln.raw_bams[0], stringency: "silent").getStatistics(exclude:["sorted"]),
+                    aln.bowtie2.log,
+                    aln.unmapped,
                 ).match() }
             )
         }
@@ -388,10 +381,11 @@ nextflow_process {
                 script "../../build/main.nf"
                 process {
                     """
-                    input[0] = [
-                        [ id:'test'],
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
-                    ]
+                    input[0] = record(
+                        id: 'test',
+                        meta: [ id:'test'],
+                        fasta: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                    )
                     """
                 }
             }
@@ -400,18 +394,16 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                    [ id:'test', single_end:false ], // meta map
-                    [
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    reads: [
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                     ]
-                ]
-                input[1] = BOWTIE2_BUILD.out.index
-                input[2] = [
-                    [ id:'test'],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
-                ]
+                )
+                input[1] = BOWTIE2_BUILD.out.map { r -> r.index }
+                input[2] = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
                 input[3] = false //save_unaligned
                 input[4] = true //sort
                 """
@@ -419,17 +411,17 @@ nextflow_process {
         }
 
         then {
+            def aln = process.out[0][0]
             assertAll (
                 { assert process.success },
                 { assert snapshot(
                     // Conda and docker version of bowtie2 produce different
                     // hashes. Therefore, testing whether file exists and bam
                     // statistics.
-                    file(process.out.bam[0][1]).name,
-                    bam(process.out.bam[0][1], stringency: "silent").getStatistics(exclude:["sorted"]),
-                    process.out.log,
-                    process.out.fastq,
-                    process.out.findAll { key, val -> key.startsWith('versions') }
+                    file(aln.raw_bams[0]).name,
+                    bam(aln.raw_bams[0], stringency: "silent").getStatistics(exclude:["sorted"]),
+                    aln.bowtie2.log,
+                    aln.unmapped,
                 ).match() }
             )
         }
@@ -444,10 +436,11 @@ nextflow_process {
                 script "../../build/main.nf"
                 process {
                     """
-                    input[0] = [
-                        [ id:'test'],
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
-                    ]
+                    input[0] = record(
+                        id: 'test',
+                        meta: [ id:'test'],
+                        fasta: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                    )
                     """
                 }
             }
@@ -456,21 +449,19 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                    [
-                        id:'test',
-                        single_end:false,
-                        fasta:'https://raw.githubusercontent.com/nf-core/test-datasets/refs/heads/modules/data/genomics/sarscov2/genome/genome.fasta' ], // meta map + fasta for cram testing
-                    [
+                input[0] = record(
+                    id: 'test',
+                    meta: [
+                    id:'test',
+                    single_end:false,
+                    fasta:'https://raw.githubusercontent.com/nf-core/test-datasets/refs/heads/modules/data/genomics/sarscov2/genome/genome.fasta' ],
+                    reads: [
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                     ]
-                ]
-                input[1] = BOWTIE2_BUILD.out.index
-                input[2] = [
-                    [ id:'test'],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
-                ]
+                )
+                input[1] = BOWTIE2_BUILD.out.map { r -> r.index }
+                input[2] = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
                 input[3] = false //save_unaligned
                 input[4] = true //sort
                 """
@@ -478,13 +469,13 @@ nextflow_process {
         }
 
         then {
+            def aln = process.out[0][0]
             assertAll (
                 { assert process.success },
                 { assert snapshot(
-                    file(process.out.cram[0][1]).name,
-                    file(process.out.crai[0][1]).name,
-                    cram(process.out.cram[0][1], process.out.cram[0][0].fasta ).getStatistics(exclude:["sorted"]),
-                    process.out.findAll { key, val -> key.startsWith('versions') }
+                    file(aln.cram).name,
+                    file(aln.crai).name,
+                    cram(aln.cram, aln.meta.fasta ).getStatistics(exclude:["sorted"]),
                 ).match() }
             )
         }
@@ -499,10 +490,11 @@ nextflow_process {
                 script "../../build/main.nf"
                 process {
                     """
-                    input[0] = [
-                        [ id:'test'],
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
-                    ]
+                    input[0] = record(
+                        id: 'test',
+                        meta: [ id:'test'],
+                        fasta: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                    )
                     """
                 }
             }
@@ -511,18 +503,16 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                    [ id:'test', single_end:false ], // meta map
-                    [
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    reads: [
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                     ]
-                ]
-                input[1] = BOWTIE2_BUILD.out.index
-                input[2] = [
-                    [ id:'test'],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
-                ]
+                )
+                input[1] = BOWTIE2_BUILD.out.map { r -> r.index }
+                input[2] = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
                 input[3] = false //save_unaligned
                 input[4] = false //sort
                 """
@@ -530,14 +520,14 @@ nextflow_process {
         }
 
         then {
+            def aln = process.out[0][0]
             assertAll (
                 { assert process.success },
                 { assert snapshot(
-                    file(process.out.bam[0][1]).name,
-                    file(process.out.csi[0][1]).name,
-                    file(process.out.log[0][1]).name,
-                    process.out.fastq,
-                    process.out.findAll { key, val -> key.startsWith('versions') }
+                    file(aln.raw_bams[0]).name,
+                    file(aln.csi).name,
+                    file(aln.bowtie2.log).name,
+                    aln.unmapped,
                 ).match() }
             )
         }
@@ -552,10 +542,11 @@ nextflow_process {
                 script "../../build/main.nf"
                 process {
                     """
-                    input[0] = [
-                        [ id:'test'],
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
-                    ]
+                    input[0] = record(
+                        id: 'test',
+                        meta: [ id:'test'],
+                        fasta: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                    )
                     """
                 }
             }
@@ -564,15 +555,13 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                    [ id:'test', single_end:true ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
-                ]
-                input[1] = BOWTIE2_BUILD.out.index
-                input[2] = [
-                    [ id:'test'],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:true ],
+                    reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                )
+                input[1] = BOWTIE2_BUILD.out.map { r -> r.index }
+                input[2] = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
                 input[3] = true //save_unaligned
                 input[4] = false //sort
                 """
@@ -580,14 +569,14 @@ nextflow_process {
         }
 
         then {
+            def aln = process.out[0][0]
             assertAll (
                 { assert process.success },
                 { assert snapshot(
-                    file(process.out.bam[0][1]).name,
-                    file(process.out.csi[0][1]).name,
-                    file(process.out.log[0][1]).name,
-                    process.out.fastq,
-                    process.out.findAll { key, val -> key.startsWith('versions') }
+                    file(aln.raw_bams[0]).name,
+                    file(aln.csi).name,
+                    file(aln.bowtie2.log).name,
+                    aln.unmapped,
                 ).match() }
             )
         }

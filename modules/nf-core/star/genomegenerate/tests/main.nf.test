@@ -13,14 +13,12 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test_fasta' ],
-                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
-                ])
-                input[1] = Channel.of([
-                    [ id:'test_gtf' ],
-                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
-                ])
+                input[0] = Channel.of(record(
+                    id: 'test_fasta',
+                    meta: [ id:'test_fasta' ],
+                    fasta: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                ))
+                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
                 """
             }
         }
@@ -29,8 +27,7 @@ nextflow_process {
             assertAll(
                 { assert process.success },
                 { assert snapshot(
-                    file(process.out.index[0][1]).listFiles().collect { it.getName() }.sort().toString(),
-                    process.out.findAll { key, val -> key.startsWith('versions') })
+                    file(process.out[0][0].index).listFiles().collect { it.getName() }.sort().toString())
                 .match() }
             )
         }
@@ -41,11 +38,12 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test_fasta' ],
-                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
-                ])
-                input[1] = Channel.of([ [], [] ])
+                input[0] = Channel.of(record(
+                    id: 'test_fasta',
+                    meta: [ id:'test_fasta' ],
+                    fasta: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                ))
+                input[1] = Channel.of([])
                 """
             }
         }
@@ -54,8 +52,7 @@ nextflow_process {
             assertAll(
                 { assert process.success },
                 { assert snapshot(
-                    file(process.out.index[0][1]).listFiles().collect { it.getName() }.sort().toString(),
-                    process.out.findAll { key, val -> key.startsWith('versions') }
+                    file(process.out[0][0].index).listFiles().collect { it.getName() }.sort().toString()
                 ).match() }
             )
         }
@@ -68,14 +65,12 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test_fasta' ],
-                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
-                ])
-                input[1] = Channel.of([
-                    [ id:'test_gtf' ],
-                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
-                ])
+                input[0] = Channel.of(record(
+                    id: 'test_fasta',
+                    meta: [ id:'test_fasta' ],
+                    fasta: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                ))
+                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
                 """
             }
         }
@@ -95,11 +90,12 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test_fasta' ],
-                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
-                ])
-                input[1] = Channel.of([ [], [] ])
+                input[0] = Channel.of(record(
+                    id: 'test_fasta',
+                    meta: [ id:'test_fasta' ],
+                    fasta: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                ))
+                input[1] = Channel.of([])
                 """
             }
         }

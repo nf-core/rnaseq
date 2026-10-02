@@ -1,63 +1,42 @@
 {
     "test_bam_dedup_stats_samtools_umicollapse_stats": {
         "content": [
-            [
-                [
-                    {
-                        "id": "test"
-                    },
-                    "test.stats:md5,0820fa64eb353406bbedb913ca898ba8"
-                ]
-            ]
+            "test.stats:md5,6c45d1aea740cf5b2283f98b3b464482"
         ],
-        "timestamp": "2026-07-10T08:38:32.509121",
+        "timestamp": "2026-09-30T18:27:08.322146905",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.09.1"
         }
     },
     "test_bam_dedup_stats_samtools_umicollapse_flagstats": {
         "content": [
-            [
-                [
-                    {
-                        "id": "test"
-                    },
-                    "test.flagstat:md5,18d602435a02a4d721b78d1812622159"
-                ]
-            ]
+            "test.flagstat:md5,18d602435a02a4d721b78d1812622159"
         ],
-        "timestamp": "2026-02-03T09:58:09.226353172",
+        "timestamp": "2026-09-30T18:27:08.373661707",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nf-test": "0.9.5",
+            "nextflow": "26.09.1"
         }
     },
     "test_bam_dedup_stats_samtools_umicollapse_idxstats": {
         "content": [
-            [
-                [
-                    {
-                        "id": "test"
-                    },
-                    "test.idxstats:md5,85d20a901eef23ca50c323638a2eb602"
-                ]
-            ]
+            "test.idxstats:md5,85d20a901eef23ca50c323638a2eb602"
         ],
-        "timestamp": "2026-02-03T09:58:09.233354058",
+        "timestamp": "2026-09-30T18:27:08.425170476",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nf-test": "0.9.5",
+            "nextflow": "26.09.1"
         }
     },
     "test_bam_dedup_stats_samtools_umicollapse_bam": {
         "content": [
-            "2ba8b456c322daac5b454a84b7568ad"
+            "b7be15ac7aae194b04bdbb56f3534495"
         ],
-        "timestamp": "2026-02-03T09:58:09.209299524",
+        "timestamp": "2026-09-30T18:27:08.269624061",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nf-test": "0.9.5",
+            "nextflow": "26.09.1"
         }
     }
 }

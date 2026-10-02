@@ -14,11 +14,12 @@ nextflow_process {
             script "../../../salmon/index/main.nf"
             process {
                 """
-                input[0] = channel.of([
-                    [ id:'test' ], // meta map
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true),
-                    file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.fasta", checkIfExists: true)
-                ])
+                input[0] = channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    transcript_fasta: file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true),
+                    genome_fasta: file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.fasta", checkIfExists: true)
+                ))
                 """
             }
         }
@@ -29,22 +30,25 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = channel.of([
-                    [ id:'test', single_end: true ], // meta map
-                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true) ]
-                ])
-                input[1] = SALMON_INDEX.out.index.combine(channel.of([
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true),
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)
-                ]))
+                input[0] = channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end: true ],
+                    reads: [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true) ]
+                ))
+                input[1] = SALMON_INDEX.out.map { r -> r.index }
+                input[2] = channel.of(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true))
+                input[3] = channel.of(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true))
                 """
             }
         }
 
         then {
+            def q = process.out[0][0]
+            def quant_files = []
+            new File(q.quant_dir.toString()).eachFileRecurse(groovy.io.FileType.FILES) { f -> quant_files << f.name }
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["json_info", "results"])).match() }
+                { assert snapshot(q.id, q.meta, quant_files.sort(), q.json_info ? new File(q.json_info.toString()).name : null, q.lib_format_counts).match() }
             )
         }
 
@@ -55,22 +59,25 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = channel.of([
-                    [ id:'test', single_end: true ], // meta map
-                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true) ]
-                ])
-                input[1] = SALMON_INDEX.out.index.combine(channel.of([
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true),
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)
-                ]))
+                input[0] = channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end: true ],
+                    reads: [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true) ]
+                ))
+                input[1] = SALMON_INDEX.out.map { r -> r.index }
+                input[2] = channel.of(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true))
+                input[3] = channel.of(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true))
                 """
             }
         }
 
         then {
+            def q = process.out[0][0]
+            def quant_files = []
+            new File(q.quant_dir.toString()).eachFileRecurse(groovy.io.FileType.FILES) { f -> quant_files << f.name }
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["json_info", "results"])).match() }
+                { assert snapshot(q.id, q.meta, quant_files.sort(), q.json_info ? new File(q.json_info.toString()).name : null, q.lib_format_counts).match() }
             )
         }
 
@@ -81,25 +88,25 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = channel.of([
-                    [ id:'test', single_end: true ], // meta map
-                    [
-                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true),
-                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_2.fastq.gz", checkIfExists: true)
-                    ]
-                ])
-                input[1] = SALMON_INDEX.out.index.combine(channel.of([
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true),
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)
-                ]))
+                input[0] = channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end: true ],
+                    reads: [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true), file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_2.fastq.gz", checkIfExists: true) ]
+                ))
+                input[1] = SALMON_INDEX.out.map { r -> r.index }
+                input[2] = channel.of(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true))
+                input[3] = channel.of(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true))
                 """
             }
         }
 
         then {
+            def q = process.out[0][0]
+            def quant_files = []
+            new File(q.quant_dir.toString()).eachFileRecurse(groovy.io.FileType.FILES) { f -> quant_files << f.name }
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["json_info", "results"])).match() }
+                { assert snapshot(q.id, q.meta, quant_files.sort(), q.json_info ? new File(q.json_info.toString()).name : null, q.lib_format_counts).match() }
             )
         }
 
@@ -111,26 +118,26 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = channel.of([
-                    [ id:'test', single_end: true ], // meta map
-                    [
-                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true),
-                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_2.fastq.gz", checkIfExists: true)
-                    ]
-                ])
-                input[1] = SALMON_INDEX.out.index.combine(channel.of([
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true),
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)
-                ]))
+                input[0] = channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end: true ],
+                    reads: [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true), file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_2.fastq.gz", checkIfExists: true) ]
+                ))
+                input[1] = SALMON_INDEX.out.map { r -> r.index }
+                input[2] = channel.of(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true))
+                input[3] = channel.of(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true))
                 """
             }
         }
 
         then {
+            def q = process.out[0][0]
+            def quant_files = []
+            new File(q.quant_dir.toString()).eachFileRecurse(groovy.io.FileType.FILES) { f -> quant_files << f.name }
             assertAll(
                 { assert process.success },
-                { assert path(process.out.lib_format_counts.get(0).get(1)).json.expected_format == 'SF' },
-                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["json_info", "results"])).match() }
+                { assert path(q.lib_format_counts).json.expected_format == 'SF' },
+                { assert snapshot(q.id, q.meta, quant_files.sort(), q.json_info ? new File(q.json_info.toString()).name : null, q.lib_format_counts).match() }
             )
         }
 
@@ -141,25 +148,25 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = channel.of([
-                    [ id:'test', single_end: false ], // meta map
-                    [
-                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true),
-                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_2.fastq.gz", checkIfExists: true)
-                    ]
-                ])
-                input[1] = SALMON_INDEX.out.index.combine(channel.of([
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true),
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)
-                ]))
+                input[0] = channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end: false ],
+                    reads: [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true), file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_2.fastq.gz", checkIfExists: true) ]
+                ))
+                input[1] = SALMON_INDEX.out.map { r -> r.index }
+                input[2] = channel.of(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true))
+                input[3] = channel.of(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true))
                 """
             }
         }
 
         then {
+            def q = process.out[0][0]
+            def quant_files = []
+            new File(q.quant_dir.toString()).eachFileRecurse(groovy.io.FileType.FILES) { f -> quant_files << f.name }
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["json_info", "results"])).match() }
+                { assert snapshot(q.id, q.meta, quant_files.sort(), q.json_info ? new File(q.json_info.toString()).name : null, q.lib_format_counts).match() }
             )
         }
 
@@ -170,25 +177,25 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = channel.of([
-                    [ id:'test', single_end: false ], // meta map
-                    [
-                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true),
-                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_2.fastq.gz", checkIfExists: true)
-                    ]
-                ])
-                input[1] = SALMON_INDEX.out.index.combine(channel.of([
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true),
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)
-                ]))
+                input[0] = channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end: false ],
+                    reads: [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true), file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_2.fastq.gz", checkIfExists: true) ]
+                ))
+                input[1] = SALMON_INDEX.out.map { r -> r.index }
+                input[2] = channel.of(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true))
+                input[3] = channel.of(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true))
                 """
             }
         }
 
         then {
+            def q = process.out[0][0]
+            def quant_files = []
+            new File(q.quant_dir.toString()).eachFileRecurse(groovy.io.FileType.FILES) { f -> quant_files << f.name }
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["json_info", "results"])).match() }
+                { assert snapshot(q.id, q.meta, quant_files.sort(), q.json_info ? new File(q.json_info.toString()).name : null, q.lib_format_counts).match() }
             )
         }
 
@@ -199,25 +206,25 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = channel.of([
-                    [ id:'test', single_end: true ], // meta map
-                    [
-                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true),
-                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_2.fastq.gz", checkIfExists: true)
-                    ]
-                ])
-                input[1] = SALMON_INDEX.out.index.combine(channel.of([
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true),
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)
-                ]))
+                input[0] = channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end: true ],
+                    reads: [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true), file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_2.fastq.gz", checkIfExists: true) ]
+                ))
+                input[1] = SALMON_INDEX.out.map { r -> r.index }
+                input[2] = channel.of(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true))
+                input[3] = channel.of(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true))
                 """
             }
         }
 
         then {
+            def q = process.out[0][0]
+            def quant_files = []
+            new File(q.quant_dir.toString()).eachFileRecurse(groovy.io.FileType.FILES) { f -> quant_files << f.name }
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["json_info", "results"])).match() }
+                { assert snapshot(q.id, q.meta, quant_files.sort(), q.json_info ? new File(q.json_info.toString()).name : null, q.lib_format_counts).match() }
             )
         }
 
@@ -228,27 +235,25 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = channel.of([
-                    [ id:'test', single_end:false ], // meta map
-                    [
-                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true),
-                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_2.fastq.gz", checkIfExists: true),
-                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test2_1.fastq.gz", checkIfExists: true),
-                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test2_2.fastq.gz", checkIfExists: true)
-                    ]
-                ])
-                input[1] = SALMON_INDEX.out.index.combine(channel.of([
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true),
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)
-                ]))
+                input[0] = channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    reads: [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true), file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_2.fastq.gz", checkIfExists: true), file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test2_1.fastq.gz", checkIfExists: true), file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test2_2.fastq.gz", checkIfExists: true) ]
+                ))
+                input[1] = SALMON_INDEX.out.map { r -> r.index }
+                input[2] = channel.of(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true))
+                input[3] = channel.of(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true))
                 """
             }
         }
 
         then {
+            def q = process.out[0][0]
+            def quant_files = []
+            new File(q.quant_dir.toString()).eachFileRecurse(groovy.io.FileType.FILES) { f -> quant_files << f.name }
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["json_info", "results"])).match() }
+                { assert snapshot(q.id, q.meta, quant_files.sort(), q.json_info ? new File(q.json_info.toString()).name : null, q.lib_format_counts).match() }
             )
         }
 
@@ -259,27 +264,25 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = channel.of([
-                    [ id:'test', single_end:false ], // meta map
-                    [
-                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true),
-                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_2.fastq.gz", checkIfExists: true),
-                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test2_1.fastq.gz", checkIfExists: true),
-                        file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test2_2.fastq.gz", checkIfExists: true)
-                    ]
-                ])
-                input[1] = SALMON_INDEX.out.index.combine(channel.of([
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true),
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)
-                ]))
+                input[0] = channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    reads: [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true), file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_2.fastq.gz", checkIfExists: true), file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test2_1.fastq.gz", checkIfExists: true), file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test2_2.fastq.gz", checkIfExists: true) ]
+                ))
+                input[1] = SALMON_INDEX.out.map { r -> r.index }
+                input[2] = channel.of(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true))
+                input[3] = channel.of(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true))
                 """
             }
         }
 
         then {
+            def q = process.out[0][0]
+            def quant_files = []
+            new File(q.quant_dir.toString()).eachFileRecurse(groovy.io.FileType.FILES) { f -> quant_files << f.name }
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["json_info", "results"])).match() }
+                { assert snapshot(q.id, q.meta, quant_files.sort(), q.json_info ? new File(q.json_info.toString()).name : null, q.lib_format_counts).match() }
             )
         }
 

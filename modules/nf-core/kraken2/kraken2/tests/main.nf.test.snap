@@ -1,181 +1,53 @@
 {
     "sarscov2 illumina single end [fastq]": {
         "content": [
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": true
-                    },
-                    "test.kraken2.report.txt:md5,4227755fe40478b8d7dc8634b489761e"
-                ]
-            ],
-            {
-                "versions_kraken2": [
-                    [
-                        "KRAKEN2_KRAKEN2",
-                        "kraken2",
-                        "2.1.6"
-                    ]
-                ],
-                "versions_pigz": [
-                    [
-                        "KRAKEN2_KRAKEN2",
-                        "pigz",
-                        "2.8"
-                    ]
-                ]
-            }
+            "test.kraken2.report.txt:md5,4227755fe40478b8d7dc8634b489761e"
         ],
+        "timestamp": "2026-09-29T16:35:01.182009251",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-01-19T17:22:36.682041524"
+            "nf-test": "0.9.5",
+            "nextflow": "26.09.1"
+        }
     },
     "paired_end - stub": {
         "content": [
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.kraken2.report.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
-                ]
-            ],
-            {
-                "versions_kraken2": [
-                    [
-                        "KRAKEN2_KRAKEN2",
-                        "kraken2",
-                        "2.1.6"
-                    ]
-                ],
-                "versions_pigz": [
-                    [
-                        "KRAKEN2_KRAKEN2",
-                        "pigz",
-                        "2.8"
-                    ]
-                ]
-            }
+            "test.kraken2.report.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
         ],
+        "timestamp": "2026-09-29T16:35:41.429420482",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-01-19T17:22:59.824433284"
+            "nf-test": "0.9.5",
+            "nextflow": "26.09.1"
+        }
     },
     "sarscov2 illumina paired end [fastq]": {
         "content": [
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.kraken2.report.txt:md5,4227755fe40478b8d7dc8634b489761e"
-                ]
-            ],
-            {
-                "versions_kraken2": [
-                    [
-                        "KRAKEN2_KRAKEN2",
-                        "kraken2",
-                        "2.1.6"
-                    ]
-                ],
-                "versions_pigz": [
-                    [
-                        "KRAKEN2_KRAKEN2",
-                        "pigz",
-                        "2.8"
-                    ]
-                ]
-            }
+            "test.kraken2.report.txt:md5,4227755fe40478b8d7dc8634b489761e"
         ],
+        "timestamp": "2026-09-29T16:35:11.865743537",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-01-19T17:22:42.807626617"
+            "nf-test": "0.9.5",
+            "nextflow": "26.09.1"
+        }
     },
     "sarscov2 illumina single end [fastq] + save_reads_assignment": {
         "content": [
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": true
-                    },
-                    "test.kraken2.report.txt:md5,4227755fe40478b8d7dc8634b489761e"
-                ]
-            ],
-            {
-                "versions_kraken2": [
-                    [
-                        "KRAKEN2_KRAKEN2",
-                        "kraken2",
-                        "2.1.6"
-                    ]
-                ],
-                "versions_pigz": [
-                    [
-                        "KRAKEN2_KRAKEN2",
-                        "pigz",
-                        "2.8"
-                    ]
-                ]
-            },
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": true
-                    },
-                    "test.kraken2.classifiedreads.txt:md5,e7a90531f0d8d777316515c36fe4cae0"
-                ]
-            ]
+            "test.kraken2.report.txt:md5,4227755fe40478b8d7dc8634b489761e",
+            "test.kraken2.classifiedreads.txt:md5,e7a90531f0d8d777316515c36fe4cae0"
         ],
+        "timestamp": "2026-09-29T16:35:22.242417524",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-01-19T17:22:48.87201447"
+            "nf-test": "0.9.5",
+            "nextflow": "26.09.1"
+        }
     },
     "single_end - stub": {
         "content": [
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": true
-                    },
-                    "test.kraken2.report.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
-                ]
-            ],
-            {
-                "versions_kraken2": [
-                    [
-                        "KRAKEN2_KRAKEN2",
-                        "kraken2",
-                        "2.1.6"
-                    ]
-                ],
-                "versions_pigz": [
-                    [
-                        "KRAKEN2_KRAKEN2",
-                        "pigz",
-                        "2.8"
-                    ]
-                ]
-            }
+            "test.kraken2.report.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
         ],
+        "timestamp": "2026-09-29T16:35:31.870991305",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-01-19T17:22:54.351663948"
+            "nf-test": "0.9.5",
+            "nextflow": "26.09.1"
+        }
     }
 }

@@ -30,15 +30,16 @@ nextflow_workflow {
                 """
                 // CAT_FASTQ input: alternating R1/R2 files [r1_a, r2_a, r1_b, r2_b, ...]
                 // Even indices -> R1 files, odd indices -> R2 files
-                input[0] = channel.of([
-                    [ id:'test', single_end:false, strandedness:'auto' ],
-                    [
+                input[0] = channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false, strandedness:'auto' ],
+                    reads: [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'generic/fastq/rrna_reads_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'generic/fastq/rrna_reads_2.fastq.gz', checkIfExists: true)
                     ]
-                ])
+                ))
                 """
             }
         }
@@ -50,15 +51,15 @@ nextflow_workflow {
             workflow {
                 """
                 // Input channels
-                input[0] = CAT_FASTQ.out.reads
-                input[1] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)) // ch_fasta
-                input[2] = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)) // ch_transcript_fasta
-                input[3] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)) // ch_gtf
-                input[4] = []              // ch_salmon_index
-                input[5] = []              // ch_sortmerna_index
-                input[6] = []              // ch_bowtie2_index
-                input[7] = []              // ch_bbsplit_index
-                input[8] = channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas
+                input[0] = new nextflow.dataflow.ChannelImpl(CAT_FASTQ.out)
+                input[1] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))) // ch_fasta
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))) // ch_transcript_fasta
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))) // ch_gtf
+                input[4] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_salmon_index
+                input[5] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_sortmerna_index
+                input[6] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_bowtie2_index
+                input[7] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_bbsplit_index
+                input[8] = new nextflow.dataflow.ChannelImpl(channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true))) // ch_rrna_fastas
 
                 // Skip options
                 input[9] = true            // skip_bbsplit
@@ -97,18 +98,18 @@ nextflow_workflow {
         }
 
         then {
-            def pelines1 = path(workflow.out.reads[0][1][0]).linesGzip
-            def pelines2 = path(workflow.out.reads[0][1][1]).linesGzip
+            def pelines1 = path(workflow.out.samples[0].reads[0]).linesGzip
+            def pelines2 = path(workflow.out.samples[0].reads[1]).linesGzip
 
             // First part of each fq lint report line is a timestamp, remove it before snapshotting
-            def processed_ribo_removal_lint_report = path(workflow.out.lint_log_ribo[0][1])
+            def processed_ribo_removal_lint_report = path(workflow.out.samples[0].lint.ribo)
                 .getText()
                 .readLines()
                 .collect { line -> line.split(' ', 2)[1] } // Split by the first space and take everything after it
                 .join('\n') // Join the processed lines back into a single text block
 
             // Parse sortmerna log for rRNA detection stats
-            def sortmernaLog = path(workflow.out.multiqc_files.find { _meta, file -> file.toString().endsWith('.sortmerna.log') }[1])
+            def sortmernaLog = path(workflow.out.samples[0].rrna.sortmerna_log)
                 .getText()
             def sortmernaRrnaMatch = (sortmernaLog =~ /Total reads passing E-value threshold = (\d+)/)
             def sortmernaRrnaCount = sortmernaRrnaMatch ? sortmernaRrnaMatch[0][1].toInteger() : -1
@@ -120,21 +121,21 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert pelines1.size() == 4508 },  // 1127 pairs × 4 lines/read
                 { assert pelines2.size() == 4508 },
-                { assert workflow.out.trim_read_count[0][1] == 3022 },
+                { assert workflow.out.samples[0].num_trimmed_reads == 3022 },
                 { assert sortmernaRrnaCount == 20 },  // 10 pairs = 20 individual reads (100% detection)
-                { assert path(workflow.out.trim_reads_merged[0][1]).linesGzip.size() == 3022 * 4 },  // fastp's merged overlapping read pairs, excluded from `reads`
+                { assert path(workflow.out.samples[0].trim.reads_merged).linesGzip.size() == 3022 * 4 },  // fastp's merged overlapping read pairs, excluded from `reads`
                 { assert snapshot(
                     pelines1.join('\n').md5(),
                     pelines2.join('\n').md5(),
                     processed_ribo_removal_lint_report,
-                    file(workflow.out.fastqc_filtered_html[0][1][0]).name,
-                    file(workflow.out.fastqc_filtered_html[0][1][1]).name,
-                    file(workflow.out.fastqc_filtered_zip[0][1][0]).name,
-                    file(workflow.out.fastqc_filtered_zip[0][1][1]).name,
+                    file(workflow.out.samples[0].fastqc.filtered_html[0]).name,
+                    file(workflow.out.samples[0].fastqc.filtered_html[1]).name,
+                    file(workflow.out.samples[0].fastqc.filtered_zip[0]).name,
+                    file(workflow.out.samples[0].fastqc.filtered_zip[1]).name,
                 ).match() },
                 { assert snapshot(
-                    workflow.out.reads_cat.collect    { meta, reads -> [meta, [reads].flatten().collect { f -> path(f).linesGzip.join('\n').md5() }] },
-                    workflow.out.reads_trimmed.collect { meta, reads -> [meta, [reads].flatten().collect { f -> path(f).linesGzip.join('\n').md5() }] },
+                    workflow.out.samples.collect    { r -> [r.meta, [r.reads_cat].flatten().collect { f -> path(f).linesGzip.join('\n').md5() }] },
+                    workflow.out.samples.collect { r -> [r.meta, [r.reads_trimmed].flatten().collect { f -> path(f).linesGzip.join('\n').md5() }] },
                 ).match("intermediate_reads_pe_fastp_sortmerna") }
             )
         }
@@ -146,15 +147,15 @@ nextflow_workflow {
             workflow {
                 """
                 // Input channels
-                input[0] = CAT_FASTQ.out.reads
-                input[1] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)) // ch_fasta
-                input[2] = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)) // ch_transcript_fasta
-                input[3] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)) // ch_gtf
-                input[4] = []              // ch_salmon_index
-                input[5] = []              // ch_sortmerna_index
-                input[6] = []              // ch_bowtie2_index
-                input[7] = []              // ch_bbsplit_index
-                input[8] = []              // ch_rrna_fastas (not needed for ribodetector)
+                input[0] = new nextflow.dataflow.ChannelImpl(CAT_FASTQ.out)
+                input[1] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))) // ch_fasta
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))) // ch_transcript_fasta
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))) // ch_gtf
+                input[4] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_salmon_index
+                input[5] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_sortmerna_index
+                input[6] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_bowtie2_index
+                input[7] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_bbsplit_index
+                input[8] = new nextflow.dataflow.ChannelImpl(channel.empty())              // ch_rrna_fastas (not needed for ribodetector)
 
                 // Skip options
                 input[9] = true            // skip_bbsplit
@@ -193,11 +194,11 @@ nextflow_workflow {
         }
 
         then {
-            def pelines1 = path(workflow.out.reads[0][1][0]).linesGzip
-            def pelines2 = path(workflow.out.reads[0][1][1]).linesGzip
+            def pelines1 = path(workflow.out.samples[0].reads[0]).linesGzip
+            def pelines2 = path(workflow.out.samples[0].reads[1]).linesGzip
 
             // First part of each fq lint report line is a timestamp, remove it before snapshotting
-            def processed_ribo_removal_lint_report = path(workflow.out.lint_log_ribo[0][1])
+            def processed_ribo_removal_lint_report = path(workflow.out.samples[0].lint.ribo)
                 .getText()
                 .readLines()
                 .collect { line -> line.split(' ', 2)[1] } // Split by the first space and take everything after it
@@ -205,7 +206,7 @@ nextflow_workflow {
 
             // Parse ribodetector log for rRNA detection stats
             // Note: ribodetector log contains ANSI color codes that must be stripped before regex matching
-            def ribodetectorLog = path(workflow.out.multiqc_files.find { _meta, file -> file.toString().endsWith('.ribodetector.log') }[1])
+            def ribodetectorLog = path(workflow.out.samples[0].rrna.ribodetector_log)
                 .getText()
                 .replaceAll(/\u001b\[[0-9;]*m/, '')  // Strip ANSI escape codes
             def ribodetectorRrnaMatch = (ribodetectorLog =~ /Detected (\d+) rRNA sequences/)
@@ -218,20 +219,20 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert pelines1.size() == 4520 },  // 1130 pairs × 4 lines/read
                 { assert pelines2.size() == 4520 },
-                { assert workflow.out.trim_read_count[0][1] == 3022 },
+                { assert workflow.out.samples[0].num_trimmed_reads == 3022 },
                 { assert ribodetectorRrnaCount == 7 },  // 7 pairs detected (70% - ML model misses some)
                 { assert snapshot(
                     pelines1.join('\n').md5(),
                     pelines2.join('\n').md5(),
                     processed_ribo_removal_lint_report.md5(),
-                    file(workflow.out.fastqc_filtered_html[0][1][0]).name,
-                    file(workflow.out.fastqc_filtered_html[0][1][1]).name,
-                    file(workflow.out.fastqc_filtered_zip[0][1][0]).name,
-                    file(workflow.out.fastqc_filtered_zip[0][1][1]).name,
+                    file(workflow.out.samples[0].fastqc.filtered_html[0]).name,
+                    file(workflow.out.samples[0].fastqc.filtered_html[1]).name,
+                    file(workflow.out.samples[0].fastqc.filtered_zip[0]).name,
+                    file(workflow.out.samples[0].fastqc.filtered_zip[1]).name,
                 ).match() },
                 { assert snapshot(
-                    workflow.out.reads_cat.collect    { meta, reads -> [meta, [reads].flatten().collect { f -> path(f).linesGzip.join('\n').md5() }] },
-                    workflow.out.reads_trimmed.collect { meta, reads -> [meta, [reads].flatten().collect { f -> path(f).linesGzip.join('\n').md5() }] },
+                    workflow.out.samples.collect    { r -> [r.meta, [r.reads_cat].flatten().collect { f -> path(f).linesGzip.join('\n').md5() }] },
+                    workflow.out.samples.collect { r -> [r.meta, [r.reads_trimmed].flatten().collect { f -> path(f).linesGzip.join('\n').md5() }] },
                 ).match("intermediate_reads_pe_fastp_ribodetector") }
             )
         }
@@ -243,15 +244,15 @@ nextflow_workflow {
             workflow {
                 """
                 // Input channels
-                input[0] = CAT_FASTQ.out.reads
-                input[1] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)) // ch_fasta
-                input[2] = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)) // ch_transcript_fasta
-                input[3] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)) // ch_gtf
-                input[4] = []              // ch_salmon_index
-                input[5] = []              // ch_sortmerna_index
-                input[6] = []              // ch_bowtie2_index
-                input[7] = []              // ch_bbsplit_index
-                input[8] = channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas
+                input[0] = new nextflow.dataflow.ChannelImpl(CAT_FASTQ.out)
+                input[1] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))) // ch_fasta
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))) // ch_transcript_fasta
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))) // ch_gtf
+                input[4] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_salmon_index
+                input[5] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_sortmerna_index
+                input[6] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_bowtie2_index
+                input[7] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_bbsplit_index
+                input[8] = new nextflow.dataflow.ChannelImpl(channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true))) // ch_rrna_fastas
 
                 // Skip options
                 input[9] = true            // skip_bbsplit
@@ -290,18 +291,18 @@ nextflow_workflow {
         }
 
         then {
-            def pelines1 = path(workflow.out.reads[0][1][0]).linesGzip
-            def pelines2 = path(workflow.out.reads[0][1][1]).linesGzip
+            def pelines1 = path(workflow.out.samples[0].reads[0]).linesGzip
+            def pelines2 = path(workflow.out.samples[0].reads[1]).linesGzip
 
             // First part of each fq lint report line is a timestamp, remove it before snapshotting
-            def processed_ribo_removal_lint_report = path(workflow.out.lint_log_ribo[0][1])
+            def processed_ribo_removal_lint_report = path(workflow.out.samples[0].lint.ribo)
                 .getText()
                 .readLines()
                 .collect { line -> line.split(' ', 2)[1] } // Split by the first space and take everything after it
                 .join('\n') // Join the processed lines back into a single text block
 
             // Parse sortmerna log for rRNA detection stats
-            def sortmernaLog = path(workflow.out.multiqc_files.find { _meta, file -> file.toString().endsWith('.sortmerna.log') }[1])
+            def sortmernaLog = path(workflow.out.samples[0].rrna.sortmerna_log)
                 .getText()
             def sortmernaRrnaMatch = (sortmernaLog =~ /Total reads passing E-value threshold = (\d+)/)
             def sortmernaRrnaCount = sortmernaRrnaMatch ? sortmernaRrnaMatch[0][1].toInteger() : -1
@@ -313,22 +314,21 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert pelines1.size() == 16636 },  // 4159 pairs × 4 lines/read
                 { assert pelines2.size() == 16636 },
-                { assert workflow.out.trim_read_count[0][1] == 4169.0 },
+                { assert workflow.out.samples[0].num_trimmed_reads == 4169.0 },
                 { assert sortmernaRrnaCount == 20 },  // 10 pairs = 20 individual reads (100% detection)
-                { assert workflow.out.per_sample_mqc_bundle.size() == 1 },
-                { assert workflow.out.per_sample_mqc_bundle[0][1].size() > 0 },
+                { assert workflow.out.samples.size() == 1 },
                 { assert snapshot(
                     pelines1.join('\n').md5(),
                     pelines2.join('\n').md5(),
                     processed_ribo_removal_lint_report.md5(),
-                    file(workflow.out.fastqc_filtered_html[0][1][0]).name,
-                    file(workflow.out.fastqc_filtered_html[0][1][1]).name,
-                    file(workflow.out.fastqc_filtered_zip[0][1][0]).name,
-                    file(workflow.out.fastqc_filtered_zip[0][1][1]).name,
+                    file(workflow.out.samples[0].fastqc.filtered_html[0]).name,
+                    file(workflow.out.samples[0].fastqc.filtered_html[1]).name,
+                    file(workflow.out.samples[0].fastqc.filtered_zip[0]).name,
+                    file(workflow.out.samples[0].fastqc.filtered_zip[1]).name,
                 ).match() },
                 { assert snapshot(
-                    workflow.out.reads_cat.collect    { meta, reads -> [meta, [reads].flatten().collect { f -> path(f).linesGzip.join('\n').md5() }] },
-                    workflow.out.reads_trimmed.collect { meta, reads -> [meta, [reads].flatten().collect { f -> path(f).linesGzip.join('\n').md5() }] },
+                    workflow.out.samples.collect    { r -> [r.meta, [r.reads_cat].flatten().collect { f -> path(f).linesGzip.join('\n').md5() }] },
+                    workflow.out.samples.collect { r -> [r.meta, [r.reads_trimmed].flatten().collect { f -> path(f).linesGzip.join('\n').md5() }] },
                 ).match("intermediate_reads_pe_trimgalore_sortmerna") }
             )
         }
@@ -340,15 +340,15 @@ nextflow_workflow {
             workflow {
                 """
                 // Input channels
-                input[0] = CAT_FASTQ.out.reads
-                input[1] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)) // ch_fasta
-                input[2] = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)) // ch_transcript_fasta
-                input[3] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)) // ch_gtf
-                input[4] = []              // ch_salmon_index
-                input[5] = []              // ch_sortmerna_index
-                input[6] = []              // ch_bowtie2_index
-                input[7] = []              // ch_bbsplit_index
-                input[8] = channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas
+                input[0] = new nextflow.dataflow.ChannelImpl(CAT_FASTQ.out)
+                input[1] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))) // ch_fasta
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))) // ch_transcript_fasta
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))) // ch_gtf
+                input[4] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_salmon_index
+                input[5] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_sortmerna_index
+                input[6] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_bowtie2_index
+                input[7] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_bbsplit_index
+                input[8] = new nextflow.dataflow.ChannelImpl(channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true))) // ch_rrna_fastas
 
                 // Skip options
                 input[9] = true            // skip_bbsplit
@@ -387,18 +387,18 @@ nextflow_workflow {
         }
 
         then {
-            def pelines1 = path(workflow.out.reads[0][1][0]).linesGzip
-            def pelines2 = path(workflow.out.reads[0][1][1]).linesGzip
+            def pelines1 = path(workflow.out.samples[0].reads[0]).linesGzip
+            def pelines2 = path(workflow.out.samples[0].reads[1]).linesGzip
 
             // First part of each fq lint report line is a timestamp, remove it before snapshotting
-            def processed_ribo_removal_lint_report = path(workflow.out.lint_log_ribo[0][1])
+            def processed_ribo_removal_lint_report = path(workflow.out.samples[0].lint.ribo)
                 .getText()
                 .readLines()
                 .collect { line -> line.split(' ', 2)[1] } // Split by the first space and take everything after it
                 .join('\n') // Join the processed lines back into a single text block
 
             // Parse bowtie2 log for alignment stats - count mates that aligned to rRNA
-            def bowtie2Log = path(workflow.out.multiqc_files.find { _meta, file -> file.toString().endsWith('.bowtie2.log') }[1])
+            def bowtie2Log = path(workflow.out.samples[0].rrna.bowtie2_log)
                 .getText()
             def exactMatch = (bowtie2Log =~ /(\d+) \(\d+\.\d+%\) aligned exactly 1 time/)
             def multiMatch = (bowtie2Log =~ /(\d+) \(\d+\.\d+%\) aligned >1 times/)
@@ -416,20 +416,20 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert pelines1.size() == 4508 },  // 1127 pairs × 4 lines/read
                 { assert pelines2.size() == 4508 },
-                { assert workflow.out.trim_read_count[0][1] == 3022 },
+                { assert workflow.out.samples[0].num_trimmed_reads == 3022 },
                 { assert bowtie2RrnaCount == 17 },  // 17 mates aligned to rRNA reference
                 { assert snapshot(
                     pelines1.join('\n').md5(),
                     pelines2.join('\n').md5(),
                     processed_ribo_removal_lint_report.md5(),
-                    file(workflow.out.fastqc_filtered_html[0][1][0]).name,
-                    file(workflow.out.fastqc_filtered_html[0][1][1]).name,
-                    file(workflow.out.fastqc_filtered_zip[0][1][0]).name,
-                    file(workflow.out.fastqc_filtered_zip[0][1][1]).name,
+                    file(workflow.out.samples[0].fastqc.filtered_html[0]).name,
+                    file(workflow.out.samples[0].fastqc.filtered_html[1]).name,
+                    file(workflow.out.samples[0].fastqc.filtered_zip[0]).name,
+                    file(workflow.out.samples[0].fastqc.filtered_zip[1]).name,
                 ).match() },
                 { assert snapshot(
-                    workflow.out.reads_cat.collect    { meta, reads -> [meta, [reads].flatten().collect { f -> path(f).linesGzip.join('\n').md5() }] },
-                    workflow.out.reads_trimmed.collect { meta, reads -> [meta, [reads].flatten().collect { f -> path(f).linesGzip.join('\n').md5() }] },
+                    workflow.out.samples.collect    { r -> [r.meta, [r.reads_cat].flatten().collect { f -> path(f).linesGzip.join('\n').md5() }] },
+                    workflow.out.samples.collect { r -> [r.meta, [r.reads_trimmed].flatten().collect { f -> path(f).linesGzip.join('\n').md5() }] },
                 ).match("intermediate_reads_pe_fastp_bowtie2") }
             )
         }
@@ -442,21 +442,22 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = channel.of([
-                    [ id:'test', single_end:false, strandedness:'auto' ],
-                    [
+                input[0] = new nextflow.dataflow.ChannelImpl(channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false, strandedness:'auto' ],
+                    reads: [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true),
                     ]
-                ])
-                input[1] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
-                input[2] = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))
-                input[3] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
-                input[4] = []              // ch_salmon_index
-                input[5] = []              // ch_sortmerna_index
-                input[6] = []              // ch_bowtie2_index
-                input[7] = []              // ch_bbsplit_index
-                input[8] = []              // ch_rrna_fastas
+                )))
+                input[1] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)))
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)))
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)))
+                input[4] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_salmon_index
+                input[5] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_sortmerna_index
+                input[6] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_bowtie2_index
+                input[7] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_bbsplit_index
+                input[8] = new nextflow.dataflow.ChannelImpl(channel.empty())              // ch_rrna_fastas
 
                 // Skip options
                 input[9] = true            // skip_bbsplit
@@ -508,21 +509,22 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = channel.of([
-                    [ id:'test', single_end:false, strandedness:'auto' ],
-                    [
+                input[0] = new nextflow.dataflow.ChannelImpl(channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false, strandedness:'auto' ],
+                    reads: [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true),
                     ]
-                ])
-                input[1] = channel.of([]) // ch_fasta: no genome fasta supplied (e.g. pseudoalignment-only run)
-                input[2] = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))
-                input[3] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))
-                input[4] = []              // ch_salmon_index
-                input[5] = []              // ch_sortmerna_index
-                input[6] = []              // ch_bowtie2_index
-                input[7] = []              // ch_bbsplit_index
-                input[8] = []              // ch_rrna_fastas
+                )))
+                input[1] = new nextflow.dataflow.ValueImpl(channel.value(null as Path)) // ch_fasta: no genome fasta supplied (e.g. pseudoalignment-only run)
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)))
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)))
+                input[4] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_salmon_index
+                input[5] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_sortmerna_index
+                input[6] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_bowtie2_index
+                input[7] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_bbsplit_index
+                input[8] = new nextflow.dataflow.ChannelImpl(channel.empty())              // ch_rrna_fastas
 
                 // Skip options
                 input[9] = true            // skip_bbsplit
@@ -563,7 +565,7 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success },
-                { assert workflow.out.reads[0][0].strandedness != 'auto' }
+                { assert workflow.out.samples[0].meta.strandedness != 'auto' }
             )
         }
     }
@@ -576,13 +578,14 @@ nextflow_workflow {
                 process {
                     """
                     // Single-end test data with synthetic rRNA reads
-                    input[0] = channel.of([
-                        [ id:'test_se', single_end:true, strandedness:'auto' ],
-                        [
+                    input[0] = channel.of(record(
+                        id: 'test_se',
+                        meta: [ id:'test_se', single_end:true, strandedness:'auto' ],
+                        reads: [
                             file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
                             file(params.modules_testdata_base_path + 'generic/fastq/rrna_reads_1.fastq.gz', checkIfExists: true)
                         ]
-                    ])
+                    ))
                     """
                 }
             }
@@ -592,15 +595,15 @@ nextflow_workflow {
             workflow {
                 """
                 // Input channels - wrap single file in list to match expected format
-                input[0] = CAT_FASTQ_SE.out.reads.map { meta, reads -> [meta, reads instanceof List ? reads : [reads]] }
-                input[1] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)) // ch_fasta
-                input[2] = channel.of(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true)) // ch_transcript_fasta
-                input[3] = channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)) // ch_gtf
-                input[4] = []              // ch_salmon_index
-                input[5] = []              // ch_sortmerna_index
-                input[6] = []              // ch_bowtie2_index
-                input[7] = []              // ch_bbsplit_index
-                input[8] = channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas
+                input[0] = new nextflow.dataflow.ChannelImpl(CAT_FASTQ_SE.out)
+                input[1] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))) // ch_fasta
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/transcriptome.fasta", checkIfExists: true))) // ch_transcript_fasta
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true))) // ch_gtf
+                input[4] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_salmon_index
+                input[5] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_sortmerna_index
+                input[6] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_bowtie2_index
+                input[7] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))              // ch_bbsplit_index
+                input[8] = new nextflow.dataflow.ChannelImpl(channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true))) // ch_rrna_fastas
 
                 // Skip options
                 input[9] = true            // skip_bbsplit
@@ -640,17 +643,17 @@ nextflow_workflow {
 
         then {
             // For single-end, reads output is a single file, not a list
-            def selines = path(workflow.out.reads[0][1]).linesGzip
+            def selines = path(workflow.out.samples[0].reads[0]).linesGzip
 
             // First part of each fq lint report line is a timestamp, remove it before snapshotting
-            def processed_ribo_removal_lint_report = path(workflow.out.lint_log_ribo[0][1])
+            def processed_ribo_removal_lint_report = path(workflow.out.samples[0].lint.ribo)
                 .getText()
                 .readLines()
                 .collect { line -> line.split(' ', 2)[1] }
                 .join('\n')
 
             // Parse bowtie2 log for alignment stats
-            def bowtie2Log = path(workflow.out.multiqc_files.find { _meta, file -> file.toString().endsWith('.bowtie2.log') }[1])
+            def bowtie2Log = path(workflow.out.samples[0].rrna.bowtie2_log)
                 .getText()
             def exactMatch = (bowtie2Log =~ /(\d+) \(\d+\.\d+%\) aligned exactly 1 time/)
             def multiMatch = (bowtie2Log =~ /(\d+) \(\d+\.\d+%\) aligned >1 times/)
@@ -665,17 +668,17 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert selines.size() == 16608 },  // 4152 reads × 4 lines/read
-                { assert workflow.out.trim_read_count[0][1] == 4162 },
+                { assert workflow.out.samples[0].num_trimmed_reads == 4162 },
                 { assert bowtie2RrnaCount == 10 },   // 10 reads aligned to rRNA reference
                 { assert snapshot(
                     selines.join('\n').md5(),
                     processed_ribo_removal_lint_report.md5(),
-                    file(workflow.out.fastqc_filtered_html[0][1]).name,
-                    file(workflow.out.fastqc_filtered_zip[0][1]).name,
+                    file(workflow.out.samples[0].fastqc.filtered_html[0]).name,
+                    file(workflow.out.samples[0].fastqc.filtered_zip[0]).name,
                 ).match() },
                 { assert snapshot(
-                    workflow.out.reads_cat.collect    { meta, reads -> [meta, [reads].flatten().collect { f -> path(f).linesGzip.join('\n').md5() }] },
-                    workflow.out.reads_trimmed.collect { meta, reads -> [meta, [reads].flatten().collect { f -> path(f).linesGzip.join('\n').md5() }] },
+                    workflow.out.samples.collect    { r -> [r.meta, [r.reads_cat].flatten().collect { f -> path(f).linesGzip.join('\n').md5() }] },
+                    workflow.out.samples.collect { r -> [r.meta, [r.reads_trimmed].flatten().collect { f -> path(f).linesGzip.join('\n').md5() }] },
                 ).match("intermediate_reads_se_fastp_bowtie2") }
             )
         }

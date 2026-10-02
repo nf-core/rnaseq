@@ -63,7 +63,7 @@ input:
         - meta:
             type: map
             description: Metadata map
-        - bam:
+        - transcriptome_bam:
             type: file
             description: BAM file
             pattern: "*.bam"

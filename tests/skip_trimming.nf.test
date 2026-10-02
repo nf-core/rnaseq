@@ -6,9 +6,10 @@ nextflow_pipeline {
 
     test("Params: --skip_trimming --stringtie_ignore_gtf") {
 
+        options "-output-dir $outputDir"
+
         when {
             params {
-                outdir = "$outputDir"
                 skip_trimming = true
                 // Only test exercising the BAM_STRINGTIE_MERGE path.
                 stringtie_ignore_gtf = true
@@ -16,10 +17,10 @@ nextflow_pipeline {
         }
 
         then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // stable_name: All files + folders in the output directory with a stable name
+            def stable_name = getAllFilesFromDir(outputDir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in the output directory with stable content
+            def stable_path = getAllFilesFromDir(outputDir, ignoreFile: 'tests/.nftignore')
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(

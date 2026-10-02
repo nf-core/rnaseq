@@ -17,10 +17,11 @@ nextflow_process {
                 script "../../../untar/main.nf"
                 process {
                     """
-                    input[0] = Channel.of([
-                        [ id:'test'], // meta map
-                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/kallisto_results.tar.gz', checkIfExists: true)
-                    ])
+                    input[0] = Channel.of(record(
+                        id: 'test',
+                        meta: [ id:'test'],
+                        archive: file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/kallisto_results.tar.gz', checkIfExists: true)
+                    ))
                     """
                 }
             }
@@ -29,11 +30,8 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test'], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
-                ])
-                input[1] = UNTAR.out.untar.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
+                input[0] = UNTAR.out.map { r -> [ r.meta, r.dir ] }.map { meta, dir -> record(id: meta.id, meta: meta, quants: dir.listFiles().collect()) }
+                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
                 input[2] = 'kallisto'
                 input[3] = 'gene_id'
                 input[4] = 'gene_name'
@@ -44,7 +42,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(process.out[0][0].meta, process.out[0][0].tx2gene).match() }
             )
         }
     }
@@ -56,10 +54,11 @@ nextflow_process {
                 script "../../../untar/main.nf"
                 process {
                     """
-                    input[0] = Channel.of([
-                        [ id:'test'], // meta map
-                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/kallisto_results.tar.gz', checkIfExists: true)
-                    ])
+                    input[0] = Channel.of(record(
+                        id: 'test',
+                        meta: [ id:'test'],
+                        archive: file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/kallisto_results.tar.gz', checkIfExists: true)
+                    ))
                     """
                 }
             }
@@ -68,11 +67,8 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test'], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
-                ])
-                input[1] = UNTAR.out.untar.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
+                input[0] = UNTAR.out.map { r -> [ r.meta, r.dir ] }.map { meta, dir -> record(id: meta.id, meta: meta, quants: dir.listFiles().collect()) }
+                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
                 input[2] = 'kallisto'
                 input[3] = 'gene_id'
                 input[4] = 'gene_name,gene_biotype'
@@ -83,7 +79,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(process.out[0][0].meta, process.out[0][0].tx2gene).match() }
             )
         }
     }
@@ -95,10 +91,11 @@ nextflow_process {
                 script "../../../untar/main.nf"
                 process {
                     """
-                    input[0] = Channel.of([
-                        [ id:'test'], // meta map
-                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/rsem_results.tar.gz', checkIfExists: true)
-                    ])
+                    input[0] = Channel.of(record(
+                        id: 'test',
+                        meta: [ id:'test'],
+                        archive: file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/rsem_results.tar.gz', checkIfExists: true)
+                    ))
                     """
                 }
             }
@@ -107,17 +104,14 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test'], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
-                ])
-                input[1] = UNTAR.out.untar.map { meta, dir ->
+                input[0] = UNTAR.out.map { r -> [ r.meta, r.dir ] }.map { meta, dir ->
                     def results = []
                     dir.eachFileRecurse { f ->
                         if (f.name.endsWith('.isoforms.results')) results << f
                     }
-                    [ meta, results ]
+                    record(id: meta.id, meta: meta, quants: results)
                 }
+                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
                 input[2] = 'rsem'
                 input[3] = 'gene_id'
                 input[4] = 'gene_name'
@@ -128,7 +122,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(process.out[0][0].meta, process.out[0][0].tx2gene).match() }
             )
         }
     }
@@ -142,10 +136,11 @@ nextflow_process {
                 script "../../../untar/main.nf"
                 process {
                     """
-                    input[0] = Channel.of([
-                        [ id:'test'], // meta map
-                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/kallisto_results.tar.gz', checkIfExists: true)
-                    ])
+                    input[0] = Channel.of(record(
+                        id: 'test',
+                        meta: [ id:'test'],
+                        archive: file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/kallisto_results.tar.gz', checkIfExists: true)
+                    ))
                     """
                 }
             }
@@ -154,11 +149,8 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test'], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
-                ])
-                input[1] = UNTAR.out.untar.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
+                input[0] = UNTAR.out.map { r -> [ r.meta, r.dir ] }.map { meta, dir -> record(id: meta.id, meta: meta, quants: dir.listFiles().collect()) }
+                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true))
                 input[2] = 'kallisto'
                 input[3] = 'gene_id'
                 input[4] = 'gene_name'
@@ -169,7 +161,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(process.out[0][0].meta, process.out[0][0].tx2gene).match() }
             )
         }
     }

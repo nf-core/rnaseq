@@ -1,5 +1,17 @@
+nextflow.enable.types = true
+
+include { ReadsInput } from '../types'
+
+record SortmernaResult {
+    id:    String
+    meta:  Map
+    reads: List<Path>
+    log:   Path?
+    index: Path?
+}
+
 process SORTMERNA {
-    tag "$meta.id"
+    tag "$sample.meta.id"
     label 'process_high'
 
     conda "${moduleDir}/environment.yml"
@@ -8,26 +20,28 @@ process SORTMERNA {
         'community.wave.seqera.io/library/sortmerna:4.3.7--b730cad73fc42b8e' }"
 
     input:
-    tuple val(meta), path(reads)
-    tuple val(meta2), path(fastas)
-    tuple val(meta3), path(index)
+    sample: ReadsInput
+    fastas: List<Path>
+    index: Path?
 
     output:
-    tuple val(meta), path("*non_rRNA.fastq.gz"), emit: reads, optional: true
-    tuple val(meta), path("*.log")             , emit: log, optional: true
-    tuple val(meta2), path("idx")              , emit: index, optional: true
-    tuple val("${task.process}"), val('sortmerna'), eval('sortmerna --version 2>&1 | grep -oE "[0-9]+\\.[0-9]+\\.[0-9]+" | head -1'), topic: versions, emit: versions_sortmerna
+    record(
+        id:    sample.id,
+        meta:  sample.meta,
+        reads: files('*non_rRNA.fastq.gz', optional: true).toSorted { f -> f.name },
+        log:   file('*.log', optional: true),
+        index: file('idx', optional: true)
+    ) as SortmernaResult
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'sortmerna', eval('sortmerna --version 2>&1 | grep -oE "[0-9]+\\.[0-9]+\\.[0-9]+" | head -1')) >> 'versions'
 
     script:
     def args          = task.ext.args  ?: ''
-    def prefix        = task.ext.prefix ?: "${meta.id}"
+    def prefix        = task.ext.prefix ?: "${sample.meta.id}"
 
     def index_only    = args.contains('--index 1')? true : false
     def skip_index    = args.contains('--index 0')? true : false
-    def paired_end    = reads instanceof List
     def paired_cmd    = ''
     def reads_args    = ''
     def out2_cmd      = ''
@@ -37,8 +51,8 @@ process SORTMERNA {
 
     if (! index_only){
         reads_args = '--aligned rRNA_reads --fastx --other non_rRNA_reads'
-        reads_input = paired_end ? reads.collect{ r -> "--reads $r"}.join(' ') : "--reads $reads"
-        def n_fastq = paired_end ? reads.size() : 1
+        reads_input = sample.reads.collect{ r -> "--reads $r"}.join(' ')
+        def n_fastq = sample.reads.size()
         if ( n_fastq == 1 ) {
             mv_cmd = """
             mv non_rRNA_reads.f*q.gz ${prefix}.non_rRNA.fastq.gz
@@ -71,14 +85,13 @@ process SORTMERNA {
 
     stub:
     def args          = task.ext.args  ?: ''
-    def prefix        = task.ext.prefix ?: "${meta.id}"
+    def prefix        = task.ext.prefix ?: "${sample.meta.id}"
 
     def index_only    = args.contains('--index 1')? true : false
-    def paired_end    = reads instanceof List
     def mv_cmd        = ''
 
     if (! index_only){
-        def n_fastq = paired_end ? reads.size() : 1
+        def n_fastq = sample.reads.size()
         if ( n_fastq == 1 ) {
             mv_cmd = "echo | gzip > ${prefix}.non_rRNA.fastq.gz"
         } else {

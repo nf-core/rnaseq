@@ -16,9 +16,10 @@ nextflow_pipeline {
 
     test("Params: --pseudo_aligner salmon --skip_qc --skip_alignment") {
 
+        options "-output-dir $outputDir"
+
         when {
             params {
-                outdir = "$outputDir"
                 pseudo_aligner = 'salmon'
                 skip_qc = true
                 skip_alignment = true
@@ -26,10 +27,10 @@ nextflow_pipeline {
         }
 
         then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // stable_name: All files + folders in the output directory with a stable name
+            def stable_name = getAllFilesFromDir(outputDir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in the output directory with stable content
+            def stable_path = getAllFilesFromDir(outputDir, ignoreFile: 'tests/.nftignore')
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -59,11 +60,10 @@ nextflow_pipeline {
 
     test("Params: --pseudo_aligner salmon --skip_qc --skip_alignment - stub") {
 
-        options "-stub"
+        options "-stub -output-dir $outputDir"
 
         when {
             params {
-                outdir = "$outputDir"
                 pseudo_aligner = 'salmon'
                 skip_qc = true
                 skip_alignment = true
@@ -71,10 +71,10 @@ nextflow_pipeline {
         }
 
         then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // stable_name: All files + folders in the output directory with a stable name
+            def stable_name = getAllFilesFromDir(outputDir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in the output directory with stable content
+            def stable_path = getAllFilesFromDir(outputDir, ignoreFile: 'tests/.nftignore')
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -104,9 +104,10 @@ nextflow_pipeline {
 
     test("Params: --pseudo_aligner salmon --skip_alignment --skip_quantification_merge") {
 
+        options "-output-dir $outputDir"
+
         when {
             params {
-                outdir = "$outputDir"
                 pseudo_aligner = 'salmon'
                 skip_alignment = true
                 skip_quantification_merge = true
@@ -114,10 +115,10 @@ nextflow_pipeline {
         }
 
         then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // stable_name: All files + folders in the output directory with a stable name
+            def stable_name = getAllFilesFromDir(outputDir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in the output directory with stable content
+            def stable_path = getAllFilesFromDir(outputDir, ignoreFile: 'tests/.nftignore')
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -147,11 +148,10 @@ nextflow_pipeline {
 
     test("Params: --pseudo_aligner salmon --skip_alignment --skip_quantification_merge - stub") {
 
-        options "-stub"
+        options "-stub -output-dir $outputDir"
 
         when {
             params {
-                outdir = "$outputDir"
                 pseudo_aligner = 'salmon'
                 skip_alignment = true
                 skip_quantification_merge = true
@@ -159,10 +159,10 @@ nextflow_pipeline {
         }
 
         then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // stable_name: All files + folders in the output directory with a stable name
+            def stable_name = getAllFilesFromDir(outputDir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in the output directory with stable content
+            def stable_path = getAllFilesFromDir(outputDir, ignoreFile: 'tests/.nftignore')
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -192,12 +192,13 @@ nextflow_pipeline {
 
     test("Params: --pseudo_aligner salmon, duplicate transcript dropped by default") {
 
+        options "-output-dir $outputDir"
+
         when {
             def duplicateFasta = File.createTempFile('transcriptome_with_duplicate', '.fasta')
             duplicateFasta.text = DUPLICATE_TRANSCRIPT_FASTA
 
             params {
-                outdir = "$outputDir"
                 pseudo_aligner = 'salmon'
                 skip_qc = true
                 skip_alignment = true
@@ -230,12 +231,13 @@ nextflow_pipeline {
 
     test("Params: --pseudo_aligner salmon --extra_salmon_index_args --keepDuplicates retains the duplicate transcript") {
 
+        options "-output-dir $outputDir"
+
         when {
             def duplicateFasta = File.createTempFile('transcriptome_with_duplicate', '.fasta')
             duplicateFasta.text = DUPLICATE_TRANSCRIPT_FASTA
 
             params {
-                outdir = "$outputDir"
                 pseudo_aligner = 'salmon'
                 skip_qc = true
                 skip_alignment = true

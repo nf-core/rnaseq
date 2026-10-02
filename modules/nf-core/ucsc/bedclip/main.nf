@@ -1,5 +1,15 @@
+nextflow.enable.types = true
+
+include { BedgraphInput } from '../../types'
+
+record UcscBedclipResult {
+    id:       String
+    meta:     Map
+    bedgraph: Path
+}
+
 process UCSC_BEDCLIP {
-    tag "$meta.id"
+    tag "$sample.meta.id"
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
@@ -8,29 +18,29 @@ process UCSC_BEDCLIP {
         'quay.io/biocontainers/ucsc-bedclip:482--h0b57e2e_0' }"
 
     input:
-    tuple val(meta), path(bedgraph)
-    path  sizes
+    sample: BedgraphInput
+    sizes: Path
 
     output:
-    tuple val(meta), path("*.bedGraph"), emit: bedgraph
-    tuple val("${task.process}"), val('ucsc'), val('482'), topic: versions, emit: versions_ucsc
+    record(id: sample.id, meta: sample.meta, bedgraph: file("*.bedGraph")) as UcscBedclipResult
+
+    topic:
     // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
-    when:
-    task.ext.when == null || task.ext.when
+    tuple(task.process, 'ucsc', '482') >> 'versions'
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     bedClip \\
         $args \\
-        $bedgraph \\
+        $sample.bedgraph \\
         $sizes \\
         ${prefix}.bedGraph
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     touch ${prefix}.bedGraph
     """

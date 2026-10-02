@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 //
 // Sort, index BAM file and run samtools stats, flagstat and idxstats
 //
@@ -5,27 +7,35 @@
 include { SAMTOOLS_SORT      } from '../../../modules/nf-core/samtools/sort/main'
 include { SAMTOOLS_INDEX     } from '../../../modules/nf-core/samtools/index/main'
 include { BAM_STATS_SAMTOOLS } from '../bam_stats_samtools/main'
+include { RawBams; Bam } from '../../../modules/nf-core/types'
+include { SamtoolsIndexResult } from '../../../modules/nf-core/samtools/index/main'
+include { SamtoolsSortResult } from '../../../modules/nf-core/samtools/sort/main'
 
 workflow BAM_SORT_STATS_SAMTOOLS {
     take:
-    ch_bam // channel: [ val(meta), [ bam ] ]
-    ch_fasta_fai // channel: [ val(meta), path(fasta), path(fai) ]
+    ch_bam: Channel<RawBams>
+    ch_fasta: Value<Path?>
+    ch_fai: Value<Path?>
 
     main:
-    SAMTOOLS_SORT(ch_bam, ch_fasta_fai, '')
+    def ch_sorted: Channel<SamtoolsSortResult> = SAMTOOLS_SORT(ch_bam, ch_fasta, ch_fai, '')
+        .filter { r -> r.bam != null }
 
-    SAMTOOLS_INDEX(SAMTOOLS_SORT.out.bam)
+    def ch_index: Channel<SamtoolsIndexResult> = SAMTOOLS_INDEX(ch_sorted)
+    ch_sorted_indexed = ch_sorted.join(ch_index, by: 'id', remainder: true)
+    ch_sorted_indexed.subscribe { r ->
+        if( r.bam == null || r.bai == null ) {
+            error "Sample '${r.id}' is missing its samtools index result"
+        }
+    }
+    ch_indexed = ch_sorted_indexed.filter { r -> r.bam != null && r.bai != null }
 
-    SAMTOOLS_SORT.out.bam
-        .join(SAMTOOLS_INDEX.out.index, by: [0])
-        .set { ch_bam_bai }
-
-    BAM_STATS_SAMTOOLS(ch_bam_bai, ch_fasta_fai)
+    // SAMTOOLS_SORT also carries cram, sam, csi and crai fields; dropping them keeps them from
+    // overwriting same-named fields when a caller joins this result onto its own record.
+    ch_results = ch_indexed
+        .join(BAM_STATS_SAMTOOLS(ch_indexed, ch_fasta, ch_fai), by: 'id')
+        .map { r -> record(id: r.id, meta: r.meta, bam: r.bam, bai: r.bai, samtools: r.samtools) }
 
     emit:
-    bam      = SAMTOOLS_SORT.out.bam // channel: [ val(meta), [ bam ] ]
-    index    = SAMTOOLS_INDEX.out.index // channel: [ val(meta), [ index ] ]
-    stats    = BAM_STATS_SAMTOOLS.out.stats // channel: [ val(meta), [ stats ] ]
-    flagstat = BAM_STATS_SAMTOOLS.out.flagstat // channel: [ val(meta), [ flagstat ] ]
-    idxstats = BAM_STATS_SAMTOOLS.out.idxstats // channel: [ val(meta), [ idxstats ] ]
+    ch_results
 }

@@ -1,5 +1,9 @@
+nextflow.enable.types = true
+
+include { ReadsInput; StarAlignResult } from '../../types'
+
 process SENTIEON_STARALIGN {
-    tag "${meta.id}"
+    tag "$sample.meta.id"
     label 'process_high'
     label 'sentieon'
 
@@ -10,40 +14,51 @@ process SENTIEON_STARALIGN {
         : 'community.wave.seqera.io/library/sentieon:202503.02--def60555294d04fa'}"
 
     input:
-    tuple val(meta), path(reads, stageAs: "input*/*")
-    tuple val(meta2), path(index)
-    tuple val(meta3), path(gtf)
-    val star_ignore_sjdbgtf
+    sample: ReadsInput
+    index: Path
+    gtf: Path?
+    star_ignore_sjdbgtf: Boolean
+
+    stage:
+    stageAs sample.reads, 'input*/*'
 
     output:
-    tuple val(meta), path('*Log.final.out'),                          emit: log_final
-    tuple val(meta), path('*Log.out'),                                emit: log_out
-    tuple val(meta), path('*Log.progress.out'),                       emit: log_progress
-    tuple val(meta), path('*d.out.bam'),                              emit: bam,                optional: true
-    tuple val(meta), path("${prefix}.sortedByCoord.out.bam"),         emit: bam_sorted,         optional: true
-    tuple val(meta), path("${prefix}.Aligned.sortedByCoord.out.bam"), emit: bam_sorted_aligned, optional: true
-    tuple val(meta), path('*toTranscriptome.out.bam'),                emit: bam_transcript,     optional: true
-    tuple val(meta), path('*Aligned.unsort.out.bam'),                 emit: bam_unsorted,       optional: true
-    tuple val(meta), path('*fastq.gz'),                               emit: fastq,              optional: true
-    tuple val(meta), path('*.tab'),                                   emit: tab,                optional: true
-    tuple val(meta), path('*.SJ.out.tab'),                            emit: spl_junc_tab,       optional: true
-    tuple val(meta), path('*.ReadsPerGene.out.tab'),                  emit: read_per_gene_tab,  optional: true
-    tuple val(meta), path('*.out.junction'),                          emit: junction,           optional: true
-    tuple val(meta), path('*.out.sam'),                               emit: sam,                optional: true
-    tuple val(meta), path('*.wig'),                                   emit: wig,                optional: true
-    tuple val(meta), path('*.bg'),                                    emit: bedgraph,           optional: true
-    tuple val("${task.process}"), val('star'), eval('sentieon STAR --version | sed -e "s/STAR_//g"'), topic: versions, emit: versions_star
-    tuple val("${task.process}"), val('sentieon'), eval('sentieon driver --version 2>&1 | sed -e "s/sentieon-genomics-//g"'), topic: versions, emit: versions_sentieon
+    record(
+        id:                 sample.id,
+        meta:               sample.meta,
+        raw_bams:           files('*d.out.bam', optional: true).toSorted { f -> f.name },
+        bam_sorted:         file("${prefix}.sortedByCoord.out.bam", optional: true),
+        bam_sorted_aligned: file("${prefix}.Aligned.sortedByCoord.out.bam", optional: true),
+        bam_unsorted:       file('*Aligned.unsort.out.bam', optional: true),
+        transcriptome_bam:  file('*toTranscriptome.out.bam', optional: true),
+        unmapped:           files('*fastq.gz', optional: true).toSorted { f -> f.name },
+        sam:                file('*.out.sam', optional: true),
+        junction:           file('*.out.junction', optional: true),
+        spl_junc_tab:       file('*.SJ.out.tab', optional: true),
+        read_per_gene_tab:  file('*.ReadsPerGene.out.tab', optional: true),
+        wig:                files('*.wig', optional: true).toSorted { f -> f.name },
+        bedgraph:           files('*.bg', optional: true).toSorted { f -> f.name },
+        orig_bai:           null,
+        qc_metrics:         null,
+        duplicate_metrics:  null,
+        star:               record(
+            log_final:    file('*Log.final.out'),
+            log_out:      file('*Log.out'),
+            log_progress: file('*Log.progress.out'),
+            tab:          files('*.tab', optional: true).toSorted { f -> f.name }
+        )
+    ) as StarAlignResult
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'star', eval('sentieon STAR --version | sed -e "s/STAR_//g"')) >> 'versions'
+    tuple(task.process, 'sentieon', eval('sentieon driver --version 2>&1 | sed -e "s/sentieon-genomics-//g"')) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''
-    prefix = task.ext.prefix ?: "${meta.id}"
-    def reads1 = []
-    def reads2 = []
-    meta.single_end ? [reads].flatten().each { r -> reads1 << r } : reads.eachWithIndex { v, ix -> (ix & 1 ? reads2 : reads1) << v }
+    prefix = task.ext.prefix ?: "${sample.meta.id}"
+    def read_pairs = sample.reads.collate(2)
+    def reads1 = sample.meta.single_end ? sample.reads : read_pairs.collect { pair -> pair[0] }.toList()
+    def reads2 = sample.meta.single_end ? [] : read_pairs.collect { pair -> pair[1] }.toList()
     def ignore_gtf = star_ignore_sjdbgtf ? '' : "--sjdbGTFfile ${gtf}"
     attrRG = args.contains("--outSAMattrRGline") ? "" : "--outSAMattrRGline 'ID:${prefix}' 'SM:${prefix}'"
     def out_sam_type = args.contains('--outSAMtype') ? '' : '--outSAMtype BAM Unsorted'
@@ -78,7 +93,7 @@ process SENTIEON_STARALIGN {
     """
 
     stub:
-    prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     echo "" | gzip > ${prefix}.unmapped_1.fastq.gz
     echo "" | gzip > ${prefix}.unmapped_2.fastq.gz

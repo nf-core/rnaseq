@@ -1,5 +1,15 @@
+nextflow.enable.types = true
+
+include { FastaInput } from '../../nf-core/types'
+
+record PreprocessTranscriptsFastaGencodeResult {
+    id:    String
+    meta:  Map
+    fasta: Path
+}
+
 process PREPROCESS_TRANSCRIPTS_FASTA_GENCODE {
-    tag "$fasta"
+    tag "${sample.fasta}"
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -7,26 +17,25 @@ process PREPROCESS_TRANSCRIPTS_FASTA_GENCODE {
         'nf-core/ubuntu:20.04' }"
 
     input:
-    path fasta
+    sample: FastaInput
 
     output:
-    path "*.fa", emit: fasta
-    tuple val("${task.process}"), val('sed'), eval("sed --version 2>&1 | sed '1!d;s/^.*) //'"), topic: versions
+    record(id: sample.id, meta: sample.meta, fasta: file('*.fa')) as PreprocessTranscriptsFastaGencodeResult
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'sed', eval("sed --version 2>&1 | sed '1!d;s/^.*) //'")) >> 'versions'
 
     script:
-    def gzipped = fasta.toString().endsWith('.gz')
-    def outfile = gzipped ? file(fasta.baseName).baseName : fasta.baseName
+    def gzipped = sample.fasta.name.endsWith('.gz')
+    def outfile = gzipped ? file(sample.fasta.baseName).baseName : sample.fasta.baseName
     def command = gzipped ? 'zcat' : 'cat'
     """
-    $command $fasta | cut -d "|" -f1 > ${outfile}.fixed.fa
+    $command ${sample.fasta} | cut -d "|" -f1 > ${outfile}.fixed.fa
     """
 
     stub:
-    def gzipped = fasta.toString().endsWith('.gz')
-    def outfile = gzipped ? file(fasta.baseName).baseName : fasta.baseName
+    def gzipped = sample.fasta.name.endsWith('.gz')
+    def outfile = gzipped ? file(sample.fasta.baseName).baseName : sample.fasta.baseName
     """
     touch ${outfile}.fixed.fa
     """

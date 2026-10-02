@@ -1,5 +1,15 @@
+nextflow.enable.types = true
+
+include { BamInput } from '../../types'
+
+record QualimapRnaseqResult {
+    id:       String
+    meta:     Map
+    qualimap: Path
+}
+
 process QUALIMAP_RNASEQ {
-    tag "$meta.id"
+    tag "$sample.meta.id"
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
@@ -8,21 +18,20 @@ process QUALIMAP_RNASEQ {
         'quay.io/biocontainers/qualimap:2.3--hdfd78af_0' }"
 
     input:
-    tuple val(meta), path(bam)
-    tuple val(meta2), path(gtf)
+    sample: BamInput
+    gtf: Path
 
     output:
-    tuple val(meta), path("${prefix}"), emit: results
-    tuple val("${task.process}"), val('qualimap'), eval("qualimap -h | sed -n 's/^QualiMap v.//p'"), topic: versions, emit: versions_qualimap
+    record(id: sample.id, meta: sample.meta, qualimap: file("${prefix}")) as QualimapRnaseqResult
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'qualimap', eval("qualimap -h | sed -n 's/^QualiMap v.//p'")) >> 'versions'
 
     script:
     def args = task.ext.args   ?: ''
-    prefix   = task.ext.prefix ?: "${meta.id}"
-    def paired_end = meta.single_end ? '' : '-pe'
-    def memory = (task.memory.mega*0.8).intValue() + 'M'
+    prefix   = task.ext.prefix ?: "${sample.meta.id}"
+    def paired_end = sample.meta.single_end ? '' : '-pe'
+    def memory = "${(task.memory.toMega() * 0.8).intValue()}M"
 
     """
     unset DISPLAY
@@ -32,14 +41,14 @@ process QUALIMAP_RNASEQ {
         --java-mem-size=${memory} \\
         rnaseq \\
         ${args} \\
-        -bam ${bam} \\
+        -bam ${sample.bam} \\
         -gtf ${gtf} \\
         ${paired_end} \\
         -outdir ${prefix}
     """
 
     stub:
-    prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     mkdir ${prefix}
     """

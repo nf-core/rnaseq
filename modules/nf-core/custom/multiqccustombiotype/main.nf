@@ -1,5 +1,20 @@
+nextflow.enable.types = true
+
+record CustomMultiqccustombiotypeInput {
+    id:     String
+    meta:   Map
+    counts: Path
+}
+
+record CustomMultiqccustombiotypeResult {
+    id:   String
+    meta: Map
+    tsv:  Path
+    rrna: Path
+}
+
 process CUSTOM_MULTIQCCUSTOMBIOTYPE {
-    tag "$meta.id"
+    tag "${sample.meta.id}"
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
@@ -8,22 +23,25 @@ process CUSTOM_MULTIQCCUSTOMBIOTYPE {
         'quay.io/biocontainers/python:3.12.12' }"
 
     input:
-    tuple val(meta), path(count)
-    tuple val(meta2), path(header)
+    sample: CustomMultiqccustombiotypeInput
+    header: Path
 
     output:
-    tuple val(meta), path("*biotype_counts_mqc.tsv")      , emit: tsv
-    tuple val(meta), path("*biotype_counts_rrna_mqc.tsv") , emit: rrna
-    path "versions.yml"                                   , emit: versions, topic: versions
+    record(
+        id:   sample.id,
+        meta: sample.meta,
+        tsv:  file('*biotype_counts_mqc.tsv'),
+        rrna: file('*biotype_counts_rrna_mqc.tsv')
+    ) as CustomMultiqccustombiotypeResult
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    file('versions.yml') >> 'versions'
 
     script:
     template 'mqc_features_stat.py'
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     touch ${prefix}.biotype_counts_mqc.tsv
     touch ${prefix}.biotype_counts_rrna_mqc.tsv

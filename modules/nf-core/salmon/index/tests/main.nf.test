@@ -13,19 +13,24 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = channel.of([
-                    [ id:'test' ], // meta map
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true),
-                    file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.fasta", checkIfExists: true)
-                ])
+                input[0] = channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    transcript_fasta: file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true),
+                    genome_fasta: file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.fasta", checkIfExists: true)
+                ))
                 """
             }
         }
 
         then {
+            def idx = process.out[0][0]
+            def idx_dir = new File(idx.index.toString())
+            def idx_files = []
+            if (idx_dir.isDirectory()) { idx_dir.eachFileRecurse(groovy.io.FileType.FILES) { f -> idx_files << f.name } }
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["index"])).match()}
+                { assert snapshot(idx.meta, idx_dir.isDirectory() ? idx_files.sort() : idx_dir.name).match()}
             )
         }
 
@@ -36,19 +41,24 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = channel.of([
-                    [ id:'test' ], // meta map
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true),
-                    []
-                ])
+                input[0] = channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    transcript_fasta: file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true),
+                    genome_fasta: []
+                ))
                 """
             }
         }
 
         then {
+            def idx = process.out[0][0]
+            def idx_dir = new File(idx.index.toString())
+            def idx_files = []
+            if (idx_dir.isDirectory()) { idx_dir.eachFileRecurse(groovy.io.FileType.FILES) { f -> idx_files << f.name } }
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["index"])).match()}
+                { assert snapshot(idx.meta, idx_dir.isDirectory() ? idx_files.sort() : idx_dir.name).match()}
             )
         }
 
@@ -59,19 +69,24 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = channel.of([
-                    [ id:'test' ], // meta map
-                    file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true),
-                    file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.fasta", checkIfExists: true)
-                ])
+                input[0] = channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    transcript_fasta: file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true),
+                    genome_fasta: file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.fasta", checkIfExists: true)
+                ))
                 """
             }
         }
 
         then {
+            def idx = process.out[0][0]
+            def idx_dir = new File(idx.index.toString())
+            def idx_files = []
+            if (idx_dir.isDirectory()) { idx_dir.eachFileRecurse(groovy.io.FileType.FILES) { f -> idx_files << f.name } }
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["index"])).match()}
+                { assert snapshot(idx.meta, idx_dir.isDirectory() ? idx_files.sort() : idx_dir.name).match()}
             )
         }
 

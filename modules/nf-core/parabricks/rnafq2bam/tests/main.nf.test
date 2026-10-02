@@ -17,14 +17,12 @@ nextflow_process {
             script "../../../star/genomegenerate/main.nf"
             process {
                 """
-                input[0] = [
-                    [ id:'minigenome_fasta' ],
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/minigenome.fa')
-                ]
-                input[1] = [
-                    [ id:'minigenome_gtf' ],
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/minigenome.gtf')
-                ]
+                input[0] = record(
+                    id: 'minigenome_fasta',
+                    meta: [ id:'minigenome_fasta' ],
+                    fasta: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/minigenome.fa')
+                )
+                input[1] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/minigenome.gtf')
                 """
             }
         }
@@ -40,15 +38,13 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:true ], // meta map
-                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/test_starfusion_rnaseq_1.fastq.gz', checkIfExists: true) ]
-                ])
-                input[1] = Channel.of([
-                    [ id:'test' ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
-                ])
-                input[2] = STAR_GENOMEGENERATE.out.index
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:true ],
+                    reads: [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/test_starfusion_rnaseq_1.fastq.gz', checkIfExists: true) ]
+                ))
+                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
+                input[2] = STAR_GENOMEGENERATE.out.map { r -> r.index }
                 input[3] = false
                 input[4] = false
                 """
@@ -56,12 +52,12 @@ nextflow_process {
         }
 
         then {
+            def aln = process.out[0][0]
             assertAll(
                 { assert process.success },
                 { assert snapshot(
-                    file(process.out.log_final[0][1]).name,
-                    process.out.findAll { key, val -> key.startsWith('versions') },
-                    bam(process.out.bam[0][1]).getReadsMD5()
+                    file(aln.star.log_final).name,
+                    bam(aln.raw_bams[0]).getReadsMD5()
                 ).match() }
             )
         }
@@ -77,15 +73,13 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:true ], // meta map
-                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/test_starfusion_rnaseq_1.fastq.gz', checkIfExists: true) ]
-                ])
-                input[1] = Channel.of([
-                    [ id:'test' ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/minigenome.fa', checkIfExists: true)
-                ])
-                input[2] = STAR_GENOMEGENERATE.out.index
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:true ],
+                    reads: [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/test_starfusion_rnaseq_1.fastq.gz', checkIfExists: true) ]
+                ))
+                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/minigenome.fa', checkIfExists: true))
+                input[2] = STAR_GENOMEGENERATE.out.map { r -> r.index }
                 input[3] = false
                 input[4] = false
                 """
@@ -108,15 +102,13 @@ nextflow_process {
             }
             process {
                 """
-                 input[0] = Channel.of([
-                    [ id:'test', single_end:true ], // meta map
-                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/test_starfusion_rnaseq_1.fastq.gz', checkIfExists: true) ]
-                ])
-                input[1] = Channel.of([
-                    [ id:'test' ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
-                ])
-                input[2] = STAR_GENOMEGENERATE.out.index
+                 input[0] = Channel.of(record(
+                     id: 'test',
+                     meta: [ id:'test', single_end:true ],
+                     reads: [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/test_starfusion_rnaseq_1.fastq.gz', checkIfExists: true) ]
+                 ))
+                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
+                input[2] = STAR_GENOMEGENERATE.out.map { r -> r.index }
                 input[3] = false
                 input[4] = false
                 """
@@ -124,13 +116,13 @@ nextflow_process {
         }
 
         then {
+            def aln = process.out[0][0]
             assertAll(
                 { assert process.success },
                 { assert snapshot(
-                    bam(process.out.bam[0][1]).getReadsMD5(),
-                    file(process.out.bai[0][1]).name,
-                    file(process.out.junction[0][1]).name,
-                    process.out.findAll { key, val -> key.startsWith('versions') }
+                    bam(aln.raw_bams[0]).getReadsMD5(),
+                    file(aln.orig_bai).name,
+                    file(aln.junction).name,
                 ).match() }
             )
         }
@@ -146,15 +138,13 @@ nextflow_process {
             }
             process {
                 """
-                 input[0] = Channel.of([
-                    [ id:'test', single_end:true ], // meta map
-                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/test_starfusion_rnaseq_1.fastq.gz', checkIfExists: true) ]
-                ])
-                input[1] = Channel.of([
-                    [ id:'test' ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
-                ])
-                input[2] = STAR_GENOMEGENERATE.out.index
+                 input[0] = Channel.of(record(
+                     id: 'test',
+                     meta: [ id:'test', single_end:true ],
+                     reads: [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/test_starfusion_rnaseq_1.fastq.gz', checkIfExists: true) ]
+                 ))
+                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
+                input[2] = STAR_GENOMEGENERATE.out.map { r -> r.index }
                 input[3] = false
                 input[4] = false
                 """

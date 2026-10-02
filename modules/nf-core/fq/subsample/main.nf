@@ -1,5 +1,15 @@
+nextflow.enable.types = true
+
+include { ReadsInput } from '../../types'
+
+record FqSubsampleResult {
+    id:    String
+    meta:  Map
+    reads: List<Path>
+}
+
 process FQ_SUBSAMPLE {
-    tag "$meta.id"
+    tag "$sample.meta.id"
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
@@ -8,14 +18,13 @@ process FQ_SUBSAMPLE {
         'quay.io/biocontainers/fq:0.12.0--h9ee0642_0' }"
 
     input:
-    tuple val(meta), path(fastq)
+    sample: ReadsInput
 
     output:
-    tuple val(meta), path("*.fastq.gz"), emit: fastq
-    tuple val("${task.process}"), val('fq'), eval("fq subsample --version | sed 's/fq-subsample //; s/ .*//'"), emit: versions_fq, topic: versions
+    record(id: sample.id, meta: sample.meta, reads: files("*.fastq.gz").toSorted { f -> f.name }) as FqSubsampleResult
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'fq', eval("fq subsample --version | sed 's/fq-subsample //; s/ .*//'")) >> 'versions'
 
     script:
     /* args requires:
@@ -28,9 +37,8 @@ process FQ_SUBSAMPLE {
     if ( !(prob_exists || nrec_exists) ){
         error "FQ/SUBSAMPLE requires --probability (-p) or --record-count (-n) specified in task.ext.args!"
     }
-    def prefix = task.ext.prefix ?: "${meta.id}"
-    def n_fastq = fastq instanceof List ? fastq.size() : 1
-    log.debug "FQ/SUBSAMPLE found ${n_fastq} FASTQ files"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
+    def n_fastq = sample.reads.size()
     if ( n_fastq == 1 ){
         fastq1_output = "--r1-dst ${prefix}.fastq.gz"
         fastq2_output = ""
@@ -43,13 +51,13 @@ process FQ_SUBSAMPLE {
     """
     fq subsample \\
         $args \\
-        $fastq \\
+        ${sample.reads.join(' ')} \\
         $fastq1_output \\
         $fastq2_output
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     echo '' | gzip >  ${prefix}_R1.fastq.gz
     echo '' | gzip >  ${prefix}_R2.fastq.gz

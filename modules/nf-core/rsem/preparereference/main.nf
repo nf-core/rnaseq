@@ -1,5 +1,16 @@
+nextflow.enable.types = true
+
+include { FastaGtfInput } from '../../types'
+
+record RsemPreparereferenceResult {
+    id:               String
+    meta:             Map
+    index:            Path
+    transcript_fasta: Path
+}
+
 process RSEM_PREPAREREFERENCE {
-    tag "$fasta"
+    tag "$sample.fasta"
     label 'process_high'
 
     conda "${moduleDir}/environment.yml"
@@ -8,39 +19,44 @@ process RSEM_PREPAREREFERENCE {
         'community.wave.seqera.io/library/rsem_star:5acb4e8c03239c32' }"
 
     input:
-    path fasta, stageAs: "rsem/*"
-    path gtf
+    sample: FastaGtfInput
+
+    stage:
+    stageAs sample.fasta, 'rsem/*'
 
     output:
-    path "rsem"           , emit: index
-    path "*transcripts.fa", emit: transcript_fasta
-    tuple val("${task.process}"), val('rsem'), eval('rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g"'), topic: versions, emit: versions_rsem
+    record(
+        id:               sample.id,
+        meta:             sample.meta,
+        index:            file("rsem"),
+        transcript_fasta: file("*transcripts.fa")
+    ) as RsemPreparereferenceResult
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'rsem', eval('rsem-calculate-expression --version | sed -e "s/Current version: RSEM v//g"')) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''
     def args2 = task.ext.args2 ?: ''
     def args_list = args.tokenize()
+    def args_no_star = args_list.findAll { arg -> !arg.contains('--star') }.join(' ')
     if (args_list.contains('--star')) {
-        args_list.removeIf { arg -> arg.contains('--star') }
         def memory = task.memory ? "--limitGenomeGenerateRAM ${task.memory.toBytes() - 100000000}" : ''
         """
         STAR \\
             --runMode genomeGenerate \\
             --genomeDir rsem/ \\
-            --genomeFastaFiles $fasta \\
-            --sjdbGTFfile $gtf \\
+            --genomeFastaFiles $sample.fasta \\
+            --sjdbGTFfile $sample.gtf \\
             --runThreadN $task.cpus \\
             $memory \\
             $args2
 
         rsem-prepare-reference \\
-            --gtf $gtf \\
+            --gtf $sample.gtf \\
             --num-threads $task.cpus \\
-            ${args_list.join(' ')} \\
-            $fasta \\
+            ${args_no_star} \\
+            $sample.fasta \\
             rsem/genome
 
         cp rsem/genome.transcripts.fa .
@@ -48,10 +64,10 @@ process RSEM_PREPAREREFERENCE {
     } else {
         """
         rsem-prepare-reference \\
-            --gtf $gtf \\
+            --gtf $sample.gtf \\
             --num-threads $task.cpus \\
             $args \\
-            $fasta \\
+            $sample.fasta \\
             rsem/genome
 
         cp rsem/genome.transcripts.fa .

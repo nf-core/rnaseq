@@ -1,5 +1,20 @@
+nextflow.enable.types = true
+
+include { RawBams } from '../../types'
+
+record SamtoolsSortResult {
+    id:   String
+    meta: Map
+    bam:  Path?
+    cram: Path?
+    sam:  Path?
+    bai:  Path?
+    csi:  Path?
+    crai: Path?
+}
+
 process SAMTOOLS_SORT {
-    tag "${meta.id}"
+    tag "${sample.meta.id}"
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
@@ -8,23 +23,32 @@ process SAMTOOLS_SORT {
         : 'community.wave.seqera.io/library/htslib_samtools:1.24--d697cfb9dce007cd'}"
 
     input:
-    tuple val(meta), path(bam, stageAs: "?/*")
-    tuple val(meta2), path(fasta), path(fai)
-    val index_format
+    sample: RawBams
+    fasta: Path?
+    fai: Path?
+    index_format: String
+
+    stage:
+    stageAs sample.raw_bams, '?/*'
 
     output:
-    tuple val(meta), path("${prefix}.bam"), emit: bam, optional: true
-    tuple val(meta), path("${prefix}.cram"), emit: cram, optional: true
-    tuple val(meta), path("${prefix}.sam"), emit: sam, optional: true
-    tuple val(meta), path("${prefix}.${extension}.{crai,csi,bai}"), emit: index, optional: true
-    tuple val("${task.process}"), val('samtools'), eval("samtools version | sed '1!d;s/.* //'"), topic: versions, emit: versions_samtools
+    record(
+        id:   sample.id,
+        meta: sample.meta,
+        bam:  file("${prefix}.bam", optional: true),
+        cram: file("${prefix}.cram", optional: true),
+        sam:  file("${prefix}.sam", optional: true),
+        bai:  file("${prefix}.{bam,cram,sam}.bai", optional: true),
+        csi:  file("${prefix}.{bam,cram,sam}.csi", optional: true),
+        crai: file("${prefix}.{bam,cram,sam}.crai", optional: true)
+    ) as SamtoolsSortResult
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'samtools', eval("samtools version | sed '1!d;s/.* //'")) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''
-    prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${sample.meta.id}"
     extension = args.contains("--output-fmt sam")
         ? "sam"
         : args.contains("--output-fmt cram")
@@ -40,24 +64,23 @@ process SAMTOOLS_SORT {
         write_index = "--write-index"
         output_file = "${prefix}.${extension}##idx##${prefix}.${extension}.${index_format}"
     }
-    def is_sam = (bam instanceof List ? bam[0] : bam).name.endsWith('.sam')
+    // A lone file arrives as a Path, which iterates over its name components.
+    def bam_names = sample.raw_bams instanceof Path ? "${sample.raw_bams}" : sample.raw_bams.join(' ')
+    def is_sam = bam_names.replaceAll(' .*', '').endsWith('.sam')
     if (index_format) {
-        if (!index_format.matches('bai|csi|crai')) {
+        if (!(index_format in ['bai', 'csi', 'crai'])) {
             error("Index format not one of bai, csi, crai.")
         }
         else if (extension == "sam") {
             error("Indexing not compatible with SAM output")
         }
     }
-    if ("${bam}" == "${prefix}.bam") {
-        error("Input and output names are the same, use \"task.ext.prefix\" to disambiguate!")
-    }
-    if ("${bam}" == "${prefix}.bam") {
+    if (bam_names == "${prefix}.bam") {
         error("Input and output names are the same, use \"task.ext.prefix\" to disambiguate!")
     }
 
-    def input_source = is_sam ? "${bam}" : "-"
-    def pre_command = is_sam ? "" : "samtools cat ${bam} | "
+    def input_source = is_sam ? bam_names : "-"
+    def pre_command = is_sam ? "" : "samtools cat ${bam_names} | "
 
     """
     ${pre_command}samtools sort \\
@@ -72,7 +95,7 @@ process SAMTOOLS_SORT {
 
     stub:
     def args = task.ext.args ?: ''
-    prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${sample.meta.id}"
     extension = args.contains("--output-fmt sam")
         ? "sam"
         : args.contains("--output-fmt cram")
@@ -80,7 +103,7 @@ process SAMTOOLS_SORT {
             : "bam"
 
     if (index_format) {
-        if (!index_format.matches('bai|csi|crai')) {
+        if (!(index_format in ['bai', 'csi', 'crai'])) {
             error("Index format not one of bai, csi, crai.")
         }
         else if (extension == "sam") {

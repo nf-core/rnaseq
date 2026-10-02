@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 //
 // Quantification post-processing with tximport and SummarizedExperiment
 //
@@ -7,16 +9,19 @@ include { TXIMETA_TXIMPORT } from '../../../modules/nf-core/tximeta/tximport'
 
 include { SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT as SE_GENE_UNIFIED       } from '../../../modules/nf-core/summarizedexperiment/summarizedexperiment'
 include { SUMMARIZEDEXPERIMENT_SUMMARIZEDEXPERIMENT as SE_TRANSCRIPT_UNIFIED } from '../../../modules/nf-core/summarizedexperiment/summarizedexperiment'
+include { QuantsInput; QuantMerged } from '../../../modules/nf-core/types'
+include { CustomTx2geneResult } from '../../../modules/nf-core/custom/tx2gene/main'
+include { TximetaTximportResult } from '../../../modules/nf-core/tximeta/tximport/main'
 
 workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT {
     take:
-    samplesheet           // channel: [ val(meta), /path/to/samplesheet ]
-    quant_results         // channel: [ val(meta), /path/to/results ] - per-sample quant files
-    gtf                   // channel: /path/to/genome.gtf
-    gtf_id_attribute      //     val: GTF gene ID attribute
-    gtf_extra_attribute   //     val: GTF alternative gene attribute (e.g. gene_name)
-    quant_type            //     val: 'salmon', 'kallisto', or 'rsem'
-    skip_merge            //    bool: skip cross-sample merging, run tximport per-sample
+    samplesheet: Value<Path>
+    ch_quants: Channel<QuantsInput> // per-sample quantification results
+    gtf: Value<Path>
+    gtf_id_attribute: String // GTF gene ID attribute
+    gtf_extra_attribute: String // GTF alternative gene attribute (e.g. gene_name)
+    quant_type: String // 'salmon', 'kallisto', or 'rsem'
+    skip_merge: Boolean // skip cross-sample merging, run tximport per-sample
 
     main:
 
@@ -33,20 +38,20 @@ workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT {
     // across -resume. Picking by arrival order would vary between runs and
     // invalidate the cache for tx2gene and everything downstream of it. The
     // empty-list guard keeps tx2gene from running when no quant results are
-    // supplied, since toSortedList still emits an empty list in that case.
+    // supplied, since collect still emits an empty list in that case.
     //
-    ch_tx2gene_quants = quant_results
-        .toSortedList { a, b -> a[1].name <=> b[1].name }
-        .filter { sorted -> sorted.size() > 0 }
-        .map { sorted -> [ [:], sorted.first()[1] ] }
+    ch_tx2gene_quants = ch_quants
+        .collect()
+        .flatMap { rs -> rs.isEmpty() ? [] : [ record(id: 'tx2gene', meta: [:], quants: [ rs.collect { r -> r.quants[0] }.toSorted { f -> f.name }.first() ]) ] }
 
-    CUSTOM_TX2GENE (
-        gtf.map { gtf_file -> [ [:], gtf_file ] },
+    def ch_tx2gene: Channel<CustomTx2geneResult> = CUSTOM_TX2GENE(
         ch_tx2gene_quants,
+        gtf,
         quant_type,
         gtf_id_attribute,
         gtf_extra_attribute
     )
+    ch_tx2gene_file = ch_tx2gene.collect().map { rs -> rs.isEmpty() ? null : rs.toSorted { r -> r.id }.first().tx2gene }
 
     //
     // Import and summarize quantifications with tximport
@@ -55,75 +60,58 @@ workflow QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT {
     // Sorted by name for a stable cache key; the R script derives sample
     // identity from staged file names, not list position. Filtered to
     // skip TXIMETA_TXIMPORT when there are no samples, since
-    // toSortedList() emits [] rather than nothing on an empty channel.
+    // collect emits [] rather than nothing on an empty channel.
     //
-    ch_tximport_input = skip_merge
-        ? quant_results
-        : quant_results
-            .toSortedList { a, b -> a[1].name <=> b[1].name }
-            .filter { sorted -> sorted.size() > 0 }
-            .map { sorted -> [ ['id': 'all_samples'], sorted.collect { it[1] } ] }
+    if (skip_merge) {
+        ch_tximport_input = ch_quants
+    } else {
+        ch_tximport_input = ch_quants
+            .collect()
+            .flatMap { rs -> rs.isEmpty() ? [] : [ record(id: 'all_samples', meta: [id: 'all_samples'], quants: rs.collect { r -> r.quants[0] }.toSorted { f -> f.name }) ] }
+    }
 
-    TXIMETA_TXIMPORT (
-        ch_tximport_input,
-        CUSTOM_TX2GENE.out.tx2gene,
-        quant_type
-    )
+    def ch_tximport: Channel<TximetaTximportResult> = TXIMETA_TXIMPORT(ch_tximport_input, ch_tx2gene_file, quant_type)
 
     //
     // Build SummarizedExperiment objects (only when merging)
     //
-    ch_merged_gene_rds       = channel.empty()
-    ch_merged_transcript_rds = channel.empty()
-
-    if (!skip_merge) {
+    if (skip_merge) {
+        ch_se_gene       = ch_tximport.map { r -> record(id: r.id, merged_gene_rds: null) }
+        ch_se_transcript = ch_tximport.map { r -> record(id: r.id, merged_transcript_rds: null) }
+    } else {
         //
         // Build gene-level SummarizedExperiment
         //
-        ch_gene_unified = TXIMETA_TXIMPORT.out.counts_gene
-            .join(TXIMETA_TXIMPORT.out.counts_gene_length_scaled, failOnMismatch: true, failOnDuplicate: true)
-            .join(TXIMETA_TXIMPORT.out.counts_gene_scaled, failOnMismatch: true, failOnDuplicate: true)
-            .join(TXIMETA_TXIMPORT.out.lengths_gene, failOnMismatch: true, failOnDuplicate: true)
-            .join(TXIMETA_TXIMPORT.out.tpm_gene, failOnMismatch: true, failOnDuplicate: true)
-            .map { row -> tuple(row[0], row.tail()) }
-
-        SE_GENE_UNIFIED (
-            ch_gene_unified,
-            CUSTOM_TX2GENE.out.tx2gene,
+        ch_se_gene = SE_GENE_UNIFIED(
+            ch_tximport.map { r ->
+                record(id: r.id, meta: r.meta, matrix_files: [ r.counts_gene, r.counts_gene_length_scaled, r.counts_gene_scaled, r.lengths_gene, r.tpm_gene ])
+            },
+            ch_tx2gene_file,
             samplesheet
-        )
+        ).map { r -> record(id: r.id, merged_gene_rds: r.rds) }
 
         //
         // Build transcript-level SummarizedExperiment
         //
-        ch_transcript_unified = TXIMETA_TXIMPORT.out.counts_transcript
-            .join(TXIMETA_TXIMPORT.out.lengths_transcript, failOnMismatch: true, failOnDuplicate: true)
-            .join(TXIMETA_TXIMPORT.out.tpm_transcript, failOnMismatch: true, failOnDuplicate: true)
-            .map { row -> tuple(row[0], row.tail()) }
-
-        SE_TRANSCRIPT_UNIFIED (
-            ch_transcript_unified,
-            TXIMETA_TXIMPORT.out.tx2gene_augmented,
+        ch_se_transcript = SE_TRANSCRIPT_UNIFIED(
+            ch_tximport.map { r ->
+                record(id: r.id, meta: r.meta, matrix_files: [ r.counts_transcript, r.lengths_transcript, r.tpm_transcript ])
+            },
+            ch_tximport.collect().map { rs -> rs.isEmpty() ? null : rs.toSorted { r -> r.id }.first().tx2gene_augmented },
             samplesheet
-        )
-
-        ch_merged_gene_rds       = SE_GENE_UNIFIED.out.rds
-        ch_merged_transcript_rds = SE_TRANSCRIPT_UNIFIED.out.rds
+        ).map { r -> record(id: r.id, merged_transcript_rds: r.rds) }
     }
 
+    //
+    // One record per TXIMETA_TXIMPORT row: a single 'all_samples' row when
+    // merging, or one per sample under skip_merge. The SE outputs only exist
+    // when merging and are null otherwise.
+    //
+    ch_results = ch_tximport
+        .join(ch_se_gene, by: 'id')
+        .join(ch_se_transcript, by: 'id')
+        .combine(tx2gene: ch_tx2gene_file)
+
     emit:
-    tx2gene                   = CUSTOM_TX2GENE.out.tx2gene                     // channel: [ val(meta), tx2gene.tsv ]
-    tx2gene_augmented         = TXIMETA_TXIMPORT.out.tx2gene_augmented         // channel: [ val(meta), tx2gene_augmented.tsv ]
-
-    tpm_gene                  = TXIMETA_TXIMPORT.out.tpm_gene                  //    path: *gene_tpm.tsv
-    counts_gene               = TXIMETA_TXIMPORT.out.counts_gene               //    path: *gene_counts.tsv
-    lengths_gene              = TXIMETA_TXIMPORT.out.lengths_gene              //    path: *gene_lengths.tsv
-    counts_gene_length_scaled = TXIMETA_TXIMPORT.out.counts_gene_length_scaled //    path: *gene_counts_length_scaled.tsv
-    counts_gene_scaled        = TXIMETA_TXIMPORT.out.counts_gene_scaled        //    path: *gene_counts_scaled.tsv
-    tpm_transcript            = TXIMETA_TXIMPORT.out.tpm_transcript            //    path: *transcript_tpm.tsv
-    counts_transcript         = TXIMETA_TXIMPORT.out.counts_transcript         //    path: *transcript_counts.tsv
-    lengths_transcript        = TXIMETA_TXIMPORT.out.lengths_transcript        //    path: *transcript_lengths.tsv
-
-    merged_gene_rds           = ch_merged_gene_rds                             //    path: *.rds
-    merged_transcript_rds     = ch_merged_transcript_rds                       //    path: *.rds
+    ch_results
 }

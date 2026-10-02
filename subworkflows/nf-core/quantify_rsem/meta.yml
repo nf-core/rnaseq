@@ -164,6 +164,17 @@ output:
       description: |
         Transcript to gene mapping table.
       pattern: "*.tx2gene.tsv"
+  - quant_merged:
+      type: file
+      description: |
+        Merged quantification, keyed by id: a single row when merging, one per
+        sample when `skip_merge` is true. Fields as `quant_tximport_summarizedexperiment`'s
+        `results` output.
+  - rsem_merge:
+      type: file
+      description: |
+        Wide-format RSEM merge counts as a single per-run record, keyed by id.
+        Empty channel when `skip_merge` is true.
 authors:
   - "@pinin4fjords"
 maintainers:

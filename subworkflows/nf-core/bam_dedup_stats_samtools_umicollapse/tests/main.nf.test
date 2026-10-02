@@ -29,11 +29,11 @@ nextflow_workflow {
             }
             workflow {
                 """
-                input[0] = Channel.of([
-                    [ id:'test'], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam.bai', checkIfExists: true)
-                ])
+                input[0] = new nextflow.dataflow.ChannelImpl(channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test'],
+                    bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.umi.sorted.bam', checkIfExists: true)
+                )))
                 """
             }
         }
@@ -41,13 +41,13 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success},
-                { assert snapshot(bam(workflow.out.bam[0][1]).getSamLinesMD5()).match("test_bam_dedup_stats_samtools_umicollapse_bam")},  // separate, because of linting error otherwise
-                { assert workflow.out.bam.get(0).get(1) ==~ ".*.bam"},
-                { assert workflow.out.index.get(0).get(1) ==~ ".*.bai"},
-                { assert workflow.out.dedup_stats.get(0).get(1) ==~ ".*_UMICollapse.log"},
-                { assert snapshot(workflow.out.stats).match("test_bam_dedup_stats_samtools_umicollapse_stats") },
-                { assert snapshot(workflow.out.flagstat).match("test_bam_dedup_stats_samtools_umicollapse_flagstats") },
-                { assert snapshot(workflow.out.idxstats).match("test_bam_dedup_stats_samtools_umicollapse_idxstats") }
+                { assert snapshot(bam(workflow.out[0][0].bam).getSamLinesMD5()).match("test_bam_dedup_stats_samtools_umicollapse_bam")},  // separate, because of linting error otherwise
+                { assert workflow.out[0][0].bam ==~ ".*.bam"},
+                { assert workflow.out[0][0].bai ==~ ".*.bai"},
+                { assert workflow.out[0][0].log ==~ ".*_UMICollapse.log"},
+                { assert snapshot(workflow.out[0][0].samtools.stats).match("test_bam_dedup_stats_samtools_umicollapse_stats") },
+                { assert snapshot(workflow.out[0][0].samtools.flagstat).match("test_bam_dedup_stats_samtools_umicollapse_flagstats") },
+                { assert snapshot(workflow.out[0][0].samtools.idxstats).match("test_bam_dedup_stats_samtools_umicollapse_idxstats") }
             )
         }
 

@@ -1,5 +1,15 @@
+nextflow.enable.types = true
+
+include { ReadsInput } from '../../types'
+
+record SeqkitStatsResult {
+    id:    String
+    meta:  Map
+    stats: Path
+}
+
 process SEQKIT_STATS {
-    tag "${meta.id}"
+    tag "${sample.meta.id}"
     label 'process_low'
 
     conda "${moduleDir}/environment.yml"
@@ -8,29 +18,28 @@ process SEQKIT_STATS {
         : 'community.wave.seqera.io/library/seqkit:2.13.0--05c0a96bf9fb2751'}"
 
     input:
-    tuple val(meta), path(reads)
+    sample: ReadsInput
 
     output:
-    tuple val(meta), path("*.tsv"), emit: stats
-    tuple val("${task.process}"), val('seqkit'), eval("seqkit version | sed 's/^.*v//'"), emit: versions_seqkit, topic: versions
+    record(id: sample.id, meta: sample.meta, stats: file("*.tsv")) as SeqkitStatsResult
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'seqkit', eval("seqkit version | sed 's/^.*v//'")) >> 'versions'
 
     script:
     def args = task.ext.args ?: '--all'
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     seqkit stats \\
         --tabular \\
         --threads ${task.cpus} \\
         ${args} \\
-        ${reads} > '${prefix}.tsv'
+        ${sample.reads.join(' ')} > '${prefix}.tsv'
     """
 
     stub:
     def args = task.ext.args ?: '--all'
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     echo ${args}
 

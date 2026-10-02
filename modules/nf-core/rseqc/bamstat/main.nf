@@ -1,5 +1,15 @@
+nextflow.enable.types = true
+
+include { BamBaiInput } from '../../types'
+
+record RseqcBamstatResult {
+    id:      String
+    meta:    Map
+    bamstat: Path
+}
+
 process RSEQC_BAMSTAT {
-    tag "$meta.id"
+    tag "$sample.meta.id"
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
@@ -8,27 +18,26 @@ process RSEQC_BAMSTAT {
         'community.wave.seqera.io/library/rseqc_r-base:2e29d2dfda9cef15' }"
 
     input:
-    tuple val(meta), path(bam), path(bai)
+    sample: BamBaiInput
 
     output:
-    tuple val(meta), path("*.bam_stat.txt"), emit: txt
-    tuple val("${task.process}"), val('rseqc'), eval('bam_stat.py --version | sed "s/bam_stat.py //"'), emit: versions_rseqc, topic: versions
+    record(id: sample.id, meta: sample.meta, bamstat: file("*.bam_stat.txt")) as RseqcBamstatResult
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'rseqc', eval('bam_stat.py --version | sed "s/bam_stat.py //"')) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     bam_stat.py \\
-        -i $bam \\
+        -i $sample.bam \\
         $args \\
         > ${prefix}.bam_stat.txt
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     touch ${prefix}.bam_stat.txt
     """

@@ -50,9 +50,19 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success },
+                { assert workflow.out.references.collect { r -> [ r.kind, file(r.file).name ] }.sort { a, b -> a[0] <=> b[0] } == [
+                    [ 'chrom_sizes', 'genome_gfp.fasta.sizes' ],
+                    [ 'fai', 'genome_gfp.fasta.fai' ],
+                    [ 'fasta', 'genome_gfp.fasta' ],
+                    [ 'gene_bed', 'genome_gfp.bed' ],
+                    [ 'gtf', 'genome_gfp.gtf' ]
+                ] },
+                { assert workflow.out.intermediates.collect { r -> [ r.kind, file(r.file).name ] } == [
+                    [ 'gtf_pre_concat', 'genes_with_empty_tid.filtered.gtf' ]
+                ] },
                 { assert snapshot(
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
@@ -114,7 +124,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
@@ -176,7 +186,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
@@ -238,7 +248,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
@@ -300,7 +310,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
@@ -362,7 +372,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
@@ -424,7 +434,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
@@ -486,7 +496,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
@@ -548,7 +558,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
@@ -610,7 +620,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
@@ -672,7 +682,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
@@ -734,7 +744,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
@@ -796,7 +806,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
@@ -858,7 +868,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
@@ -920,7 +930,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
@@ -982,7 +992,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
@@ -1044,7 +1054,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
@@ -1106,7 +1116,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
@@ -1168,7 +1178,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
@@ -1230,7 +1240,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
@@ -1292,7 +1302,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
@@ -1414,9 +1424,19 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success },
+                { assert workflow.out.references.collect { r -> [ r.kind, file(r.file).name ] }.sort { a, b -> a[0] <=> b[0] } == [
+                    [ 'chrom_sizes', 'genome_gfp.fasta.sizes' ],
+                    [ 'fai', 'genome_gfp.fasta.fai' ],
+                    [ 'fasta', 'genome_gfp.fasta' ],
+                    [ 'gene_bed', 'genome_gfp.bed' ],
+                    [ 'gtf', 'genome_gfp.gtf' ]
+                ] },
+                { assert workflow.out.intermediates.collect { r -> [ r.kind, file(r.file).name ] } == [
+                    [ 'gtf_pre_concat', 'genes_with_empty_tid.filtered.gtf' ]
+                ] },
                 { assert snapshot(
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
@@ -1480,7 +1500,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
@@ -1544,7 +1564,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
@@ -1663,7 +1683,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
@@ -1727,7 +1747,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
@@ -1791,7 +1811,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
@@ -1855,7 +1875,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
@@ -1919,7 +1939,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
@@ -1983,7 +2003,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
@@ -2047,7 +2067,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
@@ -2111,7 +2131,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
@@ -2175,7 +2195,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
@@ -2239,7 +2259,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
@@ -2303,7 +2323,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
@@ -2367,7 +2387,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
@@ -2431,7 +2451,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
@@ -2495,7 +2515,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
@@ -2614,7 +2634,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
@@ -2678,7 +2698,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
-                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    [ workflow.out.fasta, workflow.out.fai ].transpose().collect { f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
                     workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
                     workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }

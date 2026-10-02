@@ -1,5 +1,21 @@
+nextflow.enable.types = true
+
+record RibodetectorInput {
+    id:     String
+    meta:   Map
+    reads:  List<Path>
+    length: Integer
+}
+
+record RibodetectorResult {
+    id:    String
+    meta:  Map
+    reads: List<Path>
+    log:   Path
+}
+
 process RIBODETECTOR {
-	tag "$meta.id"
+	tag "$sample.meta.id"
 	label 'process_medium'
 
 	conda "${ task.accelerator ? "${moduleDir}/environment.gpu.yml" : "${moduleDir}/environment.yml" }"
@@ -8,30 +24,32 @@ process RIBODETECTOR {
         (task.accelerator ? 'community.wave.seqera.io/library/ribodetector_pytorch-gpu_cuda-version:fa9183da731515ea' : 'community.wave.seqera.io/library/ribodetector:0.3.3--ad3d7071e408b502') }"
 
 	input:
-	tuple val(meta), path(fastq)
-	val length
+	sample: RibodetectorInput
 
 	output:
-	tuple val(meta), path("*.nonrna*.fastq.gz"), emit: fastq
-	tuple val(meta), path("*.log")             , emit: log
-	tuple val("${task.process}"), val('ribodetector'), eval('ribodetector --version | sed "s/ribodetector //"'), emit: versions_ribodetector, topic: versions
-	tuple val("${task.process}"), val('cuda'), eval('python -c "import torch; print(torch.version.cuda or \'no CUDA available\')"'), emit: versions_cuda, topic: versions
+	record(
+		id:    sample.id,
+		meta:  sample.meta,
+		reads: files('*.nonrna*.fastq.gz').toSorted { f -> f.name },
+		log:   file('*.log')
+	) as RibodetectorResult
 
-	when:
-	task.ext.when == null || task.ext.when
+	topic:
+	tuple(task.process, 'ribodetector', eval('ribodetector --version | sed "s/ribodetector //"')) >> 'versions'
+	tuple(task.process, 'cuda', eval('python -c "import torch; print(torch.version.cuda or \'no CUDA available\')"')) >> 'versions'
 
 	script:
 	def args = task.ext.args ?: ''
-	def prefix = task.ext.prefix ?: "${meta.id}"
+	def prefix = task.ext.prefix ?: "${sample.meta.id}"
 	ribodetector_bin = task.accelerator ? "ribodetector" : "ribodetector_cpu"
 	ribodetector_mem = task.accelerator ? "-m ${task.memory.toGiga()}" : ""
-	output = meta.single_end ? "${prefix}.nonrna.fastq.gz" : "${prefix}.nonrna.1.fastq.gz ${prefix}.nonrna.2.fastq.gz"
+	output = sample.meta.single_end ? "${prefix}.nonrna.fastq.gz" : "${prefix}.nonrna.1.fastq.gz ${prefix}.nonrna.2.fastq.gz"
 
 	"""
 	${ribodetector_bin} \\
-		-i ${fastq} \\
+		-i ${sample.reads.join(' ')} \\
 		-o ${output} \\
-		-l ${length} \\
+		-l ${sample.length} \\
 		-t ${task.cpus} \\
 		--log ${prefix}.log \\
 		${ribodetector_mem} \\
@@ -40,7 +58,7 @@ process RIBODETECTOR {
 
 	stub:
 	def args = task.ext.args ?: ''
-	def prefix = task.ext.prefix ?: "${meta.id}"
+	def prefix = task.ext.prefix ?: "${sample.meta.id}"
 
 	"""
 	echo $args

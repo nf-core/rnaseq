@@ -24,15 +24,14 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end: false ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true)
-                ])
-                input[1] = Channel.of([
-                    [ id:'genome' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)
-                ])
+                input[0] = new nextflow.dataflow.ChannelImpl(Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end: false ],
+                    bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true)
+                )))
+                input[1] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)))
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)))
+                input[3] = true
                 """
             }
         }
@@ -40,16 +39,15 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success},
-                { assert path(workflow.out.metrics.get(0).get(1)).getText().contains("97") },
-                { assert workflow.out.per_sample_mqc_bundle.size() == 1 },
-                { assert workflow.out.per_sample_mqc_bundle[0][0] == [ id:'test', single_end: false ] },
-                { assert workflow.out.per_sample_mqc_bundle[0][1].size() == 4 },
+                { assert path(workflow.out[0][0].metrics).getText().contains("97") },
+                { assert workflow.out[0].size() == 1 },
+                { assert workflow.out[0][0].meta == [ id:'test', single_end: false ] },
                 { assert snapshot(
-                    workflow.out.bam.collect{meta, bam_ ->  file(bam_).name + ':readsMD5,' + bam(bam_).getReadsMD5()},
-                    path(workflow.out.index[0][1]),
-                    path(workflow.out.flagstat[0][1]),
-                    path(workflow.out.idxstats[0][1]),
-                    path(workflow.out.stats[0][1])
+                    workflow.out[0].collect{ r -> file(r.bam).name + ':readsMD5,' + bam(r.bam).getReadsMD5()},
+                    path(workflow.out[0][0].bai),
+                    path(workflow.out[0][0].samtools.flagstat),
+                    path(workflow.out[0][0].samtools.idxstats),
+                    path(workflow.out[0][0].samtools.stats)
                 ).match() }
             )
         }
@@ -60,15 +58,14 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = Channel.of([
-                    [ id:'test' ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true)
-                ])
-                input[1] = Channel.of([
-                    [ id:'genome' ],
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
-                ])
+                input[0] = new nextflow.dataflow.ChannelImpl(Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    bam: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true)
+                )))
+                input[1] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)))
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)))
+                input[3] = true
                 """
             }
         }
@@ -77,16 +74,15 @@ nextflow_workflow {
             def fasta = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.fasta'
             assertAll(
                 { assert workflow.success},
-                { assert path(workflow.out.metrics.get(0).get(1)).getText().contains("0.999986") },
-                { assert workflow.out.per_sample_mqc_bundle.size() == 1 },
-                { assert workflow.out.per_sample_mqc_bundle[0][0] == [ id:'test' ] },
-                { assert workflow.out.per_sample_mqc_bundle[0][1].size() == 4 },
+                { assert path(workflow.out[0][0].metrics).getText().contains("0.999986") },
+                { assert workflow.out[0].size() == 1 },
+                { assert workflow.out[0][0].meta == [ id:'test' ] },
                 { assert snapshot(
-                    workflow.out.cram.collect{meta, cram_ ->  file(cram_).name + ':readsMD5,' + cram(cram_, fasta).getReadsMD5()},
-                    path(workflow.out.index[0][1]),
-                    path(workflow.out.flagstat[0][1]),
-                    path(workflow.out.idxstats[0][1]),
-                    path(workflow.out.stats[0][1])
+                    workflow.out[0].collect{ r -> file(r.cram).name + ':readsMD5,' + cram(r.cram, fasta).getReadsMD5()},
+                    path(workflow.out[0][0].bai),
+                    path(workflow.out[0][0].samtools.flagstat),
+                    path(workflow.out[0][0].samtools.idxstats),
+                    path(workflow.out[0][0].samtools.stats)
                 ).match() }
             )
         }
@@ -99,15 +95,14 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = Channel.of([
-                    [ id:'test', single_end: false ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true)
-                ])
-                input[1] = Channel.of([
-                    [ id:'genome' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)
-                ])
+                input[0] = new nextflow.dataflow.ChannelImpl(Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end: false ],
+                    bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true)
+                )))
+                input[1] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)))
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)))
+                input[3] = true
                 """
             }
         }
@@ -127,15 +122,14 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = Channel.of([
-                    [ id:'test' ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true)
-                ])
-                input[1] = Channel.of([
-                    [ id:'genome' ],
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
-                ])
+                input[0] = new nextflow.dataflow.ChannelImpl(Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    bam: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true)
+                )))
+                input[1] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)))
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)))
+                input[3] = true
                 """
             }
         }

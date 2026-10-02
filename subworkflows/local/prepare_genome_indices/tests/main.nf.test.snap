@@ -296,6 +296,63 @@
             "nextflow": "25.04.3"
         }
     },
+    "output": {
+        "content": [
+            {
+                "bbsplit_index": [
+                    [
+                        
+                    ]
+                ],
+                "bowtie2_index": [
+                    null
+                ],
+                "bowtie2_rrna_index": [
+                    null
+                ],
+                "hisat2_index": [
+                    [
+                        
+                    ]
+                ],
+                "kallisto_index": [
+                    null
+                ],
+                "rsem_index": [
+                    null
+                ],
+                "salmon_index": [
+                    [
+                        "duplicate_clusters.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "index.ctab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "index.ectab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "index.refinfo:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "index.ssi:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "index.ssi.mphf:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "index.tct:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "index.tdct:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "info.json:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "refseq.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "refseq_offsets.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "sortmerna_index": [
+                    null
+                ],
+                "splicesites": [
+                    "genome_gfp.splice_sites.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "star_index": [
+                    null
+                ]
+            }
+        ],
+        "timestamp": "2026-09-30T18:22:18.502020019",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.09.1"
+        }
+    },
     "skip_bbsplit = true": {
         "content": [
             [
@@ -755,10 +812,10 @@
                     ]
                 ],
                 "bowtie2_index": [
-                    
+                    null
                 ],
                 "bowtie2_rrna_index": [
-                    
+                    null
                 ],
                 "hisat2_index": [
                     [
@@ -773,46 +830,41 @@
                     ]
                 ],
                 "kallisto_index": [
-                    
+                    null
                 ],
                 "rsem_index": [
-                    
+                    null
                 ],
                 "salmon_index": [
                     [
-                        {
-                            
-                        },
-                        [
-                            "duplicate_clusters.tsv",
-                            "index.ctab",
-                            "index.ectab",
-                            "index.refinfo",
-                            "index.ssi",
-                            "index.ssi.mphf",
-                            "index.tct",
-                            "index.tdct",
-                            "info.json",
-                            "refseq.bin",
-                            "refseq_offsets.json"
-                        ]
+                        "duplicate_clusters.tsv",
+                        "index.ctab",
+                        "index.ectab",
+                        "index.refinfo",
+                        "index.ssi",
+                        "index.ssi.mphf",
+                        "index.tct",
+                        "index.tdct",
+                        "info.json",
+                        "refseq.bin",
+                        "refseq_offsets.json"
                     ]
                 ],
                 "sortmerna_index": [
-                    
+                    null
                 ],
                 "splicesites": [
                     "genome_gfp.splice_sites.txt:md5,4e9620ff904f32dfe6e7897a9acdc15b"
                 ],
                 "star_index": [
-                    
+                    null
                 ]
             }
         ],
-        "timestamp": "2026-09-19T00:46:38.858038568",
+        "timestamp": "2026-09-30T18:22:00.857262225",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.09.1"
         }
     },
     "rsem_index = false - stub": {
@@ -1091,6 +1143,53 @@
             "nextflow": "25.04.3"
         }
     },
+    "indices": {
+        "content": [
+            [
+                {
+                    "file": [
+                        
+                    ],
+                    "kind": "bbsplit"
+                },
+                {
+                    "file": "genome_transcriptome.log:md5,d41d8cd98f00b204e9800998ecf8427e",
+                    "kind": "bbsplit_log"
+                },
+                {
+                    "file": [
+                        
+                    ],
+                    "kind": "hisat2"
+                },
+                {
+                    "file": "genome_gfp.splice_sites.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                    "kind": "hisat2_splicesites"
+                },
+                {
+                    "file": [
+                        "duplicate_clusters.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "index.ctab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "index.ectab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "index.refinfo:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "index.ssi:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "index.ssi.mphf:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "index.tct:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "index.tdct:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "info.json:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "refseq.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "refseq_offsets.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    "kind": "salmon"
+                }
+            ]
+        ],
+        "timestamp": "2026-09-29T14:42:37.67309503",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.09.1"
+        }
+    },
     "gff = false": {
         "content": [
             [
@@ -1365,68 +1464,6 @@
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.04.3"
-        }
-    },
-    "hisat2_index = false - stub": {
-        "content": [
-            {
-                "bbsplit_index": [
-                    [
-                        
-                    ]
-                ],
-                "bowtie2_index": [
-                    
-                ],
-                "bowtie2_rrna_index": [
-                    
-                ],
-                "hisat2_index": [
-                    [
-                        
-                    ]
-                ],
-                "kallisto_index": [
-                    
-                ],
-                "rsem_index": [
-                    
-                ],
-                "salmon_index": [
-                    [
-                        {
-                            
-                        },
-                        [
-                            "duplicate_clusters.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "index.ctab:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "index.ectab:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "index.refinfo:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "index.ssi:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "index.ssi.mphf:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "index.tct:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "index.tdct:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "info.json:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "refseq.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "refseq_offsets.json:md5,d41d8cd98f00b204e9800998ecf8427e"
-                        ]
-                    ]
-                ],
-                "sortmerna_index": [
-                    
-                ],
-                "splicesites": [
-                    "genome_gfp.splice_sites.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
-                ],
-                "star_index": [
-                    
-                ]
-            }
-        ],
-        "timestamp": "2026-09-18T20:53:25.929420237",
-        "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
         }
     }
 }

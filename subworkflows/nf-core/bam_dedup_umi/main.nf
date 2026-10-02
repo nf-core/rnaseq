@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 //
 // BAM deduplication with UMI processing
 //
@@ -10,47 +12,47 @@ include { BAM_SORT_STATS_SAMTOOLS                                               
 
 include { UMITOOLS_PREPAREFORRSEM                                                                    } from '../../../modules/nf-core/umitools/prepareforrsem'
 include { SAMTOOLS_SORT                                                                              } from '../../../modules/nf-core/samtools/sort/main'
+include { Bam; UmiDedupBam } from '../../../modules/nf-core/types'
+include { SamtoolsSortResult } from '../../../modules/nf-core/samtools/sort/main'
+include { UmitoolsPrepareforrsemResult } from '../../../modules/nf-core/umitools/prepareforrsem/main'
 
 workflow BAM_DEDUP_UMI {
     take:
-    ch_genome_bam // channel: [ val(meta), path(bam), path(bai) ]
-    ch_fasta_fai // channel: [ val(meta), path(fasta), path(fai) ]
-    umi_dedup_tool // string: 'umicollapse' or 'umitools'
-    umitools_dedup_stats // boolean: whether to generate UMI-tools dedup stats
-    ch_transcriptome_bam // channel: [ val(meta), path(bam) ]
-    ch_transcript_fasta_fai // channel: [ val(meta), path(fasta), path(fai) ]
-    umitools_dedup_primary_only // boolean: whether to filter to primary alignments before dedup
+    ch_genome_bam: Channel<Bam>
+    fasta: Value<Path?>
+    fai: Value<Path?>
+    umi_dedup_tool: String // 'umicollapse' or 'umitools'
+    umitools_dedup_stats: Boolean // whether to generate UMI-tools dedup stats
+    ch_transcriptome_bam: Channel<Bam> // records with transcriptome_bam set
+    transcript_fasta: Value<Path?>
+    umitools_dedup_primary_only: Boolean // whether to filter to primary alignments before dedup
 
     main:
-    ch_tsv_edit_distance = channel.empty()
-    ch_tsv_per_umi = channel.empty()
-    ch_tsv_umi_per_position = channel.empty()
-    ch_genomic_dedup_log = channel.empty()
-    ch_transcriptomic_dedup_log = channel.empty()
-
     if (umi_dedup_tool != "umicollapse" && umi_dedup_tool != "umitools") {
         error("Unknown umi_dedup_tool '${umi_dedup_tool}'")
     }
 
+    // Both tools are reduced to the same record shape; only umitools produces stats tables (tsv).
+
     // Genome BAM deduplication
     if (umi_dedup_tool == "umicollapse") {
-        BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_GENOME(
-            ch_genome_bam
-        )
-        UMI_DEDUP_GENOME = BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_GENOME
-        ch_genomic_dedup_log = UMI_DEDUP_GENOME.out.dedup_stats
+        ch_genome_dedup = BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_GENOME(ch_genome_bam)
+            .map { r -> r + record(tsv: null) }
     }
-    else if (umi_dedup_tool == "umitools") {
-        BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME(
+    else {
+        ch_genome_dedup = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME(
             ch_genome_bam,
             umitools_dedup_stats,
             umitools_dedup_primary_only,
         )
-        UMI_DEDUP_GENOME = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_GENOME
-        ch_genomic_dedup_log = UMI_DEDUP_GENOME.out.deduplog
-        ch_tsv_edit_distance = UMI_DEDUP_GENOME.out.tsv_edit_distance
-        ch_tsv_per_umi = UMI_DEDUP_GENOME.out.tsv_per_umi
-        ch_tsv_umi_per_position = UMI_DEDUP_GENOME.out.tsv_umi_per_position
+            .map { r ->
+                record(
+                    id: r.id, meta: r.meta, bam: r.bam, bai: r.bai, log: r.log, samtools: r.samtools,
+                    tsv: r.tsv_edit_distance != null
+                        ? record(edit_distance: r.tsv_edit_distance, per_umi: r.tsv_per_umi, umi_per_position: r.tsv_umi_per_position)
+                        : null
+                )
+            }
     }
 
     // Co-ordinate sort, index and run stats on transcriptome BAM. This takes
@@ -59,95 +61,90 @@ workflow BAM_DEDUP_UMI {
     // to prepare for rsem or salmon
 
     // 1. Coordinate sort
-
-    BAM_SORT_STATS_SAMTOOLS(
-        ch_transcriptome_bam,
-        ch_transcript_fasta_fai,
+    def ch_coord_sorted: Channel<Bam> = BAM_SORT_STATS_SAMTOOLS(
+        ch_transcriptome_bam.map { r -> record(id: r.id, meta: r.meta, raw_bams: [r.transcriptome_bam]) },
+        transcript_fasta,
+        null
     )
-    ch_sorted_transcriptome_bam = BAM_SORT_STATS_SAMTOOLS.out.bam.join(BAM_SORT_STATS_SAMTOOLS.out.index)
 
     // 2. Transcriptome BAM deduplication
     if (umi_dedup_tool == "umicollapse") {
-        BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_TRANSCRIPTOME(
-            ch_sorted_transcriptome_bam
-        )
-        UMI_DEDUP_TRANSCRIPTOME = BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_TRANSCRIPTOME
-        ch_transcriptomic_dedup_log = UMI_DEDUP_TRANSCRIPTOME.out.dedup_stats
+        ch_transcriptome_dedup = BAM_DEDUP_STATS_SAMTOOLS_UMICOLLAPSE_TRANSCRIPTOME(ch_coord_sorted)
+            .map { r -> r + record(tsv: null) }
     }
-    else if (umi_dedup_tool == "umitools") {
-        BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME(
-            ch_sorted_transcriptome_bam,
+    else {
+        ch_transcriptome_dedup = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME(
+            ch_coord_sorted,
             umitools_dedup_stats,
             umitools_dedup_primary_only,
         )
-        UMI_DEDUP_TRANSCRIPTOME = BAM_DEDUP_STATS_SAMTOOLS_UMITOOLS_TRANSCRIPTOME
-        ch_transcriptomic_dedup_log = UMI_DEDUP_TRANSCRIPTOME.out.deduplog
-        ch_tsv_edit_distance = ch_tsv_edit_distance.mix(UMI_DEDUP_TRANSCRIPTOME.out.tsv_edit_distance)
-        ch_tsv_per_umi = ch_tsv_per_umi.mix(UMI_DEDUP_TRANSCRIPTOME.out.tsv_per_umi)
-        ch_tsv_umi_per_position = ch_tsv_umi_per_position.mix(UMI_DEDUP_TRANSCRIPTOME.out.tsv_umi_per_position)
+            .map { r ->
+                record(
+                    id: r.id, meta: r.meta, bam: r.bam, bai: r.bai, log: r.log, samtools: r.samtools,
+                    tsv: r.tsv_edit_distance != null
+                        ? record(edit_distance: r.tsv_edit_distance, per_umi: r.tsv_per_umi, umi_per_position: r.tsv_umi_per_position)
+                        : null
+                )
+            }
     }
 
     // 3. Restore name sorting
-    SAMTOOLS_SORT(
-        UMI_DEDUP_TRANSCRIPTOME.out.bam,
-        ch_fasta_fai,
+    def ch_name_sorted: Channel<SamtoolsSortResult> = SAMTOOLS_SORT(
+        ch_transcriptome_dedup.map { r -> record(id: r.id, meta: r.meta, raw_bams: [r.bam]) },
+        fasta,
+        fai,
         '',
     )
+        .filter { r -> r.bam != null }
 
     // 4. Run prepare_for_rsem.py on paired-end BAM files
     // This fixes paired-end reads in name sorted BAM files
     // See: https://github.com/nf-core/rnaseq/issues/828
-    ended_transcriptome_dedup_bam = SAMTOOLS_SORT.out.bam.branch { meta, bam ->
-        single_end: meta.single_end
-        return [meta, bam]
-        paired_end: !meta.single_end
-        return [meta, bam]
-    }
+    def ch_prepared: Channel<UmitoolsPrepareforrsemResult> = UMITOOLS_PREPAREFORRSEM(ch_name_sorted.filter { r -> !r.meta.single_end })
 
-    UMITOOLS_PREPAREFORRSEM(
-        ended_transcriptome_dedup_bam.paired_end.map { meta, bam -> [meta, bam, []] }
-    )
+    // Only paired-end samples pass through UMITOOLS_PREPAREFORRSEM, so the remainder
+    // join leaves `prepared` null for single-end samples.
+    ch_transcriptome_part = ch_transcriptome_bam
+        .join(ch_coord_sorted.map { r -> record(id: r.id, coord_sorted: r) }, by: 'id')
+        .join(ch_transcriptome_dedup.map { r -> record(id: r.id, dedup: r) }, by: 'id')
+        .join(ch_name_sorted.map { r -> record(id: r.id, name_sorted: r) }, by: 'id')
+        .join(ch_prepared.map { r -> record(id: r.id, prepared: r) }, by: 'id', remainder: true)
+        .map { r ->
+            record(
+                id:                       r.id,
+                transcriptomic_dedup_log: r.dedup.log,
+                prepare_for_rsem_log:     r.prepared?.log,
+                transcriptome_bam:        r.prepared?.bam ?: r.name_sorted.bam,
+                transcriptome:            record(
+                    transcriptome_bam:      r.transcriptome_bam,
+                    dedup_bam:              r.dedup.bam,
+                    sorted_bam:             r.name_sorted.bam,
+                    sorted_bam_index:       r.dedup.bai,
+                    filtered_bam:           r.prepared?.bam,
+                    samtools:               r.dedup.samtools,
+                    tsv:                    r.dedup.tsv,
+                    coord_sorted_bam:       r.coord_sorted.bam,
+                    coord_sorted_bam_index: r.coord_sorted.bai,
+                    coord_sorted_samtools:  r.coord_sorted.samtools
+                )
+            )
+        }
 
-    ch_dedup_transcriptome_bam = ended_transcriptome_dedup_bam.single_end.mix(UMITOOLS_PREPAREFORRSEM.out.bam)
-
-    // Collect files useful for MultiQC into one helpful emission. Don't
-    // automatically add transcriptome stats- difficult to separate in multiqc
-    // without a bit more work
-
-    ch_multiqc_files = ch_genomic_dedup_log
-        .mix(UMI_DEDUP_GENOME.out.stats)
-        .mix(UMI_DEDUP_GENOME.out.flagstat)
-        .mix(UMI_DEDUP_GENOME.out.idxstats)
-        .transpose()
-
-    // Genome-side only; transcriptome stats excluded (MultiQC can't
-    // disambiguate them from genome stats without extra work).
-    ch_per_sample_mqc_bundle = ch_genomic_dedup_log
-        .join(UMI_DEDUP_GENOME.out.stats,    remainder: true)
-        .join(UMI_DEDUP_GENOME.out.flagstat, remainder: true)
-        .join(UMI_DEDUP_GENOME.out.idxstats, remainder: true)
-        .map { row -> [row[0], row.drop(1).findAll { f -> f != null }.collectMany { e -> (e instanceof List) ? e : [e] }] }
+    // The transcriptome side is absent when there is no transcriptome BAM (e.g. HISAT2).
+    ch_results = ch_genome_dedup
+        .map { r ->
+            record(
+                id:                r.id,
+                meta:              r.meta,
+                bam:               r.bam,
+                bai:               r.bai,
+                samtools:          r.samtools,
+                genomic_dedup_log: r.log,
+                tsv:               r.tsv
+            )
+        }
+        .join(ch_transcriptome_part, by: 'id', remainder: true)
 
     emit:
-    bam                            = UMI_DEDUP_GENOME.out.bam // channel: [ val(meta), path(bam) ]
-    index                          = UMI_DEDUP_GENOME.out.index // channel: [ val(meta), path(bai) ]
-    genomic_dedup_log              = ch_genomic_dedup_log // channel: [ val(meta), path(log) ]
-    transcriptomic_dedup_log       = ch_transcriptomic_dedup_log // channel: [ val(meta), path(log) ]
-    prepare_for_rsem_log           = UMITOOLS_PREPAREFORRSEM.out.log // channel: [ val(meta), path(log) ]
-    stats                          = UMI_DEDUP_GENOME.out.stats.mix(UMI_DEDUP_TRANSCRIPTOME.out.stats) // channel: [ val(meta), path(stats)]
-    flagstat                       = UMI_DEDUP_GENOME.out.flagstat.mix(UMI_DEDUP_TRANSCRIPTOME.out.flagstat) // channel: [ val(meta), path(flagstat)]
-    idxstats                       = UMI_DEDUP_GENOME.out.idxstats.mix(UMI_DEDUP_TRANSCRIPTOME.out.idxstats) // channel: [ val(meta), path(idxstats)]
-    genome_stats                   = UMI_DEDUP_GENOME.out.stats // channel: [ val(meta), path(stats) ]
-    genome_flagstat                = UMI_DEDUP_GENOME.out.flagstat // channel: [ val(meta), path(flagstat) ]
-    genome_idxstats                = UMI_DEDUP_GENOME.out.idxstats // channel: [ val(meta), path(idxstats) ]
-    tsv_edit_distance              = ch_tsv_edit_distance // channel: [ val(meta), path(tsv) ]
-    tsv_per_umi                    = ch_tsv_per_umi // channel: [ val(meta), path(tsv) ]
-    tsv_umi_per_position           = ch_tsv_umi_per_position // channel: [ val(meta), path(tsv) ]
-    multiqc_files                  = ch_multiqc_files // channel: [ val(meta), path(file) ]
-    transcriptome_bam              = ch_dedup_transcriptome_bam // channel: [ val(meta), path(bam) ] - final output
-    transcriptome_dedup_bam        = UMI_DEDUP_TRANSCRIPTOME.out.bam // channel: [ val(meta), path(bam) ] - after dedup, before name sort
-    transcriptome_sorted_bam       = SAMTOOLS_SORT.out.bam // channel: [ val(meta), path(bam) ] - name-sorted
-    transcriptome_sorted_bam_index = UMI_DEDUP_TRANSCRIPTOME.out.index // channel: [ val(meta), path(index) ] - coordinate-sorted dedup index
-    transcriptome_filtered_bam     = UMITOOLS_PREPAREFORRSEM.out.bam // channel: [ val(meta), path(bam) ] - paired-end filtered
-    per_sample_mqc_bundle          = ch_per_sample_mqc_bundle // channel: [ val(meta), list(files) ]
+    ch_results
 }

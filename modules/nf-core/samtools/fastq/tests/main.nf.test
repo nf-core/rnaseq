@@ -16,10 +16,11 @@ nextflow_process {
                 """
                 interleave = false
 
-                input[0] = channel.of([
-                    [ id:'test', single_end:false ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true)
-                ])
+                input[0] = channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true)
+                ))
                 input[1] = interleave
                 """
             }
@@ -28,11 +29,10 @@ nextflow_process {
         then {
             assert process.success
             assertAll(
-                { assert snapshot(process.out.fastq[0][1].collect { path(it).linesGzip[0..6] }).match("bam_fastq") },
-                { assert snapshot(process.out.interleaved).match("bam_interleaved") },
-                { assert snapshot(file(process.out.singleton[0][1]).name).match("bam_singleton") },
-                { assert snapshot(file(process.out.other[0][1]).name).match("bam_other") },
-                { assert snapshot(process.out.findAll { key, val -> key.startsWith('versions') }).match("bam_versions") }
+                { assert snapshot(process.out[0][0].reads.collect { path(it).linesGzip[0..6] }).match("bam_fastq") },
+                { assert snapshot(process.out[0][0].interleaved).match("bam_interleaved") },
+                { assert snapshot(file(process.out[0][0].singleton).name).match("bam_singleton") },
+                { assert snapshot(file(process.out[0][0].other).name).match("bam_other") }
             )
         }
     }
@@ -44,10 +44,11 @@ nextflow_process {
                 """
                 interleave = true
 
-                input[0] = channel.of([
-                    [ id:'test', single_end:false ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true)
-                ])
+                input[0] = channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true)
+                ))
                 input[1] = interleave
                 """
             }
@@ -56,11 +57,10 @@ nextflow_process {
         then {
             assert process.success
             assertAll(
-                { assert snapshot(process.out.fastq).match("bam_interleave_fastq") },
-                { assert snapshot(path(process.out.interleaved[0][1]).readLines()[0..6]).match("bam_interlinterleave_eaved") },
-                { assert snapshot(process.out.singleton).match("bam_singinterleave_leton") },
-                { assert snapshot(file(process.out.other[0][1]).name).match("bam_interleave_other") },
-                { assert snapshot(process.out.findAll { key, val -> key.startsWith('versions') }).match("bam_verinterleave_sions") }
+                { assert snapshot(process.out[0][0].reads).match("bam_interleave_fastq") },
+                { assert snapshot(path(process.out[0][0].interleaved).readLines()[0..6]).match("bam_interlinterleave_eaved") },
+                { assert snapshot(process.out[0][0].singleton).match("bam_singinterleave_leton") },
+                { assert snapshot(file(process.out[0][0].other).name).match("bam_interleave_other") }
             )
         }
     }
@@ -74,10 +74,11 @@ nextflow_process {
                 """
                 interleave = false
 
-                input[0] = channel.of([
-                    [ id:'test', single_end:false ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true)
-                ])
+                input[0] = channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true)
+                ))
                 input[1] = interleave
                 """
             }
@@ -87,11 +88,10 @@ nextflow_process {
             assert process.success
             assertAll(
                 { assert snapshot(
-                    process.out.fastq,
-                    process.out.interleaved,
-                    process.out.singleton,
-                    process.out.other,
-                    process.out.findAll { key, val -> key.startsWith('versions') }
+                    process.out[0][0].reads,
+                    process.out[0][0].interleaved,
+                    process.out[0][0].singleton,
+                    process.out[0][0].other
                 ).match() }
             )
         }
@@ -106,10 +106,11 @@ nextflow_process {
                 """
                 interleave = true
 
-                input[0] = channel.of([
-                    [ id:'test', single_end:false ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true)
-                ])
+                input[0] = channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true)
+                ))
                 input[1] = interleave
                 """
             }
@@ -119,11 +120,10 @@ nextflow_process {
             assert process.success
             assertAll(
                 { assert snapshot(
-                    process.out.fastq,
-                    process.out.interleaved,
-                    process.out.singleton,
-                    process.out.other,
-                    process.out.findAll { key, val -> key.startsWith('versions') }
+                    process.out[0][0].reads,
+                    process.out[0][0].interleaved,
+                    process.out[0][0].singleton,
+                    process.out[0][0].other
                 ).match() }
             )
         }

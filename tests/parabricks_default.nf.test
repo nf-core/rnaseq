@@ -8,9 +8,10 @@ nextflow_pipeline {
 
     test("Params: parabricks star_salmon (no markdups)") {
 
+        options "-output-dir $outputDir"
+
         when {
             params {
-                outdir = "$outputDir"
                 use_parabricks_star = true
                 skip_markduplicates = true
                 extra_star_align_args = '--low-memory --x3'
@@ -20,10 +21,10 @@ nextflow_pipeline {
         }
 
         then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore', ignore: ['**/aux_info/ambig_info.tsv'])
+            // stable_name: All files + folders in the output directory with a stable name
+            def stable_name = getAllFilesFromDir(outputDir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in the output directory with stable content
+            def stable_path = getAllFilesFromDir(outputDir, ignoreFile: 'tests/.nftignore', ignore: ['**/aux_info/ambig_info.tsv'])
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -53,9 +54,10 @@ nextflow_pipeline {
 
     test("Params: parabricks star_salmon (with markdups)") {
 
+        options "-output-dir $outputDir"
+
         when {
             params {
-                outdir = "$outputDir"
                 use_parabricks_star = true
                 skip_markduplicates = false
                 extra_star_align_args = '--low-memory --x3'
@@ -65,10 +67,10 @@ nextflow_pipeline {
         }
 
         then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore', ignore: ['**/aux_info/ambig_info.tsv'])
+            // stable_name: All files + folders in the output directory with a stable name
+            def stable_name = getAllFilesFromDir(outputDir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in the output directory with stable content
+            def stable_path = getAllFilesFromDir(outputDir, ignoreFile: 'tests/.nftignore', ignore: ['**/aux_info/ambig_info.tsv'])
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -98,11 +100,10 @@ nextflow_pipeline {
 
     test("Params: parabricks star_salmon (no markdups) - stub") {
 
-        options "-stub"
+        options "-stub -output-dir $outputDir"
 
         when {
             params {
-                outdir = "$outputDir"
                 use_parabricks_star = true
                 skip_markduplicates = true
                 extra_star_align_args = '--low-memory --x3'
@@ -112,10 +113,10 @@ nextflow_pipeline {
         }
 
         then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore', ignore: ['**/aux_info/ambig_info.tsv'])
+            // stable_name: All files + folders in the output directory with a stable name
+            def stable_name = getAllFilesFromDir(outputDir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in the output directory with stable content
+            def stable_path = getAllFilesFromDir(outputDir, ignoreFile: 'tests/.nftignore', ignore: ['**/aux_info/ambig_info.tsv'])
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -145,11 +146,10 @@ nextflow_pipeline {
 
     test("Params: parabricks star_salmon (with markdups) - stub") {
 
-        options "-stub"
+        options "-stub -output-dir $outputDir"
 
         when {
             params {
-                outdir = "$outputDir"
                 use_parabricks_star = true
                 skip_markduplicates = false
                 extra_star_align_args = '--low-memory --x3'
@@ -159,10 +159,10 @@ nextflow_pipeline {
         }
 
         then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore', ignore: ['**/aux_info/ambig_info.tsv'])
+            // stable_name: All files + folders in the output directory with a stable name
+            def stable_name = getAllFilesFromDir(outputDir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in the output directory with stable content
+            def stable_path = getAllFilesFromDir(outputDir, ignoreFile: 'tests/.nftignore', ignore: ['**/aux_info/ambig_info.tsv'])
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(

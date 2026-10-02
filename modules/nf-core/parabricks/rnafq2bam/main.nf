@@ -1,5 +1,9 @@
+nextflow.enable.types = true
+
+include { ReadsInput; StarAlignResult } from '../../types'
+
 process PARABRICKS_RNAFQ2BAM {
-    tag "${meta.id}"
+    tag "${sample.meta.id}"
     label 'process_high'
     label 'process_gpu'
     // needed by the module to work properly can be removed when fixed upstream - see: https://github.com/nf-core/modules/issues/7226
@@ -8,36 +12,41 @@ process PARABRICKS_RNAFQ2BAM {
     container "nvcr.io/nvidia/clara/clara-parabricks:4.7.1-1"
 
     input:
-    tuple val(meta),  path(reads)
-    tuple val(meta2), path(fasta)
-    tuple val(meta3), path(index)
-    val qc_metrics
-    val mark_duplicates
+    sample: ReadsInput
+    fasta: Path
+    index: Path
+    qc_metrics: Boolean
+    mark_duplicates: Boolean
 
     output:
-    tuple val(meta), path("${prefix}.Log.final.out"),                           emit: log_final
-    tuple val(meta), path("${prefix}.Log.out"),                                 emit: log_out
-    tuple val(meta), path("${prefix}.Log.progress.out"),                        emit: log_progress
-    tuple val(meta), path("${prefix}.bam"),                                     emit: bam,                  optional:true
-    tuple val(meta), path("${prefix}.bam.bai"),                                 emit: bai,                  optional:true
-    tuple val(meta), path("*.sortedByCoord.out.bam"),                           emit: bam_sorted,           optional:true
-    tuple val(meta), path("*.Aligned.sortedByCoord.out.bam"),                   emit: bam_sorted_aligned,   optional:true
-    tuple val(meta), path('*toTranscriptome.out.bam'),                          emit: bam_transcript,       optional:true
-    tuple val(meta), path('*Aligned.unsort.out.bam'),                           emit: bam_unsorted,         optional:true
-    tuple val(meta), path('*fastq.gz'),                                         emit: fastq,                optional:true
-    tuple val(meta), path('*.tab'),                                             emit: tab,                  optional:true
-    tuple val(meta), path('*.SJ.out.tab'),                                      emit: spl_junc_tab,         optional:true
-    tuple val(meta), path('*.ReadsPerGene.out.tab'),                            emit: read_per_gene_tab,    optional:true
-    tuple val(meta), path('*.out.junction'),                                    emit: junction,             optional:true
-    tuple val(meta), path('*.out.sam'),                                         emit: sam,                  optional:true
-    tuple val(meta), path('*.wig'),                                             emit: wig,                  optional:true
-    tuple val(meta), path('*.bg'),                                              emit: bedgraph,             optional:true
-    tuple val(meta), path("${prefix}_qc_metrics"),                              emit: qc_metrics,           optional:true
-    tuple val(meta), path("${prefix}.duplicate-metrics.txt"),                   emit: duplicate_metrics,    optional:true
-    tuple val("${task.process}"), val("parabricks"), eval("pbrun version 2>&1 | grep -Po '(?<=^pbrun: ).*'"),   emit: versions_parabricks,  topic: versions
+    record(
+        id:                 sample.id,
+        meta:               sample.meta,
+        raw_bams:           files("${prefix}.bam", optional: true).toSorted { f -> f.name },
+        bam_sorted:         file("${prefix}.sortedByCoord.out.bam", optional: true),
+        bam_sorted_aligned: file("${prefix}.Aligned.sortedByCoord.out.bam", optional: true),
+        bam_unsorted:       file('*Aligned.unsort.out.bam', optional: true),
+        transcriptome_bam:  file('*toTranscriptome.out.bam', optional: true),
+        unmapped:           files('*fastq.gz', optional: true).toSorted { f -> f.name },
+        sam:                file('*.out.sam', optional: true),
+        junction:           file('*.out.junction', optional: true),
+        spl_junc_tab:       file('*.SJ.out.tab', optional: true),
+        read_per_gene_tab:  file('*.ReadsPerGene.out.tab', optional: true),
+        wig:                files('*.wig', optional: true).toSorted { f -> f.name },
+        bedgraph:           files('*.bg', optional: true).toSorted { f -> f.name },
+        orig_bai:           file("${prefix}.bam.bai", optional: true),
+        qc_metrics:         file("${prefix}_qc_metrics", optional: true),
+        duplicate_metrics:  file("${prefix}.duplicate-metrics.txt", optional: true),
+        star:               record(
+            log_final:    file("${prefix}.Log.final.out"),
+            log_out:      file("${prefix}.Log.out"),
+            log_progress: file("${prefix}.Log.progress.out"),
+            tab:          files('*.tab', optional: true).toSorted { f -> f.name }
+        )
+    ) as StarAlignResult
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'parabricks', eval("pbrun version 2>&1 | grep -Po '(?<=^pbrun: ).*'")) >> 'versions'
 
     script:
     // Exit if running this module with -profile conda / -profile mamba
@@ -45,9 +54,9 @@ process PARABRICKS_RNAFQ2BAM {
         error("Parabricks module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
     def args = task.ext.args ?: ''
-    prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${sample.meta.id}"
 
-    def in_fq_command = meta.single_end ? "--in-se-fq ${reads}" : "--in-fq ${reads}"
+    def in_fq_command = sample.meta.single_end ? "--in-se-fq ${sample.reads.join(' ')}" : "--in-fq ${sample.reads.join(' ')}"
     def num_gpus = task.accelerator ? "--num-gpus ${task.accelerator.request}" : ''
 
     def qc_metrics_command = qc_metrics ? "--out-qc-metrics-dir ${prefix}_qc_metrics" : ""
@@ -74,7 +83,7 @@ process PARABRICKS_RNAFQ2BAM {
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
         error("Parabricks module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
-    prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${sample.meta.id}"
     def qc_metrics_output = qc_metrics ? "mkdir ${prefix}_qc_metrics" : ""
     def duplicate_metrics_output = mark_duplicates ? "touch ${prefix}.duplicate-metrics.txt" : ""
     """

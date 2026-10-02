@@ -6,9 +6,10 @@ nextflow_pipeline {
 
     test("Params: --aligner hisat2") {
 
+        options "-output-dir $outputDir"
+
         when {
             params {
-                outdir = "$outputDir"
                 aligner = 'hisat2'
                 // Skip bigwig (coverage tracks don't vary meaningfully by aligner)
                 // Keep QC and StringTie as HISAT2 BAMs have different characteristics worth integration testing
@@ -19,10 +20,10 @@ nextflow_pipeline {
         }
 
         then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // stable_name: All files + folders in the output directory with a stable name
+            def stable_name = getAllFilesFromDir(outputDir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in the output directory with stable content
+            def stable_path = getAllFilesFromDir(outputDir, ignoreFile: 'tests/.nftignore')
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -52,9 +53,10 @@ nextflow_pipeline {
 
     test("Params: --aligner hisat2 --min_mapped_reads 100") {
 
+        options "-output-dir $outputDir"
+
         when {
             params {
-                outdir = "$outputDir"
                 aligner = 'hisat2'
                 skip_qc = true
                 min_mapped_reads = 100
@@ -71,11 +73,10 @@ nextflow_pipeline {
 
     test("Params: --aligner hisat2 - stub") {
 
-        options "-stub"
+        options "-stub -output-dir $outputDir"
 
         when {
             params {
-                outdir = "$outputDir"
                 aligner = 'hisat2'
                 // Skip bigwig (coverage tracks don't vary meaningfully by aligner)
                 // Keep QC and StringTie as HISAT2 BAMs have different characteristics worth integration testing
@@ -86,10 +87,10 @@ nextflow_pipeline {
         }
 
         then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // stable_name: All files + folders in the output directory with a stable name
+            def stable_name = getAllFilesFromDir(outputDir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in the output directory with stable content
+            def stable_path = getAllFilesFromDir(outputDir, ignoreFile: 'tests/.nftignore')
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(

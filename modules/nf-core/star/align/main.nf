@@ -1,5 +1,9 @@
+nextflow.enable.types = true
+
+include { ReadsInput; StarAlignResult } from '../../types'
+
 process STAR_ALIGN {
-    tag "$meta.id"
+    tag "$sample.meta.id"
     label 'process_high'
 
     conda "${moduleDir}/environment.yml"
@@ -8,42 +12,52 @@ process STAR_ALIGN {
         'community.wave.seqera.io/library/htslib_samtools_star_gawk:ae438e9a604351a4' }"
 
     input:
-    tuple val(meta), path(reads, stageAs: "input*/*")
-    tuple val(meta2), path(index)
-    tuple val(meta3), path(gtf)
-    val star_ignore_sjdbgtf
+    sample: ReadsInput
+    index: Path
+    gtf: Path?
+    star_ignore_sjdbgtf: Boolean
+
+    stage:
+    stageAs sample.reads, 'input*/*'
 
     output:
-    tuple val(meta), path('*Log.final.out')   , emit: log_final
-    tuple val(meta), path('*Log.out')         , emit: log_out
-    tuple val(meta), path('*Log.progress.out'), emit: log_progress
-    tuple val("${task.process}"), val('star'), eval('STAR --version | sed "s/STAR_//"'), emit: versions_star, topic: versions
-    tuple val("${task.process}"), val('samtools'), eval("samtools --version | sed -n '1s/samtools //p'"), emit: versions_samtools, topic: versions
-    tuple val("${task.process}"), val('gawk'), eval("gawk --version | sed -n '1s/GNU Awk \\([0-9.]*\\).*/\\1/p'"), emit: versions_gawk, topic: versions
+    record(
+        id:                 sample.id,
+        meta:               sample.meta,
+        raw_bams:           files('*d.out.bam', optional: true).toSorted { f -> f.name },
+        bam_sorted:         file("${prefix}.sortedByCoord.out.bam", optional: true),
+        bam_sorted_aligned: file("${prefix}.Aligned.sortedByCoord.out.bam", optional: true),
+        bam_unsorted:       file('*Aligned.unsort.out.bam', optional: true),
+        transcriptome_bam:  file('*toTranscriptome.out.bam', optional: true),
+        unmapped:           files('*fastq.gz', optional: true).toSorted { f -> f.name },
+        sam:                file('*.out.sam', optional: true),
+        junction:           file('*.out.junction', optional: true),
+        spl_junc_tab:       file('*.SJ.out.tab', optional: true),
+        read_per_gene_tab:  file('*.ReadsPerGene.out.tab', optional: true),
+        wig:                files('*.wig', optional: true).toSorted { f -> f.name },
+        bedgraph:           files('*.bg', optional: true).toSorted { f -> f.name },
+        orig_bai:           null,
+        qc_metrics:         null,
+        duplicate_metrics:  null,
+        star:               record(
+            log_final:    file('*Log.final.out'),
+            log_out:      file('*Log.out'),
+            log_progress: file('*Log.progress.out'),
+            tab:          files('*.tab', optional: true).toSorted { f -> f.name }
+        )
+    ) as StarAlignResult
 
-    tuple val(meta), path('*d.out.bam')                              , optional:true, emit: bam
-    tuple val(meta), path("${prefix}.sortedByCoord.out.bam")         , optional:true, emit: bam_sorted
-    tuple val(meta), path("${prefix}.Aligned.sortedByCoord.out.bam") , optional:true, emit: bam_sorted_aligned
-    tuple val(meta), path('*toTranscriptome.out.bam')                , optional:true, emit: bam_transcript
-    tuple val(meta), path('*Aligned.unsort.out.bam')                 , optional:true, emit: bam_unsorted
-    tuple val(meta), path('*fastq.gz')                               , optional:true, emit: fastq
-    tuple val(meta), path('*.tab')                                   , optional:true, emit: tab
-    tuple val(meta), path('*.SJ.out.tab')                            , optional:true, emit: spl_junc_tab
-    tuple val(meta), path('*.ReadsPerGene.out.tab')                  , optional:true, emit: read_per_gene_tab
-    tuple val(meta), path('*.out.junction')                          , optional:true, emit: junction
-    tuple val(meta), path('*.out.sam')                               , optional:true, emit: sam
-    tuple val(meta), path('*.wig')                                   , optional:true, emit: wig
-    tuple val(meta), path('*.bg')                                    , optional:true, emit: bedgraph
-
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'star', eval('STAR --version | sed "s/STAR_//"')) >> 'versions'
+    tuple(task.process, 'samtools', eval("samtools --version | sed -n '1s/samtools //p'")) >> 'versions'
+    tuple(task.process, 'gawk', eval("gawk --version | sed -n '1s/GNU Awk \\([0-9.]*\\).*/\\1/p'")) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''
-    prefix = task.ext.prefix ?: "${meta.id}"
-    def reads1 = []
-    def reads2 = []
-    meta.single_end ? [reads].flatten().each{ read -> reads1 << read} : reads.eachWithIndex{ v, ix -> ( ix & 1 ? reads2 : reads1) << v }
+    prefix = task.ext.prefix ?: "${sample.meta.id}"
+    def read_pairs = sample.reads.collate(2)
+    def reads1 = sample.meta.single_end ? sample.reads : read_pairs.collect { pair -> pair[0] }.toList()
+    def reads2 = sample.meta.single_end ? [] : read_pairs.collect { pair -> pair[1] }.toList()
     def ignore_gtf      = star_ignore_sjdbgtf ? '' : "--sjdbGTFfile $gtf"
     attrRG          = args.contains("--outSAMattrRGline") ? "" : "--outSAMattrRGline 'ID:$prefix' 'SM:$prefix'"
     def out_sam_type    = (args.contains('--outSAMtype')) ? '' : '--outSAMtype BAM Unsorted'
@@ -72,7 +86,7 @@ process STAR_ALIGN {
     """
 
     stub:
-    prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     echo "" | gzip > ${prefix}.unmapped_1.fastq.gz
     echo "" | gzip > ${prefix}.unmapped_2.fastq.gz

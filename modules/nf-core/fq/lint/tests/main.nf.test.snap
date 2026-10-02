@@ -1,19 +1,16 @@
 {
     "test_fq_lint_fail": {
         "content": [
-            [
-                
-            ],
             {
-                "versions_fq": [
+                "0": [
                     
                 ]
             }
         ],
+        "timestamp": "2026-09-29T17:47:03.33229279",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-02-02T17:01:53.025036"
+            "nf-test": "0.9.5",
+            "nextflow": "26.09.1"
+        }
     }
 }

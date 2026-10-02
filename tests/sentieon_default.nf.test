@@ -8,9 +8,10 @@ nextflow_pipeline {
 
     test("Params: default --use_sentieon_star") {
 
+        options "-output-dir $outputDir"
+
         when {
             params {
-                outdir = "$outputDir"
                 use_sentieon_star = true
                 // Pseudo-alignment is aligner-invariant and fully covered by tests/default.nf.test
                 skip_pseudo_alignment = true
@@ -18,10 +19,10 @@ nextflow_pipeline {
         }
 
         then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore', ignore: ['**/e_data.ctab'])
+            // stable_name: All files + folders in the output directory with a stable name
+            def stable_name = getAllFilesFromDir(outputDir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in the output directory with stable content
+            def stable_path = getAllFilesFromDir(outputDir, ignoreFile: 'tests/.nftignore', ignore: ['**/e_data.ctab'])
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -51,11 +52,10 @@ nextflow_pipeline {
 
     test("Params: default --use_sentieon_star - stub") {
 
-        options "-stub"
+        options "-stub -output-dir $outputDir"
 
         when {
             params {
-                outdir = "$outputDir"
                 use_sentieon_star = true
                 // Pseudo-alignment is aligner-invariant and fully covered by tests/default.nf.test
                 skip_pseudo_alignment = true
@@ -63,10 +63,10 @@ nextflow_pipeline {
         }
 
         then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore', ignore: ['**/e_data.ctab'])
+            // stable_name: All files + folders in the output directory with a stable name
+            def stable_name = getAllFilesFromDir(outputDir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in the output directory with stable content
+            def stable_path = getAllFilesFromDir(outputDir, ignoreFile: 'tests/.nftignore', ignore: ['**/e_data.ctab'])
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(

@@ -14,10 +14,11 @@ nextflow_process {
                 script "../../index/main.nf"
                 process {
                     """
-                    input[0] = channel.of([
-                        [ id:'transcriptome' ], // meta map
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true)
-                    ])
+                    input[0] = channel.of(record(
+                        id: 'transcriptome',
+                        meta: [ id:'transcriptome' ],
+                        fasta: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true)
+                    ))
                     """
                 }
             }
@@ -26,10 +27,11 @@ nextflow_process {
                 script "../../index/main.nf"
                 process {
                     """
-                    input[0] = channel.of([
-                        [ id:'transcriptome' ], // meta map
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true)
-                    ])
+                    input[0] = channel.of(record(
+                        id: 'transcriptome',
+                        meta: [ id:'transcriptome' ],
+                        fasta: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true)
+                    ))
                     """
                 }
             }
@@ -42,21 +44,27 @@ nextflow_process {
                 fragment_length    = 150
                 fragment_length_sd = 75
 
-                input[0] = channel.of([
-                    [ id:'test', single_end:true ],
-                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
-                ])
-                input[1] = KALLISTO_INDEX.out.index.combine(channel.of([ [], [] ]))
-                input[2] = fragment_length
-                input[3] = fragment_length_sd
+                input[0] = channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:true ],
+                    reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                ))
+                input[1] = KALLISTO_INDEX.out.map { r -> r.index }
+                input[2] = null
+                input[3] = null
+                input[4] = fragment_length
+                input[5] = fragment_length_sd
                 """
             }
         }
 
         then {
+            def q = process.out[0][0]
+            def quant_files = []
+            new File(q.quant_dir.toString()).eachFileRecurse(groovy.io.FileType.FILES) { f -> quant_files << f.name }
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["json_info", "results"])).match() }
+                { assert snapshot(q.id, q.meta, quant_files.sort(), q.json_info ? new File(q.json_info.toString()).name : null, q.log).match() }
             )
         }
     }
@@ -68,21 +76,26 @@ nextflow_process {
                 fragment_length    = []
                 fragment_length_sd = []
 
-                input[0] = channel.of([
-                    [ id:'test', single_end:false ], // meta map
-                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
-                ])
-                input[1] = KALLISTO_INDEX.out.index.combine(channel.of([ [], [] ]))
-                input[2] = fragment_length
-                input[3] = fragment_length_sd
+                input[0] = channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true), file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
+                ))
+                input[1] = KALLISTO_INDEX.out.map { r -> r.index }
+                input[2] = null
+                input[3] = null
+                input[4] = fragment_length
+                input[5] = fragment_length_sd
                 """
             }
         }
         then {
+            def q = process.out[0][0]
+            def quant_files = []
+            new File(q.quant_dir.toString()).eachFileRecurse(groovy.io.FileType.FILES) { f -> quant_files << f.name }
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["json_info", "results"])).match() }
+                { assert snapshot(q.id, q.meta, quant_files.sort(), q.json_info ? new File(q.json_info.toString()).name : null, q.log).match() }
             )
         }
     }
@@ -96,22 +109,28 @@ nextflow_process {
                 fragment_length    = 150
                 fragment_length_sd = 75
 
-                input[0] = channel.of([
-                    [ id:'test', single_end:true ],
-                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
-                ])
-                input[1] = KALLISTO_INDEX.out.index.combine(channel.of([ [], [] ]))
-                input[2] = fragment_length
-                input[3] = fragment_length_sd
+                input[0] = channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:true ],
+                    reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                ))
+                input[1] = KALLISTO_INDEX.out.map { r -> r.index }
+                input[2] = null
+                input[3] = null
+                input[4] = fragment_length
+                input[5] = fragment_length_sd
                 """
             }
         }
 
         then {
+            def q = process.out[0][0]
+            def quant_files = []
+            new File(q.quant_dir.toString()).eachFileRecurse(groovy.io.FileType.FILES) { f -> quant_files << f.name }
             assertAll(
                 { assert process.success },
-                { assert path(process.out.json_info.get(0).get(1)).json.call.contains('--fr-stranded') },
-                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["json_info", "results"])).match() }
+                { assert path(q.json_info).json.call.contains('--fr-stranded') },
+                { assert snapshot(q.id, q.meta, quant_files.sort(), q.json_info ? new File(q.json_info.toString()).name : null, q.log).match() }
             )
         }
     }
@@ -126,21 +145,27 @@ nextflow_process {
                 fragment_length    = 150
                 fragment_length_sd = 75
 
-                input[0] = channel.of([
-                    [ id:'test', single_end:true ],
-                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
-                ])
-                input[1] = KALLISTO_INDEX_STUB.out.index.combine(channel.of([ [], [] ]))
-                input[2] = fragment_length
-                input[3] = fragment_length_sd
+                input[0] = channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:true ],
+                    reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                ))
+                input[1] = KALLISTO_INDEX_STUB.out.map { r -> r.index }
+                input[2] = null
+                input[3] = null
+                input[4] = fragment_length
+                input[5] = fragment_length_sd
                 """
             }
         }
 
         then {
+            def q = process.out[0][0]
+            def quant_files = []
+            new File(q.quant_dir.toString()).eachFileRecurse(groovy.io.FileType.FILES) { f -> quant_files << f.name }
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["json_info", "results"])).match() }
+                { assert snapshot(q.id, q.meta, quant_files.sort(), q.json_info ? new File(q.json_info.toString()).name : null, q.log).match() }
             )
         }
     }
@@ -155,21 +180,26 @@ nextflow_process {
                 fragment_length    = []
                 fragment_length_sd = []
 
-                input[0] = channel.of([
-                    [ id:'test', single_end:false ], // meta map
-                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
-                ])
-                input[1] = KALLISTO_INDEX_STUB.out.index.combine(channel.of([ [], [] ]))
-                input[2] = fragment_length
-                input[3] = fragment_length_sd
+                input[0] = channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true), file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
+                ))
+                input[1] = KALLISTO_INDEX_STUB.out.map { r -> r.index }
+                input[2] = null
+                input[3] = null
+                input[4] = fragment_length
+                input[5] = fragment_length_sd
                 """
             }
         }
         then {
+            def q = process.out[0][0]
+            def quant_files = []
+            new File(q.quant_dir.toString()).eachFileRecurse(groovy.io.FileType.FILES) { f -> quant_files << f.name }
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["json_info", "results"])).match() }
+                { assert snapshot(q.id, q.meta, quant_files.sort(), q.json_info ? new File(q.json_info.toString()).name : null, q.log).match() }
             )
         }
     }

@@ -12,22 +12,21 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [ [ id:'test',single_end:true ], // meta map
-                            [
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test',single_end:true ],
+                    reads: [
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
                     ]
-                ]
-                input[1] = file(params.modules_testdata_base_path +'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                )
+                input[1] = [file(params.modules_testdata_base_path +'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
                 """
             }
         }
 
         then {
             assert process.success
-            assert snapshot(
-                process.out.findAll { key, val -> key.startsWith("versions") },
-                file(process.out.profile_out[0][1]).readLines()[0]
-            ).match()
+            assert snapshot(file(process.out[0][0].profile_out).readLines()[0]).match()
         }
     }
 
@@ -35,23 +34,22 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [ [ id:'test' ], // meta map
-                            [
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    reads: [
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                     ]
-                ]
-                input[1] = file(params.modules_testdata_base_path +'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                )
+                input[1] = [file(params.modules_testdata_base_path +'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
                 """
             }
         }
 
         then {
             assert process.success
-            assert snapshot(
-                process.out.findAll { key, val -> key.startsWith("versions") },
-                file(process.out.profile_out[0][1]).readLines()[0]
-            ).match()
+            assert snapshot(file(process.out[0][0].profile_out).readLines()[0]).match()
         }
     }
 
@@ -61,20 +59,22 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [ [ id:'test' ], // meta map
-                            [
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    reads: [
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                     ]
-                ]
-                input[1] = file(params.modules_testdata_base_path +'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                )
+                input[1] = [file(params.modules_testdata_base_path +'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
                 """
             }
         }
 
         then {
             assert process.success
-            assert snapshot(process.out).match()
+            assert snapshot(process.out[0]).match()
         }
     }
 }

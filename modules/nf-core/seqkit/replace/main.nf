@@ -1,5 +1,13 @@
+nextflow.enable.types = true
+
+record SeqkitReplaceResult {
+    id:    String
+    meta:  Map
+    fastx: Path
+}
+
 process SEQKIT_REPLACE {
-    tag "${meta.id}"
+    tag "${sample.meta.id}"
     label 'process_low'
 
     conda "${moduleDir}/environment.yml"
@@ -8,25 +16,24 @@ process SEQKIT_REPLACE {
         : 'community.wave.seqera.io/library/seqkit:2.13.0--05c0a96bf9fb2751'}"
 
     input:
-    tuple val(meta), path(fastx)
-    val out_ext
+    sample: SeqkitReplaceResult
+    out_ext: String
 
     output:
-    tuple val(meta), path("*.fast*"), emit: fastx
-    tuple val("${task.process}"), val('seqkit'), eval("seqkit version | sed 's/^.*v//'"), emit: versions_seqkit, topic: versions
+    record(id: sample.id, meta: sample.meta, fastx: file("*.fast*")) as SeqkitReplaceResult
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'seqkit', eval("seqkit version | sed 's/^.*v//'")) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     def extension = "fastq"
-    if ("${fastx}" ==~ /.+\.fasta|.+\.fasta.gz|.+\.fa|.+\.fa.gz|.+\.fas|.+\.fas.gz|.+\.fna|.+\.fna.gz|.+\.faa|.+\.faa.gz/) {
+    if ("${sample.fastx}" ==~ /.+\.fasta|.+\.fasta.gz|.+\.fa|.+\.fa.gz|.+\.fas|.+\.fas.gz|.+\.fna|.+\.fna.gz|.+\.faa|.+\.faa.gz/) {
         extension = "fasta"
     }
     def isgz = ""
-    if ("${fastx}" ==~ /.+\.gz/) {
+    if ("${sample.fastx}" ==~ /.+\.gz/) {
         isgz = ".gz"
     }
     def endswith = out_ext ?: "${extension}${isgz}"
@@ -35,19 +42,19 @@ process SEQKIT_REPLACE {
         replace \\
         ${args} \\
         --threads ${task.cpus} \\
-        -i ${fastx} \\
+        -i ${sample.fastx} \\
         -o ${prefix}.${endswith}
     """
 
     stub:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     def extension = "fastq"
-    if ("${fastx}" ==~ /.+\.fasta|.+\.fasta.gz|.+\.fa|.+\.fa.gz|.+\.fas|.+\.fas.gz|.+\.fna|.+\.fna.gz|.+\.faa|.+\.faa.gz/) {
+    if ("${sample.fastx}" ==~ /.+\.fasta|.+\.fasta.gz|.+\.fa|.+\.fa.gz|.+\.fas|.+\.fas.gz|.+\.fna|.+\.fna.gz|.+\.faa|.+\.faa.gz/) {
         extension = "fasta"
     }
     def isgz = ""
-    if ("${fastx}" ==~ /.+\.gz/) {
+    if ("${sample.fastx}" ==~ /.+\.gz/) {
         isgz = ".gz"
     }
     def endswith = out_ext ?: "${extension}${isgz}"

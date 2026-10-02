@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 //
 // Run post-alignment QC tools on RNA-seq BAM files
 //
@@ -9,161 +11,114 @@ include { SUBREAD_FEATURECOUNTS           } from '../../../modules/nf-core/subre
 include { CUSTOM_MULTIQCCUSTOMBIOTYPE     } from '../../../modules/nf-core/custom/multiqccustombiotype/main'
 include { SAMTOOLS_SORT as SAMTOOLS_SORT_QUALIMAP } from '../../../modules/nf-core/samtools/sort/main'
 include { BAM_RSEQC                       } from '../bam_rseqc/main'
+include { BamBaiInput; BamQcFeaturecounts; BamQcRnaseq } from '../../../modules/nf-core/types'
+include { CustomMultiqccustombiotypeResult } from '../../../modules/nf-core/custom/multiqccustombiotype/main'
+include { SamtoolsSortResult } from '../../../modules/nf-core/samtools/sort/main'
 
 workflow BAM_QC_RNASEQ {
 
     take:
-    ch_bam_bai         // channel: [ val(meta), path(bam), path(bai) ]
-    ch_gtf             // channel: [ val(meta), path(gtf) ]
-    ch_gene_bed        // channel: path(bed)
-    ch_fasta_fai       // channel: [ val(meta), path(fasta), path(fai) ]
-    ch_biotypes_header // channel: [ val(meta), path(biotypes_header.txt) ]
-    tools   // val(list)   - e.g. ['preseq', 'biotype_qc', 'qualimap', 'dupradar', 'rseqc_bam_stat', 'rseqc_infer_experiment', ...]
-    biotype // val(string) - e.g. "gene_type" or "gene_biotype"
+    ch_bam_bai: Channel<BamBaiInput>
+    ch_gtf: Value<Path>
+    ch_gene_bed: Value<Path>
+    ch_fasta: Value<Path?>
+    ch_fai: Value<Path?>
+    biotypes_header: Path
+    tools: List<String>  // e.g. ['preseq', 'biotype_qc', 'qualimap', 'dupradar', 'rseqc_bam_stat', 'rseqc_infer_experiment', ...]
+    biotype: String      // e.g. "gene_type" or "gene_biotype"
 
     main:
-    def rseqc_modules = tools.findAll { tool -> tool.startsWith('rseqc_') }.collect { tool -> tool.replace('rseqc_', '') }
+    def rseqc_modules = tools.findAll { tool -> tool.startsWith('rseqc_') }.collect { tool -> tool.replace('rseqc_', '') }.toList()
 
-    ch_genome_bam = ch_bam_bai.map { meta, bam, _bai -> [ meta, bam ] }
+    // Every field starts null and is overwritten by the join of the tool group that ran,
+    // so skipped groups leave a null field and no join is made against an empty channel.
+    ch_qc = ch_bam_bai.map { r ->
+        record(
+            id:            r.id,
+            meta:          r.meta,
+            preseq:        null,
+            featurecounts: null,
+            biotype:       null,
+            qualimap:      null,
+            dupradar:      null,
+            rseqc:         null
+        )
+    }
 
     //
     // MODULE: Preseq library complexity
     //
-    PRESEQ_LCEXTRAP (
-        ch_genome_bam.filter { 'preseq' in tools }
-    )
+    if ('preseq' in tools) {
+        // Remainder join: preseq can fail on low-duplication BAMs, and callers
+        // may set errorStrategy 'ignore' rather than lose the sample.
+        ch_qc = ch_qc.join(
+            PRESEQ_LCEXTRAP(ch_bam_bai).map { r -> record(id: r.id, preseq: r) },
+            by: 'id',
+            remainder: true
+        )
+    }
 
     //
     // MODULE: Feature biotype QC using featureCounts
     //
-    SUBREAD_FEATURECOUNTS (
-        ch_genome_bam
-            .combine(ch_gtf.map { _meta, gtf -> gtf })
-            .filter { 'biotype_qc' in tools && biotype }
-    )
-
-    CUSTOM_MULTIQCCUSTOMBIOTYPE (
-        SUBREAD_FEATURECOUNTS.out.counts,
-        ch_biotypes_header
-    )
+    if ('biotype_qc' in tools && biotype) {
+        def ch_featurecounts: Channel<BamQcFeaturecounts> = SUBREAD_FEATURECOUNTS(ch_bam_bai, ch_gtf)
+        def ch_biotype: Channel<CustomMultiqccustombiotypeResult> = CUSTOM_MULTIQCCUSTOMBIOTYPE(ch_featurecounts, biotypes_header)
+        ch_qc = ch_qc
+            .join(ch_featurecounts.map { r -> record(id: r.id, featurecounts: r) }, by: 'id')
+            .join(ch_biotype.map { r -> record(id: r.id, biotype: record(tsv: r.tsv, rrna: r.rrna)) }, by: 'id')
+    }
 
     //
-    // MODULE: Qualimap (name-sorted BAM via samtools sort)
-    // Requires ext.args = '-n' to be set by the caller for SAMTOOLS_SORT_QUALIMAP
+    // MODULE: Qualimap
     //
-    SAMTOOLS_SORT_QUALIMAP (
-        ch_genome_bam.filter { 'qualimap' in tools },
-        ch_fasta_fai,
-        ''
-    )
+    if ('qualimap' in tools) {
+        ch_sort_in = ch_bam_bai.map { r -> record(id: r.id, meta: r.meta, raw_bams: [ r.bam ]) }
 
-    QUALIMAP_RNASEQ (
-        SAMTOOLS_SORT_QUALIMAP.out.bam,
-        ch_gtf
-    )
+        // Name-sorted BAM via samtools sort; requires ext.args = '-n' to be set by the caller for SAMTOOLS_SORT_QUALIMAP
+        def ch_name_sorted: Channel<SamtoolsSortResult> = SAMTOOLS_SORT_QUALIMAP(ch_sort_in, ch_fasta, ch_fai, '')
+        ch_qc = ch_qc.join(QUALIMAP_RNASEQ(ch_name_sorted, ch_gtf), by: 'id')
+    }
 
     //
     // MODULE: dupRadar
     //
-    DUPRADAR (
-        ch_genome_bam.filter { 'dupradar' in tools },
-        ch_gtf
-    )
+    if ('dupradar' in tools) {
+        ch_qc = ch_qc.join(
+            DUPRADAR(ch_bam_bai, ch_gtf).map { r -> record(id: r.id, dupradar: r) },
+            by: 'id'
+        )
+    }
 
     //
     // SUBWORKFLOW: RSeQC
     //
-    BAM_RSEQC (
-        ch_bam_bai
-            .map { meta, bam, bai -> [ meta, [ bam, bai ] ] }
-            .filter { rseqc_modules.size() > 0 },
-        ch_gene_bed,
-        rseqc_modules
-    )
+    if (rseqc_modules.size() > 0) {
+        ch_qc = ch_qc.join(
+            BAM_RSEQC(ch_bam_bai, ch_gene_bed, rseqc_modules).map { r -> record(id: r.id, rseqc: r) },
+            by: 'id'
+        )
+    }
 
-    // Aggregate MultiQC-compatible output files
-    ch_multiqc_files = channel.empty()
-        .mix(PRESEQ_LCEXTRAP.out.lc_extrap)
-        .mix(CUSTOM_MULTIQCCUSTOMBIOTYPE.out.tsv)
-        .mix(QUALIMAP_RNASEQ.out.results)
-        .mix(DUPRADAR.out.multiqc)
-        .mix(BAM_RSEQC.out.bamstat_txt)
-        .mix(BAM_RSEQC.out.inferexperiment_txt)
-        .mix(BAM_RSEQC.out.innerdistance_freq)
-        .mix(BAM_RSEQC.out.junctionannotation_log)
-        .mix(BAM_RSEQC.out.junctionsaturation_rscript)
-        .mix(BAM_RSEQC.out.readdistribution_txt)
-        .mix(BAM_RSEQC.out.readduplication_pos_xls)
-        .mix(BAM_RSEQC.out.tin_txt)
-
-    // `remainder: true` needed because every contributor is gated behind
-    // `tools` / `rseqc_modules`.
-    ch_per_sample_mqc_bundle = PRESEQ_LCEXTRAP.out.lc_extrap
-        .join(CUSTOM_MULTIQCCUSTOMBIOTYPE.out.tsv,         remainder: true)
-        .join(QUALIMAP_RNASEQ.out.results,                 remainder: true)
-        .join(DUPRADAR.out.multiqc,                        remainder: true)
-        .join(BAM_RSEQC.out.bamstat_txt,                   remainder: true)
-        .join(BAM_RSEQC.out.inferexperiment_txt,           remainder: true)
-        .join(BAM_RSEQC.out.innerdistance_freq,            remainder: true)
-        .join(BAM_RSEQC.out.junctionannotation_log,        remainder: true)
-        .join(BAM_RSEQC.out.junctionsaturation_rscript,    remainder: true)
-        .join(BAM_RSEQC.out.readdistribution_txt,          remainder: true)
-        .join(BAM_RSEQC.out.readduplication_pos_xls,       remainder: true)
-        .join(BAM_RSEQC.out.tin_txt,                       remainder: true)
-        .map { row -> [row[0], row.drop(1).findAll { f -> f != null }.collectMany { e -> (e instanceof List) ? e : [e] }] }
+    // Files MultiQC reads for each sample, in the order the tools report them.
+    ch_results = ch_qc.map { r ->
+        r + record(
+            mqc_files: [
+                r.preseq?.lc_extrap,
+                r.biotype?.tsv,
+                r.qualimap,
+                r.rseqc?.bamstat,
+                r.rseqc?.inferexperiment,
+                r.rseqc?.innerdistance?.freq,
+                r.rseqc?.junctionannotation?.log,
+                r.rseqc?.junctionsaturation?.rscript,
+                r.rseqc?.readdistribution,
+                r.rseqc?.readduplication?.pos_xls,
+                r.rseqc?.tin?.txt
+            ].findAll { f -> f != null }.toList() + ((r.dupradar?.multiqc ?: []) as List<Path>)
+        )
+    }
 
     emit:
-    // Aggregated
-    multiqc_files = ch_multiqc_files // channel: [ val(meta), path(files) ]
-
-    // Preseq
-    preseq_lc_extrap = PRESEQ_LCEXTRAP.out.lc_extrap // channel: [ val(meta), path(txt) ]
-    preseq_log       = PRESEQ_LCEXTRAP.out.log       // channel: [ val(meta), path(log) ]
-
-    // Biotype QC
-    featurecounts_counts  = SUBREAD_FEATURECOUNTS.out.counts     // channel: [ val(meta), path(txt) ]
-    featurecounts_summary = SUBREAD_FEATURECOUNTS.out.summary    // channel: [ val(meta), path(txt) ]
-    biotype_tsv           = CUSTOM_MULTIQCCUSTOMBIOTYPE.out.tsv  // channel: [ val(meta), path(tsv) ]
-    biotype_rrna          = CUSTOM_MULTIQCCUSTOMBIOTYPE.out.rrna // channel: [ val(meta), path(tsv) ]
-
-    // Qualimap
-    qualimap_results = QUALIMAP_RNASEQ.out.results // channel: [ val(meta), path(dir) ]
-
-    // dupRadar
-    dupradar_scatter2d       = DUPRADAR.out.scatter2d       // channel: [ val(meta), path(pdf) ]
-    dupradar_boxplot         = DUPRADAR.out.boxplot         // channel: [ val(meta), path(pdf) ]
-    dupradar_hist            = DUPRADAR.out.hist            // channel: [ val(meta), path(pdf) ]
-    dupradar_dupmatrix       = DUPRADAR.out.dupmatrix       // channel: [ val(meta), path(txt) ]
-    dupradar_intercept_slope = DUPRADAR.out.intercept_slope // channel: [ val(meta), path(txt) ]
-    dupradar_multiqc         = DUPRADAR.out.multiqc         // channel: [ val(meta), path(txt) ]
-
-    // RSeQC
-    inferexperiment_txt             = BAM_RSEQC.out.inferexperiment_txt             // channel: [ val(meta), path(txt) ]
-    bamstat_txt                     = BAM_RSEQC.out.bamstat_txt                     // channel: [ val(meta), path(txt) ]
-    innerdistance_all               = BAM_RSEQC.out.innerdistance_all               // channel: [ val(meta), path(txt/pdf/r) ]
-    innerdistance_distance          = BAM_RSEQC.out.innerdistance_distance          // channel: [ val(meta), path(txt) ]
-    innerdistance_freq              = BAM_RSEQC.out.innerdistance_freq              // channel: [ val(meta), path(txt) ]
-    innerdistance_mean              = BAM_RSEQC.out.innerdistance_mean              // channel: [ val(meta), path(txt) ]
-    innerdistance_pdf               = BAM_RSEQC.out.innerdistance_pdf               // channel: [ val(meta), path(pdf) ]
-    innerdistance_rscript           = BAM_RSEQC.out.innerdistance_rscript           // channel: [ val(meta), path(r) ]
-    junctionannotation_all          = BAM_RSEQC.out.junctionannotation_all          // channel: [ val(meta), path(bed/xls/pdf/r/log) ]
-    junctionannotation_bed          = BAM_RSEQC.out.junctionannotation_bed          // channel: [ val(meta), path(bed) ]
-    junctionannotation_interact_bed = BAM_RSEQC.out.junctionannotation_interact_bed // channel: [ val(meta), path(bed) ]
-    junctionannotation_xls          = BAM_RSEQC.out.junctionannotation_xls          // channel: [ val(meta), path(xls) ]
-    junctionannotation_pdf          = BAM_RSEQC.out.junctionannotation_pdf          // channel: [ val(meta), path(pdf) ]
-    junctionannotation_events_pdf   = BAM_RSEQC.out.junctionannotation_events_pdf   // channel: [ val(meta), path(pdf) ]
-    junctionannotation_rscript      = BAM_RSEQC.out.junctionannotation_rscript      // channel: [ val(meta), path(r) ]
-    junctionannotation_log          = BAM_RSEQC.out.junctionannotation_log          // channel: [ val(meta), path(log) ]
-    junctionsaturation_all          = BAM_RSEQC.out.junctionsaturation_all          // channel: [ val(meta), path(pdf/r) ]
-    junctionsaturation_pdf          = BAM_RSEQC.out.junctionsaturation_pdf          // channel: [ val(meta), path(pdf) ]
-    junctionsaturation_rscript      = BAM_RSEQC.out.junctionsaturation_rscript      // channel: [ val(meta), path(r) ]
-    readdistribution_txt            = BAM_RSEQC.out.readdistribution_txt            // channel: [ val(meta), path(txt) ]
-    readduplication_all             = BAM_RSEQC.out.readduplication_all             // channel: [ val(meta), path(xls/pdf/r) ]
-    readduplication_seq_xls         = BAM_RSEQC.out.readduplication_seq_xls         // channel: [ val(meta), path(xls) ]
-    readduplication_pos_xls         = BAM_RSEQC.out.readduplication_pos_xls         // channel: [ val(meta), path(xls) ]
-    readduplication_pdf             = BAM_RSEQC.out.readduplication_pdf             // channel: [ val(meta), path(pdf) ]
-    readduplication_rscript         = BAM_RSEQC.out.readduplication_rscript         // channel: [ val(meta), path(r) ]
-    tin_txt                         = BAM_RSEQC.out.tin_txt                         // channel: [ val(meta), path(txt) ]
-    per_sample_mqc_bundle           = ch_per_sample_mqc_bundle                      // channel: [ val(meta), list(files) ]
-
+    ch_results
 }

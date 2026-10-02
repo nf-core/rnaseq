@@ -17,15 +17,17 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = [
-                    [ id:'test' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true),
-                    []
-                ]
-                input[1] = [[],[],[]]
-                input[2] = [[], []]
-                input[3] = [[], []]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true),
+                    bai: null
+                )
+                input[1] = []
+                input[2] = []
+                input[3] = []
                 input[4] = []
+                input[5] = ''
                 """
             }
         }
@@ -33,7 +35,7 @@ nextflow_process {
         then {
             assert process.success
             assertAll(
-                { assert snapshot(sanitizeOutput(process.out, readsMD5Keys: ["bam"])).match()}
+                { assert snapshot(process.out[0][0].collectEntries { k, v -> [k, v == null ? null : k in ["bam"] ? file(v).name + ':readsMD5,' + bam(v).getReadsMD5() : v] }).match()}
             )
         }
     }
@@ -45,15 +47,17 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = [
-                    [ id:'test' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
-                    []
-                ]
-                input[1] = [[],[],[]]
-                input[2] = [[], []]
-                input[3] = [[], []]
-                input[4] = 'csi'
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    bai: null
+                )
+                input[1] = []
+                input[2] = []
+                input[3] = []
+                input[4] = []
+                input[5] = 'csi'
                 """
             }
         }
@@ -61,7 +65,7 @@ nextflow_process {
         then {
             assert process.success
             assertAll(
-                { assert snapshot(sanitizeOutput(process.out, readsMD5Keys: ["bam"], unstableKeys: ["csi"])).match()}
+                { assert snapshot(process.out[0][0].collectEntries { k, v -> [k, v == null ? null : k in ["bam"] ? file(v).name + ':readsMD5,' + bam(v).getReadsMD5() : k in ["bai"] ? file(v).name : v] }).match()}
             )
         }
     }
@@ -73,15 +77,17 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = [
-                    [ id:'test' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
-                    []
-                ]
-                input[1] = [[],[],[]]
-                input[2] = [[], []]
-                input[3] = [[], []]
-                input[4] = 'bai'
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    bai: null
+                )
+                input[1] = []
+                input[2] = []
+                input[3] = []
+                input[4] = []
+                input[5] = 'bai'
                 """
             }
         }
@@ -89,7 +95,7 @@ nextflow_process {
         then {
             assert process.success
             assertAll(
-                { assert snapshot(sanitizeOutput(process.out, readsMD5Keys: ["bam"], unstableKeys: ["bai"])).match()}
+                { assert snapshot(process.out[0][0].collectEntries { k, v -> [k, v == null ? null : k in ["bam"] ? file(v).name + ':readsMD5,' + bam(v).getReadsMD5() : k in ["bai"] ? file(v).name : v] }).match()}
             )
         }
     }
@@ -101,17 +107,18 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = [
-                    [ id:'test' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
-                    []
-                ]
-                input[1] = [[],[],[]]
-                input[2] = channel.of('testN:1')
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    bai: null
+                )
+                input[1] = []
+                input[2] = []
+                input[3] = channel.of('testN:1')
                     .collectFile(name: 'selected_reads.txt')
-                    .map { file -> [[:], file] }
-                input[3] = [[], []]
-                input[4] = 'bai'
+                input[4] = []
+                input[5] = 'bai'
                 """
             }
         }
@@ -120,7 +127,7 @@ nextflow_process {
             assert process.success
             assertAll(
                 // bam is empty so we checksum the name
-                { assert snapshot(sanitizeOutput(process.out, readsMD5Keys: ["unselected"], unstableKeys: ["bam","bai", "unselected_index"])).match()}
+                { assert snapshot(process.out[0][0].collectEntries { k, v -> [k, v == null ? null : k in ["unselected"] ? file(v).name + ':readsMD5,' + bam(v).getReadsMD5() : k in ["bam","bai", "unselected_index"] ? file(v).name : v] }).match()}
             )
         }
     }
@@ -132,17 +139,18 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = [
-                    [ id:'test' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
-                    []
-                ]
-                input[1] = [[],[],[]]
-                input[2] = channel.of('testN:1')
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    bai: null
+                )
+                input[1] = []
+                input[2] = []
+                input[3] = channel.of('testN:1')
                     .collectFile(name: 'selected_reads.txt')
-                    .map { file -> [[:], file] }
-                input[3] = [[], []]
-                input[4] = 'crai'
+                input[4] = []
+                input[5] = 'crai'
                 """
             }
         }
@@ -151,7 +159,7 @@ nextflow_process {
             assert process.success
             assertAll(
                 // cram is empty so we checksum the name
-                { assert snapshot(sanitizeOutput(process.out, readsMD5Keys: ["unselected"], referenceFasta: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/genome.fasta', unstableKeys: ["cram", "bai", "unselected_index", "crai"])).match()}
+                { assert snapshot(process.out[0][0].collectEntries { k, v -> [k, v == null ? null : k in ["unselected"] ? file(v).name + ':readsMD5,' + (v.toString().endsWith('.cram') ? cram(v, 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/genome.fasta') : bam(v)).getReadsMD5() : k in ["bam", "bai", "unselected_index"] ? file(v).name : v] }).match()}
             )
         }
     }
@@ -163,19 +171,17 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = [
-                    [ id:'test' ],
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram.crai', checkIfExists: true)
-                ]
-                input[1] = [
-                    [ id:'genome' ],
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
-                ]
-                input[2] = [[], []]
-                input[3] = [[], []]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    bam: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true),
+                    bai: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram.crai', checkIfExists: true)
+                )
+                input[1] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                input[2] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
+                input[3] = []
                 input[4] = []
+                input[5] = ''
                 """
             }
         }
@@ -183,7 +189,7 @@ nextflow_process {
         then {
             assert process.success
             assertAll(
-                { assert snapshot(sanitizeOutput(process.out, readsMD5Keys: ["cram"], referenceFasta: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.fasta')).match()}
+                { assert snapshot(process.out[0][0].collectEntries { k, v -> [k, v == null ? null : k in ["bam"] ? file(v).name + ':readsMD5,' + (v.toString().endsWith('.cram') ? cram(v, 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.fasta') : bam(v)).getReadsMD5() : v] }).match()}
             )
         }
     }
@@ -195,19 +201,17 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = [
-                    [ id:'test' ],
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true),
-                    []
-                ]
-                input[1] = [
-                    [ id:'genome' ],
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
-                ]
-                input[2] = [[], []]
-                input[3] = [[], []]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    bam: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true),
+                    bai: null
+                )
+                input[1] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                input[2] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
+                input[3] = []
                 input[4] = []
+                input[5] = ''
                 """
             }
         }
@@ -215,7 +219,7 @@ nextflow_process {
         then {
             assert process.success
             assertAll(
-                { assert snapshot(sanitizeOutput(process.out, readsMD5Keys: ["bam"])).match()}
+                { assert snapshot(process.out[0][0].collectEntries { k, v -> [k, v == null ? null : k in ["bam"] ? file(v).name + ':readsMD5,' + bam(v).getReadsMD5() : v] }).match()}
             )
         }
     }
@@ -227,19 +231,17 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = [
-                    [ id:'test' ],
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true),
-                    []
-                ]
-                input[1] = [
-                    [ id:'genome' ],
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
-                ]
-                input[2] = [[], []]
-                input[3] = [[], []]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    bam: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true),
+                    bai: null
+                )
+                input[1] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                input[2] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
+                input[3] = []
                 input[4] = []
+                input[5] = ''
                 """
             }
         }
@@ -247,7 +249,7 @@ nextflow_process {
         then {
             assert process.success
             assertAll(
-                { assert snapshot(sanitizeOutput(process.out, readsMD5Keys: ["bam"], unstableKeys: ["csi"])).match()}
+                { assert snapshot(process.out[0][0].collectEntries { k, v -> [k, v == null ? null : k in ["bam"] ? file(v).name + ':readsMD5,' + bam(v).getReadsMD5() : k in ["bai"] ? file(v).name : v] }).match()}
             )
         }
     }
@@ -259,21 +261,18 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = [
-                    [ id:'test' ],
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true),
-                    []
-                ]
-                input[1] = [
-                    [ id:'genome' ],
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
-                ]
-                input[2] = channel.of("testN:2817", "testN:2814")
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    bam: file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true),
+                    bai: null
+                )
+                input[1] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                input[2] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
+                input[3] = channel.of("testN:2817", "testN:2814")
                     .collectFile(name: "readnames.list", newLine: true)
-                    .map { file -> [[:], file] }
-                input[3] = [[], []]
                 input[4] = []
+                input[5] = ''
                 """
             }
         }
@@ -282,7 +281,7 @@ nextflow_process {
 
             assert process.success
             assertAll(
-                { assert snapshot(sanitizeOutput(process.out, readsMD5Keys: ["bam", "unselected"], unstableKeys: ["bai", "unselected_index"])).match()}
+                { assert snapshot(process.out[0][0].collectEntries { k, v -> [k, v == null ? null : k in ["bam", "unselected"] ? file(v).name + ':readsMD5,' + bam(v).getReadsMD5() : k in ["bai", "unselected_index"] ? file(v).name : v] }).match()}
             )
         }
     }
@@ -294,18 +293,17 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = [
-                    [ id:'test' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
-                    []
-                ]
-                input[1] = [[],[],[]]
-                input[2] = [[], []]
-                input[3] = [
-                    [:],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/bed/test.bed', checkIfExists: true)
-                ]
-                input[4] = []
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    bai: null
+                )
+                input[1] = []
+                input[2] = []
+                input[3] = []
+                input[4] = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/bed/test.bed', checkIfExists: true)
+                input[5] = ''
                 """
             }
         }
@@ -313,7 +311,7 @@ nextflow_process {
         then {
             assert process.success
             assertAll(
-                { assert snapshot(sanitizeOutput(process.out, readsMD5Keys: ["bam"])).match()}
+                { assert snapshot(process.out[0][0].collectEntries { k, v -> [k, v == null ? null : k in ["bam"] ? file(v).name + ':readsMD5,' + bam(v).getReadsMD5() : v] }).match()}
             )
         }
     }
@@ -328,15 +326,17 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = [
-                    [ id:'test' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true),
-                    []
-                ]
-                input[1] = [[],[],[]]
-                input[2] = [[], []]
-                input[3] = [[], []]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.bam', checkIfExists: true),
+                    bai: null
+                )
+                input[1] = []
+                input[2] = []
+                input[3] = []
                 input[4] = []
+                input[5] = ''
                 """
             }
         }
@@ -344,7 +344,7 @@ nextflow_process {
         then {
             assert process.success
             assertAll(
-                { assert snapshot(sanitizeOutput(process.out)).match()}
+                { assert snapshot(process.out[0][0].collectEntries { k, v -> [k, v == null ? null : v] }).match()}
             )
         }
     }
@@ -359,15 +359,17 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = [
-                    [ id:'test' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
-                    []
-                ]
-                input[1] = [[],[],[]]
-                input[2] = [[], []]
-                input[3] = [[], []]
-                input[4] = 'csi'
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    bai: null
+                )
+                input[1] = []
+                input[2] = []
+                input[3] = []
+                input[4] = []
+                input[5] = 'csi'
                 """
             }
         }
@@ -375,7 +377,7 @@ nextflow_process {
         then {
             assert process.success
             assertAll(
-                { assert snapshot(sanitizeOutput(process.out)).match() }
+                { assert snapshot(process.out[0][0].collectEntries { k, v -> [k, v == null ? null : v] }).match() }
             )
         }
     }
@@ -390,15 +392,17 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = [
-                    [ id:'test' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
-                    []
-                ]
-                input[1] = [[],[],[]]
-                input[2] = [[], []]
-                input[3] = [[], []]
-                input[4] = 'bai'
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    bai: null
+                )
+                input[1] = []
+                input[2] = []
+                input[3] = []
+                input[4] = []
+                input[5] = 'bai'
                 """
             }
         }
@@ -406,7 +410,7 @@ nextflow_process {
         then {
             assert process.success
             assertAll(
-                { assert snapshot(sanitizeOutput(process.out)).match() }
+                { assert snapshot(process.out[0][0].collectEntries { k, v -> [k, v == null ? null : v] }).match() }
             )
         }
     }
@@ -421,17 +425,18 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = [
-                    [ id:'test' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
-                    []
-                ]
-                input[1] = [[],[],[]]
-                input[2] = channel.of('testN:1')
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    bai: null
+                )
+                input[1] = []
+                input[2] = []
+                input[3] = channel.of('testN:1')
                     .collectFile(name: 'selected_reads.txt')
-                    .map { file -> [[:], file] }
-                input[3] = [[], []]
-                input[4] = 'bai'
+                input[4] = []
+                input[5] = 'bai'
                 """
             }
         }
@@ -439,7 +444,7 @@ nextflow_process {
         then {
             assert process.success
             assertAll(
-                { assert snapshot(sanitizeOutput(process.out)).match() }
+                { assert snapshot(process.out[0][0].collectEntries { k, v -> [k, v == null ? null : v] }).match() }
             )
         }
     }
@@ -454,17 +459,18 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = [
-                    [ id:'test' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
-                    []
-                ]
-                input[1] = [[],[],[]]
-                input[2] = channel.of('testN:1')
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test' ],
+                    bam: file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    bai: null
+                )
+                input[1] = []
+                input[2] = []
+                input[3] = channel.of('testN:1')
                     .collectFile(name: 'selected_reads.txt')
-                    .map { file -> [[:], file] }
-                input[3] = [[], []]
-                input[4] = 'crai'
+                input[4] = []
+                input[5] = 'crai'
                 """
             }
         }
@@ -472,7 +478,7 @@ nextflow_process {
         then {
             assert process.success
             assertAll(
-                { assert snapshot(sanitizeOutput(process.out)).match() }
+                { assert snapshot(process.out[0][0].collectEntries { k, v -> [k, v == null ? null : v] }).match() }
             )
         }
     }

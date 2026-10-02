@@ -30,52 +30,17 @@
     "bam - stub": {
         "content": [
             [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    [
-                        "test_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                        "test_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
-                    ]
-                ]
+                "test_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                "test_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
             ],
-            [
-                
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test_singleton.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test_other.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
-                ]
-            ],
-            {
-                "versions_samtools": [
-                    [
-                        "SAMTOOLS_FASTQ",
-                        "samtools",
-                        "1.24"
-                    ]
-                ]
-            }
+            null,
+            "test_singleton.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+            "test_other.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
         ],
-        "timestamp": "2026-03-19T08:58:51.815096",
+        "timestamp": "2026-09-29T17:31:52.203149273",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
+            "nf-test": "0.9.5",
+            "nextflow": "26.09.1"
         }
     },
     "bam_fastq": {
@@ -118,27 +83,19 @@
         }
     },
     "bam_interleaved": {
-        "content": [
-            [
-                
-            ]
-        ],
-        "timestamp": "2024-02-12T18:18:23.980431",
+        "content": null,
+        "timestamp": "2026-09-29T17:31:19.406436453",
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.04.3"
+            "nf-test": "0.9.5",
+            "nextflow": "26.09.1"
         }
     },
     "bam_singinterleave_leton": {
-        "content": [
-            [
-                
-            ]
-        ],
-        "timestamp": "2024-02-12T18:18:30.869149",
+        "content": null,
+        "timestamp": "2026-09-29T17:31:35.517644269",
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.04.3"
+            "nf-test": "0.9.5",
+            "nextflow": "26.09.1"
         }
     },
     "bam_versions": {
@@ -204,41 +161,14 @@
             [
                 
             ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test_interleaved.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
-                ]
-            ],
-            [
-                
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test_other.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
-                ]
-            ],
-            {
-                "versions_samtools": [
-                    [
-                        "SAMTOOLS_FASTQ",
-                        "samtools",
-                        "1.24"
-                    ]
-                ]
-            }
+            "test_interleaved.fastq:md5,d41d8cd98f00b204e9800998ecf8427e",
+            null,
+            "test_other.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
         ],
-        "timestamp": "2026-03-19T08:58:56.91914",
+        "timestamp": "2026-09-29T17:32:08.873461309",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
+            "nf-test": "0.9.5",
+            "nextflow": "26.09.1"
         }
     }
 }

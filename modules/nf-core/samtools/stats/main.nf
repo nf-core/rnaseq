@@ -1,5 +1,15 @@
+nextflow.enable.types = true
+
+include { BamBaiInput } from '../../types'
+
+record SamtoolsStatsResult {
+    id:    String
+    meta:  Map
+    stats: Path
+}
+
 process SAMTOOLS_STATS {
-    tag "${meta.id}"
+    tag "${sample.meta.id}"
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
@@ -8,19 +18,19 @@ process SAMTOOLS_STATS {
         : 'community.wave.seqera.io/library/htslib_samtools:1.24--d697cfb9dce007cd'}"
 
     input:
-    tuple val(meta), path(input), path(input_index)
-    tuple val(meta2), path(fasta), path(fai)
+    sample: BamBaiInput
+    fasta: Path?
+    fai: Path?
 
     output:
-    tuple val(meta), path("*.stats"), emit: stats
-    tuple val("${task.process}"), val('samtools'), eval('samtools version | sed "1!d;s/.* //"'), emit: versions_samtools, topic: versions
+    record(id: sample.id, meta: sample.meta, stats: file('*.stats')) as SamtoolsStatsResult
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'samtools', eval("samtools version | sed '1!d;s/.* //'")) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     def reference = fasta ? "--reference ${fasta}" : ""
     """
     samtools \\
@@ -28,12 +38,12 @@ process SAMTOOLS_STATS {
         ${args} \\
         --threads ${task.cpus} \\
         ${reference} \\
-        ${input} \\
+        ${sample.bam} \\
         > ${prefix}.stats
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     touch ${prefix}.stats
     """

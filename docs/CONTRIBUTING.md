@@ -207,11 +207,29 @@ Modules and subworkflows under `modules/nf-core/` and `subworkflows/nf-core/` ar
 
 #### Module configs
 
-Per-tool publishDir, ext.args, and ext.prefix settings are split into one file per logical group under `conf/modules/` (e.g. `conf/modules/align_star.config`, `conf/modules/quantify_rsem.config`) and included from `nextflow.config`. When you add a new local module, add or extend the matching file rather than dropping settings into `nextflow.config` directly.
+Per-tool `ext.args` and `ext.prefix` settings are split into one file per logical group under `conf/modules/` (e.g. `conf/modules/align_star.config`, `conf/modules/quantify_rsem.config`) and included from `nextflow.config`. When you add a new local module, add or extend the matching file rather than dropping settings into `nextflow.config` directly. Publishing is not configured here: the `output {}` block in `main.nf` decides where every file goes (see below).
 
 #### Version reporting
 
 Modules emit their versions onto the `versions` channel topic so the calling workflow does not have to thread a `ch_versions` through every process (PR #1689). Modules that still also declare a `path "versions.yml", emit: versions` output do so because they are templated (the `.r`/`.py` template script writes the YAML); those modules populate the topic too and don't need migrating - leave them alone.
+
+#### Per-sample result records
+
+Subworkflows that produce per-sample files also emit a `results` record (or `sample_results` where `results` was already taken by an existing channel): one value per sample carrying the process outputs as named, possibly-nested fields, instead of one channel per file. `main.nf`'s `output {}` block publishes these records; no process uses `publishDir`. See nf-core/rnaseq#1931 for the full design and nf-core/rnaseq#1933 for the rules a new record should follow. In short:
+
+- Keyed on `id` (`meta.id`); the top-level per-stage record also carries the original `meta` map so `ext.args`/`ext.prefix` config closures can read it.
+- Built right after the process call it wraps, from that process's own tuple outputs (`join` on shared `meta`), not derived from something built elsewhere.
+- Combined across stages with `.join(other, by: 'id')`, never `mix` + `groupTuple` - an unsized `groupTuple` waits for the channel to close and defers every downstream release to end of run.
+- Conditional stages (`if (!params.skip_x) { ... }`) join conditionally, at the workflow level. Joining a `channel.empty()` with `remainder: true` has the same end-of-run-only problem as `groupTuple`.
+- Field names are stable API: they end up in `docs/output.md` and in `index` file headers. Reuse a module's own emit name unless it's ambiguous.
+- Each module casts its output record to a named result type (`record(...) as SamtoolsSortResult`), which lint checks for missing fields and wrong field types; it does not check nullability or extra fields, so write `Path?` yourself for optional files. Casting is safe for `Path`s on non-local filesystems from Nextflow #7684, which the pinned CI build contains.
+- Record types live where they are owned. A module's own input and result types are declared in the module's `main.nf` and imported from there. Types shared by several modules (`ReadsInput`, `BamBaiInput`, ...), the pipeline-level records built in subworkflows and `main.nf`, and the sub-records they nest are declared once in `modules/nf-core/types.nf`. nf-core tooling does not yet recognise type `include`s (it reads them as module dependencies), so expect a tools update before these can be shared across installed components.
+- Some records represent one of several tool-specific variants as a group of nullable fields (`AlignedSample` has `star`, `hisat2` and `bowtie2` logs, of which only the aligner that ran is set; `Contaminants` is similar). Record types cannot express a union today, so consumers check the field for the tool they expect.
+- Nf-core-owned components under `subworkflows/nf-core/` and `modules/nf-core/` are, for now, edited in place without going through `nf-core subworkflows patch`/`.diff` tracking (nf-core/tools#3157), so `nf-core pipelines lint` flags them as diverged; that is expected until the changes are upstreamed. Do not run `nf-core modules update` or `nf-core subworkflows update` on this branch.
+- Every published target guarantees one live `>>` per value, otherwise the target crashes with an NPE when every `>>` resolves to null for one record (nextflow-io/nextflow#7669) and the run still exits 0. Not every stage has a field that's unconditionally present (an "anchor"): several tool selections are mutually exclusive at the workflow level (which aligner, which trimmer, which rRNA-removal tool, whether QC ran at all), so more than one stage record has every field genuinely nullable. Don't force an anchor onto a record that doesn't have one; use whichever of these fits instead: an anchor field, an `enabled` gate over params that is true exactly when at least one `>>` can be non-null (write it as a top-level helper function so the gate and the closure can't drift apart), or a `.filter()` upstream of the `publish:` block when nullness varies per record rather than per run.
+- Reference fields hold task outputs only. A user-supplied reference passed straight through (an uncompressed GTF, FASTA, or transcript FASTA the user pointed `--fasta`/`--gtf` at) crashes the output block when routed with `>>` (nextflow-io/nextflow#7667): set the field to `null` unless the path is a task output, so the published tree never contains the user's own input file.
+- Prefer explicit nullable fields over an absent key. `remainder: true` on a record-to-record join leaves an unmatched field absent rather than `null`; field access behaves the same either way, but `index` JSON output differs (key dropped versus `"field": null`). Build records from the process's own tuple outputs first, then join records to records, so optional fields come out as explicit `null`.
+- Everything published lives in a record: per-sample files in the stage records, run-level files in small value records grouped by output directory (`genome`, `quant_merged`, `deseq2`, `multiqc`, `pipeline_info`). The only emits that stay bare are non-file values such as the status booleans. A bare `path` emit that corresponds to a published file needs a record home, not a `publishDir` or `storeDir` of its own.
 
 #### `--genome` reference catalogues
 
@@ -220,6 +238,8 @@ Modules emit their versions onto the `versions` channel topic so the calling wor
 #### Snapshots
 
 Non-deterministic outputs (STAR, Salmon, Kallisto, RSEM, HISAT2 indices; qualimap reports) are snapshotted by file-name-only (`getSnapshot()` filtered) rather than content. Deterministic text outputs are snapshotted by md5. Verbose JSON test output (e.g. helper-function tests) should snapshot `.md5()` of the result rather than inlining the JSON. Don't snapshot timestamps or paths that contain hash directories.
+
+The tests of vendored modules and nf-core subworkflows (`modules/nf-core/**/tests`, `subworkflows/nf-core/**/tests`) are excluded from CI by `nf-test.config`, as upstream, because nf-core/modules runs them. This branch edits those components in place, so their snapshots only change when someone runs the tests with that ignore list removed; ordinary CI will not notice if they go stale.
 
 #### `.nftignore`
 

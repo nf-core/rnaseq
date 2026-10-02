@@ -1,5 +1,9 @@
+nextflow.enable.types = true
+
+include { BamBaiInput; RseqcJunctionAnnotation } from '../../types'
+
 process RSEQC_JUNCTIONANNOTATION {
-    tag "$meta.id"
+    tag "$sample.meta.id"
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
@@ -8,28 +12,31 @@ process RSEQC_JUNCTIONANNOTATION {
         'community.wave.seqera.io/library/rseqc_r-base:2e29d2dfda9cef15' }"
 
     input:
-    tuple val(meta), path(bam), path(bai)
-    path  bed
+    sample: BamBaiInput
+    bed: Path
 
     output:
-    tuple val(meta), path("*.xls")         , emit: xls
-    tuple val(meta), path("*.r")           , emit: rscript
-    tuple val(meta), path("*.log")         , emit: log
-    tuple val(meta), path("*.junction.bed"), optional:true, emit: bed
-    tuple val(meta), path("*.Interact.bed"), optional:true, emit: interact_bed
-    tuple val(meta), path("*junction.pdf") , optional:true, emit: pdf
-    tuple val(meta), path("*events.pdf")   , optional:true, emit: events_pdf
-    tuple val("${task.process}"), val('rseqc'), eval('junction_annotation.py --version | sed "s/junction_annotation.py //"'), emit: versions_rseqc, topic: versions
+    record(
+        id:           sample.id,
+        meta:         sample.meta,
+        bed:          file("*.junction.bed", optional: true),
+        interact_bed: file("*.Interact.bed", optional: true),
+        xls:          file("*.xls"),
+        pdf:          file("*junction.pdf", optional: true),
+        events_pdf:   file("*events.pdf", optional: true),
+        rscript:      file("*.r"),
+        log:          file("*.log")
+    ) as RseqcJunctionAnnotation
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'rseqc', eval('junction_annotation.py --version | sed "s/junction_annotation.py //"')) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     junction_annotation.py \\
-        -i $bam \\
+        -i $sample.bam \\
         -r $bed \\
         -o $prefix \\
         $args \\
@@ -37,7 +44,7 @@ process RSEQC_JUNCTIONANNOTATION {
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     touch ${prefix}.junction.xls
     touch ${prefix}.junction_plot.r

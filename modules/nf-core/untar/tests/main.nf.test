@@ -12,7 +12,11 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [ [], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/db/kraken2.tar.gz', checkIfExists: true) ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [:],
+                    archive: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/db/kraken2.tar.gz', checkIfExists: true)
+                )
                 """
             }
         }
@@ -20,10 +24,7 @@ nextflow_process {
         then {
             assertAll (
                 { assert process.success },
-                { assert snapshot(
-                    process.out.untar,
-                    process.out.findAll { key, val -> key.startsWith('versions') }
-                ).match() },
+                { assert snapshot(process.out[0]).match() },
             )
         }
     }
@@ -33,7 +34,11 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [ [], file(params.modules_testdata_base_path + 'generic/tar/hello.tar.gz', checkIfExists: true) ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [:],
+                    archive: file(params.modules_testdata_base_path + 'generic/tar/hello.tar.gz', checkIfExists: true)
+                )
                 """
             }
         }
@@ -41,10 +46,7 @@ nextflow_process {
         then {
             assertAll (
                 { assert process.success },
-                { assert snapshot(
-                    process.out.untar,
-                    process.out.findAll { key, val -> key.startsWith('versions') }
-                ).match() },
+                { assert snapshot(process.out[0]).match() },
             )
         }
     }
@@ -56,7 +58,11 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [ [], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/db/kraken2.tar.gz', checkIfExists: true) ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [:],
+                    archive: file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/db/kraken2.tar.gz', checkIfExists: true)
+                )
                 """
             }
         }
@@ -64,10 +70,7 @@ nextflow_process {
         then {
             assertAll (
                 { assert process.success },
-                { assert snapshot(
-                    process.out.untar,
-                    process.out.findAll { key, val -> key.startsWith('versions') }
-                ).match() },
+                { assert snapshot(process.out[0]).match() },
             )
         }
     }
@@ -79,7 +82,11 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [ [], file(params.modules_testdata_base_path + 'generic/tar/hello.tar.gz', checkIfExists: true) ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [:],
+                    archive: file(params.modules_testdata_base_path + 'generic/tar/hello.tar.gz', checkIfExists: true)
+                )
                 """
             }
         }
@@ -87,10 +94,7 @@ nextflow_process {
         then {
             assertAll (
                 { assert process.success },
-                { assert snapshot(
-                    process.out.untar,
-                    process.out.findAll { key, val -> key.startsWith('versions') }
-                ).match() },
+                { assert snapshot(process.out[0]).match() },
             )
         }
     }

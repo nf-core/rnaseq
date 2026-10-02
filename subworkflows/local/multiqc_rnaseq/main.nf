@@ -1,119 +1,128 @@
+nextflow.enable.types = true
+
 //
 // MultiQC report assembly for nf-core/rnaseq.
 //
 
-include { MULTIQC                } from '../../../modules/nf-core/multiqc'
-include { paramsSummaryMap       } from 'plugin/nf-schema'
-include { samplesheetToList      } from 'plugin/nf-schema'
-include { paramsSummaryMultiqc   } from '../../nf-core/utils_nfcore_pipeline'
-include { workflowVersionToYAML  } from '../../nf-core/utils_nfcore_pipeline'
-include { methodsDescriptionText } from '../utils_nfcore_rnaseq_pipeline'
-
+include { MULTIQC                    } from '../../../modules/nf-core/multiqc'
+include { workflowVersionToYAML      } from '../../nf-core/utils_nfcore_pipeline'
+include { Sample; MultiqcFiles; SampleRuns; TrimReadCount; PercentMappedPass; StrandData } from '../../../modules/nf-core/types'
+include { MultiqcReport } from '../../../modules/nf-core/multiqc/main'
+include { methodsDescriptionText     } from '../utils_nfcore_rnaseq_pipeline'
+include { workflowSummaryMultiqcYaml } from './helpers'
+include { multiqcNameReplacementLines } from './helpers'
+include { multiqcSampleMergeYaml     } from './helpers'
+include { loadMultiqcAsset           } from './helpers'
+include { strandCheckSummaryYaml     } from './helpers'
+include { strandCheckCompositionYaml } from './helpers'
 
 workflow MULTIQC_RNASEQ {
 
     take:
-    ch_multiqc_files           // channel: [ val(meta), path(file) ]       - flat, contributor outputs
-    ch_per_sample_bundle_raw   // channel: [ id, meta, f1, f2, ... ]       - per-sample, grown by `.join(..., remainder: true)` at each subworkflow aggregation site
-    ch_strand_data             // channel: [ val(meta), provided, status, salmon, rseqc ] - per-sample strand classification, used for the Strandedness checks section
-    ch_trim_read_count         // channel: [ val(meta), val(num_reads) ]   - for fail_trimmed section
-    ch_percent_mapped_pass     // channel: [ id, percent_mapped, pass ]    - for fail_mapped section
-    aligner_display_name       // string: display name of the aligner used for the percent_mapped metric, e.g. 'STAR uniquely mapped reads' or 'Bowtie2 overall alignment rate'
-    ch_fastq                   // channel: [ val(meta), [ reads ] ]
-    ch_collated_versions       // channel: path(versions yaml)
-    samplesheet_path           // path: pipeline input samplesheet
-    samplesheet_schema         // path: samplesheet JSON schema
-    mqc_default_config         // path: pipeline-bundled MultiQC config
-    mqc_custom_config          // path (or []): optional user MultiQC config
-    mqc_logo                   // path (or []): optional custom logo
-    methods_description_yml    // path: methods-description YAML template
-    strand_summary_asset       // path: strand_check_summary YAML custom-content template
-    strand_composition_asset   // path: strand_check_composition YAML custom-content template
-    sample_status_header       // path: MultiQC custom content header for fail_* tables
-    min_trimmed_reads          // integer: threshold for fail_trimmed classification
-    skip_quantification_merge  // boolean
+    ch_sample_ids: Channel<String>                // one id per input sample; every sample gets a report under skip_quantification_merge
+    ch_mqc_files: Channel<MultiqcFiles>           // per-sample files from each stage, for both report modes
+    ch_mqc_sample_only: Channel<MultiqcFiles>     // per-sample files for the per-sample reports only
+    ch_mqc_report_only: Channel<Path>             // files for the merged report only
+    ch_strand_data: Channel<StrandData>           // per-sample strand classification, used for the Strandedness checks section
+    ch_trim_read_count: Channel<TrimReadCount>  // for fail_trimmed section
+    ch_percent_mapped_pass: Channel<PercentMappedPass> // for fail_mapped section
+    aligner_display_name: String                  // display name of the aligner used for the percent_mapped metric, e.g. 'STAR uniquely mapped reads' or 'Bowtie2 overall alignment rate'
+    ch_fastq: Channel<SampleRuns>                 // one entry per sample, one run per sequencing run
+    ch_collated_versions: Channel<Path>           // versions yaml
+    samplesheet_rows: List                        // validated samplesheet rows, one per sequencing run
+    mqc_default_config: Path                      // pipeline-bundled MultiQC config
+    mqc_custom_config: Path?                      // optional user MultiQC config
+    mqc_logo: Path?                               // optional custom logo
+    methods_description_yml: Path                 // methods-description YAML template
+    strand_summary_asset: Path                    // strand_check_summary YAML custom-content template
+    strand_composition_asset: Path                // strand_check_composition YAML custom-content template
+    sample_status_header: Path                    // MultiQC custom content header for fail_* tables
+    min_trimmed_reads: Integer                    // threshold for fail_trimmed classification
+    skip_quantification_merge: Boolean
 
     main:
 
     //
-    // fail_* custom-content TSVs. Each sample either contributes a
-    // single fail row or an empty placeholder so the downstream
-    // per-sample `.join(..., remainder: true)` can close
-    // progressively. The anchor is derived from the bundle itself so
-    // every bundle sample has a match on every fail_* stream.
+    // fail_* custom-content TSVs. Each failing sample contributes one
+    // file; the merged tables concatenate them in sample order and are
+    // only produced when at least one sample fails.
     //
     // `status_header_lines` tracks the header row count so editing
     // `sample_status_header.txt` doesn't silently mis-skip the merged
     // aggregate's concatenation.
     //
-    def status_header_lines = sample_status_header.readLines().size() + 1  // parent header + one column row
-    ch_sample_anchor_by_id  = ch_per_sample_bundle_raw.map { row -> [row[0], row[1]] }
+    status_header_lines = sample_status_header.readLines().size() + 1  // parent header + one column row
+    status_header_text  = sample_status_header.text
 
-    ch_fail_trimmed_fail_by_id = ch_trim_read_count
-        .filter { _meta, n -> n <= min_trimmed_reads.toFloat() }
-        .collectFile { meta, n ->
-            [
-                "${meta.id}_fail_trimmed_samples_mqc.tsv",
-                "Sample\tReads after trimming\n${meta.id}\t${n}\n",
-            ]
+    ch_fail_trimmed_rows = ch_trim_read_count
+        .filter { r -> r.num_reads <= min_trimmed_reads }
+        .map { r ->
+            record(
+                id:      r.id,
+                name:    "${r.id}_fail_trimmed_samples_mqc.tsv",
+                content: "Sample\tReads after trimming\n${r.id}\t${r.num_reads}\n"
+            )
         }
-        .map { f -> [f.baseName.replace('_fail_trimmed_samples_mqc', ''), f] }
 
-    ch_fail_trimmed_all = ch_sample_anchor_by_id
-        .join(ch_fail_trimmed_fail_by_id, remainder: true)
-        .map { _id, meta, f -> [meta, f ?: []] }
+    ch_fail_trimmed_by_id = ch_fail_trimmed_rows
+        .collectFile { r -> [r.name, r.content] }
+        .map { p -> p as Path }
+        .map { f -> record(id: f.name.replace('_fail_trimmed_samples_mqc.tsv', ''), fail_trimmed: f) }
 
-    ch_fail_trimmed_merged = ch_fail_trimmed_all
-        .map { _meta, f -> f }
-        .flatten()
-        .collectFile(name: 'fail_trimmed_samples_mqc.tsv', keepHeader: true)
-        .map { f -> [[:], f] }
+    ch_fail_trimmed_merged = ch_fail_trimmed_rows
+        .map { r -> r.content }
+        .collectFile(name: 'fail_trimmed_samples_mqc.tsv', keepHeader: true, sort: true)
+        .map { p -> p as Path }
 
-    ch_fail_mapped_fail_by_id = ch_percent_mapped_pass
-        .filter { _id, _pm, pass -> pass != null && !pass }
-        .collectFile { id, percent_mapped, _pass ->
-            [
-                "${id}_fail_mapped_samples_mqc.tsv",
-                sample_status_header.text + "Sample\t${aligner_display_name} (%)\n${id}\t${percent_mapped}\n",
-            ]
+    ch_fail_mapped_rows = ch_percent_mapped_pass
+        .filter { r -> r.pass != null && !r.pass }
+        .map { r ->
+            record(
+                id:      r.id,
+                name:    "${r.id}_fail_mapped_samples_mqc.tsv",
+                content: status_header_text + "Sample\t${aligner_display_name} (%)\n${r.id}\t${r.percent_mapped}\n"
+            )
         }
-        .map { f -> [f.baseName.replace('_fail_mapped_samples_mqc', ''), f] }
 
-    ch_fail_mapped_all = ch_sample_anchor_by_id
-        .join(ch_fail_mapped_fail_by_id, remainder: true)
-        .map { _id, meta, f -> [meta, f ?: []] }
+    ch_fail_mapped_by_id = ch_fail_mapped_rows
+        .collectFile { r -> [r.name, r.content] }
+        .map { p -> p as Path }
+        .map { f -> record(id: f.name.replace('_fail_mapped_samples_mqc.tsv', ''), fail_mapped: f) }
 
-    ch_fail_mapped_merged = ch_fail_mapped_all
-        .map { _meta, f -> f }
-        .flatten()
-        .collectFile(name: 'fail_mapped_samples_mqc.tsv', keepHeader: true, skip: status_header_lines)
-        .map { f -> [[:], f] }
+    ch_fail_mapped_merged = ch_fail_mapped_rows
+        .map { r -> r.content }
+        .collectFile(name: 'fail_mapped_samples_mqc.tsv', keepHeader: true, skip: status_header_lines, sort: true)
+        .map { p -> p as Path }
 
     //
     // Strandedness checks custom-content section. Two MultiQC
     // subsections (summary table + stacked composition bargraph) are
-    // rendered from the same per-sample tuple, with header / pconfig
+    // rendered from the same per-sample record, with header / pconfig
     // / colour config in the bundled YAML templates. The composition
     // section inherits `parent_*` from the summary section so the
     // description lives in one place.
     //
-    def strand_summary_static     = loadMultiqcAsset(strand_summary_asset)
-    def strand_composition_static = loadMultiqcAsset(strand_composition_asset) + strand_summary_static.subMap(['parent_id', 'parent_name', 'parent_description'])
+    strand_summary_static     = loadMultiqcAsset(strand_summary_asset)
+    strand_composition_static = loadMultiqcAsset(strand_composition_asset) + strand_summary_static.subMap(['parent_id', 'parent_name', 'parent_description'])
 
     // Per-run table_sample_merge config: only PE samples from the
     // samplesheet get their _1 / _2 rows grouped in the General Stats
     // table.
-    ch_mqc_dynamic_config = channel.of(multiqcSampleMergeYaml(samplesheet_path, samplesheet_schema))
+    ch_mqc_dynamic_config = channel.of(multiqcSampleMergeYaml(samplesheet_rows))
         .collectFile(name: 'multiqc_sample_merge.yml')
+        .collect()
+        .map { files -> files.toList().first() as Path }
 
     // Workflow summary and methods description rendered as MultiQC sections.
-    ch_workflow_summary = channel
-        .value(paramsSummaryMultiqc(paramsSummaryMap(workflow, parameters_schema: 'nextflow_schema.json')))
+    ch_workflow_summary = channel.of(workflowSummaryMultiqcYaml())
         .collectFile(name: 'workflow_summary_mqc.yaml')
+        .collect()
+        .map { files -> files.toList().first() as Path }
 
-    ch_methods_description = channel
-        .value(methodsDescriptionText(methods_description_yml))
+    ch_methods_description = channel.of(methodsDescriptionText(methods_description_yml))
         .collectFile(name: 'methods_description_mqc.yaml')
+        .collect()
+        .map { files -> files.toList().first() as Path }
 
     //
     // Two execution modes for MULTIQC:
@@ -123,329 +132,128 @@ workflow MULTIQC_RNASEQ {
     //     pipeline-identity manifest so the report doesn't wait on
     //     the global versions topic.
     //
-    // Each branch ends with a tuple matching the MULTIQC input
-    // contract (id, files, configs, logo, replace_names, extra); the
-    // closure below builds it so the branches stay focused on file
-    // assembly.
+    // Each branch ends with a record matching the MULTIQC input
+    // contract (id, meta, files, configs, logo, replace_names, sample_names).
     //
-    def buildMultiqcInputTuple = { id, files, dynamic_config, replace_names = [] ->
-        [
-            [id: id],
-            files,
-            [mqc_default_config, dynamic_config, mqc_custom_config].findAll { cfg -> cfg },
-            mqc_logo,
-            replace_names,
-            [],
-        ]
-    }
-
     if (skip_quantification_merge) {
         ch_strand_summary_by_id = ch_strand_data
-            .collectFile { row ->
-                [
-                    "${row[0].id}_strand_check_summary_mqc.json",
-                    strandCheckSummaryYaml(strand_summary_static, [row]),
-                ]
-            }
-            .map { f -> [f.baseName.replace('_strand_check_summary_mqc', ''), f] }
+            .collectFile { r -> ["${r.id}_strand_check_summary_mqc.json", strandCheckSummaryYaml(strand_summary_static, [r]) as String] }
+            .map { p -> p as Path }
+            .map { f -> record(id: f.name.replace('_strand_check_summary_mqc.json', ''), strand_summary: f) }
 
         ch_strand_composition_by_id = ch_strand_data
-            .collectFile { row ->
-                [
-                    "${row[0].id}_strand_check_composition_mqc.json",
-                    strandCheckCompositionYaml(strand_composition_static, [row]),
-                ]
-            }
-            .map { f -> [f.baseName.replace('_strand_check_composition_mqc', ''), f] }
+            .collectFile { r -> ["${r.id}_strand_check_composition_mqc.json", strandCheckCompositionYaml(strand_composition_static, [r]) as String] }
+            .map { p -> p as Path }
+            .map { f -> record(id: f.name.replace('_strand_check_composition_mqc.json', ''), strand_composition: f) }
 
-        // Collapse the raw bundle with every per-sample contributor,
-        // one `.join(remainder: true)` per stream. Each sample becomes
-        // `[meta, [files]]`; missing streams show up as null entries
-        // that are filtered out before MULTIQC sees them.
-        ch_per_sample_bundle = ch_per_sample_bundle_raw
-            .join(ch_fail_trimmed_all.map { meta, f -> [meta.id, f] }, remainder: true)
-            .join(ch_fail_mapped_all.map  { meta, f -> [meta.id, f] }, remainder: true)
-            .join(ch_strand_summary_by_id,     remainder: true)
-            .join(ch_strand_composition_by_id, remainder: true)
-            .map { row ->
-                [
-                    row[1],
-                    row.drop(2)
-                        .findAll { entry -> entry != null }
-                        .collectMany { entry -> (entry instanceof List) ? entry : [entry] },
-                ]
+        // One empty contribution per sample keeps samples that no stage contributed files for.
+        def ch_no_files: Channel<MultiqcFiles> = ch_sample_ids.map { id -> record(id: id, files: []) }
+        ch_per_sample_bundle = ch_no_files
+            .mix(ch_mqc_files)
+            .mix(ch_mqc_sample_only)
+            .mix(ch_fail_trimmed_by_id.map { r -> record(id: r.id, files: [r.fail_trimmed]) })
+            .mix(ch_fail_mapped_by_id.map { r -> record(id: r.id, files: [r.fail_mapped]) })
+            .mix(ch_strand_summary_by_id.map { r -> record(id: r.id, files: [r.strand_summary]) })
+            .mix(ch_strand_composition_by_id.map { r -> record(id: r.id, files: [r.strand_composition]) })
+            .collect()
+            .flatMap { rs ->
+                rs.collect { r -> r.id }.toSet().toSorted().collect { id ->
+                    def files = rs.findAll { r -> r.id == id }.collectMany { r -> r.files }
+                    record(id: id, files: files.toSorted { f -> f.name })
+                }
             }
 
-        ch_manifest_versions = channel.value(workflowVersionToYAML())
+        ch_manifest_versions = channel.of(workflowVersionToYAML())
             .collectFile(name: 'nf_core_rnaseq_software_mqc_versions.yml')
+            .collect()
+            .map { files -> files.toList().first() as Path }
 
         ch_static_globals = ch_workflow_summary
-            .mix(ch_methods_description)
-            .mix(ch_manifest_versions)
-            .collect()
+            .combine(ch_methods_description)
+            .combine(ch_manifest_versions)
+            .map { workflow_summary, methods_description, manifest_versions -> [workflow_summary, methods_description, manifest_versions] }
 
         ch_global_files = ch_fail_trimmed_merged
             .mix(ch_fail_mapped_merged)
-            .map { _meta, f -> f }
             .collect()
-            .ifEmpty([])
+            .map { files -> files.toSorted { f -> f.name } }
 
         ch_multiqc_input = ch_per_sample_bundle
-            .combine(ch_static_globals.toList())
-            .combine(ch_global_files.toList())
-            .combine(ch_mqc_dynamic_config)
-            .map { meta, sample_files, static_globals, run_globals, dyn ->
+            .combine(static_globals: ch_static_globals, run_globals: ch_global_files, dyn: ch_mqc_dynamic_config)
+            .map { r ->
                 // No replace_names: each per-sample report contains one sample.
-                buildMultiqcInputTuple.call(
-                    meta.id,
-                    sample_files + (static_globals ?: []) + (run_globals ?: []),
-                    dyn,
+                record(
+                    id:             r.id,
+                    meta:           [id: r.id],
+                    multiqc_files:  r.files + r.static_globals + r.run_globals,
+                    multiqc_config: [mqc_default_config, r.dyn, mqc_custom_config].findAll { cfg -> cfg != null }.toList(),
+                    multiqc_logo:   mqc_logo,
+                    replace_names:  null,
+                    sample_names:   null
                 )
             }
     } else {
-        // `.collect(flat: false)` is silent on an empty channel, so
-        // zero strand rows -> no *_mqc.json emission -> MultiQC drops
+        // Zero strand rows -> no *_mqc.json emission -> MultiQC drops
         // the section cleanly.
-        ch_strand_rows = ch_strand_data.collect(flat: false)
+        ch_strand_rows = ch_strand_data.collect()
 
         ch_strand_summary_merged = ch_strand_rows
-            .map { rows -> strandCheckSummaryYaml(strand_summary_static, rows) }
+            .flatMap { rows -> rows.isEmpty() ? [] : [strandCheckSummaryYaml(strand_summary_static, rows)] }
             .collectFile(name: 'strand_check_summary_mqc.json')
-            .map { f -> [[:], f] }
+            .map { p -> p as Path }
 
         ch_strand_composition_merged = ch_strand_rows
-            .map { rows -> strandCheckCompositionYaml(strand_composition_static, rows) }
+            .flatMap { rows -> rows.isEmpty() ? [] : [strandCheckCompositionYaml(strand_composition_static, rows)] }
             .collectFile(name: 'strand_check_composition_mqc.json')
-            .map { f -> [[:], f] }
+            .map { p -> p as Path }
 
         // --replace-names TSV so MultiQC uses sample IDs rather than FASTQ basenames.
-        ch_name_replacements = multiqcNameReplacements(ch_fastq)
+        ch_name_replacements = ch_fastq
+            .collect()
+            .flatMap { rows -> multiqcNameReplacementLines(rows) }
+            .collectFile(name: 'name_replacement.txt', newLine: true)
+            .map { p -> p as Path }
+            .collect()
+            .map { files -> files.isEmpty() ? null : files.toList().first() }
 
         // `multiqc_report` is a sentinel meta.id used by
         // conf/modules/multiqc.config to pick the merged output path.
-        ch_multiqc_files_merged = ch_multiqc_files
+        ch_multiqc_files_merged = ch_mqc_files
+            .flatMap { r -> r.files }
+            .mix(ch_mqc_report_only)
             .mix(ch_fail_trimmed_merged)
             .mix(ch_fail_mapped_merged)
             .mix(ch_strand_summary_merged)
             .mix(ch_strand_composition_merged)
-            .mix(ch_workflow_summary.mix(ch_collated_versions).mix(ch_methods_description).map { f -> [[:], f] })
+            .mix(ch_workflow_summary)
+            .mix(ch_collated_versions)
+            .mix(ch_methods_description)
 
         ch_multiqc_input = ch_multiqc_files_merged
-            .map { _meta, f -> f }
             .collect()
-            .map { files -> [files] }
-            .combine(ch_name_replacements.ifEmpty([]).toList())
-            .combine(ch_mqc_dynamic_config)
-            .map { files, replace_names, dyn ->
-                buildMultiqcInputTuple.call('multiqc_report', files, dyn, replace_names ?: [])
+            .map { files -> record(files: files.toSorted { f -> f.name }) }
+            .combine(replace_names: ch_name_replacements, dyn: ch_mqc_dynamic_config)
+            .flatMap { r ->
+                [
+                    record(
+                        id:             'multiqc_report',
+                        meta:           [id: 'multiqc_report'],
+                        multiqc_files:  r.files,
+                        multiqc_config: [mqc_default_config, r.dyn, mqc_custom_config].findAll { cfg -> cfg != null }.toList(),
+                        multiqc_logo:   mqc_logo,
+                        replace_names:  r.replace_names,
+                        sample_names:   null
+                    )
+                ]
             }
     }
 
-    MULTIQC(ch_multiqc_input)
+    //
+    // One record per MULTIQC task: a single 'multiqc_report' row when
+    // merged, or one per sample under skip_quantification_merge.
+    //
+    ch_results = MULTIQC(ch_multiqc_input)
 
     emit:
-    report = MULTIQC.out.report.map { _meta, report -> report }
-}
-
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    HELPER FUNCTIONS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-//
-// MultiQC `--replace-names` file: map each FASTQ simpleName to
-// '<id>_1' / '<id>_2' (or '<id>' for SE), skipping cases where the
-// simpleName already equals the sample ID (see #1341 / #1659).
-//
-def multiqcNameReplacements(ch_fastq) {
-    return ch_fastq
-        .map { meta, reads ->
-            def paired   = reads[0][1] as boolean
-            def suffixes = paired ? ['_1', '_2'] : ['']
-            def mappings = []
-
-            def fastq1_simplename = file(reads[0][0]).simpleName
-            if (fastq1_simplename != meta.id) {
-                mappings << [fastq1_simplename, "${meta.id}${suffixes[0]}"]
-                if (paired) {
-                    mappings << [file(reads[0][1]).simpleName, "${meta.id}${suffixes[1]}"]
-                }
-            }
-
-            return mappings.collect { mapping -> mapping.join('\t') }
-        }
-        .flatten()
-        .collectFile(name: 'name_replacement.txt', newLine: true)
-        .ifEmpty([])
-}
-
-// Escape Python-regex metacharacters and YAML single-quote a sample ID
-// for use in a multiqcSampleMergeYaml lookbehind pattern.
-def multiqcSampleMergeYamlPattern(id, read) {
-    def esc = id.replaceAll(/[\\^$.|?*+()\[\]{}\/]/) { m -> "\\${m[0]}" }
-                .replace("'", "''")
-    return "    - type: regex\n      pattern: '(?<=^${esc})_${read}\$'"
-}
-
-//
-// MultiQC table_sample_merge YAML scoped to PE sample IDs via a
-// fixed-length lookbehind, so sample IDs ending in `_1` / `_2` aren't
-// wrongly collapsed.
-//
-def multiqcSampleMergeYaml(samplesheet_path, schema_path) {
-    // Row order comes from assets/schema_input.json: [0]=meta,
-    // [1]=fastq_1, [2]=fastq_2 (truthy => paired-end).
-    def pe_sample_ids = samplesheetToList(samplesheet_path, schema_path)
-        .findAll { row -> row[2] as boolean }
-        .collect { row -> row[0].id as String }
-        .unique()
-        .sort()
-    if (!pe_sample_ids) return 'table_sample_merge: {}\n'
-
-    def r1 = pe_sample_ids.collect { id -> multiqcSampleMergeYamlPattern(id, 1) }.join('\n')
-    def r2 = pe_sample_ids.collect { id -> multiqcSampleMergeYamlPattern(id, 2) }.join('\n')
-    return "table_sample_merge:\n  \"Read 1\":\n${r1}\n  \"Read 2\":\n${r2}\n"
-}
-
-//
-// Load a MultiQC custom-content config template from a YAML file. The
-// asset is parsed as YAML so SnakeYAML stays contained in this single
-// helper and callers just get a plain Map. Top-level keys starting
-// with '_' are dropped after YAML anchor resolution (they exist only
-// to host named anchors reused via merge keys elsewhere in the file),
-// so they are never emitted to MultiQC.
-//
-def loadMultiqcAsset(asset_path) {
-    def parsed = new org.yaml.snakeyaml.Yaml().load(file(asset_path).text)
-    parsed.findAll { k, _v -> !k.toString().startsWith('_') }
-}
-
-//
-// Certainty of a strand call, expressed as the same quantity
-// `calculateStrandedness` compares against `stranded_threshold`: the
-// inferred direction's share of the stranded fragment pool, 0-100.
-// So a 'forward' call that cleared `stranded_threshold = 0.8` will
-// show a value >= 80 here regardless of the unstranded fraction.
-// Null when the input is null, when the sample has zero stranded
-// fragments, or for 'unstranded' and 'undetermined' classifications
-// (different thresholds apply to those calls).
-//
-def inferenceCertainty(analysis) {
-    if (!analysis) return null
-    def fwd = analysis.forwardFragments
-    def rev = analysis.reverseFragments
-    def stranded = fwd + rev
-    if (stranded == 0) return null
-
-    def s = analysis.inferred_strandedness
-    if (s == 'forward') return (fwd / stranded) * 100
-    if (s == 'reverse') return (rev / stranded) * 100
-    null
-}
-
-// Round a Double to one decimal place, preserving null.
-def roundOneDecimal(v) {
-    v == null ? null : Math.round(v * 10) / 10.0d
-}
-
-//
-// Build a per-sample cell map for the strandedness summary table. One
-// entry per column id; nulls mean "method didn't produce this cell"
-// and are dropped before emission so MultiQC renders blanks (not
-// "None") in data exports.
-//
-def strandSummaryCells(_meta, provided, status, salmon, rseqc) {
-    [
-        provided:        provided,
-        salmon_inferred: salmon?.inferred_strandedness ?: '-',
-        salmon_pct:      roundOneDecimal(inferenceCertainty(salmon)),
-        salmon_s:        roundOneDecimal(salmon?.forwardFragments),
-        salmon_a:        roundOneDecimal(salmon?.reverseFragments),
-        salmon_u:        roundOneDecimal(salmon?.unstrandedFragments),
-        rseqc_inferred:  rseqc?.inferred_strandedness ?: '-',
-        rseqc_pct:       roundOneDecimal(inferenceCertainty(rseqc)),
-        rseqc_s:         roundOneDecimal(rseqc?.forwardFragments),
-        rseqc_a:         roundOneDecimal(rseqc?.reverseFragments),
-        rseqc_u:         roundOneDecimal(rseqc?.unstrandedFragments),
-        status:          status,
-    ]
-}
-
-//
-// Build the MultiQC custom-content JSON for the strandedness summary
-// table by merging a static config template (parsed from
-// assets/strand_check_summary.yaml) with per-sample rows
-// emitted by classifyStrand. Column order is taken from the YAML
-// header keyset so reordering columns in the asset reorders them in
-// the rendered table. Throws if a row emits a cell that is not
-// declared in the asset's headers block, so the data/config contract
-// stays explicit.
-//
-def strandCheckSummaryYaml(static_config, rows) {
-    def header_keys = static_config.headers.keySet()
-    // Sort by sample id so the merged output is deterministic regardless of
-    // which sample finished RSeQC/Salmon first, and so the rendered MultiQC
-    // table has a consistent default row order.
-    def data = rows.toSorted { row -> row[0].id }.collectEntries { row ->
-        def (meta, provided, status, salmon, rseqc) = row
-        def raw = strandSummaryCells(meta, provided, status, salmon, rseqc)
-        def unknown = raw.keySet() - header_keys
-        if (unknown) error("strand_check_summary.yaml headers do not declare columns: ${unknown}")
-
-        def cells = [:]  // follow header order, drop null cells
-        header_keys.each { k -> if (raw[k] != null) cells[k] = raw[k] }
-        [ (meta.id): cells ]
-    }
-    groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(static_config + [data: data]))
-}
-
-// Per-sample {Sense/Antisense/Unstranded} percentages for the strand
-// composition bargraph. Returns null so unavailable datasets are
-// dropped before rendering.
-def strandCompositionMap(analysis) {
-    if (!analysis) return null
-    [
-        Sense:      roundOneDecimal(analysis.forwardFragments),
-        Antisense:  roundOneDecimal(analysis.reverseFragments),
-        Unstranded: roundOneDecimal(analysis.unstrandedFragments),
-    ]
-}
-
-//
-// Build the MultiQC custom-content JSON for the strandedness read-
-// composition bargraph. When both inference methods produced data,
-// two datasets are emitted (RSeQC first so reports default to the
-// alignment-based view) and MultiQC's `data_labels` switcher lets
-// users flip between them. Single-dataset otherwise. Dataset labels
-// inherit `ylab` from the static config's pconfig so the string lives
-// in YAML only.
-//
-def strandCheckCompositionYaml(static_config, rows) {
-    def rseqc_data  = [:]
-    def salmon_data = [:]
-    // Sort by sample id so the merged output is deterministic regardless of
-    // which sample finished RSeQC/Salmon first, and so the rendered MultiQC
-    // bargraph has a consistent default sample order.
-    rows.toSorted { row -> row[0].id }.each { row ->
-        def (meta, _p, _s, salmon, rseqc) = row
-        if (rseqc)  rseqc_data[meta.id]  = strandCompositionMap(rseqc)
-        if (salmon) salmon_data[meta.id] = strandCompositionMap(salmon)
-    }
-    def datasets = []
-    def labels   = []
-    if (rseqc_data)  { datasets << rseqc_data;  labels << 'RSeQC'  }
-    if (salmon_data) { datasets << salmon_data; labels << 'Salmon' }
-
-    // Deep-ish copy: both the top-level map and pconfig get mutated,
-    // so clone both to keep the cached static_config untouched.
-    def config  = new LinkedHashMap(static_config)
-    def pconfig = new LinkedHashMap(config.pconfig)
-    if (datasets.size() > 1) {
-        pconfig.data_labels = labels.collect { label -> [name: label, ylab: pconfig.ylab] }
-    }
-    config.pconfig = pconfig
-    config.data    = datasets.size() == 1 ? datasets[0] : datasets
-    groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(config))
+    ch_results // channel: MultiqcReport
 }

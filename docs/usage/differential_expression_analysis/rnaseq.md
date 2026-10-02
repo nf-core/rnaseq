@@ -116,7 +116,7 @@ Now we are ready to launch the pipeline, and we can use the following command li
 ```bash
 nextflow run nf-core/rnaseq -r 3.12.0 \
 --input /workspace/gitpod/training/data/reads/rnaseq_samplesheet.csv \
---outdir ./results_star_salmon \
+-output-dir ./results_star_salmon \
 --genome GRCh38chr21 \
 --aligner star_salmon \
 --pseudo_aligner salmon \

@@ -1,5 +1,21 @@
+nextflow.enable.types = true
+
+include { ReadsInput; Bowtie2Logs } from '../../types'
+
+record Bowtie2AlignResult {
+    id:       String
+    meta:     Map
+    sam:      Path?
+    raw_bams: List<Path>
+    cram:     Path?
+    csi:      Path?
+    crai:     Path?
+    unmapped: List<Path>
+    bowtie2:  Bowtie2Logs
+}
+
 process BOWTIE2_ALIGN {
-    tag "$meta.id"
+    tag "${sample.meta.id}"
     label 'process_high'
 
     conda "${moduleDir}/environment.yml"
@@ -8,47 +24,50 @@ process BOWTIE2_ALIGN {
         'community.wave.seqera.io/library/bowtie2_htslib_samtools_pigz:edeb13799090a2a6' }"
 
     input:
-    tuple val(meta) , path(reads)
-    tuple val(meta2), path(index)
-    tuple val(meta3), path(fasta)
-    val   save_unaligned
-    val   sort_bam
+    sample: ReadsInput
+    index: Path
+    fasta: Path?
+    save_unaligned: Boolean
+    sort_bam: Boolean
 
     output:
-    tuple val(meta), path("*.sam")      , emit: sam     , optional:true
-    tuple val(meta), path("*.bam")      , emit: bam     , optional:true
-    tuple val(meta), path("*.cram")     , emit: cram    , optional:true
-    tuple val(meta), path("*.csi")      , emit: csi     , optional:true
-    tuple val(meta), path("*.crai")     , emit: crai    , optional:true
-    tuple val(meta), path("*.log")      , emit: log
-    tuple val(meta), path("*fastq.gz")  , emit: fastq   , optional:true
-    tuple val("${task.process}"), val('bowtie2'), eval("bowtie2 --version 2>&1 | sed -n 's/.*bowtie2-align-s version //p'"), emit: versions_bowtie2, topic: versions
-    tuple val("${task.process}"), val('samtools'), eval("samtools version | sed '1!d;s/.* //'"), emit: versions_samtools, topic: versions
-    tuple val("${task.process}"), val('pigz'), eval("pigz --version 2>&1 | sed 's/pigz //'"), emit: versions_pigz, topic: versions
+    record(
+        id:       sample.id,
+        meta:     sample.meta,
+        sam:      file('*.sam',  optional: true),
+        raw_bams: files('*.bam', optional: true).toSorted { f -> f.name },
+        cram:     file('*.cram', optional: true),
+        csi:      file('*.csi',  optional: true),
+        crai:     file('*.crai', optional: true),
+        unmapped: files('*fastq.gz', optional: true).toSorted { f -> f.name },
+        bowtie2:  record(log: file('*.log'))
+    ) as Bowtie2AlignResult
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'bowtie2', eval("bowtie2 --version 2>&1 | sed -n 's/.*bowtie2-align-s version //p'")) >> 'versions'
+    tuple(task.process, 'samtools', eval("samtools version | sed '1!d;s/.* //'")) >> 'versions'
+    tuple(task.process, 'pigz', eval("pigz --version 2>&1 | sed 's/pigz //'")) >> 'versions'
 
     script:
     def args = task.ext.args ?: ""
     def args2 = task.ext.args2 ?: ""
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     def rg = args.contains("--rg-id") ? "" : "--rg-id ${prefix} --rg SM:${prefix}"
 
     def unaligned = ""
     def reads_args = ""
-    if (meta.single_end) {
+    if (sample.meta.single_end) {
         unaligned = save_unaligned ? "--un-gz ${prefix}.unmapped.fastq.gz" : ""
-        reads_args = "-U ${reads}"
+        reads_args = "-U ${sample.reads.join(' ')}"
     } else {
         unaligned = save_unaligned ? "--un-conc-gz ${prefix}.unmapped.fastq.gz" : ""
-        reads_args = "-1 ${reads[0]} -2 ${reads[1]}"
+        reads_args = "-1 ${sample.reads[0]} -2 ${sample.reads[1]}"
     }
 
     def samtools_command = sort_bam ? 'sort' : 'view'
     def extension_pattern = /(--output-fmt|-O)+\s+(\S+)/
     def extension_matcher =  (args2 =~ extension_pattern)
-    def extension = extension_matcher.getCount() > 0 ? extension_matcher[0][2].toLowerCase() : "bam"
+    def extension = extension_matcher.getCount() > 0 ? (extension_matcher[0][2] as String).toLowerCase() : "bam"
     def reference = fasta && extension=="cram"  ? "--reference ${fasta}" : ""
     if (!fasta && extension=="cram") error "Fasta reference is required for CRAM output"
 
@@ -78,11 +97,11 @@ process BOWTIE2_ALIGN {
 
     stub:
     def args2 = task.ext.args2 ?: ""
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     def extension_pattern = /(--output-fmt|-O)+\s+(\S+)/
-    def extension = (args2 ==~ extension_pattern) ? (args2 =~ extension_pattern)[0][2].toLowerCase() : "bam"
+    def extension = (args2 ==~ extension_pattern) ? ((args2 =~ extension_pattern)[0][2] as String).toLowerCase() : "bam"
     def create_unmapped = ""
-    if (meta.single_end) {
+    if (sample.meta.single_end) {
         create_unmapped = save_unaligned ? "echo | gzip > ${prefix}.unmapped.fastq.gz" : ""
     } else {
         create_unmapped = save_unaligned ? "echo | gzip > ${prefix}.unmapped_1.fastq.gz && echo | gzip > ${prefix}.unmapped_2.fastq.gz" : ""

@@ -1,3 +1,24 @@
+nextflow.enable.types = true
+
+record Deseq2QcInput {
+    id:                        String
+    meta:                      Map
+    counts_gene_length_scaled: Path
+}
+
+record Deseq2Qc {
+    id:            String
+    meta:          Map
+    rdata:         Path?
+    pca_vals:      Path?
+    plots_pdf:     Path?
+    sample_dists:  Path?
+    size_factors:  Path?
+    log:           Path?
+    pca_multiqc:   Path?
+    dists_multiqc: Path?
+}
+
 process DESEQ2_QC {
     label "process_medium"
 
@@ -9,53 +30,29 @@ process DESEQ2_QC {
         'community.wave.seqera.io/library/r-base_r-optparse_r-ggplot2_r-rcolorbrewer_pruned:9e75394d0bc21987' }"
 
     input:
-    path counts
-    path pca_header_multiqc
-    path clustering_header_multiqc
+    sample: Deseq2QcInput
+    pca_header_multiqc: Path
+    clustering_header_multiqc: Path
 
     output:
-    path "*.pdf"                , optional:true, emit: pdf
-    path "*.RData"              , optional:true, emit: rdata
-    path "*pca.vals.txt"        , optional:true, emit: pca_txt
-    path "*pca.vals_mqc.tsv"    , optional:true, emit: pca_multiqc
-    path "*sample.dists.txt"    , optional:true, emit: dists_txt
-    path "*sample.dists_mqc.tsv", optional:true, emit: dists_multiqc
-    path "*.log"                , optional:true, emit: log
-    path "size_factors"         , optional:true, emit: size_factors
-    tuple val("${task.process}"), val('r-base'), eval("Rscript -e 'cat(as.character(getRversion()))'"), emit: versions_r_base, topic: versions
-    tuple val("${task.process}"), val('bioconductor-deseq2'), eval("Rscript -e \"library(DESeq2); cat(as.character(packageVersion('DESeq2')))\""), emit: versions_deseq2, topic: versions
+    record(
+        id:            sample.id,
+        meta:          sample.meta,
+        rdata:         file('*.RData',               optional: true),
+        pca_vals:      file('*pca.vals.txt',         optional: true),
+        plots_pdf:     file('*.pdf',                 optional: true),
+        sample_dists:  file('*sample.dists.txt',     optional: true),
+        size_factors:  file('size_factors',          optional: true),
+        log:           file('*.log',                 optional: true),
+        pca_multiqc:   file('*pca.vals_mqc.tsv',     optional: true),
+        dists_multiqc: file('*sample.dists_mqc.tsv', optional: true)
+    ) as Deseq2Qc
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    file('versions.yml') >> 'versions'
 
     script:
-    def args  = task.ext.args  ?: ''
-    def args2 = task.ext.args2 ?: ''
-    def label_lower = args2.toLowerCase()
-    def label_upper = args2.toUpperCase()
-    prefix = task.ext.prefix ?: "deseq2"
-    """
-    deseq2_qc.r \\
-        --count_file $counts \\
-        --outdir ./ \\
-        --cores $task.cpus \\
-        --outprefix $prefix \\
-        $args
-
-    if [ -f "R_sessionInfo.log" ]; then
-        # Handle PCA files
-        sed "s/deseq2_pca/${label_lower}_deseq2_pca/g" <$pca_header_multiqc > pca_header.tmp
-        sed -i -e "s/DESeq2 PCA/${label_upper} DESeq2 PCA/g" pca_header.tmp
-        cat pca_header.tmp *.pca.vals.txt > ${label_lower}.pca.vals_mqc.tsv
-        rm pca_header.tmp
-
-        # Handle clustering files
-        sed "s/deseq2_clustering/${label_lower}_deseq2_clustering/g" <$clustering_header_multiqc > clustering_header.tmp
-        sed -i -e "s/DESeq2 sample/${label_upper} DESeq2 sample/g" clustering_header.tmp
-        cat clustering_header.tmp *.sample.dists.txt > ${label_lower}.sample.dists_mqc.tsv
-        rm clustering_header.tmp
-    fi
-    """
+    template 'deseq2_qc.r'
 
     stub:
     def args2 = task.ext.args2 ?: ''
@@ -70,11 +67,17 @@ process DESEQ2_QC {
     touch ${prefix}.sample.dists.txt
     touch R_sessionInfo.log
 
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        r-base: \$(Rscript -e 'cat(as.character(getRversion()))')
+        bioconductor-deseq2: \$(Rscript -e "library(DESeq2); cat(as.character(packageVersion('DESeq2')))")
+    END_VERSIONS
+
     mkdir size_factors
     touch size_factors/${prefix}.size_factors.RData
-    # One per-sample size_factors file per data column in $counts; the
+    # One per-sample size_factors file per data column in ${sample.counts_gene_length_scaled}; the
     # module test snaps these names so the stub must mirror real-run output.
-    for i in `head $counts -n 1 | cut -f3-`;
+    for i in `head ${sample.counts_gene_length_scaled} -n 1 | cut -f3-`;
     do
         touch size_factors/\${i}.size_factors.RData
     done

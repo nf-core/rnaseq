@@ -49,7 +49,7 @@ input:
       type: boolean
       description: Save unaligned reads to FastQ files
 output:
-  - orig_bam:
+  - raw_bams:
       type: file
       description: |
         Unsorted BAM file containing read alignments straight from HISAT2.

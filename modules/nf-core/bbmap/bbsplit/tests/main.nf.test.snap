@@ -2,38 +2,15 @@
     "sarscov2_se_fastq_fasta_chr22_fasta - split with prebuilt index": {
         "content": [
             [
-                [
-                    {
-                        "id": "test",
-                        "single_end": true
-                    },
-                    "test_primary.fastq.gz:md5,4161df271f9bfcd25d5845a1e220dbec"
-                ]
+                "test_primary.fastq.gz:md5,4161df271f9bfcd25d5845a1e220dbec"
             ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": true
-                    },
-                    "test.stats.txt:md5,2cbf69b72e5f4f8508306b54e8fe2861"
-                ]
-            ],
-            {
-                "versions_bbmap": [
-                    [
-                        "BBMAP_BBSPLIT",
-                        "bbmap",
-                        "39.18"
-                    ]
-                ]
-            }
+            "test.stats.txt:md5,2cbf69b72e5f4f8508306b54e8fe2861"
         ],
+        "timestamp": "2026-09-29T18:04:39.332707648",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-01-19T14:51:21.775776"
+            "nf-test": "0.9.5",
+            "nextflow": "26.09.1"
+        }
     },
     "sarscov2_se_fastq_fasta_chr22_fasta - build index": {
         "content": [
@@ -47,10 +24,10 @@
                 ]
             }
         ],
+        "timestamp": "2026-01-19T14:50:28.922018",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-01-19T14:50:28.922018"
+        }
     }
 }

@@ -13,12 +13,16 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [[:], []]
-                input[1] = []
+                input[0] = record(
+                    id: 'test',
+                    meta: [:],
+                    reads: []
+                )
+                input[1] = null
                 input[2] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true))
                 input[3] = Channel.of([
                     [ 'human' ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr22/sequence/chr22_23800000-23980000.fa', checkIfExists: true)
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr22/sequence/chr22_23800000-23980000.fa', checkIfExists: true) ]
                 ])
                 input[4] = true
                 """
@@ -26,11 +30,11 @@ nextflow_process {
         }
 
         then {
+            def bb = process.out[0][0]
             assertAll(
                 { assert process.success },
-                { assert path("${process.out.index[0]}").exists() },
-                { assert path(process.out.log[0][1]).text.contains("No index available") },
-                { assert snapshot(process.out.findAll { key, val -> key.startsWith("versions") }).match() }
+                { assert path("${bb.index}").exists() },
+                { assert path(bb.log).text.contains("No index available") }
             )
         }
     }
@@ -42,12 +46,16 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [[:], []]
-                input[1] = []
+                input[0] = record(
+                    id: 'test',
+                    meta: [:],
+                    reads: []
+                )
+                input[1] = null
                 input[2] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true))
                 input[3] = Channel.of([
                     [ 'human' ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr22/sequence/chr22_23800000-23980000.fa', checkIfExists: true)
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr22/sequence/chr22_23800000-23980000.fa', checkIfExists: true) ]
                 ])
                 input[4] = true
                 """
@@ -69,12 +77,16 @@ nextflow_process {
                 script "../main.nf"
                 process {
                     """
-                    input[0] = [[:], []]
-                    input[1] = []
+                    input[0] = record(
+                        id: 'test',
+                        meta: [:],
+                        reads: []
+                    )
+                    input[1] = null
                     input[2] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true))
                     input[3] = Channel.of([
                         [ 'human' ], // meta map
-                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr22/sequence/chr22_23800000-23980000.fa', checkIfExists: true)
+                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr22/sequence/chr22_23800000-23980000.fa', checkIfExists: true) ]
                     ])
                     input[4] = true
                     """
@@ -85,12 +97,13 @@ nextflow_process {
         when {
             process {
                     """
-                    input[0] = Channel.of([
-                        [ id:'test', single_end:true ], // meta map
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
-                    ])
-                    input[1] = BBMAP_BBSPLIT_INDEX.out.index
-                    input[2] = []
+                    input[0] = Channel.of(record(
+                        id: 'test',
+                        meta: [ id:'test', single_end:true ],
+                        reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                    ))
+                    input[1] = BBMAP_BBSPLIT_INDEX.out.map { r -> r.index }
+                    input[2] = null
                     input[3] = [[], []]
                     input[4] = false
                     """
@@ -98,13 +111,13 @@ nextflow_process {
         }
 
         then {
+            def bb = process.out[0][0]
             assertAll(
                 { assert process.success },
-                { assert path(process.out.log[0][1]).text.contains("If you wish to regenerate the index") },
+                { assert path(bb.log).text.contains("If you wish to regenerate the index") },
                 { assert snapshot(
-                    process.out.primary_fastq,
-                    process.out.stats,
-                    process.out.findAll { key, val -> key.startsWith("versions") }
+                    bb.reads,
+                    bb.stats
                 ).match()}
             )
         }
@@ -120,12 +133,16 @@ nextflow_process {
                 script "../main.nf"
                 process {
                     """
-                    input[0] = [[:], []]
-                    input[1] = []
+                    input[0] = record(
+                        id: 'test',
+                        meta: [:],
+                        reads: []
+                    )
+                    input[1] = null
                     input[2] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true))
                     input[3] = Channel.of([
                         [ 'human' ], // meta map
-                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr22/sequence/chr22_23800000-23980000.fa', checkIfExists: true)
+                        [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr22/sequence/chr22_23800000-23980000.fa', checkIfExists: true) ]
                     ])
                     input[4] = true
                     """
@@ -136,12 +153,13 @@ nextflow_process {
         when {
             process {
                 """
-                    input[0] = Channel.of([
-                        [ id:'test', single_end:true ], // meta map
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
-                    ])
-                    input[1] = BBMAP_BBSPLIT_INDEX.out.index
-                    input[2] = []
+                    input[0] = Channel.of(record(
+                        id: 'test',
+                        meta: [ id:'test', single_end:true ],
+                        reads: [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                    ))
+                    input[1] = BBMAP_BBSPLIT_INDEX.out.map { r -> r.index }
+                    input[2] = null
                     input[3] = [[], []]
                     input[4] = false
                 """

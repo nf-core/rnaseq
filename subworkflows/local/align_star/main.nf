@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 //
 // Alignment with STAR
 //
@@ -5,6 +7,7 @@ include { SENTIEON_STARALIGN as SENTIEON_STAR_ALIGN } from '../../../modules/nf-
 include { PARABRICKS_RNAFQ2BAM as PARABRICKS_RNA_FQ2BAM } from '../../../modules/nf-core/parabricks/rnafq2bam/main'
 include { STAR_ALIGN                                } from '../../../modules/nf-core/star/align'
 include { BAM_SORT_STATS_SAMTOOLS                   } from '../../nf-core/bam_sort_stats_samtools'
+include { ReadsInput; StarAligned; StarAlignResult; Bam } from '../../../modules/nf-core/types'
 
 
 //
@@ -25,67 +28,48 @@ def getStarPercentMapped(_params, align_log) {
 
 workflow ALIGN_STAR {
     take:
-    reads                // channel: [ val(meta), [ reads ] ]
-    index                // channel: [ val(meta), [ index ] ]
-    gtf                  // channel: [ val(meta), [ gtf ] ]
-    star_ignore_sjdbgtf  // boolean: when using pre-built STAR indices do not re-extract and use splice junctions from the GTF file
-    fasta_fai            // channel: [ val(meta), path(fasta), path(fai) ]
-    use_sentieon_star    // boolean: whether star alignment is accelerated with Sentieon
-    use_parabricks_star  // boolean: whether star alignment (and mark duplicates) is accelerated with Parabricks
-    skip_markduplicates  // boolean: whether to skip marking duplicates
+    ch_samples: Channel<ReadsInput>
+    index: Value<Path>
+    gtf: Value<Path?>
+    star_ignore_sjdbgtf: Boolean // when using pre-built STAR indices do not re-extract and use splice junctions from the GTF file
+    fasta: Value<Path?>
+    fai: Value<Path?>
+    use_sentieon_star: Boolean // whether star alignment is accelerated with Sentieon
+    use_parabricks_star: Boolean // whether star alignment (and mark duplicates) is accelerated with Parabricks
+    skip_markduplicates: Boolean // whether to skip marking duplicates
 
     main:
 
     //
     // Map reads with STAR
     //
-    ch_star_out = null
+    def ch_star_out: Channel<StarAlignResult>
     if (use_sentieon_star) {
-
-        SENTIEON_STAR_ALIGN(reads, index, gtf, star_ignore_sjdbgtf)
-        ch_star_out = SENTIEON_STAR_ALIGN
-        // SENTIEON_STAR_ALIGN uses topic-based version reporting
-
+        ch_star_out = SENTIEON_STAR_ALIGN(ch_samples, index, gtf, star_ignore_sjdbgtf)
     } else if (use_parabricks_star) {
-
-        PARABRICKS_RNA_FQ2BAM(reads, fasta_fai.map { meta, fasta, _fai -> [ meta, fasta ] }, index, true, !skip_markduplicates)
-        ch_star_out = PARABRICKS_RNA_FQ2BAM
-
+        ch_star_out = PARABRICKS_RNA_FQ2BAM(ch_samples, fasta, index, true, !skip_markduplicates)
     } else {
-
-        STAR_ALIGN(reads, index, gtf, star_ignore_sjdbgtf)
-        ch_star_out = STAR_ALIGN
-
+        ch_star_out = STAR_ALIGN(ch_samples, index, gtf, star_ignore_sjdbgtf)
     }
 
-    ch_orig_bam = ch_star_out.out.bam
-    ch_log_final = ch_star_out.out.log_final
-    ch_log_out = ch_star_out.out.log_out
-    ch_log_progress = ch_star_out.out.log_progress
-    ch_bam_sorted = ch_star_out.out.bam_sorted
-    ch_bam_transcript = ch_star_out.out.bam_transcript
-    ch_fastq = ch_star_out.out.fastq
-    ch_tab = ch_star_out.out.tab
-    ch_percent_mapped = ch_log_final.map { meta, log -> [ meta, getStarPercentMapped(params, log) ] }
+    // A run that produced no BAM drops out of the downstream channels.
+    ch_star = ch_star_out.filter { r -> !r.raw_bams.isEmpty() }
 
     //
     // Sort, index BAM file and run samtools stats, flagstat and idxstats
     //
-    BAM_SORT_STATS_SAMTOOLS(ch_orig_bam, fasta_fai)
+    def ch_sorted: Channel<Bam> = BAM_SORT_STATS_SAMTOOLS(ch_star, fasta, fai)
+
+    ch_star_sorted = ch_star.join(ch_sorted, by: 'id', remainder: true)
+    ch_star_sorted.subscribe { r ->
+        if( r.star == null || r.samtools == null ) {
+            error "Sample '${r.id}' is missing its STAR sorted BAM result"
+        }
+    }
+    ch_results = ch_star_sorted
+        .filter { r -> r.star != null && r.samtools != null }
+        .map { r -> r + record(aligner: 'star', percent_mapped: getStarPercentMapped(params, r.star.log_final)) }
 
     emit:
-    orig_bam = ch_orig_bam                          // channel: [ val(meta), bam            ]
-    log_final = ch_log_final                        // channel: [ val(meta), log_final      ]
-    log_out = ch_log_out                            // channel: [ val(meta), log_out        ]
-    log_progress = ch_log_progress                  // channel: [ val(meta), log_progress   ]
-    bam_sorted = ch_bam_sorted                      // channel: [ val(meta), bam_sorted     ]
-    bam_transcript = ch_bam_transcript              // channel: [ val(meta), bam_transcript ]
-    fastq = ch_fastq                                // channel: [ val(meta), fastq          ]
-    tab = ch_tab                                    // channel: [ val(meta), tab            ]
-    bam = BAM_SORT_STATS_SAMTOOLS.out.bam           // channel: [ val(meta), [ bam ] ]
-    index = BAM_SORT_STATS_SAMTOOLS.out.index       // channel: [ val(meta), [ index ] ]
-    stats = BAM_SORT_STATS_SAMTOOLS.out.stats       // channel: [ val(meta), [ stats ] ]
-    flagstat = BAM_SORT_STATS_SAMTOOLS.out.flagstat // channel: [ val(meta), [ flagstat ] ]
-    idxstats = BAM_SORT_STATS_SAMTOOLS.out.idxstats // channel: [ val(meta), [ idxstats ] ]
-    percent_mapped = ch_percent_mapped              // channel: [ val(meta), percent_mapped ]
+    ch_results
 }

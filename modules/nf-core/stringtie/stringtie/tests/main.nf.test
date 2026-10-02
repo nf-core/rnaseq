@@ -13,11 +13,12 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                            [ id:'test', strandedness:'forward' ], // meta map
-                            [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true) ],
-                            []
-                        ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test', strandedness:'forward' ],
+                    bam: file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true),
+                    lrbam: null
+                )
                 input[1] = []
                 input[2] = []
                 """
@@ -25,9 +26,11 @@ nextflow_process {
         }
 
         then {
+            def stringtie = process.out[0][0]
+            def ballgown = stringtie.ballgown?.sort()
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["coverage_gtf", "abundance"])).match() }
+                { assert snapshot(stringtie.id, stringtie.meta, stringtie.transcript_gtf, ballgown, path(stringtie.abundance).fileName.toString(), stringtie.coverage_gtf ? path(stringtie.coverage_gtf).fileName.toString() : null).match() }
             )
         }
     }
@@ -37,11 +40,12 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                    [ id:'test', strandedness:'forward' ], // meta map
-                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true) ],
-                    []
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test', strandedness:'forward' ],
+                    bam: file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true),
+                    lrbam: null
+                )
                 input[1] = []
                 input[2] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
                 """
@@ -49,9 +53,11 @@ nextflow_process {
         }
 
         then {
+            def stringtie = process.out[0][0]
+            def ballgown = stringtie.ballgown?.sort()
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["coverage_gtf", "abundance"])).match() }
+                { assert snapshot(stringtie.id, stringtie.meta, stringtie.transcript_gtf, ballgown, path(stringtie.abundance).fileName.toString(), stringtie.coverage_gtf ? path(stringtie.coverage_gtf).fileName.toString() : null).match() }
             )
         }
     }
@@ -61,11 +67,12 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                            [ id:'test', strandedness:'reverse' ], // meta map
-                            [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true) ],
-                            []
-                        ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test', strandedness:'reverse' ],
+                    bam: file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true),
+                    lrbam: null
+                )
                 input[1] = []
                 input[2] = []
                 """
@@ -73,9 +80,11 @@ nextflow_process {
         }
 
         then {
+            def stringtie = process.out[0][0]
+            def ballgown = stringtie.ballgown?.sort()
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["coverage_gtf", "abundance"])).match() }
+                { assert snapshot(stringtie.id, stringtie.meta, stringtie.transcript_gtf, ballgown, path(stringtie.abundance).fileName.toString(), stringtie.coverage_gtf ? path(stringtie.coverage_gtf).fileName.toString() : null).match() }
             )
         }
     }
@@ -85,11 +94,12 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                            [ id:'test', strandedness:'reverse' ], // meta map
-                            [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true) ],
-                            []
-                        ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test', strandedness:'reverse' ],
+                    bam: file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true),
+                    lrbam: null
+                )
                 input[1] = []
                 input[2] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
                 """
@@ -97,9 +107,11 @@ nextflow_process {
         }
 
         then {
+            def stringtie = process.out[0][0]
+            def ballgown = stringtie.ballgown?.sort()
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["coverage_gtf", "abundance"])).match() }
+                { assert snapshot(stringtie.id, stringtie.meta, stringtie.transcript_gtf, ballgown, path(stringtie.abundance).fileName.toString(), stringtie.coverage_gtf ? path(stringtie.coverage_gtf).fileName.toString() : null).match() }
             )
         }
     }
@@ -111,11 +123,12 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                            [ id:'test', strandedness:'forward' ], // meta map
-                            [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true) ],
-                            []
-                        ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test', strandedness:'forward' ],
+                    bam: file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true),
+                    lrbam: null
+                )
                 input[1] = []
                 input[2] = []
                 """
@@ -123,9 +136,11 @@ nextflow_process {
         }
 
         then {
+            def stringtie = process.out[0][0]
+            def ballgown = stringtie.ballgown?.sort()
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out)).match() }
+                { assert snapshot(stringtie.id, stringtie.meta, stringtie.transcript_gtf, stringtie.abundance, stringtie.coverage_gtf, ballgown).match() }
             )
         }
     }
@@ -137,11 +152,12 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                    [ id:'test', strandedness:'forward' ], // meta map
-                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true) ],
-                    [],
-                ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test', strandedness:'forward' ],
+                    bam: file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true),
+                    lrbam: null
+                )
                 input[1] = []
                 input[2] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
                 """
@@ -149,9 +165,11 @@ nextflow_process {
         }
 
         then {
+            def stringtie = process.out[0][0]
+            def ballgown = stringtie.ballgown?.sort()
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out)).match() }
+                { assert snapshot(stringtie.id, stringtie.meta, stringtie.transcript_gtf, stringtie.abundance, stringtie.coverage_gtf, ballgown).match() }
             )
         }
     }
@@ -163,11 +181,12 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                            [ id:'test', strandedness:'reverse' ], // meta map
-                            [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true) ],
-                            [],
-                        ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test', strandedness:'reverse' ],
+                    bam: file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true),
+                    lrbam: null
+                )
                 input[1] = []
                 input[2] = []
                 """
@@ -175,9 +194,11 @@ nextflow_process {
         }
 
         then {
+            def stringtie = process.out[0][0]
+            def ballgown = stringtie.ballgown?.sort()
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out)).match() }
+                { assert snapshot(stringtie.id, stringtie.meta, stringtie.transcript_gtf, stringtie.abundance, stringtie.coverage_gtf, ballgown).match() }
             )
         }
     }
@@ -189,11 +210,12 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                            [ id:'test', strandedness:'reverse' ], // meta map
-                            [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true) ],
-                            []
-                        ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test', strandedness:'reverse' ],
+                    bam: file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true),
+                    lrbam: null
+                )
                 input[1] = []
                 input[2] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
                 """
@@ -201,9 +223,11 @@ nextflow_process {
         }
 
         then {
+            def stringtie = process.out[0][0]
+            def ballgown = stringtie.ballgown?.sort()
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out)).match() }
+                { assert snapshot(stringtie.id, stringtie.meta, stringtie.transcript_gtf, stringtie.abundance, stringtie.coverage_gtf, ballgown).match() }
             )
         }
     }
@@ -213,11 +237,12 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                            [ id:'test', strandedness:'reverse' ], // meta map
-                            [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true) ],
-                            [ file(params.modules_testdata_base_path + "genomics/homo_sapiens/pacbio/bam/test_hifi_aligned_assembly.bam", checkIfExists: true) ]
-                        ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test', strandedness:'reverse' ],
+                    bam: file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true),
+                    lrbam: file(params.modules_testdata_base_path + "genomics/homo_sapiens/pacbio/bam/test_hifi_aligned_assembly.bam", checkIfExists: true)
+                )
                 input[1] = ["mix-reads-assembly"]
                 input[2] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
                 """
@@ -225,9 +250,11 @@ nextflow_process {
         }
 
         then {
+            def stringtie = process.out[0][0]
+            def ballgown = stringtie.ballgown?.sort()
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["coverage_gtf", "abundance"])).match() }
+                { assert snapshot(stringtie.id, stringtie.meta, stringtie.transcript_gtf, ballgown, path(stringtie.abundance).fileName.toString(), stringtie.coverage_gtf ? path(stringtie.coverage_gtf).fileName.toString() : null).match() }
             )
         }
     }
@@ -239,11 +266,12 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                            [ id:'test', strandedness:'reverse' ], // meta map
-                            [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true) ],
-                            [ file(params.modules_testdata_base_path + "genomics/homo_sapiens/pacbio/bam/test_hifi_aligned_assembly.bam", checkIfExists: true) ]
-                        ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test', strandedness:'reverse' ],
+                    bam: file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true),
+                    lrbam: file(params.modules_testdata_base_path + "genomics/homo_sapiens/pacbio/bam/test_hifi_aligned_assembly.bam", checkIfExists: true)
+                )
                 input[1] = ["mix-reads-assembly"]
                 input[2] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
                 """
@@ -251,9 +279,11 @@ nextflow_process {
         }
 
         then {
+            def stringtie = process.out[0][0]
+            def ballgown = stringtie.ballgown?.sort()
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out)).match() }
+                { assert snapshot(stringtie.id, stringtie.meta, stringtie.transcript_gtf, stringtie.abundance, stringtie.coverage_gtf, ballgown).match() }
             )
         }
     }
@@ -263,11 +293,12 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                            [ id:'test', strandedness:'reverse' ], // meta map
-                            [],
-                            [ file(params.modules_testdata_base_path + "genomics/homo_sapiens/pacbio/bam/test_hifi_aligned_assembly.bam", checkIfExists: true) ]
-                        ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test', strandedness:'reverse' ],
+                    bam: null,
+                    lrbam: file(params.modules_testdata_base_path + "genomics/homo_sapiens/pacbio/bam/test_hifi_aligned_assembly.bam", checkIfExists: true)
+                )
                 input[1] = ["long-reads-assembly"]
                 input[2] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
                 """
@@ -275,9 +306,11 @@ nextflow_process {
         }
 
         then {
+            def stringtie = process.out[0][0]
+            def ballgown = stringtie.ballgown?.sort()
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["coverage_gtf", "abundance"])).match() }
+                { assert snapshot(stringtie.id, stringtie.meta, stringtie.transcript_gtf, ballgown, path(stringtie.abundance).fileName.toString(), stringtie.coverage_gtf ? path(stringtie.coverage_gtf).fileName.toString() : null).match() }
             )
         }
     }
@@ -289,11 +322,12 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                            [ id:'test', strandedness:'reverse' ], // meta map
-                            [],
-                            [ file(params.modules_testdata_base_path + "genomics/homo_sapiens/pacbio/bam/test_hifi_aligned_assembly.bam", checkIfExists: true) ]
-                        ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test', strandedness:'reverse' ],
+                    bam: null,
+                    lrbam: file(params.modules_testdata_base_path + "genomics/homo_sapiens/pacbio/bam/test_hifi_aligned_assembly.bam", checkIfExists: true)
+                )
                 input[1] = ["long-reads-assembly"]
                 input[2] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
                 """
@@ -301,9 +335,11 @@ nextflow_process {
         }
 
         then {
+            def stringtie = process.out[0][0]
+            def ballgown = stringtie.ballgown?.sort()
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out)).match() }
+                { assert snapshot(stringtie.id, stringtie.meta, stringtie.transcript_gtf, stringtie.abundance, stringtie.coverage_gtf, ballgown).match() }
             )
         }
     }
@@ -313,11 +349,12 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                            [ id:'test', strandedness:'reverse' ], // meta map
-                            [],
-                            [ file(params.modules_testdata_base_path + "genomics/homo_sapiens/nanopore/bam/test.sorted.bam", checkIfExists: true) ]
-                        ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test', strandedness:'reverse' ],
+                    bam: null,
+                    lrbam: file(params.modules_testdata_base_path + "genomics/homo_sapiens/nanopore/bam/test.sorted.bam", checkIfExists: true)
+                )
                 input[1] = ["long-reads-assembly"]
                 input[2] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
                 """
@@ -325,9 +362,11 @@ nextflow_process {
         }
 
         then {
+            def stringtie = process.out[0][0]
+            def ballgown = stringtie.ballgown?.sort()
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["coverage_gtf", "abundance"])).match() }
+                { assert snapshot(stringtie.id, stringtie.meta, stringtie.transcript_gtf, ballgown, path(stringtie.abundance).fileName.toString(), stringtie.coverage_gtf ? path(stringtie.coverage_gtf).fileName.toString() : null).match() }
             )
         }
     }
@@ -339,11 +378,12 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                            [ id:'test', strandedness:'reverse' ], // meta map
-                            [],
-                            [ file(params.modules_testdata_base_path + "genomics/homo_sapiens/nanopore/bam/test.sorted.bam", checkIfExists: true) ]
-                        ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test', strandedness:'reverse' ],
+                    bam: null,
+                    lrbam: file(params.modules_testdata_base_path + "genomics/homo_sapiens/nanopore/bam/test.sorted.bam", checkIfExists: true)
+                )
                 input[1] = ["long-reads-assembly"]
                 input[2] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
                 """
@@ -351,9 +391,11 @@ nextflow_process {
         }
 
         then {
+            def stringtie = process.out[0][0]
+            def ballgown = stringtie.ballgown?.sort()
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out)).match() }
+                { assert snapshot(stringtie.id, stringtie.meta, stringtie.transcript_gtf, stringtie.abundance, stringtie.coverage_gtf, ballgown).match() }
             )
         }
     }
@@ -363,11 +405,12 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                            [ id:'test', strandedness:'reverse' ], // meta map
-                            [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true) ],
-                            [ file(params.modules_testdata_base_path + "genomics/homo_sapiens/pacbio/bam/test_hifi_aligned_assembly.bam", checkIfExists: true) ]
-                        ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test', strandedness:'reverse' ],
+                    bam: file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true),
+                    lrbam: file(params.modules_testdata_base_path + "genomics/homo_sapiens/pacbio/bam/test_hifi_aligned_assembly.bam", checkIfExists: true)
+                )
                 input[1] = ["mix-reads-assembly", "nascent-aware-assembly"]
                 input[2] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
                 """
@@ -375,9 +418,11 @@ nextflow_process {
         }
 
         then {
+            def stringtie = process.out[0][0]
+            def ballgown = stringtie.ballgown?.sort()
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["coverage_gtf", "abundance"])).match() }
+                { assert snapshot(stringtie.id, stringtie.meta, stringtie.transcript_gtf, ballgown, path(stringtie.abundance).fileName.toString(), stringtie.coverage_gtf ? path(stringtie.coverage_gtf).fileName.toString() : null).match() }
             )
         }
     }
@@ -389,11 +434,12 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
-                            [ id:'test', strandedness:'reverse' ], // meta map
-                            [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true) ],
-                            [ file(params.modules_testdata_base_path + "genomics/homo_sapiens/pacbio/bam/test_hifi_aligned_assembly.bam", checkIfExists: true) ]
-                        ]
+                input[0] = record(
+                    id: 'test',
+                    meta: [ id:'test', strandedness:'reverse' ],
+                    bam: file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true),
+                    lrbam: file(params.modules_testdata_base_path + "genomics/homo_sapiens/pacbio/bam/test_hifi_aligned_assembly.bam", checkIfExists: true)
+                )
                 input[1] = ["mix-reads-assembly", "nascent-aware-assembly"]
                 input[2] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
                 """
@@ -401,9 +447,11 @@ nextflow_process {
         }
 
         then {
+            def stringtie = process.out[0][0]
+            def ballgown = stringtie.ballgown?.sort()
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out)).match() }
+                { assert snapshot(stringtie.id, stringtie.meta, stringtie.transcript_gtf, stringtie.abundance, stringtie.coverage_gtf, ballgown).match() }
             )
         }
     }

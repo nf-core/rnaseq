@@ -1,3 +1,5 @@
+nextflow.enable.types = true
+
 //
 // Alignment with Bowtie2
 //
@@ -9,6 +11,8 @@
 
 include { BOWTIE2_ALIGN           } from '../../../modules/nf-core/bowtie2/align'
 include { BAM_SORT_STATS_SAMTOOLS } from '../../nf-core/bam_sort_stats_samtools'
+include { ReadsInput; Bowtie2Aligned; Bam } from '../../../modules/nf-core/types'
+include { Bowtie2AlignResult } from '../../../modules/nf-core/bowtie2/align/main'
 
 //
 // Function that parses and returns the alignment rate from the Bowtie2 log output
@@ -27,41 +31,47 @@ def getBowtie2PercentMapped(align_log) {
 
 workflow ALIGN_BOWTIE2 {
     take:
-    reads         // channel: [ val(meta), [ reads ] ]
-    index         // channel: /path/to/bowtie2/index/
-    fasta_fai     // channel: [ val(meta), path(fasta), path(fai) ]
+    ch_samples: Channel<ReadsInput>
+    index: Value<Path> // /path/to/bowtie2/index/
+    fasta: Value<Path?>
+    fai: Value<Path?>
 
     main:
 
     //
     // Map reads with Bowtie2
     //
-    BOWTIE2_ALIGN(
-        reads,
-        index.map { index_path -> [ [id: 'genome'], index_path ] },
-        [ [:], [] ],    // No fasta needed for BAM output
-        params.save_unaligned,  // save_unaligned - enable for downstream analysis of unmapped reads
-        false           // sort_bam - we'll sort with samtools for consistency
-    )
-
-    ch_orig_bam = BOWTIE2_ALIGN.out.bam
-    ch_log = BOWTIE2_ALIGN.out.log
-
-    // Parse alignment rate from log
-    ch_percent_mapped = ch_log.map { meta, log_file -> [ meta, getBowtie2PercentMapped(log_file) ] }
+    def ch_bowtie2: Channel<Bowtie2AlignResult> = BOWTIE2_ALIGN(
+        ch_samples,
+        index,
+        null,                   // no fasta needed for BAM output
+        params.save_unaligned,
+        false                   // sort_bam - we'll sort with samtools for consistency
+    ).filter { r -> !r.raw_bams.isEmpty() }
 
     //
     // Sort, index BAM file and run samtools stats, flagstat and idxstats
     //
-    BAM_SORT_STATS_SAMTOOLS(ch_orig_bam, fasta_fai)
+    def ch_sorted: Channel<Bam> = BAM_SORT_STATS_SAMTOOLS(ch_bowtie2, fasta, fai)
+
+    // The BAM is aligned to the transcriptome, and its unsorted form is what Salmon quantifies:
+    // a coordinate-sorted BAM breaks paired-end quantification.
+    ch_bowtie2_sorted = ch_bowtie2
+        .map { r ->
+            r + record(
+                aligner:           'bowtie2',
+                percent_mapped:    getBowtie2PercentMapped(r.bowtie2.log),
+                transcriptome_bam: r.raw_bams[0]
+            )
+        }
+        .join(ch_sorted, by: 'id', remainder: true)
+    ch_bowtie2_sorted.subscribe { r ->
+        if( r.bowtie2 == null || r.samtools == null ) {
+            error "Sample '${r.id}' is missing its Bowtie2 sorted BAM result"
+        }
+    }
+    ch_results = ch_bowtie2_sorted.filter { r -> r.bowtie2 != null && r.samtools != null }
 
     emit:
-    orig_bam       = ch_orig_bam                          // channel: [ val(meta), bam ]
-    log_final      = ch_log                               // channel: [ val(meta), log ]
-    bam            = BAM_SORT_STATS_SAMTOOLS.out.bam      // channel: [ val(meta), [ bam ] ]
-    index          = BAM_SORT_STATS_SAMTOOLS.out.index    // channel: [ val(meta), [ index ] ]
-    stats          = BAM_SORT_STATS_SAMTOOLS.out.stats    // channel: [ val(meta), [ stats ] ]
-    flagstat       = BAM_SORT_STATS_SAMTOOLS.out.flagstat // channel: [ val(meta), [ flagstat ] ]
-    idxstats       = BAM_SORT_STATS_SAMTOOLS.out.idxstats // channel: [ val(meta), [ idxstats ] ]
-    percent_mapped = ch_percent_mapped                    // channel: [ val(meta), percent_mapped ]
+    ch_results
 }

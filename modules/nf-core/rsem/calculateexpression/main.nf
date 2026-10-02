@@ -1,5 +1,21 @@
+nextflow.enable.types = true
+
+include { ReadsInput } from '../../types'
+
+record RsemQuantSample {
+    id:                String
+    meta:              Map
+    counts_gene:       Path
+    counts_transcript: Path
+    stat:              Path
+    log:               Path?
+    bam_star:          Path?
+    bam_genome:        Path?
+    bam_transcript:    Path?
+}
+
 process RSEM_CALCULATEEXPRESSION {
-    tag "$meta.id"
+    tag "$sample.meta.id"
     label 'process_high'
 
     conda "${moduleDir}/environment.yml"
@@ -8,40 +24,44 @@ process RSEM_CALCULATEEXPRESSION {
         'community.wave.seqera.io/library/rsem_star:5acb4e8c03239c32' }"
 
     input:
-    tuple val(meta), path(reads)  // FASTQ files or BAM file for --alignments mode
-    path  index
+    sample: ReadsInput  // FASTQ files or BAM file for --alignments mode
+    index: Path
 
     output:
-    tuple val(meta), path("*.genes.results")   , emit: counts_gene
-    tuple val(meta), path("*.isoforms.results"), emit: counts_transcript
-    tuple val(meta), path("*.stat")            , emit: stat
-    tuple val(meta), path("*.log")             , emit: logs, optional:true
-    tuple val("${task.process}"), val('rsem'), eval("rsem-calculate-expression --version | sed 's/Current version: RSEM v//'"), emit: versions_rsem, topic: versions
+    record(
+        id:                sample.id,
+        meta:              sample.meta,
+        counts_gene:       file("*.genes.results"),
+        counts_transcript: file("*.isoforms.results"),
+        stat:              file("*.stat"),
+        log:               file("*.log", optional: true),
+        bam_star:          file("*.STAR.genome.bam", optional: true),
+        bam_genome:        file("${prefix}.genome.bam", optional: true),
+        bam_transcript:    file("${prefix}.transcript.bam", optional: true)
+    ) as RsemQuantSample
 
-    tuple val(meta), path("*.STAR.genome.bam")       , optional:true, emit: bam_star
-    tuple val(meta), path("${prefix}.genome.bam")    , optional:true, emit: bam_genome
-    tuple val(meta), path("${prefix}.transcript.bam"), optional:true, emit: bam_transcript
-
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'rsem', eval("rsem-calculate-expression --version | sed 's/Current version: RSEM v//'")) >> 'versions'
 
     script:
     def args = task.ext.args   ?: ''
-    prefix   = task.ext.prefix ?: "${meta.id}"
+    prefix   = task.ext.prefix ?: "${sample.meta.id}"
 
     def strandedness = ''
-    if (meta.strandedness == 'forward') {
+    if (sample.meta.strandedness == 'forward') {
         strandedness = '--strandedness forward'
-    } else if (meta.strandedness == 'reverse') {
+    } else if (sample.meta.strandedness == 'reverse') {
         strandedness = '--strandedness reverse'
     }
 
-    // Detect if input is BAM file(s)
-    def is_bam = reads.toString().toLowerCase().endsWith('.bam')
+    // Detect if input is BAM file(s); a lone file arrives as a Path, which iterates over its name components
+    def reads_names = sample.reads instanceof Path ? "${sample.reads}" : sample.reads.join(' ')
+    def reads_count = sample.reads instanceof Path ? 1 : sample.reads.size()
+    def is_bam = reads_names.toLowerCase().endsWith('.bam')
     def alignment_mode = is_bam ? '--alignments' : ''
 
     // Use metadata for paired-end detection if available, otherwise empty (auto-detect)
-    def paired_end = meta.containsKey('single_end') ? (meta.single_end ? "" : "--paired-end") : "unknown"
+    def paired_end = sample.meta.containsKey('single_end') ? (sample.meta.single_end ? "" : "--paired-end") : "unknown"
 
     """
     INDEX=`find -L ./ -name "*.grp" | sed 's/\\.grp\$//'`
@@ -51,9 +71,9 @@ process RSEM_CALCULATEEXPRESSION {
     if [ "${paired_end}" == "unknown" ]; then
         # Auto-detect only if no metadata provided
         if [ "${is_bam}" == "true" ]; then
-            samtools flagstat $reads | grep -q 'paired in sequencing' && PAIRED_END_FLAG="--paired-end"
+            samtools flagstat $reads_names | grep -q 'paired in sequencing' && PAIRED_END_FLAG="--paired-end"
         else
-            [ ${reads.size()} -gt 1 ] && PAIRED_END_FLAG="--paired-end"
+            [ ${reads_count} -gt 1 ] && PAIRED_END_FLAG="--paired-end"
         fi
     fi
 
@@ -64,14 +84,14 @@ process RSEM_CALCULATEEXPRESSION {
         $strandedness \\
         \$PAIRED_END_FLAG \\
         $args \\
-        $reads \\
+        $reads_names \\
         \$INDEX \\
         $prefix
     """
 
     stub:
-    prefix = task.ext.prefix ?: "${meta.id}"
-    def is_bam = reads.toString().toLowerCase().endsWith('.bam')
+    prefix = task.ext.prefix ?: "${sample.meta.id}"
+    def is_bam = (sample.reads instanceof Path ? "${sample.reads}" : sample.reads.join(' ')).toLowerCase().endsWith('.bam')
     """
     touch ${prefix}.genes.results
     touch ${prefix}.isoforms.results

@@ -56,8 +56,19 @@ jobs:
           echo "shard=${{ steps.set-shards.outputs.shard }}" >> $GITHUB_ENV
           echo "total_shards=${{ steps.set-shards.outputs.total_shards }}" >> $GITHUB_ENV
 
-  nf-test-gpu:
+  # TEMPORARY: builds the Nextflow used by every nf-test job, see .github/actions/build-nextflow
+  build-nextflow:
+    name: build-nextflow
     needs: [get-shards]
+    if: ${{ needs.get-shards.outputs.total_shards > 0 }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - uses: ./.github/actions/build-nextflow
+
+  nf-test-gpu:
+    needs: [get-shards, build-nextflow]
     runs-on: "runs-on=${{ github.run_id }}/family=g5.2xlarge+g6.2xlarge/image=ubuntu24-gpu-x64"
     name: "GPU Test | ${{ matrix.profile }} | ${{ matrix.shard }} | ${{ matrix.NXF_VER }} | ${{ matrix.filters }}"
     env:
@@ -77,7 +88,7 @@ jobs:
         profile: [docker, singularity]
         shard: ${{ fromJson(needs.get-shards.outputs.shard) }}
         NXF_VER:
-          - "25.10.4"
+          - "26.09.0-edge"
         filters: [pipeline]
 
     steps:

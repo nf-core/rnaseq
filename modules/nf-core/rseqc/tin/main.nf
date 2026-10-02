@@ -1,5 +1,9 @@
+nextflow.enable.types = true
+
+include { BamBaiInput; RseqcTin } from '../../types'
+
 process RSEQC_TIN {
-    tag "$meta.id"
+    tag "$sample.meta.id"
     label 'process_high'
 
     conda "${moduleDir}/environment.yml"
@@ -8,32 +12,35 @@ process RSEQC_TIN {
         'community.wave.seqera.io/library/rseqc_r-base:2e29d2dfda9cef15' }"
 
     input:
-    tuple val(meta), path(bam), path(bai)
-    path  bed
+    sample: BamBaiInput
+    bed: Path
 
     output:
-    tuple val(meta), path("*.txt"), emit: txt
-    tuple val(meta), path("*.xls"), emit: xls
-    tuple val("${task.process}"), val('rseqc'), eval('tin.py --version | sed "s/tin.py //"'), emit: versions_rseqc, topic: versions
+    record(
+        id:   sample.id,
+        meta: sample.meta,
+        txt:  file("*.txt"),
+        xls:  file("*.xls")
+    ) as RseqcTin
 
-    when:
-    task.ext.when == null || task.ext.when
+    topic:
+    tuple(task.process, 'rseqc', eval('tin.py --version | sed "s/tin.py //"')) >> 'versions'
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     tin.py \\
-        -i $bam \\
+        -i $sample.bam \\
         -r $bed \\
         $args
 
-    mv ${bam.baseName}.summary.txt ${prefix}.summary.txt
-    mv ${bam.baseName}.tin.xls ${prefix}.tin.xls
+    mv ${sample.bam.baseName}.summary.txt ${prefix}.summary.txt
+    mv ${sample.bam.baseName}.tin.xls ${prefix}.tin.xls
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     touch ${prefix}.summary.txt
     touch ${prefix}.tin.xls

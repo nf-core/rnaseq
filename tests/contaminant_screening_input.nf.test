@@ -6,11 +6,10 @@ nextflow_pipeline {
 
     test("Params: contaminant screening unmapped input - stub") {
 
-        options "-stub"
+        options "-stub -output-dir $outputDir"
 
         when {
             params {
-                outdir = "$outputDir"
                 aligner = 'hisat2'
                 skip_bigwig = true
                 contaminant_screening = 'kraken2'
@@ -18,8 +17,8 @@ nextflow_pipeline {
         }
 
         then {
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            def stable_name = getAllFilesFromDir(outputDir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            def stable_path = getAllFilesFromDir(outputDir, ignoreFile: 'tests/.nftignore')
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
@@ -45,11 +44,10 @@ nextflow_pipeline {
 
     test("Params: contaminant screening trimmed input with skip_alignment - stub") {
 
-        options "-stub"
+        options "-stub -output-dir $outputDir"
 
         when {
             params {
-                outdir = "$outputDir"
                 skip_alignment = true
                 contaminant_screening = 'kraken2'
                 contaminant_screening_input = 'trimmed'
@@ -57,8 +55,8 @@ nextflow_pipeline {
         }
 
         then {
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            def stable_name = getAllFilesFromDir(outputDir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            def stable_path = getAllFilesFromDir(outputDir, ignoreFile: 'tests/.nftignore')
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
@@ -84,11 +82,10 @@ nextflow_pipeline {
 
     test("Params: contaminant screening trim_only input - stub") {
 
-        options "-stub"
+        options "-stub -output-dir $outputDir"
 
         when {
             params {
-                outdir                      = "$outputDir"
                 skip_alignment              = true
                 contaminant_screening       = 'kraken2'
                 contaminant_screening_input = 'trim_only'
@@ -96,8 +93,8 @@ nextflow_pipeline {
         }
 
         then {
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            def stable_name = getAllFilesFromDir(outputDir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            def stable_path = getAllFilesFromDir(outputDir, ignoreFile: 'tests/.nftignore')
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
@@ -121,11 +118,10 @@ nextflow_pipeline {
 
     test("Params: contaminant screening raw input - stub") {
 
-        options "-stub"
+        options "-stub -output-dir $outputDir"
 
         when {
             params {
-                outdir                      = "$outputDir"
                 skip_alignment              = true
                 contaminant_screening       = 'kraken2'
                 contaminant_screening_input = 'raw'
@@ -133,8 +129,8 @@ nextflow_pipeline {
         }
 
         then {
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            def stable_name = getAllFilesFromDir(outputDir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            def stable_path = getAllFilesFromDir(outputDir, ignoreFile: 'tests/.nftignore')
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
@@ -158,9 +154,10 @@ nextflow_pipeline {
 
     test("Params: contaminant_screening_input=trimmed screens pre-alignment reads") {
 
+        options "-output-dir $outputDir"
+
         when {
             params {
-                outdir                      = "$outputDir"
                 contaminant_screening       = 'kraken2'
                 contaminant_screening_input = 'trimmed'
                 skip_bigwig                 = true
@@ -169,8 +166,8 @@ nextflow_pipeline {
         }
 
         then {
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            def stable_name = getAllFilesFromDir(outputDir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            def stable_path = getAllFilesFromDir(outputDir, ignoreFile: 'tests/.nftignore')
             def krakenReportDir = file("$outputDir/star_salmon/contaminants/kraken2/kraken_reports")
             def krakenReadCounts = krakenReportDir.listFiles()
                 .sort { it.name }
@@ -217,9 +214,10 @@ nextflow_pipeline {
 
     test("Params: contaminant_screening_input=unmapped (default) screens post-alignment reads") {
 
+        options "-output-dir $outputDir"
+
         when {
             params {
-                outdir                = "$outputDir"
                 contaminant_screening = 'kraken2'
                 skip_bigwig           = true
                 skip_stringtie        = true
@@ -227,8 +225,8 @@ nextflow_pipeline {
         }
 
         then {
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            def stable_name = getAllFilesFromDir(outputDir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            def stable_path = getAllFilesFromDir(outputDir, ignoreFile: 'tests/.nftignore')
             def krakenReportDir = file("$outputDir/star_salmon/contaminants/kraken2/kraken_reports")
             def krakenReadCounts = krakenReportDir.listFiles()
                 .sort { it.name }

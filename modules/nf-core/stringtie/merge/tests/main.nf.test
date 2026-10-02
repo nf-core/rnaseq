@@ -14,12 +14,13 @@ nextflow_process {
             script "../../stringtie/main.nf"
             process {
             """
-            input[0] = [
-                        [ id:'test', strandedness:'reverse' ], // meta map
-                        [ file(params.modules_testdata_base_path + "genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true) ],
-                        [ file(params.modules_testdata_base_path + "genomics/homo_sapiens/pacbio/bam/test_hifi_aligned_assembly.bam", checkIfExists: true) ]
-                    ]
-            input[1] = "mix-reads-assembly"
+            input[0] = record(
+                id: 'test',
+                meta: [ id:'test', strandedness:'reverse' ],
+                bam: file(params.modules_testdata_base_path + "genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true),
+                lrbam: file(params.modules_testdata_base_path + "genomics/homo_sapiens/pacbio/bam/test_hifi_aligned_assembly.bam", checkIfExists: true)
+            )
+            input[1] = ["mix-reads-assembly"]
             input[2] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
             """
             }
@@ -31,16 +32,17 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = STRINGTIE_STRINGTIE.out.transcript_gtf
-                input[1] = [[id:'ref', strandedness:'forward'], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                input[0] = STRINGTIE_STRINGTIE.out.map { r -> record(id: r.id, meta: r.meta, gtf: [r.transcript_gtf]) }
+                input[1] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
                 """
             }
         }
 
         then {
+            def merged = process.out[0][0]
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out)).match() }
+                { assert snapshot(merged).match() }
             )
         }
     }
@@ -50,16 +52,17 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = STRINGTIE_STRINGTIE.out.transcript_gtf
-                input[1] = [[id:'ref', strandedness:'reverse'], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                input[0] = STRINGTIE_STRINGTIE.out.map { r -> record(id: r.id, meta: r.meta, gtf: [r.transcript_gtf]) }
+                input[1] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)
                 """
             }
         }
 
         then {
+            def merged = process.out[0][0]
             assertAll(
                 { assert process.success },
-                { assert snapshot(sanitizeOutput(process.out)).match() }
+                { assert snapshot(merged).match() }
             )
         }
     }

@@ -30,15 +30,16 @@ nextflow_workflow {
             process {
                 """
                 // CAT_FASTQ input: alternating R1/R2 files [r1_a, r2_a, r1_b, r2_b, ...]
-                input[0] = Channel.of([
-                    [ id:'test', single_end:false ],
-                    [
+                input[0] = Channel.of(record(
+                    id: 'test',
+                    meta: [ id:'test', single_end:false ],
+                    reads: [
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'generic/fastq/rrna_reads_1.fastq.gz', checkIfExists: true),
                         file(params.modules_testdata_base_path + 'generic/fastq/rrna_reads_2.fastq.gz', checkIfExists: true)
                     ]
-                ])
+                ))
                 """
             }
         }
@@ -49,10 +50,10 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = CAT_FASTQ.out.reads                                    // ch_reads
-                input[1] = Channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas
-                input[2] = []                                                     // ch_sortmerna_index
-                input[3] = []                                                     // ch_bowtie2_index
+                input[0] = new nextflow.dataflow.ChannelImpl(CAT_FASTQ.out)                                    // ch_reads
+                input[1] = new nextflow.dataflow.ChannelImpl(Channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true))) // ch_rrna_fastas
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))                                                     // ch_sortmerna_index
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))                                                     // ch_bowtie2_index
                 input[4] = 'sortmerna'                                            // ribo_removal_tool
                 input[5] = true                                                   // make_sortmerna_index
                 input[6] = false                                                  // make_bowtie2_index
@@ -61,11 +62,11 @@ nextflow_workflow {
         }
 
         then {
-            def pelines1 = path(workflow.out.reads[0][1][0]).linesGzip
-            def pelines2 = path(workflow.out.reads[0][1][1]).linesGzip
+            def pelines1 = path(workflow.out.samples[0].reads[0]).linesGzip
+            def pelines2 = path(workflow.out.samples[0].reads[1]).linesGzip
 
             // Parse sortmerna log for rRNA detection stats
-            def sortmernaLog = path(workflow.out.multiqc_files.find { entry -> entry[1].toString().endsWith('.sortmerna.log') }?.getAt(1))
+            def sortmernaLog = path(workflow.out.samples[0].sortmerna_log)
                 .getText()
             def sortmernaRrnaMatch = (sortmernaLog =~ /Total reads passing E-value threshold = (\d+)/)
             def sortmernaRrnaCount = sortmernaRrnaMatch ? sortmernaRrnaMatch[0][1].toInteger() : -1
@@ -90,10 +91,10 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = CAT_FASTQ.out.reads                                    // ch_reads
-                input[1] = []                                                     // ch_rrna_fastas (not needed for ribodetector)
-                input[2] = []                                                     // ch_sortmerna_index
-                input[3] = []                                                     // ch_bowtie2_index
+                input[0] = new nextflow.dataflow.ChannelImpl(CAT_FASTQ.out)                                    // ch_reads
+                input[1] = new nextflow.dataflow.ChannelImpl(channel.empty())                                                     // ch_rrna_fastas (not needed for ribodetector)
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))                                                     // ch_sortmerna_index
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))                                                     // ch_bowtie2_index
                 input[4] = 'ribodetector'                                         // ribo_removal_tool
                 input[5] = false                                                  // make_sortmerna_index
                 input[6] = false                                                  // make_bowtie2_index
@@ -102,12 +103,12 @@ nextflow_workflow {
         }
 
         then {
-            def pelines1 = path(workflow.out.reads[0][1][0]).linesGzip
-            def pelines2 = path(workflow.out.reads[0][1][1]).linesGzip
+            def pelines1 = path(workflow.out.samples[0].reads[0]).linesGzip
+            def pelines2 = path(workflow.out.samples[0].reads[1]).linesGzip
 
             // Parse ribodetector log for rRNA detection stats
             // Note: ribodetector log contains ANSI color codes that must be stripped before regex matching
-            def ribodetectorLog = path(workflow.out.multiqc_files.find { entry -> entry[1].toString().endsWith('.ribodetector.log') }?.getAt(1))
+            def ribodetectorLog = path(workflow.out.samples[0].ribodetector_log)
                 .getText()
                 .replaceAll(/\u001b\[[0-9;]*m/, '')  // Strip ANSI escape codes
             def ribodetectorRrnaMatch = (ribodetectorLog =~ /Detected (\d+) rRNA sequences/)
@@ -138,10 +139,10 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = CAT_FASTQ.out.reads                                    // ch_reads
-                input[1] = Channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas
-                input[2] = []                                                     // ch_sortmerna_index
-                input[3] = []                                                     // ch_bowtie2_index
+                input[0] = new nextflow.dataflow.ChannelImpl(CAT_FASTQ.out)                                    // ch_reads
+                input[1] = new nextflow.dataflow.ChannelImpl(Channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true))) // ch_rrna_fastas
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))                                                     // ch_sortmerna_index
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))                                                     // ch_bowtie2_index
                 input[4] = 'bowtie2'                                              // ribo_removal_tool
                 input[5] = false                                                  // make_sortmerna_index
                 input[6] = true                                                   // make_bowtie2_index
@@ -150,11 +151,11 @@ nextflow_workflow {
         }
 
         then {
-            def pelines1 = path(workflow.out.reads[0][1][0]).linesGzip
-            def pelines2 = path(workflow.out.reads[0][1][1]).linesGzip
+            def pelines1 = path(workflow.out.samples[0].reads[0]).linesGzip
+            def pelines2 = path(workflow.out.samples[0].reads[1]).linesGzip
 
             // Parse bowtie2 log for alignment stats - count mates that aligned to rRNA
-            def bowtie2Log = path(workflow.out.multiqc_files.find { entry -> entry[1].toString().endsWith('.bowtie2.log') }?.getAt(1))
+            def bowtie2Log = path(workflow.out.samples[0].bowtie2_log)
                 .getText()
             def exactMatch = (bowtie2Log =~ /(\d+) \(\d+\.\d+%\) aligned exactly 1 time/)
             def multiMatch = (bowtie2Log =~ /(\d+) \(\d+\.\d+%\) aligned >1 times/)
@@ -186,13 +187,14 @@ nextflow_workflow {
                 process {
                     """
                     // Single-end test data with synthetic rRNA reads
-                    input[0] = Channel.of([
-                        [ id:'test_se', single_end:true ],
-                        [
+                    input[0] = Channel.of(record(
+                        id: 'test_se',
+                        meta: [ id:'test_se', single_end:true ],
+                        reads: [
                             file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
                             file(params.modules_testdata_base_path + 'generic/fastq/rrna_reads_1.fastq.gz', checkIfExists: true)
                         ]
-                    ])
+                    ))
                     """
                 }
             }
@@ -201,10 +203,10 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = CAT_FASTQ_SE.out.reads.map { meta, reads -> [meta, reads instanceof List ? reads : [reads]] }
-                input[1] = Channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas
-                input[2] = []                                                     // ch_sortmerna_index
-                input[3] = []                                                     // ch_bowtie2_index
+                input[0] = new nextflow.dataflow.ChannelImpl(CAT_FASTQ_SE.out)
+                input[1] = new nextflow.dataflow.ChannelImpl(Channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true))) // ch_rrna_fastas
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))                                                     // ch_sortmerna_index
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))                                                     // ch_bowtie2_index
                 input[4] = 'bowtie2'                                              // ribo_removal_tool
                 input[5] = false                                                  // make_sortmerna_index
                 input[6] = true                                                   // make_bowtie2_index
@@ -214,10 +216,10 @@ nextflow_workflow {
 
         then {
             // For single-end, reads output is a single file, not a list
-            def selines = path(workflow.out.reads[0][1]).linesGzip
+            def selines = path(workflow.out.samples[0].reads[0]).linesGzip
 
             // Parse bowtie2 log for alignment stats
-            def bowtie2Log = path(workflow.out.multiqc_files.find { entry -> entry[1].toString().endsWith('.bowtie2.log') }?.getAt(1))
+            def bowtie2Log = path(workflow.out.samples[0].bowtie2_log)
                 .getText()
             def exactMatch = (bowtie2Log =~ /(\d+) \(\d+\.\d+%\) aligned exactly 1 time/)
             def multiMatch = (bowtie2Log =~ /(\d+) \(\d+\.\d+%\) aligned >1 times/)
@@ -247,13 +249,14 @@ nextflow_workflow {
                 process {
                     """
                     // Single-end test data with synthetic rRNA reads
-                    input[0] = Channel.of([
-                        [ id:'test_se', single_end:true ],
-                        [
+                    input[0] = Channel.of(record(
+                        id: 'test_se',
+                        meta: [ id:'test_se', single_end:true ],
+                        reads: [
                             file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
                             file(params.modules_testdata_base_path + 'generic/fastq/rrna_reads_1.fastq.gz', checkIfExists: true)
                         ]
-                    ])
+                    ))
                     """
                 }
             }
@@ -262,10 +265,10 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = CAT_FASTQ_SE.out.reads.map { meta, reads -> [meta, reads instanceof List ? reads : [reads]] }
-                input[1] = Channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true)) // ch_rrna_fastas
-                input[2] = []                                                     // ch_sortmerna_index
-                input[3] = []                                                     // ch_bowtie2_index
+                input[0] = new nextflow.dataflow.ChannelImpl(CAT_FASTQ_SE.out)
+                input[1] = new nextflow.dataflow.ChannelImpl(Channel.of(file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/rfam-5.8s-database-id98.fasta', checkIfExists: true))) // ch_rrna_fastas
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))                                                     // ch_sortmerna_index
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))                                                     // ch_bowtie2_index
                 input[4] = 'sortmerna'                                            // ribo_removal_tool
                 input[5] = true                                                   // make_sortmerna_index
                 input[6] = false                                                  // make_bowtie2_index
@@ -275,10 +278,10 @@ nextflow_workflow {
 
         then {
             // For single-end, reads output is a single file, not a list
-            def selines = path(workflow.out.reads[0][1]).linesGzip
+            def selines = path(workflow.out.samples[0].reads[0]).linesGzip
 
             // Parse sortmerna log for rRNA detection stats
-            def sortmernaLog = path(workflow.out.multiqc_files.find { entry -> entry[1].toString().endsWith('.sortmerna.log') }?.getAt(1))
+            def sortmernaLog = path(workflow.out.samples[0].sortmerna_log)
                 .getText()
             def sortmernaRrnaMatch = (sortmernaLog =~ /Total reads passing E-value threshold = (\d+)/)
             def sortmernaRrnaCount = sortmernaRrnaMatch ? sortmernaRrnaMatch[0][1].toInteger() : -1
@@ -301,19 +304,19 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = CAT_FASTQ.out.reads                                    // ch_reads
+                input[0] = new nextflow.dataflow.ChannelImpl(CAT_FASTQ.out)                                    // ch_reads
                 // Test with multiple rRNA databases that contain clustered sequences with
                 // duplicate identifiers. SILVA databases use clustered sequences where the sequence ID
                 // (the part before the first space) can be the same across different databases, causing
                 // "Duplicate entry in sam header" errors when building Bowtie2 indexes. This test ensures
                 // the SEQKIT_REPLACE preprocessing correctly prefixes sequence IDs with their source
                 // filename to create unique identifiers while preserving all sequences.
-                input[1] = Channel.of(
+                input[1] = new nextflow.dataflow.ChannelImpl(Channel.of(
                     file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/silva-euk-18s-id95.fasta', checkIfExists: true),
                     file('https://raw.githubusercontent.com/biocore/sortmerna/v4.3.4/data/rRNA_databases/silva-euk-28s-id98.fasta', checkIfExists: true)
-                )                                                                 // ch_rrna_fastas
-                input[2] = []                                                     // ch_sortmerna_index
-                input[3] = []                                                     // ch_bowtie2_index
+                )                                                                 // ch_rrna_fastas)
+                input[2] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))                                                     // ch_sortmerna_index
+                input[3] = new nextflow.dataflow.ValueImpl(channel.value(null as Path))                                                     // ch_bowtie2_index
                 input[4] = 'bowtie2'                                              // ribo_removal_tool
                 input[5] = false                                                  // make_sortmerna_index
                 input[6] = true                                                   // make_bowtie2_index
@@ -322,11 +325,11 @@ nextflow_workflow {
         }
 
         then {
-            def pelines1 = path(workflow.out.reads[0][1][0]).linesGzip
-            def pelines2 = path(workflow.out.reads[0][1][1]).linesGzip
+            def pelines1 = path(workflow.out.samples[0].reads[0]).linesGzip
+            def pelines2 = path(workflow.out.samples[0].reads[1]).linesGzip
 
             // Parse bowtie2 log for alignment stats
-            def bowtie2Log = path(workflow.out.multiqc_files.find { entry -> entry[1].toString().endsWith('.bowtie2.log') }?.getAt(1))
+            def bowtie2Log = path(workflow.out.samples[0].bowtie2_log)
                 .getText()
 
             // The key test: workflow should complete successfully without SAM header duplicate errors

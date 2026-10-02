@@ -34,8 +34,8 @@ nextflow_process {
                     "# anchor: 'featurecounts_biotype'",
                 ].join('\\n') + '\\n'
 
-                input[0] = channel.of([ [ id:'test' ], count_file ])
-                input[1] = channel.of([ [:], header_file ])
+                input[0] = channel.of(record(id: 'test', meta: [ id:'test' ], counts: count_file))
+                input[1] = channel.of(header_file)
                 """
             }
         }
@@ -43,7 +43,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(process.out[0][0]).match() }
             )
         }
     }
@@ -72,8 +72,8 @@ nextflow_process {
                     "# anchor: 'featurecounts_biotype'",
                 ].join('\\n') + '\\n'
 
-                input[0] = channel.of([ [ id:'test' ], count_file ])
-                input[1] = channel.of([ [:], header_file ])
+                input[0] = channel.of(record(id: 'test', meta: [ id:'test' ], counts: count_file))
+                input[1] = channel.of(header_file)
                 """
             }
         }
@@ -112,8 +112,8 @@ nextflow_process {
                     "# anchor: 'featurecounts_biotype'",
                 ].join('\\n') + '\\n'
 
-                input[0] = channel.of([ [ id:'test' ], count_file ])
-                input[1] = channel.of([ [:], header_file ])
+                input[0] = channel.of(record(id: 'test', meta: [ id:'test' ], counts: count_file))
+                input[1] = channel.of(header_file)
                 """
             }
         }
@@ -138,8 +138,8 @@ nextflow_process {
                 def header_file = file("\${workDir}/biotypes_header.txt")
                 header_file.text = 'stub'
 
-                input[0] = channel.of([ [ id:'test' ], count_file ])
-                input[1] = channel.of([ [:], header_file ])
+                input[0] = channel.of(record(id: 'test', meta: [ id:'test' ], counts: count_file))
+                input[1] = channel.of(header_file)
                 """
             }
         }
@@ -147,7 +147,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(process.out[0][0]).match() }
             )
         }
     }

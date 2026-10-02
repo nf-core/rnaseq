@@ -68,10 +68,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = true
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)  // fasta channel
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)  // gtf channel
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)  // transcript_fasta channel
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)  // rrna_fastas channel
                 input[4]  = true  // fasta_provided
                 input[5]  = null  // splicesites
                 input[6]  = null  // bbsplit_fasta_list
@@ -103,7 +103,7 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }
@@ -180,10 +180,10 @@ nextflow_workflow {
                 use_sentieon_star        = false
                 use_parabricks_star      = true
 
-                input[0]  = PREPARE_GENOME_REFERENCES.out.fasta_fai  // fasta_fai channel
-                input[1]  = PREPARE_GENOME_REFERENCES.out.gtf  // gtf channel
-                input[2]  = PREPARE_GENOME_REFERENCES.out.transcript_fasta  // transcript_fasta channel
-                input[3]  = PREPARE_GENOME_REFERENCES.out.rrna_fastas  // rrna_fastas channel
+                input[0]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.fasta)  // fasta channel
+                input[1]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.gtf)  // gtf channel
+                input[2]  = new nextflow.dataflow.ValueImpl(PREPARE_GENOME_REFERENCES.out.transcript_fasta)  // transcript_fasta channel
+                input[3]  = new nextflow.dataflow.ChannelImpl(PREPARE_GENOME_REFERENCES.out.rrna_fastas)  // rrna_fastas channel
                 input[4]  = true  // fasta_provided
                 input[5]  = null  // splicesites
                 input[6]  = null  // bbsplit_fasta_list
@@ -215,7 +215,7 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.star_index.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
+                    workflow.out.star_index.findAll { p -> p != null }.collect { path -> file(path).listFiles().collect { f -> f.getName() }.sort().toString() }
                 ).match() }
             )
         }

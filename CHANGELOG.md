@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1942](https://github.com/nf-core/rnaseq/pull/1942) - Fix `--with_umi` transcriptome-side samtools stats silently colliding with genome-side stats, caused by a broad `withName` wildcard in `conf/modules/alignment.config` also matching the `BAM_DEDUP_UMI` subworkflow
 - [PR #1943](https://github.com/nf-core/rnaseq/pull/1943) - Apply `--min_mapped_reads` filtering to HISAT2 alignments
 - [PR #1958](https://github.com/nf-core/rnaseq/pull/1958) - Stop building the SortMeRNA index twice, and build the Salmon strandedness-inference index centrally in `PREPARE_GENOME_INDICES`
-- [PR #XXXX](https://github.com/nf-core/rnaseq/pull/XXXX) - Add `--fail_on_sample_checks` to fail the run, instead of silently skipping or defaulting to `unstranded`, when a sample fails the trimmed reads, mapped reads or strandedness check
+- [PR #1969](https://github.com/nf-core/rnaseq/pull/1969) - Add `--fail_on_sample_checks` to fail the run, instead of silently skipping or defaulting to `unstranded`, when a sample fails the trimmed reads, mapped reads or strandedness check
 
 ## [[3.27.0](https://github.com/nf-core/rnaseq/releases/tag/3.27.0)] - 2026-09-23
 

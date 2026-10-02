@@ -156,6 +156,7 @@ include { defineQcTools              } from './subworkflows/local/utils_nfcore_r
 include { getGenomeAttribute         } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { isStarIndexLegacy          } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { anySampleAutoStrandedness  } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { loadSamplesheet            } from './subworkflows/local/utils_nfcore_rnaseq_pipeline/samplesheet'
 
 include { AlignedSample; LintFile; SamplesheetRow; Contaminants; StringtieSample; BigwigSample; PipelineInfo; GenomeArtifact; UmiDedupBam; MarkdupBam; BamQcRnaseq; StringtieMerged; RrnaReferences; FastqQcTrimFilterSetstrandedness; QuantMerged; TrimStatus; MapStatus; StrandStatus } from './modules/nf-core/types'
 include { RsemMergeSample } from './modules/nf-core/custom/rsemmergecounts/main'
@@ -178,6 +179,8 @@ include { Deseq2Qc } from './modules/local/deseq2_qc/main'
 workflow NFCORE_RNASEQ {
 
     main:
+
+    def samplesheet_rows: List = loadSamplesheet(params.input, "${projectDir}/assets/schema_input.json")
 
     //
     // SUBWORKFLOW: Prepare reference genome files (FASTA, GTF, BED, transcript FASTA, chrom.sizes, rRNA FASTAs, Kraken DB)
@@ -238,7 +241,7 @@ workflow NFCORE_RNASEQ {
         params.use_parabricks_star,
         isStarIndexLegacy() ? true : false,
         params.hisat2_build_memory,
-        anySampleAutoStrandedness()
+        anySampleAutoStrandedness(samplesheet_rows)
     )
 
     // Check if contigs in genome fasta file > 512 Mbp
@@ -254,6 +257,7 @@ workflow NFCORE_RNASEQ {
 
     results = RNASEQ (
         ch_samplesheet,
+        samplesheet_rows,
         references.fasta,
         references.fai,
         references.gtf,

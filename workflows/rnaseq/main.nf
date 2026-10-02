@@ -83,6 +83,7 @@ workflow RNASEQ {
 
     take:
     ch_samplesheet: Value<Path>                        // sample_sheet.csv
+    samplesheet_rows: List                             // validated rows of sample_sheet.csv, one per sequencing run
     ch_fasta: Value<Path?>                             // genome.fasta
     ch_fai: Value<Path?>                               // genome.fai
     ch_gtf: Value<Path?>                               // genome.gtf
@@ -127,7 +128,7 @@ workflow RNASEQ {
     def ch_mqc_report_only: Channel<Path>         = channel.empty()
 
     def ch_input = channel
-        .fromList(readSamplesheet(params.input, "${projectDir}/assets/schema_input.json", params.skip_alignment) as List<Map>)
+        .fromList(readSamplesheet(samplesheet_rows, params.skip_alignment) as List<Map>)
         .map { s ->
             record(
                 id:                s.id,
@@ -804,8 +805,7 @@ workflow RNASEQ {
             aligner_display_name,
             ch_fastq,
             ch_collated_versions,
-            params.input,
-            "${projectDir}/assets/schema_input.json",
+            samplesheet_rows,
             file("$projectDir/assets/multiqc_config.yml", checkIfExists: true),
             params.multiqc_config ? file(params.multiqc_config, checkIfExists: true) : null,
             params.multiqc_logo   ? file(params.multiqc_logo,   checkIfExists: true) : null,

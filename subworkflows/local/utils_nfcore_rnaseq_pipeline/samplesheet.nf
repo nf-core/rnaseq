@@ -7,14 +7,22 @@ include { samplesheetToList         } from 'plugin/nf-schema'
 include { checkSamplesAfterGrouping } from './main'
 
 //
-// Read the samplesheet into one plain map per sample, merging the rows of a sample that has several
+// Validate the samplesheet against its schema and return its rows, one per sequencing run:
+// [ meta, fastq_1, fastq_2, genome_bam, transcriptome_bam ].
+//
+def loadSamplesheet(samplesheet, schema) {
+    return samplesheetToList(samplesheet, schema)
+}
+
+//
+// Group the samplesheet rows into one plain map per sample, merging the rows of a sample that has several
 // sequencing runs. Keys: id, meta, reads (all FASTQ files), runs (one list of FASTQ files per run),
 // bam, transcriptome_bam, percent_mapped and prealigned. A sample is prealigned when alignment is
 // skipped and the samplesheet supplies BAM files for it; only prealigned samples keep
 // `percent_mapped` in their meta.
 //
-def readSamplesheet(samplesheet, schema, skip_alignment) {
-    def rows = samplesheetToList(samplesheet, schema).collect { row ->
+def readSamplesheet(samplesheet_rows, skip_alignment) {
+    def rows = samplesheet_rows.collect { row ->
         def (meta, fastq_1, fastq_2, genome_bam, transcriptome_bam) = row
         def m = meta + [ id: meta.id as String, single_end: !fastq_2 ]
         return [ id: m.id, meta: m, run: fastq_2 ? [ fastq_1, fastq_2 ] : [ fastq_1 ], genome_bam: genome_bam, transcriptome_bam: transcriptome_bam ]

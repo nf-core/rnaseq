@@ -1,6 +1,12 @@
 nextflow.enable.types = true
 
-include { BamInput } from '../../types'
+
+record SamtoolsIndexInput {
+    id:   String
+    meta: Map
+    bam:  Path
+    args: String?
+}
 
 record SamtoolsIndexResult {
     id:   String
@@ -18,7 +24,7 @@ process SAMTOOLS_INDEX {
         : 'community.wave.seqera.io/library/htslib_samtools:1.24--d697cfb9dce007cd'}"
 
     input:
-    sample: BamInput
+    sample: SamtoolsIndexInput
 
     output:
     record(id: sample.id, meta: sample.meta, bai: file('*.{bai,csi,crai}')) as SamtoolsIndexResult
@@ -27,7 +33,7 @@ process SAMTOOLS_INDEX {
     tuple(task.process, 'samtools', eval("samtools version | sed '1!d;s/.* //'")) >> 'versions'
 
     script:
-    def args = task.ext.args ?: ''
+    def args = task.ext.args ?: sample.args ?: ''
     """
     samtools \\
         index \\

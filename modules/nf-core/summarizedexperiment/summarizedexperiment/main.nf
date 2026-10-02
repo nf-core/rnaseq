@@ -4,6 +4,7 @@ record SummarizedexperimentInput {
     id:           String
     meta:         Map
     matrix_files: List<Path>
+    prefix:       String?
 }
 
 record SummarizedexperimentSummarizedexperimentResult {

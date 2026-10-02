@@ -1,6 +1,13 @@
 nextflow.enable.types = true
 
-include { BamBaiInput } from '../../types'
+
+record UmitoolsDedupInput {
+    id:   String
+    meta: Map
+    bam:  Path
+    bai:  Path
+    args: String?
+}
 
 record UmitoolsDedupResult {
     id:                   String
@@ -22,7 +29,7 @@ process UMITOOLS_DEDUP {
         'community.wave.seqera.io/library/umi_tools_future_matplotlib_numpy_pruned:1ee668bafc8c9f81' }"
 
     input:
-    sample: BamBaiInput
+    sample: UmitoolsDedupInput
     get_output_stats: Boolean
 
     output:
@@ -40,7 +47,7 @@ process UMITOOLS_DEDUP {
     tuple(task.process, 'umitools', eval("umi_tools --version | sed 's/UMI-tools version: //'")) >> 'versions'
 
     script:
-    def args = task.ext.args ?: ''
+    def args = task.ext.args ?: sample.args ?: ''
     prefix = task.ext.prefix ?: "${sample.meta.id}"
     def paired = sample.meta.single_end ? "" : "--paired"
     stats = get_output_stats ? "--output-stats ${prefix}" : ""

@@ -8,6 +8,7 @@ record MultiqcInput {
     multiqc_logo:   Path?
     replace_names:  Path?
     sample_names:   Path?
+    args:           String?
 }
 
 record MultiqcReport {
@@ -45,7 +46,7 @@ process MULTIQC {
     ) as MultiqcReport
 
     script:
-    def args = task.ext.args ?: ''
+    def args = task.ext.args ?: sample.args ?: ''
     def prefix = task.ext.prefix ? "--filename ${task.ext.prefix}.html" : ''
     def config = sample.multiqc_config ? "--config ${sample.multiqc_config.join(' --config ')}" : ""
     def logo = sample.multiqc_logo ? "--cl-config 'custom_logo: \"${sample.multiqc_logo}\"'" : ''

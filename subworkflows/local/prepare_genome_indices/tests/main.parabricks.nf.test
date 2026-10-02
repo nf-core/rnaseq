@@ -47,6 +47,8 @@ nextflow_workflow {
                     input[17] = use_sentieon_star
                     input[18] = null  // contaminant_screening
                     input[19] = false  // prokaryotic
+                    input[20] = false  // skip_gtf_transcript_filter
+                    input[21] = null  // genome
                     """
                 }
             }
@@ -94,7 +96,9 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
+                input[26] = channel.value(false)  // any_auto_strandedness
+                input[27] = false  // prokaryotic
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }
@@ -159,6 +163,8 @@ nextflow_workflow {
                     input[17] = use_sentieon_star
                     input[18] = null  // contaminant_screening
                     input[19] = false  // prokaryotic
+                    input[20] = false  // skip_gtf_transcript_filter
+                    input[21] = null  // genome
                     """
                 }
             }
@@ -206,7 +212,9 @@ nextflow_workflow {
                 input[23] = use_parabricks_star
                 input[24] = false  // star_index_legacy
                 input[25] = params.hisat2_build_memory
-                input[26] = false  // any_auto_strandedness
+                input[26] = channel.value(false)  // any_auto_strandedness
+                input[27] = false  // prokaryotic
+                input[28] = record(salmon_index: '', kallisto_index: '')  // tool_args
                 """
             }
         }

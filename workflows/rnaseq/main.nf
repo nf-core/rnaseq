@@ -24,7 +24,7 @@ include { BAM_QC_RNASEQ                         } from '../../subworkflows/nf-co
 include { QUANTIFY_RSEM                         } from '../../subworkflows/nf-core/quantify_rsem'
 include { BAM_DEDUP_UMI                         } from '../../subworkflows/nf-core/bam_dedup_umi'
 
-include { ReadsInput; StringtieInput } from '../../modules/nf-core/types'
+include { ReadsInput; SampleRow; StringtieInput; ToolArgs } from '../../modules/nf-core/types'
 include { Bowtie2Aligned; StarAligned; MultiqcFiles; AlignedSample; Bam; Contaminants; StringtieSample; BigwigSample; PipelineInfo; UmiDedupBam; MarkdupBam; BamQcRnaseq; StringtieMerged; Hisat2Aligned; RrnaReferences; FastqQcTrimFilterSetstrandedness; QuantMerged; SampleRuns; TrimReadCount; TrimStatus; PercentMapped; MapStatus; PercentMappedPass; InferExperimentLog; StrandData; StrandStatus } from '../../modules/nf-core/types'
 include { RsemMergeSample } from '../../modules/nf-core/custom/rsemmergecounts/main'
 include { KallistoQuantSample } from '../../modules/nf-core/kallisto/quant/main'
@@ -36,7 +36,8 @@ include { SamtoolsIndexResult } from '../../modules/nf-core/samtools/index/main'
 include { StringtieResult } from '../../modules/nf-core/stringtie/stringtie/main'
 include { Deseq2Qc } from '../../modules/local/deseq2_qc/main'
 
-include { readSamplesheet                } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline/samplesheet'
+include { deseq2QcArgs; rustqcArgs; starAlignArgs; hisat2AlignArgs; bowtie2AlignArgs } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline/tool_args'
+include { readSamplesheet; samplesheetRowsToCsv } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline/samplesheet'
 include { classifyStrand                 } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { getHisat2PercentMapped         } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 
@@ -82,8 +83,9 @@ include { FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS              } from '../../subwor
 workflow RNASEQ {
 
     take:
-    ch_samplesheet: Value<Path>                        // sample_sheet.csv
-    samplesheet_rows: List                             // validated rows of sample_sheet.csv, one per sequencing run
+    params: Record                                     // the pipeline's params
+    tool_args: ToolArgs                                // the tool arguments that follow from the params
+    ch_sample_rows: Channel<SampleRow>                 // one row per sequencing run of each sample
     ch_fasta: Value<Path?>                             // genome.fasta
     ch_fai: Value<Path?>                               // genome.fai
     ch_gtf: Value<Path?>                               // genome.gtf
@@ -106,10 +108,10 @@ workflow RNASEQ {
 
     main:
 
-    def ch_pca_header_multiqc        = file("$projectDir/assets/deseq2_pca_header.txt", checkIfExists: true)
-    def sample_status_header_multiqc = file("$projectDir/assets/sample_status_header.txt", checkIfExists: true)
-    def ch_clustering_header_multiqc = file("$projectDir/assets/deseq2_clustering_header.txt", checkIfExists: true)
-    def ch_biotypes_header_multiqc   = file("$projectDir/assets/biotypes_header.txt", checkIfExists: true)
+    def ch_pca_header_multiqc        = file("${moduleDir}/../../assets/deseq2_pca_header.txt", checkIfExists: true)
+    def sample_status_header_multiqc = file("${moduleDir}/../../assets/sample_status_header.txt", checkIfExists: true)
+    def ch_clustering_header_multiqc = file("${moduleDir}/../../assets/deseq2_clustering_header.txt", checkIfExists: true)
+    def ch_biotypes_header_multiqc   = file("${moduleDir}/../../assets/biotypes_header.txt", checkIfExists: true)
 
     // Match the General Statistics column the active aligner emits so the
     // MultiQC fail_mapped row reads consistently with the rest of the report.
@@ -127,8 +129,11 @@ workflow RNASEQ {
     def ch_mqc_sample_only: Channel<MultiqcFiles> = channel.empty()
     def ch_mqc_report_only: Channel<Path>         = channel.empty()
 
-    def ch_input = channel
-        .fromList(readSamplesheet(samplesheet_rows, params.skip_alignment) as List<Map>)
+    // The rows are validated and merged per sample as one batch, since a sample's runs can be
+    // spread over any rows.
+    def ch_input = ch_sample_rows
+        .collect()
+        .flatMap { rows -> readSamplesheet(rows, "${moduleDir}/../../assets/schema_input.json", params.skip_alignment) as List<Map> }
         .map { s ->
             record(
                 id:                s.id,
@@ -141,6 +146,14 @@ workflow RNASEQ {
                 prealigned:        s.prealigned
             )
         }
+
+    // Samplesheet re-assembled from the validated rows, for the SummarizedExperiment sample metadata
+    def ch_samplesheet: Value<Path> = ch_sample_rows
+        .collect()
+        .flatMap { rows -> [ samplesheetRowsToCsv(rows) ] }
+        .collectFile(name: 'samplesheet.csv')
+        .collect()
+        .map { files -> files.toList().first() as Path }
 
     // Samples that go through FASTQ preprocessing and samples supplied as pre-aligned BAM files
     ch_fastq_samples = ch_input.filter { s -> !s.prealigned }
@@ -195,7 +208,8 @@ workflow RNASEQ {
         params.umi_discard_read,                    // umi_discard_read
         params.save_merged_fastq,                   // save_merged_fastq
         params.stranded_threshold,                  // stranded_threshold
-        params.unstranded_threshold                 // unstranded_threshold
+        params.unstranded_threshold,                // unstranded_threshold
+        tool_args                                   // tool_args
     )
 
     def ch_preprocessed: Channel<FastqQcTrimFilterSetstrandedness> = fastq_preprocessed.samples
@@ -240,8 +254,9 @@ workflow RNASEQ {
     //
     def ch_star: Channel<StarAligned> = channel.empty()
     if (!params.skip_alignment && (params.aligner == 'star_salmon' || params.aligner == 'star_rsem')) {
+        def star_tool = params.use_sentieon_star ? 'sentieon' : (params.use_parabricks_star ? 'parabricks' : 'star')
         ch_star = ALIGN_STAR (
-            ch_reads_ok,
+            ch_reads_ok.map { r -> r + record(args: starAlignArgs(params, star_tool, r.meta)) },
             ch_star_index,
             ch_gtf,
             params.star_ignore_sjdbgtf,
@@ -249,7 +264,8 @@ workflow RNASEQ {
             ch_fai,
             params.use_sentieon_star,
             params.use_parabricks_star,
-            params.skip_markduplicates
+            params.skip_markduplicates,
+            tool_args
         )
 
         ch_mqc_files = ch_mqc_files.mix(ch_star.map { r -> record(id: r.id, files: [r.star.log_final]) })
@@ -269,10 +285,12 @@ workflow RNASEQ {
     def ch_bowtie2: Channel<Bowtie2Aligned> = channel.empty()
     if (!params.skip_alignment && params.aligner == 'bowtie2_salmon') {
         ch_bowtie2 = ALIGN_BOWTIE2 (
-            ch_reads_ok,
+            ch_reads_ok.map { r -> r + record(args: bowtie2AlignArgs(params, r.meta)) },
             ch_bowtie2_index,
             ch_fasta,
-            ch_fai
+            ch_fai,
+            params.save_unaligned,
+            tool_args
         )
 
         ch_mqc_files = ch_mqc_files.mix(ch_bowtie2.map { r -> record(id: r.id, files: [r.bowtie2.log]) })
@@ -290,12 +308,13 @@ workflow RNASEQ {
     def ch_hisat2: Channel<Hisat2Aligned> = channel.empty()
     if (!params.skip_alignment && params.aligner == 'hisat2') {
         ch_hisat2 = FASTQ_ALIGN_HISAT2 (
-            ch_reads_ok,
+            ch_reads_ok.map { r -> r + record(args: hisat2AlignArgs(params, r.meta)) },
             ch_hisat2_index,
             ch_splicesites,
             ch_fasta,
             ch_fai,
-            params.save_unaligned || (params.contaminant_screening && params.contaminant_screening_input == 'unmapped')
+            params.save_unaligned || (params.contaminant_screening && params.contaminant_screening_input == 'unmapped'),
+            tool_args
         )
 
         ch_mqc_files = ch_mqc_files.mix(ch_hisat2.map { r -> record(id: r.id, files: [r.hisat2.summary]) })
@@ -336,7 +355,10 @@ workflow RNASEQ {
             params.umitools_dedup_stats,
             ch_transcriptome_bam,
             ch_transcript_fasta,
-            params.umitools_dedup_primary_only
+            params.umitools_dedup_primary_only,
+            tool_args,
+            params.umitools_grouping_method,
+            params.umitools_umi_separator
         )
 
         // The right-hand record wins on every shared field, so the deduplicated bam, bai and samtools replace the aligner's
@@ -387,7 +409,7 @@ workflow RNASEQ {
 
         if (run_deseq2_qc) {
             ch_deseq2 = DESEQ2_QC_RSEM (
-                ch_quant_merged,
+                ch_quant_merged.map { r -> r + record(args: deseq2QcArgs(params), label: params.aligner) },
                 ch_pca_header_multiqc,
                 ch_clustering_header_multiqc
             )
@@ -408,7 +430,9 @@ workflow RNASEQ {
             'salmon',
             params.kallisto_quant_fraglen,
             params.kallisto_quant_fraglen_sd,
-            params.skip_quantification_merge
+            params.skip_quantification_merge,
+            params.salmon_quant_libtype,
+            tool_args
         )
 
         ch_quant_salmon = bam_salmon.salmon
@@ -416,7 +440,7 @@ workflow RNASEQ {
 
         if (run_deseq2_qc) {
             ch_deseq2 = DESEQ2_QC_BAM_SALMON (
-                ch_quant_merged,
+                ch_quant_merged.map { r -> r + record(args: deseq2QcArgs(params), label: params.aligner) },
                 ch_pca_header_multiqc,
                 ch_clustering_header_multiqc
             )
@@ -450,7 +474,8 @@ workflow RNASEQ {
             ch_genome_bam,
             ch_fasta,
             ch_fai,
-            !params.use_rustqc
+            !params.use_rustqc,
+            tool_args
         )
 
         // Only bam, bai and metrics are merged: joining the whole result would overwrite the aligner's samtools stats with null when RustQC skips them
@@ -526,7 +551,7 @@ workflow RNASEQ {
             // MODULE: RustQC - single-pass replacement for multiple QC tools
             //
             ch_bam_qc_rustqc = RUSTQC (
-                ch_genome_bam,
+                ch_genome_bam.map { r -> r + record(args: rustqcArgs(params, r.meta)) },
                 ch_gtf,
             )
 
@@ -561,7 +586,8 @@ workflow RNASEQ {
                 ch_fai,
                 ch_biotypes_header_multiqc,
                 qc_tools,
-                biotype
+                biotype,
+                params.featurecounts_feature_type
             )
 
             ch_mqc_files = ch_mqc_files.mix(ch_bam_qc.map { r -> record(id: r.id, files: r.mqc_files) })
@@ -682,7 +708,7 @@ workflow RNASEQ {
                 ch_mqc_files = ch_mqc_files.mix(ch_kraken2.map { r -> record(id: r.id, files: [r.report]) })
             } else if (params.contaminant_screening == 'kraken2_bracken') {
                 ch_bracken = BRACKEN (
-                    ch_kraken2,
+                    ch_kraken2.map { r -> r + record(args: "-l ${params.bracken_precision}") },
                     ch_kraken_db
                 )
                 ch_mqc_files = ch_mqc_files.mix(ch_bracken.map { r -> record(id: r.id, files: [r.report]) })
@@ -739,7 +765,9 @@ workflow RNASEQ {
             params.pseudo_aligner,
             params.kallisto_quant_fraglen,
             params.kallisto_quant_fraglen_sd,
-            params.skip_quantification_merge
+            params.skip_quantification_merge,
+            params.salmon_quant_libtype,
+            tool_args + record(se_prefix: "${params.pseudo_aligner}.merged")
         )
 
         ch_quant_pseudo          = pseudo.salmon
@@ -754,7 +782,7 @@ workflow RNASEQ {
 
         if (run_deseq2_qc) {
             ch_deseq2_pseudo = DESEQ2_QC_PSEUDO (
-                ch_quant_merged_pseudo,
+                ch_quant_merged_pseudo.map { r -> r + record(args: deseq2QcArgs(params), label: params.pseudo_aligner) },
                 ch_pca_header_multiqc,
                 ch_clustering_header_multiqc
             )
@@ -805,18 +833,18 @@ workflow RNASEQ {
             aligner_display_name,
             ch_fastq,
             ch_collated_versions,
-            samplesheet_rows,
-            file("$projectDir/assets/multiqc_config.yml", checkIfExists: true),
+            file("${moduleDir}/../../assets/multiqc_config.yml", checkIfExists: true),
             params.multiqc_config ? file(params.multiqc_config, checkIfExists: true) : null,
             params.multiqc_logo   ? file(params.multiqc_logo,   checkIfExists: true) : null,
             params.multiqc_methods_description
                 ? file(params.multiqc_methods_description)
-                : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true),
-            file("$projectDir/assets/strand_check_summary.yaml",     checkIfExists: true),
-            file("$projectDir/assets/strand_check_composition.yaml", checkIfExists: true),
+                : file("${moduleDir}/../../assets/methods_description_template.yml", checkIfExists: true),
+            file("${moduleDir}/../../assets/strand_check_summary.yaml",     checkIfExists: true),
+            file("${moduleDir}/../../assets/strand_check_composition.yaml", checkIfExists: true),
             sample_status_header_multiqc,
             params.min_trimmed_reads,
-            params.skip_quantification_merge
+            params.skip_quantification_merge,
+            tool_args
         )
         ch_multiqc_report = ch_multiqc.map { r -> r.report }
     }

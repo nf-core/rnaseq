@@ -1,6 +1,13 @@
 nextflow.enable.types = true
 
-include { ReadsInput; Bowtie2Logs } from '../../types'
+include { Bowtie2Logs } from '../../types'
+
+record Bowtie2AlignInput {
+    id:    String
+    meta:  Map
+    reads: List<Path>
+    args:  String?
+}
 
 record Bowtie2AlignResult {
     id:       String
@@ -24,7 +31,7 @@ process BOWTIE2_ALIGN {
         'community.wave.seqera.io/library/bowtie2_htslib_samtools_pigz:edeb13799090a2a6' }"
 
     input:
-    sample: ReadsInput
+    sample: Bowtie2AlignInput
     index: Path
     fasta: Path?
     save_unaligned: Boolean
@@ -49,7 +56,7 @@ process BOWTIE2_ALIGN {
     tuple(task.process, 'pigz', eval("pigz --version 2>&1 | sed 's/pigz //'")) >> 'versions'
 
     script:
-    def args = task.ext.args ?: ""
+    def args = task.ext.args ?: sample.args ?: ''
     def args2 = task.ext.args2 ?: ""
     def prefix = task.ext.prefix ?: "${sample.meta.id}"
     def rg = args.contains("--rg-id") ? "" : "--rg-id ${prefix} --rg SM:${prefix}"

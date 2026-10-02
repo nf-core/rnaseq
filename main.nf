@@ -22,10 +22,11 @@ nextflow.enable.types = true
 
 params {
     // Input/output options
-    input:                       Path? = null
+    input:                       Channel<SampleRow>
     email:                       String? = null
 
     // Reference genome options
+    genome:                      String? = null
     fasta:                       String? = getGenomeAttribute('fasta')
     gtf:                         String? = getGenomeAttribute('gtf')
     gff:                         String? = getGenomeAttribute('gff')
@@ -40,16 +41,21 @@ params {
     kallisto_index:              String? = getGenomeAttribute('kallisto')
     bowtie2_index:               String? = getGenomeAttribute('bowtie2')
     hisat2_build_memory:         String = '200.GB'
-    gencode:                     Boolean
-    prokaryotic:                 Boolean
+    gencode:                     Boolean = false
+    prokaryotic:                 Boolean = false
     gffread_transcript_fasta:    Boolean = false
     gtf_extra_attributes:        String = 'gene_name'
     gtf_group_features:          String = 'gene_id'
-    featurecounts_group_type:    String
-
+    featurecounts_group_type:    String = 'gene_biotype'
+    featurecounts_feature_type:  String = 'exon'
+    skip_gtf_transcript_filter:  Boolean = false
+    arm:                         Boolean = false
     // Read trimming options
     trimmer:                     String = 'trimgalore'
     min_trimmed_reads:           Integer = 10000
+    extra_trimgalore_args:       String? = null
+    extra_fastp_args:            String? = null
+    extra_fqlint_args:           String = '--disable-validator P001'
 
     // Read filtering options
     bbsplit_fasta_list:          String? = null
@@ -58,22 +64,36 @@ params {
     remove_ribo_rna:             Boolean = false
     ribo_removal_tool:           String = 'sortmerna'
     bowtie2_rrna_index:          String? = null
-    ribo_database_manifest:      String = "${projectDir}/assets/rrna-db-defaults.txt"
+    ribo_database_manifest:      String = "${moduleDir}/assets/rrna-db-defaults.txt"
+    use_gpu_ribodetector:        Boolean = false
 
     // UMI options
-    with_umi:                    Boolean
+    with_umi:                    Boolean = false
+    umitools_extract_method:     String = 'string'
+    umitools_grouping_method:    String = 'directional'
+    umitools_bc_pattern:         String?
+    umitools_bc_pattern2:        String?
+    umitools_umi_separator:      String?
     umi_dedup_tool:              String = 'umitools'
     umi_discard_read:            Integer = 0
     umitools_dedup_stats:        Boolean = false
     umitools_dedup_primary_only: Boolean = false
 
     // Alignment options
-    aligner:                     String
+    aligner:                     String = 'star_salmon'
     use_sentieon_star:           Boolean = false
     use_parabricks_star:         Boolean = false
     pseudo_aligner:              String?
-    bam_csi_index:               Boolean
+    bam_csi_index:               Boolean = false
     star_ignore_sjdbgtf:         Boolean = false
+    pseudo_aligner_kmer_size:    Integer = 31
+    salmon_quant_libtype:        String?
+    extra_star_align_args:       String?
+    extra_hisat2_align_args:     String?
+    extra_bowtie2_align_args:    String?
+    extra_salmon_index_args:     String?
+    extra_salmon_quant_args:     String?
+    extra_kallisto_quant_args:   String?
     min_mapped_reads:            Float = 5.0
     seq_center:                  String?
     seq_platform:                String?
@@ -91,14 +111,16 @@ params {
     save_reference:              Boolean = false
     save_trimmed:                Boolean = false
     save_align_intermeds:        Boolean = false
-    save_unaligned:              Boolean
+    save_unaligned:              Boolean = false
     save_kraken_assignments:     Boolean = false
     save_kraken_unassigned:      Boolean = false
 
     // Quality Control
     rseqc_modules:               String = 'bam_stat,inner_distance,infer_experiment,junction_annotation,junction_saturation,read_distribution,read_duplication'
     contaminant_screening:       String?
-    contaminant_screening_input: String
+    contaminant_screening_input: String = 'unmapped'
+    bracken_precision:           String = 'S'
+    deseq2_vst:                  Boolean = true
     kraken_db:                   String? = null
     sylph_db:                    Path? = null
     sylph_taxonomy:              Path? = null
@@ -130,10 +152,11 @@ params {
     version:                     Boolean = false
     email_on_fail:               String? = null
     plaintext_email:             Boolean = false
-    monochrome_logs:             Boolean
+    monochrome_logs:             Boolean = false
     multiqc_config:              Path? = null
     multiqc_logo:                Path? = null
     multiqc_methods_description: Path? = null
+    multiqc_title:               String?
     validate_params:             Boolean = true
     help:                        String? = null
     help_full:                   Boolean = false
@@ -155,10 +178,9 @@ include { checkMaxContigSize         } from './subworkflows/local/utils_nfcore_r
 include { defineQcTools              } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { getGenomeAttribute         } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { isStarIndexLegacy          } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
-include { anySampleAutoStrandedness  } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
-include { loadSamplesheet            } from './subworkflows/local/utils_nfcore_rnaseq_pipeline/samplesheet'
+include { toolArgs } from './subworkflows/local/utils_nfcore_rnaseq_pipeline/tool_args'
 
-include { AlignedSample; LintFile; SamplesheetRow; Contaminants; StringtieSample; BigwigSample; PipelineInfo; GenomeArtifact; UmiDedupBam; MarkdupBam; BamQcRnaseq; StringtieMerged; RrnaReferences; FastqQcTrimFilterSetstrandedness; QuantMerged; TrimStatus; MapStatus; StrandStatus } from './modules/nf-core/types'
+include { AlignedSample; LintFile; SampleRow; ToolArgs; SamplesheetRow; Contaminants; StringtieSample; BigwigSample; PipelineInfo; GenomeArtifact; UmiDedupBam; MarkdupBam; BamQcRnaseq; StringtieMerged; RrnaReferences; FastqQcTrimFilterSetstrandedness; QuantMerged; TrimStatus; MapStatus; StrandStatus } from './modules/nf-core/types'
 include { RsemMergeSample } from './modules/nf-core/custom/rsemmergecounts/main'
 include { KallistoQuantSample } from './modules/nf-core/kallisto/quant/main'
 include { MultiqcReport } from './modules/nf-core/multiqc/main'
@@ -178,9 +200,10 @@ include { Deseq2Qc } from './modules/local/deseq2_qc/main'
 //
 workflow NFCORE_RNASEQ {
 
-    main:
+    take:
+    params: Record   // the pipeline's params, passed in because an including pipeline has its own
 
-    def samplesheet_rows: List = loadSamplesheet(params.input, "${projectDir}/assets/schema_input.json")
+    main:
 
     //
     // SUBWORKFLOW: Prepare reference genome files (FASTA, GTF, BED, transcript FASTA, chrom.sizes, rRNA FASTAs, Kraken DB)
@@ -208,12 +231,16 @@ workflow NFCORE_RNASEQ {
         params.skip_pseudo_alignment,
         params.use_sentieon_star,
         params.contaminant_screening,
-        params.prokaryotic
+        params.prokaryotic,
+        params.skip_gtf_transcript_filter,
+        params.genome
     )
 
     //
     // SUBWORKFLOW: Build or load aligner / pseudo-aligner / filtering indices
     //
+    def tool_args: ToolArgs = toolArgs(params)
+
     indices = PREPARE_GENOME_INDICES (
         references.fasta,
         references.gtf,
@@ -239,9 +266,11 @@ workflow NFCORE_RNASEQ {
         params.skip_pseudo_alignment,
         params.use_sentieon_star,
         params.use_parabricks_star,
-        isStarIndexLegacy() ? true : false,
+        isStarIndexLegacy(params) ? true : false,
         params.hisat2_build_memory,
-        anySampleAutoStrandedness(samplesheet_rows)
+        params.input.collect().map { rows -> rows.any { row -> row.strandedness == 'auto' } },
+        params.prokaryotic,
+        tool_args
     )
 
     // Check if contigs in genome fasta file > 512 Mbp
@@ -252,12 +281,12 @@ workflow NFCORE_RNASEQ {
     //
     // WORKFLOW: Run nf-core/rnaseq workflow
     //
-    ch_samplesheet = channel.value(file(params.input, checkIfExists: true))
     qc_tools = defineQcTools(params)
 
     results = RNASEQ (
-        ch_samplesheet,
-        samplesheet_rows,
+        params,
+        tool_args,
+        params.input,
         references.fasta,
         references.fai,
         references.gtf,
@@ -304,6 +333,7 @@ workflow NFCORE_RNASEQ {
         .join(ch_runs, by: 'id')
         .join(results.percent_mapped, by: 'id')
         .flatMap { r ->
+            def aligned_dir = "${params.skip_quantification_merge ? "${r.id}/" : ''}${params.aligner}/"
             r.runs.collect { run ->
                 record(
                     sample:            r.id,
@@ -312,18 +342,23 @@ workflow NFCORE_RNASEQ {
                     strandedness:      r.meta.strandedness,
                     seq_platform:      r.meta.seq_platform ?: params.seq_platform,
                     seq_center:        r.meta.seq_center ?: params.seq_center,
-                    genome_bam:        r.bam != null ? "${workflow.outputDir}/${alignedDir(r.id)}${r.bam.name}" : null,
+                    genome_bam:        r.bam != null ? "${workflow.outputDir}/${aligned_dir}${r.bam.name}" : null,
                     percent_mapped:    r.percent_mapped,
-                    transcriptome_bam: r.transcriptome_bam != null ? "${workflow.outputDir}/${alignedDir(r.id)}${r.transcriptome_bam.name}" : null
+                    transcriptome_bam: r.transcriptome_bam != null ? "${workflow.outputDir}/${aligned_dir}${r.transcriptome_bam.name}" : null
                 )
             }
         }
+
+    // Merged gene matrices of the primary quantifier: the alignment-based one unless alignment is skipped
+    def ch_gene_quant: Channel<QuantMerged> = params.skip_alignment ? results.quant_merged_pseudo : results.quant_merged
 
     emit:
     trim_status:           Channel<TrimStatus>                       = results.trim_status
     map_status:            Channel<MapStatus>                        = results.map_status
     strand_status:         Channel<StrandStatus>                     = results.strand_status
     multiqc_report:        Channel<Path>                             = results.multiqc_report
+    gtf:                   Value<Path?>                              = references.gtf
+    gene_quant:            Channel<QuantMerged>                      = ch_gene_quant
     genome_references:     Channel<GenomeArtifact>                   = references.references
     genome_intermediates:  Channel<GenomeArtifact>                   = references.intermediates
     genome_indices:        Channel<GenomeArtifact>                   = indices.indices
@@ -381,13 +416,14 @@ workflow {
         params.input,
         params.help,
         params.help_full,
-        params.show_hidden
+        params.show_hidden,
+        params
     )
 
     //
     // WORKFLOW: Run main workflow
     //
-    results = NFCORE_RNASEQ ()
+    results = NFCORE_RNASEQ (params)
 
     //
     // SUBWORKFLOW: Run completion tasks
@@ -400,7 +436,8 @@ workflow {
         results.multiqc_report,
         results.trim_status,
         results.map_status,
-        results.strand_status
+        results.strand_status,
+        params
     )
 
     publish:
@@ -408,6 +445,8 @@ workflow {
     stringtie            = results.stringtie
     stringtie_merged     = results.stringtie_merged
     bigwig               = results.bigwig
+    gtf                  = results.gtf
+    gene_quant           = results.gene_quant
     genome_references    = results.genome_references
     genome_intermediates = results.genome_intermediates
     genome_indices       = results.genome_indices
@@ -493,6 +532,17 @@ output {
     }
 
     // The genome targets route on GenomeArtifact.kind: 'kraken_db' (genome_references) and 'sortmerna' (genome_indices).
+    // gtf and gene_quant are only returned to an including pipeline, never published
+    gtf: Path? {
+        enabled false
+        path { f -> f >> "genome/" }
+    }
+
+    gene_quant: Channel<QuantMerged> {
+        enabled false
+        path { s -> s.counts_gene >> "quant/" }
+    }
+
     genome_references: Channel<GenomeArtifact> {   // never sample-prefixed
         enabled params.save_reference
         path { r -> r.file >> (r.kind == 'kraken_db' ? 'genome/index/' : 'genome/') }

@@ -51,6 +51,7 @@ jobs:
           GITHUB_COMMENTS_URL: ${{ github.event.pull_request.comments_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_PR_COMMIT: ${{ github.event.pull_request.head.sha }}
+          NXF_PLUGINS_TEST_REPOSITORY: https://github.com/pinin4fjords/nf-schema/releases/download/2.7.2-channel.5/nf-schema-2.7.2-channel.5-meta.json
         run: nf-core -l lint_log.txt pipelines lint --dir ${GITHUB_WORKSPACE} --markdown lint_results.md
 
       - name: Run nf-core pipelines lint --release
@@ -59,6 +60,7 @@ jobs:
           GITHUB_COMMENTS_URL: ${{ github.event.pull_request.comments_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_PR_COMMIT: ${{ github.event.pull_request.head.sha }}
+          NXF_PLUGINS_TEST_REPOSITORY: https://github.com/pinin4fjords/nf-schema/releases/download/2.7.2-channel.5/nf-schema-2.7.2-channel.5-meta.json
         run: nf-core -l lint_log.txt pipelines lint --release --dir ${GITHUB_WORKSPACE} --markdown lint_results.md
 
       - name: Save PR number

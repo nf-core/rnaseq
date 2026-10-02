@@ -16,6 +16,29 @@ You will need to create a samplesheet with information about the samples you wou
 --input '[path to samplesheet file]'
 ```
 
+### Including the pipeline in another pipeline
+
+:::warning
+Pipeline composition is experimental and needs a Nextflow version that includes [nextflow-io/nextflow#7213](https://github.com/nextflow-io/nextflow/pull/7213).
+:::
+
+`--input` is a `Channel<SampleRow>` parameter: from the command line Nextflow loads the samplesheet into one record per row, and a pipeline that includes this one can pass its own channel of the same shape. The rows are validated against `assets/schema_input.json` either way, so a channel is held to the same checks as a samplesheet file.
+
+```groovy
+include { params as RnaseqParams ; workflow as NFCORE_RNASEQ } from './pipelines/nf-core/rnaseq'
+
+params {
+    rnaseq: RnaseqParams
+}
+
+workflow {
+    main:
+    rnaseq = NFCORE_RNASEQ( params.rnaseq + record(input: ch_samples) )
+}
+```
+
+The including pipeline receives the pipeline's outputs as channels (for example `multiqc`, `quant_merged`, `quant_merged_pseudo` and `genome_references`), and decides for itself what to publish. Two outputs are returned to the including pipeline and never published by this pipeline: `gtf`, the reference annotation used by the run, and `gene_quant`, the merged gene-level matrices of the primary quantifier (alignment-based unless `--skip_alignment` is set), which is the usual input for downstream differential analysis. Only the script and its modules are included, so the including pipeline has to provide the rest of the configuration: the manifest, resource settings, the executor and container profile, the `nf-schema` plugin, and the process settings, by including `conf/modules.config` of this pipeline. The params of this pipeline, including every tool argument such as `extra_star_align_args`, are set in the `rnaseq` record. The only params that an including pipeline needs at the top level are the config params, whose defaults are in `conf/params.config` (`publish_dir_mode`, `custom_config_base`, `igenomes_base`, `gpu_container_options` and the like). To change a tool setting for the included pipeline in another way, use a selector that carries the alias in its config, for example `withName: 'NFCORE_RNASEQ:.*:STAR_ALIGN' { ext.args = '...' }`; when `ext.args` is set it replaces the arguments that the pipeline builds for that tool, as it does when the pipeline runs directly (TrimGalore keeps its fixed options and the `extra_trimgalore_args` param, and `ext.args` replaces only the fixed ones). Set `validate_params` to `false` for the included pipeline, since `nextflow_schema.json` validation applies to the params of the pipeline that is run. Genome shortcuts (`--genome`) and the completion email templates are not available when included; pass reference files explicitly.
+
 ### Multiple runs of the same sample
 
 The `sample` identifiers have to be the same when you have re-sequenced the same sample more than once e.g. to increase sequencing depth. The pipeline will concatenate the raw reads before performing any downstream analysis. Below is an example for the same sample sequenced across 3 lanes.

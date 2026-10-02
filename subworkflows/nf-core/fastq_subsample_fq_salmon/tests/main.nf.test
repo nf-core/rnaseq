@@ -48,6 +48,7 @@ nextflow_workflow {
                 input[3] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)))          // genome_gtf
                 input[4] = new nextflow.dataflow.ValueImpl(SALMON_INDEX.out.map { r -> r.index }.first())
                 input[5] = make_index
+                input[6] = record(salmon_index_strandedness: null)  // tool_args
                 """
             }
         }
@@ -108,6 +109,7 @@ nextflow_workflow {
                 input[3] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true)))          // genome_gtf
                 input[4] = new nextflow.dataflow.ValueImpl(SALMON_INDEX.out.map { r -> r.index }.first())
                 input[5] = make_index
+                input[6] = record(salmon_index_strandedness: null)  // tool_args
                 """
             }
         }

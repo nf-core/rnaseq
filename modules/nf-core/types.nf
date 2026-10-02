@@ -361,6 +361,40 @@ record LintFile {
     file: Path
 }
 
+// Tool arguments and options that follow from the pipeline params, built once and handed to the
+// subworkflows that run the tools; a subworkflow declares only the fields it reads. Attach only the field
+// a process uses to its input record: every field of a process input record is part of the task hash, so
+// a whole ToolArgs would make any change rerun the process.
+record ToolArgs {
+    fq_lint:                   String?
+    umi_extract:               String?
+    fastp:                     String?
+    trimgalore:                String?
+    use_gpu_ribodetector:      Boolean
+    salmon_index:              String?
+    salmon_index_strandedness: String?
+    kallisto_index:            String?
+    salmon_quant:              String?
+    kallisto_quant:            String?
+    se_prefix:                 String?
+    samtools_index:            String?
+    multiqc:                   String?
+}
+
+// One row of the input samplesheet, validated against assets/schema_input.json; a sample with
+// several sequencing runs has one row per run.
+record SampleRow {
+    sample:            String
+    fastq_1:           Path
+    fastq_2:           Path?
+    strandedness:      String
+    seq_platform:      String?
+    seq_center:        String?
+    genome_bam:        Path?
+    transcriptome_bam: Path?
+    percent_mapped:    Float?
+}
+
 // One row of samplesheet_with_bams.csv; field order is the CSV column order.
 record SamplesheetRow {
     sample:            String

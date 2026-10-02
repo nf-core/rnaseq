@@ -57,6 +57,7 @@ nextflow_workflow {
                 input[4] = 'sortmerna'                                            // ribo_removal_tool
                 input[5] = true                                                   // make_sortmerna_index
                 input[6] = false                                                  // make_bowtie2_index
+                input[7] = record(use_gpu_ribodetector: false)  // tool_args
                 """
             }
         }
@@ -98,6 +99,7 @@ nextflow_workflow {
                 input[4] = 'ribodetector'                                         // ribo_removal_tool
                 input[5] = false                                                  // make_sortmerna_index
                 input[6] = false                                                  // make_bowtie2_index
+                input[7] = record(use_gpu_ribodetector: false)  // tool_args
                 """
             }
         }
@@ -146,6 +148,7 @@ nextflow_workflow {
                 input[4] = 'bowtie2'                                              // ribo_removal_tool
                 input[5] = false                                                  // make_sortmerna_index
                 input[6] = true                                                   // make_bowtie2_index
+                input[7] = record(use_gpu_ribodetector: false)  // tool_args
                 """
             }
         }
@@ -210,6 +213,7 @@ nextflow_workflow {
                 input[4] = 'bowtie2'                                              // ribo_removal_tool
                 input[5] = false                                                  // make_sortmerna_index
                 input[6] = true                                                   // make_bowtie2_index
+                input[7] = record(use_gpu_ribodetector: false)  // tool_args
                 """
             }
         }
@@ -272,6 +276,7 @@ nextflow_workflow {
                 input[4] = 'sortmerna'                                            // ribo_removal_tool
                 input[5] = true                                                   // make_sortmerna_index
                 input[6] = false                                                  // make_bowtie2_index
+                input[7] = record(use_gpu_ribodetector: false)  // tool_args
                 """
             }
         }
@@ -320,6 +325,7 @@ nextflow_workflow {
                 input[4] = 'bowtie2'                                              // ribo_removal_tool
                 input[5] = false                                                  // make_sortmerna_index
                 input[6] = true                                                   // make_bowtie2_index
+                input[7] = record(use_gpu_ribodetector: false)  // tool_args
                 """
             }
         }

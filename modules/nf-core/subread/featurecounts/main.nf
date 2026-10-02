@@ -1,6 +1,12 @@
 nextflow.enable.types = true
 
-include { BamInput } from '../../types'
+
+record FeaturecountsInput {
+    id:   String
+    meta: Map
+    bam:  Path
+    args: String?
+}
 
 record SubreadFeaturecountsResult {
     id:      String
@@ -19,7 +25,7 @@ process SUBREAD_FEATURECOUNTS {
         : 'quay.io/biocontainers/subread:2.1.1--h577a1d6_0'}"
 
     input:
-    sample: BamInput
+    sample: FeaturecountsInput
     annotation: Path
 
     output:
@@ -34,7 +40,7 @@ process SUBREAD_FEATURECOUNTS {
     tuple(task.process, 'subread', eval("featureCounts -v 2>&1 | sed 's/featureCounts v//'")) >> 'versions'
 
     script:
-    def args = task.ext.args ?: ''
+    def args = task.ext.args ?: sample.args ?: ''
     def prefix = task.ext.prefix ?: "${sample.meta.id}"
     def paired_end = sample.meta.single_end ? '' : '-p'
 

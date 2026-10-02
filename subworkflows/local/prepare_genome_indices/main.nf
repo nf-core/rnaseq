@@ -29,12 +29,18 @@ include { SENTIEON_RSEMPREPAREREFERENCE as SENTIEON_RSEM_PREPAREREFERENCE_GENOME
 include { STAR_GENOMEPARAMS_UPGRADE         } from '../../../modules/local/star_genomeparams_upgrade'
 
 include { taskOutputOrNull                  } from '../utils_nfcore_rnaseq_pipeline'
+include { memoryToGiga                       } from '../utils_nfcore_rnaseq_pipeline/tool_args'
 include { GenomeArtifact } from '../../../modules/nf-core/types'
 include { BbmapBbsplitResult } from '../../../modules/nf-core/bbmap/bbsplit/main'
 include { KallistoIndexResult } from '../../../modules/nf-core/kallisto/index/main'
 include { SalmonIndexResult } from '../../../modules/nf-core/salmon/index/main'
 include { SortmernaResult } from '../../../modules/nf-core/sortmerna/main'
 include { StarGenomegenerateResult } from '../../../modules/nf-core/star/genomegenerate/main'
+
+record GenomeIndexArgs {
+    salmon_index:   String?
+    kallisto_index: String?
+}
 
 workflow PREPARE_GENOME_INDICES {
 
@@ -65,7 +71,9 @@ workflow PREPARE_GENOME_INDICES {
     use_parabricks_star: Boolean                // whether to use parabricks STAR version
     star_index_legacy: Boolean                  // whether the supplied star_index was built with STAR 2.6.x and needs genomeParameters.txt upgraded to the 2.7.4a metadata schema
     hisat2_build_memory: String?                // memory threshold for HISAT2 index building with splice sites
-    any_auto_strandedness: Boolean              // whether any sample in the input samplesheet declares strandedness 'auto', requiring a Salmon index for strandedness inference
+    any_auto_strandedness: Value<Boolean>       // whether any sample in the input samplesheet declares strandedness 'auto', requiring a Salmon index for strandedness inference
+    prokaryotic: Boolean                        // whether the genome is prokaryotic, so that the STAR index is built from CDS features
+    tool_args: GenomeIndexArgs                  // Salmon and Kallisto index options
 
     main:
     // Absent indices are Values holding null so every stream keeps one type.
@@ -79,9 +87,7 @@ workflow PREPARE_GENOME_INDICES {
         // If no index is provided, this subworkflow does not need to build an index as that is handled by the fastq_remove_rrna subworkflow.
         (ribo_removal_tool == 'bowtie2' && bowtie2_rrna_index ? ['bowtie2_rrna'] : []) +
         ((!skip_alignment && aligner) || aligner == 'star_rsem' ? [aligner as String] : []) +
-        (!skip_pseudo_alignment && pseudo_aligner ? [pseudo_aligner as String] : []) +
-        // needed to infer strandedness even without --pseudo_aligner salmon
-        (any_auto_strandedness ? ['salmon'] : [])
+        (!skip_pseudo_alignment && pseudo_aligner ? [pseudo_aligner as String] : [])
 
     //---------------------------------------------------------
     // 2) BBSplit index: uses FASTA only if we generate from scratch
@@ -160,7 +166,7 @@ workflow PREPARE_GENOME_INDICES {
     if (build_star && use_parabricks_star && fasta_provided) {
         // Parabricks needs its own STAR index built with its bundled STAR version
         def ch_star_generated: Value<StarGenomegenerateResult> = PARABRICKS_STARGENOMEGENERATE(
-            ch_fasta.map { item -> record(id: 'genome', meta: [:], fasta: item) },
+            ch_fasta.map { item -> record(id: 'genome', meta: [:], fasta: item, args: prokaryotic ? '--sjdbGTFfeatureExon CDS' : '') },
             ch_gtf
         )
         ch_star_index         = ch_star_generated.map { r -> r.index }
@@ -180,7 +186,7 @@ workflow PREPARE_GENOME_INDICES {
         }
     } else if (build_star && fasta_provided) {
         ch_star_generated = STAR_GENOMEGENERATE(
-            ch_fasta.map { item -> record(id: 'genome', meta: [:], fasta: item) },
+            ch_fasta.map { item -> record(id: 'genome', meta: [:], fasta: item, args: prokaryotic ? '--sjdbGTFfeatureExon CDS' : '') },
             ch_gtf
         )
         ch_star_index         = ch_star_generated.map { r -> r.index }
@@ -239,7 +245,7 @@ workflow PREPARE_GENOME_INDICES {
                 .combine(ch_gtf)
                 .combine(ch_splicesites)
                 .map { fasta_file, gtf_file, ss_file -> record(id: 'genome', meta: [:], fasta: fasta_file, gtf: gtf_file, splicesites: ss_file) },
-            hisat2_build_memory
+            channel.value(memoryToGiga(hisat2_build_memory))
         ).map { r -> r.index }
     } else {
         ch_hisat2_index = ch_no_path
@@ -272,17 +278,29 @@ workflow PREPARE_GENOME_INDICES {
         // genome_fasta may be null (no decoys)
         def ch_salmon_built: Value<SalmonIndexResult> = SALMON_INDEX(
             ch_transcript_fasta
-                .map { transcript_fasta_file -> record(id: 'salmon_index', meta: [:], transcript_fasta: transcript_fasta_file) }
+                .map { transcript_fasta_file -> record(id: 'salmon_index', meta: [:], args: tool_args.salmon_index, transcript_fasta: transcript_fasta_file) }
                 .combine(genome_fasta: ch_fasta)
         )
         ch_salmon_index = ch_salmon_built.map { r -> r.index }
     } else if ('salmon' in prepare_tool_indices) {
         ch_salmon_built = SALMON_INDEX(
-            ch_transcript_fasta.map { item -> record(id: 'salmon_index', meta: [:], transcript_fasta: item, genome_fasta: null) }
+            ch_transcript_fasta.map { item -> record(id: 'salmon_index', meta: [:], args: tool_args.salmon_index, transcript_fasta: item, genome_fasta: null) }
         )
         ch_salmon_index = ch_salmon_built.map { r -> r.index }
     } else {
-        ch_salmon_index = ch_no_path
+        // Strandedness inference needs a Salmon index even without --pseudo_aligner salmon. Whether
+        // any sample asks for it is only known once the samplesheet has been read, so the build
+        // is gated on that value.
+        def ch_salmon_gated: Channel<SalmonIndexResult> = SALMON_INDEX(
+            ch_transcript_fasta
+                .map { transcript_fasta_file -> record(id: 'salmon_index', meta: [:], args: tool_args.salmon_index, transcript_fasta: transcript_fasta_file) }
+                .combine(genome_fasta: ch_fasta)
+                .combine(any_auto: any_auto_strandedness)
+                .flatMap { r ->
+                    r.any_auto ? [ record(id: r.id, meta: r.meta, args: r.args, transcript_fasta: r.transcript_fasta, genome_fasta: fasta_provided ? r.genome_fasta : null) ] : []
+                }
+        )
+        ch_salmon_index = ch_salmon_gated.collect().map { rs -> rs.isEmpty() ? null : rs.toList().first().index }
     }
 
     //--------------------------------------------------
@@ -293,7 +311,7 @@ workflow PREPARE_GENOME_INDICES {
     } else if (kallisto_index) {
         ch_kallisto_index = channel.value(file(kallisto_index))
     } else if ('kallisto' in prepare_tool_indices) {
-        def ch_kallisto_built: Value<KallistoIndexResult> = KALLISTO_INDEX(ch_transcript_fasta.map { item -> record(id: 'kallisto_index', meta: [:], fasta: item) })
+        def ch_kallisto_built: Value<KallistoIndexResult> = KALLISTO_INDEX(ch_transcript_fasta.map { item -> record(id: 'kallisto_index', meta: [:], fasta: item, args: tool_args.kallisto_index) })
         ch_kallisto_index = ch_kallisto_built.map { r -> r.index }
     } else {
         ch_kallisto_index = ch_no_path

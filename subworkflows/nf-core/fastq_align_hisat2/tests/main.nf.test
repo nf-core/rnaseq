@@ -99,6 +99,7 @@ nextflow_workflow {
                 input[3] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true)))
                 input[4] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta.fai", checkIfExists: true)))
                 input[5] = false
+                input[6] = record(samtools_index: '')  // tool_args
                 """
             }
         }
@@ -128,6 +129,7 @@ nextflow_workflow {
                 input[3] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true)))
                 input[4] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta.fai", checkIfExists: true)))
                 input[5] = false
+                input[6] = record(samtools_index: '')  // tool_args
                 """
             }
         }
@@ -157,6 +159,7 @@ nextflow_workflow {
                 input[3] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true)))
                 input[4] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta.fai", checkIfExists: true)))
                 input[5] = false
+                input[6] = record(samtools_index: '')  // tool_args
                 """
             }
         }
@@ -188,6 +191,7 @@ nextflow_workflow {
                 input[3] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta", checkIfExists: true)))
                 input[4] = new nextflow.dataflow.ValueImpl(channel.value(file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.fasta.fai", checkIfExists: true)))
                 input[5] = false
+                input[6] = record(samtools_index: '')  // tool_args
                 """
             }
         }

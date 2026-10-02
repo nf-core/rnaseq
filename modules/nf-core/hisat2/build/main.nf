@@ -25,7 +25,7 @@ process HISAT2_BUILD {
 
     input:
     sample: Hisat2BuildInput
-    hisat2_memory_input: String?
+    hisat2_build_memory: Integer?
 
     output:
     record(id: sample.id, meta: sample.meta, index: file('hisat2')) as Hisat2BuildResult
@@ -40,20 +40,20 @@ process HISAT2_BUILD {
         error("[HISAT2 index build] No memory specified for process. Please configure memory for 'process_high' label.")
     }
     def avail_mem = task.memory.toGiga()
-    def hisat2_build_memory = hisat2_memory_input ? (hisat2_memory_input as MemoryUnit).toGiga() : 2147483647
+    def hisat2_build_memory_gb = hisat2_build_memory ?: 2147483647
 
     def ss = ''
     def exon = ''
     def extract_exons = ''
 
-    if (avail_mem >= hisat2_build_memory) {
+    if (avail_mem >= hisat2_build_memory_gb) {
         log.info("[HISAT2 index build] ${avail_mem} GB available, using splice sites and exons to build HISAT2 index")
         extract_exons = sample.gtf ? "hisat2_extract_exons.py ${sample.gtf} > ${sample.gtf.baseName}.exons.txt" : ""
         ss = sample.splicesites ? "--ss ${sample.splicesites}" : ""
         exon = sample.gtf ? "--exon ${sample.gtf.baseName}.exons.txt" : ""
     }
     else {
-        log.info("[HISAT2 index build] Only ${avail_mem} GB available (< ${hisat2_build_memory} GB threshold), so NOT using splice sites and exons to build HISAT2 index.")
+        log.info("[HISAT2 index build] Only ${avail_mem} GB available (< ${hisat2_build_memory_gb} GB threshold), so NOT using splice sites and exons to build HISAT2 index.")
         log.info("[HISAT2 index build] Increase memory allocation or lower --hisat2_build_memory to enable splice-aware indexing.")
     }
 

@@ -57,6 +57,8 @@ nextflow_workflow {
                 input[8] = null
                 input[9] = null
                 input[10] = false
+                input[11] = null  // salmon_libtype
+                input[12] = record(salmon_quant: null, kallisto_quant: null, se_prefix: null)  // tool_args
                 """
             }
         }
@@ -119,6 +121,8 @@ nextflow_workflow {
                 input[8] = null
                 input[9] = null
                 input[10] = false
+                input[11] = null  // salmon_libtype
+                input[12] = record(salmon_quant: null, kallisto_quant: null, se_prefix: null)  // tool_args
                 """
             }
         }
@@ -183,6 +187,8 @@ nextflow_workflow {
                 input[8] = null
                 input[9] = null
                 input[10] = false
+                input[11] = null  // salmon_libtype
+                input[12] = record(salmon_quant: null, kallisto_quant: null, se_prefix: null)  // tool_args
                 """
             }
         }
@@ -235,6 +241,8 @@ nextflow_workflow {
                 input[8] = null
                 input[9] = null
                 input[10] = false
+                input[11] = null  // salmon_libtype
+                input[12] = record(salmon_quant: null, kallisto_quant: null, se_prefix: null)  // tool_args
                 """
             }
         }

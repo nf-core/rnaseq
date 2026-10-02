@@ -1,6 +1,13 @@
 nextflow.enable.types = true
 
-include { FastaGtfInput } from '../../types'
+
+record CustomCatadditionalfastaInput {
+    id:     String
+    meta:   Map
+    fasta:  Path
+    gtf:    Path
+    prefix: String?
+}
 
 record CustomCatadditionalfastaResult {
     id:    String
@@ -18,7 +25,7 @@ process CUSTOM_CATADDITIONALFASTA {
         'quay.io/biocontainers/python:3.12' }"
 
     input:
-    sample: FastaGtfInput
+    sample: CustomCatadditionalfastaInput
     add_fasta: Path
     biotype: String
 
@@ -34,12 +41,12 @@ process CUSTOM_CATADDITIONALFASTA {
     file('versions.yml') >> 'versions'
 
     script:
-    prefix = task.ext.prefix ?: "${sample.meta.id}"
+    prefix = task.ext.prefix ?: sample.prefix ?: "${sample.meta.id}"
 
     template 'fasta2gtf.py'
 
     stub:
-    prefix = task.ext.prefix ?: "${sample.meta.id}"
+    prefix = task.ext.prefix ?: sample.prefix ?: "${sample.meta.id}"
     """
     mkdir out
     touch out/${prefix}.fasta

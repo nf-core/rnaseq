@@ -1,6 +1,12 @@
 nextflow.enable.types = true
 
-include { ReadsInput } from '../../types'
+
+record FqLintInput {
+    id:    String
+    meta:  Map
+    reads: List<Path>
+    args:  String?
+}
 
 record FqLintResult {
     id:   String
@@ -18,7 +24,7 @@ process FQ_LINT {
         'quay.io/biocontainers/fq:0.12.0--h9ee0642_0' }"
 
     input:
-    sample: ReadsInput
+    sample: FqLintInput
 
     output:
     record(id: sample.id, meta: sample.meta, lint: file("*.fq_lint.txt")) as FqLintResult
@@ -27,7 +33,7 @@ process FQ_LINT {
     tuple(task.process, 'fq', eval("fq lint --version | sed 's/fq-lint //; s/ .*//'")) >> 'versions'
 
     script:
-    def args   = task.ext.args ?: ''
+    def args   = task.ext.args ?: sample.args ?: ''
     def prefix = task.ext.prefix ?: "${sample.meta.id}"
     """
     fq lint \\

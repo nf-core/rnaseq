@@ -78,6 +78,16 @@ def getSalmonInferredStrandedness(json_file, stranded_threshold = 0.8, unstrande
     return calculateStrandedness(forwardFragments, reverseFragments, unstrandedFragments, stranded_threshold, unstranded_threshold)
 }
 
+// The tool arguments of this subworkflow and of the subworkflows it runs: each of those reads a subset of these fields
+record QcTrimFilterArgs {
+    fq_lint:                   String?
+    umi_extract:               String?
+    fastp:                     String?
+    trimgalore:                String?
+    use_gpu_ribodetector:      Boolean?
+    salmon_index_strandedness: String?
+}
+
 workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     take:
     // Input channels
@@ -123,6 +133,9 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     // Strandedness thresholds
     stranded_threshold: Float // The fraction of stranded reads that must be assigned to a strandedness for confident assignment. Must be at least 0.5
     unstranded_threshold: Float // The difference in fraction of stranded reads assigned to 'forward' and 'reverse' below which a sample is classified as 'unstranded'
+
+    // Tool options
+    tool_args: QcTrimFilterArgs // fq_lint, plus the options of the subworkflows it runs
 
     main:
 
@@ -173,7 +186,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     //
 
     if (!skip_linting) {
-        def ch_lint_raw: Channel<FqLintResult> = FQ_LINT(ch_cat)
+        def ch_lint_raw: Channel<FqLintResult> = FQ_LINT(ch_cat.map { r -> r + record(args: tool_args.fq_lint) })
         ch_samples = ch_samples.join(ch_lint_raw.map { r -> record(id: r.id, lint_raw: r.lint) }, by: 'id')
     }
 
@@ -189,6 +202,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
             skip_trimming,
             umi_discard_read,
             min_trimmed_reads,
+            tool_args,
         )
 
         // TrimGalore's own html and zip are FastQC reports on the trimmed reads
@@ -220,6 +234,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
             save_trimmed,
             fastp_merge,
             min_trimmed_reads,
+            tool_args,
         )
 
         ch_samples = ch_samples.join(
@@ -235,7 +250,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
     }
 
     if (!skip_linting && !skip_trimming) {
-        def ch_lint_trimmed: Channel<FqLintResult> = FQ_LINT_AFTER_TRIMMING(ch_samples.filter { r -> r.reads != null })
+        def ch_lint_trimmed: Channel<FqLintResult> = FQ_LINT_AFTER_TRIMMING(ch_samples.filter { r -> r.reads != null }.map { r -> r + record(args: tool_args.fq_lint) })
         ch_samples = ch_samples.join(
             ch_lint_trimmed.map { r -> record(id: r.id, lint_trimmed: r.lint) },
             by: 'id',
@@ -276,7 +291,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         )
 
         if (!skip_linting) {
-            def ch_lint_bbsplit: Channel<FqLintResult> = FQ_LINT_AFTER_BBSPLIT(ch_samples.filter { r -> r.reads != null })
+            def ch_lint_bbsplit: Channel<FqLintResult> = FQ_LINT_AFTER_BBSPLIT(ch_samples.filter { r -> r.reads != null }.map { r -> r + record(args: tool_args.fq_lint) })
             ch_samples = ch_samples.join(
                 ch_lint_bbsplit.map { r -> record(id: r.id, lint_bbsplit: r.lint) },
                 by: 'id',
@@ -300,6 +315,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
             ribo_removal_tool,
             make_sortmerna_index,
             make_bowtie2_index,
+            tool_args,
         )
 
         val_rrna_references = ch_rrna_removed.references
@@ -322,7 +338,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         )
 
         if (!skip_linting) {
-            def ch_lint_ribo: Channel<FqLintResult> = FQ_LINT_AFTER_RIBO_REMOVAL(ch_samples.filter { r -> r.reads != null })
+            def ch_lint_ribo: Channel<FqLintResult> = FQ_LINT_AFTER_RIBO_REMOVAL(ch_samples.filter { r -> r.reads != null }.map { r -> r + record(args: tool_args.fq_lint) })
             ch_samples = ch_samples.join(
                 ch_lint_ribo.map { r -> record(id: r.id, lint_ribo: r.lint) },
                 by: 'id',
@@ -355,6 +371,7 @@ workflow FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS {
         ch_gtf,
         ch_salmon_index,
         make_salmon_index,
+        tool_args,
     )
     ch_lib_format_counts = ch_salmon.samples.map { r -> record(id: r.id, lib_format_counts: r.lib_format_counts) }
     ch_salmon_index_built = ch_salmon.index_built

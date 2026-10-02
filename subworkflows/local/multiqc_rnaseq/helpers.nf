@@ -17,7 +17,7 @@ include { paramsSummaryMultiqc } from '../../nf-core/utils_nfcore_pipeline'
 // Workflow summary rendered as a MultiQC custom-content YAML section.
 //
 def workflowSummaryMultiqcYaml() {
-    return paramsSummaryMultiqc(paramsSummaryMap(workflow, parameters_schema: 'nextflow_schema.json'))
+    return paramsSummaryMultiqc(paramsSummaryMap(workflow, parameters_schema: "${moduleDir}/../../../nextflow_schema.json"))
 }
 
 //
@@ -60,12 +60,10 @@ def multiqcSampleMergeYamlPattern(id, read) {
 // fixed-length lookbehind, so sample IDs ending in `_1` / `_2` aren't
 // wrongly collapsed.
 //
-def multiqcSampleMergeYaml(samplesheet_rows) {
-    // Row order comes from assets/schema_input.json: [0]=meta,
-    // [1]=fastq_1, [2]=fastq_2 (truthy => paired-end).
-    def pe_sample_ids = samplesheet_rows
-        .findAll { row -> row[2] as boolean }
-        .collect { row -> row[0].id as String }
+def multiqcSampleMergeYaml(samples) {
+    def pe_sample_ids = samples
+        .findAll { s -> !s.meta.single_end }
+        .collect { s -> s.id as String }
         .unique()
         .sort()
     if (!pe_sample_ids) return 'table_sample_merge: {}\n'

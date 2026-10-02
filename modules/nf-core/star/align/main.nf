@@ -1,6 +1,13 @@
 nextflow.enable.types = true
 
-include { ReadsInput; StarAlignResult } from '../../types'
+include { StarAlignResult } from '../../types'
+
+record StarAlignInput {
+    id:    String
+    meta:  Map
+    reads: List<Path>
+    args:  String?
+}
 
 process STAR_ALIGN {
     tag "$sample.meta.id"
@@ -12,7 +19,7 @@ process STAR_ALIGN {
         'community.wave.seqera.io/library/htslib_samtools_star_gawk:ae438e9a604351a4' }"
 
     input:
-    sample: ReadsInput
+    sample: StarAlignInput
     index: Path
     gtf: Path?
     star_ignore_sjdbgtf: Boolean
@@ -53,7 +60,7 @@ process STAR_ALIGN {
     tuple(task.process, 'gawk', eval("gawk --version | sed -n '1s/GNU Awk \\([0-9.]*\\).*/\\1/p'")) >> 'versions'
 
     script:
-    def args = task.ext.args ?: ''
+    def args = task.ext.args ?: sample.args ?: ''
     prefix = task.ext.prefix ?: "${sample.meta.id}"
     def read_pairs = sample.reads.collate(2)
     def reads1 = sample.meta.single_end ? sample.reads : read_pairs.collect { pair -> pair[0] }.toList()

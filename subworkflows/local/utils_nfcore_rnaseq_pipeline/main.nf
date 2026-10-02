@@ -35,6 +35,7 @@ workflow PIPELINE_INITIALISATION {
     help              // boolean: Display help message and exit
     help_full         // boolean: Show the full help message
     show_hidden       // boolean: Show hidden parameters in the help message
+    params            //  record: the pipeline's params, passed in because an including pipeline has its own
 
     main:
 
@@ -62,7 +63,7 @@ ${colors.blue}  | \\| |       \\__, \\__/ |  \\ |___     ${colors.green}\\`-._,-
 ${colors.purple}  nf-core/rnaseq ${workflow.manifest.version}${colors.reset}
 -${colors.dim}----------------------------------------------------${colors.reset}-
 """
-    def after_text = """${workflow.manifest.doi ? "\n* The pipeline\n" : ""}${workflow.manifest.doi.tokenize(",").collect { doi -> "    https://doi.org/${doi.trim().replace('https://doi.org/','')}"}.join("\n")}${workflow.manifest.doi ? "\n" : ""}
+    def after_text = """${workflow.manifest.doi ? "\n* The pipeline\n" : ""}${(workflow.manifest.doi ?: "").tokenize(",").collect { doi -> "    https://doi.org/${doi.trim().replace('https://doi.org/','')}"}.join("\n")}${workflow.manifest.doi ? "\n" : ""}
 * The nf-core framework
     https://doi.org/10.1038/s41587-020-0439-x
 
@@ -78,7 +79,7 @@ ${colors.purple}  nf-core/rnaseq ${workflow.manifest.version}${colors.reset}
     UTILS_NFSCHEMA_PLUGIN (
         workflow,
         validate_params,
-        null,
+        pipelineSchema(),
         help,
         help_full,
         show_hidden,
@@ -98,7 +99,7 @@ ${colors.purple}  nf-core/rnaseq ${workflow.manifest.version}${colors.reset}
     //
     // Custom validation for pipeline parameters
     //
-    validateInputParameters()
+    validateInputParameters(params)
 }
 
 /*
@@ -118,13 +119,14 @@ workflow PIPELINE_COMPLETION {
     trim_status        // channel: record(id, pass) for trimming
     map_status         // channel: record(id, pass) for mapping
     strand_status      // channel: record(id, pass) for the strandedness check
+    params             //  record: the pipeline's params, passed in because an including pipeline has its own
 
     main:
     def pass_mapped_reads  = [:]
     def pass_trimmed_reads = [:]
     def pass_strand_check  = [:]
 
-    summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
+    summary_params = paramsSummaryMap(workflow, parameters_schema: pipelineSchema())
     def multiqc_reports = multiqc_report.toList()
 
     trim_status
@@ -152,7 +154,7 @@ workflow PIPELINE_COMPLETION {
             )
         }
 
-        rnaseqSummary(monochrome_logs, pass_mapped_reads, pass_trimmed_reads, pass_strand_check)
+        rnaseqSummary(params, monochrome_logs, pass_mapped_reads, pass_trimmed_reads, pass_strand_check)
     }
 
     workflow.onError {
@@ -234,11 +236,18 @@ def checkSamplesAfterGrouping(input) {
 }
 
 //
+// The pipeline's own parameter schema: the project that runs is the including project when this pipeline is included
+//
+def pipelineSchema() {
+    return "${moduleDir}/../../../nextflow_schema.json"
+}
+
+//
 // Check and validate pipeline parameters
 //
-def validateInputParameters() {
+def validateInputParameters(params) {
 
-    genomeExistsError()
+    genomeExistsError(params)
 
     def pseudo_index_provided = (
         (params.pseudo_aligner == 'salmon' && params.salmon_index) ||
@@ -437,7 +446,7 @@ def validateInputParameters() {
 //
 // Exit pipeline if incorrect --genome key provided
 //
-def genomeExistsError() {
+def genomeExistsError(params) {
     if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
         def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
             "  Genome '${params.genome}' not found in any config files provided to the pipeline.\n" +
@@ -488,7 +497,7 @@ def methodsDescriptionText(mqc_methods_yaml) {
         // Removing `https://doi.org/` to handle pipelines using DOIs vs DOI resolvers
         // Removing ` ` since the manifest.doi is a string and not a proper list
         def temp_doi_ref = ""
-        def manifest_doi = meta.manifest_map.doi.tokenize(",")
+        def manifest_doi = (meta.manifest_map.doi ?: "").tokenize(",")
         manifest_doi.each { doi_ref ->
             temp_doi_ref += "(doi: <a href=\'https://doi.org/${doi_ref.replace("https://doi.org/", "").replace(" ", "")}\'>${doi_ref.replace("https://doi.org/", "").replace(" ", "")}</a>), "
         }
@@ -674,7 +683,7 @@ def additionaFastaIndexWarn(index) {
 // Sentieon and Parabricks branches bundle older STAR builds that already
 // accept versionGenome 20201).
 //
-def isStarIndexLegacy() {
+def isStarIndexLegacy(params) {
     def genome_entry = params.genomes && params.genome ? params.genomes[params.genome] : null
     return  genome_entry?.star_legacy &&
             params.star_index == genome_entry.star &&
@@ -692,14 +701,6 @@ def getGenomeAttribute(attribute) {
         }
     }
     return null
-}
-
-//
-// Check whether any sample declares strandedness 'auto'
-//
-def anySampleAutoStrandedness(samplesheet_rows) {
-    samplesheet_rows
-        .any { meta, _fastq_1, _fastq_2, _genome_bam, _transcriptome_bam -> meta.strandedness == 'auto' }
 }
 
 //
@@ -890,7 +891,7 @@ def classifyStrand(meta, strand_log, stranded_threshold, unstranded_threshold) {
 //
 // Print pipeline summary on completion
 //
-def rnaseqSummary(monochrome_logs=true, pass_mapped_reads=[:], pass_trimmed_reads=[:], pass_strand_check=[:]) {
+def rnaseqSummary(params, monochrome_logs=true, pass_mapped_reads=[:], pass_trimmed_reads=[:], pass_strand_check=[:]) {
     def colors = logColours(monochrome_logs)
 
     def fail_mapped_count  = pass_mapped_reads.count  { _key, value -> value == false }

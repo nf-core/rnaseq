@@ -5,6 +5,7 @@ record SalmonIndexInput {
     meta:             Map
     transcript_fasta: Path
     genome_fasta:     Path?
+    args:             String?
 }
 
 record SalmonIndexResult {
@@ -35,7 +36,7 @@ process SALMON_INDEX {
     task.ext.when == null || task.ext.when
 
     script:
-    def args = task.ext.args ?: ''
+    def args = task.ext.args ?: sample.args ?: ''
     def decoys = ''
     def fasta = "${sample.transcript_fasta}"
     def genome = sample.genome_fasta ? "${sample.genome_fasta}" : ''

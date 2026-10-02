@@ -1,8 +1,9 @@
 name: "Build Nextflow"
 description: "TEMPORARY: builds a Nextflow launcher from a pinned upstream commit and uploads it as an artifact"
-# The output {} block needs nextflow-io/nextflow#7646 and #7674, which are merged upstream but not
-# in a release yet. Delete this action, the build-nextflow jobs and the custom-install steps in
-# .github/actions/nf-test/action.yml once a release contains both.
+# The output {} block needs nextflow-io/nextflow#7646 and #7674, and including rnaseq in another
+# pipeline needs #7213. These are merged upstream but not in a release yet. Delete this action, the
+# build-nextflow jobs and the custom-install steps in .github/actions/nf-test/action.yml once a
+# release contains them.
 runs:
   using: "composite"
   steps:
@@ -10,7 +11,7 @@ runs:
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       with:
         repository: nextflow-io/nextflow
-        ref: 508fe13c6d241cdea08ddbdcee62695d6d871fb9
+        ref: 5272797c4e9b114c94e93a01e540b13c08b6c5a9
         path: nextflow-src
 
     - name: Set up Java

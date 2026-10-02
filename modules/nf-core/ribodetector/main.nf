@@ -5,6 +5,7 @@ record RibodetectorInput {
     meta:   Map
     reads:  List<Path>
     length: Integer
+    gpu:    Boolean
 }
 
 record RibodetectorResult {

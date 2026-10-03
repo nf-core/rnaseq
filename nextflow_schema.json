@@ -338,6 +338,13 @@
                     "description": "Path to directory or tar.gz archive for pre-built Bowtie2 index for rRNA removal.",
                     "help_text": "Optional when using `--remove_ribo_rna` and `--ribo_removal_tool` is set to `bowtie2`. If not provided, the index will be built using the database provided with `--ribo_database_manifest`"
                 },
+                "extra_ribodetector_args": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Extra arguments to pass to RiboDetector command in addition to defaults defined by the pipeline. Only available when using --ribo_removal_tool ribodetector.",
+                    "help_text": "Requires `--remove_ribo_rna` to be enabled and `--ribo_removal_tool ribodetector`. Applies to both CPU and GPU runs.\n\n**Pipeline default:** `-e rrna` for paired-end reads only. With paired-end reads, `-e rrna` predicts a read pair as rRNA only when both ends are classified as rRNA. The pipeline does not add this default for single-end reads.\n\n**Read length (`-l`):** Calculated automatically per sample from the mean read length reported by `seqkit stats`, averaging the R1 and R2 means for paired-end reads and rounding to the nearest integer. Override with `--extra_ribodetector_args '-l 150'` to use the supplied value for all samples. `seqkit stats` still runs when you override the read length.\n\n**Threads (`-t`):** Follows the CPUs allocated to the task in both CPU and GPU modes (6 CPUs on the first attempt by default, subject to resource limits and custom configurations). Set `cpus` for `RIBODETECTOR` in a custom Nextflow configuration to change the allocation and thread count together.",
+                    "fa_icon": "fas fa-plus"
+                },
                 "use_gpu_ribodetector": {
                     "type": "boolean",
                     "description": "Enable GPU acceleration for ribodetector.",

@@ -1,0 +1,49 @@
+nextflow_pipeline {
+
+    name "Test pipeline with extra RiboDetector arguments"
+    script "../main.nf"
+    tag "pipeline"
+    tag "ribodetector"
+    tag "remove_ribo_rna"
+
+    test("Params: --remove_ribo_rna --ribo_removal_tool ribodetector --extra_ribodetector_args") {
+
+        when {
+            params {
+                outdir = "$outputDir"
+                remove_ribo_rna = true
+                ribo_removal_tool = 'ribodetector'
+                extra_ribodetector_args = '--chunk_size 256 --seed 1'
+                skip_bbsplit = true
+                skip_alignment = true
+                skip_pseudo_alignment = true
+                skip_qc = true
+                skip_stringtie = true
+                skip_bigwig = true
+                skip_multiqc = true
+            }
+        }
+
+        then {
+            def ribodetectorTasks = workflow.trace.succeeded().findAll { it.name.contains(':RIBODETECTOR') }
+            def ribodetectorLogs = new File("$outputDir/ribodetector").listFiles()?.findAll { it.name.endsWith('.log') } ?: []
+            def ribodetectorCommands = []
+            new File("$workDir").eachFileRecurse { file ->
+                if (file.name == '.command.sh' && file.text.contains('ribodetector_cpu')) {
+                    ribodetectorCommands << file.text
+                }
+            }
+
+            assertAll(
+                { assert workflow.success },
+                { assert !ribodetectorTasks.isEmpty() },
+                { assert ribodetectorLogs.size() == ribodetectorTasks.size() },
+                { assert ribodetectorCommands.size() == ribodetectorTasks.size() },
+                // tests/nextflow.config allocates two CPUs; the command must use that allocation.
+                { assert ribodetectorCommands.every { it.contains('-t 2 ') } },
+                // Check the tool's reported chunk size, so dropping the extra arguments fails this test.
+                { assert ribodetectorLogs.every { it.text.replaceAll(/\u001B\[[;\d]*m/, '').contains('reads with chunk size 256') } }
+            )
+        }
+    }
+}

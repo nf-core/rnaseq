@@ -246,7 +246,23 @@ nextflow run nf-core/rnaseq --remove_ribo_rna --ribo_removal_tool bowtie2 ...
 nextflow run nf-core/rnaseq --remove_ribo_rna --ribo_removal_tool ribodetector ...
 ```
 
-RiboDetector automatically determines read length from your data and uses its pre-trained neural network model to classify reads.
+The pipeline uses `seqkit stats` to determine the mean read length for each sample from the reads entering RiboDetector, after any enabled trimming and filtering. For single-end reads, it uses the mean for that FASTQ. For paired-end reads, it averages the R1 and R2 means. The value is rounded to the nearest integer and passed to RiboDetector as `-l`. Multiple sequencing runs sharing a samplesheet sample ID are merged before this calculation. RiboDetector uses its pre-trained neural network model to classify reads.
+
+You can pass additional RiboDetector arguments with `--extra_ribodetector_args`. This string parameter is only used with `--remove_ribo_rna --ribo_removal_tool ribodetector` and applies to both CPU and GPU runs. Arguments are appended after the pipeline defaults. The pipeline adds `-e rrna` for paired-end reads only. With paired-end reads, `-e rrna` predicts a read pair as rRNA only when both ends are classified as rRNA. For example, to process reads in chunks:
+
+```bash
+nextflow run nf-core/rnaseq --remove_ribo_rna --ribo_removal_tool ribodetector --extra_ribodetector_args '--chunk_size 256' ...
+```
+
+To override the calculated read length, supply `-l` through `--extra_ribodetector_args`:
+
+```bash
+nextflow run nf-core/rnaseq --remove_ribo_rna --ribo_removal_tool ribodetector --extra_ribodetector_args '-l 150' ...
+```
+
+The supplied value overrides the automatically calculated value and applies to all samples. `seqkit stats` still runs when you override the read length.
+
+RiboDetector's thread count (`-t`) follows the CPUs allocated to the task in both CPU and GPU modes. The standard allocation is 6 CPUs on the first attempt, subject to resource limits and custom configurations. To change the allocation and thread count together, set `cpus` for the `RIBODETECTOR` process in a custom Nextflow configuration.
 
 #### GPU acceleration for RiboDetector
 

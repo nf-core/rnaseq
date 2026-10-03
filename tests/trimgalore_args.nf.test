@@ -1,0 +1,70 @@
+nextflow_workflow {
+
+    name "Test --extra_trimgalore_args"
+    script "./config/trimgalore_args.nf"
+    workflow "TRIMGALORE_CONFIG_TEST"
+    config "./config/trimgalore_args.config"
+
+    tag "trimgalore"
+    tag "config"
+
+    test("Valueless flags appear once and valued options retain their values") {
+        when {
+            params {
+                extra_trimgalore_args = '--illumina --length 25 --retain_unpaired'
+            }
+            workflow {
+                """
+                input[0] = channel.of(true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.out[0] == ["--fastqc_args '-t 2' --illumina --length 25 --retain_unpaired"] }
+            )
+        }
+    }
+
+    test("Absent extra arguments retain the pipeline FastQC preset") {
+        when {
+            params {
+                extra_trimgalore_args = null
+            }
+            workflow {
+                """
+                input[0] = channel.of(true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.out[0] == ["--fastqc_args '-t 2'"] }
+            )
+        }
+    }
+
+    test("Extra arguments override the preset and repeated keys use the last value") {
+        when {
+            params {
+                extra_trimgalore_args = "--fastqc_args '-t 1' --length 20 --length 25 --illumina --illumina"
+            }
+            workflow {
+                """
+                input[0] = channel.of(true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.out[0] == ["--fastqc_args '-t 1' --length 25 --illumina"] }
+            )
+        }
+    }
+}

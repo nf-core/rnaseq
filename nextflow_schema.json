@@ -268,7 +268,7 @@
                 "extra_trimgalore_args": {
                     "type": "string",
                     "minLength": 1,
-                    "description": "Extra arguments to pass to Trim Galore! command in addition to defaults defined by the pipeline.",
+                    "description": "Extra arguments to pass to Trim Galore! command in addition to defaults defined by the pipeline. Only available when using `--trimmer trimgalore`.",
                     "fa_icon": "fas fa-plus"
                 },
                 "extra_fastp_args": {

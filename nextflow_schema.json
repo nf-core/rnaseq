@@ -269,6 +269,7 @@
                     "type": "string",
                     "minLength": 1,
                     "description": "Extra arguments to pass to Trim Galore! command in addition to defaults defined by the pipeline. Only available when using `--trimmer trimgalore`.",
+                    "help_text": "The pipeline supplies `--fastqc_args` with FastQC threads set from the allocated CPUs, adds `--paired` for paired-end samples, and calculates `--cores` from the CPU allocation. All other trimming settings follow Trim Galore defaults.\n\n**Note:** Trim Galore automatically enables poly-G trimming when sequence-based detection identifies reads from 2-colour instruments.",
                     "fa_icon": "fas fa-plus"
                 },
                 "extra_fastp_args": {

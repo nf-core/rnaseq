@@ -57,6 +57,74 @@ nextflow_pipeline {
         }
     }
 
+    test("Params: --remove_ribo_rna --ribo_removal_tool ribodetector --use_gpu_ribodetector --extra_ribodetector_args") {
+
+        when {
+            params {
+                outdir = "$outputDir"
+                remove_ribo_rna = true
+                ribo_removal_tool = 'ribodetector'
+                use_gpu_ribodetector = true
+                extra_ribodetector_args = '-m 8 --chunk_size 256 --seed 1'
+                save_non_ribo_reads = true
+                skip_bbsplit = true
+                skip_alignment = true
+                skip_pseudo_alignment = true
+                skip_qc = true
+                skip_stringtie = true
+                skip_bigwig = true
+                skip_multiqc = true
+            }
+        }
+
+        then {
+            def ribodetectorTasks = workflow.trace.succeeded().findAll { it.name.contains(':RIBODETECTOR') }
+            def ribodetectorDir = new File("$outputDir/ribodetector")
+            def ribodetectorLogs = ribodetectorDir.listFiles()?.findAll { it.name.endsWith('.log') } ?: []
+            def ribodetectorLogText = ribodetectorLogs.collect { it.text.replaceAll(/\u001B\[[;\d]*m/, '') }
+            def ribodetectorCommands = []
+            new File("$workDir").eachFileRecurse { file ->
+                if (file.name == '.command.sh' && file.text.contains('ribodetector \\')) {
+                    // Inspect the tool invocation, excluding Bash flags and Nextflow's environment capture.
+                    ribodetectorCommands << file.text.readLines()
+                        .dropWhile { !it.trim().startsWith('ribodetector ') }
+                        .takeWhile { !it.trim().isEmpty() }
+                        .join('\n')
+                }
+            }
+            // Identify read layout from the output FASTQ names, independently of the ensure flag.
+            def pairedEndCommands = ribodetectorCommands.findAll {
+                it.contains('.nonrna.1.fastq.gz') && it.contains('.nonrna.2.fastq.gz')
+            }
+            def singleEndCommands = ribodetectorCommands.findAll { it.contains('.nonrna.fastq.gz') }
+
+            assertAll(
+                { assert workflow.success },
+                { assert !ribodetectorTasks.isEmpty() },
+                { assert ribodetectorLogs.size() == ribodetectorTasks.size() },
+                { assert ribodetectorCommands.size() == ribodetectorTasks.size() },
+                // Require both layouts so either branch cannot pass without being exercised.
+                { assert !pairedEndCommands.isEmpty() && !singleEndCommands.isEmpty() },
+                { assert pairedEndCommands.size() + singleEndCommands.size() == ribodetectorCommands.size() },
+                { assert pairedEndCommands.every { (it =~ /(?:^|\s)-e\s+rrna(?:\s|$)/).find() } },
+                { assert singleEndCommands.every { !(it =~ /(?:^|\s)(?:-e|--ensure)(?:\s|=|$)/).find() } },
+                // tests/nextflow.config allocates two CPUs; the GPU command must use that allocation.
+                { assert ribodetectorCommands.every { it.contains('-t 2 ') } },
+                { assert ribodetectorCommands.every { it.contains('-m 8 --chunk_size 256 --seed 1') } },
+                { assert ribodetectorLogText.every { it.contains('Model using cuda') } },
+                // The tool must use the explicit GPU memory argument, independently of host RAM.
+                { assert ribodetectorLogText.every { it.contains('based on the given GPU RAM size 8GB') } },
+                { assert ribodetectorLogs.every { log ->
+                    def prefix = log.name.replaceFirst(/\.log$/, '')
+                    new File(ribodetectorDir, "${prefix}.nonrna.fastq.gz").isFile() || (
+                        new File(ribodetectorDir, "${prefix}.nonrna.1.fastq.gz").isFile() &&
+                        new File(ribodetectorDir, "${prefix}.nonrna.2.fastq.gz").isFile()
+                    )
+                } }
+            )
+        }
+    }
+
     test("Params: --remove_ribo_rna --ribo_removal_tool ribodetector --use_gpu_ribodetector - stub") {
 
         options "-stub"

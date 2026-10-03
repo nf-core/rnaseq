@@ -268,6 +268,8 @@ When `--ribo_removal_tool bowtie2` is specified, the pipeline uses [Bowtie2](htt
 
 When `--ribo_removal_tool ribodetector` is specified, the pipeline uses [RiboDetector](https://github.com/hzi-bifo/RiboDetector), a machine learning-based tool that identifies rRNA reads without requiring a reference database.
 
+You can specify additional options for RiboDetector via the `--extra_ribodetector_args` parameter in both CPU and GPU runs. See the [RiboDetector usage documentation](usage.md#ribodetector) for an example.
+
 ### FastQC (filtered)
 
 <details markdown="1">

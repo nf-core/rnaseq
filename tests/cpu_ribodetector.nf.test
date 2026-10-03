@@ -30,15 +30,29 @@ nextflow_pipeline {
             def ribodetectorCommands = []
             new File("$workDir").eachFileRecurse { file ->
                 if (file.name == '.command.sh' && file.text.contains('ribodetector_cpu')) {
-                    ribodetectorCommands << file.text
+                    // Inspect the tool invocation, excluding Bash flags and Nextflow's environment capture.
+                    ribodetectorCommands << file.text.readLines()
+                        .dropWhile { !it.trim().startsWith('ribodetector_cpu ') }
+                        .takeWhile { !it.trim().isEmpty() }
+                        .join('\n')
                 }
             }
+            // Identify read layout from the output FASTQ names, independently of the ensure flag.
+            def pairedEndCommands = ribodetectorCommands.findAll {
+                it.contains('.nonrna.1.fastq.gz') && it.contains('.nonrna.2.fastq.gz')
+            }
+            def singleEndCommands = ribodetectorCommands.findAll { it.contains('.nonrna.fastq.gz') }
 
             assertAll(
                 { assert workflow.success },
                 { assert !ribodetectorTasks.isEmpty() },
                 { assert ribodetectorLogs.size() == ribodetectorTasks.size() },
                 { assert ribodetectorCommands.size() == ribodetectorTasks.size() },
+                // Require both layouts so either branch cannot pass without being exercised.
+                { assert !pairedEndCommands.isEmpty() && !singleEndCommands.isEmpty() },
+                { assert pairedEndCommands.size() + singleEndCommands.size() == ribodetectorCommands.size() },
+                { assert pairedEndCommands.every { (it =~ /(?:^|\s)-e\s+rrna(?:\s|$)/).find() } },
+                { assert singleEndCommands.every { !(it =~ /(?:^|\s)(?:-e|--ensure)(?:\s|=|$)/).find() } },
                 // tests/nextflow.config allocates two CPUs; the command must use that allocation.
                 { assert ribodetectorCommands.every { it.contains('-t 2 ') } },
                 // Check the tool's reported chunk size, so dropping the extra arguments fails this test.

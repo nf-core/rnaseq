@@ -55,6 +55,7 @@ nextflow_pipeline {
                 { assert singleEndCommands.every { !(it =~ /(?:^|\s)(?:-e|--ensure)(?:\s|=|$)/).find() } },
                 // tests/nextflow.config allocates two CPUs; the command must use that allocation.
                 { assert ribodetectorCommands.every { it.contains('-t 2 ') } },
+                { assert ribodetectorCommands.every { it.contains('--chunk_size 256 --seed 1') } },
                 // Check the tool's reported chunk size, so dropping the extra arguments fails this test.
                 { assert ribodetectorLogs.every { it.text.replaceAll(/\u001B\[[;\d]*m/, '').contains('reads with chunk size 256') } }
             )

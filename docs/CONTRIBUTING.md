@@ -63,11 +63,12 @@ To get started, open the repository in [Codespaces](https://github.com/nf-core/r
 
 ### Testing
 
-To run the default pipeline tests locally, use the following command:
 For additional information, use the `--verbose` flag to view the Nextflow console log output.
 
 > [!IMPORTANT]
 > Unlike most nf-core pipelines, this pipeline does **not** set a default `profile "test"` in `nf-test.config`. This is because the pipeline supports both CPU and GPU test profiles (`test` and `test_gpu`) with different resource limits, and hardcoding one would prevent the other from being used in CI. You must always include the `test` profile explicitly when running tests locally (e.g. `--profile=+test,docker`).
+
+To run the default pipeline tests locally, use the following command:
 
 ```bash
 nf-test test tests/default.nf.test --profile +test,docker --verbose

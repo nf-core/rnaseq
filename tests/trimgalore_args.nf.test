@@ -1,69 +1,53 @@
-nextflow_workflow {
+nextflow_pipeline {
 
     name "Test --extra_trimgalore_args"
-    script "./config/trimgalore_args.nf"
-    workflow "TRIMGALORE_CONFIG_TEST"
-    config "./config/trimgalore_args.config"
-
+    script "../main.nf"
+    tag "pipeline"
     tag "trimgalore"
-    tag "config"
 
-    test("Valueless flags appear once and valued options retain their values") {
+    test("Params: --extra_trimgalore_args '--poly_a --nextseq 20'") {
+
         when {
+            def samplesheet = File.createTempFile('trimgalore_args', '.csv')
+            samplesheet.deleteOnExit()
+            samplesheet.text = """sample,fastq_1,fastq_2,strandedness
+WT_REP2,https://raw.githubusercontent.com/nf-core/test-datasets/626c8fab639062eade4b10747e919341cbf9b41a/testdata/GSE110004/SRR6357072_1.fastq.gz,https://raw.githubusercontent.com/nf-core/test-datasets/626c8fab639062eade4b10747e919341cbf9b41a/testdata/GSE110004/SRR6357072_2.fastq.gz,reverse
+RAP1_UNINDUCED_REP1,https://raw.githubusercontent.com/nf-core/test-datasets/626c8fab639062eade4b10747e919341cbf9b41a/testdata/GSE110004/SRR6357073_1.fastq.gz,,reverse
+"""
+
             params {
-                extra_trimgalore_args = '--illumina --length 25 --retain_unpaired'
-            }
-            workflow {
-                """
-                input[0] = channel.of(true)
-                """
+                input = samplesheet.toString()
+                outdir = "$outputDir"
+                trimmer = 'trimgalore'
+                extra_trimgalore_args = '--poly_a --nextseq 20'
+                save_trimmed = true
+                skip_alignment = true
+                skip_pseudo_alignment = true
+                skip_qc = true
+                skip_multiqc = true
+                skip_bbsplit = true
+                skip_linting = true
+                skip_bigwig = true
+                skip_stringtie = true
+                fasta = null
+                additional_fasta = null
+                salmon_index = null
             }
         }
 
         then {
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            def trimgalore_versions = removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow").findAll { process, _versions -> process == 'TRIMGALORE' }
             assertAll(
                 { assert workflow.success },
-                { assert workflow.out[0] == ["--fastqc_args '-t 2' --illumina --length 25 --retain_unpaired"] }
-            )
-        }
-    }
-
-    test("Absent extra arguments retain the pipeline FastQC preset") {
-        when {
-            params {
-                extra_trimgalore_args = null
-            }
-            workflow {
-                """
-                input[0] = channel.of(true)
-                """
-            }
-        }
-
-        then {
-            assertAll(
-                { assert workflow.success },
-                { assert workflow.out[0] == ["--fastqc_args '-t 2'"] }
-            )
-        }
-    }
-
-    test("Extra arguments override the preset and repeated keys use the last value") {
-        when {
-            params {
-                extra_trimgalore_args = "--fastqc_args '-t 1' --length 20 --length 25 --illumina --illumina"
-            }
-            workflow {
-                """
-                input[0] = channel.of(true)
-                """
-            }
-        }
-
-        then {
-            assertAll(
-                { assert workflow.success },
-                { assert workflow.out[0] == ["--fastqc_args '-t 1' --length 25 --illumina"] }
+                { assert workflow.trace.succeeded().count { it.name.contains(':TRIMGALORE') } == 2 },
+                { assert snapshot(
+                    workflow.trace.succeeded().size(),
+                    trimgalore_versions,
+                    stable_name,
+                    stable_path
+                ).match() }
             )
         }
     }

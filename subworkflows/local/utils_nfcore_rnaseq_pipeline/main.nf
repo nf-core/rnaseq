@@ -897,6 +897,40 @@ def mapBamToPublishedPath(bam_path, sample_id, aligner, outdir) {
 }
 
 //
+// Function to build the failure message for a sample with too few reads after trimming
+//
+def trimmedReadsMessage(sample_id, num_reads, min_trimmed_reads) {
+    return "Sample '${sample_id}' failed the trimmed reads check: ${num_reads} reads remained after trimming, which is not above the --min_trimmed_reads threshold (${min_trimmed_reads})."
+}
+
+//
+// Function to build the failure message for a sample with a low mapping rate
+//
+def mappedReadsMessage(sample_id, percent_mapped, min_mapped_reads) {
+    return "Sample '${sample_id}' failed the mapped reads check: ${percent_mapped}% of reads mapped, below the --min_mapped_reads threshold (${min_mapped_reads}%)."
+}
+
+//
+// Function to build the failure message for a sample whose strandedness could not be determined
+//
+def undeterminedStrandednessMessage(sample_id, salmon_strand_analysis) {
+    def forward = salmon_strand_analysis.forwardFragments
+    def reverse = salmon_strand_analysis.reverseFragments
+    def assigned = (forward + reverse) as double
+    def message = "Sample '${sample_id}' failed the strandedness check: strandedness was set to 'auto' but could not be determined. "
+    if (!Double.isNaN(assigned) && assigned > 0) {
+        message += "Of the fragments Salmon assigned, ${String.format('%.1f', forward)}% were forward and ${String.format('%.1f', reverse)}% reverse, " +
+            "which is not enough evidence for a confident call. Possible causes include a genuinely unstranded or mixed library, " +
+            "genomic DNA contamination, or a low number of assigned fragments. "
+    }
+    else {
+        message += "Salmon assigned no fragments, so there is no strand evidence. Check the mapping rate, that the reference matches " +
+            "the sample's species, and that the reads are intact and correctly paired. "
+    }
+    return message + "Set strandedness explicitly in the samplesheet for this sample and rerun with -resume."
+}
+
+//
 // Print pipeline summary on completion
 //
 def rnaseqSummary(monochrome_logs=true, pass_mapped_reads=[:], pass_trimmed_reads=[:], pass_strand_check=[:]) {

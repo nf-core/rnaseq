@@ -268,7 +268,7 @@
                 "extra_trimgalore_args": {
                     "type": "string",
                     "minLength": 1,
-                    "description": "Extra arguments to pass to Trim Galore! command in addition to defaults defined by the pipeline.",
+                    "description": "Extra arguments to pass to Trim Galore! command in addition to defaults defined by the pipeline. Only applicable when using `--trimmer trimgalore`.",
                     "fa_icon": "fas fa-plus"
                 },
                 "extra_fastp_args": {
@@ -593,6 +593,24 @@
                     "maximum": 1,
                     "default": 0.1,
                     "description": "The difference in fraction of stranded reads assigned to 'forward' and 'reverse' below which a sample is classified as 'unstranded'. By default the forward and reverse fractions must differ by less than 0.1 for the sample to be called as unstranded."
+                },
+                "fail_on_low_trimmed_reads": {
+                    "type": "boolean",
+                    "description": "Fail the run for samples with too few reads after trimming (see --min_trimmed_reads), instead of only skipping them.",
+                    "help_text": "Failing samples are excluded from downstream steps and reported as a failed `SAMPLE_CHECK_FAILED` task, so the failure follows your `errorStrategy`. To let other samples finish and still exit with an error, set `process.errorStrategy = 'ignore'` and `workflow.failOnIgnore = true`.",
+                    "fa_icon": "fas fa-times-circle"
+                },
+                "fail_on_low_mapped_reads": {
+                    "type": "boolean",
+                    "description": "Fail the run for samples with a mapping rate below --min_mapped_reads, instead of only skipping them.",
+                    "help_text": "Failing samples are excluded from downstream steps and reported as a failed `SAMPLE_CHECK_FAILED` task, so the failure follows your `errorStrategy`. To let other samples finish and still exit with an error, set `process.errorStrategy = 'ignore'` and `workflow.failOnIgnore = true`.",
+                    "fa_icon": "fas fa-times-circle"
+                },
+                "fail_on_undetermined_strandedness": {
+                    "type": "boolean",
+                    "description": "Fail the run for samples with strandedness 'auto' that Salmon cannot determine, instead of treating them as 'unstranded'.",
+                    "help_text": "Failing samples are excluded from downstream steps and reported as a failed `SAMPLE_CHECK_FAILED` task, so the failure follows your `errorStrategy`. To let other samples finish and still exit with an error, set `process.errorStrategy = 'ignore'` and `workflow.failOnIgnore = true`.",
+                    "fa_icon": "fas fa-times-circle"
                 }
             }
         },

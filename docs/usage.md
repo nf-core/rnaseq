@@ -78,6 +78,16 @@ If RSeQC disagrees with the expected strandedness, or returns 'undetermined' (wh
 
 ![MultiQC - Strand check table](images/mqc_strand_check.png)
 
+#### Failing the run on per-sample check failures
+
+By default, a sample with too few trimmed reads (`--min_trimmed_reads`) or a low mapping rate (`--min_mapped_reads`) is skipped downstream and reported in MultiQC, and a sample set to `auto` whose strandedness Salmon cannot determine is processed as `unstranded`. In all cases the run still completes successfully. To fail the run instead, enable the matching option:
+
+- `--fail_on_low_trimmed_reads`: fewer reads than `--min_trimmed_reads` remain after trimming.
+- `--fail_on_low_mapped_reads`: the mapping rate is below `--min_mapped_reads`.
+- `--fail_on_undetermined_strandedness`: strandedness is `auto` but could not be determined.
+
+Samples that fail an enabled check are excluded from downstream steps and reported as a failed `SAMPLE_CHECK_FAILED` task whose error explains why, so the failure follows your `errorStrategy`. With the default `finish` strategy the run stops once running tasks complete. To let all other samples finish and still exit with an error, add `process.errorStrategy = 'ignore'` and `workflow.failOnIgnore = true` to a custom config. For an undetermined strandedness, set `strandedness` explicitly for that sample in the samplesheet and rerun with `-resume`.
+
 The **Configure columns** dialog above the summary table lets you toggle the hidden per-component percentages on:
 
 ![MultiQC - Strandedness Configure columns modal](images/mqc_strand_check_columns.png)
@@ -192,10 +202,10 @@ If you would like to reduce the number of reads used in the analysis, for exampl
 
 ## Adapter trimming options
 
-[Trim Galore!](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/) is a wrapper tool around Cutadapt and FastQC to peform quality and adapter trimming on FastQ files. Trim Galore! will automatically detect and trim the appropriate adapter sequence. It is the default trimming tool used by this pipeline, however you can use fastp instead by specifying the `--trimmer fastp` parameter. [fastp](https://github.com/OpenGene/fastp) is a tool designed to provide fast, all-in-one preprocessing for FastQ files. It has been developed in C++ with multithreading support to achieve higher performance. You can specify additional options for Trim Galore! and fastp via the `--extra_trimgalore_args` and `--extra_fastp_args` parameters, respectively.
+[Trim Galore!](https://github.com/FelixKrueger/TrimGalore) v2.0+ ([website](https://www.trimgalore.com)) is a faithful Rust rewrite of the original wrapper around Cutadapt and FastQC for quality and adapter trimming on FastQ files. Trim Galore! will automatically detect and trim the appropriate adapter sequence. It is the default trimming tool used by this pipeline, however you can use fastp instead by specifying the `--trimmer fastp` parameter. [fastp](https://github.com/OpenGene/fastp) is a tool designed to provide fast, all-in-one preprocessing for FastQ files. It has been developed in C++ with multithreading support to achieve higher performance. You can specify additional options for Trim Galore! and fastp via the `--extra_trimgalore_args` and `--extra_fastp_args` parameters, respectively.
 
 :::note
-TrimGalore! will only run using multiple cores if you are able to use more than > 5 and > 6 CPUs for single- and paired-end data, respectively. The total cores available to TrimGalore! will also be capped at 4 (7 and 8 CPUs in total for single- and paired-end data, respectively) because there is no longer a run-time benefit. See [release notes](https://github.com/FelixKrueger/TrimGalore/blob/master/Changelog.md#version-060-release-on-1-mar-2019) and [discussion whilst adding this logic to the nf-core/atacseq pipeline](https://github.com/nf-core/atacseq/pull/65).
+The pipeline sets Trim Galore’s `--cores` argument to the allocated CPUs minus 3 for single-end reads or minus 4 for paired-end reads, leaving CPUs available for I/O threads. The value passed to `--cores` is constrained to 1–8. With the default first-attempt allocation of 8 CPUs, this gives `--cores 5` for single-end reads or `--cores 4` for paired-end reads.
 :::
 
 ## rRNA removal options

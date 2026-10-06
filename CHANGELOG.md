@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1943](https://github.com/nf-core/rnaseq/pull/1943) - Apply `--min_mapped_reads` filtering to HISAT2 alignments
 - [PR #1958](https://github.com/nf-core/rnaseq/pull/1958) - Stop building the SortMeRNA index twice, and build the Salmon strandedness-inference index centrally in `PREPARE_GENOME_INDICES`
 - [PR #1963](https://github.com/nf-core/rnaseq/pull/1963) - Correct local nf-test examples to explicitly select the default pipeline tests and include the `test` profile.
-- Add a quick-start example to the usage documentation, with links to samplesheet, reference genome, and execution instructions.
+- [PR #1973](https://github.com/nf-core/rnaseq/pull/1973) - Add a quick-start example to the usage documentation, with links to samplesheet, reference genome, and execution instructions.
 
 ## [[3.27.0](https://github.com/nf-core/rnaseq/releases/tag/3.27.0)] - 2026-09-23
 

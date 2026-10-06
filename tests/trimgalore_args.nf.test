@@ -1,6 +1,6 @@
 nextflow_pipeline {
 
-    name "Test --extra_trimgalore_args"
+    name "Test pipeline with --extra_trimgalore_args"
     script "../main.nf"
     tag "pipeline"
     tag "trimgalore"
@@ -8,47 +8,49 @@ nextflow_pipeline {
     test("Params: --extra_trimgalore_args '--poly_a --nextseq 20'") {
 
         when {
-            def samplesheet = File.createTempFile('trimgalore_args', '.csv')
-            samplesheet.deleteOnExit()
-            samplesheet.text = """sample,fastq_1,fastq_2,strandedness
-WT_REP2,https://raw.githubusercontent.com/nf-core/test-datasets/626c8fab639062eade4b10747e919341cbf9b41a/testdata/GSE110004/SRR6357072_1.fastq.gz,https://raw.githubusercontent.com/nf-core/test-datasets/626c8fab639062eade4b10747e919341cbf9b41a/testdata/GSE110004/SRR6357072_2.fastq.gz,reverse
-RAP1_UNINDUCED_REP1,https://raw.githubusercontent.com/nf-core/test-datasets/626c8fab639062eade4b10747e919341cbf9b41a/testdata/GSE110004/SRR6357073_1.fastq.gz,,reverse
-"""
-
             params {
-                input = samplesheet.toString()
                 outdir = "$outputDir"
                 trimmer = 'trimgalore'
                 extra_trimgalore_args = '--poly_a --nextseq 20'
                 save_trimmed = true
                 skip_alignment = true
                 skip_pseudo_alignment = true
+                skip_bbsplit = true
                 skip_qc = true
                 skip_multiqc = true
-                skip_bbsplit = true
-                skip_linting = true
-                skip_bigwig = true
-                skip_stringtie = true
-                fasta = null
-                additional_fasta = null
-                salmon_index = null
             }
         }
 
         then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
             def trimgalore_versions = removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow").findAll { process, _versions -> process == 'TRIMGALORE' }
             assertAll(
-                { assert workflow.success },
-                { assert workflow.trace.succeeded().count { it.name.contains(':TRIMGALORE') } == 2 },
+                { assert workflow.success},
+                { assert workflow.trace.succeeded().count { it.name.contains(':TRIMGALORE') } == 5 },
                 { assert snapshot(
+                    // Number of successful tasks
                     workflow.trace.succeeded().size(),
                     trimgalore_versions,
+                    // All stable path name, with a relative path
                     stable_name,
+                    // All files with stable contents
                     stable_path
                 ).match() }
             )
+        }
+
+        cleanup {
+            // Only prune/delete on CI - keeping local VM state intact prevents
+            // cross-test launchDir wipes that break nf-test snapshot walks.
+            if (System.getenv("CI") == "true") {
+                if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                    "docker system prune -a -f --volumes".execute()
+                }
+                new File("${launchDir}").deleteDir()
+            }
         }
     }
 }

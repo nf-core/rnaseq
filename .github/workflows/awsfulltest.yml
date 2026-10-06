@@ -37,6 +37,14 @@ jobs:
           revision: ${{ steps.revision.outputs.revision }}
           workdir: s3://${{ vars.AWS_S3_BUCKET }}/work/rnaseq/work-${{ steps.revision.outputs.revision }}
           nextflow_config: |
+            process {
+              withName: '.*:QUANTIFY_RSEM:RSEM_CALCULATEEXPRESSION|.*:QUANTIFY_RSEM:SENTIEON_RSEMCALCULATEEXPRESSION' {
+                ext.args = '--estimate-rspd --no-bam-output --temporary-folder /tmp/rsem'
+              }
+              withName: 'DUPRADAR' {
+                ext.args = '--tmp_dir /tmp/dupradar'
+              }
+            }
             plugins {
               id 'nf-slack@0.5.0'
             }

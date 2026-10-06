@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1942](https://github.com/nf-core/rnaseq/pull/1942) - Fix `--with_umi` transcriptome-side samtools stats silently colliding with genome-side stats, caused by a broad `withName` wildcard in `conf/modules/alignment.config` also matching the `BAM_DEDUP_UMI` subworkflow
 - [PR #1943](https://github.com/nf-core/rnaseq/pull/1943) - Apply `--min_mapped_reads` filtering to HISAT2 alignments
 - [PR #1958](https://github.com/nf-core/rnaseq/pull/1958) - Stop building the SortMeRNA index twice, and build the Salmon strandedness-inference index centrally in `PREPARE_GENOME_INDICES`
-- [PR #1959](https://github.com/nf-core/rnaseq/pull/1959) - Right-size `RSEM_CALCULATEEXPRESSION` memory/time and drop its unused default BAM output
+- [PR #1959](https://github.com/nf-core/rnaseq/pull/1959) - Right-size `RSEM_CALCULATEEXPRESSION` memory/time, drop its unused default BAM output, and keep RSEM/dupRadar scratch files on local disk in the AWS full test
 - [PR #1963](https://github.com/nf-core/rnaseq/pull/1963) - Correct local nf-test examples to explicitly select the default pipeline tests and include the `test` profile.
 - [PR #1968](https://github.com/nf-core/rnaseq/pull/1968) - Fix duplicated valueless flags passed via `--extra_trimgalore_args`
 - [PR #1969](https://github.com/nf-core/rnaseq/pull/1969) - Add `--fail_on_low_trimmed_reads`, `--fail_on_low_mapped_reads` and `--fail_on_undetermined_strandedness` to fail the run, instead of silently skipping the sample or defaulting to `unstranded`

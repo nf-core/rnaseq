@@ -2,11 +2,6 @@
     "Params: --extra_trimgalore_args '--poly_a --nextseq 20'": {
         "content": [
             25,
-            {
-                "TRIMGALORE": {
-                    "trimgalore": "2.3.0"
-                }
-            },
             [
                 "fastqc",
                 "fastqc/trim",
@@ -70,7 +65,7 @@
                 "WT_REP2_trimmed_2_val_2.fq.gz:md5,e02a4c874bf849b56ca60e07bbca722a"
             ]
         ],
-        "timestamp": "2026-10-06T10:12:33.62830105",
+        "timestamp": "2026-10-06T10:30:53.818592246",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"

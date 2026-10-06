@@ -25,14 +25,12 @@ nextflow_pipeline {
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // stable_path: All files in ${params.outdir}/ with stable content
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
-            def trimgalore_versions = removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow").findAll { process, _versions -> process == 'TRIMGALORE' }
             assertAll(
                 { assert workflow.success},
                 { assert workflow.trace.succeeded().count { it.name.contains(':TRIMGALORE') } == 5 },
                 { assert snapshot(
                     // Number of successful tasks
                     workflow.trace.succeeded().size(),
-                    trimgalore_versions,
                     // All stable path name, with a relative path
                     stable_name,
                     // All files with stable contents

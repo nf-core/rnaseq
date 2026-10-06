@@ -24,5 +24,4 @@ Changes in 'rsem/calculateexpression/main.nf':
 'modules/nf-core/rsem/calculateexpression/tests/main.nf.test.snap' is unchanged
 'modules/nf-core/rsem/calculateexpression/tests/nextflow.config' is unchanged
 'modules/nf-core/rsem/calculateexpression/tests/main.nf.test' is unchanged
-'modules/nf-core/rsem/calculateexpression/tests/alignment.config' is unchanged
 ************************************************************

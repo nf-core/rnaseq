@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1943](https://github.com/nf-core/rnaseq/pull/1943) - Apply `--min_mapped_reads` filtering to HISAT2 alignments
 - [PR #1958](https://github.com/nf-core/rnaseq/pull/1958) - Stop building the SortMeRNA index twice, and build the Salmon strandedness-inference index centrally in `PREPARE_GENOME_INDICES`
 - [PR #1963](https://github.com/nf-core/rnaseq/pull/1963) - Correct local nf-test examples to explicitly select the default pipeline tests and include the `test` profile.
-- [PR #1968](https://github.com/nf-core/rnaseq/pull/1968) - Fix duplicated valueless flags in --extra_trimgalore_args, add regression tests, and update Trim Galore documentation for pipeline defaults
+- [PR #1968](https://github.com/nf-core/rnaseq/pull/1968) - Fix duplicated valueless flags passed via `--extra_trimgalore_args`
 
 ## [[3.27.0](https://github.com/nf-core/rnaseq/releases/tag/3.27.0)] - 2026-09-23
 

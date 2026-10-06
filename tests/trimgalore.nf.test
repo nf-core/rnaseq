@@ -3,7 +3,6 @@ nextflow_pipeline {
     name "Test pipeline with --extra_trimgalore_args"
     script "../main.nf"
     tag "pipeline"
-    tag "trimgalore"
 
     test("Params: --extra_trimgalore_args '--poly_a --nextseq 20'") {
 

@@ -4,6 +4,26 @@
 
 > _Documentation of pipeline parameters is generated automatically from the pipeline schema and can no longer be found in markdown files._
 
+## Quick start
+
+Prepare a [samplesheet](#samplesheet-input) describing your FASTQ files and choose a matching reference genome FASTA and gene annotation GTF. See [Reference genome options](#reference-genome-options) for details.
+
+With Nextflow and Docker installed, run the pipeline using:
+
+```bash
+nextflow run nf-core/rnaseq \
+    -r <VERSION> \
+    -profile docker \
+    --input samplesheet.csv \
+    --fasta /path/to/genome.fa \
+    --gtf /path/to/annotation.gtf \
+    --outdir results
+```
+
+Replace `<VERSION>` with a release tag from the [releases page](https://github.com/nf-core/rnaseq/releases), and replace the example file paths with your own. Pinning a release helps make your analysis reproducible.
+
+For other execution environments and additional run options, see [Running the pipeline](#running-the-pipeline) and [Core Nextflow arguments](#core-nextflow-arguments).
+
 ## Pipeline parameters
 
 Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration except for parameters; see [docs](https://nf-co.re/usage/configuration#custom-configuration-files).

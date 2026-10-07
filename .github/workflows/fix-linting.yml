@@ -1,0 +1,21 @@
+name: Fix linting from a comment
+on:
+  issue_comment:
+    types: [created] # Add "@nf-core-bot fix linting" as a PR comment to trigger this workflow.
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.issue.number }}
+
+jobs:
+  fix-linting:
+    uses: nf-core/actions/.github/workflows/fix-linting.yml@v1
+    with:
+      nextflow-versions: '["25.10.4","latest-everything"]'
+    permissions:
+      actions: read
+      contents: read
+      issues: write
+      pull-requests: write
+
+    secrets:
+      BOT_TOKEN: ${{ secrets.nf_core_bot_auth_token }}

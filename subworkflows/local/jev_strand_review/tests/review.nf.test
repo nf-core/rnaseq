@@ -1,0 +1,128 @@
+nextflow_function {
+    name "Shadow strand review contract"
+    script "../review.nf"
+    function "reviewStrandEvidence"
+
+    test("Conflicting review preserves metadata and excludes private fields from the request") {
+        when {
+            function {
+                """
+                def meta = [id: 'private-sample', strandedness: 'reverse', single_end: false, secret: '/private/path']
+                def evidence = [inferred_strandedness: 'reverse', forwardFragments: 3, reverseFragments: 92, unstrandedFragments: 5]
+                input[0] = [meta, 'auto', 'pass', evidence, evidence]
+                input[1] = 'Protocol expects forward orientation'
+                input[2] = 'jev-1.13.0'
+                input[3] = 0.8
+                input[4] = { state, questions ->
+                    assert !state.toString().contains('private')
+                    assert state.rseqc.unassigned_percent == 5
+                    assert state.salmon.unassigned_percent == null
+                    assert meta.strandedness == 'reverse'
+                    [strand_review: [type: 'choice', choice: 'review_conflicting_evidence', confidence: 0.8,
+                        probabilities: [consistent: 0.05, review_conflicting_evidence: 0.9, review_insufficient_evidence: 0.05]]]
+                }
+                """
+            }
+        }
+        then {
+            assert function.success
+            assert function.result.disposition == 'review_conflicting_evidence'
+            assert function.result.disagreement == true
+            assert function.result.request.state.applied_strand == 'reverse'
+            assert function.result.request.state.rseqc.evidence_count == null
+            assert function.result.sample == 'private-sample'
+        }
+    }
+
+    test("Low confidence does not count as agreement or disagreement") {
+        when {
+            function {
+                """
+                input[0] = [[id: 'borderline', strandedness: 'forward'], 'forward', 'fail', null, null]
+                input[1] = null
+                input[2] = 'jev-1.13.0'
+                input[3] = 0.8
+                input[4] = { state, questions ->
+                    [strand_review: [type: 'choice', choice: 'consistent', confidence: 0.799,
+                        probabilities: [consistent: 0.8, review_conflicting_evidence: 0.1, review_insufficient_evidence: 0.1]]]
+                }
+                """
+            }
+        }
+        then {
+            assert function.success
+            assert function.result.disposition == 'review_low_confidence'
+            assert function.result.disagreement == null
+            assert function.result.answer.choice == 'consistent'
+        }
+    }
+
+    test("Invalid measurements become unknown and malformed answers never become passes") {
+        when {
+            function {
+                """
+                input[0] = [[id: 'zero-evidence', strandedness: 'unstranded'], 'auto', '-',
+                    [inferred_strandedness: 'undetermined', forwardFragments: Double.NaN, reverseFragments: -1, unstrandedFragments: 101], null]
+                input[1] = null
+                input[2] = 'jev-1.13.0'
+                input[3] = 0.8
+                input[4] = { state, questions ->
+                    assert state.salmon.forward_percent == null
+                    assert state.salmon.reverse_percent == null
+                    [strand_review: [type: 'choice', choice: 'consistent', confidence: 0.99,
+                        probabilities: [consistent: 0.99]]]
+                }
+                """
+            }
+        }
+        then {
+            assert function.success
+            assert function.result.disposition == 'review_unavailable'
+            assert function.result.error == 'invalid_response'
+            assert function.result.disagreement == null
+        }
+    }
+
+    test("Insufficient evidence is not a disagreement with an existing pass") {
+        when {
+            function {
+                """
+                input[0] = [[id: 'missing-evidence', strandedness: 'reverse'], 'reverse', 'pass', null, null]
+                input[1] = null
+                input[2] = 'jev-1.13.0'
+                input[3] = 0.8
+                input[4] = { state, questions ->
+                    [strand_review: [type: 'choice', choice: 'review_insufficient_evidence', confidence: 0.95,
+                        probabilities: [consistent: 0.01, review_conflicting_evidence: 0.01, review_insufficient_evidence: 0.98]]]
+                }
+                """
+            }
+        }
+        then {
+            assert function.success
+            assert function.result.disposition == 'review_insufficient_evidence'
+            assert function.result.disagreement == null
+        }
+    }
+
+    test("Provider failure preserves a review record without leaking error text") {
+        when {
+            function {
+                """
+                input[0] = [[id: 'outage', strandedness: 'reverse'], 'reverse', 'pass', null, null]
+                input[1] = null
+                input[2] = 'jev-1.13.0'
+                input[3] = 0.8
+                input[4] = { state, questions -> throw new IOException('private provider response') }
+                """
+            }
+        }
+        then {
+            assert function.success
+            assert function.result.disposition == 'review_unavailable'
+            assert function.result.error == 'inference_unavailable'
+            assert !function.result.toString().contains('private provider response')
+            assert function.result.baseline_status == 'pass'
+        }
+    }
+}

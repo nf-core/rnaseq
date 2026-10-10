@@ -580,6 +580,28 @@
                     "default": 200,
                     "fa_icon": "fas fa-sort-amount-up-alt"
                 },
+                "jev_strand_review": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Send allowlisted strand QC evidence to Jev for an advisory shadow review. Never changes scientific outputs or sample inclusion."
+                },
+                "jev_strand_protocol": {
+                    "type": "string",
+                    "description": "Optional protocol context shared by all samples in this run and sent to Jev. Omit for mixed protocols; do not include sensitive data."
+                },
+                "jev_strand_confidence": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1,
+                    "default": 0.8,
+                    "description": "Model confidence below this floor is reported as review_low_confidence. Experimental, not biologically calibrated."
+                },
+                "jev_strand_model": {
+                    "type": "string",
+                    "default": "jev-1.13.0",
+                    "minLength": 1,
+                    "description": "TypeSafe model for strand shadow review. Use a pinned version and retain the Jev cache for repeatable decisions."
+                },
                 "stranded_threshold": {
                     "type": "number",
                     "minimum": 0.5,

@@ -1,0 +1,42 @@
+{
+    "id": "jev_strand_review",
+    "parent_id": "strandedness",
+    "parent_name": "Strandedness checks",
+    "section_name": "Jev shadow review",
+    "description": "Experimental advisory review only. No strand settings, QC statuses, or sample inclusion change. Confidence describes the model answer, not biological correctness. Evidence counts are unavailable. Disagrees means the recommendation differs from the existing pass/fail check; neither is ground truth. Only samples reaching strand reporting are reviewed. Full requests and answers are saved in jev_strand_review/strand_review.jsonl.",
+    "plot_type": "table",
+    "pconfig": { "id": "jev_strand_review_table", "title": "Jev shadow strand review" },
+    "headers": {
+        "baseline": { "title": "Existing QC" },
+        "review": {
+            "title": "Shadow recommendation",
+            "cond_formatting_rules": {
+                "pass": [{ "s_eq": "consistent" }],
+                "warn": [
+                    { "s_eq": "review_conflicting_evidence" },
+                    { "s_eq": "review_insufficient_evidence" },
+                    { "s_eq": "review_low_confidence" }
+                ],
+                "fail": [{ "s_eq": "review_unavailable" }]
+            },
+            "cond_formatting_colours": [{ "pass": "#27AE60" }, { "warn": "#F4D03F" }, { "fail": "#AAB7B8" }]
+        },
+        "confidence": {
+            "title": "Model confidence",
+            "suffix": "%",
+            "format": "{:.1f}",
+            "min": 0,
+            "max": 100,
+            "scale": "Blues"
+        },
+        "comparison": {
+            "title": "Versus existing QC",
+            "cond_formatting_rules": { "warn": [{ "s_eq": "Disagrees" }] },
+            "cond_formatting_colours": [{ "warn": "#F4D03F" }]
+        },
+        "applied": { "title": "Applied strand" },
+        "salmon": { "title": "Salmon call" },
+        "rseqc": { "title": "RSeQC call" },
+        "error": { "title": "Review error", "hidden": true }
+    }
+}

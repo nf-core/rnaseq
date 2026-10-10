@@ -12,3 +12,4 @@ testing/
 work/
 null/
 .lineage/
+.jev-strand-cache/

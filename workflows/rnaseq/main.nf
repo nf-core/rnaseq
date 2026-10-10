@@ -19,6 +19,7 @@ include { RUSTQC                              } from '../../modules/nf-core/rust
 include { ALIGN_STAR                            } from '../../subworkflows/local/align_star'
 include { ALIGN_BOWTIE2                         } from '../../subworkflows/local/align_bowtie2'
 include { MULTIQC_RNASEQ                        } from '../../subworkflows/local/multiqc_rnaseq'
+include { JEV_STRAND_REVIEW                     } from '../../subworkflows/local/jev_strand_review'
 include { BAM_QC_RNASEQ                         } from '../../subworkflows/nf-core/bam_qc_rnaseq'
 include { QUANTIFY_RSEM                         } from '../../subworkflows/nf-core/quantify_rsem'
 include { BAM_DEDUP_UMI                         } from '../../subworkflows/nf-core/bam_dedup_umi'
@@ -842,6 +843,20 @@ workflow RNASEQ {
     // SUBWORKFLOW: MultiQC
     //
     ch_multiqc_report = channel.empty()
+
+    if (params.jev_strand_review) {
+        JEV_STRAND_REVIEW(
+            ch_strand_data,
+            params.jev_strand_protocol,
+            params.jev_strand_model,
+            params.jev_strand_confidence,
+            file("${projectDir}/assets/jev_strand_review_mqc.json", checkIfExists: true),
+            "${params.outdir}/jev_strand_review",
+        )
+        ch_multiqc_files = ch_multiqc_files.mix(JEV_STRAND_REVIEW.out.multiqc)
+        ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
+            .join(JEV_STRAND_REVIEW.out.multiqc.map { meta, report -> [meta.id, report] }, remainder: true)
+    }
 
     if (!params.skip_multiqc) {
         MULTIQC_RNASEQ(

@@ -4,10 +4,10 @@
             89,
             {
                 "BBMAP_BBSPLIT": {
-                    "bbmap": 39.18
+                    "bbmap": "39.18"
                 },
                 "CAT_FASTQ": {
-                    "cat": 9.5
+                    "cat": "9.5"
                 },
                 "CUSTOM_CATADDITIONALFASTA": {
                     "python": "3.12.2"
@@ -44,39 +44,39 @@
                     "fq": "0.12.0"
                 },
                 "GUNZIP_ADDITIONAL_FASTA": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "GUNZIP_GTF": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "PARABRICKS_RNA_FQ2BAM": {
                     "parabricks": "4.7.1-1"
                 },
                 "PARABRICKS_STARGENOMEGENERATE": {
                     "gawk": "5.1.0",
-                    "samtools": 1.21,
+                    "samtools": "1.21",
                     "star": "2.7.2a"
                 },
                 "SALMON_QUANT": {
                     "salmon": "2.7.0"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -91,7 +91,7 @@
                     "bioconductor-tximeta": "1.20.1"
                 },
                 "UNTAR_SALMON_INDEX": {
-                    "untar": 1.34
+                    "untar": "1.34"
                 }
             },
             [
@@ -653,10 +653,10 @@
             27,
             {
                 "BBMAP_BBSPLIT": {
-                    "bbmap": 39.18
+                    "bbmap": "39.18"
                 },
                 "CAT_FASTQ": {
-                    "cat": 9.5
+                    "cat": "9.5"
                 },
                 "CUSTOM_CATADDITIONALFASTA": {
                     "python": "3.12.2"
@@ -674,24 +674,24 @@
                     "fq": "0.12.0"
                 },
                 "GUNZIP_ADDITIONAL_FASTA": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "GUNZIP_GTF": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "PARABRICKS_STARGENOMEGENERATE": {
                     "gawk": "5.1.0",
-                    "samtools": 1.21,
+                    "samtools": "1.21",
                     "star": "2.7.2a"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "TRIMGALORE": {
                     "trimgalore": "2.3.0"
                 },
                 "UNTAR_SALMON_INDEX": {
-                    "untar": 1.34
+                    "untar": "1.34"
                 }
             },
             [
@@ -749,10 +749,10 @@
             27,
             {
                 "BBMAP_BBSPLIT": {
-                    "bbmap": 39.18
+                    "bbmap": "39.18"
                 },
                 "CAT_FASTQ": {
-                    "cat": 9.5
+                    "cat": "9.5"
                 },
                 "CUSTOM_CATADDITIONALFASTA": {
                     "python": "3.12.2"
@@ -770,24 +770,24 @@
                     "fq": "0.12.0"
                 },
                 "GUNZIP_ADDITIONAL_FASTA": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "GUNZIP_GTF": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "PARABRICKS_STARGENOMEGENERATE": {
                     "gawk": "5.1.0",
-                    "samtools": 1.21,
+                    "samtools": "1.21",
                     "star": "2.7.2a"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "TRIMGALORE": {
                     "trimgalore": "2.3.0"
                 },
                 "UNTAR_SALMON_INDEX": {
-                    "untar": 1.34
+                    "untar": "1.34"
                 }
             },
             [
@@ -845,10 +845,10 @@
             89,
             {
                 "BBMAP_BBSPLIT": {
-                    "bbmap": 39.18
+                    "bbmap": "39.18"
                 },
                 "CAT_FASTQ": {
-                    "cat": 9.5
+                    "cat": "9.5"
                 },
                 "CUSTOM_CATADDITIONALFASTA": {
                     "python": "3.12.2"
@@ -885,39 +885,39 @@
                     "fq": "0.12.0"
                 },
                 "GUNZIP_ADDITIONAL_FASTA": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "GUNZIP_GTF": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "PARABRICKS_RNA_FQ2BAM": {
                     "parabricks": "4.7.1-1"
                 },
                 "PARABRICKS_STARGENOMEGENERATE": {
                     "gawk": "5.1.0",
-                    "samtools": 1.21,
+                    "samtools": "1.21",
                     "star": "2.7.2a"
                 },
                 "SALMON_QUANT": {
                     "salmon": "2.7.0"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -932,7 +932,7 @@
                     "bioconductor-tximeta": "1.20.1"
                 },
                 "UNTAR_SALMON_INDEX": {
-                    "untar": 1.34
+                    "untar": "1.34"
                 }
             },
             [

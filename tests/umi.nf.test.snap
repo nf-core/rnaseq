@@ -4,7 +4,7 @@
             223,
             {
                 "CAT_FASTQ": {
-                    "cat": 9.5
+                    "cat": "9.5"
                 },
                 "CUSTOM_CATADDITIONALFASTA": {
                     "python": "3.12.2"
@@ -16,7 +16,7 @@
                     "python": "3.12.12"
                 },
                 "CUSTOM_RSEMMERGECOUNTS": {
-                    "sed": 4.7
+                    "sed": "4.7"
                 },
                 "CUSTOM_TX2GENE": {
                     "python": "3.10.4"
@@ -44,13 +44,13 @@
                     "fq": "0.12.0"
                 },
                 "GUNZIP_ADDITIONAL_FASTA": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "GUNZIP_GTF": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "QUALIMAP_RNASEQ": {
-                    "qualimap": 2.3
+                    "qualimap": "2.3"
                 },
                 "RSEM_CALCULATEEXPRESSION": {
                     "rsem": "1.3.1"
@@ -83,25 +83,25 @@
                     "salmon": "2.7.0"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_SORT_QUALIMAP": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -111,12 +111,12 @@
                 },
                 "STAR_ALIGN": {
                     "gawk": "5.1.0",
-                    "samtools": 1.21,
+                    "samtools": "1.21",
                     "star": "2.7.11b"
                 },
                 "STAR_GENOMEGENERATE": {
                     "gawk": "5.1.0",
-                    "samtools": 1.21,
+                    "samtools": "1.21",
                     "star": "2.7.11b"
                 },
                 "SUBREAD_FEATURECOUNTS": {
@@ -138,7 +138,7 @@
                     "umitools": "1.1.6"
                 },
                 "UNTAR_SALMON_INDEX": {
-                    "untar": 1.34
+                    "untar": "1.34"
                 }
             },
             [
@@ -1275,7 +1275,7 @@
             221,
             {
                 "CAT_FASTQ": {
-                    "cat": 9.5
+                    "cat": "9.5"
                 },
                 "CUSTOM_CATADDITIONALFASTA": {
                     "python": "3.12.2"
@@ -1312,13 +1312,13 @@
                     "fq": "0.12.0"
                 },
                 "GUNZIP_ADDITIONAL_FASTA": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "GUNZIP_GTF": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "QUALIMAP_RNASEQ": {
-                    "qualimap": 2.3
+                    "qualimap": "2.3"
                 },
                 "RSEQC_BAMSTAT": {
                     "rseqc": "5.0.4"
@@ -1345,25 +1345,25 @@
                     "salmon": "2.7.0"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_SORT_QUALIMAP": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -1373,12 +1373,12 @@
                 },
                 "STAR_ALIGN": {
                     "gawk": "5.1.0",
-                    "samtools": 1.21,
+                    "samtools": "1.21",
                     "star": "2.7.11b"
                 },
                 "STAR_GENOMEGENERATE": {
                     "gawk": "5.1.0",
-                    "samtools": 1.21,
+                    "samtools": "1.21",
                     "star": "2.7.11b"
                 },
                 "SUBREAD_FEATURECOUNTS": {
@@ -1400,7 +1400,7 @@
                     "umitools": "1.1.6"
                 },
                 "UNTAR_SALMON_INDEX": {
-                    "untar": 1.34
+                    "untar": "1.34"
                 }
             },
             [
@@ -2579,7 +2579,7 @@
             154,
             {
                 "CAT_FASTQ": {
-                    "cat": 9.5
+                    "cat": "9.5"
                 },
                 "CUSTOM_CATADDITIONALFASTA": {
                     "python": "3.12.2"
@@ -2609,21 +2609,21 @@
                     "fq": "0.12.0"
                 },
                 "GUNZIP_ADDITIONAL_FASTA": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "GUNZIP_GTF": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "HISAT2_ALIGN": {
                     "hisat2": "2.2.3",
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "HISAT2_EXTRACTSPLICESITES": {
                     "hisat2": "2.2.3",
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "QUALIMAP_RNASEQ": {
-                    "qualimap": 2.3
+                    "qualimap": "2.3"
                 },
                 "RSEQC_BAMSTAT": {
                     "rseqc": "5.0.4"
@@ -2650,25 +2650,25 @@
                     "salmon": "2.7.0"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_SORT_QUALIMAP": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "SUBREAD_FEATURECOUNTS": {
                     "subread": "2.1.1"
@@ -2683,10 +2683,10 @@
                     "umitools": "1.1.6"
                 },
                 "UNTAR_HISAT2_INDEX": {
-                    "untar": 1.34
+                    "untar": "1.34"
                 },
                 "UNTAR_SALMON_INDEX": {
-                    "untar": 1.34
+                    "untar": "1.34"
                 }
             },
             [
@@ -3584,10 +3584,10 @@
             32,
             {
                 "BBMAP_BBSPLIT": {
-                    "bbmap": 39.18
+                    "bbmap": "39.18"
                 },
                 "CAT_FASTQ": {
-                    "cat": 9.5
+                    "cat": "9.5"
                 },
                 "CUSTOM_CATADDITIONALFASTA": {
                     "python": "3.12.2"
@@ -3605,17 +3605,17 @@
                     "fq": "0.12.0"
                 },
                 "GUNZIP_ADDITIONAL_FASTA": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "GUNZIP_GTF": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "STAR_GENOMEGENERATE": {
                     "gawk": "5.1.0",
-                    "samtools": 1.21,
+                    "samtools": "1.21",
                     "star": "2.7.11b"
                 },
                 "TRIMGALORE": {
@@ -3625,7 +3625,7 @@
                     "umitools": "1.1.6"
                 },
                 "UNTAR_SALMON_INDEX": {
-                    "untar": 1.34
+                    "untar": "1.34"
                 }
             },
             [

@@ -4,7 +4,7 @@
             132,
             {
                 "BBMAP_BBSPLIT": {
-                    "bbmap": 39.18
+                    "bbmap": "39.18"
                 },
                 "BEDTOOLS_GENOMECOV_COMBINED": {
                     "bedtools": "2.31.1"
@@ -16,7 +16,7 @@
                     "bedtools": "2.31.1"
                 },
                 "CAT_FASTQ": {
-                    "cat": 9.5
+                    "cat": "9.5"
                 },
                 "CUSTOM_CATADDITIONALFASTA": {
                     "python": "3.12.2"
@@ -43,10 +43,10 @@
                     "fq": "0.12.0"
                 },
                 "GUNZIP_ADDITIONAL_FASTA": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "GUNZIP_GTF": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "PICARD_MARKDUPLICATES": {
                     "picard": "3.5.0"
@@ -55,22 +55,22 @@
                     "salmon": "2.7.0"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -80,12 +80,12 @@
                 },
                 "STAR_ALIGN": {
                     "gawk": "5.1.0",
-                    "samtools": 1.21,
+                    "samtools": "1.21",
                     "star": "2.7.11b"
                 },
                 "STAR_GENOMEGENERATE": {
                     "gawk": "5.1.0",
-                    "samtools": 1.21,
+                    "samtools": "1.21",
                     "star": "2.7.11b"
                 },
                 "STRINGTIE_STRINGTIE": {
@@ -98,13 +98,13 @@
                     "bioconductor-tximeta": "1.20.1"
                 },
                 "UCSC_BEDCLIP": {
-                    "ucsc": 482
+                    "ucsc": "482"
                 },
                 "UCSC_BEDGRAPHTOBIGWIG": {
-                    "ucsc": 482
+                    "ucsc": "482"
                 },
                 "UNTAR_SALMON_INDEX": {
-                    "untar": 1.34
+                    "untar": "1.34"
                 }
             },
             [
@@ -744,10 +744,10 @@
             22,
             {
                 "BBMAP_BBSPLIT": {
-                    "bbmap": 39.18
+                    "bbmap": "39.18"
                 },
                 "CAT_FASTQ": {
-                    "cat": 9.5
+                    "cat": "9.5"
                 },
                 "CUSTOM_CATADDITIONALFASTA": {
                     "python": "3.12.2"
@@ -762,24 +762,24 @@
                     "fq": "0.12.0"
                 },
                 "GUNZIP_ADDITIONAL_FASTA": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "GUNZIP_GTF": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "STAR_GENOMEGENERATE": {
                     "gawk": "5.1.0",
-                    "samtools": 1.21,
+                    "samtools": "1.21",
                     "star": "2.7.11b"
                 },
                 "TRIMGALORE": {
                     "trimgalore": "2.3.0"
                 },
                 "UNTAR_SALMON_INDEX": {
-                    "untar": 1.34
+                    "untar": "1.34"
                 }
             },
             [

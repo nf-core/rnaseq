@@ -84,7 +84,7 @@ ${colors.purple}  nf-core/rnaseq ${workflow.manifest.version}${colors.reset}
     if (help || help_full) {
         log.info paramsHelp(
             [beforeText: before_text, afterText: after_text, command: command, showHidden: show_hidden, fullHelp: help_full],
-            (params.help instanceof String && params.help != 'true') ? params.help : ''
+            (help instanceof String && help != 'true') ? help : ''
         )
         exit 0
     }

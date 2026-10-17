@@ -8,14 +8,15 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { UTILS_NFSCHEMA_PLUGIN     } from '../../nf-core/utils_nfschema_plugin'
 include { paramsSummaryMap          } from 'plugin/nf-schema'
 include { paramsHelp                } from 'plugin/nf-schema'
-include { completionEmail           } from '../../nf-core/utils_nfcore_pipeline'
-include { completionSummary         } from '../../nf-core/utils_nfcore_pipeline'
-include { UTILS_NFCORE_PIPELINE     } from '../../nf-core/utils_nfcore_pipeline'
-include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipeline'
-include { logColours                } from '../../nf-core/utils_nfcore_pipeline'
+include { paramsSummaryLog          } from 'plugin/nf-schema'
+include { validateParameters        } from 'plugin/nf-schema'
+include { completionEmail           } from 'plugin/nf-core-utils'
+include { checkConfigProvided       } from 'plugin/nf-core-utils'
+include { checkCondaChannels        } from 'plugin/nf-core-utils'
+include { dumpParametersToJSON      } from 'plugin/nf-core-utils'
+include { getWorkflowVersion        } from 'plugin/nf-core-utils'
 include { calculateStrandedness     } from '../../nf-core/fastq_qc_trim_filter_setstrandedness'
 
 /*
@@ -42,12 +43,16 @@ workflow PIPELINE_INITIALISATION {
     //
     // Print version and exit if required and dump pipeline parameters to JSON file
     //
-    UTILS_NEXTFLOW_PIPELINE (
-        version,
-        true,
-        outdir,
-        workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1
-    )
+    if (version) {
+        log.info("${workflow.manifest.name} ${getWorkflowVersion(workflow.manifest.version, workflow.commitId)}")
+        System.exit(0)
+    }
+    if (outdir) {
+        dumpParametersToJSON(outdir.toString(), params)
+    }
+    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba'])) {
+        checkCondaChannels()
+    }
 
     //
     // Validate parameters and generate parameter summary to stdout
@@ -76,25 +81,26 @@ ${colors.purple}  nf-core/rnaseq ${workflow.manifest.version}${colors.reset}
 
     command = "nextflow run ${workflow.manifest.name} -profile <docker/singularity/.../institute> --input samplesheet.csv --outdir <OUTDIR>"
 
-    UTILS_NFSCHEMA_PLUGIN (
-        workflow,
-        validate_params,
-        null,
-        help,
-        help_full,
-        show_hidden,
-        before_text,
-        after_text,
-        command,
-        false
-    )
+    if (help || help_full) {
+        log.info paramsHelp(
+            [beforeText: before_text, afterText: after_text, command: command, showHidden: show_hidden, fullHelp: help_full],
+            (help instanceof String && help != 'true') ? help : ''
+        )
+        exit 0
+    }
+
+    log.info before_text
+    log.info paramsSummaryLog(workflow)
+    log.info after_text
+    if (validate_params) {
+        validateParameters(cast_cli_params: false)
+    }
 
     //
     // Check config provided to the pipeline
     //
-    UTILS_NFCORE_PIPELINE (
-        nextflow_cli_args
-    )
+    checkConfigProvided()
+    checkProfileProvided(nextflow_cli_args)
 
     //
     // Custom validation for pipeline parameters
@@ -173,6 +179,34 @@ workflow PIPELINE_COMPLETION {
     FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
+
+// nf-core-utils checks its args for -profile, but Nextflow only passes positional args here.
+def checkProfileProvided(nextflow_cli_args) {
+    if (workflow.profile.endsWith(',')) {
+        error(
+            "The `-profile` option cannot end with a trailing comma, please remove it and re-run the pipeline!\n" + "HINT: A common mistake is to provide multiple values separated by spaces e.g. `-profile test, docker`.\n"
+        )
+    }
+    if (nextflow_cli_args[0]) {
+        log.warn(
+            "nf-core pipelines do not accept positional arguments. The positional argument `${nextflow_cli_args[0]}` has been detected.\n" + "HINT: A common mistake is to provide multiple values separated by spaces e.g. `-profile test, docker`.\n"
+        )
+    }
+}
+
+// Colours used by the rnaseq banner and sample QC summary; not exported by nf-core-utils.
+def logColours(monochrome_logs) {
+    return [
+        reset:  monochrome_logs ? '' : "\033[0m",
+        dim:    monochrome_logs ? '' : "\033[2m",
+        black:  monochrome_logs ? '' : "\033[0;30m",
+        red:    monochrome_logs ? '' : "\033[0;31m",
+        green:  monochrome_logs ? '' : "\033[0;32m",
+        yellow: monochrome_logs ? '' : "\033[0;33m",
+        blue:   monochrome_logs ? '' : "\033[0;34m",
+        purple: monochrome_logs ? '' : "\033[0;35m",
+    ]
+}
 
 //
 // Function to check samples are internally consistent after being grouped

@@ -4,7 +4,7 @@
             39,
             {
                 "CAT_FASTQ": {
-                    "cat": 9.5
+                    "cat": "9.5"
                 },
                 "CUSTOM_GTFFILTER": {
                     "python": "3.14.5"
@@ -32,7 +32,7 @@
                     "fq": "0.12.0"
                 },
                 "GUNZIP_GTF": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "SALMON_INDEX": {
                     "salmon": "2.7.0"

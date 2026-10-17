@@ -54,7 +54,7 @@ include { SAMTOOLS_INDEX                                       } from '../../mod
 // SUBWORKFLOW: Consisting entirely of nf-core/modules
 //
 include { samplesheetToList                } from 'plugin/nf-schema'
-include { softwareVersionsToYAML           } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
+include { collectVersions                  } from 'plugin/nf-core-utils'
 include { FASTQ_ALIGN_HISAT2               } from '../../subworkflows/nf-core/fastq_align_hisat2'
 include { BAM_MARKDUPLICATES_PICARD        } from '../../subworkflows/nf-core/bam_markduplicates_picard'
 include { BAM_STRINGTIE_MERGE              } from '../../subworkflows/nf-core/bam_stringtie_merge/main'
@@ -135,28 +135,6 @@ workflow RNASEQ {
     // this aggregation silently emits duplicate rows.
     ch_mqc_per_sample_bundle = channel.empty()
     def collapseAgg = { row -> [row[0].id, row.drop(1).findAll { e -> e != null }.collectMany { e -> (e instanceof List) ? e : [e] }] }
-
-    //
-    // Collect versions from the topic channel. Entries are either
-    // `path(versions.yml)` (legacy file-emit style) or
-    // `(task.process, tool, version)` tuples (inline `eval` style).
-    //
-    def topic_versions = channel.topic('versions')
-        .distinct()
-        .branch { entry ->
-            versions_file: entry instanceof Path
-            versions_tuple: true
-        }
-
-    def topic_versions_string = topic_versions.versions_tuple
-        .map { process, tool, version ->
-            [ process[process.lastIndexOf(':')+1..-1], "  ${tool}: ${version}" ]
-        }
-        .groupTuple(by: 0)
-        .map { process, tool_versions ->
-            tool_versions.unique().sort()
-            "${process}:\n${tool_versions.join('\n')}"
-        }
 
     //
     // Create channel from input file provided through params.input
@@ -834,8 +812,11 @@ workflow RNASEQ {
     //
     // Collate and save software versions from the `versions` topic
     //
-    ch_collated_versions = softwareVersionsToYAML(topic_versions.versions_file)
-        .mix(topic_versions_string)
+    ch_collated_versions = channel.topic('versions')
+        // Read via Nextflow's Path API so remote work directories remain supported.
+        .map { entry -> entry instanceof Path ? entry.text : entry }
+        .toList()
+        .map { versions -> collectVersions(versions, workflow.nextflow.version) }
         .collectFile(storeDir: "${params.outdir}/pipeline_info", name: 'nf_core_rnaseq_software_mqc_versions.yml', sort: true, newLine: true)
 
     //

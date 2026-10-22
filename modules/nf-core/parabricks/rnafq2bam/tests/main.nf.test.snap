@@ -97,7 +97,7 @@
                     [
                         "PARABRICKS_RNAFQ2BAM",
                         "parabricks",
-                        "4.7.1-1"
+                        "4.8.0-1"
                     ]
                 ],
                 "2": [
@@ -342,7 +342,7 @@
                     [
                         "PARABRICKS_RNAFQ2BAM",
                         "parabricks",
-                        "4.7.1-1"
+                        "4.8.0-1"
                     ]
                 ],
                 "wig": [
@@ -356,11 +356,11 @@
                 ]
             }
         ],
+        "timestamp": "2026-10-22T07:01:24.244593988",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-04-17T08:08:44.920007509"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
     },
     "homo_sapiens_chimeric - stub": {
         "content": [
@@ -460,7 +460,7 @@
                     [
                         "PARABRICKS_RNAFQ2BAM",
                         "parabricks",
-                        "4.7.1-1"
+                        "4.8.0-1"
                     ]
                 ],
                 "2": [
@@ -705,7 +705,7 @@
                     [
                         "PARABRICKS_RNAFQ2BAM",
                         "parabricks",
-                        "4.7.1-1"
+                        "4.8.0-1"
                     ]
                 ],
                 "wig": [
@@ -719,11 +719,11 @@
                 ]
             }
         ],
+        "timestamp": "2026-10-22T07:02:22.81197374",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-04-17T08:09:51.697962968"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
     },
     "homo_sapiens": {
         "content": [
@@ -733,17 +733,17 @@
                     [
                         "PARABRICKS_RNAFQ2BAM",
                         "parabricks",
-                        "4.7.1-1"
+                        "4.8.0-1"
                     ]
                 ]
             },
             "220938db5c88cdfcb9d98e10630a9e31"
         ],
+        "timestamp": "2026-10-22T07:01:14.497151702",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-04-17T08:08:34.03461553"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
     },
     "homo_sapiens_chimeric": {
         "content": [
@@ -755,15 +755,15 @@
                     [
                         "PARABRICKS_RNAFQ2BAM",
                         "parabricks",
-                        "4.7.1-1"
+                        "4.8.0-1"
                     ]
                 ]
             }
         ],
+        "timestamp": "2026-10-22T07:02:13.142235067",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-04-17T08:09:41.244103512"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
     }
 }

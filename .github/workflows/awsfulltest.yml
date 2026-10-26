@@ -23,7 +23,7 @@ jobs:
           echo "revision=${{ (github.event_name == 'workflow_dispatch' || github.event_name == 'release') && github.sha || 'dev' }}" >> "$GITHUB_OUTPUT"
 
       - name: Launch workflow via Seqera Platform
-        uses: seqeralabs/action-tower-launch@51565b514bff1827cf34620de25d0055759f1fc9 # v2
+        uses: seqeralabs/action-tower-launch@v2
         # TODO nf-core: You can customise AWS full pipeline tests as required
         # Add full size test data (but still relatively small datasets for few samples)
         # on the `test_full.config` test runs with only one set of parameters
@@ -36,6 +36,7 @@ jobs:
           nextflow_config: |
             plugins {
               id 'nf-slack@0.5.0'
+              id 'nf-schema@2.7.2'
             }
             slack {
               enabled = true
@@ -59,7 +60,7 @@ jobs:
             }
           profiles: test_full
 
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: Seqera Platform debug log file
           path: |

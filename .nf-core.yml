@@ -26,7 +26,7 @@ lint:
     - config_defaults:
         - params.ribo_database_manifest
   nf_test_content: false
-nf_core_version: 4.1.0
+nf_core_version: 4.2.1
 repository_type: pipeline
 template:
   author: "Harshil Patel, Phil Ewels, Rickard Hammar\xE9n"
@@ -37,4 +37,4 @@ template:
   name: rnaseq
   org: nf-core
   outdir: .
-  version: 3.27.0dev
+  version: 3.28.0dev

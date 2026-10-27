@@ -1,0 +1,79 @@
+nextflow_process {
+
+    name "Test Process RIBODETECTOR (GPU)"
+    script "../main.nf"
+    process "RIBODETECTOR"
+
+    tag "gpu"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "ribodetector"
+
+    test("ribodetector - GPU rnaseq PE input") {
+
+        config "./nextflow.gpu.config"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
+                    ]
+                ]
+                input[1] = 150
+                """
+            }
+        }
+
+        then {
+            def log_text = path(process.out.log[0][1]).getText().replaceAll(/\x1b\[[0-9;]*m/, '')
+            def fq1 = path(process.out.fastq[0][1][0]).fastq
+            def fq2 = path(process.out.fastq[0][1][1]).fastq
+            assertAll(
+                { assert process.success },
+                { assert log_text.contains("4159 sequences loaded") },
+                { assert log_text.contains("Processed 4159 sequences in total") },
+                { assert log_text.contains("Detected 4159 non-rRNA sequences") },
+                { assert log_text.contains("Detected 0 rRNA sequences") },
+                { assert fq1.getNumberOfRecords() == 4159 },
+                { assert fq2.getNumberOfRecords() == 4159 },
+                { assert snapshot(
+                    fq1.getReadNames().sort(),
+                    fq2.getReadNames().sort(),
+                    process.out.findAll { key, val -> key.startsWith("versions") }
+                ).match() }
+            )
+        }
+    }
+
+    test("ribodetector - GPU stub rnaseq PE input") {
+
+        config "./nextflow.gpu.config"
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
+                    ]
+                ]
+                input[1] = 150
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+}

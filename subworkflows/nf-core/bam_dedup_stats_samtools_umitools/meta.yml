@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "bam_dedup_stats_samtools_umitools"
+description: UMI-tools dedup, index BAM file and run samtools stats, flagstat and idxstats
+keywords:
+  - umi
+  - dedup
+  - index
+  - bam
+  - sam
+  - cram
+components:
+  - umitools/dedup
+  - samtools/index
+  - samtools/view
+  - samtools/stats
+  - samtools/idxstats
+  - samtools/flagstat
+  - bam_stats_samtools
+input:
+  - ch_bam_bai:
+      description: |
+        input BAM file
+        Structure: [ val(meta), path(bam), path(bai) ]
+  - val_get_dedup_stats:
+      type: boolean
+      description: |
+        Generate output stats when running "umi_tools dedup"
+  - val_primary_only:
+      type: boolean
+      description: |
+        Filter to primary alignments (SAM flag 0x900) before running UMI-tools dedup.
+        When true, secondary and supplementary alignments are removed so that dedup
+        statistics reflect only primary alignments.
+output:
+  - bam:
+      description: |
+        Umi deduplicated BAM/SAM file
+        Structure: [ val(meta), path(bam) ]
+  - deduplog:
+      description: |
+        UMI-tools deduplication log
+        Structure: [ val(meta), path(log) ]
+  - tsv_edit_distance:
+      description: |
+        Reports the (binned) average edit distance between the UMIs at each position
+        Structure: [ val(meta), path(tsv) ]
+  - tsv_per_umi:
+      description: |
+        UMI-level summary statistics
+        Structure: [ val(meta), path(tsv) ]
+  - tsv_umi_per_position:
+      description: |
+        Tabulates the counts for unique combinations of UMI and position
+        Structure: [ val(meta), path(tsv) ]
+  - index:
+      description: |
+        Umi deduplicated BAM/SAM samtools index (BAI or CSI)
+        Structure: [ val(meta), path(bai/csi) ]
+  - stats:
+      description: |
+        File containing samtools stats output
+        Structure: [ val(meta), path(stats) ]
+  - flagstat:
+      description: |
+        File containing samtools flagstat output
+        Structure: [ val(meta), path(flagstat) ]
+  - idxstats:
+      description: |
+        File containing samtools idxstats output
+        Structure: [ val(meta), path(idxstats) ]
+authors:
+  - "@drpatelh"
+  - "@KamilMaliszArdigen"
+maintainers:
+  - "@drpatelh"
+  - "@KamilMaliszArdigen"

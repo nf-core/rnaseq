@@ -1,0 +1,163 @@
+# Shared formatting blocks. YAML anchors (`&name`) are inlined via merge
+# keys (`<<: *name`) below so the same rule / colour palette lives in one
+# place. The leading underscore on `_anchors` is load-time bookkeeping only:
+# `loadMultiqcAsset` in subworkflows/local/utils_nfcore_rnaseq_pipeline/
+# drops keys starting with `_` before serialising to JSON, so MultiQC
+# never sees this block.
+_anchors:
+  inferred_value_formatting: &inferred_value_formatting
+    cond_formatting_rules:
+      black: [{ s_eq: forward }]
+      grey: [{ s_eq: reverse }]
+      red: [{ s_eq: undetermined }]
+    cond_formatting_colours:
+      - black: "#17202A"
+      - grey: "#AAB7B8"
+      - red: "#B03A2E"
+  pct_scale: &pct_scale
+    suffix: "%"
+    format: "{:,.1f}"
+    min: 0
+    max: 100
+    floor: 0
+    ceiling: 100
+    scale: RdYlGn
+  sau_hidden: &sau_hidden
+    <<: *pct_scale
+    hidden: true
+
+id: strand_check_summary
+parent_id: strandedness
+parent_name: Strandedness checks
+parent_description: >
+  Strandedness declared in the samplesheet versus the values inferred by Salmon
+  and/or RSeQC infer_experiment.
+section_name: "Strandedness: inference summary"
+description: >
+  One row per sample showing the strandedness declared in the samplesheet
+  (auto means Salmon was asked to infer it) alongside the value each active
+  inference method reported. The Salmon % and RSeQC % columns are a
+  per-method certainty metric for forward / reverse calls: the inferred
+  direction's share of the strand-classified fragment pool (the same
+  quantity the configured stranded_threshold is applied to). Blank for
+  unstranded or undetermined classifications, where different thresholds
+  apply. Per-component Sense / Antisense / Unstranded percentages are
+  hidden by default; toggle them on via the Configure Columns button
+  above the table.
+plot_type: table
+pconfig:
+  id: strand_check_summary_table
+  title: Strandedness inference summary
+
+headers:
+  provided:
+    title: Provided
+    description: >-
+      Strandedness declared in the samplesheet. "auto" means Salmon was
+      asked to infer the strandedness.
+    cond_formatting_rules:
+      blue: [{ s_eq: auto }]
+      black: [{ s_eq: forward }]
+      grey: [{ s_eq: reverse }]
+      red: [{ s_eq: undetermined }]
+    cond_formatting_colours:
+      - blue: "#3498DB"
+      - black: "#17202A"
+      - grey: "#AAB7B8"
+      - red: "#B03A2E"
+
+  salmon_inferred:
+    <<: *inferred_value_formatting
+    title: Salmon inferred
+    description: >-
+      Strandedness inferred by Salmon from a subsample of reads. Dash when
+      Salmon inference did not run for this sample.
+
+  salmon_pct:
+    <<: *pct_scale
+    title: Salmon %
+    description: >-
+      Certainty of the Salmon strand call: the inferred direction's share
+      of the strand-classified fragment pool (the same quantity the
+      configured stranded_threshold is applied to). Blank for unstranded
+      or undetermined calls, where different thresholds apply.
+
+  salmon_s:
+    <<: *sau_hidden
+    title: "Salmon Sense %"
+    namespace: Salmon
+    description: >-
+      Salmon: percentage of fragments mapped in the forward (sense)
+      orientation. Hidden by default; toggle via Configure Columns.
+
+  salmon_a:
+    <<: *sau_hidden
+    title: "Salmon Antisense %"
+    namespace: Salmon
+    description: >-
+      Salmon: percentage of fragments mapped in the reverse (antisense)
+      orientation. Hidden by default; toggle via Configure Columns.
+
+  salmon_u:
+    <<: *sau_hidden
+    title: "Salmon Unstranded %"
+    namespace: Salmon
+    description: >-
+      Salmon: percentage of fragments that could not be assigned to either
+      strand. Hidden by default; toggle via Configure Columns.
+
+  rseqc_inferred:
+    <<: *inferred_value_formatting
+    title: RSeQC inferred
+    description: >-
+      Strandedness inferred by RSeQC / RustQC infer_experiment. Dash when
+      infer_experiment did not run.
+
+  rseqc_pct:
+    <<: *pct_scale
+    title: RSeQC %
+    description: >-
+      Certainty of the RSeQC infer_experiment strand call: the inferred
+      direction's share of the strand-classified fragment pool (the same
+      quantity the configured stranded_threshold is applied to). Blank
+      for unstranded or undetermined calls.
+
+  rseqc_s:
+    <<: *sau_hidden
+    title: "RSeQC Sense %"
+    namespace: RSeQC
+    description: >-
+      RSeQC: percentage of fragments mapped in the forward (sense)
+      orientation. Hidden by default; toggle via Configure Columns.
+
+  rseqc_a:
+    <<: *sau_hidden
+    title: "RSeQC Antisense %"
+    namespace: RSeQC
+    description: >-
+      RSeQC: percentage of fragments mapped in the reverse (antisense)
+      orientation. Hidden by default; toggle via Configure Columns.
+
+  rseqc_u:
+    <<: *sau_hidden
+    title: "RSeQC Unstranded %"
+    namespace: RSeQC
+    description: >-
+      RSeQC: percentage of fragments that could not be assigned to either
+      strand. Hidden by default; toggle via Configure Columns.
+
+  status:
+    title: Status
+    description: >-
+      pass / fail whenever RSeQC infer_experiment is active - the call is
+      compared against Salmon-inferred strandedness for 'auto' samples and
+      against the samplesheet value otherwise. Dash when infer_experiment
+      is not active, so no cross-check is possible.
+    cond_formatting_rules:
+      pass: [{ s_eq: pass }]
+      fail: [{ s_eq: fail }]
+      grey: [{ s_eq: "-" }]
+    cond_formatting_colours:
+      - pass: "#27AE60"
+      - fail: "#C0392B"
+      - grey: "#AAB7B8"

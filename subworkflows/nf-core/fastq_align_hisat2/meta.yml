@@ -1,0 +1,111 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "fastq_align_hisat2"
+description: Align reads to a reference genome using hisat2 then sort with samtools
+keywords:
+  - align
+  - sort
+  - rnaseq
+  - genome
+  - fastq
+  - bam
+  - sam
+  - cram
+components:
+  - hisat2/align
+  - samtools/stats
+  - samtools/idxstats
+  - samtools/flagstat
+  - bam_sort_stats_samtools
+input:
+  - reads:
+      type: file
+      description: |
+        List of input FastQ files of size 1 and 2 for single-end and paired-end data,
+        respectively.
+
+        Structure: [ val(meta), [ path(reads) ] ]
+  - index:
+      type: file
+      description: |
+        HISAT2 genome index file.
+
+        Structure: [ val(meta), path(index) ]
+      pattern: "*.ht2"
+  - splicesites:
+      type: file
+      description: |
+        Splice sites in gtf file.
+
+        Structure: [ val(meta), path(splicesites) ]
+      pattern: "*.txt"
+  - ch_fasta_fai:
+      type: file
+      description: |
+        Reference genome fasta file and its index.
+
+        Structure: [ val(meta), path(fasta), path(fai) ]
+      pattern: "*.{fasta,fa,fai}"
+  - save_unaligned:
+      type: boolean
+      description: Save unaligned reads to FastQ files
+output:
+  - orig_bam:
+      type: file
+      description: |
+        Unsorted BAM file containing read alignments straight from HISAT2.
+
+        Structure: [ val(meta), path(bam) ]
+      pattern: "*.bam"
+  - summary:
+      type: file
+      description: |
+        Alignment log.
+
+        Structure: [ val(meta), path(log) ]
+      pattern: "*.log"
+  - fastq:
+      type: file
+      description: |
+        Optional output FASTQ files containing unaligned reads.
+
+        Structure: [ val(meta), [ path(fastq) ] ]
+      pattern: "*.fastq.gz"
+  - bam:
+      type: file
+      description: |
+        Sorted BAM/CRAM/SAM file.
+
+        Structure: [ val(meta), path(bam) ]
+      pattern: "*.{bam,cram,sam}"
+  - index:
+      type: file
+      description: |
+        BAM/CRAM/SAM index file.
+
+        Structure: [ val(meta), path(index) ]
+      pattern: "*.{bai,crai,csi}"
+  - stats:
+      type: file
+      description: |
+        File containing samtools stats output.
+
+        Structure: [ val(meta), path(stats) ]
+      pattern: "*.stats"
+  - flagstat:
+      type: file
+      description: |
+        File containing samtools flagstat output.
+
+        Structure: [ val(meta), path(flagstat) ]
+      pattern: "*.flagstat"
+  - idxstats:
+      type: file
+      description: |
+        File containing samtools idxstats output.
+
+        Structure: [ val(meta), path(idxstats) ]
+      pattern: "*.idxstats"
+authors:
+  - "@priyanka-surana"
+maintainers:
+  - "@priyanka-surana"

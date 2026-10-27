@@ -1,0 +1,326 @@
+{
+    "homo_sapiens - cram": {
+        "content": [
+            [
+                "test.md.cram:readsMD5,2f11e4fe3390b8ad0a1852616fd1da04"
+            ],
+            "test.md.cram.crai:md5,c1e24434334efa764177e3c8305ae247",
+            "test.flagstat:md5,93b0ef463df947ede1f42ff60396c34d",
+            "test.idxstats:md5,e179601fa7b8ebce81ac3765206f6c15",
+            "test.stats:md5,f8d7ed94d9c4c7a202a8bd60510ea6a2"
+        ],
+        "timestamp": "2026-08-20T09:07:51.678756",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    },
+    "sarscov2 - bam - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.md.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.md.metrics.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.md.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "4": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.stats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "5": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.flagstat:md5,67394650dbae96d1a4fcc70484822159"
+                    ]
+                ],
+                "6": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "7": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.stats:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.flagstat:md5,67394650dbae96d1a4fcc70484822159",
+                            "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.md.metrics.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.md.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "cram": [
+                    
+                ],
+                "flagstat": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.flagstat:md5,67394650dbae96d1a4fcc70484822159"
+                    ]
+                ],
+                "idxstats": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "index": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.md.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "metrics": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.md.metrics.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "per_sample_mqc_bundle": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.stats:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.flagstat:md5,67394650dbae96d1a4fcc70484822159",
+                            "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.md.metrics.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "stats": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.stats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-04-20T10:50:34.652754",
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.4"
+        }
+    },
+    "homo_sapiens - cram - stub": {
+        "content": [
+            {
+                "0": [
+                    
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.md.cram:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.md.metrics.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.md.cram.crai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "4": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.stats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "5": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.flagstat:md5,67394650dbae96d1a4fcc70484822159"
+                    ]
+                ],
+                "6": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "7": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "test.stats:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.flagstat:md5,67394650dbae96d1a4fcc70484822159",
+                            "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.md.metrics.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "bam": [
+                    
+                ],
+                "cram": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.md.cram:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "flagstat": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.flagstat:md5,67394650dbae96d1a4fcc70484822159"
+                    ]
+                ],
+                "idxstats": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "index": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.md.cram.crai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "metrics": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.md.metrics.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "per_sample_mqc_bundle": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "test.stats:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.flagstat:md5,67394650dbae96d1a4fcc70484822159",
+                            "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.md.metrics.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "stats": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.stats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-04-20T10:51:10.962305",
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.4"
+        }
+    },
+    "sarscov2 - bam": {
+        "content": [
+            [
+                "test.md.bam:readsMD5,894549ee3ced6b5ca2eed2563a985217"
+            ],
+            "test.md.bam.bai:md5,8973dd987f3ac6c352716ef89139c567",
+            "test.flagstat:md5,4f7ffd1e6a5e85524d443209ac97d783",
+            "test.idxstats:md5,df60a8c8d6621100d05178c93fb053a2",
+            "test.stats:md5,5011891ba77f77bb107f5a55467af5c7"
+        ],
+        "timestamp": "2026-08-20T09:07:25.021368",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    }
+}

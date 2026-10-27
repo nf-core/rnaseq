@@ -1,0 +1,56 @@
+{
+    "homo_sapiens - forward strandedness": {
+        "content": [
+            {
+                "merged_gtf": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.gtf:md5,ea6e012500cbc5b5a04e8569fd78cdfa"
+                    ]
+                ],
+                "versions_stringtie": [
+                    [
+                        "STRINGTIE_MERGE",
+                        "stringtie",
+                        "3.0.3"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-08-07T14:58:21.387191799",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
+    },
+    "homo_sapiens - reverse strandedness": {
+        "content": [
+            {
+                "merged_gtf": [
+                    [
+                        {
+                            "id": "test",
+                            "strandedness": "reverse"
+                        },
+                        "test.gtf:md5,ea6e012500cbc5b5a04e8569fd78cdfa"
+                    ]
+                ],
+                "versions_stringtie": [
+                    [
+                        "STRINGTIE_MERGE",
+                        "stringtie",
+                        "3.0.3"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-08-07T14:58:27.936872798",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
+    }
+}

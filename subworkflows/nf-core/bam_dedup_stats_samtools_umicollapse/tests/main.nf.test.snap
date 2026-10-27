@@ -1,0 +1,63 @@
+{
+    "test_bam_dedup_stats_samtools_umicollapse_stats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.stats:md5,0820fa64eb353406bbedb913ca898ba8"
+                ]
+            ]
+        ],
+        "timestamp": "2026-07-10T08:38:32.509121",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    },
+    "test_bam_dedup_stats_samtools_umicollapse_flagstats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.flagstat:md5,18d602435a02a4d721b78d1812622159"
+                ]
+            ]
+        ],
+        "timestamp": "2026-02-03T09:58:09.226353172",
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        }
+    },
+    "test_bam_dedup_stats_samtools_umicollapse_idxstats": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.idxstats:md5,85d20a901eef23ca50c323638a2eb602"
+                ]
+            ]
+        ],
+        "timestamp": "2026-02-03T09:58:09.233354058",
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        }
+    },
+    "test_bam_dedup_stats_samtools_umicollapse_bam": {
+        "content": [
+            "2ba8b456c322daac5b454a84b7568ad"
+        ],
+        "timestamp": "2026-02-03T09:58:09.209299524",
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        }
+    }
+}

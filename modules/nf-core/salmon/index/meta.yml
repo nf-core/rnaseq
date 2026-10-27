@@ -1,0 +1,72 @@
+name: salmon_index
+description: Create index for salmon
+keywords:
+  - index
+  - fasta
+  - genome
+  - reference
+tools:
+  - salmon:
+      description: |
+        Salmon is a tool for wicked-fast transcript quantification from RNA-seq data
+      homepage: https://salmon.readthedocs.io/en/latest/salmon.html
+      manual: https://salmon.readthedocs.io/en/latest/salmon.html
+      doi: 10.1038/nmeth.4197
+      licence: ["GPL-3.0-or-later"]
+      identifier: biotools:salmon
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'genome' ]
+    - transcript_fasta:
+        type: file
+        description: Fasta file of the reference transcriptome
+        ontologies: []
+    - genome_fasta:
+        type: file
+        description: |
+          Fasta file of the reference genome, used to build decoy sequences.
+          Optional: pass `[]` to build a non-decoy-aware index.
+        ontologies: []
+output:
+  index:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing reference information
+            e.g. [ id:'genome' ]
+      - salmon:
+          type: directory
+          description: Folder containing the salmon index files
+          pattern: "salmon"
+  versions_salmon:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - salmon:
+          type: string
+          description: The name of the tool
+      - "salmon --version | sed 's/salmon //'":
+          type: eval
+          description: The expression to obtain the version of the tool
+
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - salmon:
+          type: string
+          description: The name of the tool
+      - "salmon --version | sed 's/salmon //'":
+          type: eval
+          description: The expression to obtain the version of the tool
+
+authors:
+  - "@kevinmenden"
+  - "@drpatelh"
+maintainers:
+  - "@kevinmenden"
+  - "@drpatelh"

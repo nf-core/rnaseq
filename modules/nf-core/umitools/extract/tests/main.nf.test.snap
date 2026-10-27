@@ -1,0 +1,205 @@
+{
+    "pair end - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.umi_extract_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test.umi_extract_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                        ]
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.umi_extract.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    [
+                        "UMITOOLS_EXTRACT",
+                        "umitools",
+                        "1.1.6"
+                    ]
+                ],
+                "log": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.umi_extract.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "reads": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.umi_extract_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test.umi_extract_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                        ]
+                    ]
+                ],
+                "versions_umitools": [
+                    [
+                        "UMITOOLS_EXTRACT",
+                        "umitools",
+                        "1.1.6"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-02-03T13:17:55.612739621",
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        }
+    },
+    "single end - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.umi_extract.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.umi_extract.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    [
+                        "UMITOOLS_EXTRACT",
+                        "umitools",
+                        "1.1.6"
+                    ]
+                ],
+                "log": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.umi_extract.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "reads": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.umi_extract.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "versions_umitools": [
+                    [
+                        "UMITOOLS_EXTRACT",
+                        "umitools",
+                        "1.1.6"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-02-03T13:17:37.310716092",
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        }
+    },
+    "pair end": {
+        "content": [
+            {
+                "log": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.umi_extract.log"
+                    ]
+                ],
+                "reads": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.umi_extract_1.fastq.gz:md5,eb32762f8eb8bfdfa366cdb91231e6e5",
+                            "test.umi_extract_2.fastq.gz:md5,4e2272b969f65fe96afb1d77387c3db1"
+                        ]
+                    ]
+                ],
+                "versions_umitools": [
+                    [
+                        "UMITOOLS_EXTRACT",
+                        "umitools",
+                        "1.1.6"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-08-25T20:05:42.942823",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    },
+    "single end": {
+        "content": [
+            {
+                "log": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.umi_extract.log"
+                    ]
+                ],
+                "reads": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.umi_extract.fastq.gz:md5,eb32762f8eb8bfdfa366cdb91231e6e5"
+                    ]
+                ],
+                "versions_umitools": [
+                    [
+                        "UMITOOLS_EXTRACT",
+                        "umitools",
+                        "1.1.6"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-08-25T20:05:26.816116",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    }
+}

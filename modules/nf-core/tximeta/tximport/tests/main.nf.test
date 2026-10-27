@@ -1,0 +1,508 @@
+nextflow_process {
+
+    name "Test Process TXIMETA_TXIMPORT"
+    script "../main.nf"
+    process "TXIMETA_TXIMPORT"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "custom/tx2gene"
+    tag "tximeta"
+    tag "tximeta/tximport"
+    tag "untar"
+
+    test("saccharomyces_cerevisiae - kallisto - gtf") {
+
+        setup {
+            run("UNTAR") {
+                script "../../../untar/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id:'test'], // meta map
+                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/kallisto_results.tar.gz', checkIfExists: true)
+                    ])
+                    """
+                }
+            }
+            run("CUSTOM_TX2GENE") {
+                script "../../../custom/tx2gene/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id:'test'], // meta map
+                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
+                    ])
+                    input[1] = UNTAR.out.untar.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
+                    input[2] = 'kallisto'
+                    input[3] = 'gene_id'
+                    input[4] = 'gene_name'
+                    """
+                }
+            }
+        }
+
+        when {
+            process {
+                """
+                input[0] = UNTAR.out.untar.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
+                input[1] = CUSTOM_TX2GENE.out.tx2gene
+                input[2] = 'kallisto'
+                """
+            }
+        }
+
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.counts_gene,
+                    process.out.counts_gene_length_scaled,
+                    process.out.counts_gene_scaled,
+                    process.out.counts_transcript,
+                    process.out.lengths_gene,
+                    process.out.lengths_transcript,
+                    process.out.tpm_gene,
+                    process.out.tpm_transcript,
+                    process.out.tx2gene_augmented,
+                    process.out.versions).match()
+                }
+            )
+        }
+    }
+
+    test("saccharomyces_cerevisiae - kallisto - gtf - extra_attributes") {
+
+        setup {
+            run("UNTAR") {
+                script "../../../untar/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id:'test'], // meta map
+                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/kallisto_results.tar.gz', checkIfExists: true)
+                    ])
+                    """
+                }
+            }
+            run("CUSTOM_TX2GENE") {
+                script "../../../custom/tx2gene/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id:'test'], // meta map
+                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
+                    ])
+                    input[1] = UNTAR.out.untar.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
+                    input[2] = 'kallisto'
+                    input[3] = 'gene_id'
+                    input[4] = 'gene_name,gene_biotype'
+                    """
+                }
+            }
+        }
+
+        when {
+            process {
+                """
+                input[0] = UNTAR.out.untar.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
+                input[1] = CUSTOM_TX2GENE.out.tx2gene
+                input[2] = 'kallisto'
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.counts_gene,
+                    process.out.counts_gene_length_scaled,
+                    process.out.counts_gene_scaled,
+                    process.out.counts_transcript,
+                    process.out.lengths_gene,
+                    process.out.lengths_transcript,
+                    process.out.tpm_gene,
+                    process.out.tpm_transcript,
+                    process.out.tx2gene_augmented,
+                    process.out.versions).match()
+                }
+            )
+        }
+    }
+
+    test("saccharomyces_cerevisiae - kallisto - gtf - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([ [], [] ])
+                input[1] = Channel.of([ [], [] ])
+                input[2] = 'kallisto'
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match()
+                }
+            )
+        }
+
+    }
+    test("saccharomyces_cerevisiae - salmon - gtf") {
+
+        setup {
+            run("UNTAR") {
+                script "../../../untar/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id:'test'], // meta map
+                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/salmon_results.tar.gz', checkIfExists: true)
+                    ])
+                    """
+                }
+            }
+            run("CUSTOM_TX2GENE") {
+                script "../../../custom/tx2gene/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id:'test'], // meta map
+                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
+                    ])
+                    input[1] = UNTAR.out.untar.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
+                    input[2] = 'salmon'
+                    input[3] = 'gene_id'
+                    input[4] = 'gene_name'
+                    """
+                }
+            }
+        }
+
+        when {
+            process {
+                """
+                input[0] = UNTAR.out.untar.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
+                input[1] = CUSTOM_TX2GENE.out.tx2gene
+                input[2] = 'salmon'
+                """
+            }
+        }
+
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.counts_gene,
+                    process.out.counts_gene_length_scaled,
+                    process.out.counts_gene_scaled,
+                    process.out.counts_transcript,
+                    process.out.lengths_gene,
+                    process.out.lengths_transcript,
+                    process.out.tpm_gene,
+                    process.out.tpm_transcript,
+                    process.out.tx2gene_augmented,
+                    process.out.versions).match()
+                }
+            )
+        }
+
+    }
+
+    test("saccharomyces_cerevisiae - salmon - gtf - mismatched_transcripts") {
+
+        setup {
+            run("UNTAR") {
+                script "../../../untar/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id:'test'], // meta map
+                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/salmon_results.tar.gz', checkIfExists: true)
+                    ])
+                    """
+                }
+            }
+            run("CUSTOM_TX2GENE") {
+                script "../../../custom/tx2gene/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id:'test'], // meta map
+                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
+                    ])
+                    input[1] = UNTAR.out.untar.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
+                    input[2] = 'salmon'
+                    input[3] = 'gene_id'
+                    input[4] = 'gene_name'
+                    """
+                }
+            }
+        }
+
+        when {
+            process {
+                """
+                input[0] = UNTAR.out.untar.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
+                // Remove half the entries from tx2gene to simulate FASTA/GTF mismatch
+                input[1] = CUSTOM_TX2GENE.out.tx2gene.map { meta, tx2gene ->
+                    def lines = tx2gene.readLines()
+                    def header = lines[0]
+                    def kept = lines[1..Math.max(1, lines.size().intdiv(2))]
+                    def modified = file("\${workDir}/truncated_tx2gene.tsv")
+                    modified.text = ([header] + kept).join('\\n') + '\\n'
+                    [meta, modified]
+                }
+                input[2] = 'salmon'
+                """
+            }
+        }
+
+        then {
+            // The truncated tx2gene covers only a subset of transcripts.
+            // Without filtering, unmapped transcripts would appear as fake
+            // genes (gene_id = transcript_id), inflating the gene count to
+            // match the transcript count (yeast has ~1:1 gene:transcript).
+            // With filtering, gene rows should be strictly fewer.
+            def gene_counts = path(process.out.counts_gene[0][1])
+            def gene_lines = gene_counts.readLines()
+            def tx_lines = path(process.out.counts_transcript[0][1]).readLines()
+            def aug_lines = path(process.out.tx2gene_augmented[0][1]).readLines()
+            def n_genes = gene_lines.size() - 1        // subtract header
+            def n_transcripts = tx_lines.size() - 1
+            def n_aug = aug_lines.size() - 1
+
+            // Read .command.err from the work directory to check for warning
+            def commandErr = gene_counts.parent.resolve('.command.err').text
+
+            assertAll(
+                { assert process.success },
+                { assert n_genes > 0 },
+                { assert n_genes < n_transcripts :
+                    "Gene count rows ($n_genes) should be fewer than transcript rows ($n_transcripts) after filtering unmapped transcripts" },
+                { assert n_aug == n_transcripts :
+                    "Augmented tx2gene rows ($n_aug) should equal transcript count ($n_transcripts) - one mapping per quantified transcript" },
+                { assert commandErr.contains("transcripts found in quantification output but missing from") :
+                    "Expected warning about unmapped transcripts in .command.err" }
+            )
+        }
+    }
+
+    test("saccharomyces_cerevisiae - salmon - gtf - stub") {
+
+        options "-stub"
+
+        setup {
+            run("UNTAR") {
+                script "../../../untar/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id:'test'], // meta map
+                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/salmon_results.tar.gz', checkIfExists: true)
+                    ])
+                    """
+                }
+            }
+            run("CUSTOM_TX2GENE") {
+                script "../../../custom/tx2gene/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id:'test'], // meta map
+                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
+                    ])
+                    input[1] = UNTAR.out.untar.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
+                    input[2] = 'salmon'
+                    input[3] = 'gene_id'
+                    input[4] = 'gene_name'
+                    """
+                }
+            }
+        }
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([ [], [] ])
+                input[1] = Channel.of([ [], [] ])
+                input[2] = 'salmon'
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match()}
+            )
+        }
+    }
+
+    test("saccharomyces_cerevisiae - rsem - gtf") {
+
+        setup {
+            run("UNTAR") {
+                script "../../../untar/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id:'test'], // meta map
+                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/rsem_results.tar.gz', checkIfExists: true)
+                    ])
+                    """
+                }
+            }
+            run("CUSTOM_TX2GENE") {
+                script "../../../custom/tx2gene/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id:'test'], // meta map
+                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
+                    ])
+                    input[1] = UNTAR.out.untar.map { meta, dir ->
+                        def results = []
+                        dir.eachFileRecurse { f ->
+                            if (f.name.endsWith('.isoforms.results')) results << f
+                        }
+                        [ meta, results ]
+                    }
+                    input[2] = 'rsem'
+                    input[3] = 'gene_id'
+                    input[4] = 'gene_name'
+                    """
+                }
+            }
+        }
+
+        when {
+            process {
+                """
+                input[0] = UNTAR.out.untar.map { meta, dir ->
+                    def results = []
+                    dir.eachFileRecurse { f ->
+                        if (f.name.endsWith('.isoforms.results')) results << f
+                    }
+                    [ meta, results ]
+                }
+                input[1] = CUSTOM_TX2GENE.out.tx2gene
+                input[2] = 'rsem'
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.counts_gene,
+                    process.out.counts_gene_length_scaled,
+                    process.out.counts_gene_scaled,
+                    process.out.counts_transcript,
+                    process.out.lengths_gene,
+                    process.out.lengths_transcript,
+                    process.out.tpm_gene,
+                    process.out.tpm_transcript,
+                    process.out.tx2gene_augmented,
+                    process.out.versions).match()
+                }
+            )
+        }
+    }
+
+    test("saccharomyces_cerevisiae - rsem - gtf - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([ [id:'test'], [] ])
+                input[1] = Channel.of([ [id:'test'], [] ])
+                input[2] = 'rsem'
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match()
+                }
+            )
+        }
+
+    }
+
+    test("saccharomyces_cerevisiae - kallisto - gtf - custom_column_names") {
+
+        config "./nextflow.config"
+
+        setup {
+            run("UNTAR") {
+                script "../../../untar/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id:'test'], // meta map
+                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/kallisto_results.tar.gz', checkIfExists: true)
+                    ])
+                    """
+                }
+            }
+            run("CUSTOM_TX2GENE") {
+                script "../../../custom/tx2gene/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([
+                        [ id:'test'], // meta map
+                        file(params.modules_testdata_base_path + 'genomics/eukaryotes/saccharomyces_cerevisiae/genome_gfp.gtf', checkIfExists: true)
+                    ])
+                    input[1] = UNTAR.out.untar.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
+                    input[2] = 'kallisto'
+                    input[3] = 'gene_id'
+                    input[4] = 'gene_name,gene_biotype'
+                    """
+                }
+            }
+        }
+
+        when {
+            process {
+                """
+                // Uses ext.args = '--gene_name_col gene_biotype' from nextflow.config
+                input[0] = UNTAR.out.untar.map { meta, dir -> [ meta, dir.listFiles().collect() ] }
+                input[1] = CUSTOM_TX2GENE.out.tx2gene
+                input[2] = 'kallisto'
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.counts_gene,
+                    process.out.counts_gene_length_scaled,
+                    process.out.counts_gene_scaled,
+                    process.out.counts_transcript,
+                    process.out.lengths_gene,
+                    process.out.lengths_transcript,
+                    process.out.tpm_gene,
+                    process.out.tpm_transcript,
+                    process.out.tx2gene_augmented,
+                    process.out.versions).match()
+                }
+            )
+        }
+    }
+}

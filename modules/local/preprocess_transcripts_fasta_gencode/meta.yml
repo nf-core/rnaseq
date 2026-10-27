@@ -1,0 +1,55 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: "preprocess_transcripts_fasta_gencode"
+description: |
+  Strip the pipe-separated GENCODE metadata trailing each transcript header in a
+  transcript FASTA, leaving only the bare transcript identifier as the sequence name.
+  Required to keep GENCODE transcript IDs consistent with the GTF-derived `tx2gene`
+  mapping consumed downstream by Salmon, Kallisto, and tximport. Transparently
+  decompresses `.gz` input.
+keywords:
+  - gencode
+  - transcripts
+  - fasta
+  - preprocess
+  - rnaseq
+tools:
+  - "sed":
+      description: "GNU stream editor - used only to extract the tool version reported in the topic; the actual header rewrite is done with cut(1)."
+      homepage: "https://www.gnu.org/software/sed/"
+      documentation: "https://www.gnu.org/software/sed/manual/sed.html"
+      licence:
+        - "GPL v3"
+      identifier: ""
+input:
+  - - fasta:
+        type: file
+        description: |
+          GENCODE transcript FASTA, optionally gzipped. Each header is expected to be of the
+          form `>ENST...|ENSG...|...|...` where everything from the first `|` onwards is
+          stripped.
+        pattern: "*.{fa,fasta,fa.gz,fasta.gz}"
+        ontologies: []
+output:
+  fasta:
+    - "*.fa":
+        type: file
+        description: Transcript FASTA with pipe-suffixed header metadata removed
+        pattern: "*.fa"
+        ontologies: []
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - sed:
+          type: string
+          description: The name of the tool
+      - "sed --version 2>&1 | sed '1!d;s/^.*) //'":
+          type: eval
+          description: The expression to obtain the version of the tool
+authors:
+  - "@drpatelh"
+  - "@pinin4fjords"
+maintainers:
+  - "@pinin4fjords"

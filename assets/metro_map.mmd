@@ -1,0 +1,231 @@
+%%metro title: nf-core/rnaseq
+%%metro logo: ../docs/images/nf-core-rnaseq_logo_light.png | ../docs/images/nf-core-rnaseq_logo_dark.png
+%%metro style: dark
+%%metro diamond_style: symmetric
+%%metro file: fastq_in | FASTQ
+%%metro file: report_final | HTML
+%%metro file: report_quant | HTML
+%%metro file: report_bowtie2 | HTML
+%%metro line: star_rsem | Aligner: STAR, Quantification: RSEM | #0570b0
+%%metro line: star_salmon | Aligner: STAR, Quantification: Salmon (default) | #2db572
+%%metro line: bowtie2_salmon | Aligner: Bowtie2 (prokaryotic), Quantification: Salmon | #ff8c00
+%%metro line: hisat2 | Aligner: HISAT2, Quantification: None | #f5c542
+%%metro line: pseudo_salmon | Pseudo-aligner: Salmon, Quantification: Salmon | #e63946
+%%metro line: pseudo_kallisto | Pseudo-aligner: Kallisto, Quantification: Kallisto | #7b2d3b
+%%metro legend: bl
+%%metro logo_scale: 0.85
+
+%% Process mappings for live-progress mode (nf-metro serve / nf-metro check-mapping).
+%% process_scope factors out the shared FQN prefix so each value is the tail
+%% under NFCORE_RNASEQ:RNASEQ, matched literally with intermediate subworkflow
+%% nesting tolerated.
+%%metro process_scope: NFCORE_RNASEQ:RNASEQ
+
+%% Pre-processing
+%%metro process: cat_fastq          | CAT_FASTQ
+%%metro process: fastqc_raw         | FASTQ_FASTQC_UMITOOLS_TRIMGALORE:FASTQC
+%%metro process: fastqc_raw         | FASTQ_FASTQC_UMITOOLS_FASTP:FASTQC_RAW
+%%metro process: umi_tools_extract  | UMITOOLS_EXTRACT
+%%metro process: fastp              | FASTP
+%%metro process: trimgalore         | TRIMGALORE
+%%metro process: fastqc_trimmed     | FASTQ_FASTQC_UMITOOLS_FASTP:FASTQC_TRIM
+%%metro process: bbsplit            | BBMAP_BBSPLIT
+%%metro process: sortmerna          | FASTQ_REMOVE_RRNA:SORTMERNA
+%%metro process: ribodetector       | RIBODETECTOR
+%%metro process: bowtie2_rrna       | FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FASTQ_REMOVE_RRNA:BOWTIE2_ALIGN
+%%metro process: bowtie2_rrna       | FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FASTQ_REMOVE_RRNA:BOWTIE2_ALIGN_PE
+%%metro process: fastqc_filtered    | FASTQC_FILTERED
+%%metro process: infer_strandedness | FASTQ_SUBSAMPLE_FQ_SALMON:SALMON_QUANT
+
+%% Genome alignment & quantification
+%%metro process: star               | ALIGN_STAR:STAR_ALIGN
+%%metro process: star               | ALIGN_STAR:SENTIEON_STAR_ALIGN
+%%metro process: star               | ALIGN_STAR:PARABRICKS_RNA_FQ2BAM
+%%metro process: hisat2_align       | FASTQ_ALIGN_HISAT2:HISAT2_ALIGN
+%%metro process: bowtie2_align      | ALIGN_BOWTIE2:BOWTIE2_ALIGN
+%%metro process: bowtie2_align      | ALIGN_BOWTIE2:BOWTIE2_ALIGN_PE
+%%metro process: umi_tools_dedup    | UMITOOLS_DEDUP
+%%metro process: umi_tools_dedup    | UMICOLLAPSE
+%%metro process: rsem               | RSEM_CALCULATEEXPRESSION
+%%metro process: rsem               | SENTIEON_RSEMCALCULATEEXPRESSION
+%%metro process: salmon_quant       | QUANTIFY_BAM_SALMON:SALMON_QUANT
+%%metro process: tximport_ga        | QUANTIFY_BAM_SALMON:QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT:TXIMETA_TXIMPORT
+%%metro process: tximport_ga        | QUANTIFY_RSEM:QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT:TXIMETA_TXIMPORT
+%%metro process: summarized_exp_ga  | QUANTIFY_BAM_SALMON:QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT:SE_GENE_UNIFIED
+%%metro process: summarized_exp_ga  | QUANTIFY_BAM_SALMON:QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT:SE_TRANSCRIPT_UNIFIED
+%%metro process: summarized_exp_ga  | QUANTIFY_RSEM:QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT:SE_GENE_UNIFIED
+%%metro process: summarized_exp_ga  | QUANTIFY_RSEM:QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT:SE_TRANSCRIPT_UNIFIED
+%%metro process: multiqc_bowtie2    | MULTIQC_RNASEQ:MULTIQC
+
+%% Pseudo-alignment & quantification
+%%metro process: salmon_pseudo      | QUANTIFY_PSEUDO_ALIGNMENT:SALMON_QUANT
+%%metro process: kallisto           | KALLISTO_QUANT
+%%metro process: tximport_pa        | QUANTIFY_PSEUDO_ALIGNMENT:QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT:TXIMETA_TXIMPORT
+%%metro process: summarized_exp_pa  | QUANTIFY_PSEUDO_ALIGNMENT:QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT:SE_GENE_UNIFIED
+%%metro process: summarized_exp_pa  | QUANTIFY_PSEUDO_ALIGNMENT:QUANT_TXIMPORT_SUMMARIZEDEXPERIMENT:SE_TRANSCRIPT_UNIFIED
+%%metro process: multiqc_quant      | MULTIQC_RNASEQ:MULTIQC
+
+%% Post-processing
+%%metro process: picard             | PICARD_MARKDUPLICATES
+%%metro process: bedtools           | BEDTOOLS_GENOMECOV_FW
+%%metro process: bedtools           | BEDTOOLS_GENOMECOV_REV
+%%metro process: bedtools           | BEDTOOLS_GENOMECOV_COMBINED
+%%metro process: bedgraph           | UCSC_BEDGRAPHTOBIGWIG
+%%metro process: stringtie          | STRINGTIE_STRINGTIE
+
+%% Quality control & reporting
+%%metro process: rseqc              | RSEQC_BAMSTAT
+%%metro process: rseqc              | RSEQC_INNERDISTANCE
+%%metro process: rseqc              | RSEQC_INFEREXPERIMENT
+%%metro process: rseqc              | RSEQC_JUNCTIONANNOTATION
+%%metro process: rseqc              | RSEQC_JUNCTIONSATURATION
+%%metro process: rseqc              | RSEQC_READDISTRIBUTION
+%%metro process: rseqc              | RSEQC_READDUPLICATION
+%%metro process: rseqc              | RSEQC_TIN
+%%metro process: preseq             | PRESEQ_LCEXTRAP
+%%metro process: qualimap           | QUALIMAP_RNASEQ
+%%metro process: dupradar           | DUPRADAR
+%%metro process: featurecounts      | SUBREAD_FEATURECOUNTS
+%%metro process: deseq2_pca         | DESEQ2_QC_BAM_SALMON
+%%metro process: deseq2_pca         | DESEQ2_QC_RSEM
+%%metro process: deseq2_pca         | DESEQ2_QC_PSEUDO
+%%metro process: kraken2            | KRAKEN2
+%%metro process: sylph              | SYLPH_PROFILE
+%%metro process: sylph              | SYLPHTAX_TAXPROF
+%%metro process: multiqc_final      | MULTIQC_RNASEQ:MULTIQC
+
+graph LR
+    subgraph preprocessing [Pre-processing]
+        %%metro exit: right | star_salmon, star_rsem, hisat2, bowtie2_salmon
+        %%metro exit: bottom | pseudo_salmon, pseudo_kallisto
+        fastq_in[ ]
+        cat_fastq[cat FASTQ]
+        fastqc_raw[FastQC]
+        umi_tools_extract[UMI-tools Extract]
+        fastp[fastp]
+        trimgalore[Trim Galore!]
+        fastqc_trimmed[FastQC]
+        bbsplit[BBSplit]
+        sortmerna[SortMeRNA]
+        ribodetector[RiboDetector]
+        bowtie2_rrna[Bowtie2]
+        fastqc_filtered[FastQC]
+        infer_strandedness[Infer Strand.]
+
+        fastq_in -->|pseudo_salmon,pseudo_kallisto,star_salmon,star_rsem,hisat2,bowtie2_salmon| cat_fastq
+        cat_fastq -->|pseudo_salmon,pseudo_kallisto,star_salmon,star_rsem,hisat2,bowtie2_salmon| fastqc_raw
+        fastqc_raw -->|pseudo_salmon,pseudo_kallisto,star_salmon,star_rsem,hisat2,bowtie2_salmon| umi_tools_extract
+
+        umi_tools_extract -->|pseudo_salmon,pseudo_kallisto,star_salmon,star_rsem,hisat2,bowtie2_salmon| fastp
+        umi_tools_extract -->|pseudo_salmon,pseudo_kallisto,star_salmon,star_rsem,hisat2,bowtie2_salmon| trimgalore
+        fastp -->|pseudo_salmon,pseudo_kallisto,star_salmon,star_rsem,hisat2,bowtie2_salmon| fastqc_trimmed
+        trimgalore -->|pseudo_salmon,pseudo_kallisto,star_salmon,star_rsem,hisat2,bowtie2_salmon| fastqc_trimmed
+
+        fastqc_trimmed -->|pseudo_salmon,pseudo_kallisto,star_salmon,star_rsem,hisat2,bowtie2_salmon| bbsplit
+        bbsplit -->|pseudo_salmon,pseudo_kallisto,star_salmon,star_rsem,hisat2,bowtie2_salmon| sortmerna
+        bbsplit -->|pseudo_salmon,pseudo_kallisto,star_salmon,star_rsem,hisat2,bowtie2_salmon| ribodetector
+        bbsplit -->|pseudo_salmon,pseudo_kallisto,star_salmon,star_rsem,hisat2,bowtie2_salmon| bowtie2_rrna
+        sortmerna -->|pseudo_salmon,pseudo_kallisto,star_salmon,star_rsem,hisat2,bowtie2_salmon| fastqc_filtered
+        ribodetector -->|pseudo_salmon,pseudo_kallisto,star_salmon,star_rsem,hisat2,bowtie2_salmon| fastqc_filtered
+        bowtie2_rrna -->|pseudo_salmon,pseudo_kallisto,star_salmon,star_rsem,hisat2,bowtie2_salmon| fastqc_filtered
+        fastqc_filtered -->|pseudo_salmon,pseudo_kallisto,star_salmon,star_rsem,hisat2,bowtie2_salmon| infer_strandedness
+    end
+
+    subgraph genome_align [Genome alignment & quantification]
+        %%metro entry: left | star_salmon, star_rsem, hisat2, bowtie2_salmon
+        %%metro exit: right | star_salmon, star_rsem
+        %%metro exit: right | hisat2
+        star[STAR]
+        hisat2_align[HISAT2]
+        bowtie2_align[Bowtie2]
+        rsem[RSEM]
+        salmon_quant[Salmon]
+        umi_tools_dedup[UMI-tools Dedup]
+        tximport_ga[tximport]
+        summarized_exp_ga[Sum. Exp.]
+        multiqc_bowtie2[MultiQC]
+        report_bowtie2[ ]
+        _h1[hidden]
+        _h2[hidden]
+        _h3[hidden]
+
+        star -->|star_rsem,star_salmon| umi_tools_dedup
+        hisat2_align -->|hisat2| umi_tools_dedup
+        bowtie2_align -->|bowtie2_salmon| umi_tools_dedup
+        umi_tools_dedup -->|star_rsem| rsem
+        umi_tools_dedup -->|star_salmon,bowtie2_salmon| salmon_quant
+        umi_tools_dedup -->|hisat2| _h1
+        _h1 -->|hisat2| _h2
+        _h2 -->|hisat2| _h3
+        salmon_quant -->|star_salmon,bowtie2_salmon| tximport_ga
+        rsem -->|star_rsem| tximport_ga
+        tximport_ga -->|star_salmon,star_rsem,bowtie2_salmon| summarized_exp_ga
+        summarized_exp_ga -->|bowtie2_salmon| multiqc_bowtie2
+        multiqc_bowtie2 -->|bowtie2_salmon| report_bowtie2
+    end
+
+    subgraph pseudo_align [Pseudo-alignment & quantification]
+        %%metro entry: left | pseudo_salmon, pseudo_kallisto
+        salmon_pseudo[Salmon]
+        kallisto[Kallisto]
+        tximport_pa[tximport]
+        summarized_exp_pa[Sum. Exp.]
+        multiqc_quant[MultiQC]
+        report_quant[ ]
+
+        salmon_pseudo -->|pseudo_salmon| tximport_pa
+        kallisto -->|pseudo_kallisto| tximport_pa
+        tximport_pa -->|pseudo_salmon,pseudo_kallisto| summarized_exp_pa
+        summarized_exp_pa -->|pseudo_salmon,pseudo_kallisto| multiqc_quant
+        multiqc_quant -->|pseudo_salmon,pseudo_kallisto| report_quant
+    end
+
+    subgraph postprocessing [Post-processing]
+        %%metro direction: TB
+        %%metro entry: left | star_salmon, star_rsem, hisat2
+        %%metro exit: bottom | star_salmon, star_rsem, hisat2
+        picard[Picard]
+        bedtools[BEDTools]
+        bedgraph[bedGraphToBigWig]
+        stringtie[StringTie]
+
+        picard -->|star_salmon,star_rsem,hisat2| bedtools
+        bedtools -->|star_salmon,star_rsem,hisat2| bedgraph
+        bedgraph -->|star_salmon,star_rsem,hisat2| stringtie
+    end
+
+    subgraph qc_report [Quality control & reporting]
+        %%metro direction: RL
+        %%metro entry: top | star_salmon, star_rsem, hisat2
+        rseqc[RSeQC]
+        preseq[Preseq]
+        qualimap[Qualimap]
+        dupradar[dupRadar]
+        featurecounts[featureCounts]
+        deseq2_pca[DESeq2 PCA]
+        kraken2[Kraken2/Bracken]
+        sylph[Sylph]
+        multiqc_final[MultiQC]
+        report_final[ ]
+
+        rseqc -->|star_salmon,star_rsem,hisat2| preseq
+        preseq -->|star_salmon,star_rsem,hisat2| qualimap
+        qualimap -->|star_salmon,star_rsem,hisat2| dupradar
+        dupradar -->|star_salmon,star_rsem,hisat2| featurecounts
+        featurecounts -->|star_salmon,star_rsem,hisat2| deseq2_pca
+        deseq2_pca -->|star_salmon,star_rsem,hisat2| kraken2
+        deseq2_pca -->|star_salmon,star_rsem,hisat2| sylph
+        kraken2 -->|star_salmon,star_rsem,hisat2| multiqc_final
+        sylph -->|star_salmon,star_rsem,hisat2| multiqc_final
+        multiqc_final -->|star_salmon,star_rsem,hisat2| report_final
+    end
+
+    %% Inter-section edges
+    infer_strandedness -->|star_salmon,star_rsem| star
+    infer_strandedness -->|hisat2| hisat2_align
+    infer_strandedness -->|bowtie2_salmon| bowtie2_align
+    infer_strandedness -->|pseudo_salmon| salmon_pseudo
+    infer_strandedness -->|pseudo_kallisto| kallisto
+    summarized_exp_ga -->|star_salmon,star_rsem| picard
+    _h3 -->|hisat2| picard
+    stringtie -->|star_salmon,star_rsem,hisat2| rseqc

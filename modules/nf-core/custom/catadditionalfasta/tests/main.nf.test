@@ -1,0 +1,75 @@
+nextflow_process {
+
+    name "Test Process CUSTOM_CATADDITIONALFASTA"
+    script "../main.nf"
+    process "CUSTOM_CATADDITIONALFASTA"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "custom"
+    tag "custom/catadditionalfasta"
+
+    test("sarscov2 - fastq - gtf") {
+
+        when {
+            process {
+                """
+                input[0] = channel.of([
+                    [ id:'genome' ],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
+                ])
+                input[1] = channel.of([
+                    [ id:'transcriptome' ],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true)
+                ])
+                input[2] = 'test_biotype'
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.fasta,
+                    process.out.gtf,
+                    process.out.versions,
+                    path(process.out.versions[0]).yaml
+                ).match() }
+            )
+        }
+    }
+
+    test("sarscov2 - fastq - gtf - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = channel.of([
+                    [ id:'genome' ],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
+                ])
+                input[1] = channel.of([
+                    [ id:'transcriptome' ],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true)
+                ])
+                input[2] = 'test_biotype'
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    sanitizeOutput(process.out),
+                    path(process.out.versions[0]).yaml
+                ).match() }
+            )
+        }
+    }
+}

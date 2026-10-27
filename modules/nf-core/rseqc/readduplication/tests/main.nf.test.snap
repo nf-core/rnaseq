@@ -1,0 +1,143 @@
+{
+    "sarscov2 paired-end [bam]": {
+        "content": [
+            "test.DupRate_plot.pdf",
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.pos.DupRate.xls:md5,a859bc2031d46bf1cc4336205847caa3"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.DupRate_plot.r:md5,3c0325095cee4835b921e57d61c23dca"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.seq.DupRate.xls:md5,ee8783399eec5a18522a6f08bece338b"
+                ]
+            ],
+            [
+                [
+                    "RSEQC_READDUPLICATION",
+                    "rseqc",
+                    "5.0.4"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2025-12-11T15:22:07.908044925"
+    },
+    "sarscov2 paired-end [bam] - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.seq.DupRate.xls:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.pos.DupRate.xls:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.DupRate_plot.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.DupRate_plot.r:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "4": [
+                    [
+                        "RSEQC_READDUPLICATION",
+                        "rseqc",
+                        "5.0.4"
+                    ]
+                ],
+                "pdf": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.DupRate_plot.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "pos_xls": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.pos.DupRate.xls:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "rscript": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.DupRate_plot.r:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "seq_xls": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.seq.DupRate.xls:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions_rseqc": [
+                    [
+                        "RSEQC_READDUPLICATION",
+                        "rseqc",
+                        "5.0.4"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2025-12-11T15:22:13.974266658"
+    }
+}

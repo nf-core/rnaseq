@@ -1,0 +1,60 @@
+nextflow_process {
+
+    name "Test Process PREPROCESS_TRANSCRIPTS_FASTA_GENCODE"
+    script "../main.nf"
+    process "PREPROCESS_TRANSCRIPTS_FASTA_GENCODE"
+
+    test("gencode fasta") {
+
+        when {
+            process {
+                """
+                def fileContents = [
+                    '>chr22|removeme',
+                    'ACTCAAGATAATGATGAGTAAAGAATATATTTCTAACAACAAAAAGGAAATTTGATAGTA'
+                ]
+                def gencodeFasta = file("${workDir}/gencodeFasta.fasta")
+                gencodeFasta.withWriter{ out ->
+                    fileContents.each {out.println it}
+                }
+                input[0] = gencodeFasta
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("gencode fasta - stub") {
+
+    options "-stub"
+
+        when {
+            process {
+                """
+                def fileContents = [
+                    '>chr22|removeme',
+                    'ACTCAAGATAATGATGAGTAAAGAATATATTTCTAACAACAAAAAGGAAATTTGATAGTA'
+                ]
+                def gencodeFasta = file("${workDir}/gencodeFasta.fasta")
+                gencodeFasta.withWriter{ out ->
+                    fileContents.each {out.println it}
+                }
+                input[0] = gencodeFasta
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+}

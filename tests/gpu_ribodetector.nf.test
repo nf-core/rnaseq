@@ -1,0 +1,112 @@
+nextflow_pipeline {
+
+    name "Test pipeline with GPU ribodetector"
+    script "../main.nf"
+    tag "pipeline"
+    tag "ribodetector"
+    tag "gpu"
+
+    test("Params: --remove_ribo_rna --ribo_removal_tool ribodetector --use_gpu_ribodetector") {
+
+        when {
+            params {
+                outdir = "$outputDir"
+                remove_ribo_rna = true
+                ribo_removal_tool = 'ribodetector'
+                use_gpu_ribodetector = true
+                // Only exercise ribodetector GPU path, skip everything else
+                skip_bbsplit = true
+                skip_alignment = true
+                skip_pseudo_alignment = true
+                skip_qc = true
+                skip_stringtie = true
+                skip_bigwig = true
+                skip_multiqc = true
+            }
+        }
+
+        then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow and pipeline versions are removed (all from the workflow key)
+                    removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow"),
+                    // All stable path name, with a relative path
+                    stable_name,
+                    // All files with stable contents
+                    stable_path
+                ).match() }
+            )
+        }
+
+        cleanup {
+            // Only prune/delete on CI - keeping local VM state intact prevents
+            // cross-test launchDir wipes that break nf-test snapshot walks.
+            if (System.getenv("CI") == "true") {
+                if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                    "docker system prune -a -f --volumes".execute()
+                }
+                new File("${launchDir}").deleteDir()
+            }
+        }
+    }
+
+    test("Params: --remove_ribo_rna --ribo_removal_tool ribodetector --use_gpu_ribodetector - stub") {
+
+        options "-stub"
+
+        when {
+            params {
+                outdir = "$outputDir"
+                remove_ribo_rna = true
+                ribo_removal_tool = 'ribodetector'
+                use_gpu_ribodetector = true
+                // Only exercise ribodetector GPU path, skip everything else
+                skip_bbsplit = true
+                skip_alignment = true
+                skip_pseudo_alignment = true
+                skip_qc = true
+                skip_stringtie = true
+                skip_bigwig = true
+                skip_multiqc = true
+            }
+        }
+
+        then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow and pipeline versions are removed (all from the workflow key)
+                    removeFromYamlMap("$outputDir/pipeline_info/nf_core_rnaseq_software_mqc_versions.yml", "Workflow"),
+                    // All stable path name, with a relative path
+                    stable_name,
+                    // All files with stable contents
+                    stable_path
+                ).match() }
+            )
+        }
+
+        cleanup {
+            // Only prune/delete on CI - keeping local VM state intact prevents
+            // cross-test launchDir wipes that break nf-test snapshot walks.
+            if (System.getenv("CI") == "true") {
+                if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                    "docker system prune -a -f --volumes".execute()
+                }
+                new File("${launchDir}").deleteDir()
+            }
+        }
+    }
+}

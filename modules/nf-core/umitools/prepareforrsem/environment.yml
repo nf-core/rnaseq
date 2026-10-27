@@ -1,0 +1,17 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/environment-schema.json
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  # renovate: datasource=conda depName=bioconda/umi_tools
+  - bioconda::umi_tools=1.1.6
+  - conda-forge::future=0.18.3
+  - conda-forge::matplotlib=3.8.2
+  - conda-forge::numpy=1.26.4
+  - conda-forge::pandas=2.2.0
+  - conda-forge::python=3.9.18
+  - conda-forge::regex=2023.12.25
+  - conda-forge::scipy=1.12.0
+  - conda-forge::pybktree=1.1
+  - bioconda::pysam=0.22.0

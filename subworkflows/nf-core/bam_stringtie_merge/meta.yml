@@ -1,0 +1,54 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "bam_stringtie_merge"
+description: >
+  Assemble transcripts from sorted BAM alignments using StringTie, then merge
+  per-sample transcript GTFs into a unified annotation.
+keywords:
+  - rna-seq
+  - transcript-assembly
+  - transcript-merge
+  - stringtie
+  - gtf
+components:
+  - stringtie/stringtie
+  - stringtie/merge
+input:
+  - ch_bams:
+      type: file
+      description: |
+        Sorted alignment files from short-read and long-read alignment.
+
+        Structure: [ val(meta), path(srbam), path(lrbam) ]
+      pattern: "*.bam"
+  - ch_mode:
+      type: string
+      description: |
+        Mode in which to run StringTie.
+
+        Structure: [ val(mode) ]
+      enum:
+        - long-reads-assembly
+        - mix-reads-assembly
+        - expression-estimation
+  - ch_chrgtf:
+      type: file
+      description: |
+        Reference gene annotation (GTF) for guided assembly and merge.
+
+        Structure: [ val(meta), path(gtf) ]
+      pattern: "*.gtf"
+output:
+  - stringtie_gtf:
+      type: file
+      description: |
+        Merged transcript annotation produced by StringTie --merge.
+        Structure: [ val(meta), path(gtf) ]
+      pattern: "*.gtf"
+authors:
+  - "@atrigila"
+  - "@rannick"
+  - "@nvnieuwk"
+maintainers:
+  - "@atrigila"
+  - "@rannick"
+  - "@nvnieuwk"

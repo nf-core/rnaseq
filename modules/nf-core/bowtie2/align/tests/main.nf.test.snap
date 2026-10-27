@@ -1,0 +1,583 @@
+{
+    "sarscov2 - [fastq1, fastq2], index, fasta_fai, true, true - bam": {
+        "content": [
+            "test.bam",
+            {
+                "maxReadLength": 151,
+                "minReadLength": 53,
+                "meanReadLength": 138,
+                "maxQuality": 42,
+                "minQuality": 0,
+                "meanQuality": 41,
+                "readCount": 200,
+                "duplicateReadCount": 0
+            },
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.bowtie2.log:md5,bd89ce1b28c93bf822bae391ffcedd19"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    [
+                        "test.unmapped_1.fastq.gz:md5,84b4ab15e6ffc9f29d0a3f1b79003744",
+                        "test.unmapped_2.fastq.gz:md5,40bbe14edd48a98cca6f53574b2198fd"
+                    ]
+                ]
+            ],
+            {
+                "versions_bowtie2": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "bowtie2",
+                        "2.5.4"
+                    ]
+                ],
+                "versions_pigz": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "pigz",
+                        "2.8"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "samtools",
+                        "1.21"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-07-14T22:43:42.982329",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    },
+    "sarscov2 - [fastq1, fastq2], large_index, fasta_fai, false, true - bam": {
+        "content": [
+            "test.bam",
+            {
+                "maxReadLength": 151,
+                "minReadLength": 53,
+                "meanReadLength": 138,
+                "maxQuality": 42,
+                "minQuality": 0,
+                "meanQuality": 41,
+                "readCount": 200,
+                "duplicateReadCount": 0
+            },
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.bowtie2.log:md5,bd89ce1b28c93bf822bae391ffcedd19"
+                ]
+            ],
+            [
+                
+            ],
+            {
+                "versions_bowtie2": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "bowtie2",
+                        "2.5.4"
+                    ]
+                ],
+                "versions_pigz": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "pigz",
+                        "2.8"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "samtools",
+                        "1.21"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-07-14T22:43:59.4478",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    },
+    "sarscov2 - fastq, index, fasta_fai, true, true - bam": {
+        "content": [
+            "test.bam",
+            {
+                "maxReadLength": 151,
+                "minReadLength": 72,
+                "meanReadLength": 138,
+                "maxQuality": 42,
+                "minQuality": 0,
+                "meanQuality": 41,
+                "readCount": 100,
+                "duplicateReadCount": 0
+            },
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.bowtie2.log:md5,7b8a9e61b7646da1089b041333c41a87"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.unmapped.fastq.gz:md5,d17d9a4ff728b6a6afa6203a746b7a01"
+                ]
+            ],
+            {
+                "versions_bowtie2": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "bowtie2",
+                        "2.5.4"
+                    ]
+                ],
+                "versions_pigz": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "pigz",
+                        "2.8"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "samtools",
+                        "1.21"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-07-14T22:43:26.487819",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    },
+    "sarscov2 - fastq, large_index, fasta_fai, false, true - bam": {
+        "content": [
+            "test.bam",
+            {
+                "maxReadLength": 151,
+                "minReadLength": 72,
+                "meanReadLength": 138,
+                "maxQuality": 42,
+                "minQuality": 0,
+                "meanQuality": 41,
+                "readCount": 100,
+                "duplicateReadCount": 0
+            },
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.bowtie2.log:md5,7b8a9e61b7646da1089b041333c41a87"
+                ]
+            ],
+            [
+                
+            ],
+            {
+                "versions_bowtie2": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "bowtie2",
+                        "2.5.4"
+                    ]
+                ],
+                "versions_pigz": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "pigz",
+                        "2.8"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "samtools",
+                        "1.21"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-07-14T22:43:51.231937",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    },
+    "sarscov2 - fastq, index, fasta_fai, false, true - bam": {
+        "content": [
+            "test.bam",
+            {
+                "maxReadLength": 151,
+                "minReadLength": 72,
+                "meanReadLength": 138,
+                "maxQuality": 42,
+                "minQuality": 0,
+                "meanQuality": 41,
+                "readCount": 100,
+                "duplicateReadCount": 0
+            },
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.bowtie2.log:md5,7b8a9e61b7646da1089b041333c41a87"
+                ]
+            ],
+            [
+                
+            ],
+            {
+                "versions_bowtie2": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "bowtie2",
+                        "2.5.4"
+                    ]
+                ],
+                "versions_pigz": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "pigz",
+                        "2.8"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "samtools",
+                        "1.21"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-07-14T22:43:02.704611",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    },
+    "sarscov2 - [fastq1, fastq2], index, fasta_fai, false, false - stub": {
+        "content": [
+            "test.bam",
+            "test.csi",
+            "test.bowtie2.log",
+            [
+                
+            ],
+            {
+                "versions_bowtie2": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "bowtie2",
+                        "2.5.4"
+                    ]
+                ],
+                "versions_pigz": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "pigz",
+                        "2.8"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "samtools",
+                        "1.21"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-07-14T22:44:15.443539",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    },
+    "sarscov2 - [fastq1, fastq2], index, fasta_fai, false, true - bam": {
+        "content": [
+            "test.bam",
+            {
+                "maxReadLength": 151,
+                "minReadLength": 53,
+                "meanReadLength": 138,
+                "maxQuality": 42,
+                "minQuality": 0,
+                "meanQuality": 41,
+                "readCount": 200,
+                "duplicateReadCount": 0
+            },
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.bowtie2.log:md5,bd89ce1b28c93bf822bae391ffcedd19"
+                ]
+            ],
+            [
+                
+            ],
+            {
+                "versions_bowtie2": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "bowtie2",
+                        "2.5.4"
+                    ]
+                ],
+                "versions_pigz": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "pigz",
+                        "2.8"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "samtools",
+                        "1.21"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-07-14T22:43:34.912657",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    },
+    "sarscov2 - fastq, index, fasta_fai, false, true - sam": {
+        "content": [
+            "test.sam",
+            {
+                "maxReadLength": 151,
+                "minReadLength": 72,
+                "meanReadLength": 138,
+                "maxQuality": 42,
+                "minQuality": 0,
+                "meanQuality": 41,
+                "readCount": 100,
+                "duplicateReadCount": 0
+            },
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.bowtie2.log:md5,7b8a9e61b7646da1089b041333c41a87"
+                ]
+            ],
+            [
+                
+            ],
+            {
+                "versions_bowtie2": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "bowtie2",
+                        "2.5.4"
+                    ]
+                ],
+                "versions_pigz": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "pigz",
+                        "2.8"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "samtools",
+                        "1.21"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-07-14T22:43:10.578894",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    },
+    "sarscov2 - fastq, index, fasta_fai, true, false - stub": {
+        "content": [
+            "test.bam",
+            "test.csi",
+            "test.bowtie2.log",
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.unmapped.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                ]
+            ],
+            {
+                "versions_bowtie2": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "bowtie2",
+                        "2.5.4"
+                    ]
+                ],
+                "versions_pigz": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "pigz",
+                        "2.8"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "samtools",
+                        "1.21"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-07-14T22:44:22.594867",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    },
+    "sarscov2 - fastq, index, fasta_fai, false, true - sam2": {
+        "content": [
+            "test.sam",
+            {
+                "maxReadLength": 151,
+                "minReadLength": 72,
+                "meanReadLength": 138,
+                "maxQuality": 42,
+                "minQuality": 0,
+                "meanQuality": 41,
+                "readCount": 100,
+                "duplicateReadCount": 0
+            },
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.bowtie2.log:md5,7b8a9e61b7646da1089b041333c41a87"
+                ]
+            ],
+            [
+                
+            ],
+            {
+                "versions_bowtie2": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "bowtie2",
+                        "2.5.4"
+                    ]
+                ],
+                "versions_pigz": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "pigz",
+                        "2.8"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "samtools",
+                        "1.21"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-07-14T22:43:18.486229",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    },
+    "sarscov2 - [fastq1, fastq2], index, fasta_fai, false, true - cram": {
+        "content": [
+            "test.cram",
+            "test.cram.crai",
+            {
+                "maxReadLength": 151,
+                "minReadLength": 53,
+                "meanReadLength": 138,
+                "maxQuality": 42,
+                "minQuality": 0,
+                "meanQuality": 41,
+                "readCount": 200,
+                "duplicateReadCount": 0
+            },
+            {
+                "versions_bowtie2": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "bowtie2",
+                        "2.5.4"
+                    ]
+                ],
+                "versions_pigz": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "pigz",
+                        "2.8"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "BOWTIE2_ALIGN",
+                        "samtools",
+                        "1.21"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-07-14T22:44:08.322534",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    }
+}

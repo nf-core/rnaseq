@@ -1,0 +1,344 @@
+{
+    "versions": {
+        "content": [
+            [
+                [
+                    "RUSTQC",
+                    "rustqc",
+                    "0.2.1"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-04-02T18:06:41.098556"
+    },
+    "homo_sapiens paired-end [bam] - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test_dupMatrix.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test_dup_intercept_mqc.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test_duprateExpBoxplot.png:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test_duprateExpDens.png:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test_duprateExpDensCurve_mqc.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test_expressionHist.png:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test_intercept_slope.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.biotype_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.biotype_counts_mqc.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.biotype_counts_rrna_mqc.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.featureCounts.biotype.tsv.summary:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.featureCounts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.featureCounts.tsv.summary:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.lc_extrap.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.flagstat:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.stats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "4": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.bam_stat.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.infer_experiment.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.inner_distance.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.inner_distance_freq.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.inner_distance_mean.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.inner_distance_plot.png:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.inner_distance_plot.r:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.inner_distance_summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.junction.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.junction.xls:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.junction_annotation.log:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.junction_plot.r:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.splice_events.png:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.splice_junction.png:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.junctionSaturation_plot.png:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.junctionSaturation_plot.r:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.junctionSaturation_summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.read_distribution.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.DupRate_plot.png:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.DupRate_plot.r:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.pos.DupRate.xls:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.seq.DupRate.xls:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.tin.xls:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "5": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "qualimapReport.html:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "coverage_profile_along_genes_(total).txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "rnaseq_qc_results.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "6": [
+                    [
+                        "RUSTQC",
+                        "rustqc",
+                        "0.2.1"
+                    ]
+                ],
+                "dupradar": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test_dupMatrix.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test_dup_intercept_mqc.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test_duprateExpBoxplot.png:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test_duprateExpDens.png:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test_duprateExpDensCurve_mqc.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test_expressionHist.png:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test_intercept_slope.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "featurecounts": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.biotype_counts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.biotype_counts_mqc.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.biotype_counts_rrna_mqc.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.featureCounts.biotype.tsv.summary:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.featureCounts.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.featureCounts.tsv.summary:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "preseq": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.lc_extrap.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "qualimap": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "qualimapReport.html:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "coverage_profile_along_genes_(total).txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "rnaseq_qc_results.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "rseqc": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.bam_stat.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.infer_experiment.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.inner_distance.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.inner_distance_freq.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.inner_distance_mean.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.inner_distance_plot.png:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.inner_distance_plot.r:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.inner_distance_summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.junction.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.junction.xls:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.junction_annotation.log:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.junction_plot.r:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.splice_events.png:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.splice_junction.png:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.junctionSaturation_plot.png:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.junctionSaturation_plot.r:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.junctionSaturation_summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.read_distribution.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.DupRate_plot.png:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.DupRate_plot.r:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.pos.DupRate.xls:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.seq.DupRate.xls:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.tin.xls:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "samtools": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.flagstat:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.idxstats:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.stats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "versions_rustqc": [
+                    [
+                        "RUSTQC",
+                        "rustqc",
+                        "0.2.1"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-04-02T18:06:47.69887"
+    },
+    "homo_sapiens paired-end [bam]": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    [
+                        "test.biotype_counts.tsv:md5,68744ae62d861b2f5fbe83b2d1e1ac92",
+                        "test.biotype_counts_mqc.tsv:md5,0bb6b11917b544c9690e0c9104f044d6",
+                        "test.biotype_counts_rrna_mqc.tsv:md5,31c68d05ffe90d1e3eb2cb2ef9a7b4d9",
+                        "test.featureCounts.biotype.tsv.summary:md5,45ccc3a9a51380ab0607d1e87bbd9db6",
+                        "test.featureCounts.tsv:md5,7613a7c0da252ea99f69ac7c33cd8e7c",
+                        "test.featureCounts.tsv.summary:md5,45ccc3a9a51380ab0607d1e87bbd9db6"
+                    ]
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.lc_extrap.txt:md5,deefbb79ddd19e5d05f4f757ed2f2f13"
+                ]
+            ],
+            [
+                "test.infer_experiment.txt:md5,58428af8e55b2a464a247650ca926908",
+                "test.inner_distance_summary.txt:md5,d8e829669dca96f3fe485f026258726e",
+                "test.junctionSaturation_summary.txt:md5,622a2ebe648988edddb9aab2f6f11678",
+                "test.summary.txt:md5,0c1c79cc34b229369eb027c7bafada3b",
+                "test.tin.xls:md5,e5699ed57f9b0513f9e7115de2dd855a"
+            ],
+            [
+                "test_dupMatrix.txt",
+                "test_duprateExpBoxplot.png",
+                "test_duprateExpBoxplot.svg",
+                "test_expressionHist.png",
+                "test_expressionHist.svg"
+            ],
+            [
+                "test.flagstat",
+                "test.idxstats",
+                "test.stats"
+            ],
+            [
+                "Coverage Profile Along Genes (High).png",
+                "Coverage Profile Along Genes (High).svg",
+                "Coverage Profile Along Genes (Low).png",
+                "Coverage Profile Along Genes (Low).svg",
+                "Coverage Profile Along Genes (Total).png",
+                "Coverage Profile Along Genes (Total).svg",
+                "Reads Genomic Origin.png",
+                "Reads Genomic Origin.svg",
+                "Transcript coverage histogram.png",
+                "Transcript coverage histogram.svg",
+                "coverage_profile_along_genes_(high).txt",
+                "coverage_profile_along_genes_(low).txt",
+                "coverage_profile_along_genes_(total).txt",
+                "qualimapReport.html",
+                "rnaseq_qc_results.txt"
+            ],
+            [
+                "test.DupRate_plot.png",
+                "test.DupRate_plot.r",
+                "test.DupRate_plot.svg",
+                "test.bam_stat.txt",
+                "test.inner_distance.txt",
+                "test.inner_distance_freq.txt",
+                "test.inner_distance_mean.txt",
+                "test.inner_distance_plot.png",
+                "test.inner_distance_plot.r",
+                "test.inner_distance_plot.svg",
+                "test.junction.Interact.bed",
+                "test.junction.bed",
+                "test.junction.xls",
+                "test.junctionSaturation_plot.png",
+                "test.junctionSaturation_plot.r",
+                "test.junctionSaturation_plot.svg",
+                "test.junction_annotation.log",
+                "test.junction_plot.r",
+                "test.pos.DupRate.xls",
+                "test.read_distribution.txt",
+                "test.seq.DupRate.xls",
+                "test.splice_events.png",
+                "test.splice_events.svg",
+                "test.splice_junction.png",
+                "test.splice_junction.svg"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-04-02T18:06:41.074558"
+    }
+}

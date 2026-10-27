@@ -1,0 +1,119 @@
+nextflow_process {
+
+    name "Test Process HISAT2_BUILD"
+    script "../main.nf"
+    process "HISAT2_BUILD"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "hisat2"
+    tag "hisat2/build"
+    tag "hisat2/extractsplicesites"
+
+    test("Should run without failures") {
+
+        setup {
+            run("HISAT2_EXTRACTSPLICESITES") {
+                script "../../extractsplicesites/main.nf"
+                process {
+                """
+                input[0] = Channel.of([
+                    [id:'genome'],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
+                ])
+                """
+                }
+            }
+        }
+
+        when {
+            process {
+                """
+                def fasta_file = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                def gtf_file = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
+                input[0] = HISAT2_EXTRACTSPLICESITES.out.txt.map { meta, txt -> [meta, fasta_file, gtf_file, txt] }
+                input[1] = false
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assertAll(
+                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["index"])).match() }
+            )
+        }
+    }
+
+    test("Should run without failures - stub") {
+
+        options "-stub"
+
+        setup {
+            run("HISAT2_EXTRACTSPLICESITES") {
+                script "../../extractsplicesites/main.nf"
+                process {
+                """
+                input[0] = Channel.of([
+                    [id:'genome'],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
+                ])
+                """
+                }
+            }
+        }
+
+        when {
+
+            process {
+                """
+                def fasta_file = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                def gtf_file = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
+                input[0] = HISAT2_EXTRACTSPLICESITES.out.txt.map { meta, txt -> [meta, fasta_file, gtf_file, txt] }
+                input[1] = false
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assertAll(
+                { assert snapshot(sanitizeOutput(process.out)).match() }
+            )
+        }
+    }
+
+    test("Should use splice sites when memory threshold is met") {
+
+        setup {
+            run("HISAT2_EXTRACTSPLICESITES") {
+                script "../../extractsplicesites/main.nf"
+                process {
+                """
+                input[0] = Channel.of([
+                    [id:'genome'],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
+                ])
+                """
+                }
+            }
+        }
+
+        when {
+            process {
+                """
+                def fasta_file = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                def gtf_file = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gtf', checkIfExists: true)
+                input[0] = HISAT2_EXTRACTSPLICESITES.out.txt.map { meta, txt -> [meta, fasta_file, gtf_file, txt] }
+                input[1] = '3.GB'
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assertAll(
+                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["index"])).match() }
+            )
+        }
+    }
+}

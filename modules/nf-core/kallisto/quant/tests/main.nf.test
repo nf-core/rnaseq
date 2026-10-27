@@ -1,0 +1,176 @@
+nextflow_process {
+
+    name "Test Process KALLISTO_QUANT"
+    script "../main.nf"
+    process "KALLISTO_QUANT"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "kallisto"
+    tag "kallisto/quant"
+    tag "kallisto/index"
+
+    setup {
+            run("KALLISTO_INDEX") {
+                script "../../index/main.nf"
+                process {
+                    """
+                    input[0] = channel.of([
+                        [ id:'transcriptome' ], // meta map
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true)
+                    ])
+                    """
+                }
+            }
+
+            run("KALLISTO_INDEX", alias: "KALLISTO_INDEX_STUB") {
+                script "../../index/main.nf"
+                process {
+                    """
+                    input[0] = channel.of([
+                        [ id:'transcriptome' ], // meta map
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/transcriptome.fasta', checkIfExists: true)
+                    ])
+                    """
+                }
+            }
+        }
+
+    test("sarscov2 single-end") {
+        when {
+            process {
+                """
+                fragment_length    = 150
+                fragment_length_sd = 75
+
+                input[0] = channel.of([
+                    [ id:'test', single_end:true ],
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                ])
+                input[1] = KALLISTO_INDEX.out.index.combine(channel.of([ [], [] ]))
+                input[2] = fragment_length
+                input[3] = fragment_length_sd
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["json_info", "results"])).match() }
+            )
+        }
+    }
+
+    test("sarscov2 paired-end") {
+        when {
+            process {
+                """
+                fragment_length    = []
+                fragment_length_sd = []
+
+                input[0] = channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
+                ])
+                input[1] = KALLISTO_INDEX.out.index.combine(channel.of([ [], [] ]))
+                input[2] = fragment_length
+                input[3] = fragment_length_sd
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["json_info", "results"])).match() }
+            )
+        }
+    }
+
+    test("sarscov2 single-end ext.args sets strandedness") {
+        config "./nextflow_ext_args_strandedness.config"
+
+        when {
+            process {
+                """
+                fragment_length    = 150
+                fragment_length_sd = 75
+
+                input[0] = channel.of([
+                    [ id:'test', single_end:true ],
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                ])
+                input[1] = KALLISTO_INDEX.out.index.combine(channel.of([ [], [] ]))
+                input[2] = fragment_length
+                input[3] = fragment_length_sd
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert path(process.out.json_info.get(0).get(1)).json.call.contains('--fr-stranded') },
+                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["json_info", "results"])).match() }
+            )
+        }
+    }
+
+    test("sarscov2 single-end - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                fragment_length    = 150
+                fragment_length_sd = 75
+
+                input[0] = channel.of([
+                    [ id:'test', single_end:true ],
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                ])
+                input[1] = KALLISTO_INDEX_STUB.out.index.combine(channel.of([ [], [] ]))
+                input[2] = fragment_length
+                input[3] = fragment_length_sd
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["json_info", "results"])).match() }
+            )
+        }
+    }
+
+    test("sarscov2 paired-end - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                fragment_length    = []
+                fragment_length_sd = []
+
+                input[0] = channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
+                ])
+                input[1] = KALLISTO_INDEX_STUB.out.index.combine(channel.of([ [], [] ]))
+                input[2] = fragment_length
+                input[3] = fragment_length_sd
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["json_info", "results"])).match() }
+            )
+        }
+    }
+}

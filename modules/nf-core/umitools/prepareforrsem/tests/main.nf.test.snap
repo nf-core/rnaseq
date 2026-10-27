@@ -1,0 +1,74 @@
+{
+    "sarscov2 - bam - stub": {
+        "content": [
+            {
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "log": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions_umitools": [
+                    [
+                        "UMITOOLS_PREPAREFORRSEM",
+                        "umitools",
+                        "1.1.6"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-08-25T20:05:01.209888",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    },
+    "sarscov2 - bam": {
+        "content": [
+            {
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam:md5Reads,30423995b9123ef95e973e3fd80fb8e5"
+                    ]
+                ],
+                "log": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.prepare_for_rsem.log"
+                    ]
+                ],
+                "versions_umitools": [
+                    [
+                        "UMITOOLS_PREPAREFORRSEM",
+                        "umitools",
+                        "1.1.6"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-08-25T20:20:17.63546",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    }
+}

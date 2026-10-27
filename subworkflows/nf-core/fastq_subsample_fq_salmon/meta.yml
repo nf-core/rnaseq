@@ -1,0 +1,89 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "fastq_subsample_fq_salmon"
+description: Subsample fastq
+keywords:
+  - fastq
+  - subsample
+  - strandedness
+components:
+  - fq/subsample
+  - salmon/quant
+  - salmon/index
+input:
+  - ch_reads:
+      type: file
+      description: |
+        List of input FastQ files of size 1 and 2 for single-end and paired-end data,
+        respectively.
+
+        Structure: [ val(meta), [ path(reads) ] ]
+      pattern: "*.{fq,fastq}{,.gz}"
+  - ch_genome_fasta:
+      type: file
+      description: |
+        Genome sequence in fasta format.
+
+        Structure: [ path(fasta) ]
+  - ch_transcript_fasta:
+      type: file
+      description: |
+        Transcript sequence in fasta format.
+
+        Structure: [ path(fasta) ]
+  - ch_gtf:
+      type: file
+      description: |
+        Genome features in GTF format.
+
+        Structure: [ path(gtf) ]
+  - ch_index:
+      type: directory
+      description: |
+        Directory containing the Salmon index.
+
+        Structure: [ path(index) ]
+  - make_index:
+      type: boolean
+      description: Whether to create salmon index before running salmon quant
+output:
+  - index:
+      type: directory
+      description: |
+        Directory containing the Salmon index, either the one supplied as input or
+        the one built by this subworkflow.
+
+        Structure: [ path(index) ]
+  - reads:
+      type: file
+      description: |
+        Subsampled FastQ reads.
+
+        Structure: [ val(meta), [ path(fastq) ] ]
+      pattern: "*.{fq,fastq}{,.gz}"
+  - results:
+      type: directory
+      description: |
+        Folder containing the quantification results for a specific sample.
+
+        Structure: [ val(meta), path(results) ]
+  - json_info:
+      type: file
+      description: |
+        File containing meta information from Salmon quant,
+        which could be used to infer strandedness among other things.
+
+        Structure: [ val(meta), path(json) ]
+      pattern: "*info.json"
+  - lib_format_counts:
+      type: file
+      description: |
+        File containing the library format counts.
+
+        Structure: [ val(meta), path(json) ]
+      pattern: "*lib_format_counts.json"
+authors:
+  - "@robsyme"
+  - "@drpatelh"
+maintainers:
+  - "@robsyme"
+  - "@drpatelh"

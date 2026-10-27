@@ -1,0 +1,98 @@
+{
+    "homo_sapiens [bam] - stub": {
+        "content": [
+            {
+                "results": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            
+                        ]
+                    ]
+                ],
+                "versions_qualimap": [
+                    [
+                        "QUALIMAP_RNASEQ",
+                        "qualimap",
+                        "2.3"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-08-07T17:04:26.734359056",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    },
+    "homo_sapiens [bam]": {
+        "content": [
+            {
+                "results": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            [
+                                "agogo.css",
+                                "ajax-loader.gif",
+                                "basic.css",
+                                "bgfooter.png",
+                                "bgtop.png",
+                                "comment-bright.png",
+                                "comment-close.png",
+                                "comment.png",
+                                "doctools.js",
+                                "down-pressed.png",
+                                "down.png",
+                                "file.png",
+                                "jquery.js",
+                                "minus.png",
+                                "plus.png",
+                                "pygments.css",
+                                "qualimap_logo_small.png",
+                                "report.css",
+                                "searchtools.js",
+                                "underscore.js",
+                                "up-pressed.png",
+                                "up.png",
+                                "websupport.js"
+                            ],
+                            [
+                                "Coverage Profile Along Genes (High).png",
+                                "Coverage Profile Along Genes (Low).png",
+                                "Coverage Profile Along Genes (Total).png",
+                                "Reads Genomic Origin.png",
+                                "Transcript coverage histogram.png"
+                            ],
+                            "qualimapReport.html",
+                            [
+                                "coverage_profile_along_genes_(high).txt",
+                                "coverage_profile_along_genes_(low).txt",
+                                "coverage_profile_along_genes_(total).txt"
+                            ],
+                            "rnaseq_qc_results.txt"
+                        ]
+                    ]
+                ],
+                "versions_qualimap": [
+                    [
+                        "QUALIMAP_RNASEQ",
+                        "qualimap",
+                        "2.3"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-09-14T23:07:21.293303126",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
+    }
+}

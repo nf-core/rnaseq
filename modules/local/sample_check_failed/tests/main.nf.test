@@ -1,0 +1,24 @@
+nextflow_process {
+
+    name "Test Process SAMPLE_CHECK_FAILED"
+    script "../main.nf"
+    process "SAMPLE_CHECK_FAILED"
+
+    test("fails with the supplied message") {
+
+        when {
+            process {
+                """
+                input[0] = [ 'sample1', 'sample1 did not pass the check' ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.failed },
+                { assert process.errorReport.contains("sample1 did not pass the check") }
+            )
+        }
+    }
+}

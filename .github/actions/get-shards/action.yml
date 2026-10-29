@@ -21,7 +21,7 @@ runs:
   using: "composite"
   steps:
     - name: Install nf-test
-      uses: nf-core/setup-nf-test@4069fbbaabe94c08faba4ad261bfa88225ba133f # v2
+      uses: nf-core/setup-nf-test@v2
       with:
         version: ${{ env.NFT_VER }}
     - name: Get number of shards

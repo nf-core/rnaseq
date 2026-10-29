@@ -1,3 +1,6 @@
+// Copyright (c) the nf-core community under an open-source MIT license.
+// See https://github.com/nf-core/modules for full license, file patching instructions and upstream contributing.
+
 process PARABRICKS_RNAFQ2BAM {
     tag "${meta.id}"
     label 'process_high'
@@ -5,7 +8,7 @@ process PARABRICKS_RNAFQ2BAM {
     // needed by the module to work properly can be removed when fixed upstream - see: https://github.com/nf-core/modules/issues/7226
     stageInMode 'copy'
 
-    container "nvcr.io/nvidia/clara/clara-parabricks:4.7.1-1"
+    container "nvcr.io/nvidia/clara/clara-parabricks:4.8.0-1"
 
     input:
     tuple val(meta),  path(reads)
@@ -47,7 +50,13 @@ process PARABRICKS_RNAFQ2BAM {
     def args = task.ext.args ?: ''
     prefix = task.ext.prefix ?: "${meta.id}"
 
-    def in_fq_command = meta.single_end ? "--in-se-fq ${reads}" : "--in-fq ${reads}"
+    def fastqs = [reads].flatten()
+    if (!meta.single_end && fastqs.size() % 2 != 0) {
+        error("Paired-end input for ${meta.id} needs an even number of FASTQ files ordered R1, R2 per pair; got ${fastqs.size()}.")
+    }
+    def in_fq_command = meta.single_end
+        ? fastqs.collect { fq -> "--in-se-fq ${fq}" }.join(' ')
+        : fastqs.collate(2).collect { pair -> "--in-fq ${pair.join(' ')}" }.join(' ')
     def num_gpus = task.accelerator ? "--num-gpus ${task.accelerator.request}" : ''
 
     def qc_metrics_command = qc_metrics ? "--out-qc-metrics-dir ${prefix}_qc_metrics" : ""
@@ -61,7 +70,7 @@ process PARABRICKS_RNAFQ2BAM {
         --output-dir . \\
         --genome-lib-dir ${index} \\
         --out-bam ${prefix}.bam \\
-        --logfile ${prefix}.Log.final.out \\
+        --logfile ${prefix}.pbrun.log \\
         --out-prefix ${prefix}. \\
         ${num_gpus} \\
         ${qc_metrics_command} \\

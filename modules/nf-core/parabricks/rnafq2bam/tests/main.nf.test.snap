@@ -356,10 +356,30 @@
                 ]
             }
         ],
-        "timestamp": "2026-10-22T07:01:24.244593988",
+        "timestamp": "2026-10-23T16:18:13.829451217",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.03.2"
+        }
+    },
+    "homo_sapiens - paired_end - multiple_fastq": {
+        "content": [
+            "test.Log.final.out",
+            {
+                "versions_parabricks": [
+                    [
+                        "PARABRICKS_RNAFQ2BAM",
+                        "parabricks",
+                        "4.8.0-1"
+                    ]
+                ]
+            },
+            "fab46f9ccf563504edc63e6a8e9cd43"
+        ],
+        "timestamp": "2026-10-23T16:32:48.683342906",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.03.2"
         }
     },
     "homo_sapiens_chimeric - stub": {
@@ -719,10 +739,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-10-22T07:02:22.81197374",
+        "timestamp": "2026-10-23T16:18:44.914510468",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.03.2"
         }
     },
     "homo_sapiens": {
@@ -739,10 +759,10 @@
             },
             "220938db5c88cdfcb9d98e10630a9e31"
         ],
-        "timestamp": "2026-10-22T07:01:14.497151702",
+        "timestamp": "2026-10-23T16:31:44.269700129",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.03.2"
         }
     },
     "homo_sapiens_chimeric": {
@@ -760,10 +780,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-10-22T07:02:13.142235067",
+        "timestamp": "2026-10-23T16:33:36.49011308",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.03.2"
         }
     }
 }

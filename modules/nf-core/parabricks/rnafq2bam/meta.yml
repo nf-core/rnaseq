@@ -23,7 +23,10 @@ input:
           e.g. [ id:'test', single_end:false ]
     - reads:
         type: file
-        description: fastq.gz files
+        description: |
+          List of fastq.gz files. Multiple files (e.g. lanes) are aligned together.
+          Paired-end files must be ordered R1, R2 per pair, e.g.
+          [ L1_R1, L1_R2, L2_R1, L2_R2 ].
         pattern: "*.fastq.gz"
         ontologies:
           - edam: http://edamontology.org/format_3989

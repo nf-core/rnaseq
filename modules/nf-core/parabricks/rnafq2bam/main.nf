@@ -61,7 +61,7 @@ process PARABRICKS_RNAFQ2BAM {
         --output-dir . \\
         --genome-lib-dir ${index} \\
         --out-bam ${prefix}.bam \\
-        --logfile ${prefix}.Log.final.out \\
+        --logfile ${prefix}.pbrun.log \\
         --out-prefix ${prefix}. \\
         ${num_gpus} \\
         ${qc_metrics_command} \\

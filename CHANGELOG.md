@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1968](https://github.com/nf-core/rnaseq/pull/1968) - Fix duplicated valueless flags passed via `--extra_trimgalore_args`
 - [PR #1969](https://github.com/nf-core/rnaseq/pull/1969) - Add `--fail_on_low_trimmed_reads`, `--fail_on_low_mapped_reads` and `--fail_on_undetermined_strandedness` to fail the run, instead of silently skipping the sample or defaulting to `unstranded`
 - [PR #1972](https://github.com/nf-core/rnaseq/pull/1972) - Remove `cpus = 1` override for RiboDetector from `qc_trim_filter.config`
-- [PR #1984](https://github.com/nf-core/rnaseq/pull/1984) - Leave samples failing `--min_mapped_reads` out of Salmon/RSEM quantification and the merged count tables, and document the MultiQC fail tables and `multiqc_report_data/` folder
+- [PR #1984](https://github.com/nf-core/rnaseq/pull/1984) - Leave samples failing `--min_mapped_reads` out of Salmon/RSEM quantification and the merged count tables, fix Parabricks STAR mapping rates (the pbrun log overwrote `Log.final.out`), and document the MultiQC fail tables and `multiqc_report_data/` folder
 
 ## [[3.27.0](https://github.com/nf-core/rnaseq/releases/tag/3.27.0)] - 2026-09-23
 

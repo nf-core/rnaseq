@@ -513,7 +513,7 @@
                     "default": 5,
                     "fa_icon": "fas fa-percentage",
                     "description": "Minimum percentage of uniquely mapped reads below which samples are removed from further processing.",
-                    "help_text": "Samples below the threshold are left out of the alignment-based steps, including the aligner's merged count tables, and are listed in the MultiQC report. They are still quantified by `--pseudo_aligner` if one is set. Downstream pipeline steps may fail if this threshold is set too low."
+                    "help_text": "Samples below the threshold are left out of quantification (the aligner's merged count tables), duplicate marking, StringTie, featureCounts, bigWig and post-alignment QC, and are listed in the MultiQC report. They are still quantified by `--pseudo_aligner` if one is set. Downstream pipeline steps may fail if this threshold is set too low."
                 },
                 "seq_center": {
                     "type": "string",

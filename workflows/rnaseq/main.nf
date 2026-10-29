@@ -433,7 +433,8 @@ workflow RNASEQ {
             .join(ch_bam_dedup_umi_bundle, remainder: true)
     }
 
-    // Filter bam and index by percent mapped being present in the meta
+    // Decide pass/fail on --min_mapped_reads once per sample, ahead of quantification.
+    // Samples without a mapping rate are treated as passing.
 
     ch_genome_bam_bai_mapping = ch_genome_bam
         .join(ch_genome_bam_index)
@@ -476,8 +477,10 @@ workflow RNASEQ {
     ch_genome_bam_index = map_filtered_genome_bam_bai.index
 
     // Apply the same decision to the transcriptome BAMs so failed samples are
-    // left out of quantification. Status rows with no transcriptome BAM (e.g.
-    // HISAT2) come back from the remainder join with a null meta.
+    // left out of quantification. Rows from the remainder join take three shapes:
+    // [id, meta, bam, pass] when matched, [id, meta, bam, null] for a transcriptome
+    // BAM with no status, and [id, null, pass] for a status with no transcriptome
+    // BAM (e.g. HISAT2).
 
     ch_transcriptome_bam = ch_transcriptome_bam
         .map { meta, bam -> [ meta.id, meta, bam ] }

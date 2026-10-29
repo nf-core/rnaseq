@@ -966,7 +966,7 @@ The plot on the left hand side shows the standard PC plot - notice the variable 
 - `multiqc/<ALIGNER>/`
   - `multiqc_report.html`: a standalone HTML file that can be viewed in your web browser.
   - `multiqc_report_data/`: directory containing parsed statistics from the different tools used in the pipeline.
-  - `multiqc_report_data/multiqc_fail_trimmed_samples_table.txt`, `multiqc_report_data/multiqc_fail_mapped_samples_table.txt`: written only when a sample fails `--min_trimmed_reads` or `--min_mapped_reads`. One row per skipped sample, with its read count or mapping rate. A sample that fails `--min_trimmed_reads` is left out of all later steps. A sample that fails `--min_mapped_reads` is left out of the alignment-based steps, including the `<ALIGNER>` merged count tables, but is still quantified by `--pseudo_aligner` if one is set.
+  - `multiqc_report_data/multiqc_fail_trimmed_samples_table.txt`, `multiqc_report_data/multiqc_fail_mapped_samples_table.txt`: written only when a sample fails `--min_trimmed_reads` or `--min_mapped_reads`. One row per skipped sample, with its read count or mapping rate. A sample that fails `--min_trimmed_reads` is left out of all later steps. A sample that fails `--min_mapped_reads` is left out of quantification (the `<ALIGNER>` merged count tables), duplicate marking, StringTie, featureCounts, bigWig and post-alignment QC, but is still quantified by `--pseudo_aligner` if one is set.
 
 </details>
 

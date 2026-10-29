@@ -1,3 +1,4 @@
 {
-    "markdown.styles": ["public/vscode_markdown.css"]
+    // Render nf-core website admonitions nicely in markdown previews
+    "markdown.styles": ["https://nf-co.re/vscode_markdown.css"]
 }

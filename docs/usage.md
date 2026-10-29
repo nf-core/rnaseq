@@ -80,7 +80,7 @@ If RSeQC disagrees with the expected strandedness, or returns 'undetermined' (wh
 
 #### Failing the run on per-sample check failures
 
-By default, a sample with too few trimmed reads (`--min_trimmed_reads`) or a low mapping rate (`--min_mapped_reads`) is skipped downstream and reported in MultiQC, and a sample set to `auto` whose strandedness Salmon cannot determine is processed as `unstranded`. In all cases the run still completes successfully. To fail the run instead, enable the matching option:
+By default, a sample with too few trimmed reads (`--min_trimmed_reads`) or a low mapping rate (`--min_mapped_reads`) is skipped downstream and reported in MultiQC, and a sample set to `auto` whose strandedness Salmon cannot determine is processed as `unstranded`. A sample skipped for either read threshold is left out of quantification, so it does not appear in the merged count tables. In all cases the run still completes successfully. To fail the run instead, enable the matching option:
 
 - `--fail_on_low_trimmed_reads`: fewer reads than `--min_trimmed_reads` remain after trimming.
 - `--fail_on_low_mapped_reads`: the mapping rate is below `--min_mapped_reads`.

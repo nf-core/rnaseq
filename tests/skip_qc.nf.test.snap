@@ -1,7 +1,7 @@
 {
     "Params: --skip_qc --min_mapped_reads 90": {
         "content": [
-            132,
+            130,
             {
                 "BBMAP_BBSPLIT": {
                     "bbmap": 39.18
@@ -486,38 +486,6 @@
                 "star_salmon/RAP1_UNINDUCED_REP2/logs/salmon_quant.log",
                 "star_salmon/RAP1_UNINDUCED_REP2/quant.genes.sf",
                 "star_salmon/RAP1_UNINDUCED_REP2/quant.sf",
-                "star_salmon/WT_REP1",
-                "star_salmon/WT_REP1/aux_info",
-                "star_salmon/WT_REP1/aux_info/ambig_info.tsv",
-                "star_salmon/WT_REP1/aux_info/expected_bias.gz",
-                "star_salmon/WT_REP1/aux_info/fld.gz",
-                "star_salmon/WT_REP1/aux_info/meta_info.json",
-                "star_salmon/WT_REP1/aux_info/observed_bias.gz",
-                "star_salmon/WT_REP1/aux_info/observed_bias_3p.gz",
-                "star_salmon/WT_REP1/cmd_info.json",
-                "star_salmon/WT_REP1/libParams",
-                "star_salmon/WT_REP1/libParams/flenDist.txt",
-                "star_salmon/WT_REP1/lib_format_counts.json",
-                "star_salmon/WT_REP1/logs",
-                "star_salmon/WT_REP1/logs/salmon_quant.log",
-                "star_salmon/WT_REP1/quant.genes.sf",
-                "star_salmon/WT_REP1/quant.sf",
-                "star_salmon/WT_REP2",
-                "star_salmon/WT_REP2/aux_info",
-                "star_salmon/WT_REP2/aux_info/ambig_info.tsv",
-                "star_salmon/WT_REP2/aux_info/expected_bias.gz",
-                "star_salmon/WT_REP2/aux_info/fld.gz",
-                "star_salmon/WT_REP2/aux_info/meta_info.json",
-                "star_salmon/WT_REP2/aux_info/observed_bias.gz",
-                "star_salmon/WT_REP2/aux_info/observed_bias_3p.gz",
-                "star_salmon/WT_REP2/cmd_info.json",
-                "star_salmon/WT_REP2/libParams",
-                "star_salmon/WT_REP2/libParams/flenDist.txt",
-                "star_salmon/WT_REP2/lib_format_counts.json",
-                "star_salmon/WT_REP2/logs",
-                "star_salmon/WT_REP2/logs/salmon_quant.log",
-                "star_salmon/WT_REP2/quant.genes.sf",
-                "star_salmon/WT_REP2/quant.sf",
                 "star_salmon/bigwig",
                 "star_salmon/bigwig/RAP1_IAA_30M_REP1.bigWig",
                 "star_salmon/bigwig/RAP1_IAA_30M_REP1.forward.bigWig",
@@ -702,16 +670,6 @@
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "cmd_info.json:md5,a43ebd41b8c288735c7816262163f02c",
-                "ambig_info.tsv:md5,be7b6ca4d489ad60ad2816a2e67493ec",
-                "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
-                "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,d1cd2398038030227c66243995111e02",
-                "ambig_info.tsv:md5,636970512be74cdf4f0b7ab899742566",
-                "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
-                "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,017e2a5451b01a3da9d2241f2ae53e79",
                 "RAP1_IAA_30M_REP1.SJ.out.tab:md5,ea95e243278af55534f2c52eb5fff7ee",
                 "RAP1_UNINDUCED_REP1.SJ.out.tab:md5,e548d13942535dc0821f3ec6d9743ec8",
                 "RAP1_UNINDUCED_REP2.SJ.out.tab:md5,1f294365343a1a5e95682792fdb77033",
@@ -733,7 +691,7 @@
                 "i_data.ctab:md5,525413b70bcf62c24c8f96182e09883e"
             ]
         ],
-        "timestamp": "2026-09-18T23:55:23.452081169",
+        "timestamp": "2026-10-29T10:59:02.215819264",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

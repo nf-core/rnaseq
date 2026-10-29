@@ -1,0 +1,47 @@
+nextflow_pipeline {
+
+    name "Test pipeline with samples below the mapped reads threshold"
+    script "../main.nf"
+    tag "pipeline"
+
+    test("Params: --min_mapped_reads 90 leaves failing samples out of quantification") {
+
+        when {
+            params {
+                outdir           = "$outputDir"
+                min_mapped_reads = 90
+            }
+        }
+
+        then {
+            // WT_REP1 and WT_REP2 map at ~89%, the RAP1 samples above 90%
+            def failed = ['WT_REP1', 'WT_REP2']
+            def passed = ['RAP1_IAA_30M_REP1', 'RAP1_UNINDUCED_REP1', 'RAP1_UNINDUCED_REP2']
+            def merged_tables = [
+                'salmon.merged.gene_counts.tsv',
+                'salmon.merged.gene_counts_length_scaled.tsv',
+                'salmon.merged.transcript_counts.tsv'
+            ].collect { name -> file("$outputDir/star_salmon/$name") }
+            def fail_table = file("$outputDir/multiqc/star_salmon/multiqc_report_data/multiqc_fail_mapped_samples_table.txt")
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.trace.succeeded().any { task -> task.name.contains('DESEQ2_QC_BAM_SALMON') } },
+                { assert merged_tables.every { table -> table.exists() } },
+                { assert merged_tables.every { table -> def header = table.readLines()[0].split('\t') as List; failed.every { id -> !(id in header) } && passed.every { id -> id in header } } },
+                { assert failed.every { id -> !file("$outputDir/star_salmon/$id").exists() } },
+                { assert failed.every { id -> fail_table.text.contains(id) } }
+            )
+        }
+
+        cleanup {
+            // Only prune/delete on CI - keeping local VM state intact prevents
+            // cross-test launchDir wipes that break nf-test snapshot walks.
+            if (System.getenv("CI") == "true") {
+                if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                    "docker system prune -a -f --volumes".execute()
+                }
+                new File("${launchDir}").deleteDir()
+            }
+        }
+    }
+}

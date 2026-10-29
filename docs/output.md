@@ -965,7 +965,8 @@ The plot on the left hand side shows the standard PC plot - notice the variable 
 
 - `multiqc/<ALIGNER>/`
   - `multiqc_report.html`: a standalone HTML file that can be viewed in your web browser.
-  - `multiqc_data/`: directory containing parsed statistics from the different tools used in the pipeline.
+  - `multiqc_report_data/`: directory containing parsed statistics from the different tools used in the pipeline.
+  - `multiqc_report_data/multiqc_fail_trimmed_samples_table.txt`, `multiqc_report_data/multiqc_fail_mapped_samples_table.txt`: written only when a sample fails `--min_trimmed_reads` or `--min_mapped_reads`. One row per skipped sample, with its read count or mapping rate. These samples are left out of later steps, including quantification, so they do not appear in the merged count tables.
 
 </details>
 

@@ -513,7 +513,7 @@
                     "default": 5,
                     "fa_icon": "fas fa-percentage",
                     "description": "Minimum percentage of uniquely mapped reads below which samples are removed from further processing.",
-                    "help_text": "Downstream pipeline steps may fail if this threshold is set too low."
+                    "help_text": "Samples below the threshold are left out of alignment QC and quantification, so they do not appear in the merged count tables, and are listed in the MultiQC report. Downstream pipeline steps may fail if this threshold is set too low."
                 },
                 "seq_center": {
                     "type": "string",

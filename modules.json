@@ -62,7 +62,7 @@
                     },
                     "dupradar": {
                         "branch": "master",
-                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
+                        "git_sha": "07f8f55a82b2f9eb764bcd6db7d53041e138d3d2",
                         "installed_by": ["bam_qc_rnaseq", "modules"]
                     },
                     "ea-utils/gtf2bed": {
@@ -166,7 +166,7 @@
                     },
                     "rsem/calculateexpression": {
                         "branch": "master",
-                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
+                        "git_sha": "07f8f55a82b2f9eb764bcd6db7d53041e138d3d2",
                         "installed_by": ["modules", "quantify_rsem"],
                         "patch": "modules/nf-core/rsem/calculateexpression/rsem-calculateexpression.diff"
                     },
@@ -279,7 +279,7 @@
                     },
                     "sentieon/rsemcalculateexpression": {
                         "branch": "master",
-                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
+                        "git_sha": "07f8f55a82b2f9eb764bcd6db7d53041e138d3d2",
                         "installed_by": ["modules", "quantify_rsem"]
                     },
                     "sentieon/rsempreparereference": {

@@ -33,6 +33,10 @@ process SENTIEON_RSEMCALCULATEEXPRESSION {
     def args = task.ext.args   ?: ''
     prefix   = task.ext.prefix ?: "${meta.id}"
 
+    if (!args.contains('--temporary-folder')) {
+        args += ' --temporary-folder ./tmp/'
+    }
+
     def strandedness = ''
     if (meta.strandedness == 'forward') {
         strandedness = '--strandedness forward'
@@ -73,7 +77,6 @@ process SENTIEON_RSEMCALCULATEEXPRESSION {
 
     rsem-calculate-expression \\
         --num-threads $task.cpus \\
-        --temporary-folder ./tmp/ \\
         $alignment_mode \\
         $strandedness \\
         \$PAIRED_END_FLAG \\

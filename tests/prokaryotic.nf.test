@@ -32,6 +32,7 @@ nextflow_pipeline {
                 skip_deseq2_qc  = true
                 pseudo_aligner  = null
                 min_trimmed_reads = 0
+                min_mapped_reads  = 0
             }
         }
 
@@ -149,6 +150,7 @@ nextflow_pipeline {
                 skip_deseq2_qc  = true
                 pseudo_aligner  = null
                 min_trimmed_reads = 0
+                min_mapped_reads  = 0
             }
         }
 

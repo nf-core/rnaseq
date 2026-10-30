@@ -433,6 +433,61 @@ workflow RNASEQ {
             .join(ch_bam_dedup_umi_bundle, remainder: true)
     }
 
+    // Decide pass/fail on --min_mapped_reads once per sample, ahead of quantification.
+    // Samples without a mapping rate are treated as passing.
+
+    ch_genome_bam_bai_mapping = ch_genome_bam
+        .join(ch_genome_bam_index)
+        .join(ch_percent_mapped, remainder: true)
+        .map{ row ->
+            def (meta, bam, index) = row[0..2]
+            def percent_mapped = row.size() == 4 ? row[3] : null
+            def pass = percent_mapped != null ? percent_mapped >= params.min_mapped_reads.toFloat() : null
+            return [ meta, bam, index, percent_mapped, pass ]
+        }
+        .multiMap { meta, bam, index, percent_mapped, pass ->
+            bam: [ meta, bam, index, pass ]
+            percent_mapped: [ meta.id, percent_mapped ]
+            percent_mapped_pass: [ meta.id, percent_mapped, pass ]
+            status: [ meta.id, pass ]
+        }
+
+    ch_percent_mapped = ch_genome_bam_bai_mapping.percent_mapped
+
+    // Save mapping status for workflow summary where present
+
+    ch_map_status = ch_genome_bam_bai_mapping.status
+        .filter { _id, pass -> pass != null }
+
+    ch_failed_on_low_mapped_reads = ch_genome_bam_bai_mapping.percent_mapped_pass
+        .filter { _id, _percent_mapped, pass -> fail_on_low_mapped_reads && pass == false }
+        .map { id, percent_mapped, _pass -> [ id, mappedReadsMessage(id, percent_mapped, params.min_mapped_reads) ] }
+    ch_failed_checks = ch_failed_checks.mix(ch_failed_on_low_mapped_reads)
+
+    // Where a percent mapping is present, use it to filter bam and index
+
+    map_filtered_genome_bam_bai = ch_genome_bam_bai_mapping.bam
+        .filter { _meta, _bam, _index, pass -> pass || pass == null }
+        .multiMap { meta, bam, index, _pass ->
+            bam: [ meta, bam ]
+            index: [ meta, index ]
+        }
+
+    ch_genome_bam = map_filtered_genome_bam_bai.bam
+    ch_genome_bam_index = map_filtered_genome_bam_bai.index
+
+    // Apply the same decision to the transcriptome BAMs so failed samples are
+    // left out of quantification. Rows from the remainder join take three shapes:
+    // [id, meta, bam, pass] when matched, [id, meta, bam, null] for a transcriptome
+    // BAM with no status, and [id, null, pass] for a status with no transcriptome
+    // BAM (e.g. HISAT2).
+
+    ch_transcriptome_bam = ch_transcriptome_bam
+        .map { meta, bam -> [ meta.id, meta, bam ] }
+        .join(ch_genome_bam_bai_mapping.status, remainder: true)
+        .filter { row -> row[1] != null && row[-1] != false }
+        .map { row -> [ row[1], row[2] ] }
+
     //
     // Quantification
     //
@@ -490,48 +545,6 @@ workflow RNASEQ {
             ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_BAM_SALMON.out.dists_multiqc.collect().map { file -> [[:], file] })
         }
     }
-
-    // Filter bam and index by percent mapped being present in the meta
-
-    ch_genome_bam_bai_mapping = ch_genome_bam
-        .join(ch_genome_bam_index)
-        .join(ch_percent_mapped, remainder: true)
-        .map{ row ->
-            def (meta, bam, index) = row[0..2]
-            def percent_mapped = row.size() == 4 ? row[3] : null
-            def pass = percent_mapped != null ? percent_mapped >= params.min_mapped_reads.toFloat() : null
-            return [ meta, bam, index, percent_mapped, pass ]
-        }
-        .multiMap { meta, bam, index, percent_mapped, pass ->
-            bam: [ meta, bam, index, pass ]
-            percent_mapped: [ meta.id, percent_mapped ]
-            percent_mapped_pass: [ meta.id, percent_mapped, pass ]
-            status: [ meta.id, pass ]
-        }
-
-    ch_percent_mapped = ch_genome_bam_bai_mapping.percent_mapped
-
-    // Save mapping status for workflow summary where present
-
-    ch_map_status = ch_genome_bam_bai_mapping.status
-        .filter { _id, pass -> pass != null }
-
-    ch_failed_on_low_mapped_reads = ch_genome_bam_bai_mapping.percent_mapped_pass
-        .filter { _id, _percent_mapped, pass -> fail_on_low_mapped_reads && pass == false }
-        .map { id, percent_mapped, _pass -> [ id, mappedReadsMessage(id, percent_mapped, params.min_mapped_reads) ] }
-    ch_failed_checks = ch_failed_checks.mix(ch_failed_on_low_mapped_reads)
-
-    // Where a percent mapping is present, use it to filter bam and index
-
-    map_filtered_genome_bam_bai = ch_genome_bam_bai_mapping.bam
-        .filter { _meta, _bam, _index, pass -> pass || pass == null }
-        .multiMap { meta, bam, index, _pass ->
-            bam: [ meta, bam ]
-            index: [ meta, index ]
-        }
-
-    ch_genome_bam = map_filtered_genome_bam_bai.bam
-    ch_genome_bam_index = map_filtered_genome_bam_bai.index
 
     //
     // SUBWORKFLOW: Mark duplicate reads

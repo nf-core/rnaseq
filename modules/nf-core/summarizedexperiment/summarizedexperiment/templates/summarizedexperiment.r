@@ -162,12 +162,19 @@ matrices <- lapply(matrix_files, read_delim_flexible, row.names = 1, stringsAsFa
 # assays stay aligned.
 numeric_cols <- unique(unlist(lapply(matrices, function(mat) names(Filter(is.numeric, mat)))))
 
-assay_list <- lapply(matrices, function(mat){
-    all_na <- vapply(mat, function(x) all(is.na(x)), logical(1))
-    mat <- mat[, vapply(mat, is.numeric, logical(1)) | (all_na & names(mat) %in% numeric_cols), drop = FALSE]
-    mat[] <- lapply(mat, function(x) if (is.logical(x)) as.numeric(x) else x)
-    mat
-})
+assay_list <- Map(function(mat, matrix_file){
+    is_num <- vapply(mat, is.numeric, logical(1))
+    all_na <- vapply(mat, function(x) all(is.na(x)), logical(1)) & !is_num
+    keep_na <- all_na & names(mat) %in% numeric_cols
+    if (any(all_na & !keep_na)) {
+        warning(
+            "Dropping all-NA column(s) from ", matrix_file, " that are not numeric in any input matrix: ",
+            paste(names(mat)[all_na & !keep_na], collapse = ', ')
+        )
+    }
+    mat[keep_na] <- lapply(mat[keep_na], as.numeric)
+    mat[, is_num | keep_na, drop = FALSE]
+}, matrices, matrix_files)
 
 checkRowColNames(assay_list)
 
@@ -222,6 +229,7 @@ saveRDS(se, file = output_file)
 sink(paste(prefix, "R_sessionInfo.log", sep = '.'))
 citation("SummarizedExperiment")
 print(sessionInfo())
+print(se)
 sink()
 
 ################################################

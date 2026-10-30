@@ -334,7 +334,7 @@
                     },
                     "summarizedexperiment/summarizedexperiment": {
                         "branch": "master",
-                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
+                        "git_sha": "4dc37b3757a72e8c3418d01a978231bf27bfd875",
                         "installed_by": ["quant_tximport_summarizedexperiment"]
                     },
                     "sylph/profile": {

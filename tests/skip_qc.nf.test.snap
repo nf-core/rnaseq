@@ -55,22 +55,22 @@
                     "salmon": "2.11.0"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -681,7 +681,7 @@
                 "i_data.ctab:md5,525413b70bcf62c24c8f96182e09883e"
             ]
         ],
-        "timestamp": "2026-11-09T14:06:47.219820179",
+        "timestamp": "2026-11-09T17:35:30.598617942",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -716,7 +716,7 @@
                     "gunzip": 1.13
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "STAR_GENOMEGENERATE": {
                     "gawk": "5.1.0",
@@ -763,7 +763,7 @@
                 
             ]
         ],
-        "timestamp": "2026-09-16T16:01:43.077279465",
+        "timestamp": "2026-11-09T17:41:05.353761412",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

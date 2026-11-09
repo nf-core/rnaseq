@@ -1,7 +1,5 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
 name: "custom_tx2gene"
-description: Make a transcript/gene mapping from a GTF and cross-reference with transcript
-  quantifications.
+description: Make a transcript/gene mapping from a GTF and cross-reference with transcript quantifications.
 keywords:
   - gene
   - gtf
@@ -73,3 +71,27 @@ authors:
   - "@pinin4fjords"
 maintainers:
   - "@pinin4fjords"
+containers:
+  docker:
+    linux/arm64:
+      name: community.wave.seqera.io/library/python:3.10.4--960a3ac1dc8fceb8
+      build_id: bd-960a3ac1dc8fceb8_1
+      scan_id: sc-6f1e2f69d88077b0_1
+    linux/amd64:
+      name: community.wave.seqera.io/library/python:3.10.4--b5b45c494792cf95
+      build_id: bd-b5b45c494792cf95_1
+      scan_id: sc-7661077dc89c2acc_1
+  singularity:
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/python:3.10.4--a884553357188f3c
+      build_id: bd-a884553357188f3c_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/a3/a3afdbbeb3c6f212ac595eca51a566b047a7bab2c50783955d3aac0d55fa683b/data
+    linux/arm64:
+      name: oras://community.wave.seqera.io/library/python:3.10.4--ba72b5df0b0e205a
+      build_id: bd-ba72b5df0b0e205a_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/30/30ad1acd663df5e621ccc8a090ce1b9073133e2b375e87aa9d671f8983a0c22c/data
+  conda:
+    linux/amd64:
+      lock_file: modules/nf-core/custom/tx2gene/.conda-lock/linux_amd64-bd-b5b45c494792cf95_1.txt
+    linux/arm64:
+      lock_file: modules/nf-core/custom/tx2gene/.conda-lock/linux_arm64-bd-960a3ac1dc8fceb8_1.txt

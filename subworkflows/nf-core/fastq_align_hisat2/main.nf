@@ -1,3 +1,6 @@
+// Copyright (c) the nf-core community under an open-source MIT license.
+// See https://github.com/nf-core/modules for full license, file patching instructions and upstream contributing.
+
 include { HISAT2_ALIGN            } from '../../../modules/nf-core/hisat2/align/main'
 include { BAM_SORT_STATS_SAMTOOLS } from '../bam_sort_stats_samtools/main'
 

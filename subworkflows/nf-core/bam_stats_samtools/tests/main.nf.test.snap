@@ -220,14 +220,14 @@
                         "id": "test",
                         "single_end": true
                     },
-                    "test.stats:md5,6583f1f142c27974ffc924b7fa734767"
+                    "test.stats:md5,4f6b69a144c8e1d93110b0c6ad961aac"
                 ]
             ]
         ],
-        "timestamp": "2026-07-10T08:13:24.390328",
+        "timestamp": "2026-10-28T07:20:26.696028",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.10.4"
         }
     },
     "test_bam_stats_samtools_paired_end": {
@@ -256,14 +256,14 @@
                         "id": "test",
                         "single_end": true
                     },
-                    "test.stats:md5,c4ca9c9d1415005c80481e6fe4c95f90"
+                    "test.stats:md5,3cdba85eb1287f1f2273eb45b48fcfd9"
                 ]
             ]
         ],
-        "timestamp": "2026-07-10T08:13:29.123968",
+        "timestamp": "2026-10-28T07:20:32.474522",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.10.4"
         }
     },
     "test_bam_stats_samtools_paired_end_cram": {
@@ -292,14 +292,14 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.stats:md5,a2a40d6e88c35aa33d4433355f47f217"
+                    "test.stats:md5,f0a64674d746d343f9c9bb2dacfff14d"
                 ]
             ]
         ],
-        "timestamp": "2026-07-10T08:13:33.60771",
+        "timestamp": "2026-10-28T07:20:38.134112",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.10.4"
         }
     }
 }

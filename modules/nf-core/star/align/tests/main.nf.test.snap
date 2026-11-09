@@ -2,182 +2,6 @@
     "homo_sapiens - single_end - stub": {
         "content": [
             {
-                "0": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test.Log.final.out:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "1": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test.Log.out:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "10": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test.Aligned.unsort.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "11": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        [
-                            "test.unmapped_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                            "test.unmapped_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
-                        ]
-                    ]
-                ],
-                "12": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        [
-                            "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
-                        ]
-                    ]
-                ],
-                "13": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "14": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "15": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test.Chimeric.out.junction:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "16": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test.out.sam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "17": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test.Signal.UniqueMultiple.str1.out.wig:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "18": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test.Signal.UniqueMultiple.str1.out.bg:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "2": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test.Log.progress.out:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "3": [
-                    [
-                        "STAR_ALIGN",
-                        "star",
-                        "2.7.11b"
-                    ]
-                ],
-                "4": [
-                    [
-                        "STAR_ALIGN",
-                        "samtools",
-                        "1.21"
-                    ]
-                ],
-                "5": [
-                    [
-                        "STAR_ALIGN",
-                        "gawk",
-                        "5.1.0"
-                    ]
-                ],
-                "6": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        [
-                            "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "testXd.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                        ]
-                    ]
-                ],
-                "7": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "8": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "9": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test.toTranscriptome.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
                 "bam": [
                     [
                         {
@@ -185,9 +9,9 @@
                             "single_end": true
                         },
                         [
-                            "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "testXd.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            "test.Aligned.sortedByCoord.out.bam",
+                            "test.sortedByCoord.out.bam",
+                            "testXd.out.bam"
                         ]
                     ]
                 ],
@@ -197,7 +21,7 @@
                             "id": "test",
                             "single_end": true
                         },
-                        "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.sortedByCoord.out.bam"
                     ]
                 ],
                 "bam_sorted_aligned": [
@@ -206,7 +30,7 @@
                             "id": "test",
                             "single_end": true
                         },
-                        "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Aligned.sortedByCoord.out.bam"
                     ]
                 ],
                 "bam_transcript": [
@@ -215,7 +39,7 @@
                             "id": "test",
                             "single_end": true
                         },
-                        "test.toTranscriptome.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.toTranscriptome.out.bam"
                     ]
                 ],
                 "bam_unsorted": [
@@ -224,7 +48,7 @@
                             "id": "test",
                             "single_end": true
                         },
-                        "test.Aligned.unsort.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Aligned.unsort.out.bam"
                     ]
                 ],
                 "bedgraph": [
@@ -254,7 +78,7 @@
                             "id": "test",
                             "single_end": true
                         },
-                        "test.Chimeric.out.junction:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Chimeric.out.junction"
                     ]
                 ],
                 "log_final": [
@@ -263,7 +87,7 @@
                             "id": "test",
                             "single_end": true
                         },
-                        "test.Log.final.out:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Log.final.out"
                     ]
                 ],
                 "log_out": [
@@ -272,7 +96,7 @@
                             "id": "test",
                             "single_end": true
                         },
-                        "test.Log.out:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Log.out"
                     ]
                 ],
                 "log_progress": [
@@ -281,7 +105,7 @@
                             "id": "test",
                             "single_end": true
                         },
-                        "test.Log.progress.out:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Log.progress.out"
                     ]
                 ],
                 "read_per_gene_tab": [
@@ -356,191 +180,15 @@
                 ]
             }
         ],
+        "timestamp": "2026-10-16T15:34:13.984562",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-03T09:28:25.802437191"
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.0"
+        }
     },
     "homo_sapiens - paired_end - arriba - stub": {
         "content": [
             {
-                "0": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.Log.final.out:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "1": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.Log.out:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "10": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.Aligned.unsort.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "11": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        [
-                            "test.unmapped_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                            "test.unmapped_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
-                        ]
-                    ]
-                ],
-                "12": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        [
-                            "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
-                        ]
-                    ]
-                ],
-                "13": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "14": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "15": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.Chimeric.out.junction:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "16": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.out.sam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "17": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.Signal.UniqueMultiple.str1.out.wig:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "18": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.Signal.UniqueMultiple.str1.out.bg:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "2": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.Log.progress.out:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "3": [
-                    [
-                        "STAR_ALIGN",
-                        "star",
-                        "2.7.11b"
-                    ]
-                ],
-                "4": [
-                    [
-                        "STAR_ALIGN",
-                        "samtools",
-                        "1.21"
-                    ]
-                ],
-                "5": [
-                    [
-                        "STAR_ALIGN",
-                        "gawk",
-                        "5.1.0"
-                    ]
-                ],
-                "6": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        [
-                            "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "testXd.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                        ]
-                    ]
-                ],
-                "7": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "8": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "9": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.toTranscriptome.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
                 "bam": [
                     [
                         {
@@ -548,9 +196,9 @@
                             "single_end": false
                         },
                         [
-                            "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "testXd.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            "test.Aligned.sortedByCoord.out.bam",
+                            "test.sortedByCoord.out.bam",
+                            "testXd.out.bam"
                         ]
                     ]
                 ],
@@ -560,7 +208,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.sortedByCoord.out.bam"
                     ]
                 ],
                 "bam_sorted_aligned": [
@@ -569,7 +217,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Aligned.sortedByCoord.out.bam"
                     ]
                 ],
                 "bam_transcript": [
@@ -578,7 +226,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.toTranscriptome.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.toTranscriptome.out.bam"
                     ]
                 ],
                 "bam_unsorted": [
@@ -587,7 +235,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Aligned.unsort.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Aligned.unsort.out.bam"
                     ]
                 ],
                 "bedgraph": [
@@ -617,7 +265,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Chimeric.out.junction:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Chimeric.out.junction"
                     ]
                 ],
                 "log_final": [
@@ -626,7 +274,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Log.final.out:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Log.final.out"
                     ]
                 ],
                 "log_out": [
@@ -635,7 +283,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Log.out:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Log.out"
                     ]
                 ],
                 "log_progress": [
@@ -644,7 +292,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Log.progress.out:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Log.progress.out"
                     ]
                 ],
                 "read_per_gene_tab": [
@@ -719,62 +367,113 @@
                 ]
             }
         ],
+        "timestamp": "2026-10-16T15:34:30.649663",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-03T09:28:38.483306917"
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.0"
+        }
     },
     "homo_sapiens - single_end": {
         "content": [
-            "test.Log.final.out",
-            "test.Log.out",
-            "test.Log.progress.out",
             "9f76be49a6607613a64f760101bdddce",
             "9f76be49a6607613a64f760101bdddce",
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": true
-                    },
-                    [
-                        "test.Signal.Unique.str1.out.bg:md5,c56fc1472776fb927eaf62d973da5f9a",
-                        "test.Signal.UniqueMultiple.str1.out.bg:md5,e93373cf6f2a2a9506e2efdb260cdd4f"
-                    ]
-                ]
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": true
-                    },
-                    "test.SJ.out.tab:md5,75a516ab950fb958f40b29996474949c"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": true
-                    },
-                    "test.SJ.out.tab:md5,75a516ab950fb958f40b29996474949c"
-                ]
-            ],
-            [
-                
-            ],
             {
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Aligned.sortedByCoord.out.bam"
+                    ]
+                ],
+                "bam_sorted": [
+                    
+                ],
+                "bam_sorted_aligned": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Aligned.sortedByCoord.out.bam"
+                    ]
+                ],
+                "bam_transcript": [
+                    
+                ],
+                "bam_unsorted": [
+                    
+                ],
+                "bedgraph": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        [
+                            "test.Signal.Unique.str1.out.bg:md5,c56fc1472776fb927eaf62d973da5f9a",
+                            "test.Signal.UniqueMultiple.str1.out.bg:md5,e93373cf6f2a2a9506e2efdb260cdd4f"
+                        ]
+                    ]
+                ],
+                "fastq": [
+                    
+                ],
+                "junction": [
+                    
+                ],
+                "log_final": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Log.final.out"
+                    ]
+                ],
+                "log_out": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Log.out"
+                    ]
+                ],
+                "log_progress": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Log.progress.out"
+                    ]
+                ],
+                "read_per_gene_tab": [
+                    
+                ],
+                "sam": [
+                    
+                ],
+                "spl_junc_tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.SJ.out.tab:md5,75a516ab950fb958f40b29996474949c"
+                    ]
+                ],
+                "tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.SJ.out.tab:md5,75a516ab950fb958f40b29996474949c"
+                    ]
+                ],
                 "versions_gawk": [
                     [
                         "STAR_ALIGN",
@@ -795,65 +494,119 @@
                         "star",
                         "2.7.11b"
                     ]
+                ],
+                "wig": [
+                    
                 ]
             }
         ],
+        "timestamp": "2026-10-16T15:01:30.550482",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-02-02T23:44:45.378997"
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.2"
+        }
     },
     "homo_sapiens - paired_end": {
         "content": [
-            "test.Log.final.out",
-            "test.Log.out",
-            "test.Log.progress.out",
             "db9a8324b5163b025bcc0c33e848486",
             "db9a8324b5163b025bcc0c33e848486",
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    [
-                        "test.Signal.Unique.str1.out.bg:md5,d7bf8b70b436ca048a62513e1d0ece3a",
-                        "test.Signal.UniqueMultiple.str1.out.bg:md5,686d58493b9eb445b56ace4d67f76ef6"
-                    ]
-                ]
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.SJ.out.tab:md5,844af19ab0fc8cd9a3f75228445aca0d"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.SJ.out.tab:md5,844af19ab0fc8cd9a3f75228445aca0d"
-                ]
-            ],
-            [
-                
-            ],
             {
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Aligned.sortedByCoord.out.bam"
+                    ]
+                ],
+                "bam_sorted": [
+                    
+                ],
+                "bam_sorted_aligned": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Aligned.sortedByCoord.out.bam"
+                    ]
+                ],
+                "bam_transcript": [
+                    
+                ],
+                "bam_unsorted": [
+                    
+                ],
+                "bedgraph": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.Signal.Unique.str1.out.bg:md5,d7bf8b70b436ca048a62513e1d0ece3a",
+                            "test.Signal.UniqueMultiple.str1.out.bg:md5,686d58493b9eb445b56ace4d67f76ef6"
+                        ]
+                    ]
+                ],
+                "fastq": [
+                    
+                ],
+                "junction": [
+                    
+                ],
+                "log_final": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.final.out"
+                    ]
+                ],
+                "log_out": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.out"
+                    ]
+                ],
+                "log_progress": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.progress.out"
+                    ]
+                ],
+                "read_per_gene_tab": [
+                    
+                ],
+                "sam": [
+                    
+                ],
+                "spl_junc_tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.SJ.out.tab:md5,844af19ab0fc8cd9a3f75228445aca0d"
+                    ]
+                ],
+                "tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.SJ.out.tab:md5,844af19ab0fc8cd9a3f75228445aca0d"
+                    ]
+                ],
                 "versions_gawk": [
                     [
                         "STAR_ALIGN",
@@ -874,194 +627,21 @@
                         "star",
                         "2.7.11b"
                     ]
+                ],
+                "wig": [
+                    
                 ]
             }
         ],
+        "timestamp": "2026-10-16T15:02:01.313813",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-02-02T23:50:50.657212"
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.2"
+        }
     },
     "homo_sapiens - paired_end - multiple - stub": {
         "content": [
             {
-                "0": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.Log.final.out:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "1": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.Log.out:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "10": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.Aligned.unsort.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "11": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        [
-                            "test.unmapped_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                            "test.unmapped_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
-                        ]
-                    ]
-                ],
-                "12": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        [
-                            "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
-                        ]
-                    ]
-                ],
-                "13": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "14": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "15": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.Chimeric.out.junction:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "16": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.out.sam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "17": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.Signal.UniqueMultiple.str1.out.wig:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "18": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.Signal.UniqueMultiple.str1.out.bg:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "2": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.Log.progress.out:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "3": [
-                    [
-                        "STAR_ALIGN",
-                        "star",
-                        "2.7.11b"
-                    ]
-                ],
-                "4": [
-                    [
-                        "STAR_ALIGN",
-                        "samtools",
-                        "1.21"
-                    ]
-                ],
-                "5": [
-                    [
-                        "STAR_ALIGN",
-                        "gawk",
-                        "5.1.0"
-                    ]
-                ],
-                "6": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        [
-                            "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "testXd.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                        ]
-                    ]
-                ],
-                "7": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "8": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "9": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.toTranscriptome.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
                 "bam": [
                     [
                         {
@@ -1069,9 +649,9 @@
                             "single_end": false
                         },
                         [
-                            "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "testXd.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            "test.Aligned.sortedByCoord.out.bam",
+                            "test.sortedByCoord.out.bam",
+                            "testXd.out.bam"
                         ]
                     ]
                 ],
@@ -1081,7 +661,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.sortedByCoord.out.bam"
                     ]
                 ],
                 "bam_sorted_aligned": [
@@ -1090,7 +670,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Aligned.sortedByCoord.out.bam"
                     ]
                 ],
                 "bam_transcript": [
@@ -1099,7 +679,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.toTranscriptome.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.toTranscriptome.out.bam"
                     ]
                 ],
                 "bam_unsorted": [
@@ -1108,7 +688,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Aligned.unsort.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Aligned.unsort.out.bam"
                     ]
                 ],
                 "bedgraph": [
@@ -1138,7 +718,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Chimeric.out.junction:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Chimeric.out.junction"
                     ]
                 ],
                 "log_final": [
@@ -1147,7 +727,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Log.final.out:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Log.final.out"
                     ]
                 ],
                 "log_out": [
@@ -1156,7 +736,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Log.out:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Log.out"
                     ]
                 ],
                 "log_progress": [
@@ -1165,7 +745,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Log.progress.out:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Log.progress.out"
                     ]
                 ],
                 "read_per_gene_tab": [
@@ -1240,62 +820,113 @@
                 ]
             }
         ],
+        "timestamp": "2026-10-16T15:34:46.669976",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-03T09:28:51.288466085"
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.0"
+        }
     },
     "homo_sapiens - paired_end - multiple": {
         "content": [
-            "test.Log.final.out",
-            "test.Log.out",
-            "test.Log.progress.out",
             "3e54e45f5dc3e9c1f2fc55bc41531a87",
             "3e54e45f5dc3e9c1f2fc55bc41531a87",
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    [
-                        "test.Signal.Unique.str1.out.bg:md5,d7bf8b70b436ca048a62513e1d0ece3a",
-                        "test.Signal.UniqueMultiple.str1.out.bg:md5,686d58493b9eb445b56ace4d67f76ef6"
-                    ]
-                ]
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.SJ.out.tab:md5,069877e053714e23010fe4e1c003b4a2"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.SJ.out.tab:md5,069877e053714e23010fe4e1c003b4a2"
-                ]
-            ],
-            [
-                
-            ],
             {
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Aligned.sortedByCoord.out.bam"
+                    ]
+                ],
+                "bam_sorted": [
+                    
+                ],
+                "bam_sorted_aligned": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Aligned.sortedByCoord.out.bam"
+                    ]
+                ],
+                "bam_transcript": [
+                    
+                ],
+                "bam_unsorted": [
+                    
+                ],
+                "bedgraph": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.Signal.Unique.str1.out.bg:md5,d7bf8b70b436ca048a62513e1d0ece3a",
+                            "test.Signal.UniqueMultiple.str1.out.bg:md5,686d58493b9eb445b56ace4d67f76ef6"
+                        ]
+                    ]
+                ],
+                "fastq": [
+                    
+                ],
+                "junction": [
+                    
+                ],
+                "log_final": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.final.out"
+                    ]
+                ],
+                "log_out": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.out"
+                    ]
+                ],
+                "log_progress": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.progress.out"
+                    ]
+                ],
+                "read_per_gene_tab": [
+                    
+                ],
+                "sam": [
+                    
+                ],
+                "spl_junc_tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.SJ.out.tab:md5,069877e053714e23010fe4e1c003b4a2"
+                    ]
+                ],
+                "tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.SJ.out.tab:md5,069877e053714e23010fe4e1c003b4a2"
+                    ]
+                ],
                 "versions_gawk": [
                     [
                         "STAR_ALIGN",
@@ -1316,194 +947,21 @@
                         "star",
                         "2.7.11b"
                     ]
+                ],
+                "wig": [
+                    
                 ]
             }
         ],
+        "timestamp": "2026-10-16T15:06:13.204034",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-03T09:28:19.516063466"
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.2"
+        }
     },
     "homo_sapiens - paired_end - stub": {
         "content": [
             {
-                "0": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.Log.final.out:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "1": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.Log.out:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "10": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.Aligned.unsort.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "11": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        [
-                            "test.unmapped_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                            "test.unmapped_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
-                        ]
-                    ]
-                ],
-                "12": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        [
-                            "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
-                        ]
-                    ]
-                ],
-                "13": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "14": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "15": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.Chimeric.out.junction:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "16": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.out.sam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "17": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.Signal.UniqueMultiple.str1.out.wig:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "18": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.Signal.UniqueMultiple.str1.out.bg:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "2": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.Log.progress.out:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "3": [
-                    [
-                        "STAR_ALIGN",
-                        "star",
-                        "2.7.11b"
-                    ]
-                ],
-                "4": [
-                    [
-                        "STAR_ALIGN",
-                        "samtools",
-                        "1.21"
-                    ]
-                ],
-                "5": [
-                    [
-                        "STAR_ALIGN",
-                        "gawk",
-                        "5.1.0"
-                    ]
-                ],
-                "6": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        [
-                            "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "testXd.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                        ]
-                    ]
-                ],
-                "7": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "8": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "9": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.toTranscriptome.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
                 "bam": [
                     [
                         {
@@ -1511,9 +969,9 @@
                             "single_end": false
                         },
                         [
-                            "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "testXd.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            "test.Aligned.sortedByCoord.out.bam",
+                            "test.sortedByCoord.out.bam",
+                            "testXd.out.bam"
                         ]
                     ]
                 ],
@@ -1523,7 +981,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.sortedByCoord.out.bam"
                     ]
                 ],
                 "bam_sorted_aligned": [
@@ -1532,7 +990,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Aligned.sortedByCoord.out.bam"
                     ]
                 ],
                 "bam_transcript": [
@@ -1541,7 +999,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.toTranscriptome.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.toTranscriptome.out.bam"
                     ]
                 ],
                 "bam_unsorted": [
@@ -1550,7 +1008,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Aligned.unsort.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Aligned.unsort.out.bam"
                     ]
                 ],
                 "bedgraph": [
@@ -1580,7 +1038,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Chimeric.out.junction:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Chimeric.out.junction"
                     ]
                 ],
                 "log_final": [
@@ -1589,7 +1047,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Log.final.out:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Log.final.out"
                     ]
                 ],
                 "log_out": [
@@ -1598,7 +1056,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Log.out:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Log.out"
                     ]
                 ],
                 "log_progress": [
@@ -1607,7 +1065,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Log.progress.out:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Log.progress.out"
                     ]
                 ],
                 "read_per_gene_tab": [
@@ -1682,53 +1140,103 @@
                 ]
             }
         ],
+        "timestamp": "2026-10-16T15:34:22.334123",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-03T09:28:32.099657738"
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.0"
+        }
     },
     "homo_sapiens - paired_end - starfusion": {
         "content": [
-            "test.Log.final.out",
-            "test.Log.out",
-            "test.Log.progress.out",
-            "test.Chimeric.out.junction",
             "caee9dcda13882d4913456973c25b57a",
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.SJ.out.tab:md5,19c3faa1bfa9a0cc5e4c45f17065b53a"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.SJ.out.tab:md5,19c3faa1bfa9a0cc5e4c45f17065b53a"
-                ]
-            ],
-            [
-                
-            ],
             {
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Aligned.out.bam"
+                    ]
+                ],
+                "bam_sorted": [
+                    
+                ],
+                "bam_sorted_aligned": [
+                    
+                ],
+                "bam_transcript": [
+                    
+                ],
+                "bam_unsorted": [
+                    
+                ],
+                "bedgraph": [
+                    
+                ],
+                "fastq": [
+                    
+                ],
+                "junction": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Chimeric.out.junction"
+                    ]
+                ],
+                "log_final": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.final.out"
+                    ]
+                ],
+                "log_out": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.out"
+                    ]
+                ],
+                "log_progress": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.progress.out"
+                    ]
+                ],
+                "read_per_gene_tab": [
+                    
+                ],
+                "sam": [
+                    
+                ],
+                "spl_junc_tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.SJ.out.tab:md5,19c3faa1bfa9a0cc5e4c45f17065b53a"
+                    ]
+                ],
+                "tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.SJ.out.tab:md5,19c3faa1bfa9a0cc5e4c45f17065b53a"
+                    ]
+                ],
                 "versions_gawk": [
                     [
                         "STAR_ALIGN",
@@ -1749,55 +1257,103 @@
                         "star",
                         "2.7.11b"
                     ]
+                ],
+                "wig": [
+                    
                 ]
             }
         ],
+        "timestamp": "2026-10-16T15:33:09.458067",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-03T09:26:46.244829386"
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.0"
+        }
     },
     "homo_sapiens - paired_end - arriba": {
         "content": [
-            "test.Log.final.out",
-            "test.Log.out",
-            "test.Log.progress.out",
             "1a3abe88fb2490589c58497d39921bcc",
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.SJ.out.tab:md5,5155c9fd1f787ad6d7d80987fb06219c"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": false
-                    },
-                    "test.SJ.out.tab:md5,5155c9fd1f787ad6d7d80987fb06219c"
-                ]
-            ],
-            [
-                
-            ],
             {
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Aligned.out.bam"
+                    ]
+                ],
+                "bam_sorted": [
+                    
+                ],
+                "bam_sorted_aligned": [
+                    
+                ],
+                "bam_transcript": [
+                    
+                ],
+                "bam_unsorted": [
+                    
+                ],
+                "bedgraph": [
+                    
+                ],
+                "fastq": [
+                    
+                ],
+                "junction": [
+                    
+                ],
+                "log_final": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.final.out"
+                    ]
+                ],
+                "log_out": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.out"
+                    ]
+                ],
+                "log_progress": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.progress.out"
+                    ]
+                ],
+                "read_per_gene_tab": [
+                    
+                ],
+                "sam": [
+                    
+                ],
+                "spl_junc_tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.SJ.out.tab:md5,5155c9fd1f787ad6d7d80987fb06219c"
+                    ]
+                ],
+                "tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.SJ.out.tab:md5,5155c9fd1f787ad6d7d80987fb06219c"
+                    ]
+                ],
                 "versions_gawk": [
                     [
                         "STAR_ALIGN",
@@ -1818,194 +1374,153 @@
                         "star",
                         "2.7.11b"
                     ]
+                ],
+                "wig": [
+                    
                 ]
             }
         ],
+        "timestamp": "2026-10-16T15:03:16.035386",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-03T09:22:41.580434639"
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.2"
+        }
+    },
+    "homo_sapiens - single_end - uncompressed": {
+        "content": [
+            "9f76be49a6607613a64f760101bdddce",
+            {
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Aligned.sortedByCoord.out.bam"
+                    ]
+                ],
+                "bam_sorted": [
+                    
+                ],
+                "bam_sorted_aligned": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Aligned.sortedByCoord.out.bam"
+                    ]
+                ],
+                "bam_transcript": [
+                    
+                ],
+                "bam_unsorted": [
+                    
+                ],
+                "bedgraph": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        [
+                            "test.Signal.Unique.str1.out.bg:md5,c56fc1472776fb927eaf62d973da5f9a",
+                            "test.Signal.UniqueMultiple.str1.out.bg:md5,e93373cf6f2a2a9506e2efdb260cdd4f"
+                        ]
+                    ]
+                ],
+                "fastq": [
+                    
+                ],
+                "junction": [
+                    
+                ],
+                "log_final": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Log.final.out"
+                    ]
+                ],
+                "log_out": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Log.out"
+                    ]
+                ],
+                "log_progress": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Log.progress.out"
+                    ]
+                ],
+                "read_per_gene_tab": [
+                    
+                ],
+                "sam": [
+                    
+                ],
+                "spl_junc_tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.SJ.out.tab:md5,75a516ab950fb958f40b29996474949c"
+                    ]
+                ],
+                "tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.SJ.out.tab:md5,75a516ab950fb958f40b29996474949c"
+                    ]
+                ],
+                "versions_gawk": [
+                    [
+                        "STAR_ALIGN",
+                        "gawk",
+                        "5.1.0"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "STAR_ALIGN",
+                        "samtools",
+                        "1.21"
+                    ]
+                ],
+                "versions_star": [
+                    [
+                        "STAR_ALIGN",
+                        "star",
+                        "2.7.11b"
+                    ]
+                ],
+                "wig": [
+                    
+                ]
+            }
+        ],
+        "timestamp": "2026-10-16T15:06:21.61758",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.2"
+        }
     },
     "homo_sapiens - paired_end - starfusion - stub": {
         "content": [
             {
-                "0": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.Log.final.out:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "1": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.Log.out:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "10": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.Aligned.unsort.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "11": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        [
-                            "test.unmapped_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                            "test.unmapped_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
-                        ]
-                    ]
-                ],
-                "12": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        [
-                            "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
-                        ]
-                    ]
-                ],
-                "13": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "14": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "15": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.Chimeric.out.junction:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "16": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.out.sam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "17": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.Signal.UniqueMultiple.str1.out.wig:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "18": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.Signal.UniqueMultiple.str1.out.bg:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "2": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.Log.progress.out:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "3": [
-                    [
-                        "STAR_ALIGN",
-                        "star",
-                        "2.7.11b"
-                    ]
-                ],
-                "4": [
-                    [
-                        "STAR_ALIGN",
-                        "samtools",
-                        "1.21"
-                    ]
-                ],
-                "5": [
-                    [
-                        "STAR_ALIGN",
-                        "gawk",
-                        "5.1.0"
-                    ]
-                ],
-                "6": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        [
-                            "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "testXd.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                        ]
-                    ]
-                ],
-                "7": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "8": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "9": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.toTranscriptome.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
                 "bam": [
                     [
                         {
@@ -2013,9 +1528,9 @@
                             "single_end": false
                         },
                         [
-                            "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "testXd.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            "test.Aligned.sortedByCoord.out.bam",
+                            "test.sortedByCoord.out.bam",
+                            "testXd.out.bam"
                         ]
                     ]
                 ],
@@ -2025,7 +1540,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.sortedByCoord.out.bam"
                     ]
                 ],
                 "bam_sorted_aligned": [
@@ -2034,7 +1549,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Aligned.sortedByCoord.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Aligned.sortedByCoord.out.bam"
                     ]
                 ],
                 "bam_transcript": [
@@ -2043,7 +1558,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.toTranscriptome.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.toTranscriptome.out.bam"
                     ]
                 ],
                 "bam_unsorted": [
@@ -2052,7 +1567,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Aligned.unsort.out.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Aligned.unsort.out.bam"
                     ]
                 ],
                 "bedgraph": [
@@ -2082,7 +1597,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Chimeric.out.junction:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Chimeric.out.junction"
                     ]
                 ],
                 "log_final": [
@@ -2091,7 +1606,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Log.final.out:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Log.final.out"
                     ]
                 ],
                 "log_out": [
@@ -2100,7 +1615,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Log.out:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Log.out"
                     ]
                 ],
                 "log_progress": [
@@ -2109,7 +1624,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.Log.progress.out:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.Log.progress.out"
                     ]
                 ],
                 "read_per_gene_tab": [
@@ -2184,10 +1699,10 @@
                 ]
             }
         ],
+        "timestamp": "2026-10-16T15:34:37.447288",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-03T09:28:44.836246776"
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.0"
+        }
     }
 }

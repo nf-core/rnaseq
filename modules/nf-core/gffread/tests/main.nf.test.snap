@@ -176,6 +176,65 @@
             "nextflow": "25.10.4"
         }
     },
+    "sarscov2-gff3gz-fastagz": {
+        "content": [
+            {
+                "0": [
+                    
+                ],
+                "1": [
+                    
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fasta:md5,5f8108fb51739a0588ccf0a251de919a"
+                    ]
+                ],
+                "3": [
+                    
+                ],
+                "4": [
+                    [
+                        "GFFREAD",
+                        "gffread",
+                        "0.12.7"
+                    ]
+                ],
+                "bed": [
+                    
+                ],
+                "gffread_fasta": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fasta:md5,5f8108fb51739a0588ccf0a251de919a"
+                    ]
+                ],
+                "gffread_gff": [
+                    
+                ],
+                "gtf": [
+                    
+                ],
+                "versions_gffread": [
+                    [
+                        "GFFREAD",
+                        "gffread",
+                        "0.12.7"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-09-23T22:54:27.159396637",
+        "meta": {
+            "nf-test": "0.9.4",
+            "nextflow": "25.10.2"
+        }
+    },
     "sarscov2-gff3-bed": {
         "content": [
             {

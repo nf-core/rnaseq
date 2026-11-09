@@ -223,12 +223,12 @@
                     },
                     "salmon/index": {
                         "branch": "master",
-                        "git_sha": "53daf6285b9fbf1164b4dcab41da6e70e1f2f721",
+                        "git_sha": "4913348a152767d43ab4ab0215410678dfba3ca9",
                         "installed_by": ["fastq_subsample_fq_salmon"]
                     },
                     "salmon/quant": {
                         "branch": "master",
-                        "git_sha": "225ce36098d83f8c355c4bb8684f8205350c288e",
+                        "git_sha": "4913348a152767d43ab4ab0215410678dfba3ca9",
                         "installed_by": ["fastq_subsample_fq_salmon", "quantify_pseudo_alignment"]
                     },
                     "samtools/faidx": {

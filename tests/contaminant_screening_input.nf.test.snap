@@ -383,7 +383,7 @@
                     "rseqc": "5.0.4"
                 },
                 "SALMON_QUANT": {
-                    "salmon": "2.7.0"
+                    "salmon": "2.11.0"
                 },
                 "SAMTOOLS_FAIDX": {
                     "samtools": 1.24
@@ -1788,7 +1788,7 @@
                     "rseqc": "5.0.4"
                 },
                 "SALMON_QUANT": {
-                    "salmon": "2.7.0"
+                    "salmon": "2.11.0"
                 },
                 "SAMTOOLS_FAIDX": {
                     "samtools": 1.24

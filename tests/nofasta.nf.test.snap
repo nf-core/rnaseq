@@ -35,10 +35,10 @@
                     "gunzip": 1.13
                 },
                 "SALMON_INDEX": {
-                    "salmon": "2.7.0"
+                    "salmon": "2.11.0"
                 },
                 "SALMON_QUANT": {
-                    "salmon": "2.7.0"
+                    "salmon": "2.11.0"
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"

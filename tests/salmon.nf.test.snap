@@ -46,7 +46,7 @@
                     "gunzip": 1.13
                 },
                 "SALMON_QUANT": {
-                    "salmon": "2.7.0"
+                    "salmon": "2.11.0"
                 },
                 "SAMTOOLS_FAIDX": {
                     "samtools": 1.24
@@ -1474,7 +1474,7 @@
                     "gunzip": 1.13
                 },
                 "SALMON_QUANT": {
-                    "salmon": "2.7.0"
+                    "salmon": "2.11.0"
                 },
                 "SAMTOOLS_FAIDX": {
                     "samtools": 1.24

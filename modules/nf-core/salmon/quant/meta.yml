@@ -113,3 +113,27 @@ authors:
 maintainers:
   - "@kevinmenden"
   - "@drpatelh"
+containers:
+  docker:
+    linux/arm64:
+      name: community.wave.seqera.io/library/salmon:2.11.0--491d544a92249d6b
+      build_id: bd-491d544a92249d6b_1
+      scan_id: sc-b2c2a24521c9ea79_1
+    linux/amd64:
+      name: community.wave.seqera.io/library/salmon:2.11.0--989e01c80144b039
+      build_id: bd-989e01c80144b039_1
+      scan_id: sc-d86c2f4405051c69_1
+  singularity:
+    linux/arm64:
+      name: oras://community.wave.seqera.io/library/salmon:2.11.0--1013900d28dd7865
+      build_id: bd-1013900d28dd7865_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/8e/8ea865ee3872fd4529a4c7cd5148ceb4a92d216f6fe7faf29e48621724ed1ea2/data
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/salmon:2.11.0--f3f2eb62db3a8fd9
+      build_id: bd-f3f2eb62db3a8fd9_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/f3/f3f26f40dd50f421afb6797d09e75aac5baaa7aa715f2d4190e865168b0a6163/data
+  conda:
+    linux/amd64:
+      lock_file: modules/nf-core/salmon/quant/.conda-lock/linux_amd64-bd-989e01c80144b039_1.txt
+    linux/arm64:
+      lock_file: modules/nf-core/salmon/quant/.conda-lock/linux_arm64-bd-491d544a92249d6b_1.txt

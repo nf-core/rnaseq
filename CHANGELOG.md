@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1984](https://github.com/nf-core/rnaseq/pull/1984) - Leave samples failing `--min_mapped_reads` out of Salmon/RSEM quantification and the merged count tables (behaviour change: such samples no longer get aligner-based counts), and document the MultiQC fail tables and `multiqc_report_data/` folder
 - [PR #1986](https://github.com/nf-core/rnaseq/pull/1986) - Stop a library with no quantified reads crashing the SummarizedExperiment merge and DESeq2 QC; such samples are excluded from DESeq2 QC with a warning
 - [PR #1990](https://github.com/nf-core/rnaseq/pull/1990) - Use `size()` instead of the `size` property on lists in samplesheet validation, which fails on Nextflow 26.11 and later
+- [PR #1991](https://github.com/nf-core/rnaseq/pull/1991) - Update `salmon/index` and `salmon/quant` to Salmon 2.11.0, restoring `--noLengthCorrection` behaviour for 3' tag data (QuantSeq)
 
 ## [[3.27.0](https://github.com/nf-core/rnaseq/releases/tag/3.27.0)] - 2026-09-23
 

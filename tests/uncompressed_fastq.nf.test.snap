@@ -83,7 +83,7 @@
                     "rseqc": "5.0.4"
                 },
                 "SALMON_QUANT": {
-                    "salmon": "2.7.0"
+                    "salmon": "2.11.0"
                 },
                 "SAMTOOLS_FAIDX": {
                     "samtools": 1.24
@@ -1277,32 +1277,32 @@
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,b876c63c31cc6e1e32b0c199e40842ce",
+                "cmd_info.json:md5,908f96797539e033589d1a71d57fd8eb",
                 "ambig_info.tsv:md5,d5937453f5362ebe7482540593bf639d",
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,f2b6d85f42ada3b2f17bbb2b6c7b55a3",
+                "cmd_info.json:md5,924d3fa373203e1cd4861ffa5210a696",
                 "ambig_info.tsv:md5,719c9af8980e9a5e72128bd1ab8bf2e4",
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,a43ebd41b8c288735c7816262163f02c",
+                "cmd_info.json:md5,48bac73ac0d231c170b078336e9c6269",
                 "ambig_info.tsv:md5,43f78a3f440a4351c663f9578b4fb5e4",
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,d1cd2398038030227c66243995111e02",
+                "cmd_info.json:md5,108bf657d5a2f088081e8347df737a98",
                 "ambig_info.tsv:md5,24999e60467d518385dd0e0c9a218035",
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,2f89d42661369fc59b82aee53b4d0987",
+                "cmd_info.json:md5,8b82c8289d4ed647590ded41fd8a94ee",
                 "ambig_info.tsv:md5,cec290223a44d7abdef24b2286438006",
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,017e2a5451b01a3da9d2241f2ae53e79",
+                "cmd_info.json:md5,7821a71cbcd3a78b3067b2d705ee1eb9",
                 "RAP1_IAA_30M_REP1.biotype_counts_mqc.tsv:md5,d5a54127f0167db3fecff466387920c0",
                 "RAP1_IAA_30M_REP1.biotype_counts_rrna_mqc.tsv:md5,dde2de0cb90e10d0195c726f768e9941",
                 "RAP1_IAA_30M_REP1.featureCounts.tsv:md5,ec4b6e390707b215f9063137ef92ac51",
@@ -1361,7 +1361,7 @@
                 "i_data.ctab:md5,fca03502dd5b5e2831a64ff133d8c0b5"
             ]
         ],
-        "timestamp": "2026-09-19T00:20:20.66837475",
+        "timestamp": "2026-11-09T14:12:38.297219697",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

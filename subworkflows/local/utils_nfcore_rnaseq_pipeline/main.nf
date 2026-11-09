@@ -186,31 +186,31 @@ def checkSamplesAfterGrouping(input) {
     def transcriptome_bams = input.size() > 4 ? input[4] : null
 
     // Check that multiple runs of the same sample are of the same strandedness
-    def strandedness_ok = metas.collect{ meta -> meta.strandedness }.unique().size == 1
+    def strandedness_ok = metas.collect{ meta -> meta.strandedness }.unique().size() == 1
     if (!strandedness_ok) {
         error("Please check input samplesheet -> Multiple runs of a sample must have the same strandedness!: ${metas[0].id}")
     }
 
     // Check that multiple runs of the same sample have the same sequencing platform
-    def seq_platform_ok = metas.collect { meta -> meta.seq_platform ?: '' }.unique().size == 1
+    def seq_platform_ok = metas.collect { meta -> meta.seq_platform ?: '' }.unique().size() == 1
     if (!seq_platform_ok) {
         error("Please check input samplesheet -> Multiple runs of a sample must have the same seq_platform!: ${metas[0].id}")
     }
 
     // Check that multiple runs of the same sample have the same sequencing center
-    def seq_center_ok = metas.collect { meta -> meta.seq_center ?: '' }.unique().size == 1
+    def seq_center_ok = metas.collect { meta -> meta.seq_center ?: '' }.unique().size() == 1
     if (!seq_center_ok) {
         error("Please check input samplesheet -> Multiple runs of a sample must have the same seq_center!: ${metas[0].id}")
     }
 
     // Check that multiple runs of the same sample are of the same datatype i.e. single-end / paired-end
-    def endedness_ok = metas.collect{ meta -> meta.single_end }.unique().size == 1
+    def endedness_ok = metas.collect{ meta -> meta.single_end }.unique().size() == 1
     if (!endedness_ok) {
         error("Please check input samplesheet -> Multiple runs of a sample must be of the same datatype i.e. single-end or paired-end: ${metas[0].id}")
     }
 
     // Check that multiple runs of the same sample are not mixed compressed/uncompressed
-    def compression_ok = fastqs.flatten().collect{ fq -> fq.name.endsWith('.gz') }.unique().size == 1
+    def compression_ok = fastqs.flatten().collect{ fq -> fq.name.endsWith('.gz') }.unique().size() == 1
     if (!compression_ok) {
         error("Please check input samplesheet -> Multiple runs of a sample must not mix compressed and uncompressed FASTQ files: ${metas[0].id}")
     }

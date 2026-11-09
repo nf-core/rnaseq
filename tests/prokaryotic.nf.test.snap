@@ -468,12 +468,12 @@
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,cf6867f2243695736dc27ecf1e1413a9",
+                "cmd_info.json:md5,6dfe1ef4c369f3a9506aa7cdaee83001",
                 "ambig_info.tsv:md5,c9b4c9aaeee469d7a2be88f90ebdbfd5",
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,8f138fdf3636cb462aad2f6a300b87b8",
+                "cmd_info.json:md5,9f8ca240035118be3ba6928076bf5efe",
                 "SALM_REP1.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "SALM_REP2.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "SALM_REP1.infer_experiment.txt:md5,4d2a3f763c26490b3df172fb713e18ff",
@@ -482,7 +482,7 @@
                 "salmon.merged.tx2gene_augmented.tsv:md5,02c8aa14dbbbd6c4e45cf0a1b916b1ab"
             ]
         ],
-        "timestamp": "2026-09-18T22:40:07.740663071",
+        "timestamp": "2026-11-09T13:48:00.167281087",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -891,12 +891,12 @@
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,0962fff365a75665606649f543aa203e",
+                "cmd_info.json:md5,32dda218672e548916dda2db1d52e8ba",
                 "ambig_info.tsv:md5,c9b4c9aaeee469d7a2be88f90ebdbfd5",
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,b25ef9900830f81fe25032effcf24c3d",
+                "cmd_info.json:md5,fc9cb5535d1e1dc661a3f9887836aa6c",
                 "salmon.merged.tx2gene.tsv:md5,02c8aa14dbbbd6c4e45cf0a1b916b1ab",
                 "salmon.merged.tx2gene_augmented.tsv:md5,02c8aa14dbbbd6c4e45cf0a1b916b1ab",
                 "fastqc_raw-status-check-heatmap.txt:md5,e7e2b9dc8c77f456ad5f770fe2b8e308",
@@ -934,7 +934,7 @@
                 "trim_galore_filtered_reads_plot.txt:md5,49247a651f1c0038649c28efd32afcad"
             ]
         ],
-        "timestamp": "2026-09-18T22:42:16.392320541",
+        "timestamp": "2026-11-09T13:51:30.648693147",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

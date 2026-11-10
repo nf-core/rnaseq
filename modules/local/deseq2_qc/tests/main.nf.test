@@ -30,6 +30,31 @@ nextflow_process {
         }
     }
 
+    test("excludes a sample with no quantified reads") {
+
+        when {
+            process {
+                """
+                input[0] = Channel.fromPath(params.pipelines_testdata_base_path + "deseq2qc/countFile.tsv", checkIfExists: true)
+                    .map { f -> f.readLines().withIndex().collect { line, i -> line + (i == 0 ? '\\tEMPTY_REP1' : '\\tNA') }.join('\\n') + '\\n' }
+                    .collectFile(name: 'countFile_with_empty.tsv')
+                input[1] = file(params.pipelines_testdata_base_path + "deseq2qc/deseq2_pca_header.txt", checkIfExists: true)
+                input[2] = file(params.pipelines_testdata_base_path + "deseq2qc/deseq2_clustering_header.txt", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            def pca   = path(process.out.pca_txt.get(0)).text
+            def dists = path(process.out.dists_txt.get(0)).text
+            assertAll(
+                { assert process.success },
+                { assert pca.contains('WT_REP1') && dists.contains('WT_REP1') },
+                { assert !pca.contains('EMPTY_REP1') && !dists.contains('EMPTY_REP1') }
+            )
+        }
+    }
+
     test("parse count data correctly - stub") {
 
     options "-stub"

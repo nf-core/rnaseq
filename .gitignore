@@ -12,3 +12,5 @@ testing/
 work/
 null/
 .lineage/
+.nf-test/
+.nf-test.log

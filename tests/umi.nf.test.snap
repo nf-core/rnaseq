@@ -32,7 +32,7 @@
                     "perl": "5.26.2"
                 },
                 "FASTQC": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "FQ_LINT": {
                     "fq": "0.12.0"
@@ -80,28 +80,28 @@
                     "rseqc": "5.0.4"
                 },
                 "SALMON_QUANT": {
-                    "salmon": "2.7.0"
+                    "salmon": "2.11.0"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_SORT_QUALIMAP": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -1146,7 +1146,7 @@
             [
                 "fastqc_raw-status-check-heatmap.txt:md5,5a89b0d8d162f6b1dbdaf39457bbc03b",
                 "fastqc_raw_adapter_content_plot.txt:md5,da0389be84cfdd189b1d045212eb2974",
-                "fastqc_raw_overrepresented_sequences_plot.txt:md5,25d88ea8a72f55e8a374ae802bc7f0b1",
+                "fastqc_raw_overrepresented_sequences_plot.txt:md5,2aeb10478cd9d7f45099c6a226a8026f",
                 "fastqc_raw_per_base_n_content_plot.txt:md5,d368d7e36ca2f73dcde61f2b486d8213",
                 "fastqc_raw_per_base_sequence_quality_plot.txt:md5,5c3065b549129702b185ea1b817da420",
                 "fastqc_raw_per_sequence_gc_content_plot_Counts.txt:md5,9ddaa50167117d3c9188ccf015427704",
@@ -1164,13 +1164,13 @@
                 "fastqc_trimmed_sequence_counts_plot.txt:md5,370ddc5e58838dc5b55e53b6f8b8902a",
                 "fastqc_trimmed_sequence_duplication_levels_plot.txt:md5,b106d8ee7b83efe237afb862ebbe2f47",
                 "multiqc_citations.txt:md5,f2ec215df4414fd85f2d03dce1ac05a3",
-                "multiqc_fastqc_fastqc_raw.txt:md5,81c3c1a2575a1891a7f2a9637a0f2cc0",
+                "multiqc_fastqc_fastqc_raw.txt:md5,46e017b5949b50883831bc40f06a1a1d",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,a8a003b61b03295c416f3eb66c1cca65",
                 "multiqc_featurecounts_biotype_plot.txt:md5,e17f2ad2ad0a6bd4c6270542c6b9d5ee",
                 "multiqc_samtools_idxstats.txt:md5,8117dd78c10a03ed758bc7be0e856347",
                 "multiqc_strand_check_composition_bargraph.txt:md5,fc305f519b84229cd135a4215c7f95fe",
-                "multiqc_strand_check_composition_bargraph_1.txt:md5,77664edb45d012470b9db667b98a3618",
-                "multiqc_strand_check_summary_table.txt:md5,afa76d392ad54fd1627933eb07c6296c",
+                "multiqc_strand_check_composition_bargraph_1.txt:md5,27adc6abf5eb351ff5024cd480250f00",
+                "multiqc_strand_check_summary_table.txt:md5,a20a88615939083c4475f4d3cf779268",
                 "multiqc_trim_galore.txt:md5,fb26eafffc7d62cd116b28fb0c3576fb",
                 "multiqc_umitools_extract.txt:md5,f725988a4067b50d0f7dc3661a356ccf",
                 "rseqc_infer_experiment_plot.txt:md5,74dd695a63e8e487bcd57a4db398cc79",
@@ -1264,7 +1264,7 @@
                 "WT_REP2.umi_extract_2.fastq.gz:md5,067ff23f8d1307ad241cd70bc186b5c1"
             ]
         ],
-        "timestamp": "2026-09-24T09:28:56.548546426",
+        "timestamp": "2026-11-09T17:46:08.460514193",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -1300,7 +1300,7 @@
                     "perl": "5.26.2"
                 },
                 "FASTQC": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "FQ_LINT": {
                     "fq": "0.12.0"
@@ -1342,28 +1342,28 @@
                     "rseqc": "5.0.4"
                 },
                 "SALMON_QUANT": {
-                    "salmon": "2.7.0"
+                    "salmon": "2.11.0"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_SORT_QUALIMAP": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -2439,7 +2439,7 @@
             [
                 "fastqc_raw-status-check-heatmap.txt:md5,5a89b0d8d162f6b1dbdaf39457bbc03b",
                 "fastqc_raw_adapter_content_plot.txt:md5,da0389be84cfdd189b1d045212eb2974",
-                "fastqc_raw_overrepresented_sequences_plot.txt:md5,25d88ea8a72f55e8a374ae802bc7f0b1",
+                "fastqc_raw_overrepresented_sequences_plot.txt:md5,2aeb10478cd9d7f45099c6a226a8026f",
                 "fastqc_raw_per_base_n_content_plot.txt:md5,d368d7e36ca2f73dcde61f2b486d8213",
                 "fastqc_raw_per_base_sequence_quality_plot.txt:md5,5c3065b549129702b185ea1b817da420",
                 "fastqc_raw_per_sequence_gc_content_plot_Counts.txt:md5,9ddaa50167117d3c9188ccf015427704",
@@ -2457,13 +2457,13 @@
                 "fastqc_trimmed_sequence_counts_plot.txt:md5,370ddc5e58838dc5b55e53b6f8b8902a",
                 "fastqc_trimmed_sequence_duplication_levels_plot.txt:md5,b106d8ee7b83efe237afb862ebbe2f47",
                 "multiqc_citations.txt:md5,bbfc3fa02b5ea62172985f086563cfd5",
-                "multiqc_fastqc_fastqc_raw.txt:md5,81c3c1a2575a1891a7f2a9637a0f2cc0",
+                "multiqc_fastqc_fastqc_raw.txt:md5,46e017b5949b50883831bc40f06a1a1d",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,a8a003b61b03295c416f3eb66c1cca65",
                 "multiqc_featurecounts_biotype_plot.txt:md5,331463958ffee645b8a27fe7434161c1",
                 "multiqc_samtools_idxstats.txt:md5,f4f3533bfb9996f86f76d4a995554080",
                 "multiqc_strand_check_composition_bargraph.txt:md5,d576966ca96a634cb80ef696526e4e14",
-                "multiqc_strand_check_composition_bargraph_1.txt:md5,77664edb45d012470b9db667b98a3618",
-                "multiqc_strand_check_summary_table.txt:md5,6dbecebf90aabdc2b120426fef865d9d",
+                "multiqc_strand_check_composition_bargraph_1.txt:md5,27adc6abf5eb351ff5024cd480250f00",
+                "multiqc_strand_check_summary_table.txt:md5,da07394768897a2811fccceafd659399",
                 "multiqc_trim_galore.txt:md5,fb26eafffc7d62cd116b28fb0c3576fb",
                 "multiqc_umitools_extract.txt:md5,f725988a4067b50d0f7dc3661a356ccf",
                 "rseqc_infer_experiment_plot.txt:md5,ad684fd7b58448daee59c6404b477774",
@@ -2480,27 +2480,27 @@
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,f3c84af959950d419b5b39ffa2b446ca",
+                "cmd_info.json:md5,40c5a303131a592fca90597f87da9a94",
                 "ambig_info.tsv:md5,08b86dfdc1042592b17f2cc610358493",
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,eb168f9bbe64cba27650ee556eb605de",
+                "cmd_info.json:md5,442ec20f1f1e6343f8b0e01da2eeeb2e",
                 "ambig_info.tsv:md5,31891c8515b24aa6b40448deafbbc9ca",
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,7d0fd43614e6b0affcb49c5c64f2da35",
+                "cmd_info.json:md5,8cfbb66f6821608fc1001a3234677e69",
                 "ambig_info.tsv:md5,3b36bdc595f0d5a52dbc4f0783b1fe30",
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,ba88cf5eb6173a9a96e7a3433c1ffad3",
+                "cmd_info.json:md5,9378d11b531282bd9836d2ae090a7c14",
                 "ambig_info.tsv:md5,d11c4be991811f1f1756646431fc1e35",
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,d25cd0e2df9883b0621404a3417fc27e",
+                "cmd_info.json:md5,f3ed4dee28b397df0ae7e8be73dae9a9",
                 "RAP1_IAA_30M_REP1.biotype_counts_mqc.tsv:md5,4d8441024b175d1edd237e49eb953b91",
                 "RAP1_IAA_30M_REP1.biotype_counts_rrna_mqc.tsv:md5,dde2de0cb90e10d0195c726f768e9941",
                 "RAP1_IAA_30M_REP1.featureCounts.tsv:md5,79659fd6d807944f0dc4e92caa3c3151",
@@ -2568,7 +2568,7 @@
                 "WT_REP2.umi_extract_2.fastq.gz:md5,067ff23f8d1307ad241cd70bc186b5c1"
             ]
         ],
-        "timestamp": "2026-09-24T09:25:49.761336677",
+        "timestamp": "2026-11-09T17:41:51.680545628",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -2597,7 +2597,7 @@
                     "perl": "5.26.2"
                 },
                 "FASTQC": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "FQ_LINT": {
                     "fq": "0.12.0"
@@ -2647,28 +2647,28 @@
                     "rseqc": "5.0.4"
                 },
                 "SALMON_QUANT": {
-                    "salmon": "2.7.0"
+                    "salmon": "2.11.0"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_SORT_QUALIMAP": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SUBREAD_FEATURECOUNTS": {
                     "subread": "2.1.1"
@@ -3523,7 +3523,7 @@
                 "WT_REP2.infer_experiment.txt:md5,2ac93ef54e0aaa62482ceb45c91c64bb",
                 "fastqc_raw-status-check-heatmap.txt:md5,5a89b0d8d162f6b1dbdaf39457bbc03b",
                 "fastqc_raw_adapter_content_plot.txt:md5,da0389be84cfdd189b1d045212eb2974",
-                "fastqc_raw_overrepresented_sequences_plot.txt:md5,25d88ea8a72f55e8a374ae802bc7f0b1",
+                "fastqc_raw_overrepresented_sequences_plot.txt:md5,2aeb10478cd9d7f45099c6a226a8026f",
                 "fastqc_raw_per_base_n_content_plot.txt:md5,d368d7e36ca2f73dcde61f2b486d8213",
                 "fastqc_raw_per_base_sequence_quality_plot.txt:md5,5c3065b549129702b185ea1b817da420",
                 "fastqc_raw_per_sequence_gc_content_plot_Counts.txt:md5,9ddaa50167117d3c9188ccf015427704",
@@ -3541,13 +3541,13 @@
                 "fastqc_trimmed_sequence_counts_plot.txt:md5,370ddc5e58838dc5b55e53b6f8b8902a",
                 "fastqc_trimmed_sequence_duplication_levels_plot.txt:md5,b106d8ee7b83efe237afb862ebbe2f47",
                 "multiqc_citations.txt:md5,0dc0e6759d2bcf88ba3e2efcbc95ae38",
-                "multiqc_fastqc_fastqc_raw.txt:md5,81c3c1a2575a1891a7f2a9637a0f2cc0",
+                "multiqc_fastqc_fastqc_raw.txt:md5,46e017b5949b50883831bc40f06a1a1d",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,a8a003b61b03295c416f3eb66c1cca65",
                 "multiqc_featurecounts_biotype_plot.txt:md5,aa03c08d5d2fba14d6770085bc042dbc",
                 "multiqc_samtools_idxstats.txt:md5,35fe3b73df5ab19b53c117d3269e7e72",
                 "multiqc_strand_check_composition_bargraph.txt:md5,5b71948a2c4d589a881870871b517c7c",
-                "multiqc_strand_check_composition_bargraph_1.txt:md5,77664edb45d012470b9db667b98a3618",
-                "multiqc_strand_check_summary_table.txt:md5,d62825c0f10018ec41c25b1d8cc32493",
+                "multiqc_strand_check_composition_bargraph_1.txt:md5,27adc6abf5eb351ff5024cd480250f00",
+                "multiqc_strand_check_summary_table.txt:md5,78c727fb418e039c8cba0d51d307f3ee",
                 "multiqc_trim_galore.txt:md5,fb26eafffc7d62cd116b28fb0c3576fb",
                 "multiqc_umicollapse.txt:md5,02859951011d3387427c78a768096dc8",
                 "multiqc_umitools_extract.txt:md5,f725988a4067b50d0f7dc3661a356ccf",
@@ -3573,7 +3573,7 @@
                 "WT_REP2.umi_extract_2.fastq.gz:md5,067ff23f8d1307ad241cd70bc186b5c1"
             ]
         ],
-        "timestamp": "2026-09-18T21:53:53.293809757",
+        "timestamp": "2026-11-09T17:37:10.225697201",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -3599,7 +3599,7 @@
                     "perl": "5.26.2"
                 },
                 "FASTQC": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "FQ_LINT": {
                     "fq": "0.12.0"
@@ -3611,7 +3611,7 @@
                     "gunzip": "1.13"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "STAR_GENOMEGENERATE": {
                     "gawk": "5.1.0",
@@ -3678,7 +3678,7 @@
                 
             ]
         ],
-        "timestamp": "2026-09-16T16:49:31.45248043",
+        "timestamp": "2026-11-09T17:47:04.086265728",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

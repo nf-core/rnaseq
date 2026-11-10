@@ -19,8 +19,19 @@ nextflow_pipeline {
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // stable_path: All files in ${params.outdir}/ with stable content
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // WT_REP1 and WT_REP2 map at ~89%, the RAP1 samples above 90%.
+            // Merged table contents are excluded from the snapshot by tests/.nftignore.
+            def failed = ['WT_REP1', 'WT_REP2']
+            def passed = ['RAP1_IAA_30M_REP1', 'RAP1_UNINDUCED_REP1', 'RAP1_UNINDUCED_REP2']
+            def merged_samples = ['salmon.merged.gene_counts.tsv', 'salmon.merged.transcript_counts.tsv'].collect { name ->
+                file("$outputDir/star_salmon/$name").readLines()[0].split('\t') as List
+            }
+            def fail_table = file("$outputDir/multiqc/star_salmon/multiqc_report_data/multiqc_fail_mapped_samples_table.txt").text
             assertAll(
                 { assert workflow.success},
+                { assert merged_samples.every { header -> failed.every { id -> !(id in header) } } },
+                { assert merged_samples.every { header -> passed.every { id -> id in header } } },
+                { assert failed.every { id -> fail_table.contains(id) } },
                 { assert snapshot(
                     // Number of successful tasks
                     workflow.trace.succeeded().size(),

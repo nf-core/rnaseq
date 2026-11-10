@@ -58,6 +58,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
+                { assert file(process.out.log_final[0][1]).text.contains('Uniquely mapped reads %') },
                 { assert snapshot(
                     file(process.out.log_final[0][1]).name,
                     process.out.findAll { key, val -> key.startsWith('versions') },
@@ -100,6 +101,47 @@ nextflow_process {
         }
     }
 
+    test("homo_sapiens - paired_end - multiple_fastq") {
+
+        when {
+            params {
+                module_args = '--num-streams-per-gpu 1 --read-files-command zcat --x3'
+            }
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/test_starfusion_rnaseq_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/test_starfusion_rnaseq_2.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_rnaseq_2.fastq.gz', checkIfExists: true)
+                    ]
+                ])
+                input[1] = Channel.of([
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                ])
+                input[2] = STAR_GENOMEGENERATE.out.index
+                input[3] = false
+                input[4] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert file(process.out.log_final[0][1]).text.contains('Uniquely mapped reads %') },
+                { assert snapshot(
+                    file(process.out.log_final[0][1]).name,
+                    process.out.findAll { key, val -> key.startsWith('versions') },
+                    bam(process.out.bam[0][1]).getReadsMD5()
+                ).match() }
+            )
+        }
+    }
+
     test("homo_sapiens_chimeric") {
 
         when {
@@ -126,6 +168,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
+                { assert file(process.out.log_final[0][1]).text.contains('Uniquely mapped reads %') },
                 { assert snapshot(
                     bam(process.out.bam[0][1]).getReadsMD5(),
                     file(process.out.bai[0][1]).name,

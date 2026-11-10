@@ -1,4 +1,3 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
 name: "custom_multiqccustombiotype"
 description: Generate MultiQC-compatible biotype count summaries from featureCounts output
 keywords:
@@ -75,3 +74,27 @@ authors:
   - "@pinin4fjords"
 maintainers:
   - "@pinin4fjords"
+containers:
+  docker:
+    linux/amd64:
+      name: community.wave.seqera.io/library/python:3.12.12--2411dfb0536aecdf
+      build_id: bd-2411dfb0536aecdf_1
+      scan_id: sc-1c4137e40e690083_1
+    linux/arm64:
+      name: community.wave.seqera.io/library/python:3.12.12--90d594548a5b8d06
+      build_id: bd-90d594548a5b8d06_1
+      scan_id: sc-35892c696a8ce1df_1
+  singularity:
+    linux/arm64:
+      name: oras://community.wave.seqera.io/library/python:3.12.12--41cead5f39a045ad
+      build_id: bd-41cead5f39a045ad_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/80/8066f3db760151a8f3813f56d80841a730d6c4d9dc803724e45ff6b5565daa09/data
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/python:3.12.12--2d4578b964ba956a
+      build_id: bd-2d4578b964ba956a_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/6b/6bb45b3a3fed2ebd55af1322a927ea11a751b8b62e542021dbf5be0d375abbb7/data
+  conda:
+    linux/amd64:
+      lock_file: modules/nf-core/custom/multiqccustombiotype/.conda-lock/linux_amd64-bd-2411dfb0536aecdf_1.txt
+    linux/arm64:
+      lock_file: modules/nf-core/custom/multiqccustombiotype/.conda-lock/linux_arm64-bd-90d594548a5b8d06_1.txt

@@ -11,7 +11,7 @@ tools:
       documentation: https://github.com/OpenGene/fastp
       doi: 10.1093/bioinformatics/bty560
       publication:
-        author: "Chen S., Zhou Y., Chen Y. & Gu J."
+        author: "Chen, S., Zhou, Y., Chen, Y. & Gu, J."
         year: 2018
         title: "fastp: an ultra-fast all-in-one FASTQ preprocessor"
         source: "Bioinformatics"
@@ -148,25 +148,25 @@ maintainers:
   - "@kevinmenden"
 containers:
   docker:
-    linux/arm64:
-      name: community.wave.seqera.io/library/fastp:1.3.6--95b49074d3fe9875
-      build_id: bd-95b49074d3fe9875_1
-      scan_id: sc-0b07e24d0edcdef4_1
     linux/amd64:
-      name: community.wave.seqera.io/library/fastp:1.3.6--4df8d6c11b471bde
-      build_id: bd-4df8d6c11b471bde_1
-      scan_id: sc-23500527233b592b_1
+      name: community.wave.seqera.io/library/fastp:1.4.0--df415eab5e33cb11
+      build_id: bd-df415eab5e33cb11_1
+      scan_id: sc-76e3de256f32672a_1
+    linux/arm64:
+      name: community.wave.seqera.io/library/fastp:1.4.0--39bad1c703aea2ba
+      build_id: bd-39bad1c703aea2ba_1
+      scan_id: sc-71e102ff6c6ebdb2_1
   singularity:
     linux/amd64:
-      name: oras://community.wave.seqera.io/library/fastp:1.3.6--63f52bbe4fa9aee1
-      build_id: bd-63f52bbe4fa9aee1_1
-      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/d0/d013aad5427d824afe472e6607ea47685ff0181f1fb09e52a179e0ec39e43e88/data
+      name: oras://community.wave.seqera.io/library/fastp:1.4.0--6b9a33725b111ca0
+      build_id: bd-6b9a33725b111ca0_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/77/779b25fffc4544e4d4e3bebf1c1a1f2fee9166515bfa15908b2fee95f513a402/data
     linux/arm64:
-      name: oras://community.wave.seqera.io/library/fastp:1.3.6--469416be288311d1
-      build_id: bd-469416be288311d1_1
-      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/42/42ea3a248c30a6eb0ab5d5ca35ce8b50aab6ca75e982d43420779214517a516b/data
+      name: oras://community.wave.seqera.io/library/fastp:1.4.0--3c701c03c58361cb
+      build_id: bd-3c701c03c58361cb_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/e7/e77f7a0017e22bdad7cd34b70f15e4855c11837de53c4d273af4456661377540/data
   conda:
     linux/amd64:
-      lock_file: modules/nf-core/fastp/.conda-lock/linux_amd64-bd-4df8d6c11b471bde_1.txt
+      lock_file: modules/nf-core/fastp/.conda-lock/linux_amd64-bd-df415eab5e33cb11_1.txt
     linux/arm64:
-      lock_file: modules/nf-core/fastp/.conda-lock/linux_arm64-bd-95b49074d3fe9875_1.txt
+      lock_file: modules/nf-core/fastp/.conda-lock/linux_arm64-bd-39bad1c703aea2ba_1.txt

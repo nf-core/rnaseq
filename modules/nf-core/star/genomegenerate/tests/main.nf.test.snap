@@ -1,38 +1,5 @@
 {
-    "fasta_gtf": {
-        "content": [
-            "[Genome, Log.out, SA, SAindex, chrLength.txt, chrName.txt, chrNameLength.txt, chrStart.txt, exonGeTrInfo.tab, exonInfo.tab, geneInfo.tab, genomeParameters.txt, sjdbInfo.txt, sjdbList.fromGTF.out.tab, sjdbList.out.tab, transcriptInfo.tab]",
-            {
-                "versions_gawk": [
-                    [
-                        "STAR_GENOMEGENERATE",
-                        "gawk",
-                        "5.1.0"
-                    ]
-                ],
-                "versions_samtools": [
-                    [
-                        "STAR_GENOMEGENERATE",
-                        "samtools",
-                        "1.21"
-                    ]
-                ],
-                "versions_star": [
-                    [
-                        "STAR_GENOMEGENERATE",
-                        "star",
-                        "2.7.11b"
-                    ]
-                ]
-            }
-        ],
-        "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-02T14:41:49.00863479"
-    },
-    "fasta_gtf_stub": {
+    "homo_sapiens - fasta - gtf - stub": {
         "content": [
             {
                 "0": [
@@ -129,13 +96,13 @@
                 ]
             }
         ],
+        "timestamp": "2026-10-26T02:06:03.728191",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-02T14:41:59.662412926"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
     },
-    "fasta_stub": {
+    "homo_sapiens - fasta - stub": {
         "content": [
             {
                 "0": [
@@ -218,13 +185,13 @@
                 ]
             }
         ],
+        "timestamp": "2026-10-26T02:06:09.334067",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-02T14:42:05.002386149"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
     },
-    "fasta": {
+    "homo_sapiens - fasta": {
         "content": [
             "[Genome, Log.out, SA, SAindex, chrLength.txt, chrName.txt, chrNameLength.txt, chrStart.txt, genomeParameters.txt]",
             {
@@ -251,10 +218,43 @@
                 ]
             }
         ],
+        "timestamp": "2026-10-26T02:05:58.126326",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-02T14:41:54.327031765"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    },
+    "homo_sapiens - fasta - gtf": {
+        "content": [
+            "[Genome, Log.out, SA, SAindex, chrLength.txt, chrName.txt, chrNameLength.txt, chrStart.txt, exonGeTrInfo.tab, exonInfo.tab, geneInfo.tab, genomeParameters.txt, sjdbInfo.txt, sjdbList.fromGTF.out.tab, sjdbList.out.tab, transcriptInfo.tab]",
+            {
+                "versions_gawk": [
+                    [
+                        "STAR_GENOMEGENERATE",
+                        "gawk",
+                        "5.1.0"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "STAR_GENOMEGENERATE",
+                        "samtools",
+                        "1.21"
+                    ]
+                ],
+                "versions_star": [
+                    [
+                        "STAR_GENOMEGENERATE",
+                        "star",
+                        "2.7.11b"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-10-26T02:05:53.474171",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
     }
 }

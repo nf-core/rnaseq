@@ -13,10 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1942](https://github.com/nf-core/rnaseq/pull/1942) - Fix `--with_umi` transcriptome-side samtools stats silently colliding with genome-side stats, caused by a broad `withName` wildcard in `conf/modules/alignment.config` also matching the `BAM_DEDUP_UMI` subworkflow
 - [PR #1943](https://github.com/nf-core/rnaseq/pull/1943) - Apply `--min_mapped_reads` filtering to HISAT2 alignments
 - [PR #1958](https://github.com/nf-core/rnaseq/pull/1958) - Stop building the SortMeRNA index twice, and build the Salmon strandedness-inference index centrally in `PREPARE_GENOME_INDICES`
+- [PR #1959](https://github.com/nf-core/rnaseq/pull/1959) - Right-size `RSEM_CALCULATEEXPRESSION` resources, drop its unused BAM output, and use local scratch for RSEM/dupRadar in the AWS full test
 - [PR #1963](https://github.com/nf-core/rnaseq/pull/1963) - Correct local nf-test examples to explicitly select the default pipeline tests and include the `test` profile.
 - [PR #1968](https://github.com/nf-core/rnaseq/pull/1968) - Fix duplicated valueless flags passed via `--extra_trimgalore_args`
 - [PR #1969](https://github.com/nf-core/rnaseq/pull/1969) - Add `--fail_on_low_trimmed_reads`, `--fail_on_low_mapped_reads` and `--fail_on_undetermined_strandedness` to fail the run, instead of silently skipping the sample or defaulting to `unstranded`
 - [PR #1972](https://github.com/nf-core/rnaseq/pull/1972) - Remove `cpus = 1` override for RiboDetector from `qc_trim_filter.config`
+- [PR #1978](https://github.com/nf-core/rnaseq/pull/1978) - Update `parabricks/rnafq2bam` module to 4.8.0-1, fixing the Parabricks run log overwriting STAR's `Log.final.out` so mapping rates are read correctly
+- [PR #1984](https://github.com/nf-core/rnaseq/pull/1984) - Leave samples failing `--min_mapped_reads` out of Salmon/RSEM quantification and the merged count tables (behaviour change: such samples no longer get aligner-based counts), and document the MultiQC fail tables and `multiqc_report_data/` folder
+- [PR #1986](https://github.com/nf-core/rnaseq/pull/1986) - Stop a library with no quantified reads crashing the SummarizedExperiment merge and DESeq2 QC; such samples are excluded from DESeq2 QC with a warning
+- [PR #1990](https://github.com/nf-core/rnaseq/pull/1990) - Use `size()` instead of the `size` property on lists in samplesheet validation, which fails on Nextflow 26.11 and later
+- [PR #1991](https://github.com/nf-core/rnaseq/pull/1991) - Update `salmon/index` and `salmon/quant` to Salmon 2.11.0, restoring `--noLengthCorrection` behaviour for 3' tag data (QuantSeq)
+- [PR #1993](https://github.com/nf-core/rnaseq/pull/1993) - Update nf-core modules and subworkflows, including FastQC 0.13.0, fastp 1.4.0 and samtools 1.25, and sync the matching ARM container overrides
 
 ## [[3.27.0](https://github.com/nf-core/rnaseq/releases/tag/3.27.0)] - 2026-09-23
 

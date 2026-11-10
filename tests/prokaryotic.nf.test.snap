@@ -10,7 +10,7 @@
                     "python": "3.10.4"
                 },
                 "FASTQC": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "FQ_LINT": {
                     "fq": "0.12.0"
@@ -40,25 +40,25 @@
                     "rseqc": "5.0.4"
                 },
                 "SALMON_QUANT": {
-                    "salmon": "2.7.0"
+                    "salmon": "2.11.0"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -430,7 +430,7 @@
             ],
             [
                 "fastqc_raw-status-check-heatmap.txt:md5,e7e2b9dc8c77f456ad5f770fe2b8e308",
-                "fastqc_raw_overrepresented_sequences_plot.txt:md5,4b1cdda2f52c1064258e9b77341d5d86",
+                "fastqc_raw_overrepresented_sequences_plot.txt:md5,fb046664e2b42b92ae10807a5e904416",
                 "fastqc_raw_per_base_n_content_plot.txt:md5,76f9627438fa3a1c983405fa057d1b3a",
                 "fastqc_raw_per_base_sequence_quality_plot.txt:md5,b0ee91ba241f544696d9e096a1f81ae4",
                 "fastqc_raw_per_sequence_gc_content_plot_Counts.txt:md5,9f27db3f66c750152270ac6f65fe65d8",
@@ -448,7 +448,7 @@
                 "fastqc_trimmed_sequence_counts_plot.txt:md5,fe8a0c5d299e6e9972c8605e9fc8a022",
                 "fastqc_trimmed_sequence_duplication_levels_plot.txt:md5,5413485383af9f009c86ad014cb1b026",
                 "multiqc_citations.txt:md5,3f0db14de2a149024db7b7bc5839565d",
-                "multiqc_fastqc_fastqc_raw.txt:md5,42c1cc19c4b9104eb499ce499f335951",
+                "multiqc_fastqc_fastqc_raw.txt:md5,c68402a0a316d35f85cae4a29b13ba3c",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,8be94d69e0c458017cf5064fa1fa86a0",
                 "multiqc_samtools_idxstats.txt:md5,6949b8e77b72655f069f7ffd9a298d68",
                 "multiqc_strand_check_composition_bargraph.txt:md5,a9dfa9875799864f6add4d606af11617",
@@ -468,12 +468,12 @@
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,cf6867f2243695736dc27ecf1e1413a9",
+                "cmd_info.json:md5,6dfe1ef4c369f3a9506aa7cdaee83001",
                 "ambig_info.tsv:md5,c9b4c9aaeee469d7a2be88f90ebdbfd5",
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,8f138fdf3636cb462aad2f6a300b87b8",
+                "cmd_info.json:md5,9f8ca240035118be3ba6928076bf5efe",
                 "SALM_REP1.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "SALM_REP2.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "SALM_REP1.infer_experiment.txt:md5,4d2a3f763c26490b3df172fb713e18ff",
@@ -482,7 +482,7 @@
                 "salmon.merged.tx2gene_augmented.tsv:md5,02c8aa14dbbbd6c4e45cf0a1b916b1ab"
             ]
         ],
-        "timestamp": "2026-09-18T22:40:07.740663071",
+        "timestamp": "2026-11-09T17:44:28.285674276",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -493,12 +493,12 @@
             48,
             {
                 "BOWTIE2_ALIGN": {
-                    "bowtie2": "2.5.4",
+                    "bowtie2": "2.5.5",
                     "pigz": "2.8",
-                    "samtools": "1.21"
+                    "samtools": "1.24"
                 },
                 "BOWTIE2_BUILD": {
-                    "bowtie2": "2.5.4"
+                    "bowtie2": "2.5.5"
                 },
                 "CUSTOM_GTFFILTER": {
                     "python": "3.14.5"
@@ -507,7 +507,7 @@
                     "python": "3.10.4"
                 },
                 "FASTQC": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "FQ_LINT": {
                     "fq": "0.12.0"
@@ -534,25 +534,25 @@
                     "rseqc": "5.0.4"
                 },
                 "SALMON_QUANT": {
-                    "salmon": "2.7.0"
+                    "salmon": "2.11.0"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -891,16 +891,16 @@
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,0962fff365a75665606649f543aa203e",
+                "cmd_info.json:md5,32dda218672e548916dda2db1d52e8ba",
                 "ambig_info.tsv:md5,c9b4c9aaeee469d7a2be88f90ebdbfd5",
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,b25ef9900830f81fe25032effcf24c3d",
+                "cmd_info.json:md5,fc9cb5535d1e1dc661a3f9887836aa6c",
                 "salmon.merged.tx2gene.tsv:md5,02c8aa14dbbbd6c4e45cf0a1b916b1ab",
                 "salmon.merged.tx2gene_augmented.tsv:md5,02c8aa14dbbbd6c4e45cf0a1b916b1ab",
                 "fastqc_raw-status-check-heatmap.txt:md5,e7e2b9dc8c77f456ad5f770fe2b8e308",
-                "fastqc_raw_overrepresented_sequences_plot.txt:md5,4b1cdda2f52c1064258e9b77341d5d86",
+                "fastqc_raw_overrepresented_sequences_plot.txt:md5,fb046664e2b42b92ae10807a5e904416",
                 "fastqc_raw_per_base_n_content_plot.txt:md5,76f9627438fa3a1c983405fa057d1b3a",
                 "fastqc_raw_per_base_sequence_quality_plot.txt:md5,b0ee91ba241f544696d9e096a1f81ae4",
                 "fastqc_raw_per_sequence_gc_content_plot_Counts.txt:md5,9f27db3f66c750152270ac6f65fe65d8",
@@ -919,7 +919,7 @@
                 "fastqc_trimmed_sequence_duplication_levels_plot.txt:md5,5413485383af9f009c86ad014cb1b026",
                 "multiqc_bowtie2_bowtie2_alignment.txt:md5,d2f10759fadaaa79f7cb4ceb9f6c10de",
                 "multiqc_citations.txt:md5,a4da61f613d3dfae37153b0e5652b15e",
-                "multiqc_fastqc_fastqc_raw.txt:md5,42c1cc19c4b9104eb499ce499f335951",
+                "multiqc_fastqc_fastqc_raw.txt:md5,c68402a0a316d35f85cae4a29b13ba3c",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,8be94d69e0c458017cf5064fa1fa86a0",
                 "multiqc_samtools_idxstats.txt:md5,3c5601429d85e11395c354db24a1a8ac",
                 "multiqc_trim_galore.txt:md5,396ea1135abc1864703d64380b75038c",
@@ -934,7 +934,7 @@
                 "trim_galore_filtered_reads_plot.txt:md5,49247a651f1c0038649c28efd32afcad"
             ]
         ],
-        "timestamp": "2026-09-18T22:42:16.392320541",
+        "timestamp": "2026-11-09T17:47:13.115658031",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -942,15 +942,15 @@
     },
     "Params: --aligner bowtie2_salmon --gffread_transcript_fasta (-k 200 multimapping) - stub": {
         "content": [
-            34,
+            48,
             {
                 "BOWTIE2_ALIGN": {
-                    "bowtie2": "2.5.4",
+                    "bowtie2": "2.5.5",
                     "pigz": "2.8",
-                    "samtools": "1.21"
+                    "samtools": "1.24"
                 },
                 "BOWTIE2_BUILD": {
-                    "bowtie2": "2.5.4"
+                    "bowtie2": "2.5.5"
                 },
                 "CUSTOM_GTFFILTER": {
                     "python": "3.14.5"
@@ -959,7 +959,7 @@
                     "python": "3.10.4"
                 },
                 "FASTQC": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "FQ_LINT": {
                     "fq": "0.12.0"
@@ -976,26 +976,35 @@
                 "GFFREAD_TRANSCRIPTS": {
                     "gffread": "0.12.7"
                 },
+                "PICARD_MARKDUPLICATES": {
+                    "picard": "3.5.0"
+                },
+                "RSEQC_BAMSTAT": {
+                    "rseqc": "5.0.4"
+                },
+                "RSEQC_READDUPLICATION": {
+                    "rseqc": "5.0.4"
+                },
                 "SALMON_QUANT": {
-                    "salmon": "2.7.0"
+                    "salmon": "2.11.0"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -1016,7 +1025,11 @@
             [
                 "bowtie2_salmon",
                 "bowtie2_salmon/SALM_REP1",
+                "bowtie2_salmon/SALM_REP1.markdup.sorted.bam",
+                "bowtie2_salmon/SALM_REP1.markdup.sorted.bam.bai",
                 "bowtie2_salmon/SALM_REP2",
+                "bowtie2_salmon/SALM_REP2.markdup.sorted.bam",
+                "bowtie2_salmon/SALM_REP2.markdup.sorted.bam.bai",
                 "bowtie2_salmon/all_samples.SummarizedExperiment.rds",
                 "bowtie2_salmon/all_samples.gene_counts.tsv",
                 "bowtie2_salmon/all_samples.gene_counts_length_scaled.tsv",
@@ -1030,11 +1043,36 @@
                 "bowtie2_salmon/log",
                 "bowtie2_salmon/log/SALM_REP1.bowtie2.log",
                 "bowtie2_salmon/log/SALM_REP2.bowtie2.log",
+                "bowtie2_salmon/picard_metrics",
+                "bowtie2_salmon/picard_metrics/SALM_REP1.markdup.sorted.metrics.txt",
+                "bowtie2_salmon/picard_metrics/SALM_REP2.markdup.sorted.metrics.txt",
+                "bowtie2_salmon/rseqc",
+                "bowtie2_salmon/rseqc/bam_stat",
+                "bowtie2_salmon/rseqc/bam_stat/SALM_REP1.bam_stat.txt",
+                "bowtie2_salmon/rseqc/bam_stat/SALM_REP2.bam_stat.txt",
+                "bowtie2_salmon/rseqc/read_duplication",
+                "bowtie2_salmon/rseqc/read_duplication/pdf",
+                "bowtie2_salmon/rseqc/read_duplication/pdf/SALM_REP1.DupRate_plot.pdf",
+                "bowtie2_salmon/rseqc/read_duplication/pdf/SALM_REP2.DupRate_plot.pdf",
+                "bowtie2_salmon/rseqc/read_duplication/rscript",
+                "bowtie2_salmon/rseqc/read_duplication/rscript/SALM_REP1.DupRate_plot.r",
+                "bowtie2_salmon/rseqc/read_duplication/rscript/SALM_REP2.DupRate_plot.r",
+                "bowtie2_salmon/rseqc/read_duplication/xls",
+                "bowtie2_salmon/rseqc/read_duplication/xls/SALM_REP1.pos.DupRate.xls",
+                "bowtie2_salmon/rseqc/read_duplication/xls/SALM_REP1.seq.DupRate.xls",
+                "bowtie2_salmon/rseqc/read_duplication/xls/SALM_REP2.pos.DupRate.xls",
+                "bowtie2_salmon/rseqc/read_duplication/xls/SALM_REP2.seq.DupRate.xls",
                 "bowtie2_salmon/salmon.merged.tx2gene.tsv",
                 "bowtie2_salmon/samtools_stats",
+                "bowtie2_salmon/samtools_stats/SALM_REP1.markdup.sorted.bam.flagstat",
+                "bowtie2_salmon/samtools_stats/SALM_REP1.markdup.sorted.bam.idxstats",
+                "bowtie2_salmon/samtools_stats/SALM_REP1.markdup.sorted.bam.stats",
                 "bowtie2_salmon/samtools_stats/SALM_REP1.sorted.bam.flagstat",
                 "bowtie2_salmon/samtools_stats/SALM_REP1.sorted.bam.idxstats",
                 "bowtie2_salmon/samtools_stats/SALM_REP1.sorted.bam.stats",
+                "bowtie2_salmon/samtools_stats/SALM_REP2.markdup.sorted.bam.flagstat",
+                "bowtie2_salmon/samtools_stats/SALM_REP2.markdup.sorted.bam.idxstats",
+                "bowtie2_salmon/samtools_stats/SALM_REP2.markdup.sorted.bam.stats",
                 "bowtie2_salmon/samtools_stats/SALM_REP2.sorted.bam.flagstat",
                 "bowtie2_salmon/samtools_stats/SALM_REP2.sorted.bam.idxstats",
                 "bowtie2_salmon/samtools_stats/SALM_REP2.sorted.bam.stats",
@@ -1080,7 +1118,7 @@
                 "salmon.merged.tx2gene.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
-        "timestamp": "2026-09-18T22:41:01.786087857",
+        "timestamp": "2026-11-09T17:45:42.195013292",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -1088,7 +1126,7 @@
     },
     "Params: --aligner star_salmon --prokaryotic - stub": {
         "content": [
-            34,
+            50,
             {
                 "CUSTOM_GTFFILTER": {
                     "python": "3.14.5"
@@ -1097,7 +1135,7 @@
                     "python": "3.10.4"
                 },
                 "FASTQC": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "FQ_LINT": {
                     "fq": "0.12.0"
@@ -1114,26 +1152,38 @@
                 "GFFREAD_TRANSCRIPTS": {
                     "gffread": "0.12.7"
                 },
+                "PICARD_MARKDUPLICATES": {
+                    "picard": "3.5.0"
+                },
+                "RSEQC_BAMSTAT": {
+                    "rseqc": "5.0.4"
+                },
+                "RSEQC_INFEREXPERIMENT": {
+                    "rseqc": "5.0.4"
+                },
+                "RSEQC_READDUPLICATION": {
+                    "rseqc": "5.0.4"
+                },
                 "SALMON_QUANT": {
-                    "salmon": "2.7.0"
+                    "salmon": "2.11.0"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -1187,7 +1237,11 @@
                 "pipeline_info/nf_core_rnaseq_software_mqc_versions.yml",
                 "star_salmon",
                 "star_salmon/SALM_REP1",
+                "star_salmon/SALM_REP1.markdup.sorted.bam",
+                "star_salmon/SALM_REP1.markdup.sorted.bam.bai",
                 "star_salmon/SALM_REP2",
+                "star_salmon/SALM_REP2.markdup.sorted.bam",
+                "star_salmon/SALM_REP2.markdup.sorted.bam.bai",
                 "star_salmon/all_samples.SummarizedExperiment.rds",
                 "star_salmon/all_samples.gene_counts.tsv",
                 "star_salmon/all_samples.gene_counts_length_scaled.tsv",
@@ -1211,11 +1265,39 @@
                 "star_salmon/log/SALM_REP2.ReadsPerGene.out.tab",
                 "star_salmon/log/SALM_REP2.SJ.out.tab",
                 "star_salmon/log/SALM_REP2.tab",
+                "star_salmon/picard_metrics",
+                "star_salmon/picard_metrics/SALM_REP1.markdup.sorted.metrics.txt",
+                "star_salmon/picard_metrics/SALM_REP2.markdup.sorted.metrics.txt",
+                "star_salmon/rseqc",
+                "star_salmon/rseqc/bam_stat",
+                "star_salmon/rseqc/bam_stat/SALM_REP1.bam_stat.txt",
+                "star_salmon/rseqc/bam_stat/SALM_REP2.bam_stat.txt",
+                "star_salmon/rseqc/infer_experiment",
+                "star_salmon/rseqc/infer_experiment/SALM_REP1.infer_experiment.txt",
+                "star_salmon/rseqc/infer_experiment/SALM_REP2.infer_experiment.txt",
+                "star_salmon/rseqc/read_duplication",
+                "star_salmon/rseqc/read_duplication/pdf",
+                "star_salmon/rseqc/read_duplication/pdf/SALM_REP1.DupRate_plot.pdf",
+                "star_salmon/rseqc/read_duplication/pdf/SALM_REP2.DupRate_plot.pdf",
+                "star_salmon/rseqc/read_duplication/rscript",
+                "star_salmon/rseqc/read_duplication/rscript/SALM_REP1.DupRate_plot.r",
+                "star_salmon/rseqc/read_duplication/rscript/SALM_REP2.DupRate_plot.r",
+                "star_salmon/rseqc/read_duplication/xls",
+                "star_salmon/rseqc/read_duplication/xls/SALM_REP1.pos.DupRate.xls",
+                "star_salmon/rseqc/read_duplication/xls/SALM_REP1.seq.DupRate.xls",
+                "star_salmon/rseqc/read_duplication/xls/SALM_REP2.pos.DupRate.xls",
+                "star_salmon/rseqc/read_duplication/xls/SALM_REP2.seq.DupRate.xls",
                 "star_salmon/salmon.merged.tx2gene.tsv",
                 "star_salmon/samtools_stats",
+                "star_salmon/samtools_stats/SALM_REP1.markdup.sorted.bam.flagstat",
+                "star_salmon/samtools_stats/SALM_REP1.markdup.sorted.bam.idxstats",
+                "star_salmon/samtools_stats/SALM_REP1.markdup.sorted.bam.stats",
                 "star_salmon/samtools_stats/SALM_REP1.sorted.bam.flagstat",
                 "star_salmon/samtools_stats/SALM_REP1.sorted.bam.idxstats",
                 "star_salmon/samtools_stats/SALM_REP1.sorted.bam.stats",
+                "star_salmon/samtools_stats/SALM_REP2.markdup.sorted.bam.flagstat",
+                "star_salmon/samtools_stats/SALM_REP2.markdup.sorted.bam.idxstats",
+                "star_salmon/samtools_stats/SALM_REP2.markdup.sorted.bam.stats",
                 "star_salmon/samtools_stats/SALM_REP2.sorted.bam.flagstat",
                 "star_salmon/samtools_stats/SALM_REP2.sorted.bam.idxstats",
                 "star_salmon/samtools_stats/SALM_REP2.sorted.bam.stats",
@@ -1241,10 +1323,12 @@
                 "SALM_REP2.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "SALM_REP2.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "SALM_REP2.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SALM_REP1.infer_experiment.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SALM_REP2.infer_experiment.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "salmon.merged.tx2gene.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
-        "timestamp": "2026-09-18T22:38:49.411648635",
+        "timestamp": "2026-11-09T17:42:15.871597491",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

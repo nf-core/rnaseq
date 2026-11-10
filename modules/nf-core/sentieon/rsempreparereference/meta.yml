@@ -12,7 +12,8 @@ tools:
       homepage: https://github.com/deweylab/RSEM
       documentation: https://github.com/deweylab/RSEM
       doi: 10.1186/1471-2105-12-323
-      licence: ["GPL-3.0-or-later"]
+      licence:
+        - "GPL-3.0-or-later"
       identifier: biotools:rsem
 input:
   - fasta:
@@ -67,7 +68,6 @@ output:
       - 'sentieon driver --version 2>&1 | sed -e "s/sentieon-genomics-//g"':
           type: eval
           description: The expression to obtain the version of the tool
-
 topics:
   versions:
     - - ${task.process}:
@@ -97,7 +97,6 @@ topics:
       - 'sentieon driver --version 2>&1 | sed -e "s/sentieon-genomics-//g"':
           type: eval
           description: The expression to obtain the version of the tool
-
 authors:
   - "@FriederikeHanssen"
 maintainers:

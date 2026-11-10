@@ -56,7 +56,7 @@
                             "id": "test",
                             "single_end": true
                         },
-                        "test.stats:md5,12e2673072df03d2daea0faac3d06376"
+                        "test.stats:md5,1c4e094960e4447904ef0f33594d9e02"
                     ]
                 ],
                 "summary": [
@@ -70,10 +70,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-08-31T12:54:32.178285113",
+        "timestamp": "2026-10-28T09:18:18.122353",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.08.0"
+            "nextflow": "26.10.4"
         }
     },
     "sarscov2 - bam - single_end - stub": {
@@ -210,7 +210,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.stats:md5,5eae479fe1f58e2bfe59c19f4d1ff341"
+                        "test.stats:md5,90e22dd5a62c7e613b7d730c5118eb02"
                     ]
                 ],
                 "summary": [
@@ -224,10 +224,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-08-31T12:54:46.153798661",
+        "timestamp": "2026-10-28T09:18:34.899937",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.08.0"
+            "nextflow": "26.10.4"
         }
     },
     "sarscov2 - bam - paired_end - stub": {

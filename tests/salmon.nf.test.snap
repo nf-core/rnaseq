@@ -22,10 +22,10 @@
                     "perl": "5.26.2"
                 },
                 "FASTQC": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "FASTQC_FILTERED": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "FQ_LINT": {
                     "fq": "0.12.0"
@@ -46,10 +46,10 @@
                     "gunzip": "1.13"
                 },
                 "SALMON_QUANT": {
-                    "salmon": "2.7.0"
+                    "salmon": "2.11.0"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "TRIMGALORE": {
                     "trimgalore": "2.3.0"
@@ -290,7 +290,6 @@
                 "RAP1_IAA_30M_REP1/salmon/RAP1_IAA_30M_REP1/aux_info/ambig_info.tsv",
                 "RAP1_IAA_30M_REP1/salmon/RAP1_IAA_30M_REP1/aux_info/expected_bias.gz",
                 "RAP1_IAA_30M_REP1/salmon/RAP1_IAA_30M_REP1/aux_info/fld.gz",
-                "RAP1_IAA_30M_REP1/salmon/RAP1_IAA_30M_REP1/aux_info/genemap_unmatched_txps.json",
                 "RAP1_IAA_30M_REP1/salmon/RAP1_IAA_30M_REP1/aux_info/meta_info.json",
                 "RAP1_IAA_30M_REP1/salmon/RAP1_IAA_30M_REP1/aux_info/observed_bias.gz",
                 "RAP1_IAA_30M_REP1/salmon/RAP1_IAA_30M_REP1/aux_info/observed_bias_3p.gz",
@@ -523,7 +522,6 @@
                 "RAP1_UNINDUCED_REP1/salmon/RAP1_UNINDUCED_REP1/aux_info/ambig_info.tsv",
                 "RAP1_UNINDUCED_REP1/salmon/RAP1_UNINDUCED_REP1/aux_info/expected_bias.gz",
                 "RAP1_UNINDUCED_REP1/salmon/RAP1_UNINDUCED_REP1/aux_info/fld.gz",
-                "RAP1_UNINDUCED_REP1/salmon/RAP1_UNINDUCED_REP1/aux_info/genemap_unmatched_txps.json",
                 "RAP1_UNINDUCED_REP1/salmon/RAP1_UNINDUCED_REP1/aux_info/meta_info.json",
                 "RAP1_UNINDUCED_REP1/salmon/RAP1_UNINDUCED_REP1/aux_info/observed_bias.gz",
                 "RAP1_UNINDUCED_REP1/salmon/RAP1_UNINDUCED_REP1/aux_info/observed_bias_3p.gz",
@@ -755,7 +753,6 @@
                 "RAP1_UNINDUCED_REP2/salmon/RAP1_UNINDUCED_REP2/aux_info/ambig_info.tsv",
                 "RAP1_UNINDUCED_REP2/salmon/RAP1_UNINDUCED_REP2/aux_info/expected_bias.gz",
                 "RAP1_UNINDUCED_REP2/salmon/RAP1_UNINDUCED_REP2/aux_info/fld.gz",
-                "RAP1_UNINDUCED_REP2/salmon/RAP1_UNINDUCED_REP2/aux_info/genemap_unmatched_txps.json",
                 "RAP1_UNINDUCED_REP2/salmon/RAP1_UNINDUCED_REP2/aux_info/meta_info.json",
                 "RAP1_UNINDUCED_REP2/salmon/RAP1_UNINDUCED_REP2/aux_info/observed_bias.gz",
                 "RAP1_UNINDUCED_REP2/salmon/RAP1_UNINDUCED_REP2/aux_info/observed_bias_3p.gz",
@@ -997,7 +994,6 @@
                 "WT_REP1/salmon/WT_REP1/aux_info/ambig_info.tsv",
                 "WT_REP1/salmon/WT_REP1/aux_info/expected_bias.gz",
                 "WT_REP1/salmon/WT_REP1/aux_info/fld.gz",
-                "WT_REP1/salmon/WT_REP1/aux_info/genemap_unmatched_txps.json",
                 "WT_REP1/salmon/WT_REP1/aux_info/meta_info.json",
                 "WT_REP1/salmon/WT_REP1/aux_info/observed_bias.gz",
                 "WT_REP1/salmon/WT_REP1/aux_info/observed_bias_3p.gz",
@@ -1240,7 +1236,6 @@
                 "WT_REP2/salmon/WT_REP2/aux_info/ambig_info.tsv",
                 "WT_REP2/salmon/WT_REP2/aux_info/expected_bias.gz",
                 "WT_REP2/salmon/WT_REP2/aux_info/fld.gz",
-                "WT_REP2/salmon/WT_REP2/aux_info/genemap_unmatched_txps.json",
                 "WT_REP2/salmon/WT_REP2/aux_info/meta_info.json",
                 "WT_REP2/salmon/WT_REP2/aux_info/observed_bias.gz",
                 "WT_REP2/salmon/WT_REP2/aux_info/observed_bias_3p.gz",
@@ -1263,7 +1258,7 @@
             [
                 "fastqc_raw-status-check-heatmap.txt:md5,79477fe38c3e8d8aed27ddcd05aa3a83",
                 "fastqc_raw_adapter_content_plot.txt:md5,23b509e14dd25b2801ed582a0cf7f0eb",
-                "fastqc_raw_overrepresented_sequences_plot.txt:md5,05f010ee43e6e8ef4b0447e4649f1654",
+                "fastqc_raw_overrepresented_sequences_plot.txt:md5,1971eda898dca8bb40bcd3b129623831",
                 "fastqc_raw_per_base_n_content_plot.txt:md5,5f267c758c106db8cc725ed406b6b83c",
                 "fastqc_raw_per_base_sequence_quality_plot.txt:md5,860eed8f026763ba2a3faa77226274f4",
                 "fastqc_raw_per_sequence_gc_content_plot_Counts.txt:md5,dc24efed63a49eab505b9e272fc76d8c",
@@ -1281,22 +1276,21 @@
                 "fastqc_trimmed_sequence_counts_plot.txt:md5,4d51f32d84d92ddd7562f5ed80d36dd5",
                 "fastqc_trimmed_sequence_duplication_levels_plot.txt:md5,7f27140a39819b885b5881065c8db212",
                 "multiqc_citations.txt:md5,bfa3f528994b58e4bf2e62a89b36a8b9",
-                "multiqc_fastqc_fastqc_raw.txt:md5,90b14eb12f6923ab802bd1c36752856f",
+                "multiqc_fastqc_fastqc_raw.txt:md5,84840d429b518961a9b11e31db297729",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,dea043eec248fc9af9014173d4c22748",
                 "multiqc_trim_galore.txt:md5,ce1dadd7c7fb92e553a56dd44d04799d",
                 "trim_galore_adapter_length_plot.txt:md5,8ae07bd0f42414de95c04eb8b65d9611",
                 "trim_galore_filtered_reads_plot.txt:md5,363e636eeff28ae47f28f353cd32169f",
                 "trim_galore_pair_validation_table.txt:md5,79efe099d10a5c5be0643588b1fad508",
                 "RAP1_IAA_30M_REP1.tx2gene_augmented.tsv:md5,62f1be3e94901085640179b604d879a2",
-                "ambig_info.tsv:md5,243178eb3df31ef90c3ea862b4006c75",
+                "ambig_info.tsv:md5,b858d98cdb7b9b5e293c4ea6a1bc4d9b",
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
-                "genemap_unmatched_txps.json:md5,7397fca3b0009816b63f4a09552678e5",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,cf818b6adba396cc5353b902448cfac6",
+                "cmd_info.json:md5,fb611086796ddeaa691aca7eba0968a7",
                 "fastqc_raw-status-check-heatmap.txt:md5,5c47c0b22da01c8655371c19f3a978dd",
                 "fastqc_raw_adapter_content_plot.txt:md5,7bbf284e617eb0249a53c3730816e876",
-                "fastqc_raw_overrepresented_sequences_plot.txt:md5,9011aefe6c8160b3e0e61b17a2918da8",
+                "fastqc_raw_overrepresented_sequences_plot.txt:md5,4d04c55f4881eb15dd1121c3f7ad95f9",
                 "fastqc_raw_per_base_n_content_plot.txt:md5,7e8dc9553b356afc486d5b07c2e247ed",
                 "fastqc_raw_per_base_sequence_quality_plot.txt:md5,e74a135596010b0ea755336a441719d2",
                 "fastqc_raw_per_sequence_gc_content_plot_Counts.txt:md5,c56df7f72821fedefd1380e68b9eadab",
@@ -1314,7 +1308,7 @@
                 "fastqc_trimmed_sequence_counts_plot.txt:md5,024b40b0922ff5708819af75812f4e2e",
                 "fastqc_trimmed_sequence_duplication_levels_plot.txt:md5,e3b96ad349501004d4b49e89691ec674",
                 "multiqc_citations.txt:md5,bfa3f528994b58e4bf2e62a89b36a8b9",
-                "multiqc_fastqc_fastqc_raw.txt:md5,f7523b0369288bd16dbcfa4eee85bdbe",
+                "multiqc_fastqc_fastqc_raw.txt:md5,e9854fe1761ee92787fc9a81eff9bc55",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,0c9ff79024840d80c850bce19aace3aa",
                 "multiqc_trim_galore.txt:md5,647af9f254213f7922a4c5d7ac5d3a78",
                 "trim_galore_adapter_length_plot.txt:md5,ca69a066488180b6aae99689c149b882",
@@ -1322,13 +1316,12 @@
                 "RAP1_UNINDUCED_REP1.tx2gene_augmented.tsv:md5,62f1be3e94901085640179b604d879a2",
                 "ambig_info.tsv:md5,95c4f1f2f36173500c52b2d076421112",
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
-                "genemap_unmatched_txps.json:md5,7397fca3b0009816b63f4a09552678e5",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,9357c6482eab84dabd07646ed70e0476",
+                "cmd_info.json:md5,9c21ad7352899c30df74244255b771e3",
                 "fastqc_raw-status-check-heatmap.txt:md5,9ba2649b6aee17190979addc85d24121",
                 "fastqc_raw_adapter_content_plot.txt:md5,1d81e0a10ea24a5836c3d23b661487c8",
-                "fastqc_raw_overrepresented_sequences_plot.txt:md5,c9b878c5b06d31a9f9749d683e2f0c27",
+                "fastqc_raw_overrepresented_sequences_plot.txt:md5,22284353cdc19875e87c1191029abaa2",
                 "fastqc_raw_per_base_n_content_plot.txt:md5,1aff5290ab4c49f3c8e2086357262f4a",
                 "fastqc_raw_per_base_sequence_quality_plot.txt:md5,4a0a17d77d268703ed90c3c73fe0be4d",
                 "fastqc_raw_per_sequence_gc_content_plot_Counts.txt:md5,0df16ed3cfa81ea54d9023f866314aa8",
@@ -1346,7 +1339,7 @@
                 "fastqc_trimmed_sequence_counts_plot.txt:md5,9d59c840cc5ba264598b7c030e20d6c0",
                 "fastqc_trimmed_sequence_duplication_levels_plot.txt:md5,b12faac164e47c1519a1842c19044041",
                 "multiqc_citations.txt:md5,bfa3f528994b58e4bf2e62a89b36a8b9",
-                "multiqc_fastqc_fastqc_raw.txt:md5,04aaed5c761fef5b8ee3172638c67642",
+                "multiqc_fastqc_fastqc_raw.txt:md5,8bf010c24bc3103c7befc1dd02a2a93b",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,7435c33a23fa63532bcd615b9e8d2075",
                 "multiqc_trim_galore.txt:md5,ac6e4718b7ebdc395609153c223c05a3",
                 "trim_galore_adapter_length_plot.txt:md5,c6294d92085dd6ab1d2067b22957e246",
@@ -1354,13 +1347,12 @@
                 "RAP1_UNINDUCED_REP2.tx2gene_augmented.tsv:md5,62f1be3e94901085640179b604d879a2",
                 "ambig_info.tsv:md5,8b97ad4ab166dd4ca367fa2f4cb999d1",
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
-                "genemap_unmatched_txps.json:md5,7397fca3b0009816b63f4a09552678e5",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,1570b3f15040392184dd793ecd62477e",
+                "cmd_info.json:md5,543ca54de519483c2207a7f24fc16346",
                 "fastqc_raw-status-check-heatmap.txt:md5,20bcc23374bcbedabf6614be76728428",
                 "fastqc_raw_adapter_content_plot.txt:md5,97c1a192e4e442911c3023e1b0c30b4a",
-                "fastqc_raw_overrepresented_sequences_plot.txt:md5,d2d1b657f478d50d5e0010222f131526",
+                "fastqc_raw_overrepresented_sequences_plot.txt:md5,2bcc47f8b2a8f597fb14cc96178c4850",
                 "fastqc_raw_per_base_n_content_plot.txt:md5,f73072c444d3ee5e095abca12142dbe7",
                 "fastqc_raw_per_base_sequence_quality_plot.txt:md5,0851e2b8661f05695482264ca60932f6",
                 "fastqc_raw_per_sequence_gc_content_plot_Counts.txt:md5,7983b7faaaf42d9b4e3377ec815ddd81",
@@ -1378,22 +1370,21 @@
                 "fastqc_trimmed_sequence_counts_plot.txt:md5,05257a3a4210c8e91fd3b511845dc432",
                 "fastqc_trimmed_sequence_duplication_levels_plot.txt:md5,6377b9aa4b82d94ae9ed522b1619687f",
                 "multiqc_citations.txt:md5,bfa3f528994b58e4bf2e62a89b36a8b9",
-                "multiqc_fastqc_fastqc_raw.txt:md5,0615d8c4828bd26b16715cbb1a53fb5f",
+                "multiqc_fastqc_fastqc_raw.txt:md5,126678a0b2c64ffc92a430af66010c9b",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,f197b911c18ab5840833ad69dfb68cc3",
                 "multiqc_trim_galore.txt:md5,33557425e316623fe4c890578361943c",
                 "trim_galore_adapter_length_plot.txt:md5,d272ac5827391051f5ac11f3c58b9ee1",
                 "trim_galore_filtered_reads_plot.txt:md5,a84fd35300272746a74c363489529953",
                 "trim_galore_pair_validation_table.txt:md5,0210533cb1f9137f85795fbbd157a1b3",
                 "WT_REP1.tx2gene_augmented.tsv:md5,62f1be3e94901085640179b604d879a2",
-                "ambig_info.tsv:md5,d965e915f4bb0e66ace2aa1f56597594",
+                "ambig_info.tsv:md5,466faa49ad8ac3eea22b898044b5bc0f",
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
-                "genemap_unmatched_txps.json:md5,7397fca3b0009816b63f4a09552678e5",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,c39a2ead5695c39d424c5f85104ef319",
+                "cmd_info.json:md5,10bbbdec98b1ecca3f4cfcaa25f41746",
                 "fastqc_raw-status-check-heatmap.txt:md5,e4f1b7799ed1ecae58603dec185ea75c",
                 "fastqc_raw_adapter_content_plot.txt:md5,d5f7e635fbb59d9d36bea8f5879b41a7",
-                "fastqc_raw_overrepresented_sequences_plot.txt:md5,1a254765d14578b0f4f5cb87068440b5",
+                "fastqc_raw_overrepresented_sequences_plot.txt:md5,98e8c4a0b64d0d7e0faea88df90346ca",
                 "fastqc_raw_per_base_n_content_plot.txt:md5,6b130f343157c88069f29e476ff0a9fd",
                 "fastqc_raw_per_base_sequence_quality_plot.txt:md5,126f33071af5392674c4e5ec86ab326b",
                 "fastqc_raw_per_sequence_gc_content_plot_Counts.txt:md5,59c287e22283b64d3aafb57e89cd15a8",
@@ -1411,23 +1402,22 @@
                 "fastqc_trimmed_sequence_counts_plot.txt:md5,928fe0726e385faa28dc234eeda58b1b",
                 "fastqc_trimmed_sequence_duplication_levels_plot.txt:md5,a6247d8725b2aa7ecc6b26dcf97f7544",
                 "multiqc_citations.txt:md5,bfa3f528994b58e4bf2e62a89b36a8b9",
-                "multiqc_fastqc_fastqc_raw.txt:md5,916d790365b2e374be3fb03383664e30",
+                "multiqc_fastqc_fastqc_raw.txt:md5,2d8f59b3f0b6751b3df325c1a0e80525",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,f89aa02c2a66c22803b39e7ba11417d0",
                 "multiqc_trim_galore.txt:md5,63e34a939d6e2c605463edb6a1759633",
                 "trim_galore_adapter_length_plot.txt:md5,a4dd02c2da8d9912881d5482cd642be3",
                 "trim_galore_filtered_reads_plot.txt:md5,5d0e46d02431644a4370c43ee0cb0421",
                 "trim_galore_pair_validation_table.txt:md5,335e9954f023e0cd71a7182c09e98453",
                 "WT_REP2.tx2gene_augmented.tsv:md5,62f1be3e94901085640179b604d879a2",
-                "ambig_info.tsv:md5,b59f436456fbbe3055dc6ff78d89836b",
+                "ambig_info.tsv:md5,036e6f3d46c5620a613ae1730017c27f",
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
-                "genemap_unmatched_txps.json:md5,7397fca3b0009816b63f4a09552678e5",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,a3a440b92ff27584be4f11e146a3c59c",
+                "cmd_info.json:md5,03d2e6e8dcb0aed842d2b4afc41b57cb",
                 "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
             ]
         ],
-        "timestamp": "2026-09-19T20:40:37.127864259",
+        "timestamp": "2026-11-09T17:34:18.248951125",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -1474,10 +1464,10 @@
                     "gunzip": "1.13"
                 },
                 "SALMON_QUANT": {
-                    "salmon": "2.7.0"
+                    "salmon": "2.11.0"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -1651,7 +1641,6 @@
                 "salmon/RAP1_IAA_30M_REP1/aux_info/ambig_info.tsv",
                 "salmon/RAP1_IAA_30M_REP1/aux_info/expected_bias.gz",
                 "salmon/RAP1_IAA_30M_REP1/aux_info/fld.gz",
-                "salmon/RAP1_IAA_30M_REP1/aux_info/genemap_unmatched_txps.json",
                 "salmon/RAP1_IAA_30M_REP1/aux_info/meta_info.json",
                 "salmon/RAP1_IAA_30M_REP1/aux_info/observed_bias.gz",
                 "salmon/RAP1_IAA_30M_REP1/aux_info/observed_bias_3p.gz",
@@ -1668,7 +1657,6 @@
                 "salmon/RAP1_UNINDUCED_REP1/aux_info/ambig_info.tsv",
                 "salmon/RAP1_UNINDUCED_REP1/aux_info/expected_bias.gz",
                 "salmon/RAP1_UNINDUCED_REP1/aux_info/fld.gz",
-                "salmon/RAP1_UNINDUCED_REP1/aux_info/genemap_unmatched_txps.json",
                 "salmon/RAP1_UNINDUCED_REP1/aux_info/meta_info.json",
                 "salmon/RAP1_UNINDUCED_REP1/aux_info/observed_bias.gz",
                 "salmon/RAP1_UNINDUCED_REP1/aux_info/observed_bias_3p.gz",
@@ -1685,7 +1673,6 @@
                 "salmon/RAP1_UNINDUCED_REP2/aux_info/ambig_info.tsv",
                 "salmon/RAP1_UNINDUCED_REP2/aux_info/expected_bias.gz",
                 "salmon/RAP1_UNINDUCED_REP2/aux_info/fld.gz",
-                "salmon/RAP1_UNINDUCED_REP2/aux_info/genemap_unmatched_txps.json",
                 "salmon/RAP1_UNINDUCED_REP2/aux_info/meta_info.json",
                 "salmon/RAP1_UNINDUCED_REP2/aux_info/observed_bias.gz",
                 "salmon/RAP1_UNINDUCED_REP2/aux_info/observed_bias_3p.gz",
@@ -1702,7 +1689,6 @@
                 "salmon/WT_REP1/aux_info/ambig_info.tsv",
                 "salmon/WT_REP1/aux_info/expected_bias.gz",
                 "salmon/WT_REP1/aux_info/fld.gz",
-                "salmon/WT_REP1/aux_info/genemap_unmatched_txps.json",
                 "salmon/WT_REP1/aux_info/meta_info.json",
                 "salmon/WT_REP1/aux_info/observed_bias.gz",
                 "salmon/WT_REP1/aux_info/observed_bias_3p.gz",
@@ -1719,7 +1705,6 @@
                 "salmon/WT_REP2/aux_info/ambig_info.tsv",
                 "salmon/WT_REP2/aux_info/expected_bias.gz",
                 "salmon/WT_REP2/aux_info/fld.gz",
-                "salmon/WT_REP2/aux_info/genemap_unmatched_txps.json",
                 "salmon/WT_REP2/aux_info/meta_info.json",
                 "salmon/WT_REP2/aux_info/observed_bias.gz",
                 "salmon/WT_REP2/aux_info/observed_bias_3p.gz",
@@ -1771,41 +1756,36 @@
                 "trim_galore_adapter_length_plot.txt:md5,1e34e26fac0fd53e9ffa49805862d547",
                 "trim_galore_filtered_reads_plot.txt:md5,2cae05863c03d6f6054280ee75df63b2",
                 "trim_galore_pair_validation_table.txt:md5,b1863fde4bacc276704adcb35c80fb1c",
-                "ambig_info.tsv:md5,243178eb3df31ef90c3ea862b4006c75",
+                "ambig_info.tsv:md5,b858d98cdb7b9b5e293c4ea6a1bc4d9b",
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
-                "genemap_unmatched_txps.json:md5,7397fca3b0009816b63f4a09552678e5",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,cf818b6adba396cc5353b902448cfac6",
+                "cmd_info.json:md5,fb611086796ddeaa691aca7eba0968a7",
                 "ambig_info.tsv:md5,95c4f1f2f36173500c52b2d076421112",
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
-                "genemap_unmatched_txps.json:md5,7397fca3b0009816b63f4a09552678e5",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,9357c6482eab84dabd07646ed70e0476",
+                "cmd_info.json:md5,9c21ad7352899c30df74244255b771e3",
                 "ambig_info.tsv:md5,8b97ad4ab166dd4ca367fa2f4cb999d1",
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
-                "genemap_unmatched_txps.json:md5,7397fca3b0009816b63f4a09552678e5",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,1570b3f15040392184dd793ecd62477e",
-                "ambig_info.tsv:md5,d965e915f4bb0e66ace2aa1f56597594",
+                "cmd_info.json:md5,543ca54de519483c2207a7f24fc16346",
+                "ambig_info.tsv:md5,466faa49ad8ac3eea22b898044b5bc0f",
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
-                "genemap_unmatched_txps.json:md5,7397fca3b0009816b63f4a09552678e5",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,c39a2ead5695c39d424c5f85104ef319",
-                "ambig_info.tsv:md5,b59f436456fbbe3055dc6ff78d89836b",
+                "cmd_info.json:md5,10bbbdec98b1ecca3f4cfcaa25f41746",
+                "ambig_info.tsv:md5,036e6f3d46c5620a613ae1730017c27f",
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
-                "genemap_unmatched_txps.json:md5,7397fca3b0009816b63f4a09552678e5",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,a3a440b92ff27584be4f11e146a3c59c",
+                "cmd_info.json:md5,03d2e6e8dcb0aed842d2b4afc41b57cb",
                 "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "salmon.merged.tx2gene_augmented.tsv:md5,62f1be3e94901085640179b604d879a2"
             ]
         ],
-        "timestamp": "2026-09-19T20:38:11.218521167",
+        "timestamp": "2026-11-09T17:30:48.108331374",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -1831,7 +1811,7 @@
                     "perl": "5.26.2"
                 },
                 "FASTQC": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "FQ_LINT": {
                     "fq": "0.12.0"
@@ -1843,7 +1823,7 @@
                     "gunzip": "1.13"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "TRIMGALORE": {
                     "trimgalore": "2.3.0"
@@ -1962,7 +1942,7 @@
                 "multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
-        "timestamp": "2026-09-19T20:41:15.369237061",
+        "timestamp": "2026-11-09T17:35:24.621838754",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -1997,7 +1977,7 @@
                     "gunzip": "1.13"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "TRIMGALORE": {
                     "trimgalore": "2.3.0"
@@ -2038,7 +2018,7 @@
                 
             ]
         ],
-        "timestamp": "2026-09-19T20:38:49.715009932",
+        "timestamp": "2026-11-09T17:32:01.318773604",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

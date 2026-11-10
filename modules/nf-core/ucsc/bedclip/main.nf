@@ -1,11 +1,14 @@
+// Copyright (c) the nf-core community under an open-source MIT license.
+// See https://github.com/nf-core/modules for full license, file patching instructions and upstream contributing.
+
 process UCSC_BEDCLIP {
     tag "$meta.id"
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/ucsc-bedclip:482--h0b57e2e_0' :
-        'quay.io/biocontainers/ucsc-bedclip:482--h0b57e2e_0' }"
+    container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
+?         'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/37/3752926dcf7d7fd70bcd440f6d3670948a9cee582273a8c6b806cb46af30fdc4/data'
+:         'community.wave.seqera.io/library/ucsc-bedclip:482--c81ad102fb2a5968' }"
 
     input:
     tuple val(meta), path(bedgraph)

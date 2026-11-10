@@ -35,10 +35,10 @@
                     "ribodetector": "0.3.3"
                 },
                 "SALMON_QUANT": {
-                    "salmon": "2.7.0"
+                    "salmon": "2.11.0"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "SEQKIT_STATS": {
                     "seqkit": "2.13.0"
@@ -148,7 +148,7 @@
                     "gunzip": "1.13"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": "1.24"
+                    "samtools": "1.25"
                 },
                 "TRIMGALORE": {
                     "trimgalore": "2.3.0"

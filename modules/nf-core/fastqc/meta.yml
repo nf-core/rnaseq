@@ -87,25 +87,25 @@ maintainers:
   - "@FelixKrueger"
 containers:
   docker:
-    linux/arm64:
-      name: community.wave.seqera.io/library/fastqc:0.12.1--e455e32f745abe68
-      build_id: bd-e455e32f745abe68_1
-      scan_id: sc-f102f736465af88c_1
     linux/amd64:
-      name: community.wave.seqera.io/library/fastqc:0.12.1--5cb1a2fa2f18c7c2
-      build_id: bd-5cb1a2fa2f18c7c2_1
-      scan_id: sc-0c0466326b6b77d2_1
+      name: community.wave.seqera.io/library/fastqc:0.13.0--b342db7b694c9af4
+      build_id: bd-b342db7b694c9af4_1
+      scan_id: sc-b9ffd697eb6c276d_1
+    linux/arm64:
+      name: community.wave.seqera.io/library/fastqc:0.13.0--7c8a53b986d9a000
+      build_id: bd-7c8a53b986d9a000_1
+      scan_id: sc-03411c4d2136d823_1
   singularity:
     linux/amd64:
-      name: oras://community.wave.seqera.io/library/fastqc:0.12.1--5c4bd442468d75dd
-      build_id: bd-5c4bd442468d75dd_1
-      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/f2/f20b021476d1d87658820f971ebecc1e8cdbde0f338eb0d9cea2b0a8fc54a54b/data
+      name: oras://community.wave.seqera.io/library/fastqc:0.13.0--aadddbed09923ea6
+      build_id: bd-aadddbed09923ea6_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/81/816bda6dd014e810753f642611232443ddeabb2b47f9681ad43f9044816f00ff/data
     linux/arm64:
-      name: oras://community.wave.seqera.io/library/fastqc:0.12.1--127a87fc06499035
-      build_id: bd-127a87fc06499035_1
-      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/46/46daf2dad0169afd2ae047c3e50ed3776259f664bf07e5e06b045dc23449e994/data
+      name: oras://community.wave.seqera.io/library/fastqc:0.13.0--f5a404ab2c13e090
+      build_id: bd-f5a404ab2c13e090_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/ad/add047b79c7b7b0f2c0711161f64256ffe51ebf8a6e14fa7adf31877da6425db/data
   conda:
     linux/amd64:
-      lock_file: modules/nf-core/fastqc/.conda-lock/linux_amd64-bd-5cb1a2fa2f18c7c2_1.txt
+      lock_file: modules/nf-core/fastqc/.conda-lock/linux_amd64-bd-b342db7b694c9af4_1.txt
     linux/arm64:
-      lock_file: modules/nf-core/fastqc/.conda-lock/linux_arm64-bd-e455e32f745abe68_1.txt
+      lock_file: modules/nf-core/fastqc/.conda-lock/linux_arm64-bd-7c8a53b986d9a000_1.txt

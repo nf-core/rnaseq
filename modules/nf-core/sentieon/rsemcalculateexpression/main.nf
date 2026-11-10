@@ -1,3 +1,6 @@
+// Copyright (c) the nf-core community under an open-source MIT license.
+// See https://github.com/nf-core/modules for full license, file patching instructions and upstream contributing.
+
 process SENTIEON_RSEMCALCULATEEXPRESSION {
     tag "$meta.id"
     label 'process_high'
@@ -32,6 +35,10 @@ process SENTIEON_RSEMCALCULATEEXPRESSION {
     script:
     def args = task.ext.args   ?: ''
     prefix   = task.ext.prefix ?: "${meta.id}"
+
+    if (!args.contains('--temporary-folder')) {
+        args += ' --temporary-folder ./tmp/'
+    }
 
     def strandedness = ''
     if (meta.strandedness == 'forward') {
@@ -73,7 +80,6 @@ process SENTIEON_RSEMCALCULATEEXPRESSION {
 
     rsem-calculate-expression \\
         --num-threads $task.cpus \\
-        --temporary-folder ./tmp/ \\
         $alignment_mode \\
         $strandedness \\
         \$PAIRED_END_FLAG \\

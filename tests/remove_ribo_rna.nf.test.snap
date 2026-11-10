@@ -4,13 +4,13 @@
             26,
             {
                 "BBMAP_BBSPLIT": {
-                    "bbmap": 39.18
+                    "bbmap": "39.18"
                 },
                 "BOWTIE2_BUILD": {
                     "bowtie2": "2.5.5"
                 },
                 "CAT_FASTQ": {
-                    "cat": 9.5
+                    "cat": "9.5"
                 },
                 "CUSTOM_CATADDITIONALFASTA": {
                     "python": "3.12.2"
@@ -25,27 +25,27 @@
                     "fq": "0.12.0"
                 },
                 "GUNZIP_ADDITIONAL_FASTA": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "GUNZIP_GTF": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "GUNZIP_RRNA_FASTAS": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.25
+                    "samtools": "1.25"
                 },
                 "STAR_GENOMEGENERATE": {
                     "gawk": "5.1.0",
-                    "samtools": 1.21,
+                    "samtools": "1.21",
                     "star": "2.7.11b"
                 },
                 "TRIMGALORE": {
                     "trimgalore": "2.3.0"
                 },
                 "UNTAR_SALMON_INDEX": {
-                    "untar": 1.34
+                    "untar": "1.34"
                 }
             },
             [
@@ -94,10 +94,10 @@
             124,
             {
                 "BBMAP_BBSPLIT": {
-                    "bbmap": 39.18
+                    "bbmap": "39.18"
                 },
                 "CAT_FASTQ": {
-                    "cat": 9.5
+                    "cat": "9.5"
                 },
                 "CUSTOM_CATADDITIONALFASTA": {
                     "python": "3.12.2"
@@ -127,13 +127,13 @@
                     "fq": "0.12.0"
                 },
                 "GUNZIP_ADDITIONAL_FASTA": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "GUNZIP_GTF": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "GUNZIP_RRNA_FASTAS": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "PICARD_MARKDUPLICATES": {
                     "picard": "3.5.0"
@@ -142,22 +142,22 @@
                     "salmon": "2.11.0"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.25
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": 1.25
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": 1.25
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": 1.25
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": 1.25
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.25
+                    "samtools": "1.25"
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -173,12 +173,12 @@
                 },
                 "STAR_ALIGN": {
                     "gawk": "5.1.0",
-                    "samtools": 1.21,
+                    "samtools": "1.21",
                     "star": "2.7.11b"
                 },
                 "STAR_GENOMEGENERATE": {
                     "gawk": "5.1.0",
-                    "samtools": 1.21,
+                    "samtools": "1.21",
                     "star": "2.7.11b"
                 },
                 "TRIMGALORE": {
@@ -188,7 +188,7 @@
                     "bioconductor-tximeta": "1.20.1"
                 },
                 "UNTAR_SALMON_INDEX": {
-                    "untar": 1.34
+                    "untar": "1.34"
                 }
             },
             [
@@ -795,10 +795,10 @@
             23,
             {
                 "BBMAP_BBSPLIT": {
-                    "bbmap": 39.18
+                    "bbmap": "39.18"
                 },
                 "CAT_FASTQ": {
-                    "cat": 9.5
+                    "cat": "9.5"
                 },
                 "CUSTOM_CATADDITIONALFASTA": {
                     "python": "3.12.2"
@@ -813,27 +813,27 @@
                     "fq": "0.12.0"
                 },
                 "GUNZIP_ADDITIONAL_FASTA": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "GUNZIP_GTF": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.25
+                    "samtools": "1.25"
                 },
                 "STAR_GENOMEGENERATE": {
                     "gawk": "5.1.0",
-                    "samtools": 1.21,
+                    "samtools": "1.21",
                     "star": "2.7.11b"
                 },
                 "TRIMGALORE": {
                     "trimgalore": "2.3.0"
                 },
                 "UNTAR_BOWTIE2_RRNA_INDEX": {
-                    "untar": 1.34
+                    "untar": "1.34"
                 },
                 "UNTAR_SALMON_INDEX": {
-                    "untar": 1.34
+                    "untar": "1.34"
                 }
             },
             [
@@ -880,10 +880,10 @@
             24,
             {
                 "BBMAP_BBSPLIT": {
-                    "bbmap": 39.18
+                    "bbmap": "39.18"
                 },
                 "CAT_FASTQ": {
-                    "cat": 9.5
+                    "cat": "9.5"
                 },
                 "CUSTOM_CATADDITIONALFASTA": {
                     "python": "3.12.2"
@@ -898,30 +898,30 @@
                     "fq": "0.12.0"
                 },
                 "GUNZIP_ADDITIONAL_FASTA": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "GUNZIP_GTF": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "GUNZIP_RRNA_FASTAS": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.25
+                    "samtools": "1.25"
                 },
                 "SORTMERNA_INDEX": {
                     "sortmerna": "4.3.7"
                 },
                 "STAR_GENOMEGENERATE": {
                     "gawk": "5.1.0",
-                    "samtools": 1.21,
+                    "samtools": "1.21",
                     "star": "2.7.11b"
                 },
                 "TRIMGALORE": {
                     "trimgalore": "2.3.0"
                 },
                 "UNTAR_SALMON_INDEX": {
-                    "untar": 1.34
+                    "untar": "1.34"
                 }
             },
             [
@@ -968,23 +968,23 @@
             132,
             {
                 "BBMAP_BBSPLIT": {
-                    "bbmap": 39.18
+                    "bbmap": "39.18"
                 },
                 "BOWTIE2_ALIGN": {
                     "bowtie2": "2.5.5",
-                    "pigz": 2.8,
-                    "samtools": 1.24
+                    "pigz": "2.8",
+                    "samtools": "1.24"
                 },
                 "BOWTIE2_ALIGN_PE": {
                     "bowtie2": "2.5.5",
-                    "pigz": 2.8,
-                    "samtools": 1.24
+                    "pigz": "2.8",
+                    "samtools": "1.24"
                 },
                 "BOWTIE2_BUILD": {
                     "bowtie2": "2.5.5"
                 },
                 "CAT_FASTQ": {
-                    "cat": 9.5
+                    "cat": "9.5"
                 },
                 "CUSTOM_CATADDITIONALFASTA": {
                     "python": "3.12.2"
@@ -1014,13 +1014,13 @@
                     "fq": "0.12.0"
                 },
                 "GUNZIP_ADDITIONAL_FASTA": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "GUNZIP_GTF": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "GUNZIP_RRNA_FASTAS": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "PICARD_MARKDUPLICATES": {
                     "picard": "3.5.0"
@@ -1029,28 +1029,28 @@
                     "salmon": "2.11.0"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.25
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_FASTQ_BOWTIE2": {
-                    "samtools": 1.25
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": 1.25
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": 1.25
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": 1.25
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": 1.25
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.25
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_VIEW_BOWTIE2": {
-                    "samtools": 1.25
+                    "samtools": "1.25"
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -1060,12 +1060,12 @@
                 },
                 "STAR_ALIGN": {
                     "gawk": "5.1.0",
-                    "samtools": 1.21,
+                    "samtools": "1.21",
                     "star": "2.7.11b"
                 },
                 "STAR_GENOMEGENERATE": {
                     "gawk": "5.1.0",
-                    "samtools": 1.21,
+                    "samtools": "1.21",
                     "star": "2.7.11b"
                 },
                 "TRIMGALORE": {
@@ -1075,7 +1075,7 @@
                     "bioconductor-tximeta": "1.20.1"
                 },
                 "UNTAR_SALMON_INDEX": {
-                    "untar": 1.34
+                    "untar": "1.34"
                 }
             },
             [
@@ -1690,20 +1690,20 @@
             129,
             {
                 "BBMAP_BBSPLIT": {
-                    "bbmap": 39.18
+                    "bbmap": "39.18"
                 },
                 "BOWTIE2_ALIGN": {
                     "bowtie2": "2.5.5",
-                    "pigz": 2.8,
-                    "samtools": 1.24
+                    "pigz": "2.8",
+                    "samtools": "1.24"
                 },
                 "BOWTIE2_ALIGN_PE": {
                     "bowtie2": "2.5.5",
-                    "pigz": 2.8,
-                    "samtools": 1.24
+                    "pigz": "2.8",
+                    "samtools": "1.24"
                 },
                 "CAT_FASTQ": {
-                    "cat": 9.5
+                    "cat": "9.5"
                 },
                 "CUSTOM_CATADDITIONALFASTA": {
                     "python": "3.12.2"
@@ -1733,10 +1733,10 @@
                     "fq": "0.12.0"
                 },
                 "GUNZIP_ADDITIONAL_FASTA": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "GUNZIP_GTF": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "PICARD_MARKDUPLICATES": {
                     "picard": "3.5.0"
@@ -1745,28 +1745,28 @@
                     "salmon": "2.11.0"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.25
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_FASTQ_BOWTIE2": {
-                    "samtools": 1.25
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": 1.25
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": 1.25
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": 1.25
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": 1.25
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.25
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_VIEW_BOWTIE2": {
-                    "samtools": 1.25
+                    "samtools": "1.25"
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -1776,12 +1776,12 @@
                 },
                 "STAR_ALIGN": {
                     "gawk": "5.1.0",
-                    "samtools": 1.21,
+                    "samtools": "1.21",
                     "star": "2.7.11b"
                 },
                 "STAR_GENOMEGENERATE": {
                     "gawk": "5.1.0",
-                    "samtools": 1.21,
+                    "samtools": "1.21",
                     "star": "2.7.11b"
                 },
                 "TRIMGALORE": {
@@ -1791,10 +1791,10 @@
                     "bioconductor-tximeta": "1.20.1"
                 },
                 "UNTAR_BOWTIE2_RRNA_INDEX": {
-                    "untar": 1.34
+                    "untar": "1.34"
                 },
                 "UNTAR_SALMON_INDEX": {
-                    "untar": 1.34
+                    "untar": "1.34"
                 }
             },
             [

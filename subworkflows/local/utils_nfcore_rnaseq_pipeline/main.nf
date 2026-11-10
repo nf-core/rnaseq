@@ -154,14 +154,18 @@ workflow PIPELINE_COMPLETION {
     // Completion email and summary
     //
     workflow.onComplete {
+        // The v2 parser passes untyped CLI booleans as strings, which the plugin's boolean signature rejects.
+        // Remove once nf-core-utils accepts string booleans (nf-core/nf-core-utils#94).
+        def plaintext_email_bool = plaintext_email.toString().toBoolean()
+        def monochrome_logs_bool = monochrome_logs.toString().toBoolean()
         if (email || email_on_fail) {
             completionEmail(
                 summary_params,
                 email,
                 email_on_fail,
-                plaintext_email,
+                plaintext_email_bool,
                 outdir,
-                monochrome_logs,
+                monochrome_logs_bool,
                 multiqc_reports.isBound() ? multiqc_reports.getVal() : [],
             )
         }

@@ -65,9 +65,9 @@
                         "git_sha": "7b3452a23773f687ededb4befd037920e5a51341",
                         "installed_by": ["bam_qc_rnaseq", "modules"]
                     },
-                    "ea-utils/gtf2bed": {
+                    "eautils/gtf2bed": {
                         "branch": "master",
-                        "git_sha": "1298fbd2004c2913d6682ce4a419647d97a8fc3f",
+                        "git_sha": "7b3452a23773f687ededb4befd037920e5a51341",
                         "installed_by": ["modules"]
                     },
                     "fastp": {

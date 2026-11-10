@@ -1,4 +1,3 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
 name: "eautils_gtf2bed"
 description: Convert a GTF/GFF annotation file to BED12 format
 keywords:
@@ -62,3 +61,23 @@ authors:
   - "@pinin4fjords"
 maintainers:
   - "@pinin4fjords"
+containers:
+  docker:
+    linux/amd64:
+      name: community.wave.seqera.io/library/perl:5.26.2--2f879f377ee6109b
+      build_id: bd-2f879f377ee6109b_1
+      scan_id: sc-1e3a3f7eeb641b2a_1
+    linux/arm64:
+      name: community.wave.seqera.io/library/perl:5.26.2--cc808f21c017d239
+      build_id: bd-cc808f21c017d239_1
+      scan_id: sc-f540510bf23d42a1_1
+  singularity:
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/perl:5.26.2--0ad4f52bbf0da376
+      build_id: bd-0ad4f52bbf0da376_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/a9/a90490336208590dfdaaf102bb64f3c341aa0ced1f95d9247020ce88ae017db7/data
+  conda:
+    linux/amd64:
+      lock_file: modules/nf-core/ea-utils/gtf2bed/.conda-lock/linux_amd64-bd-2f879f377ee6109b_1.txt
+    linux/arm64:
+      lock_file: modules/nf-core/ea-utils/gtf2bed/.conda-lock/linux_arm64-bd-cc808f21c017d239_1.txt

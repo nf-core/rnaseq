@@ -21,7 +21,7 @@ include { RSEM_PREPAREREFERENCE as MAKE_TRANSCRIPTS_FASTA       } from '../../..
 include { SENTIEON_RSEMPREPAREREFERENCE as SENTIEON_MAKE_TRANSCRIPTS_FASTA } from '../../../modules/nf-core/sentieon/rsempreparereference'
 
 include { PREPROCESS_TRANSCRIPTS_FASTA_GENCODE } from '../../../modules/local/preprocess_transcripts_fasta_gencode'
-include { EAUTILS_GTF2BED                      } from '../../../modules/nf-core/ea-utils/gtf2bed'
+include { EAUTILS_GTF2BED                      } from '../../../modules/nf-core/eautils/gtf2bed'
 include { CUSTOM_GTFFILTER                     } from '../../../modules/nf-core/custom/gtffilter'
 
 workflow PREPARE_GENOME_REFERENCES {
@@ -46,7 +46,7 @@ workflow PREPARE_GENOME_REFERENCES {
     skip_pseudo_alignment    // boolean: Skip all of the pseudoalignment-based processes within the pipeline
     use_sentieon_star        // boolean: whether to use sentieon STAR version
     contaminant_screening    // string: contaminant screening tool ('kraken2', 'kraken2_bracken', 'sylph', or null)
-    prokaryotic              // boolean: whether the genome is prokaryotic (CDS-only annotation - use gffread --bed for gene BED since ea-utils/gtf2bed only handles exon features)
+    prokaryotic              // boolean: whether the genome is prokaryotic (CDS-only annotation - use gffread --bed for gene BED since eautils/gtf2bed only handles exon features)
 
     main:
     //---------------------------
@@ -135,7 +135,7 @@ workflow PREPARE_GENOME_REFERENCES {
         }
     } else if (prokaryotic) {
         // Prokaryotic annotations describe genes as CDS features, not exons, so
-        // ea-utils/gtf2bed (which only reads `exon` rows) emits an empty BED.
+        // eautils/gtf2bed (which only reads `exon` rows) emits an empty BED.
         // gffread --bed derives intervals from any feature type.
         ch_gene_bed = GFFREAD_GENE_BED(
             ch_gtf.map { item -> [ [id: item.baseName], item ] },

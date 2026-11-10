@@ -3,9 +3,38 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## dev - xxxx-xx-xx
+## [[3.28.0](https://github.com/nf-core/rnaseq/releases/tag/3.28.0)] - 2026-11-10
 
 ### Credits
+
+Special thanks to the following for their contributions to the release:
+
+- [Adam Talbot](https://github.com/adamrtalbot)
+- [Ben Sherman](https://github.com/bentsherman)
+- [Brandon Seah](https://github.com/kbseah)
+- [Chris Fields](https://github.com/cjfields)
+- [Daniel Lundin](https://github.com/erikrikarddaniel)
+- [Dominik Maszczyk](https://github.com/Skitionek)
+- [Edmund Miller](https://github.com/edmundmiller)
+- [Emmanuel Tan](https://github.com/emmanuel-tan)
+- [Felix Krueger](https://github.com/FelixKrueger)
+- [Friederike Hanssen](https://github.com/FriederikeHanssen)
+- [Gary Burnett](https://github.com/gburnett-nvidia)
+- [Janaki B](https://github.com/janaki-bio)
+- [Jared R Fischbach](https://github.com/jaredfischbach)
+- [Jenny Drnevich](https://github.com/jdrnevich)
+- [Jose Espinosa-Carrasco](https://github.com/JoseEspinosa)
+- [Louis Le Nézet](https://github.com/LouisLeNezet)
+- [Matthias Hörtenhuber](https://github.com/mashehu)
+- [Maxime U Garcia](https://github.com/maxulysse)
+- [NickPanyushev](https://github.com/NickPanyushev)
+- [Paolo Di Tommaso](https://github.com/pditommaso)
+- [Paolo Inglese](https://github.com/piplus2)
+- [Phil Ewels](https://github.com/ewels)
+- [Rayan Hassaïne](https://github.com/rhassaine)
+- [Scott Handley](https://github.com/shandley)
+- [Sriiraam](https://github.com/Sriiraam)
+- [Sushant Hona](https://github.com/OtoYuki)
 
 ### Enhancements and fixes
 
@@ -19,6 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1969](https://github.com/nf-core/rnaseq/pull/1969) - Add `--fail_on_low_trimmed_reads`, `--fail_on_low_mapped_reads` and `--fail_on_undetermined_strandedness` to fail the run, instead of silently skipping the sample or defaulting to `unstranded`
 - [PR #1972](https://github.com/nf-core/rnaseq/pull/1972) - Remove `cpus = 1` override for RiboDetector from `qc_trim_filter.config`
 - [PR #1978](https://github.com/nf-core/rnaseq/pull/1978) - Update `parabricks/rnafq2bam` module to 4.8.0-1, fixing the Parabricks run log overwriting STAR's `Log.final.out` so mapping rates are read correctly
+- [PR #1980](https://github.com/nf-core/rnaseq/pull/1980) - Important! Template update for nf-core/tools v4.2.1
 - [PR #1984](https://github.com/nf-core/rnaseq/pull/1984) - Leave samples failing `--min_mapped_reads` out of Salmon/RSEM quantification and the merged count tables (behaviour change: such samples no longer get aligner-based counts), and document the MultiQC fail tables and `multiqc_report_data/` folder
 - [PR #1986](https://github.com/nf-core/rnaseq/pull/1986) - Stop a library with no quantified reads crashing the SummarizedExperiment merge and DESeq2 QC; such samples are excluded from DESeq2 QC with a warning
 - [PR #1990](https://github.com/nf-core/rnaseq/pull/1990) - Use `size()` instead of the `size` property on lists in samplesheet validation, which fails on Nextflow 26.11 and later
@@ -26,6 +56,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1993](https://github.com/nf-core/rnaseq/pull/1993) - Update nf-core modules and subworkflows, including FastQC 0.13.0, fastp 1.4.0 and samtools 1.25, and sync the matching ARM container overrides
 - [PR #1977](https://github.com/nf-core/rnaseq/pull/1977) - Replace the vendored `utils_nextflow_pipeline`, `utils_nfcore_pipeline` and `utils_nfschema_plugin` subworkflows with the `nf-core-utils@0.7.0` plugin (behaviour change: completion email is skipped on Seqera Platform launches unless `params.force_completion_email = true`)
 - [PR #1994](https://github.com/nf-core/rnaseq/pull/1994) - Fix `HISAT2_ALIGN` running for only one sample when the HISAT2 index is built in-run ([#1992](https://github.com/nf-core/rnaseq/issues/1992))
+- [PR #1995](https://github.com/nf-core/rnaseq/pull/1995) - Bump version to 3.28.0 ahead of release, and move the vendored `ea-utils/gtf2bed` module to its renamed upstream `eautils/gtf2bed` to pick up the updated container base
+
+### Software dependencies
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| `bowtie2`  | 2.5.4       | 2.5.5       |
+| `fastp`    | 1.3.6       | 1.4.0       |
+| `fastqc`   | 0.12.1      | 0.13.0      |
+| `salmon`   | 2.7.0       | 2.11.0      |
+| `samtools` | 1.24        | 1.25        |
+| `sentieon` | 202503.02   | 202503.03   |
 
 ## [[3.27.0](https://github.com/nf-core/rnaseq/releases/tag/3.27.0)] - 2026-09-23
 

@@ -8,6 +8,8 @@ nextflow_process {
     tag "modules_nfcore"
     tag "ea-utils"
     tag "ea-utils/gtf2bed"
+    tag "eautils"
+    tag "eautils/gtf2bed"
 
     test("homo_sapiens - gtf") {
 

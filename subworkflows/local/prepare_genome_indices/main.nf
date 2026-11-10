@@ -226,7 +226,7 @@ workflow PREPARE_GENOME_INDICES {
                     .combine(ch_splicesites)
                     .map { fasta_file, gtf_file, ss_file -> [ [:], fasta_file, gtf_file, ss_file ] },
                 hisat2_build_memory
-            ).index.map { tuple -> tuple[1] }
+            ).index.map { tuple -> tuple[1] }.first()
         }
     }
 

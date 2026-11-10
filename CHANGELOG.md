@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1990](https://github.com/nf-core/rnaseq/pull/1990) - Use `size()` instead of the `size` property on lists in samplesheet validation, which fails on Nextflow 26.11 and later
 - [PR #1991](https://github.com/nf-core/rnaseq/pull/1991) - Update `salmon/index` and `salmon/quant` to Salmon 2.11.0, restoring `--noLengthCorrection` behaviour for 3' tag data (QuantSeq)
 - [PR #1993](https://github.com/nf-core/rnaseq/pull/1993) - Update nf-core modules and subworkflows, including FastQC 0.13.0, fastp 1.4.0 and samtools 1.25, and sync the matching ARM container overrides
+- [PR #1977](https://github.com/nf-core/rnaseq/pull/1977) - Replace the vendored `utils_nextflow_pipeline`, `utils_nfcore_pipeline` and `utils_nfschema_plugin` subworkflows with the `nf-core-utils@0.7.0` plugin (behaviour change: completion email is skipped on Seqera Platform launches unless `params.force_completion_email = true`)
 
 ## [[3.27.0](https://github.com/nf-core/rnaseq/releases/tag/3.27.0)] - 2026-09-23
 

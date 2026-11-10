@@ -6,14 +6,14 @@
                     {
                         "id": "test"
                     },
-                    "test.stats:md5,0820fa64eb353406bbedb913ca898ba8"
+                    "test.stats:md5,d08278c04faa0604308c84459c0cd858"
                 ]
             ]
         ],
-        "timestamp": "2026-07-10T08:38:32.509121",
+        "timestamp": "2026-10-28T07:15:51.766159",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.10.4"
         }
     },
     "test_bam_dedup_stats_samtools_umicollapse_flagstats": {

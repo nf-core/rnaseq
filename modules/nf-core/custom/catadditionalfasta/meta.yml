@@ -1,14 +1,12 @@
 name: "custom_catadditionalfasta"
-description: Custom module to Add a new fasta file to an old one and update an
-  associated GTF
+description: Custom module to Add a new fasta file to an old one and update an associated GTF
 keywords:
   - fasta
   - gtf
   - genomics
 tools:
   - "custom":
-      description: "Custom module to Add a new fasta file to an old one and update an
-        associated GTF"
+      description: "Custom module to Add a new fasta file to an old one and update an associated GTF"
       tool_dev_url: "https://github.com/nf-core/modules/blob/master/modules/nf-core/custom/catadditionalfasta/main.nf"
       licence:
         - "MIT"
@@ -80,3 +78,27 @@ authors:
   - "@pinin4fjords"
 maintainers:
   - "@pinin4fjords"
+containers:
+  docker:
+    linux/amd64:
+      name: community.wave.seqera.io/library/python:3.12.2--b229f007be7a84c0
+      build_id: bd-b229f007be7a84c0_1
+      scan_id: sc-f92dccff53724554_1
+    linux/arm64:
+      name: community.wave.seqera.io/library/python:3.12.2--e29f576b61676d8d
+      build_id: bd-e29f576b61676d8d_1
+      scan_id: sc-e976400f68f60057_1
+  singularity:
+    linux/arm64:
+      name: oras://community.wave.seqera.io/library/python:3.12.2--52280fe316184f2e
+      build_id: bd-52280fe316184f2e_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/62/62fae8648b084d94afff638bcec5219e24386fb308f9a11b2d19a1d3574b820f/data
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/python:3.12.2--d57705e011be0cf4
+      build_id: bd-d57705e011be0cf4_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/dd/dd0e85ebfdd196217d90b852b82b98f50e1f222f43aa55119358e558e7a8a71f/data
+  conda:
+    linux/amd64:
+      lock_file: modules/nf-core/custom/catadditionalfasta/.conda-lock/linux_amd64-bd-b229f007be7a84c0_1.txt
+    linux/arm64:
+      lock_file: modules/nf-core/custom/catadditionalfasta/.conda-lock/linux_arm64-bd-e29f576b61676d8d_1.txt

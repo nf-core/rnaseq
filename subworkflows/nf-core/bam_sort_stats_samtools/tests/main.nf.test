@@ -8,6 +8,7 @@ nextflow_workflow {
     tag "subworkflows/bam_sort_stats_samtools"
     tag "bam_sort_stats_samtools"
     tag "subworkflows/bam_stats_samtools"
+    tag "subworkflows/../bam_stats_samtools"
     tag "bam_stats_samtools"
     tag "samtools"
     tag "samtools/index"

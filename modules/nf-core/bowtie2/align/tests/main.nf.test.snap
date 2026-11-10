@@ -18,7 +18,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.bowtie2.log:md5,bd89ce1b28c93bf822bae391ffcedd19"
+                    "test.bowtie2.log:md5,169b09bba82894cb730cc16512541820"
                 ]
             ],
             [
@@ -38,7 +38,7 @@
                     [
                         "BOWTIE2_ALIGN",
                         "bowtie2",
-                        "2.5.4"
+                        "2.5.5"
                     ]
                 ],
                 "versions_pigz": [
@@ -52,15 +52,15 @@
                     [
                         "BOWTIE2_ALIGN",
                         "samtools",
-                        "1.21"
+                        "1.24"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-07-14T22:43:42.982329",
+        "timestamp": "2026-10-20T08:39:41.639911",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
+            "nextflow": "26.04.7"
         }
     },
     "sarscov2 - [fastq1, fastq2], large_index, fasta_fai, false, true - bam": {
@@ -82,7 +82,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.bowtie2.log:md5,bd89ce1b28c93bf822bae391ffcedd19"
+                    "test.bowtie2.log:md5,169b09bba82894cb730cc16512541820"
                 ]
             ],
             [
@@ -93,7 +93,7 @@
                     [
                         "BOWTIE2_ALIGN",
                         "bowtie2",
-                        "2.5.4"
+                        "2.5.5"
                     ]
                 ],
                 "versions_pigz": [
@@ -107,15 +107,15 @@
                     [
                         "BOWTIE2_ALIGN",
                         "samtools",
-                        "1.21"
+                        "1.24"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-07-14T22:43:59.4478",
+        "timestamp": "2026-10-20T08:39:59.800213",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
+            "nextflow": "26.04.7"
         }
     },
     "sarscov2 - fastq, index, fasta_fai, true, true - bam": {
@@ -137,7 +137,7 @@
                         "id": "test",
                         "single_end": true
                     },
-                    "test.bowtie2.log:md5,7b8a9e61b7646da1089b041333c41a87"
+                    "test.bowtie2.log:md5,2318a3c202cbd5893b9a975c162f4fdd"
                 ]
             ],
             [
@@ -154,7 +154,7 @@
                     [
                         "BOWTIE2_ALIGN",
                         "bowtie2",
-                        "2.5.4"
+                        "2.5.5"
                     ]
                 ],
                 "versions_pigz": [
@@ -168,15 +168,15 @@
                     [
                         "BOWTIE2_ALIGN",
                         "samtools",
-                        "1.21"
+                        "1.24"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-07-14T22:43:26.487819",
+        "timestamp": "2026-10-20T08:39:24.459776",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
+            "nextflow": "26.04.7"
         }
     },
     "sarscov2 - fastq, large_index, fasta_fai, false, true - bam": {
@@ -198,7 +198,7 @@
                         "id": "test",
                         "single_end": true
                     },
-                    "test.bowtie2.log:md5,7b8a9e61b7646da1089b041333c41a87"
+                    "test.bowtie2.log:md5,2318a3c202cbd5893b9a975c162f4fdd"
                 ]
             ],
             [
@@ -209,7 +209,7 @@
                     [
                         "BOWTIE2_ALIGN",
                         "bowtie2",
-                        "2.5.4"
+                        "2.5.5"
                     ]
                 ],
                 "versions_pigz": [
@@ -223,15 +223,15 @@
                     [
                         "BOWTIE2_ALIGN",
                         "samtools",
-                        "1.21"
+                        "1.24"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-07-14T22:43:51.231937",
+        "timestamp": "2026-10-20T08:39:50.564005",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
+            "nextflow": "26.04.7"
         }
     },
     "sarscov2 - fastq, index, fasta_fai, false, true - bam": {
@@ -253,7 +253,7 @@
                         "id": "test",
                         "single_end": true
                     },
-                    "test.bowtie2.log:md5,7b8a9e61b7646da1089b041333c41a87"
+                    "test.bowtie2.log:md5,2318a3c202cbd5893b9a975c162f4fdd"
                 ]
             ],
             [
@@ -264,7 +264,7 @@
                     [
                         "BOWTIE2_ALIGN",
                         "bowtie2",
-                        "2.5.4"
+                        "2.5.5"
                     ]
                 ],
                 "versions_pigz": [
@@ -278,15 +278,15 @@
                     [
                         "BOWTIE2_ALIGN",
                         "samtools",
-                        "1.21"
+                        "1.24"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-07-14T22:43:02.704611",
+        "timestamp": "2026-10-20T08:38:58.351473",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
+            "nextflow": "26.04.7"
         }
     },
     "sarscov2 - [fastq1, fastq2], index, fasta_fai, false, false - stub": {
@@ -302,7 +302,7 @@
                     [
                         "BOWTIE2_ALIGN",
                         "bowtie2",
-                        "2.5.4"
+                        "2.5.5"
                     ]
                 ],
                 "versions_pigz": [
@@ -316,15 +316,15 @@
                     [
                         "BOWTIE2_ALIGN",
                         "samtools",
-                        "1.21"
+                        "1.24"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-07-14T22:44:15.443539",
+        "timestamp": "2026-10-20T08:40:17.632491",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
+            "nextflow": "26.04.7"
         }
     },
     "sarscov2 - [fastq1, fastq2], index, fasta_fai, false, true - bam": {
@@ -346,7 +346,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.bowtie2.log:md5,bd89ce1b28c93bf822bae391ffcedd19"
+                    "test.bowtie2.log:md5,169b09bba82894cb730cc16512541820"
                 ]
             ],
             [
@@ -357,7 +357,7 @@
                     [
                         "BOWTIE2_ALIGN",
                         "bowtie2",
-                        "2.5.4"
+                        "2.5.5"
                     ]
                 ],
                 "versions_pigz": [
@@ -371,15 +371,15 @@
                     [
                         "BOWTIE2_ALIGN",
                         "samtools",
-                        "1.21"
+                        "1.24"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-07-14T22:43:34.912657",
+        "timestamp": "2026-10-20T08:39:33.167139",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
+            "nextflow": "26.04.7"
         }
     },
     "sarscov2 - fastq, index, fasta_fai, false, true - sam": {
@@ -401,7 +401,7 @@
                         "id": "test",
                         "single_end": true
                     },
-                    "test.bowtie2.log:md5,7b8a9e61b7646da1089b041333c41a87"
+                    "test.bowtie2.log:md5,2318a3c202cbd5893b9a975c162f4fdd"
                 ]
             ],
             [
@@ -412,7 +412,7 @@
                     [
                         "BOWTIE2_ALIGN",
                         "bowtie2",
-                        "2.5.4"
+                        "2.5.5"
                     ]
                 ],
                 "versions_pigz": [
@@ -426,15 +426,15 @@
                     [
                         "BOWTIE2_ALIGN",
                         "samtools",
-                        "1.21"
+                        "1.24"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-07-14T22:43:10.578894",
+        "timestamp": "2026-10-20T08:39:07.469212",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
+            "nextflow": "26.04.7"
         }
     },
     "sarscov2 - fastq, index, fasta_fai, true, false - stub": {
@@ -456,7 +456,7 @@
                     [
                         "BOWTIE2_ALIGN",
                         "bowtie2",
-                        "2.5.4"
+                        "2.5.5"
                     ]
                 ],
                 "versions_pigz": [
@@ -470,15 +470,15 @@
                     [
                         "BOWTIE2_ALIGN",
                         "samtools",
-                        "1.21"
+                        "1.24"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-07-14T22:44:22.594867",
+        "timestamp": "2026-10-20T08:40:23.991519",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
+            "nextflow": "26.04.7"
         }
     },
     "sarscov2 - fastq, index, fasta_fai, false, true - sam2": {
@@ -500,7 +500,7 @@
                         "id": "test",
                         "single_end": true
                     },
-                    "test.bowtie2.log:md5,7b8a9e61b7646da1089b041333c41a87"
+                    "test.bowtie2.log:md5,2318a3c202cbd5893b9a975c162f4fdd"
                 ]
             ],
             [
@@ -511,7 +511,7 @@
                     [
                         "BOWTIE2_ALIGN",
                         "bowtie2",
-                        "2.5.4"
+                        "2.5.5"
                     ]
                 ],
                 "versions_pigz": [
@@ -525,15 +525,15 @@
                     [
                         "BOWTIE2_ALIGN",
                         "samtools",
-                        "1.21"
+                        "1.24"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-07-14T22:43:18.486229",
+        "timestamp": "2026-10-20T08:39:15.611284",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
+            "nextflow": "26.04.7"
         }
     },
     "sarscov2 - [fastq1, fastq2], index, fasta_fai, false, true - cram": {
@@ -555,7 +555,7 @@
                     [
                         "BOWTIE2_ALIGN",
                         "bowtie2",
-                        "2.5.4"
+                        "2.5.5"
                     ]
                 ],
                 "versions_pigz": [
@@ -569,15 +569,15 @@
                     [
                         "BOWTIE2_ALIGN",
                         "samtools",
-                        "1.21"
+                        "1.24"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-07-14T22:44:08.322534",
+        "timestamp": "2026-10-20T08:40:10.444707",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
+            "nextflow": "26.04.7"
         }
     }
 }

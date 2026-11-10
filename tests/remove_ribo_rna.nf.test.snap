@@ -7,7 +7,7 @@
                     "bbmap": 39.18
                 },
                 "BOWTIE2_BUILD": {
-                    "bowtie2": "2.5.4"
+                    "bowtie2": "2.5.5"
                 },
                 "CAT_FASTQ": {
                     "cat": 9.5
@@ -34,7 +34,7 @@
                     "gunzip": 1.13
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "STAR_GENOMEGENERATE": {
                     "gawk": "5.1.0",
@@ -83,7 +83,7 @@
                 
             ]
         ],
-        "timestamp": "2026-09-16T15:37:17.54052168",
+        "timestamp": "2026-11-09T17:49:06.595538009",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -142,22 +142,22 @@
                     "salmon": "2.11.0"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -784,7 +784,7 @@
                 "salmon.merged.tx2gene_augmented.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
             ]
         ],
-        "timestamp": "2026-11-09T14:00:39.948628587",
+        "timestamp": "2026-11-09T17:40:43.929811414",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -819,7 +819,7 @@
                     "gunzip": 1.13
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "STAR_GENOMEGENERATE": {
                     "gawk": "5.1.0",
@@ -869,7 +869,7 @@
                 
             ]
         ],
-        "timestamp": "2026-09-16T15:38:26.931914807",
+        "timestamp": "2026-11-09T17:54:02.900053087",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -907,7 +907,7 @@
                     "gunzip": 1.13
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SORTMERNA_INDEX": {
                     "sortmerna": "4.3.7"
@@ -957,7 +957,7 @@
                 
             ]
         ],
-        "timestamp": "2026-09-25T16:23:41.180071961",
+        "timestamp": "2026-11-09T17:41:47.104015042",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -971,17 +971,17 @@
                     "bbmap": 39.18
                 },
                 "BOWTIE2_ALIGN": {
-                    "bowtie2": "2.5.4",
+                    "bowtie2": "2.5.5",
                     "pigz": 2.8,
-                    "samtools": 1.21
+                    "samtools": 1.24
                 },
                 "BOWTIE2_ALIGN_PE": {
-                    "bowtie2": "2.5.4",
+                    "bowtie2": "2.5.5",
                     "pigz": 2.8,
-                    "samtools": 1.21
+                    "samtools": 1.24
                 },
                 "BOWTIE2_BUILD": {
-                    "bowtie2": "2.5.4"
+                    "bowtie2": "2.5.5"
                 },
                 "CAT_FASTQ": {
                     "cat": 9.5
@@ -1029,28 +1029,28 @@
                     "salmon": "2.11.0"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_FASTQ_BOWTIE2": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_VIEW_BOWTIE2": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -1679,7 +1679,7 @@
                 "salmon.merged.tx2gene_augmented.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
             ]
         ],
-        "timestamp": "2026-11-09T14:08:40.470695354",
+        "timestamp": "2026-11-09T17:48:21.468137207",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -1693,14 +1693,14 @@
                     "bbmap": 39.18
                 },
                 "BOWTIE2_ALIGN": {
-                    "bowtie2": "2.5.4",
+                    "bowtie2": "2.5.5",
                     "pigz": 2.8,
-                    "samtools": 1.21
+                    "samtools": 1.24
                 },
                 "BOWTIE2_ALIGN_PE": {
-                    "bowtie2": "2.5.4",
+                    "bowtie2": "2.5.5",
                     "pigz": 2.8,
-                    "samtools": 1.21
+                    "samtools": 1.24
                 },
                 "CAT_FASTQ": {
                     "cat": 9.5
@@ -1745,28 +1745,28 @@
                     "salmon": "2.11.0"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_FASTQ_BOWTIE2": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_VIEW_BOWTIE2": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -2397,7 +2397,7 @@
                 "salmon.merged.tx2gene_augmented.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe"
             ]
         ],
-        "timestamp": "2026-11-09T14:13:55.387191746",
+        "timestamp": "2026-11-09T17:53:15.620608012",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

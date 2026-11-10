@@ -191,3 +191,27 @@ authors:
 maintainers:
   - "@joseespinosa"
   - "@drpatelh"
+containers:
+  docker:
+    linux/arm64:
+      name: community.wave.seqera.io/library/bowtie2_htslib_samtools_pigz:9f290da29567318c
+      build_id: bd-9f290da29567318c_1
+      scan_id: sc-98905ced68bda5f0_1
+    linux/amd64:
+      name: community.wave.seqera.io/library/bowtie2_htslib_samtools_pigz:dbd18842ad7cb278
+      build_id: bd-dbd18842ad7cb278_1
+      scan_id: sc-c9fff40d1921fb76_1
+  singularity:
+    linux/arm64:
+      name: oras://community.wave.seqera.io/library/bowtie2_htslib_samtools_pigz:f2ceb0358c026249
+      build_id: bd-f2ceb0358c026249_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/92/9266ea4da38d6a8ace999a5d57cd4b4b77bfef573633da7ac18e6eb01531e1d0/data
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/bowtie2_htslib_samtools_pigz:1d137fae829780dd
+      build_id: bd-1d137fae829780dd_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/d4/d4990a9e13c1aad32d60f19e0ced204f2f1e231fe856290ce75713505a1bfe44/data
+  conda:
+    linux/amd64:
+      lock_file: modules/nf-core/bowtie2/align/.conda-lock/linux_amd64-bd-dbd18842ad7cb278_1.txt
+    linux/arm64:
+      lock_file: modules/nf-core/bowtie2/align/.conda-lock/linux_arm64-bd-9f290da29567318c_1.txt

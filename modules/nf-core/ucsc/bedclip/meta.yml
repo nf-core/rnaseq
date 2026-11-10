@@ -64,3 +64,27 @@ authors:
   - "@drpatelh"
 maintainers:
   - "@drpatelh"
+containers:
+  docker:
+    linux/amd64:
+      name: community.wave.seqera.io/library/ucsc-bedclip:482--c81ad102fb2a5968
+      build_id: bd-c81ad102fb2a5968_1
+      scan_id: sc-8a05dd82e8bcb5d8_1
+    linux/arm64:
+      name: community.wave.seqera.io/library/ucsc-bedclip:482--d778f82dce9efacf
+      build_id: bd-d778f82dce9efacf_1
+      scan_id: sc-2ffa665043eeee2e_1
+  singularity:
+    linux/arm64:
+      name: oras://community.wave.seqera.io/library/ucsc-bedclip:482--6e04912cbe083cb3
+      build_id: bd-6e04912cbe083cb3_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/ee/ee43f39c732e749f8e64d90cf3c0744d563c97c411ca6f932aae8456ce28a497/data
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/ucsc-bedclip:482--8f559b1611c808d9
+      build_id: bd-8f559b1611c808d9_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/37/3752926dcf7d7fd70bcd440f6d3670948a9cee582273a8c6b806cb46af30fdc4/data
+  conda:
+    linux/amd64:
+      lock_file: modules/nf-core/ucsc/bedclip/.conda-lock/linux_amd64-bd-c81ad102fb2a5968_1.txt
+    linux/arm64:
+      lock_file: modules/nf-core/ucsc/bedclip/.conda-lock/linux_arm64-bd-d778f82dce9efacf_1.txt

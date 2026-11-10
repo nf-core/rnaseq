@@ -1,6 +1,5 @@
 name: bedtools_genomecov
-description: Computes histograms (default), per-base reports (-d) and BEDGRAPH (-bg)
-  summaries of feature coverage (e.g., aligned sequences) for a given genome.
+description: Computes histograms (default), per-base reports (-d) and BEDGRAPH (-bg) summaries of feature coverage (e.g., aligned sequences) for a given genome.
 keywords:
   - bed
   - bam
@@ -27,19 +26,14 @@ input:
         ontologies: []
     - scale:
         type: integer
-        description: Number containing the scale factor for the output. Set to 1 to
-          disable. Setting to a value other than 1 will also get the -bg bedgraph output
-          format as this is required for this command switch
+        description: Number containing the scale factor for the output. Set to 1 to disable. Setting to a value other than 1 will also get the -bg bedgraph output format as this is required for this command switch
   - sizes:
       type: file
-      description: Tab-delimited table of chromosome names in the first column and chromosome
-        sizes in the second column
+      description: Tab-delimited table of chromosome names in the first column and chromosome sizes in the second column
       ontologies: []
   - extension:
       type: string
-      description: Extension of the output file (e. g., ".bg", ".bedgraph", ".txt",
-        ".tab", etc.) It is set arbitrarily by the user and corresponds to the file
-        format which depends on arguments.
+      description: Extension of the output file (e. g., ".bg", ".bedgraph", ".txt", ".tab", etc.) It is set arbitrarily by the user and corresponds to the file format which depends on arguments.
   - sort:
       type: boolean
       description: Sort the output
@@ -88,3 +82,27 @@ maintainers:
   - "@drpatelh"
   - "@sidorov-si"
   - "@chris-cheshire"
+containers:
+  docker:
+    linux/arm64:
+      name: community.wave.seqera.io/library/bedtools:2.31.1--e9d146a89f91ce35
+      build_id: bd-e9d146a89f91ce35_1
+      scan_id: sc-e32f8457f7f89e28_1
+    linux/amd64:
+      name: community.wave.seqera.io/library/bedtools:2.31.1--897920cd303d6413
+      build_id: bd-897920cd303d6413_1
+      scan_id: sc-ed353a7cc83a1aab_1
+  singularity:
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/bedtools:2.31.1--eb67454a3b6acef1
+      build_id: bd-eb67454a3b6acef1_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/52/52d3fbb86c48b8c39a989733ca97bfd84cf665a9ab279be7cfbbb36f5a53c46a/data
+    linux/arm64:
+      name: oras://community.wave.seqera.io/library/bedtools:2.31.1--5d006abf1fe7e822
+      build_id: bd-5d006abf1fe7e822_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/1d/1d2a87c036cbd9e3859150045d4a83692b28c6d15a09997d8910f2fdc3f31bdd/data
+  conda:
+    linux/amd64:
+      lock_file: modules/nf-core/bedtools/genomecov/.conda-lock/linux_amd64-bd-897920cd303d6413_1.txt
+    linux/arm64:
+      lock_file: modules/nf-core/bedtools/genomecov/.conda-lock/linux_arm64-bd-e9d146a89f91ce35_1.txt

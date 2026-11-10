@@ -13,6 +13,7 @@ nextflow_workflow {
     tag "dupradar"
     tag "subread/featurecounts"
     tag "custom/multiqccustombiotype"
+    tag "samtools"
     tag "samtools/sort"
     tag "subworkflows/bam_rseqc"
 

@@ -1,3 +1,6 @@
+// Copyright (c) the nf-core community under an open-source MIT license.
+// See https://github.com/nf-core/modules for full license, file patching instructions and upstream contributing.
+
 process PICARD_MARKDUPLICATES {
     tag "${meta.id}"
     label 'process_medium'
@@ -5,7 +8,7 @@ process PICARD_MARKDUPLICATES {
     conda "${moduleDir}/environment.yml"
     container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
         ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/b4/b474c6f12c0502377b95062b75ef4b7778864b1353c7fc1d5a3b1f3b3017fd2e/data'
-        : 'community.wave.seqera.io/library/picard:3.5.0--842d4c70c98af9b4'}"
+        : 'community.wave.seqera.io/library/picard:3.5.0--be20f299a1924f0d'}"
 
     input:
     tuple val(meta), path(reads)

@@ -78,3 +78,27 @@ authors:
   - "@FriederikeHanssen"
 maintainers:
   - "@FriederikeHanssen"
+containers:
+  docker:
+    linux/amd64:
+      name: community.wave.seqera.io/library/qualimap:2.3--e70af3f76915782f
+      build_id: bd-e70af3f76915782f_1
+      scan_id: sc-8d5f65002d40a54c_1
+    linux/arm64:
+      name: community.wave.seqera.io/library/qualimap:2.3--608d175cb434baca
+      build_id: bd-608d175cb434baca_1
+      scan_id: sc-037809b36ae64f60_1
+  singularity:
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/qualimap:2.3--f2479f8055c749b0
+      build_id: bd-f2479f8055c749b0_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/43/43d53d976495e04b250e36cb8dd5dcbb0b1390542e9103071cd533a74269877d/data
+    linux/arm64:
+      name: oras://community.wave.seqera.io/library/qualimap:2.3--026b8aac8332c506
+      build_id: bd-026b8aac8332c506_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/75/7518c8a6574d02c4f7d152f7833a8a2d276aa4aa377c5ee76b8e2b99197499eb/data
+  conda:
+    linux/amd64:
+      lock_file: modules/nf-core/qualimap/rnaseq/.conda-lock/linux_amd64-bd-e70af3f76915782f_1.txt
+    linux/arm64:
+      lock_file: modules/nf-core/qualimap/rnaseq/.conda-lock/linux_arm64-bd-608d175cb434baca_1.txt

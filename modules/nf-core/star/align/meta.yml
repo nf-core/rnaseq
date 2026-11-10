@@ -25,7 +25,8 @@ input:
         type: file
         description: |
           List of input FastQ files of size 1 and 2 for single-end and paired-end data,
-          respectively.
+          respectively. Gzipped FastQ files are decompressed on the fly with
+          '--readFilesCommand zcat', unless '--readFilesCommand' is set in ext.args.
         ontologies: []
   - - meta2:
         type: map

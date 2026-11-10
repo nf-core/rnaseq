@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [PR #1986](https://github.com/nf-core/rnaseq/pull/1986) - Stop a library with no quantified reads crashing the SummarizedExperiment merge and DESeq2 QC; such samples are excluded from DESeq2 QC with a warning
 - [PR #1990](https://github.com/nf-core/rnaseq/pull/1990) - Use `size()` instead of the `size` property on lists in samplesheet validation, which fails on Nextflow 26.11 and later
 - [PR #1991](https://github.com/nf-core/rnaseq/pull/1991) - Update `salmon/index` and `salmon/quant` to Salmon 2.11.0, restoring `--noLengthCorrection` behaviour for 3' tag data (QuantSeq)
+- [PR #1994](https://github.com/nf-core/rnaseq/pull/1994) - Fix `HISAT2_ALIGN` running for only one sample when the HISAT2 index is built in-run ([#1992](https://github.com/nf-core/rnaseq/issues/1992))
 
 ## [[3.27.0](https://github.com/nf-core/rnaseq/releases/tag/3.27.0)] - 2026-09-23
 

@@ -1,12 +1,15 @@
+// Copyright (c) the nf-core community under an open-source MIT license.
+// See https://github.com/nf-core/modules for full license, file patching instructions and upstream contributing.
+
 process SENTIEON_RSEMPREPAREREFERENCE {
     tag "$fasta"
     label 'process_high'
     label 'sentieon'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container ?
-        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/39/39a3e1a85912520836ad054c8ac0497b463bb5170e0e907183dbd08509dad997/data' :
-        'community.wave.seqera.io/library/rsem_sentieon:3e4315fa0b636313' }"
+    container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/9b/9b97345bd9410f04fcb01c87cb3fbb96c650609fe1188f8c7de243ee5799e42a/data'
+        : 'community.wave.seqera.io/library/rsem_sentieon:2c2a3e1e4a56ec97' }"
 
     input:
     path fasta, stageAs: "rsem/*"

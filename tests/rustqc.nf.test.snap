@@ -19,7 +19,7 @@
                     "perl": "5.26.2"
                 },
                 "FASTQC": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "FQ_LINT": {
                     "fq": "0.12.0"
@@ -31,7 +31,7 @@
                     "gunzip": 1.13
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "STAR_GENOMEGENERATE": {
                     "gawk": "5.1.0",
@@ -89,7 +89,7 @@
                 
             ]
         ],
-        "timestamp": "2026-09-16T15:46:32.612210166",
+        "timestamp": "2026-11-09T17:34:17.471878229",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -112,7 +112,7 @@
                     "perl": "5.26.2"
                 },
                 "FASTQC": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "FQ_LINT": {
                     "fq": "0.12.0"
@@ -144,22 +144,22 @@
                     "salmon": "2.11.0"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "TRIMGALORE": {
                     "trimgalore": "2.3.0"
@@ -1022,7 +1022,7 @@
                 "WT_REP2.tin.xls:md5,d13d51dc99bfd19c83d0c8b3a1bc961f",
                 "fastqc_raw-status-check-heatmap.txt:md5,5a89b0d8d162f6b1dbdaf39457bbc03b",
                 "fastqc_raw_adapter_content_plot.txt:md5,da0389be84cfdd189b1d045212eb2974",
-                "fastqc_raw_overrepresented_sequences_plot.txt:md5,25d88ea8a72f55e8a374ae802bc7f0b1",
+                "fastqc_raw_overrepresented_sequences_plot.txt:md5,2aeb10478cd9d7f45099c6a226a8026f",
                 "fastqc_raw_per_base_n_content_plot.txt:md5,d368d7e36ca2f73dcde61f2b486d8213",
                 "fastqc_raw_per_base_sequence_quality_plot.txt:md5,5c3065b549129702b185ea1b817da420",
                 "fastqc_raw_per_sequence_gc_content_plot_Counts.txt:md5,9ddaa50167117d3c9188ccf015427704",
@@ -1040,7 +1040,7 @@
                 "fastqc_trimmed_sequence_counts_plot.txt:md5,370ddc5e58838dc5b55e53b6f8b8902a",
                 "fastqc_trimmed_sequence_duplication_levels_plot.txt:md5,b106d8ee7b83efe237afb862ebbe2f47",
                 "multiqc_citations.txt:md5,321636627e50d3616b89bb8f00edcfa3",
-                "multiqc_fastqc_fastqc_raw.txt:md5,81c3c1a2575a1891a7f2a9637a0f2cc0",
+                "multiqc_fastqc_fastqc_raw.txt:md5,46e017b5949b50883831bc40f06a1a1d",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,a8a003b61b03295c416f3eb66c1cca65",
                 "multiqc_featurecounts_biotype_plot.txt:md5,324980221a51439d32f067a2c7a5665d",
                 "multiqc_rseqc_tin.txt:md5,983edbf7184341d0cb1d946e2e48221c",
@@ -1067,7 +1067,7 @@
                 "umitools_extract_regex_barplot.txt:md5,f94f8393b1dcff652edd7b34dac7c596"
             ]
         ],
-        "timestamp": "2026-11-09T14:20:13.639650493",
+        "timestamp": "2026-11-09T17:33:19.020812441",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -1113,10 +1113,10 @@
                     "perl": "5.26.2"
                 },
                 "FASTQC": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "FASTQC_FILTERED": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "FQ_LINT": {
                     "fq": "0.12.0"
@@ -1146,22 +1146,22 @@
                     "salmon": "2.11.0"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -2366,7 +2366,7 @@
             [
                 "fastqc_raw-status-check-heatmap.txt:md5,5a89b0d8d162f6b1dbdaf39457bbc03b",
                 "fastqc_raw_adapter_content_plot.txt:md5,da0389be84cfdd189b1d045212eb2974",
-                "fastqc_raw_overrepresented_sequences_plot.txt:md5,25d88ea8a72f55e8a374ae802bc7f0b1",
+                "fastqc_raw_overrepresented_sequences_plot.txt:md5,2aeb10478cd9d7f45099c6a226a8026f",
                 "fastqc_raw_per_base_n_content_plot.txt:md5,d368d7e36ca2f73dcde61f2b486d8213",
                 "fastqc_raw_per_base_sequence_quality_plot.txt:md5,5c3065b549129702b185ea1b817da420",
                 "fastqc_raw_per_sequence_gc_content_plot_Counts.txt:md5,9ddaa50167117d3c9188ccf015427704",
@@ -2384,7 +2384,7 @@
                 "fastqc_trimmed_sequence_counts_plot.txt:md5,9fd642bdd1da354f296bb8092205608f",
                 "fastqc_trimmed_sequence_duplication_levels_plot.txt:md5,0758257b497283b1ef28171e694db6db",
                 "multiqc_citations.txt:md5,ce9eccb7e7b3898774e42eee791fa28b",
-                "multiqc_fastqc_fastqc_raw.txt:md5,81c3c1a2575a1891a7f2a9637a0f2cc0",
+                "multiqc_fastqc_fastqc_raw.txt:md5,46e017b5949b50883831bc40f06a1a1d",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,54743154d0e8858980acffeb5b6f6a97",
                 "multiqc_featurecounts_biotype_plot.txt:md5,7ff6ee48139da0a7ca01563e3e66723b",
                 "multiqc_rseqc_tin.txt:md5,981edb4cb364185df3e0fe4fc7d01b28",
@@ -2527,7 +2527,7 @@
                 "i_data.ctab:md5,041edee3193df311f621c09f4991892b"
             ]
         ],
-        "timestamp": "2026-11-09T14:18:41.739317259",
+        "timestamp": "2026-11-09T17:30:45.779466021",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

@@ -10,7 +10,7 @@
                     "python": "3.10.4"
                 },
                 "FASTQC": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "FQ_LINT": {
                     "fq": "0.12.0"
@@ -43,22 +43,22 @@
                     "salmon": "2.11.0"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -430,7 +430,7 @@
             ],
             [
                 "fastqc_raw-status-check-heatmap.txt:md5,e7e2b9dc8c77f456ad5f770fe2b8e308",
-                "fastqc_raw_overrepresented_sequences_plot.txt:md5,4b1cdda2f52c1064258e9b77341d5d86",
+                "fastqc_raw_overrepresented_sequences_plot.txt:md5,fb046664e2b42b92ae10807a5e904416",
                 "fastqc_raw_per_base_n_content_plot.txt:md5,76f9627438fa3a1c983405fa057d1b3a",
                 "fastqc_raw_per_base_sequence_quality_plot.txt:md5,b0ee91ba241f544696d9e096a1f81ae4",
                 "fastqc_raw_per_sequence_gc_content_plot_Counts.txt:md5,9f27db3f66c750152270ac6f65fe65d8",
@@ -448,7 +448,7 @@
                 "fastqc_trimmed_sequence_counts_plot.txt:md5,fe8a0c5d299e6e9972c8605e9fc8a022",
                 "fastqc_trimmed_sequence_duplication_levels_plot.txt:md5,5413485383af9f009c86ad014cb1b026",
                 "multiqc_citations.txt:md5,3f0db14de2a149024db7b7bc5839565d",
-                "multiqc_fastqc_fastqc_raw.txt:md5,42c1cc19c4b9104eb499ce499f335951",
+                "multiqc_fastqc_fastqc_raw.txt:md5,c68402a0a316d35f85cae4a29b13ba3c",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,8be94d69e0c458017cf5064fa1fa86a0",
                 "multiqc_samtools_idxstats.txt:md5,6949b8e77b72655f069f7ffd9a298d68",
                 "multiqc_strand_check_composition_bargraph.txt:md5,a9dfa9875799864f6add4d606af11617",
@@ -482,7 +482,7 @@
                 "salmon.merged.tx2gene_augmented.tsv:md5,02c8aa14dbbbd6c4e45cf0a1b916b1ab"
             ]
         ],
-        "timestamp": "2026-11-09T13:48:00.167281087",
+        "timestamp": "2026-11-09T17:44:28.285674276",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -493,12 +493,12 @@
             48,
             {
                 "BOWTIE2_ALIGN": {
-                    "bowtie2": "2.5.4",
+                    "bowtie2": "2.5.5",
                     "pigz": 2.8,
-                    "samtools": 1.21
+                    "samtools": 1.24
                 },
                 "BOWTIE2_BUILD": {
-                    "bowtie2": "2.5.4"
+                    "bowtie2": "2.5.5"
                 },
                 "CUSTOM_GTFFILTER": {
                     "python": "3.14.5"
@@ -507,7 +507,7 @@
                     "python": "3.10.4"
                 },
                 "FASTQC": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "FQ_LINT": {
                     "fq": "0.12.0"
@@ -537,22 +537,22 @@
                     "salmon": "2.11.0"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -900,7 +900,7 @@
                 "salmon.merged.tx2gene.tsv:md5,02c8aa14dbbbd6c4e45cf0a1b916b1ab",
                 "salmon.merged.tx2gene_augmented.tsv:md5,02c8aa14dbbbd6c4e45cf0a1b916b1ab",
                 "fastqc_raw-status-check-heatmap.txt:md5,e7e2b9dc8c77f456ad5f770fe2b8e308",
-                "fastqc_raw_overrepresented_sequences_plot.txt:md5,4b1cdda2f52c1064258e9b77341d5d86",
+                "fastqc_raw_overrepresented_sequences_plot.txt:md5,fb046664e2b42b92ae10807a5e904416",
                 "fastqc_raw_per_base_n_content_plot.txt:md5,76f9627438fa3a1c983405fa057d1b3a",
                 "fastqc_raw_per_base_sequence_quality_plot.txt:md5,b0ee91ba241f544696d9e096a1f81ae4",
                 "fastqc_raw_per_sequence_gc_content_plot_Counts.txt:md5,9f27db3f66c750152270ac6f65fe65d8",
@@ -919,7 +919,7 @@
                 "fastqc_trimmed_sequence_duplication_levels_plot.txt:md5,5413485383af9f009c86ad014cb1b026",
                 "multiqc_bowtie2_bowtie2_alignment.txt:md5,d2f10759fadaaa79f7cb4ceb9f6c10de",
                 "multiqc_citations.txt:md5,a4da61f613d3dfae37153b0e5652b15e",
-                "multiqc_fastqc_fastqc_raw.txt:md5,42c1cc19c4b9104eb499ce499f335951",
+                "multiqc_fastqc_fastqc_raw.txt:md5,c68402a0a316d35f85cae4a29b13ba3c",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,8be94d69e0c458017cf5064fa1fa86a0",
                 "multiqc_samtools_idxstats.txt:md5,3c5601429d85e11395c354db24a1a8ac",
                 "multiqc_trim_galore.txt:md5,396ea1135abc1864703d64380b75038c",
@@ -934,7 +934,7 @@
                 "trim_galore_filtered_reads_plot.txt:md5,49247a651f1c0038649c28efd32afcad"
             ]
         ],
-        "timestamp": "2026-11-09T13:51:30.648693147",
+        "timestamp": "2026-11-09T17:47:13.115658031",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -945,12 +945,12 @@
             48,
             {
                 "BOWTIE2_ALIGN": {
-                    "bowtie2": "2.5.4",
+                    "bowtie2": "2.5.5",
                     "pigz": 2.8,
-                    "samtools": 1.21
+                    "samtools": 1.24
                 },
                 "BOWTIE2_BUILD": {
-                    "bowtie2": "2.5.4"
+                    "bowtie2": "2.5.5"
                 },
                 "CUSTOM_GTFFILTER": {
                     "python": "3.14.5"
@@ -959,7 +959,7 @@
                     "python": "3.10.4"
                 },
                 "FASTQC": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "FQ_LINT": {
                     "fq": "0.12.0"
@@ -989,22 +989,22 @@
                     "salmon": "2.11.0"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -1118,7 +1118,7 @@
                 "salmon.merged.tx2gene.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
-        "timestamp": "2026-10-29T12:08:14.899628462",
+        "timestamp": "2026-11-09T17:45:42.195013292",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -1135,7 +1135,7 @@
                     "python": "3.10.4"
                 },
                 "FASTQC": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "FQ_LINT": {
                     "fq": "0.12.0"
@@ -1168,22 +1168,22 @@
                     "salmon": "2.11.0"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.24
+                    "samtools": 1.25
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -1328,7 +1328,7 @@
                 "salmon.merged.tx2gene.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
-        "timestamp": "2026-10-29T12:06:00.431185127",
+        "timestamp": "2026-11-09T17:42:15.871597491",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

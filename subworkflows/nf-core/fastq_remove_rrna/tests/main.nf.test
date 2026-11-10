@@ -6,19 +6,22 @@ nextflow_workflow {
     workflow "FASTQ_REMOVE_RRNA"
     config "./nextflow.config"
 
-    tag "subworkflows"
-    tag "subworkflows_nfcore"
-    tag "subworkflows/fastq_remove_rrna"
-
-    tag "cat/fastq"
+    tag "bowtie2"
     tag "bowtie2/align"
     tag "bowtie2/build"
+    tag "cat"
+    tag "cat/fastq"
     tag "ribodetector"
-    tag "samtools/view"
+    tag "samtools"
     tag "samtools/fastq"
+    tag "samtools/view"
+    tag "seqkit"
     tag "seqkit/replace"
     tag "seqkit/stats"
     tag "sortmerna"
+    tag "subworkflows"
+    tag "subworkflows/fastq_remove_rrna"
+    tag "subworkflows_nfcore"
 
     // Global setup: Create test data with synthetic rRNA reads using CAT_FASTQ
     // The rRNA reads (from generic/fastq/) are 5.8S rRNA sequences that will be detected

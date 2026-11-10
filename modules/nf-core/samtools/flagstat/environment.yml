@@ -5,6 +5,6 @@ channels:
   - bioconda
 dependencies:
   # renovate: datasource=conda depName=bioconda/htslib
-  - bioconda::htslib=1.24
+  - bioconda::htslib=1.25
   # renovate: datasource=conda depName=bioconda/samtools
-  - bioconda::samtools=1.24
+  - bioconda::samtools=1.25

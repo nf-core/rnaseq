@@ -12,6 +12,7 @@ nextflow_workflow {
     tag "subworkflows/bam_dedup_stats_samtools_umitools"
     tag "subworkflows/bam_sort_stats_samtools"
     tag "umitools/prepareforrsem"
+    tag "samtools"
     tag "samtools/sort"
 
     test("sarscov2_bam_bai - umitools - with transcriptome bams") {

@@ -26,10 +26,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-04-10T11:10:35.353549766",
+        "timestamp": "2026-10-20T12:36:15.72044942",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.2"
+            "nextflow": "26.10.2"
         }
     },
     "homo_sapiens - gtf - extended": {
@@ -59,10 +59,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-04-10T11:14:33.402150582",
+        "timestamp": "2026-10-20T12:36:22.209925635",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.2"
+            "nextflow": "26.10.2"
         }
     },
     "homo_sapiens - gtf - stub": {

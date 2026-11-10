@@ -93,7 +93,7 @@ ${colors.purple}  nf-core/rnaseq ${workflow.manifest.version}${colors.reset}
     log.info paramsSummaryLog(workflow)
     log.info after_text
     if (validate_params) {
-        validateParameters(cast_cli_params: false)
+        validateParameters()
     }
 
     //

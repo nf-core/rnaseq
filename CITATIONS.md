@@ -112,7 +112,7 @@
 
   > Shaw J, Yu YW. Rapid species-level metagenome profiling and containment estimation with sylph. Nat Biotechnol. 2025 Aug;43(8):1348-1359. doi: 10.1038/s41587-024-02412-y. Epub 2024 Oct 8. PMID: 39379646; PMCID: PMC12339375.
 
-- [Trim Galore!](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/)
+- [Trim Galore!](https://github.com/FelixKrueger/TrimGalore)
 
 - [tximport](https://pubmed.ncbi.nlm.nih.gov/26925227/)
 

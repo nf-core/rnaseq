@@ -58,17 +58,22 @@ Special thanks to the following for their contributions to the release:
 - [PR #1994](https://github.com/nf-core/rnaseq/pull/1994) - Fix `HISAT2_ALIGN` running for only one sample when the HISAT2 index is built in-run ([#1992](https://github.com/nf-core/rnaseq/issues/1992))
 - [PR #1995](https://github.com/nf-core/rnaseq/pull/1995) - Bump version to 3.28.0 ahead of release, and move the vendored `ea-utils/gtf2bed` module to its renamed upstream `eautils/gtf2bed` to pick up the updated container base
 - [PR #1997](https://github.com/nf-core/rnaseq/pull/1997) - Update `bowtie2/align` and `bowtie2/build` to pick up the bowtie2 2.5.5 CPU-dispatch version parsing fix and rebuilt containers, including the arm64 overrides in `conf/arm.config`
+- [PR #1998](https://github.com/nf-core/rnaseq/pull/1998) - Address review nits from the 3.28.0 release PR: remove a stale `nf_core_version` comment, make `anySampleAutoStrandedness` independent of the samplesheet column count, and complete the software dependencies table
 
 ### Software dependencies
 
-| Dependency | Old version | New version |
-| ---------- | ----------- | ----------- |
-| `bowtie2`  | 2.5.4       | 2.5.5       |
-| `fastp`    | 1.3.6       | 1.4.0       |
-| `fastqc`   | 0.12.1      | 0.13.0      |
-| `salmon`   | 2.7.0       | 2.11.0      |
-| `samtools` | 1.24        | 1.25        |
-| `sentieon` | 202503.02   | 202503.03   |
+| Dependency           | Old version | New version |
+| -------------------- | ----------- | ----------- |
+| `bowtie2`            | 2.5.4       | 2.5.5       |
+| `fastp`              | 1.3.6       | 1.4.0       |
+| `fastqc`             | 0.12.1      | 0.13.0      |
+| `htslib`             | 1.24        | 1.25        |
+| `htslib (bowtie2)`   | 1.21        | 1.24        |
+| `parabricks`         | 4.7.1-1     | 4.8.0-1     |
+| `salmon`             | 2.7.0       | 2.11.0      |
+| `samtools`           | 1.24        | 1.25        |
+| `samtools (bowtie2)` | 1.21        | 1.24        |
+| `sentieon`           | 202503.02   | 202503.03   |
 
 ## [[3.27.0](https://github.com/nf-core/rnaseq/releases/tag/3.27.0)] - 2026-09-23
 

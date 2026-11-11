@@ -223,7 +223,7 @@ workflow {
 
 def anySampleAutoStrandedness() {
     samplesheetToList(params.input, "${projectDir}/assets/schema_input.json")
-        .any { meta, _fastq_1, _fastq_2, _genome_bam, _transcriptome_bam -> meta.strandedness == 'auto' }
+        .any { row -> row[0].strandedness == 'auto' }
 }
 
 /*

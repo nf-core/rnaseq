@@ -60,7 +60,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1997](https://github.com/nf-core/rnaseq/pull/1997) - Update `bowtie2/align` and `bowtie2/build` to pick up the bowtie2 2.5.5 CPU-dispatch version parsing fix and rebuilt containers, including the arm64 overrides in `conf/arm.config`
 - [PR #1998](https://github.com/nf-core/rnaseq/pull/1998) - Address review nits from the 3.28.0 release PR: remove a stale `nf_core_version` comment, make `anySampleAutoStrandedness` independent of the samplesheet column count, and complete the software dependencies table
 - [PR #1999](https://github.com/nf-core/rnaseq/pull/1999) - Declare the `force_completion_email` parameter in `nextflow.config` and `nextflow_schema.json`, and add tests for `--fail_on_low_trimmed_reads` and `--fail_on_low_mapped_reads`
-- [PR #2001](https://github.com/nf-core/rnaseq/pull/2001) - Address review feedback on the 3.28.0 release PR: skip the strandedness-inference Salmon index for BAM-only `auto` samples, fix the `EAUTILS_GTF2BED` conda lock paths, and update the Trim Galore citation link
+- [PR #2001](https://github.com/nf-core/rnaseq/pull/2001) - Address review feedback on the 3.28.0 release PR: skip the strandedness-inference Salmon index for BAM-only `auto` samples, stop an unparsed HISAT2 alignment rate dropping every sample, fix the `EAUTILS_GTF2BED` conda lock paths, and update the Trim Galore citation link
 - [PR #2000](https://github.com/nf-core/rnaseq/pull/2000) - Important! Template update for nf-core/tools v4.2.2
 
 ### Software dependencies

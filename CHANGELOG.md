@@ -61,14 +61,18 @@ Special thanks to the following for their contributions to the release:
 
 ### Software dependencies
 
-| Dependency | Old version | New version |
-| ---------- | ----------- | ----------- |
-| `bowtie2`  | 2.5.4       | 2.5.5       |
-| `fastp`    | 1.3.6       | 1.4.0       |
-| `fastqc`   | 0.12.1      | 0.13.0      |
-| `salmon`   | 2.7.0       | 2.11.0      |
-| `samtools` | 1.24        | 1.25        |
-| `sentieon` | 202503.02   | 202503.03   |
+| Dependency           | Old version | New version |
+| -------------------- | ----------- | ----------- |
+| `bowtie2`            | 2.5.4       | 2.5.5       |
+| `fastp`              | 1.3.6       | 1.4.0       |
+| `fastqc`             | 0.12.1      | 0.13.0      |
+| `htslib`             | 1.24        | 1.25        |
+| `htslib (bowtie2)`   | 1.21        | 1.24        |
+| `parabricks`         | 4.7.1-1     | 4.8.0-1     |
+| `salmon`             | 2.7.0       | 2.11.0      |
+| `samtools`           | 1.24        | 1.25        |
+| `samtools (bowtie2)` | 1.21        | 1.24        |
+| `sentieon`           | 202503.02   | 202503.03   |
 
 ## [[3.27.0](https://github.com/nf-core/rnaseq/releases/tag/3.27.0)] - 2026-09-23
 

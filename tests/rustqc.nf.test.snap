@@ -4,10 +4,10 @@
             27,
             {
                 "BBMAP_BBSPLIT": {
-                    "bbmap": 39.18
+                    "bbmap": "39.18"
                 },
                 "CAT_FASTQ": {
-                    "cat": 9.5
+                    "cat": "9.5"
                 },
                 "CUSTOM_CATADDITIONALFASTA": {
                     "python": "3.12.2"
@@ -19,30 +19,30 @@
                     "perl": "5.26.2"
                 },
                 "FASTQC": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "FQ_LINT": {
                     "fq": "0.12.0"
                 },
                 "GUNZIP_ADDITIONAL_FASTA": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "GUNZIP_GTF": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.24
+                    "samtools": "1.25"
                 },
                 "STAR_GENOMEGENERATE": {
                     "gawk": "5.1.0",
-                    "samtools": 1.21,
+                    "samtools": "1.21",
                     "star": "2.7.11b"
                 },
                 "TRIMGALORE": {
                     "trimgalore": "2.3.0"
                 },
                 "UNTAR_SALMON_INDEX": {
-                    "untar": 1.34
+                    "untar": "1.34"
                 }
             },
             [
@@ -89,7 +89,7 @@
                 
             ]
         ],
-        "timestamp": "2026-09-16T15:46:32.612210166",
+        "timestamp": "2026-11-09T17:34:17.471878229",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -100,7 +100,7 @@
             99,
             {
                 "CAT_FASTQ": {
-                    "cat": 9.5
+                    "cat": "9.5"
                 },
                 "CUSTOM_CATADDITIONALFASTA": {
                     "python": "3.12.2"
@@ -112,7 +112,7 @@
                     "perl": "5.26.2"
                 },
                 "FASTQC": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "FQ_LINT": {
                     "fq": "0.12.0"
@@ -124,42 +124,42 @@
                     "fq": "0.12.0"
                 },
                 "GUNZIP_ADDITIONAL_FASTA": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "GUNZIP_GTF": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "HISAT2_ALIGN": {
                     "hisat2": "2.2.3",
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "HISAT2_EXTRACTSPLICESITES": {
                     "hisat2": "2.2.3",
-                    "samtools": 1.24
+                    "samtools": "1.24"
                 },
                 "RUSTQC": {
                     "rustqc": "0.2.1"
                 },
                 "SALMON_QUANT": {
-                    "salmon": "2.7.0"
+                    "salmon": "2.11.0"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.24
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": 1.24
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": 1.24
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": 1.24
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": 1.24
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.24
+                    "samtools": "1.25"
                 },
                 "TRIMGALORE": {
                     "trimgalore": "2.3.0"
@@ -171,10 +171,10 @@
                     "umitools": "1.1.6"
                 },
                 "UNTAR_HISAT2_INDEX": {
-                    "untar": 1.34
+                    "untar": "1.34"
                 },
                 "UNTAR_SALMON_INDEX": {
-                    "untar": 1.34
+                    "untar": "1.34"
                 }
             },
             [
@@ -1022,7 +1022,7 @@
                 "WT_REP2.tin.xls:md5,d13d51dc99bfd19c83d0c8b3a1bc961f",
                 "fastqc_raw-status-check-heatmap.txt:md5,5a89b0d8d162f6b1dbdaf39457bbc03b",
                 "fastqc_raw_adapter_content_plot.txt:md5,da0389be84cfdd189b1d045212eb2974",
-                "fastqc_raw_overrepresented_sequences_plot.txt:md5,25d88ea8a72f55e8a374ae802bc7f0b1",
+                "fastqc_raw_overrepresented_sequences_plot.txt:md5,2aeb10478cd9d7f45099c6a226a8026f",
                 "fastqc_raw_per_base_n_content_plot.txt:md5,d368d7e36ca2f73dcde61f2b486d8213",
                 "fastqc_raw_per_base_sequence_quality_plot.txt:md5,5c3065b549129702b185ea1b817da420",
                 "fastqc_raw_per_sequence_gc_content_plot_Counts.txt:md5,9ddaa50167117d3c9188ccf015427704",
@@ -1040,14 +1040,14 @@
                 "fastqc_trimmed_sequence_counts_plot.txt:md5,370ddc5e58838dc5b55e53b6f8b8902a",
                 "fastqc_trimmed_sequence_duplication_levels_plot.txt:md5,b106d8ee7b83efe237afb862ebbe2f47",
                 "multiqc_citations.txt:md5,321636627e50d3616b89bb8f00edcfa3",
-                "multiqc_fastqc_fastqc_raw.txt:md5,81c3c1a2575a1891a7f2a9637a0f2cc0",
+                "multiqc_fastqc_fastqc_raw.txt:md5,46e017b5949b50883831bc40f06a1a1d",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,a8a003b61b03295c416f3eb66c1cca65",
                 "multiqc_featurecounts_biotype_plot.txt:md5,324980221a51439d32f067a2c7a5665d",
                 "multiqc_rseqc_tin.txt:md5,983edbf7184341d0cb1d946e2e48221c",
                 "multiqc_samtools_idxstats.txt:md5,35fe3b73df5ab19b53c117d3269e7e72",
                 "multiqc_strand_check_composition_bargraph.txt:md5,5b71948a2c4d589a881870871b517c7c",
-                "multiqc_strand_check_composition_bargraph_1.txt:md5,77664edb45d012470b9db667b98a3618",
-                "multiqc_strand_check_summary_table.txt:md5,d62825c0f10018ec41c25b1d8cc32493",
+                "multiqc_strand_check_composition_bargraph_1.txt:md5,27adc6abf5eb351ff5024cd480250f00",
+                "multiqc_strand_check_summary_table.txt:md5,78c727fb418e039c8cba0d51d307f3ee",
                 "multiqc_trim_galore.txt:md5,fb26eafffc7d62cd116b28fb0c3576fb",
                 "multiqc_umicollapse.txt:md5,02859951011d3387427c78a768096dc8",
                 "multiqc_umitools_extract.txt:md5,f725988a4067b50d0f7dc3661a356ccf",
@@ -1067,7 +1067,7 @@
                 "umitools_extract_regex_barplot.txt:md5,f94f8393b1dcff652edd7b34dac7c596"
             ]
         ],
-        "timestamp": "2026-09-18T18:23:39.514989257",
+        "timestamp": "2026-11-09T17:33:19.020812441",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -1078,7 +1078,7 @@
             164,
             {
                 "BBMAP_BBSPLIT": {
-                    "bbmap": 39.18
+                    "bbmap": "39.18"
                 },
                 "BEDTOOLS_GENOMECOV_COMBINED": {
                     "bedtools": "2.31.1"
@@ -1090,7 +1090,7 @@
                     "bedtools": "2.31.1"
                 },
                 "CAT_FASTQ": {
-                    "cat": 9.5
+                    "cat": "9.5"
                 },
                 "CUSTOM_CATADDITIONALFASTA": {
                     "python": "3.12.2"
@@ -1113,10 +1113,10 @@
                     "perl": "5.26.2"
                 },
                 "FASTQC": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "FASTQC_FILTERED": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "FQ_LINT": {
                     "fq": "0.12.0"
@@ -1131,10 +1131,10 @@
                     "fq": "0.12.0"
                 },
                 "GUNZIP_ADDITIONAL_FASTA": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "GUNZIP_GTF": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "PICARD_MARKDUPLICATES": {
                     "picard": "3.5.0"
@@ -1143,25 +1143,25 @@
                     "rustqc": "0.2.1"
                 },
                 "SALMON_QUANT": {
-                    "salmon": "2.7.0"
+                    "salmon": "2.11.0"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.24
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": 1.24
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": 1.24
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": 1.24
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_SORT": {
-                    "samtools": 1.24
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.24
+                    "samtools": "1.25"
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -1171,12 +1171,12 @@
                 },
                 "STAR_ALIGN": {
                     "gawk": "5.1.0",
-                    "samtools": 1.21,
+                    "samtools": "1.21",
                     "star": "2.7.11b"
                 },
                 "STAR_GENOMEGENERATE": {
                     "gawk": "5.1.0",
-                    "samtools": 1.21,
+                    "samtools": "1.21",
                     "star": "2.7.11b"
                 },
                 "STRINGTIE_STRINGTIE": {
@@ -1189,13 +1189,13 @@
                     "bioconductor-tximeta": "1.20.1"
                 },
                 "UCSC_BEDCLIP": {
-                    "ucsc": 482
+                    "ucsc": "482"
                 },
                 "UCSC_BEDGRAPHTOBIGWIG": {
-                    "ucsc": 482
+                    "ucsc": "482"
                 },
                 "UNTAR_SALMON_INDEX": {
-                    "untar": 1.34
+                    "untar": "1.34"
                 }
             },
             [
@@ -1653,7 +1653,6 @@
                 "salmon/RAP1_IAA_30M_REP1/aux_info/ambig_info.tsv",
                 "salmon/RAP1_IAA_30M_REP1/aux_info/expected_bias.gz",
                 "salmon/RAP1_IAA_30M_REP1/aux_info/fld.gz",
-                "salmon/RAP1_IAA_30M_REP1/aux_info/genemap_unmatched_txps.json",
                 "salmon/RAP1_IAA_30M_REP1/aux_info/meta_info.json",
                 "salmon/RAP1_IAA_30M_REP1/aux_info/observed_bias.gz",
                 "salmon/RAP1_IAA_30M_REP1/aux_info/observed_bias_3p.gz",
@@ -1670,7 +1669,6 @@
                 "salmon/RAP1_UNINDUCED_REP1/aux_info/ambig_info.tsv",
                 "salmon/RAP1_UNINDUCED_REP1/aux_info/expected_bias.gz",
                 "salmon/RAP1_UNINDUCED_REP1/aux_info/fld.gz",
-                "salmon/RAP1_UNINDUCED_REP1/aux_info/genemap_unmatched_txps.json",
                 "salmon/RAP1_UNINDUCED_REP1/aux_info/meta_info.json",
                 "salmon/RAP1_UNINDUCED_REP1/aux_info/observed_bias.gz",
                 "salmon/RAP1_UNINDUCED_REP1/aux_info/observed_bias_3p.gz",
@@ -1687,7 +1685,6 @@
                 "salmon/RAP1_UNINDUCED_REP2/aux_info/ambig_info.tsv",
                 "salmon/RAP1_UNINDUCED_REP2/aux_info/expected_bias.gz",
                 "salmon/RAP1_UNINDUCED_REP2/aux_info/fld.gz",
-                "salmon/RAP1_UNINDUCED_REP2/aux_info/genemap_unmatched_txps.json",
                 "salmon/RAP1_UNINDUCED_REP2/aux_info/meta_info.json",
                 "salmon/RAP1_UNINDUCED_REP2/aux_info/observed_bias.gz",
                 "salmon/RAP1_UNINDUCED_REP2/aux_info/observed_bias_3p.gz",
@@ -1704,7 +1701,6 @@
                 "salmon/WT_REP1/aux_info/ambig_info.tsv",
                 "salmon/WT_REP1/aux_info/expected_bias.gz",
                 "salmon/WT_REP1/aux_info/fld.gz",
-                "salmon/WT_REP1/aux_info/genemap_unmatched_txps.json",
                 "salmon/WT_REP1/aux_info/meta_info.json",
                 "salmon/WT_REP1/aux_info/observed_bias.gz",
                 "salmon/WT_REP1/aux_info/observed_bias_3p.gz",
@@ -1721,7 +1717,6 @@
                 "salmon/WT_REP2/aux_info/ambig_info.tsv",
                 "salmon/WT_REP2/aux_info/expected_bias.gz",
                 "salmon/WT_REP2/aux_info/fld.gz",
-                "salmon/WT_REP2/aux_info/genemap_unmatched_txps.json",
                 "salmon/WT_REP2/aux_info/meta_info.json",
                 "salmon/WT_REP2/aux_info/observed_bias.gz",
                 "salmon/WT_REP2/aux_info/observed_bias_3p.gz",
@@ -2371,7 +2366,7 @@
             [
                 "fastqc_raw-status-check-heatmap.txt:md5,5a89b0d8d162f6b1dbdaf39457bbc03b",
                 "fastqc_raw_adapter_content_plot.txt:md5,da0389be84cfdd189b1d045212eb2974",
-                "fastqc_raw_overrepresented_sequences_plot.txt:md5,25d88ea8a72f55e8a374ae802bc7f0b1",
+                "fastqc_raw_overrepresented_sequences_plot.txt:md5,2aeb10478cd9d7f45099c6a226a8026f",
                 "fastqc_raw_per_base_n_content_plot.txt:md5,d368d7e36ca2f73dcde61f2b486d8213",
                 "fastqc_raw_per_base_sequence_quality_plot.txt:md5,5c3065b549129702b185ea1b817da420",
                 "fastqc_raw_per_sequence_gc_content_plot_Counts.txt:md5,9ddaa50167117d3c9188ccf015427704",
@@ -2389,7 +2384,7 @@
                 "fastqc_trimmed_sequence_counts_plot.txt:md5,9fd642bdd1da354f296bb8092205608f",
                 "fastqc_trimmed_sequence_duplication_levels_plot.txt:md5,0758257b497283b1ef28171e694db6db",
                 "multiqc_citations.txt:md5,ce9eccb7e7b3898774e42eee791fa28b",
-                "multiqc_fastqc_fastqc_raw.txt:md5,81c3c1a2575a1891a7f2a9637a0f2cc0",
+                "multiqc_fastqc_fastqc_raw.txt:md5,46e017b5949b50883831bc40f06a1a1d",
                 "multiqc_fastqc_fastqc_trimmed.txt:md5,54743154d0e8858980acffeb5b6f6a97",
                 "multiqc_featurecounts_biotype_plot.txt:md5,7ff6ee48139da0a7ca01563e3e66723b",
                 "multiqc_rseqc_tin.txt:md5,981edb4cb364185df3e0fe4fc7d01b28",
@@ -2411,63 +2406,58 @@
                 "trim_galore_adapter_length_plot.txt:md5,1e34e26fac0fd53e9ffa49805862d547",
                 "trim_galore_filtered_reads_plot.txt:md5,2cae05863c03d6f6054280ee75df63b2",
                 "trim_galore_pair_validation_table.txt:md5,b1863fde4bacc276704adcb35c80fb1c",
-                "ambig_info.tsv:md5,243178eb3df31ef90c3ea862b4006c75",
+                "ambig_info.tsv:md5,b858d98cdb7b9b5e293c4ea6a1bc4d9b",
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
-                "genemap_unmatched_txps.json:md5,7397fca3b0009816b63f4a09552678e5",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,cf818b6adba396cc5353b902448cfac6",
+                "cmd_info.json:md5,fb611086796ddeaa691aca7eba0968a7",
                 "ambig_info.tsv:md5,95c4f1f2f36173500c52b2d076421112",
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
-                "genemap_unmatched_txps.json:md5,7397fca3b0009816b63f4a09552678e5",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,9357c6482eab84dabd07646ed70e0476",
+                "cmd_info.json:md5,9c21ad7352899c30df74244255b771e3",
                 "ambig_info.tsv:md5,8b97ad4ab166dd4ca367fa2f4cb999d1",
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
-                "genemap_unmatched_txps.json:md5,7397fca3b0009816b63f4a09552678e5",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,1570b3f15040392184dd793ecd62477e",
-                "ambig_info.tsv:md5,d965e915f4bb0e66ace2aa1f56597594",
+                "cmd_info.json:md5,543ca54de519483c2207a7f24fc16346",
+                "ambig_info.tsv:md5,466faa49ad8ac3eea22b898044b5bc0f",
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
-                "genemap_unmatched_txps.json:md5,7397fca3b0009816b63f4a09552678e5",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,c39a2ead5695c39d424c5f85104ef319",
-                "ambig_info.tsv:md5,b59f436456fbbe3055dc6ff78d89836b",
+                "cmd_info.json:md5,10bbbdec98b1ecca3f4cfcaa25f41746",
+                "ambig_info.tsv:md5,036e6f3d46c5620a613ae1730017c27f",
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
-                "genemap_unmatched_txps.json:md5,7397fca3b0009816b63f4a09552678e5",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,a3a440b92ff27584be4f11e146a3c59c",
+                "cmd_info.json:md5,03d2e6e8dcb0aed842d2b4afc41b57cb",
                 "salmon.merged.tx2gene.tsv:md5,0e2418a69d2eba45097ebffc2f700bfe",
                 "salmon.merged.tx2gene_augmented.tsv:md5,62f1be3e94901085640179b604d879a2",
                 "ambig_info.tsv:md5,ac2f5f026ff28629f6ef24c2d63caa12",
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,b876c63c31cc6e1e32b0c199e40842ce",
+                "cmd_info.json:md5,908f96797539e033589d1a71d57fd8eb",
                 "ambig_info.tsv:md5,0bce9bab59f11409e5766f486839a834",
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,f2b6d85f42ada3b2f17bbb2b6c7b55a3",
+                "cmd_info.json:md5,924d3fa373203e1cd4861ffa5210a696",
                 "ambig_info.tsv:md5,bf5d4d032356df4da4689bc8024771b0",
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,a43ebd41b8c288735c7816262163f02c",
+                "cmd_info.json:md5,48bac73ac0d231c170b078336e9c6269",
                 "ambig_info.tsv:md5,be7b6ca4d489ad60ad2816a2e67493ec",
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,d1cd2398038030227c66243995111e02",
+                "cmd_info.json:md5,108bf657d5a2f088081e8347df737a98",
                 "ambig_info.tsv:md5,636970512be74cdf4f0b7ab899742566",
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,017e2a5451b01a3da9d2241f2ae53e79",
+                "cmd_info.json:md5,7821a71cbcd3a78b3067b2d705ee1eb9",
                 "RAP1_IAA_30M_REP1.SJ.out.tab:md5,ea95e243278af55534f2c52eb5fff7ee",
                 "RAP1_UNINDUCED_REP1.SJ.out.tab:md5,e548d13942535dc0821f3ec6d9743ec8",
                 "RAP1_UNINDUCED_REP2.SJ.out.tab:md5,1f294365343a1a5e95682792fdb77033",
@@ -2537,7 +2527,7 @@
                 "i_data.ctab:md5,041edee3193df311f621c09f4991892b"
             ]
         ],
-        "timestamp": "2026-09-18T23:44:42.731825057",
+        "timestamp": "2026-11-09T17:30:45.779466021",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

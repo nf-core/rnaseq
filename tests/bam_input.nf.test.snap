@@ -4,7 +4,7 @@
             159,
             {
                 "BBMAP_BBSPLIT": {
-                    "bbmap": 39.18
+                    "bbmap": "39.18"
                 },
                 "BEDTOOLS_GENOMECOV_COMBINED": {
                     "bedtools": "2.31.1"
@@ -38,16 +38,16 @@
                     "perl": "5.26.2"
                 },
                 "GUNZIP_ADDITIONAL_FASTA": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "GUNZIP_GTF": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "PICARD_MARKDUPLICATES": {
                     "picard": "3.5.0"
                 },
                 "QUALIMAP_RNASEQ": {
-                    "qualimap": 2.3
+                    "qualimap": "2.3"
                 },
                 "RSEQC_BAMSTAT": {
                     "rseqc": "5.0.4"
@@ -71,25 +71,25 @@
                     "rseqc": "5.0.4"
                 },
                 "SALMON_QUANT": {
-                    "salmon": "2.7.0"
+                    "salmon": "2.11.0"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.24
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": 1.24
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": 1.24
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": 1.24
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_SORT_QUALIMAP": {
-                    "samtools": 1.24
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.24
+                    "samtools": "1.25"
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -107,13 +107,13 @@
                     "bioconductor-tximeta": "1.20.1"
                 },
                 "UCSC_BEDCLIP": {
-                    "ucsc": 482
+                    "ucsc": "482"
                 },
                 "UCSC_BEDGRAPHTOBIGWIG": {
-                    "ucsc": 482
+                    "ucsc": "482"
                 },
                 "UNTAR_SALMON_INDEX": {
-                    "untar": 1.34
+                    "untar": "1.34"
                 }
             },
             [
@@ -890,27 +890,27 @@
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,b876c63c31cc6e1e32b0c199e40842ce",
+                "cmd_info.json:md5,908f96797539e033589d1a71d57fd8eb",
                 "ambig_info.tsv:md5,d5937453f5362ebe7482540593bf639d",
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,f2b6d85f42ada3b2f17bbb2b6c7b55a3",
+                "cmd_info.json:md5,924d3fa373203e1cd4861ffa5210a696",
                 "ambig_info.tsv:md5,719c9af8980e9a5e72128bd1ab8bf2e4",
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,a43ebd41b8c288735c7816262163f02c",
+                "cmd_info.json:md5,48bac73ac0d231c170b078336e9c6269",
                 "ambig_info.tsv:md5,2c227c63e1314d729f066a0ac69f5118",
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,d1cd2398038030227c66243995111e02",
+                "cmd_info.json:md5,108bf657d5a2f088081e8347df737a98",
                 "ambig_info.tsv:md5,636970512be74cdf4f0b7ab899742566",
                 "expected_bias.gz:md5,e02e0d84c1f7b647c18ab9646d57ec89",
                 "observed_bias.gz:md5,f1d3ff8443297732862df21dc4e57262",
                 "observed_bias_3p.gz:md5,f1d3ff8443297732862df21dc4e57262",
-                "cmd_info.json:md5,017e2a5451b01a3da9d2241f2ae53e79",
+                "cmd_info.json:md5,7821a71cbcd3a78b3067b2d705ee1eb9",
                 "RAP1_IAA_30M_REP1.biotype_counts_mqc.tsv:md5,d5a54127f0167db3fecff466387920c0",
                 "RAP1_IAA_30M_REP1.biotype_counts_rrna_mqc.tsv:md5,dde2de0cb90e10d0195c726f768e9941",
                 "RAP1_IAA_30M_REP1.featureCounts.tsv:md5,ec4b6e390707b215f9063137ef92ac51",
@@ -955,7 +955,7 @@
                 "i_data.ctab:md5,041edee3193df311f621c09f4991892b"
             ]
         ],
-        "timestamp": "2026-09-18T22:53:31.46090663",
+        "timestamp": "2026-11-09T17:23:39.026813649",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -966,7 +966,7 @@
             162,
             {
                 "BBMAP_BBSPLIT": {
-                    "bbmap": 39.18
+                    "bbmap": "39.18"
                 },
                 "BEDTOOLS_GENOMECOV_COMBINED": {
                     "bedtools": "2.31.1"
@@ -987,7 +987,7 @@
                     "python": "3.12.12"
                 },
                 "CUSTOM_RSEMMERGECOUNTS": {
-                    "sed": 4.7
+                    "sed": "4.7"
                 },
                 "CUSTOM_TX2GENE": {
                     "python": "3.10.4"
@@ -1003,16 +1003,16 @@
                     "perl": "5.26.2"
                 },
                 "GUNZIP_ADDITIONAL_FASTA": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "GUNZIP_GTF": {
-                    "gunzip": 1.13
+                    "gunzip": "1.13"
                 },
                 "PICARD_MARKDUPLICATES": {
                     "picard": "3.5.0"
                 },
                 "QUALIMAP_RNASEQ": {
-                    "qualimap": 2.3
+                    "qualimap": "2.3"
                 },
                 "RSEM_CALCULATEEXPRESSION": {
                     "rsem": "1.3.1"
@@ -1042,22 +1042,22 @@
                     "rseqc": "5.0.4"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.24
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_FLAGSTAT": {
-                    "samtools": 1.24
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_IDXSTATS": {
-                    "samtools": 1.24
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": 1.24
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_SORT_QUALIMAP": {
-                    "samtools": 1.24
+                    "samtools": "1.25"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.24
+                    "samtools": "1.25"
                 },
                 "SE_GENE_UNIFIED": {
                     "bioconductor-summarizedexperiment": "1.32.0"
@@ -1067,7 +1067,7 @@
                 },
                 "STAR_GENOMEGENERATE": {
                     "gawk": "5.1.0",
-                    "samtools": 1.21,
+                    "samtools": "1.21",
                     "star": "2.7.11b"
                 },
                 "STRINGTIE_STRINGTIE": {
@@ -1080,13 +1080,13 @@
                     "bioconductor-tximeta": "1.20.1"
                 },
                 "UCSC_BEDCLIP": {
-                    "ucsc": 482
+                    "ucsc": "482"
                 },
                 "UCSC_BEDGRAPHTOBIGWIG": {
-                    "ucsc": 482
+                    "ucsc": "482"
                 },
                 "UNTAR_SALMON_INDEX": {
-                    "untar": 1.34
+                    "untar": "1.34"
                 }
             },
             [
@@ -1887,7 +1887,7 @@
                 "i_data.ctab:md5,7e81ace0a68bfe42482420b7275de195"
             ]
         ],
-        "timestamp": "2026-09-16T14:45:14.086016029",
+        "timestamp": "2026-11-09T17:26:23.468558435",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

@@ -9,6 +9,8 @@
 ----------------------------------------------------------------------------------------
 */
 
+include { getGenomeAttribute } from 'plugin/nf-core-utils'
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     GENOME PARAMETER VALUES
@@ -36,6 +38,7 @@ params.bowtie2_index    = getGenomeAttribute('bowtie2')
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
+include { samplesheetToList          } from 'plugin/nf-schema'
 include { RNASEQ                     } from './workflows/rnaseq'
 include { PREPARE_GENOME_REFERENCES  } from './subworkflows/local/prepare_genome_references'
 include { PREPARE_GENOME_INDICES     } from './subworkflows/local/prepare_genome_indices'
@@ -113,7 +116,8 @@ workflow NFCORE_RNASEQ {
         params.use_sentieon_star,
         params.use_parabricks_star,
         isStarIndexLegacy() ?: false,
-        params.hisat2_build_memory
+        params.hisat2_build_memory,
+        anySampleAutoStrandedness()
     )
 
     // Check if contigs in genome fasta file > 512 Mbp
@@ -149,7 +153,10 @@ workflow NFCORE_RNASEQ {
         PREPARE_GENOME_INDICES.out.bowtie2_rrna_index,
         PREPARE_GENOME_INDICES.out.splicesites,
         PREPARE_GENOME_REFERENCES.out.kraken_db,
-        qc_tools
+        qc_tools,
+        params.fail_on_low_trimmed_reads,
+        params.fail_on_low_mapped_reads,
+        params.fail_on_undetermined_strandedness
     )
 
     emit:
@@ -211,16 +218,13 @@ workflow {
 */
 
 //
-// Get attribute from genome config file e.g. fasta
+// Check whether any sample that will be processed from FASTQ declares strandedness 'auto'
+// (strandedness is only inferred on the FASTQ path, so BAM rows under --skip_alignment do not count)
 //
 
-def getGenomeAttribute(attribute) {
-    if (params.genomes && params.genome && params.genomes.containsKey(params.genome)) {
-        if (params.genomes[ params.genome ].containsKey(attribute)) {
-            return params.genomes[ params.genome ][ attribute ]
-        }
-    }
-    return null
+def anySampleAutoStrandedness() {
+    samplesheetToList(params.input, "${projectDir}/assets/schema_input.json")
+        .any { row -> row[0].strandedness == 'auto' && !(params.skip_alignment && (row[3] || row[4])) }
 }
 
 /*

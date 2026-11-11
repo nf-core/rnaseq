@@ -1,3 +1,6 @@
+// Copyright (c) the nf-core community under an open-source MIT license.
+// See https://github.com/nf-core/modules for full license, file patching instructions and upstream contributing.
+
 process CAT_FASTQ {
     tag "${meta.id}"
     label 'process_single'
@@ -22,7 +25,7 @@ process CAT_FASTQ {
     def readList = reads instanceof List ? reads.collect { item -> item.toString() } : [reads.toString()]
     def compress = readList[0]?.endsWith('.gz') ? '' : '| gzip'
     if (meta.single_end) {
-        if (readList.size >= 1) {
+        if (readList.size() >= 1) {
             """
             cat ${readList.join(' ')} ${compress} > ${prefix}.merged.fastq.gz
             """
@@ -31,7 +34,7 @@ process CAT_FASTQ {
         }
     }
     else {
-        if (readList.size >= 2) {
+        if (readList.size() >= 2) {
             def read1 = []
             def read2 = []
             readList.eachWithIndex { v, ix -> (ix & 1 ? read2 : read1) << v }
@@ -48,19 +51,19 @@ process CAT_FASTQ {
     def prefix = task.ext.prefix ?: "${meta.id}"
     def readList = reads instanceof List ? reads.collect { item -> item.toString() } : [reads.toString()]
     if (meta.single_end) {
-        if (readList.size >= 1) {
+        if (readList.size() >= 1) {
             """
-            echo '' | gzip > ${prefix}.merged.fastq.gz
+            echo "" | gzip > ${prefix}.merged.fastq.gz
             """
         } else {
             error("Could not find any FASTQ files to concatenate in the process input")
         }
     }
     else {
-        if (readList.size >= 2) {
+        if (readList.size() >= 2) {
             """
-            echo '' | gzip > ${prefix}_1.merged.fastq.gz
-            echo '' | gzip > ${prefix}_2.merged.fastq.gz
+            echo "" | gzip > ${prefix}_1.merged.fastq.gz
+            echo "" | gzip > ${prefix}_2.merged.fastq.gz
             """
         } else {
             error("Could not find any FASTQ file pairs to concatenate in the process input")

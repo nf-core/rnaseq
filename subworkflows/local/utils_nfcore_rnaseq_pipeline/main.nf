@@ -8,14 +8,15 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { UTILS_NFSCHEMA_PLUGIN     } from '../../nf-core/utils_nfschema_plugin'
 include { paramsSummaryMap          } from 'plugin/nf-schema'
 include { paramsHelp                } from 'plugin/nf-schema'
-include { completionEmail           } from '../../nf-core/utils_nfcore_pipeline'
-include { completionSummary         } from '../../nf-core/utils_nfcore_pipeline'
-include { UTILS_NFCORE_PIPELINE     } from '../../nf-core/utils_nfcore_pipeline'
-include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipeline'
-include { logColours                } from '../../nf-core/utils_nfcore_pipeline'
+include { paramsSummaryLog          } from 'plugin/nf-schema'
+include { validateParameters        } from 'plugin/nf-schema'
+include { completionEmail           } from 'plugin/nf-core-utils'
+include { checkConfigProvided       } from 'plugin/nf-core-utils'
+include { checkCondaChannels        } from 'plugin/nf-core-utils'
+include { dumpParametersToJSON      } from 'plugin/nf-core-utils'
+include { getWorkflowVersion        } from 'plugin/nf-core-utils'
 include { calculateStrandedness     } from '../../nf-core/fastq_qc_trim_filter_setstrandedness'
 
 /*
@@ -42,12 +43,16 @@ workflow PIPELINE_INITIALISATION {
     //
     // Print version and exit if required and dump pipeline parameters to JSON file
     //
-    UTILS_NEXTFLOW_PIPELINE (
-        version,
-        true,
-        outdir,
-        workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1
-    )
+    if (version) {
+        log.info("${workflow.manifest.name} ${getWorkflowVersion(workflow.manifest.version, workflow.commitId)}")
+        System.exit(0)
+    }
+    if (outdir) {
+        dumpParametersToJSON(outdir.toString(), params)
+    }
+    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba'])) {
+        checkCondaChannels()
+    }
 
     //
     // Validate parameters and generate parameter summary to stdout
@@ -76,25 +81,26 @@ ${colors.purple}  nf-core/rnaseq ${workflow.manifest.version}${colors.reset}
 
     command = "nextflow run ${workflow.manifest.name} -profile <docker/singularity/.../institute> --input samplesheet.csv --outdir <OUTDIR>"
 
-    UTILS_NFSCHEMA_PLUGIN (
-        workflow,
-        validate_params,
-        null,
-        help,
-        help_full,
-        show_hidden,
-        before_text,
-        after_text,
-        command,
-        false
-    )
+    if (help || help_full) {
+        log.info paramsHelp(
+            [beforeText: before_text, afterText: after_text, command: command, showHidden: show_hidden, fullHelp: help_full],
+            (help instanceof String && help != 'true') ? help : ''
+        )
+        exit 0
+    }
+
+    log.info before_text
+    log.info paramsSummaryLog(workflow)
+    log.info after_text
+    if (validate_params) {
+        validateParameters()
+    }
 
     //
     // Check config provided to the pipeline
     //
-    UTILS_NFCORE_PIPELINE (
-        nextflow_cli_args
-    )
+    checkConfigProvided()
+    checkProfileProvided(nextflow_cli_args)
 
     //
     // Custom validation for pipeline parameters
@@ -148,15 +154,19 @@ workflow PIPELINE_COMPLETION {
     // Completion email and summary
     //
     workflow.onComplete {
+        // The v2 parser passes untyped CLI booleans as strings, which the plugin's boolean signature rejects.
+        // Remove once these params are declared with types in the `params {}` block.
+        def plaintext_email_bool = plaintext_email.toString().toBoolean()
+        def monochrome_logs_bool = monochrome_logs.toString().toBoolean()
         if (email || email_on_fail) {
             completionEmail(
                 summary_params,
                 email,
                 email_on_fail,
-                plaintext_email,
+                plaintext_email_bool,
                 outdir,
-                monochrome_logs,
-                multiqc_reports.getVal(),
+                monochrome_logs_bool,
+                multiqc_reports.isBound() ? multiqc_reports.getVal() : [],
             )
         }
 
@@ -174,6 +184,34 @@ workflow PIPELINE_COMPLETION {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
+// nf-core-utils checks its args for -profile, but Nextflow only passes positional args here.
+def checkProfileProvided(nextflow_cli_args) {
+    if (workflow.profile.endsWith(',')) {
+        error(
+            "The `-profile` option cannot end with a trailing comma, please remove it and re-run the pipeline!\n" + "HINT: A common mistake is to provide multiple values separated by spaces e.g. `-profile test, docker`.\n"
+        )
+    }
+    if (nextflow_cli_args[0]) {
+        log.warn(
+            "nf-core pipelines do not accept positional arguments. The positional argument `${nextflow_cli_args[0]}` has been detected.\n" + "HINT: A common mistake is to provide multiple values separated by spaces e.g. `-profile test, docker`.\n"
+        )
+    }
+}
+
+// Colours used by the rnaseq banner and sample QC summary; not exported by nf-core-utils.
+def logColours(monochrome_logs) {
+    return [
+        reset:  monochrome_logs ? '' : "\033[0m",
+        dim:    monochrome_logs ? '' : "\033[2m",
+        black:  monochrome_logs ? '' : "\033[0;30m",
+        red:    monochrome_logs ? '' : "\033[0;31m",
+        green:  monochrome_logs ? '' : "\033[0;32m",
+        yellow: monochrome_logs ? '' : "\033[0;33m",
+        blue:   monochrome_logs ? '' : "\033[0;34m",
+        purple: monochrome_logs ? '' : "\033[0;35m",
+    ]
+}
+
 //
 // Function to check samples are internally consistent after being grouped
 //
@@ -186,31 +224,31 @@ def checkSamplesAfterGrouping(input) {
     def transcriptome_bams = input.size() > 4 ? input[4] : null
 
     // Check that multiple runs of the same sample are of the same strandedness
-    def strandedness_ok = metas.collect{ meta -> meta.strandedness }.unique().size == 1
+    def strandedness_ok = metas.collect{ meta -> meta.strandedness }.unique().size() == 1
     if (!strandedness_ok) {
         error("Please check input samplesheet -> Multiple runs of a sample must have the same strandedness!: ${metas[0].id}")
     }
 
     // Check that multiple runs of the same sample have the same sequencing platform
-    def seq_platform_ok = metas.collect { meta -> meta.seq_platform ?: '' }.unique().size == 1
+    def seq_platform_ok = metas.collect { meta -> meta.seq_platform ?: '' }.unique().size() == 1
     if (!seq_platform_ok) {
         error("Please check input samplesheet -> Multiple runs of a sample must have the same seq_platform!: ${metas[0].id}")
     }
 
     // Check that multiple runs of the same sample have the same sequencing center
-    def seq_center_ok = metas.collect { meta -> meta.seq_center ?: '' }.unique().size == 1
+    def seq_center_ok = metas.collect { meta -> meta.seq_center ?: '' }.unique().size() == 1
     if (!seq_center_ok) {
         error("Please check input samplesheet -> Multiple runs of a sample must have the same seq_center!: ${metas[0].id}")
     }
 
     // Check that multiple runs of the same sample are of the same datatype i.e. single-end / paired-end
-    def endedness_ok = metas.collect{ meta -> meta.single_end }.unique().size == 1
+    def endedness_ok = metas.collect{ meta -> meta.single_end }.unique().size() == 1
     if (!endedness_ok) {
         error("Please check input samplesheet -> Multiple runs of a sample must be of the same datatype i.e. single-end or paired-end: ${metas[0].id}")
     }
 
     // Check that multiple runs of the same sample are not mixed compressed/uncompressed
-    def compression_ok = fastqs.flatten().collect{ fq -> fq.name.endsWith('.gz') }.unique().size == 1
+    def compression_ok = fastqs.flatten().collect{ fq -> fq.name.endsWith('.gz') }.unique().size() == 1
     if (!compression_ok) {
         error("Please check input samplesheet -> Multiple runs of a sample must not mix compressed and uncompressed FASTQ files: ${metas[0].id}")
     }
@@ -792,6 +830,25 @@ def biotypeQcUsable(params) {
 }
 
 //
+// Function that parses HISAT2's summary log (--new-summary format) to get the overall percent mapped.
+// Returns null when the rate is not found, so the sample is not filtered on --min_mapped_reads.
+//
+def getHisat2PercentMapped(align_log) {
+    def percent_aligned = null
+    def pattern = /Overall alignment rate:\s*([\d\.]+)%/
+    align_log.eachLine { line ->
+        def matcher = line =~ pattern
+        if (matcher) {
+            percent_aligned = matcher[0][1].toFloat()
+        }
+    }
+    if (percent_aligned == null) {
+        log.warn "Could not find the overall alignment rate in HISAT2 summary '${align_log.name}'; the sample will not be filtered on --min_mapped_reads."
+    }
+    return percent_aligned
+}
+
+//
 // Function that parses RSeQC infer_experiment output file to get inferred strandedness
 //
 def getInferexperimentStrandedness(inferexperiment_file, stranded_threshold = 0.8, unstranded_threshold = 0.1) {
@@ -879,6 +936,40 @@ def mapBamToPublishedPath(bam_path, sample_id, aligner, outdir) {
 
     // Fallback to original filename
     return "${base_dir}/${filename}"
+}
+
+//
+// Function to build the failure message for a sample with too few reads after trimming
+//
+def trimmedReadsMessage(sample_id, num_reads, min_trimmed_reads) {
+    return "Sample '${sample_id}' failed the trimmed reads check: ${num_reads} reads remained after trimming, which is not above the --min_trimmed_reads threshold (${min_trimmed_reads})."
+}
+
+//
+// Function to build the failure message for a sample with a low mapping rate
+//
+def mappedReadsMessage(sample_id, percent_mapped, min_mapped_reads) {
+    return "Sample '${sample_id}' failed the mapped reads check: ${percent_mapped}% of reads mapped, below the --min_mapped_reads threshold (${min_mapped_reads}%)."
+}
+
+//
+// Function to build the failure message for a sample whose strandedness could not be determined
+//
+def undeterminedStrandednessMessage(sample_id, salmon_strand_analysis) {
+    def forward = salmon_strand_analysis.forwardFragments
+    def reverse = salmon_strand_analysis.reverseFragments
+    def assigned = (forward + reverse) as double
+    def message = "Sample '${sample_id}' failed the strandedness check: strandedness was set to 'auto' but could not be determined. "
+    if (!Double.isNaN(assigned) && assigned > 0) {
+        message += "Of the fragments Salmon assigned, ${String.format('%.1f', forward)}% were forward and ${String.format('%.1f', reverse)}% reverse, " +
+            "which is not enough evidence for a confident call. Possible causes include a genuinely unstranded or mixed library, " +
+            "genomic DNA contamination, or a low number of assigned fragments. "
+    }
+    else {
+        message += "Salmon assigned no fragments, so there is no strand evidence. Check the mapping rate, that the reference matches " +
+            "the sample's species, and that the reads are intact and correctly paired. "
+    }
+    return message + "Set strandedness explicitly in the samplesheet for this sample and rerun with -resume."
 }
 
 //

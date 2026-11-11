@@ -156,10 +156,6 @@ To facilitate processing of input data which has the UMI barcode already embedde
 
 [Trim Galore!](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/) is a wrapper tool around Cutadapt and FastQC to peform quality and adapter trimming on FastQ files. Trim Galore! will automatically detect and trim the appropriate adapter sequence. It is the default trimming tool used by this pipeline, however you can use fastp instead by specifying the `--trimmer fastp` parameter. You can specify additional options for Trim Galore! via the `--extra_trimgalore_args` parameters.
 
-:::note
-TrimGalore! will only run using multiple cores if you are able to use more than > 5 and > 6 CPUs for single- and paired-end data, respectively. The total cores available to TrimGalore! will also be capped at 4 (7 and 8 CPUs in total for single- and paired-end data, respectively) because there is no longer a run-time benefit. See [release notes](https://github.com/FelixKrueger/TrimGalore/blob/master/Changelog.md#version-060-release-on-1-mar-2019) and [discussion whilst adding this logic to the nf-core/atacseq pipeline](https://github.com/nf-core/atacseq/pull/65).
-:::
-
 ![MultiQC - cutadapt trimmed sequence length plot](images/mqc_cutadapt_trimmed.png)
 
 ### fastp
@@ -969,7 +965,8 @@ The plot on the left hand side shows the standard PC plot - notice the variable 
 
 - `multiqc/<ALIGNER>/`
   - `multiqc_report.html`: a standalone HTML file that can be viewed in your web browser.
-  - `multiqc_data/`: directory containing parsed statistics from the different tools used in the pipeline.
+  - `multiqc_report_data/`: directory containing parsed statistics from the different tools used in the pipeline.
+  - `multiqc_report_data/multiqc_fail_trimmed_samples_table.txt`, `multiqc_report_data/multiqc_fail_mapped_samples_table.txt`: written only when a sample fails `--min_trimmed_reads` or `--min_mapped_reads`. One row per skipped sample, with its read count or mapping rate. A sample that fails `--min_trimmed_reads` is left out of all later steps. A sample that fails `--min_mapped_reads` is left out of quantification (the `<ALIGNER>` merged count tables), duplicate marking, StringTie, featureCounts, bigWig and post-alignment QC, but is still quantified by `--pseudo_aligner` if one is set.
 
 </details>
 

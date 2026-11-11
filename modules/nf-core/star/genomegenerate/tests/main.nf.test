@@ -8,16 +8,16 @@ nextflow_process {
     tag "star"
     tag "star/genomegenerate"
 
-    test("fasta_gtf") {
+    test("homo_sapiens - fasta - gtf") {
 
         when {
             process {
                 """
-                input[0] = Channel.of([
+                input[0] = channel.of([
                     [ id:'test_fasta' ],
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
                 ])
-                input[1] = Channel.of([
+                input[1] = channel.of([
                     [ id:'test_gtf' ],
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
                 ])
@@ -29,23 +29,23 @@ nextflow_process {
             assertAll(
                 { assert process.success },
                 { assert snapshot(
-                    file(process.out.index[0][1]).listFiles().collect { it.getName() }.sort().toString(),
+                    file(process.out.index[0][1]).listFiles().collect { index_file -> index_file.getName() }.sort().toString(),
                     process.out.findAll { key, val -> key.startsWith('versions') })
                 .match() }
             )
         }
     }
 
-    test("fasta") {
+    test("homo_sapiens - fasta") {
 
         when {
             process {
                 """
-                input[0] = Channel.of([
+                input[0] = channel.of([
                     [ id:'test_fasta' ],
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
                 ])
-                input[1] = Channel.of([ [], [] ])
+                input[1] = channel.of([ [], [] ])
                 """
             }
         }
@@ -54,25 +54,25 @@ nextflow_process {
             assertAll(
                 { assert process.success },
                 { assert snapshot(
-                    file(process.out.index[0][1]).listFiles().collect { it.getName() }.sort().toString(),
+                    file(process.out.index[0][1]).listFiles().collect { index_file -> index_file.getName() }.sort().toString(),
                     process.out.findAll { key, val -> key.startsWith('versions') }
                 ).match() }
             )
         }
     }
 
-    test("fasta_gtf_stub") {
+    test("homo_sapiens - fasta - gtf - stub") {
 
         options '-stub'
 
         when {
             process {
                 """
-                input[0] = Channel.of([
+                input[0] = channel.of([
                     [ id:'test_fasta' ],
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
                 ])
-                input[1] = Channel.of([
+                input[1] = channel.of([
                     [ id:'test_gtf' ],
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
                 ])
@@ -88,18 +88,18 @@ nextflow_process {
         }
     }
 
-    test("fasta_stub") {
+    test("homo_sapiens - fasta - stub") {
 
         options '-stub'
 
         when {
             process {
                 """
-                input[0] = Channel.of([
+                input[0] = channel.of([
                     [ id:'test_fasta' ],
                     [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
                 ])
-                input[1] = Channel.of([ [], [] ])
+                input[1] = channel.of([ [], [] ])
                 """
             }
         }

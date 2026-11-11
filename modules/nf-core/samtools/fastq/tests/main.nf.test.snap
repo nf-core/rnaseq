@@ -67,15 +67,15 @@
                     [
                         "SAMTOOLS_FASTQ",
                         "samtools",
-                        "1.24"
+                        "1.25"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-03-19T08:58:51.815096",
+        "timestamp": "2026-10-28T07:04:00.65651",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.4"
         }
     },
     "bam_fastq": {
@@ -148,15 +148,15 @@
                     [
                         "SAMTOOLS_FASTQ",
                         "samtools",
-                        "1.24"
+                        "1.25"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-03-19T08:58:41.34399",
+        "timestamp": "2026-10-28T07:03:52.357784",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.4"
         }
     },
     "bam_verinterleave_sions": {
@@ -166,15 +166,15 @@
                     [
                         "SAMTOOLS_FASTQ",
                         "samtools",
-                        "1.24"
+                        "1.25"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-03-19T08:58:46.729284",
+        "timestamp": "2026-10-28T07:03:56.39427",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.4"
         }
     },
     "bam_singleton": {
@@ -230,15 +230,15 @@
                     [
                         "SAMTOOLS_FASTQ",
                         "samtools",
-                        "1.24"
+                        "1.25"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-03-19T08:58:56.91914",
+        "timestamp": "2026-10-28T07:04:04.787018",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.4"
         }
     }
 }

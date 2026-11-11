@@ -5,8 +5,8 @@
 include { MULTIQC                } from '../../../modules/nf-core/multiqc'
 include { paramsSummaryMap       } from 'plugin/nf-schema'
 include { samplesheetToList      } from 'plugin/nf-schema'
-include { paramsSummaryMultiqc   } from '../../nf-core/utils_nfcore_pipeline'
-include { workflowVersionToYAML  } from '../../nf-core/utils_nfcore_pipeline'
+include { paramsSummaryMultiqc   } from 'plugin/nf-core-utils'
+include { collectVersions        } from 'plugin/nf-core-utils'
 include { methodsDescriptionText } from '../utils_nfcore_rnaseq_pipeline'
 
 
@@ -176,7 +176,7 @@ workflow MULTIQC_RNASEQ {
                 ]
             }
 
-        ch_manifest_versions = channel.value(workflowVersionToYAML())
+        ch_manifest_versions = channel.value(collectVersions([], workflow.nextflow.version))
             .collectFile(name: 'nf_core_rnaseq_software_mqc_versions.yml')
 
         ch_static_globals = ch_workflow_summary

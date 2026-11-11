@@ -15,15 +15,15 @@
                     [
                         "SAMTOOLS_INDEX",
                         "samtools",
-                        "1.24"
+                        "1.25"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-03-19T09:00:39.171613",
+        "timestamp": "2026-10-28T07:05:20.146031",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.4"
         }
     },
     "crai - stub": {
@@ -42,15 +42,15 @@
                     [
                         "SAMTOOLS_INDEX",
                         "samtools",
-                        "1.24"
+                        "1.25"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-03-19T09:00:32.838795",
+        "timestamp": "2026-10-28T07:05:16.215077",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.4"
         }
     },
     "bai - stub": {
@@ -69,15 +69,15 @@
                     [
                         "SAMTOOLS_INDEX",
                         "samtools",
-                        "1.24"
+                        "1.25"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-03-19T09:00:25.255379",
+        "timestamp": "2026-10-28T07:05:12.613556",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.4"
         }
     },
     "csi": {
@@ -88,15 +88,15 @@
                     [
                         "SAMTOOLS_INDEX",
                         "samtools",
-                        "1.24"
+                        "1.25"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-03-19T09:00:18.414839",
+        "timestamp": "2026-10-28T07:05:08.66381",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.4"
         }
     },
     "crai": {
@@ -115,15 +115,15 @@
                     [
                         "SAMTOOLS_INDEX",
                         "samtools",
-                        "1.24"
+                        "1.25"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-03-19T09:00:13.571297",
+        "timestamp": "2026-10-28T07:05:04.961106",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.4"
         }
     },
     "bai": {
@@ -142,15 +142,15 @@
                     [
                         "SAMTOOLS_INDEX",
                         "samtools",
-                        "1.24"
+                        "1.25"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-03-19T09:00:06.767362",
+        "timestamp": "2026-10-28T07:05:01.122622",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.4"
         }
     }
 }

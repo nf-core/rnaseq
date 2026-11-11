@@ -1,3 +1,6 @@
+// Copyright (c) the nf-core community under an open-source MIT license.
+// See https://github.com/nf-core/modules for full license, file patching instructions and upstream contributing.
+
 include { BOWTIE2_ALIGN                            } from '../../../modules/nf-core/bowtie2/align'
 include { BOWTIE2_ALIGN as BOWTIE2_ALIGN_PE        } from '../../../modules/nf-core/bowtie2/align'
 include { BOWTIE2_BUILD                            } from '../../../modules/nf-core/bowtie2/build'

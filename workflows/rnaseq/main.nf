@@ -7,6 +7,7 @@
 //
 // MODULE: Loaded from modules/local/
 //
+include { SAMPLE_CHECK_FAILED                } from '../../modules/local/sample_check_failed'
 include { DESEQ2_QC as DESEQ2_QC_BAM_SALMON } from '../../modules/local/deseq2_qc'
 include { DESEQ2_QC as DESEQ2_QC_RSEM        } from '../../modules/local/deseq2_qc'
 include { DESEQ2_QC as DESEQ2_QC_PSEUDO      } from '../../modules/local/deseq2_qc'
@@ -24,6 +25,10 @@ include { BAM_DEDUP_UMI                         } from '../../subworkflows/nf-co
 
 include { checkSamplesAfterGrouping      } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { classifyStrand                 } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { undeterminedStrandednessMessage } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { trimmedReadsMessage            } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { mappedReadsMessage             } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
+include { getHisat2PercentMapped         } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 include { mapBamToPublishedPath          } from '../../subworkflows/local/utils_nfcore_rnaseq_pipeline'
 
 /*
@@ -49,7 +54,7 @@ include { SAMTOOLS_INDEX                                       } from '../../mod
 // SUBWORKFLOW: Consisting entirely of nf-core/modules
 //
 include { samplesheetToList                } from 'plugin/nf-schema'
-include { softwareVersionsToYAML           } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
+include { collectVersions                  } from 'plugin/nf-core-utils'
 include { FASTQ_ALIGN_HISAT2               } from '../../subworkflows/nf-core/fastq_align_hisat2'
 include { BAM_MARKDUPLICATES_PICARD        } from '../../subworkflows/nf-core/bam_markduplicates_picard'
 include { BAM_STRINGTIE_MERGE              } from '../../subworkflows/nf-core/bam_stringtie_merge/main'
@@ -88,6 +93,9 @@ workflow RNASEQ {
     ch_splicesites          // channel: path(genome.splicesites.txt)
     ch_kraken_db            // channel: path(kraken2/db/)
     qc_tools                // val(list) - QC tools to run, e.g. ['preseq', 'qualimap', 'rseqc_bam_stat', ...]
+    fail_on_low_trimmed_reads         // val(boolean) - fail the run for samples below --min_trimmed_reads
+    fail_on_low_mapped_reads          // val(boolean) - fail the run for samples below --min_mapped_reads
+    fail_on_undetermined_strandedness // val(boolean) - fail the run for 'auto' samples whose strandedness could not be determined
 
     main:
 
@@ -117,6 +125,8 @@ workflow RNASEQ {
     ch_percent_mapped = channel.empty()
     ch_unaligned_sequences = channel.empty()
 
+    ch_failed_checks = channel.empty()
+
     // Per-sample MultiQC bundle — `.join(..., remainder: true)` chains
     // fed to MULTIQC_RNASEQ. `collapseAgg` re-keys by meta.id at the end
     // of each multi-output subworkflow aggregation; sibling outputs are
@@ -125,28 +135,6 @@ workflow RNASEQ {
     // this aggregation silently emits duplicate rows.
     ch_mqc_per_sample_bundle = channel.empty()
     def collapseAgg = { row -> [row[0].id, row.drop(1).findAll { e -> e != null }.collectMany { e -> (e instanceof List) ? e : [e] }] }
-
-    //
-    // Collect versions from the topic channel. Entries are either
-    // `path(versions.yml)` (legacy file-emit style) or
-    // `(task.process, tool, version)` tuples (inline `eval` style).
-    //
-    def topic_versions = channel.topic('versions')
-        .distinct()
-        .branch { entry ->
-            versions_file: entry instanceof Path
-            versions_tuple: true
-        }
-
-    def topic_versions_string = topic_versions.versions_tuple
-        .map { process, tool, version ->
-            [ process[process.lastIndexOf(':')+1..-1], "  ${tool}: ${version}" ]
-        }
-        .groupTuple(by: 0)
-        .map { process, tool_versions ->
-            tool_versions.unique().sort()
-            "${process}:\n${tool_versions.join('\n')}"
-        }
 
     //
     // Create channel from input file provided through params.input
@@ -197,13 +185,8 @@ workflow RNASEQ {
     // Run RNA-seq FASTQ preprocessing subworkflow
     //
 
-    // The subworkflow only has to do Salmon indexing if it discovers 'auto'
-    // samples, and if we haven't already made one elsewhere
-    salmon_index_available = params.salmon_index || (!params.skip_pseudo_alignment && params.pseudo_aligner == 'salmon')
-
-    // Determine if we need to build rRNA removal indexes
-    def make_sortmerna_index = !params.sortmerna_index && params.remove_ribo_rna && params.ribo_removal_tool == 'sortmerna'
-    def make_bowtie2_index   = !params.bowtie2_rrna_index && params.remove_ribo_rna && params.ribo_removal_tool == 'bowtie2'
+    // Bowtie2 rRNA index building still happens here, not in PREPARE_GENOME_INDICES.
+    def make_bowtie2_index = !params.bowtie2_rrna_index && params.remove_ribo_rna && params.ribo_removal_tool == 'bowtie2'
 
     FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS (
         ch_fastq,                                   // ch_reads
@@ -220,8 +203,8 @@ workflow RNASEQ {
         params.skip_trimming,                       // skip_trimming
         params.skip_umi_extract,                    // skip_umi_extract
         params.skip_linting,                        // skip_linting
-        !salmon_index_available,                    // make_salmon_index
-        make_sortmerna_index,                       // make_sortmerna_index
+        false,                                      // make_salmon_index (PREPARE_GENOME_INDICES already builds/loads this)
+        false,                                      // make_sortmerna_index (PREPARE_GENOME_INDICES already builds/loads this)
         make_bowtie2_index,                         // make_bowtie2_index
         params.trimmer,                             // trimmer
         params.min_trimmed_reads,                   // min_trimmed_reads
@@ -238,6 +221,12 @@ workflow RNASEQ {
 
     ch_multiqc_files                  = ch_multiqc_files.mix(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.multiqc_files)
     ch_strand_inferred_filtered_fastq = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.reads
+    ch_failed_on_undetermined_strandedness = ch_strand_inferred_filtered_fastq
+        .filter { meta, _reads -> fail_on_undetermined_strandedness && meta.salmon_strand_analysis?.inferred_strandedness == 'undetermined' }
+        .map { meta, _reads -> [ meta.id, undeterminedStrandednessMessage(meta.id, meta.salmon_strand_analysis) ] }
+    ch_failed_checks = ch_failed_checks.mix(ch_failed_on_undetermined_strandedness)
+    ch_strand_inferred_filtered_fastq = ch_strand_inferred_filtered_fastq
+        .filter { meta, _reads -> !(fail_on_undetermined_strandedness && meta.salmon_strand_analysis?.inferred_strandedness == 'undetermined') }
     ch_reads_cat                      = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.reads_cat
     ch_reads_trimmed                  = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.reads_trimmed
     ch_trim_read_count                = FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.trim_read_count
@@ -247,6 +236,11 @@ workflow RNASEQ {
             meta, num_reads ->
                 return [ meta.id, num_reads > params.min_trimmed_reads.toFloat() ]
         }
+
+    ch_failed_on_low_trimmed_reads = ch_trim_read_count
+        .filter { _meta, num_reads -> fail_on_low_trimmed_reads && num_reads <= params.min_trimmed_reads.toFloat() }
+        .map { meta, num_reads -> [ meta.id, trimmedReadsMessage(meta.id, num_reads, params.min_trimmed_reads) ] }
+    ch_failed_checks = ch_failed_checks.mix(ch_failed_on_low_trimmed_reads)
 
     // Seed the bundle with every input sample — fastq branch and pre-aligned
     // BAM branch — so both paths can accumulate per-sample MultiQC
@@ -367,6 +361,7 @@ workflow RNASEQ {
         ch_genome_bam_index    = ch_genome_bam_index.mix(FASTQ_ALIGN_HISAT2.out.index)
         ch_unprocessed_bams    = ch_genome_bam.map { meta, bam -> [ meta, bam, '' ] }
         ch_unaligned_sequences = FASTQ_ALIGN_HISAT2.out.fastq
+        ch_percent_mapped      = ch_percent_mapped.mix(FASTQ_ALIGN_HISAT2.out.summary.map { meta, log -> [ meta, getHisat2PercentMapped(log) ] })
         ch_multiqc_files = ch_multiqc_files.mix(FASTQ_ALIGN_HISAT2.out.summary)
         ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
             .join(FASTQ_ALIGN_HISAT2.out.summary.map { meta, f -> [meta.id, f] }, remainder: true)
@@ -415,6 +410,65 @@ workflow RNASEQ {
         ch_mqc_per_sample_bundle = ch_mqc_per_sample_bundle
             .join(ch_bam_dedup_umi_bundle, remainder: true)
     }
+
+    // Decide pass/fail on --min_mapped_reads once per sample, ahead of quantification.
+    // Samples without a mapping rate are treated as passing.
+
+    ch_genome_bam_bai_mapping = ch_genome_bam
+        .join(ch_genome_bam_index)
+        .join(ch_percent_mapped, remainder: true)
+        .map{ row ->
+            def (meta, bam, index) = row[0..2]
+            def percent_mapped = row.size() == 4 ? row[3] : null
+            def pass = percent_mapped != null ? percent_mapped >= params.min_mapped_reads.toFloat() : null
+            return [ meta, bam, index, percent_mapped, pass ]
+        }
+        .multiMap { meta, bam, index, percent_mapped, pass ->
+            bam: [ meta, bam, index, pass ]
+            percent_mapped: [ meta.id, percent_mapped ]
+            percent_mapped_pass: [ meta.id, percent_mapped, pass ]
+            status: [ meta.id, pass ]
+        }
+
+    ch_percent_mapped = ch_genome_bam_bai_mapping.percent_mapped
+
+    // Save mapping status for workflow summary where present
+
+    ch_map_status = ch_genome_bam_bai_mapping.status
+        .filter { _id, pass -> pass != null }
+
+    ch_failed_on_low_mapped_reads = ch_genome_bam_bai_mapping.percent_mapped_pass
+        .filter { _id, _percent_mapped, pass -> fail_on_low_mapped_reads && pass == false }
+        .map { id, percent_mapped, _pass -> [ id, mappedReadsMessage(id, percent_mapped, params.min_mapped_reads) ] }
+    ch_failed_checks = ch_failed_checks.mix(ch_failed_on_low_mapped_reads)
+
+    // Where a percent mapping is present, use it to filter bam and index
+
+    map_filtered_genome_bam_bai = ch_genome_bam_bai_mapping.bam
+        .filter { _meta, _bam, _index, pass -> pass || pass == null }
+        .multiMap { meta, bam, index, _pass ->
+            bam: [ meta, bam ]
+            index: [ meta, index ]
+        }
+
+    ch_genome_bam = map_filtered_genome_bam_bai.bam
+    ch_genome_bam_index = map_filtered_genome_bam_bai.index
+
+    // Apply the same decision to the transcriptome BAMs so failed samples are
+    // left out of quantification. Rows from the remainder join take three shapes:
+    // [id, meta, bam, pass] when matched, [id, meta, bam, null] for a transcriptome
+    // BAM with no status, and [id, null, pass] for a status with no transcriptome
+    // BAM (e.g. HISAT2).
+
+    ch_transcriptome_bam = ch_transcriptome_bam
+        .map { meta, bam -> [ meta.id, meta, bam ] }
+        .join(ch_genome_bam_bai_mapping.status, remainder: true)
+        .filter { row ->
+            def has_transcriptome_bam = row[1] != null   // false for a status with no transcriptome BAM (e.g. HISAT2)
+            def failed_mapped_check   = row[-1] == false // null (no status) counts as passing
+            return has_transcriptome_bam && !failed_mapped_check
+        }
+        .map { row -> [ row[1], row[2] ] }
 
     //
     // Quantification
@@ -473,43 +527,6 @@ workflow RNASEQ {
             ch_multiqc_files = ch_multiqc_files.mix(DESEQ2_QC_BAM_SALMON.out.dists_multiqc.collect().map { file -> [[:], file] })
         }
     }
-
-    // Filter bam and index by percent mapped being present in the meta
-
-    ch_genome_bam_bai_mapping = ch_genome_bam
-        .join(ch_genome_bam_index)
-        .join(ch_percent_mapped, remainder: true)
-        .map{ row ->
-            def (meta, bam, index) = row[0..2]
-            def percent_mapped = row.size() == 4 ? row[3] : null
-            def pass = percent_mapped != null ? percent_mapped >= params.min_mapped_reads.toFloat() : null
-            return [ meta, bam, index, percent_mapped, pass ]
-        }
-        .multiMap { meta, bam, index, percent_mapped, pass ->
-            bam: [ meta, bam, index, pass ]
-            percent_mapped: [ meta.id, percent_mapped ]
-            percent_mapped_pass: [ meta.id, percent_mapped, pass ]
-            status: [ meta.id, pass ]
-        }
-
-    ch_percent_mapped = ch_genome_bam_bai_mapping.percent_mapped
-
-    // Save mapping status for workflow summary where present
-
-    ch_map_status = ch_genome_bam_bai_mapping.status
-        .filter { _id, pass -> pass != null }
-
-    // Where a percent mapping is present, use it to filter bam and index
-
-    map_filtered_genome_bam_bai = ch_genome_bam_bai_mapping.bam
-        .filter { _meta, _bam, _index, pass -> pass || pass == null }
-        .multiMap { meta, bam, index, _pass ->
-            bam: [ meta, bam ]
-            index: [ meta, index ]
-        }
-
-    ch_genome_bam = map_filtered_genome_bam_bai.bam
-    ch_genome_bam_index = map_filtered_genome_bam_bai.index
 
     //
     // SUBWORKFLOW: Mark duplicate reads
@@ -638,6 +655,11 @@ workflow RNASEQ {
                 .join(ch_bam_qc_rnaseq_bundle, remainder: true)
         }
     }
+
+    //
+    // MODULE: Fail the run for samples that did not pass a selected check
+    //
+    SAMPLE_CHECK_FAILED(ch_failed_checks)
 
     //
     // Build the per-sample strand-classification tuple consumed by the
@@ -807,8 +829,11 @@ workflow RNASEQ {
     //
     // Collate and save software versions from the `versions` topic
     //
-    ch_collated_versions = softwareVersionsToYAML(topic_versions.versions_file)
-        .mix(topic_versions_string)
+    ch_collated_versions = channel.topic('versions')
+        // Read via Nextflow's Path API so remote work directories remain supported.
+        .map { entry -> entry instanceof Path ? entry.text : entry }
+        .toList()
+        .map { versions -> collectVersions(versions, workflow.nextflow.version) }
         .collectFile(storeDir: "${params.outdir}/pipeline_info", name: 'nf_core_rnaseq_software_mqc_versions.yml', sort: true, newLine: true)
 
     //

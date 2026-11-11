@@ -3,6 +3,81 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [[3.28.0](https://github.com/nf-core/rnaseq/releases/tag/3.28.0)] - 2026-11-10
+
+### Credits
+
+Special thanks to the following for their contributions to the release:
+
+- [Adam Talbot](https://github.com/adamrtalbot)
+- [Ben Sherman](https://github.com/bentsherman)
+- [Brandon Seah](https://github.com/kbseah)
+- [Chris Fields](https://github.com/cjfields)
+- [Daniel Lundin](https://github.com/erikrikarddaniel)
+- [Dominik Maszczyk](https://github.com/Skitionek)
+- [Edmund Miller](https://github.com/edmundmiller)
+- [Emmanuel Tan](https://github.com/emmanuel-tan)
+- [Felix Krueger](https://github.com/FelixKrueger)
+- [Friederike Hanssen](https://github.com/FriederikeHanssen)
+- [Gary Burnett](https://github.com/gburnett-nvidia)
+- [Janaki B](https://github.com/janaki-bio)
+- [Jared R Fischbach](https://github.com/jaredfischbach)
+- [Jenny Drnevich](https://github.com/jdrnevich)
+- [Jose Espinosa-Carrasco](https://github.com/JoseEspinosa)
+- [Louis Le Nézet](https://github.com/LouisLeNezet)
+- [Matthias Hörtenhuber](https://github.com/mashehu)
+- [Maxime U Garcia](https://github.com/maxulysse)
+- [NickPanyushev](https://github.com/NickPanyushev)
+- [Paolo Di Tommaso](https://github.com/pditommaso)
+- [Paolo Inglese](https://github.com/piplus2)
+- [Phil Ewels](https://github.com/ewels)
+- [Rayan Hassaïne](https://github.com/rhassaine)
+- [Scott Handley](https://github.com/shandley)
+- [Sriiraam](https://github.com/Sriiraam)
+- [Sushant Hona](https://github.com/OtoYuki)
+
+### Enhancements and fixes
+
+- [PR #1938](https://github.com/nf-core/rnaseq/pull/1938) - Bump version to 3.28.0dev after release 3.27.0; flip the MultiQC report links and RO-Crate URL/version back to dev
+- [PR #1942](https://github.com/nf-core/rnaseq/pull/1942) - Fix `--with_umi` transcriptome-side samtools stats silently colliding with genome-side stats, caused by a broad `withName` wildcard in `conf/modules/alignment.config` also matching the `BAM_DEDUP_UMI` subworkflow
+- [PR #1943](https://github.com/nf-core/rnaseq/pull/1943) - Apply `--min_mapped_reads` filtering to HISAT2 alignments
+- [PR #1958](https://github.com/nf-core/rnaseq/pull/1958) - Stop building the SortMeRNA index twice, and build the Salmon strandedness-inference index centrally in `PREPARE_GENOME_INDICES`
+- [PR #1959](https://github.com/nf-core/rnaseq/pull/1959) - Right-size `RSEM_CALCULATEEXPRESSION` resources, drop its unused BAM output, stop pinning `--seed 1` in its default arguments, and use local scratch for RSEM/dupRadar in the AWS full test
+- [PR #1963](https://github.com/nf-core/rnaseq/pull/1963) - Correct local nf-test examples to explicitly select the default pipeline tests and include the `test` profile.
+- [PR #1968](https://github.com/nf-core/rnaseq/pull/1968) - Fix duplicated valueless flags passed via `--extra_trimgalore_args`
+- [PR #1969](https://github.com/nf-core/rnaseq/pull/1969) - Add `--fail_on_low_trimmed_reads`, `--fail_on_low_mapped_reads` and `--fail_on_undetermined_strandedness` to fail the run, instead of silently skipping the sample or defaulting to `unstranded`
+- [PR #1972](https://github.com/nf-core/rnaseq/pull/1972) - Remove `cpus = 1` override for RiboDetector from `qc_trim_filter.config`
+- [PR #1978](https://github.com/nf-core/rnaseq/pull/1978) - Update `parabricks/rnafq2bam` module to 4.8.0-1, fixing the Parabricks run log overwriting STAR's `Log.final.out` so mapping rates are read correctly
+- [PR #1980](https://github.com/nf-core/rnaseq/pull/1980) - Important! Template update for nf-core/tools v4.2.1
+- [PR #1984](https://github.com/nf-core/rnaseq/pull/1984) - Leave samples failing `--min_mapped_reads` out of Salmon/RSEM quantification and the merged count tables (behaviour change: such samples no longer get aligner-based counts), and document the MultiQC fail tables and `multiqc_report_data/` folder
+- [PR #1986](https://github.com/nf-core/rnaseq/pull/1986) - Stop a library with no quantified reads crashing the SummarizedExperiment merge and DESeq2 QC; such samples are excluded from DESeq2 QC with a warning
+- [PR #1990](https://github.com/nf-core/rnaseq/pull/1990) - Use `size()` instead of the `size` property on lists in samplesheet validation, which fails on Nextflow 26.11 and later
+- [PR #1991](https://github.com/nf-core/rnaseq/pull/1991) - Update `salmon/index` and `salmon/quant` to Salmon 2.11.0, restoring `--noLengthCorrection` behaviour for 3' tag data (QuantSeq)
+- [PR #1993](https://github.com/nf-core/rnaseq/pull/1993) - Update nf-core modules and subworkflows, including FastQC 0.13.0, fastp 1.4.0 and samtools 1.25, and sync the matching ARM container overrides
+- [PR #1977](https://github.com/nf-core/rnaseq/pull/1977) - Replace the vendored `utils_nextflow_pipeline`, `utils_nfcore_pipeline` and `utils_nfschema_plugin` subworkflows with the `nf-core-utils@0.7.0` plugin (behaviour change: completion email is skipped on Seqera Platform launches unless `params.force_completion_email = true`)
+- [PR #1994](https://github.com/nf-core/rnaseq/pull/1994) - Fix `HISAT2_ALIGN` running for only one sample when the HISAT2 index is built in-run ([#1992](https://github.com/nf-core/rnaseq/issues/1992))
+- [PR #1995](https://github.com/nf-core/rnaseq/pull/1995) - Bump version to 3.28.0 ahead of release, and move the vendored `ea-utils/gtf2bed` module to its renamed upstream `eautils/gtf2bed` to pick up the updated container base
+- [PR #1997](https://github.com/nf-core/rnaseq/pull/1997) - Update `bowtie2/align` and `bowtie2/build` to pick up the bowtie2 2.5.5 CPU-dispatch version parsing fix and rebuilt containers, including the arm64 overrides in `conf/arm.config`
+- [PR #1998](https://github.com/nf-core/rnaseq/pull/1998) - Address review nits from the 3.28.0 release PR: remove a stale `nf_core_version` comment, make `anySampleAutoStrandedness` independent of the samplesheet column count, and complete the software dependencies table
+- [PR #1999](https://github.com/nf-core/rnaseq/pull/1999) - Declare the `force_completion_email` parameter in `nextflow.config` and `nextflow_schema.json`, and add tests for `--fail_on_low_trimmed_reads` and `--fail_on_low_mapped_reads`
+- [PR #2001](https://github.com/nf-core/rnaseq/pull/2001) - Address review feedback on the 3.28.0 release PR: skip the strandedness-inference Salmon index for BAM-only `auto` samples, stop an unparsed HISAT2 alignment rate dropping every sample, fix the `EAUTILS_GTF2BED` conda lock paths, and update the Trim Galore citation link
+- [PR #2000](https://github.com/nf-core/rnaseq/pull/2000) - Important! Template update for nf-core/tools v4.2.2
+
+### Software dependencies
+
+| Dependency           | Old version | New version |
+| -------------------- | ----------- | ----------- |
+| `bowtie2`            | 2.5.4       | 2.5.5       |
+| `fastp`              | 1.3.6       | 1.4.0       |
+| `fastqc`             | 0.12.1      | 0.13.0      |
+| `htslib`             | 1.24        | 1.25        |
+| `htslib (bowtie2)`   | 1.21        | 1.24        |
+| `parabricks`         | 4.7.1-1     | 4.8.0-1     |
+| `salmon`             | 2.7.0       | 2.11.0      |
+| `samtools`           | 1.24        | 1.25        |
+| `samtools (bowtie2)` | 1.21        | 1.24        |
+| `sentieon`           | 202503.02   | 202503.03   |
+
 ## [[3.27.0](https://github.com/nf-core/rnaseq/releases/tag/3.27.0)] - 2026-09-23
 
 ### Credits

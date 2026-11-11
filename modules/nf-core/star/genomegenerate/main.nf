@@ -1,11 +1,14 @@
+// Copyright (c) the nf-core community under an open-source MIT license.
+// See https://github.com/nf-core/modules for full license, file patching instructions and upstream contributing.
+
 process STAR_GENOMEGENERATE {
     tag "$fasta"
     label 'process_high'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container ?
-        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/26/268b4c9c6cbf8fa6606c9b7fd4fafce18bf2c931d1a809a0ce51b105ec06c89d/data' :
-        'community.wave.seqera.io/library/htslib_samtools_star_gawk:ae438e9a604351a4' }"
+    container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/d8/d807965783d3d20f9a33f37da72e62223d217a042a0a8615744fae0a34457b48/data'
+        : 'community.wave.seqera.io/library/htslib_samtools_star_gawk:3ffb3e46ac3bf2ea'}"
 
     input:
     tuple val(meta), path(fasta)
@@ -22,8 +25,10 @@ process STAR_GENOMEGENERATE {
 
     script:
     def args        = task.ext.args ?: ''
+    def args2       = task.ext.args2 ?: ''
+    def args3       = task.ext.args3 ?: ''
     def args_list   = args.tokenize()
-    def memory      = task.memory ? "--limitGenomeGenerateRAM ${task.memory.toBytes() - 100000000}" : ''
+    def memory      = task.memory ? "--limitGenomeGenerateRAM ${(task.memory.toBytes() * 0.9).longValue()}" : ''
     def include_gtf = gtf ? "--sjdbGTFfile $gtf" : ''
     if (args_list.contains('--genomeSAindexNbases')) {
         """
@@ -39,8 +44,8 @@ process STAR_GENOMEGENERATE {
         """
     } else {
         """
-        samtools faidx $fasta
-        NUM_BASES=`gawk '{sum = sum + \$2}END{if ((log(sum)/log(2))/2 - 1 > 14) {printf "%.0f", 14} else {printf "%.0f", (log(sum)/log(2))/2 - 1}}' ${fasta}.fai`
+        samtools faidx $args2 $fasta
+        NUM_BASES=`gawk $args3 '{sum = sum + \$2}END{if ((log(sum)/log(2))/2 - 1 > 14) {printf "%.0f", 14} else {printf "%d", int((log(sum)/log(2))/2 - 1)}}' ${fasta}.fai`
 
         mkdir star
         STAR \\

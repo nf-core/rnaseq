@@ -61,6 +61,18 @@ count.table           <- count.table[,opt$count_col:ncol(count.table),drop=FALSE
 colnames(count.table) <- gsub(opt$sample_suffix,"",colnames(count.table))
 colnames(count.table) <- gsub(pattern='\\.$', replacement='', colnames(count.table))
 
+# A library with no quantified reads gives an all-zero column, which length
+# scaling turns into all NA; DESeq2 accepts neither.
+empty.samples <- colnames(count.table)[sapply(count.table, function(x) any(is.na(x)) || all(x == 0))]
+if (length(empty.samples) > 0) {
+    warning(paste("Excluding samples with no quantified reads:", paste(empty.samples, collapse=", ")), call.=FALSE)
+    count.table <- count.table[, !colnames(count.table) %in% empty.samples, drop=FALSE]
+}
+if (ncol(count.table) == 0) {
+    warning("No samples with quantified reads; skipping DESeq2 QC.", call.=FALSE)
+    quit(save = "no", status = 0, runLast = FALSE)
+}
+
 ################################################
 ################################################
 ## RUN DESEQ2                                 ##

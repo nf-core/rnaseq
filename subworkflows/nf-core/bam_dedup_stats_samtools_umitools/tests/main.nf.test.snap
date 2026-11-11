@@ -47,7 +47,7 @@
                         {
                             "id": "test"
                         },
-                        "test.stats:md5,bb1f33104611a21cfa5ba13d27059736"
+                        "test.stats:md5,d966ecadd532300dbbf1667dff1a17a0"
                     ]
                 ],
                 "tsv_edit_distance": [
@@ -61,10 +61,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-08-25T15:14:15.871416",
+        "timestamp": "2026-10-28T07:18:58.284701",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.10.4"
         }
     },
     "sarscov2_bam_bai - primary_only": {
@@ -115,7 +115,7 @@
                         {
                             "id": "test"
                         },
-                        "test.stats:md5,bb1f33104611a21cfa5ba13d27059736"
+                        "test.stats:md5,d966ecadd532300dbbf1667dff1a17a0"
                     ]
                 ],
                 "tsv_edit_distance": [
@@ -129,10 +129,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-08-25T15:14:34.733537",
+        "timestamp": "2026-10-28T07:19:14.393605",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.10.4"
         }
     },
     "sarscov2_bam_bai - stub": {

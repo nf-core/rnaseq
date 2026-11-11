@@ -1,3 +1,6 @@
+// Copyright (c) the nf-core community under an open-source MIT license.
+// See https://github.com/nf-core/modules for full license, file patching instructions and upstream contributing.
+
 include { BBMAP_BBSPLIT                         } from '../../../modules/nf-core/bbmap/bbsplit'
 include { FASTQC as FASTQC_FILTERED             } from '../../../modules/nf-core/fastqc'
 include { CAT_FASTQ                             } from '../../../modules/nf-core/cat/fastq/main'

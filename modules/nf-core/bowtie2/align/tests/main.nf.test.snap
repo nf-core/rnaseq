@@ -18,7 +18,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.bowtie2.log:md5,169b09bba82894cb730cc16512541820"
+                    "test.bowtie2.log:md5,bd89ce1b28c93bf822bae391ffcedd19"
                 ]
             ],
             [
@@ -57,10 +57,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-10-20T08:39:41.639911",
+        "timestamp": "2026-11-10T22:26:49.887994839",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.7"
+            "nextflow": "26.04.0"
         }
     },
     "sarscov2 - [fastq1, fastq2], large_index, fasta_fai, false, true - bam": {
@@ -82,7 +82,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.bowtie2.log:md5,169b09bba82894cb730cc16512541820"
+                    "test.bowtie2.log:md5,bd89ce1b28c93bf822bae391ffcedd19"
                 ]
             ],
             [
@@ -112,10 +112,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-10-20T08:39:59.800213",
+        "timestamp": "2026-11-10T22:27:01.430540551",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.7"
+            "nextflow": "26.04.0"
         }
     },
     "sarscov2 - fastq, index, fasta_fai, true, true - bam": {
@@ -137,7 +137,7 @@
                         "id": "test",
                         "single_end": true
                     },
-                    "test.bowtie2.log:md5,2318a3c202cbd5893b9a975c162f4fdd"
+                    "test.bowtie2.log:md5,7b8a9e61b7646da1089b041333c41a87"
                 ]
             ],
             [
@@ -173,10 +173,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-10-20T08:39:24.459776",
+        "timestamp": "2026-11-10T22:26:38.523300126",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.7"
+            "nextflow": "26.04.0"
         }
     },
     "sarscov2 - fastq, large_index, fasta_fai, false, true - bam": {
@@ -198,7 +198,7 @@
                         "id": "test",
                         "single_end": true
                     },
-                    "test.bowtie2.log:md5,2318a3c202cbd5893b9a975c162f4fdd"
+                    "test.bowtie2.log:md5,7b8a9e61b7646da1089b041333c41a87"
                 ]
             ],
             [
@@ -228,10 +228,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-10-20T08:39:50.564005",
+        "timestamp": "2026-11-10T22:26:55.651405844",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.7"
+            "nextflow": "26.04.0"
         }
     },
     "sarscov2 - fastq, index, fasta_fai, false, true - bam": {
@@ -253,7 +253,7 @@
                         "id": "test",
                         "single_end": true
                     },
-                    "test.bowtie2.log:md5,2318a3c202cbd5893b9a975c162f4fdd"
+                    "test.bowtie2.log:md5,7b8a9e61b7646da1089b041333c41a87"
                 ]
             ],
             [
@@ -283,10 +283,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-10-20T08:38:58.351473",
+        "timestamp": "2026-11-10T22:26:21.303196301",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.7"
+            "nextflow": "26.04.0"
         }
     },
     "sarscov2 - [fastq1, fastq2], index, fasta_fai, false, false - stub": {
@@ -346,7 +346,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test.bowtie2.log:md5,169b09bba82894cb730cc16512541820"
+                    "test.bowtie2.log:md5,bd89ce1b28c93bf822bae391ffcedd19"
                 ]
             ],
             [
@@ -376,10 +376,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-10-20T08:39:33.167139",
+        "timestamp": "2026-11-10T22:26:44.21719385",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.7"
+            "nextflow": "26.04.0"
         }
     },
     "sarscov2 - fastq, index, fasta_fai, false, true - sam": {
@@ -401,7 +401,7 @@
                         "id": "test",
                         "single_end": true
                     },
-                    "test.bowtie2.log:md5,2318a3c202cbd5893b9a975c162f4fdd"
+                    "test.bowtie2.log:md5,7b8a9e61b7646da1089b041333c41a87"
                 ]
             ],
             [
@@ -431,10 +431,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-10-20T08:39:07.469212",
+        "timestamp": "2026-11-10T22:26:27.129299096",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.7"
+            "nextflow": "26.04.0"
         }
     },
     "sarscov2 - fastq, index, fasta_fai, true, false - stub": {
@@ -500,7 +500,7 @@
                         "id": "test",
                         "single_end": true
                     },
-                    "test.bowtie2.log:md5,2318a3c202cbd5893b9a975c162f4fdd"
+                    "test.bowtie2.log:md5,7b8a9e61b7646da1089b041333c41a87"
                 ]
             ],
             [
@@ -530,10 +530,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-10-20T08:39:15.611284",
+        "timestamp": "2026-11-10T22:26:32.853275789",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.7"
+            "nextflow": "26.04.0"
         }
     },
     "sarscov2 - [fastq1, fastq2], index, fasta_fai, false, true - cram": {

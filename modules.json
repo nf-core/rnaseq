@@ -17,12 +17,12 @@
                     },
                     "bowtie2/align": {
                         "branch": "master",
-                        "git_sha": "7b3452a23773f687ededb4befd037920e5a51341",
+                        "git_sha": "f6a5109d8f1b6f80b53bf999bc51bbb5fcb02440",
                         "installed_by": ["fastq_remove_rrna"]
                     },
                     "bowtie2/build": {
                         "branch": "master",
-                        "git_sha": "7b3452a23773f687ededb4befd037920e5a51341",
+                        "git_sha": "f6a5109d8f1b6f80b53bf999bc51bbb5fcb02440",
                         "installed_by": ["fastq_remove_rrna"]
                     },
                     "bracken/bracken": {

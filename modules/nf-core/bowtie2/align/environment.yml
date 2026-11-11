@@ -4,8 +4,9 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
+  # build >= 2 installs the CPU-specific bowtie2-align-*-v256 binaries; builds 0 and 1 omit them
   # renovate: datasource=conda depName=bioconda/bowtie2
-  - bioconda::bowtie2=2.5.5
+  - bioconda::bowtie2=2.5.5=*_2
   # renovate: datasource=conda depName=bioconda/htslib
   - bioconda::htslib=1.24
   # renovate: datasource=conda depName=bioconda/samtools

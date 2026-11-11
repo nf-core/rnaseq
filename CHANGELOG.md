@@ -59,6 +59,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1995](https://github.com/nf-core/rnaseq/pull/1995) - Bump version to 3.28.0 ahead of release, and move the vendored `ea-utils/gtf2bed` module to its renamed upstream `eautils/gtf2bed` to pick up the updated container base
 - [PR #1997](https://github.com/nf-core/rnaseq/pull/1997) - Update `bowtie2/align` and `bowtie2/build` to pick up the bowtie2 2.5.5 CPU-dispatch version parsing fix and rebuilt containers, including the arm64 overrides in `conf/arm.config`
 - [PR #1998](https://github.com/nf-core/rnaseq/pull/1998) - Address review nits from the 3.28.0 release PR: remove a stale `nf_core_version` comment, make `anySampleAutoStrandedness` independent of the samplesheet column count, and complete the software dependencies table
+- [PR #1999](https://github.com/nf-core/rnaseq/pull/1999) - Declare the `force_completion_email` parameter in `nextflow.config` and `nextflow_schema.json`, and add tests for `--fail_on_low_trimmed_reads` and `--fail_on_low_mapped_reads`
 
 ### Software dependencies
 

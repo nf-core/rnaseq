@@ -57,6 +57,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1977](https://github.com/nf-core/rnaseq/pull/1977) - Replace the vendored `utils_nextflow_pipeline`, `utils_nfcore_pipeline` and `utils_nfschema_plugin` subworkflows with the `nf-core-utils@0.7.0` plugin (behaviour change: completion email is skipped on Seqera Platform launches unless `params.force_completion_email = true`)
 - [PR #1994](https://github.com/nf-core/rnaseq/pull/1994) - Fix `HISAT2_ALIGN` running for only one sample when the HISAT2 index is built in-run ([#1992](https://github.com/nf-core/rnaseq/issues/1992))
 - [PR #1995](https://github.com/nf-core/rnaseq/pull/1995) - Bump version to 3.28.0 ahead of release, and move the vendored `ea-utils/gtf2bed` module to its renamed upstream `eautils/gtf2bed` to pick up the updated container base
+- [PR #1997](https://github.com/nf-core/rnaseq/pull/1997) - Update `bowtie2/align` and `bowtie2/build` to pick up the bowtie2 2.5.5 CPU-dispatch version parsing fix and rebuilt containers, including the arm64 overrides in `conf/arm.config`
 
 ### Software dependencies
 

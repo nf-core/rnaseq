@@ -88,4 +88,22 @@ nextflow_pipeline {
             }
         }
     }
+
+    test("BAM input with auto strandedness does not build a Salmon index") {
+
+        when {
+            params {
+                input = "${projectDir}/tests/bam_input_auto_strandedness.csv"
+                outdir = "$outputDir"
+                skip_alignment = true
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert !workflow.trace.tasks().any { task -> task.name.contains("SALMON_INDEX") } }
+            )
+        }
+    }
 }

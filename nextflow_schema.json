@@ -964,6 +964,12 @@
                     "fa_icon": "fas fa-remove-format",
                     "hidden": true
                 },
+                "force_completion_email": {
+                    "type": "boolean",
+                    "description": "Send the completion email on Seqera Platform launches, where it is skipped by default.",
+                    "fa_icon": "fas fa-envelope",
+                    "hidden": true
+                },
                 "max_multiqc_email_size": {
                     "type": "string",
                     "description": "File size limit when attaching MultiQC reports to summary emails.",

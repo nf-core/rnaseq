@@ -45,4 +45,40 @@ nextflow_pipeline {
             )
         }
     }
+
+    test("Params: fail_on_low_trimmed_reads stops the run") {
+
+        when {
+            params {
+                outdir                    = "$outputDir"
+                fail_on_low_trimmed_reads = true
+                min_trimmed_reads         = 1000000000
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.failed },
+                { assert workflow.stdout.any { line -> line.contains("failed the trimmed reads check") } || workflow.stderr.any { line -> line.contains("failed the trimmed reads check") } }
+            )
+        }
+    }
+
+    test("Params: fail_on_low_mapped_reads stops the run") {
+
+        when {
+            params {
+                outdir                   = "$outputDir"
+                fail_on_low_mapped_reads = true
+                min_mapped_reads         = 100
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.failed },
+                { assert workflow.stdout.any { line -> line.contains("failed the mapped reads check") } || workflow.stderr.any { line -> line.contains("failed the mapped reads check") } }
+            )
+        }
+    }
 }

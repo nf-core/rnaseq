@@ -42,7 +42,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1942](https://github.com/nf-core/rnaseq/pull/1942) - Fix `--with_umi` transcriptome-side samtools stats silently colliding with genome-side stats, caused by a broad `withName` wildcard in `conf/modules/alignment.config` also matching the `BAM_DEDUP_UMI` subworkflow
 - [PR #1943](https://github.com/nf-core/rnaseq/pull/1943) - Apply `--min_mapped_reads` filtering to HISAT2 alignments
 - [PR #1958](https://github.com/nf-core/rnaseq/pull/1958) - Stop building the SortMeRNA index twice, and build the Salmon strandedness-inference index centrally in `PREPARE_GENOME_INDICES`
-- [PR #1959](https://github.com/nf-core/rnaseq/pull/1959) - Right-size `RSEM_CALCULATEEXPRESSION` resources, drop its unused BAM output, and use local scratch for RSEM/dupRadar in the AWS full test
+- [PR #1959](https://github.com/nf-core/rnaseq/pull/1959) - Right-size `RSEM_CALCULATEEXPRESSION` resources, drop its unused BAM output, stop pinning `--seed 1` in its default arguments, and use local scratch for RSEM/dupRadar in the AWS full test
 - [PR #1963](https://github.com/nf-core/rnaseq/pull/1963) - Correct local nf-test examples to explicitly select the default pipeline tests and include the `test` profile.
 - [PR #1968](https://github.com/nf-core/rnaseq/pull/1968) - Fix duplicated valueless flags passed via `--extra_trimgalore_args`
 - [PR #1969](https://github.com/nf-core/rnaseq/pull/1969) - Add `--fail_on_low_trimmed_reads`, `--fail_on_low_mapped_reads` and `--fail_on_undetermined_strandedness` to fail the run, instead of silently skipping the sample or defaulting to `unstranded`
@@ -60,6 +60,7 @@ Special thanks to the following for their contributions to the release:
 - [PR #1997](https://github.com/nf-core/rnaseq/pull/1997) - Update `bowtie2/align` and `bowtie2/build` to pick up the bowtie2 2.5.5 CPU-dispatch version parsing fix and rebuilt containers, including the arm64 overrides in `conf/arm.config`
 - [PR #1998](https://github.com/nf-core/rnaseq/pull/1998) - Address review nits from the 3.28.0 release PR: remove a stale `nf_core_version` comment, make `anySampleAutoStrandedness` independent of the samplesheet column count, and complete the software dependencies table
 - [PR #1999](https://github.com/nf-core/rnaseq/pull/1999) - Declare the `force_completion_email` parameter in `nextflow.config` and `nextflow_schema.json`, and add tests for `--fail_on_low_trimmed_reads` and `--fail_on_low_mapped_reads`
+- [PR #2001](https://github.com/nf-core/rnaseq/pull/2001) - Address review feedback on the 3.28.0 release PR: skip the strandedness-inference Salmon index for BAM-only `auto` samples, stop an unparsed HISAT2 alignment rate dropping every sample, fix the `EAUTILS_GTF2BED` conda lock paths, and update the Trim Galore citation link
 - [PR #2000](https://github.com/nf-core/rnaseq/pull/2000) - Important! Template update for nf-core/tools v4.2.2
 
 ### Software dependencies

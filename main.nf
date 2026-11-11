@@ -218,12 +218,13 @@ workflow {
 */
 
 //
-// Check whether any sample declares strandedness 'auto'
+// Check whether any sample that will be processed from FASTQ declares strandedness 'auto'
+// (strandedness is only inferred on the FASTQ path, so BAM rows under --skip_alignment do not count)
 //
 
 def anySampleAutoStrandedness() {
     samplesheetToList(params.input, "${projectDir}/assets/schema_input.json")
-        .any { row -> row[0].strandedness == 'auto' }
+        .any { row -> row[0].strandedness == 'auto' && !(params.skip_alignment && (row[3] || row[4])) }
 }
 
 /*

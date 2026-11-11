@@ -67,7 +67,7 @@
                     },
                     "eautils/gtf2bed": {
                         "branch": "master",
-                        "git_sha": "7b3452a23773f687ededb4befd037920e5a51341",
+                        "git_sha": "96862e5b8dbee826fa55a4e4646f28030fd0abdc",
                         "installed_by": ["modules"]
                     },
                     "fastp": {

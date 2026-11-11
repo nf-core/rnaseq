@@ -527,7 +527,7 @@ headers:
         then {
             assertAll(
                 { assert !function.success },
-                { assert function.stdout.any { it.contains('strand_check_summary.yaml headers do not declare columns') } || function.errors.any { it.toString().contains('strand_check_summary.yaml headers do not declare columns') } },
+                { assert function.stdout.any { it.contains('strand_check_summary.yaml headers do not declare columns') } || function.stderr.any { it.contains('strand_check_summary.yaml headers do not declare columns') } },
             )
         }
     }

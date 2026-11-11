@@ -1,0 +1,102 @@
+name: seqkit_replace
+description: Use seqkit to find/replace strings within sequences and sequence headers
+keywords:
+  - seqkit
+  - replace
+  - sequence
+  - sequence headers
+  - fasta
+tools:
+  - seqkit:
+      description: Cross-platform and ultrafast toolkit for FASTA/Q file manipulation, written by Wei Shen.
+      homepage: https://bioinf.shenwei.me/seqkit/usage/
+      documentation: https://bioinf.shenwei.me/seqkit/usage/
+      tool_dev_url: https://github.com/shenwei356/seqkit/
+      doi: "10.1371/journal.pone.016396"
+      publication:
+        author: "Shen, W., Le, S., Li, Y. & Hu, F."
+        year: 2016
+        title: "SeqKit: A Cross-Platform and Ultrafast Toolkit for FASTA/Q File Manipulation"
+        source: "PLoS ONE"
+      identifier: biotools:seqkit
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - fastx:
+        type: file
+        description: fasta/q file
+        pattern: "*.{fasta,fastq,fa,fq,fas,fna,faa}*"
+        ontologies:
+          - edam: http://edamontology.org/format_1930 # FASTQ
+  - out_ext:
+      type: string
+      description: >
+        Output file extension. Leave empty to auto-detect from input (for example
+        `.fasta`, `.fasta.gz`)
+output:
+  fastx:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.fast*":
+          type: file
+          description: fasta/q file with replaced values
+          pattern: "*.{fasta,fastq,fa,fq,fas,fna,faa}*"
+          ontologies:
+            - edam: http://edamontology.org/format_1930 # FASTQ
+  versions_seqkit:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - seqkit:
+          type: string
+          description: The name of the tool
+      - seqkit version | sed 's/^.*v//':
+          type: eval
+          description: The expression to obtain the version of seqkit
+
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - seqkit:
+          type: string
+          description: The name of the tool
+      - seqkit version | sed 's/^.*v//':
+          type: eval
+          description: The expression to obtain the version of seqkit
+
+authors:
+  - "@mjcipriano"
+maintainers:
+  - "@mjcipriano"
+containers:
+  docker:
+    linux/amd64:
+      name: community.wave.seqera.io/library/seqkit:2.13.0--3bacfb68370dd835
+      build_id: bd-3bacfb68370dd835_1
+      scan_id: sc-6db894ea42d80db1_1
+    linux/arm64:
+      name: community.wave.seqera.io/library/seqkit:2.13.0--2c3127bb2c908a0f
+      build_id: bd-2c3127bb2c908a0f_1
+      scan_id: sc-2b1a53b788f59b66_1
+  singularity:
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/seqkit:2.13.0--e9990c3bf4e9909e
+      build_id: bd-e9990c3bf4e9909e_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/29/297e985dd395d87f9089b314dbe685ddce59fa0770c4d1f5e1009bc7b6ec7a8d/data
+    linux/arm64:
+      name: oras://community.wave.seqera.io/library/seqkit:2.13.0--8ff773a329ad66fe
+      build_id: bd-8ff773a329ad66fe_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/a2/a291e8a167829fe03cbd3072209b7c2a1f38a9bdb4908f764b4ca71868a954f1/data
+  conda:
+    linux/amd64:
+      lock_file: modules/nf-core/seqkit/replace/.conda-lock/linux_amd64-bd-3bacfb68370dd835_1.txt
+    linux/arm64:
+      lock_file: modules/nf-core/seqkit/replace/.conda-lock/linux_arm64-bd-2c3127bb2c908a0f_1.txt

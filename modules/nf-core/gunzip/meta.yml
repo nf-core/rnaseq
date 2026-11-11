@@ -1,0 +1,68 @@
+name: gunzip
+description: Compresses and decompresses files.
+keywords:
+  - gunzip
+  - compression
+  - decompression
+tools:
+  - gunzip:
+      description: |
+        gzip is a file format and a software application used for file compression and decompression.
+      documentation: https://www.gnu.org/software/gzip/manual/gzip.html
+      licence: ["GPL-3.0-or-later"]
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Optional groovy Map containing meta information
+          e.g. [ id:'test', single_end:false ]
+    - archive:
+        type: file
+        description: File to be compressed/uncompressed
+        pattern: "*.*"
+        ontologies: []
+output:
+  gunzip:
+    - - meta:
+          type: file
+          description: Compressed/uncompressed file
+          pattern: "*.*"
+          ontologies: []
+      - ${gunzip}:
+          type: file
+          description: Compressed/uncompressed file
+          pattern: "*.*"
+          ontologies: []
+  versions_gunzip:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - gunzip:
+          type: string
+          description: The tool name
+      - gunzip --version 2>&1 | head -1 | sed "s/^.*(gzip) //; s/ Copyright.*//":
+          type: eval
+          description: The expression to obtain the version of the tool
+
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - gunzip:
+          type: string
+          description: The tool name
+      - gunzip --version 2>&1 | head -1 | sed "s/^.*(gzip) //; s/ Copyright.*//":
+          type: eval
+          description: The expression to obtain the version of the tool
+
+authors:
+  - "@joseespinosa"
+  - "@drpatelh"
+  - "@jfy133"
+maintainers:
+  - "@joseespinosa"
+  - "@drpatelh"
+  - "@jfy133"
+  - "@gallvp"

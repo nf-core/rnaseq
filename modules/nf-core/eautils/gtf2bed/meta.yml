@@ -1,0 +1,83 @@
+name: "eautils_gtf2bed"
+description: Convert a GTF/GFF annotation file to BED12 format
+keywords:
+  - gtf
+  - gff
+  - bed
+  - bed12
+  - annotation
+  - conversion
+tools:
+  - "gtf2bed":
+      description: |
+        Perl script from the ea-utils package that converts GTF/GFF annotation
+        files to BED12 format, handling exons, start/stop codons, and miRNAs.
+        Produces UCSC-compatible BED with proper thin/thick regions.
+      homepage: "https://expressionanalysis.github.io/ea-utils/"
+      documentation: "https://github.com/ExpressionAnalysis/ea-utils/blob/master/clipper/gtf2bed"
+      tool_dev_url: "https://github.com/ExpressionAnalysis/ea-utils"
+      licence:
+        - "MIT"
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'genome' ]`
+    - gtf:
+        type: file
+        description: GTF or GFF annotation file
+        pattern: "*.{gtf,gff,gtf.gz,gff.gz}"
+        ontologies:
+          - edam: http://edamontology.org/format_2306 # GTF
+output:
+  bed:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'genome' ]`
+      - "${prefix}.bed":
+          type: file
+          description: BED12 format annotation file with one entry per transcript
+          pattern: "*.bed"
+          ontologies:
+            - edam: http://edamontology.org/format_3003 # BED
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+
+topics:
+  versions:
+    - versions.yml:
+        type: string
+        description: The name of the process
+authors:
+  - "@pinin4fjords"
+maintainers:
+  - "@pinin4fjords"
+containers:
+  docker:
+    linux/amd64:
+      name: community.wave.seqera.io/library/perl:5.26.2--2f879f377ee6109b
+      build_id: bd-2f879f377ee6109b_1
+      scan_id: sc-1e3a3f7eeb641b2a_1
+    linux/arm64:
+      name: community.wave.seqera.io/library/perl:5.26.2--cc808f21c017d239
+      build_id: bd-cc808f21c017d239_1
+      scan_id: sc-f540510bf23d42a1_1
+  singularity:
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/perl:5.26.2--0ad4f52bbf0da376
+      build_id: bd-0ad4f52bbf0da376_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/a9/a90490336208590dfdaaf102bb64f3c341aa0ced1f95d9247020ce88ae017db7/data
+  conda:
+    linux/amd64:
+      lock_file: modules/nf-core/ea-utils/gtf2bed/.conda-lock/linux_amd64-bd-2f879f377ee6109b_1.txt
+    linux/arm64:
+      lock_file: modules/nf-core/ea-utils/gtf2bed/.conda-lock/linux_arm64-bd-cc808f21c017d239_1.txt

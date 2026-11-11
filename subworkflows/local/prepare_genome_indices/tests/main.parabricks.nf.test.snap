@@ -1,0 +1,26 @@
+{
+    "use_parabricks_star = true": {
+        "content": [
+            [
+                "[Genome, SA, SAindex, chrLength.txt, chrName.txt, chrNameLength.txt, chrStart.txt, exonGeTrInfo.tab, exonInfo.tab, geneInfo.tab, genomeParameters.txt, sjdbInfo.txt, sjdbList.fromGTF.out.tab, sjdbList.out.tab, transcriptInfo.tab]"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.04.3"
+        },
+        "timestamp": "2026-05-08T14:00:00.000000000"
+    },
+    "use_parabricks_star = true - stub": {
+        "content": [
+            [
+                "[Genome, Log.out, SA, SAindex, chrLength.txt, chrName.txt, chrNameLength.txt, chrStart.txt, exonGeTrInfo.tab, exonInfo.tab, geneInfo.tab, genomeParameters.txt, sjdbInfo.txt, sjdbList.fromGTF.out.tab, sjdbList.out.tab, transcriptInfo.tab]"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.04.3"
+        },
+        "timestamp": "2026-05-08T14:00:00.000000000"
+    }
+}

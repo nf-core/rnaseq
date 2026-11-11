@@ -1,0 +1,2698 @@
+nextflow_workflow {
+
+    name "Test Subworkflow PREPARE_GENOME_REFERENCES"
+    script "../main.nf"
+    workflow "PREPARE_GENOME_REFERENCES"
+    config "./nextflow.config"
+
+
+    test("default options") {
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter          = false
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("gencode = false") {
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter          = false
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("skip_gtf_filter") {
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter          = true
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("skip_bbsplit") {
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter           = false
+                skip_bbsplit             = true
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("skip_alignment") {
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter          = false
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = true
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("skip_pseudo_alignment") {
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter          = false
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = true
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("gtf = false") {
+
+        when {
+            workflow {
+                """
+                gencode                  = true
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter          = false
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = false
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("gff = false") {
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter          = false
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = false
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("gfp = false") {
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter          = false
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = false
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("transcriptome = false") {
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter          = false
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = false
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("with bed") {
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter          = false
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = file(params.pipelines_testdata_base_path + 'reference/ngscheckmate.bed', checkIfExists: true)
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("rsem_index = false") {
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_rsem'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter          = false
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("salmon_index = false") {
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter          = false
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("hisat2_index = false") {
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'hisat2'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter          = false
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("kallisto_index = false") {
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'kallisto'
+                skip_gtf_filter          = false
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("gencode = true") {
+
+        when {
+            workflow {
+                """
+                gencode                  = true
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter          = false
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("featurecounts_group_type = 'gene_type'") {
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_type'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter          = false
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("skip_gtf_filter = true") {
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter          = true
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("skip_bbsplit = true") {
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter          = false
+                skip_bbsplit             = true
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("skip_alignment = true") {
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter          = false
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = true
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("skip_pseudoalignment = true") {
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter          = false
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = true
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("skip_gtf_transcript_filter = true") {
+
+        config './skip_transcript_filter.config'
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter          = false
+                skip_bbsplit             = true
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("default options - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter          = false
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("gencode = false - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter          = false
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("skip_gtf_filter - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter          = true
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("skip_bbsplit - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter          = false
+                skip_bbsplit             = true
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("skip_alignment - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter          = false
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = true
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("skip_pseudo_alignment - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter          = false
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = true
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("gtf = false - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                gencode                  = true
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter          = false
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = false
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("gff = false - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter          = false
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = false
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("gfp = false - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter          = false
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = false
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("transcriptome = false - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter          = false
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = false
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("with bed - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter           = false
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = false
+                use_sentieon_star         = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = file(params.pipelines_testdata_base_path + 'reference/ngscheckmate.bed', checkIfExists: true)
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("rsem_index = false - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_rsem'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter           = false
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("salmon_index = false - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter          = false
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("hisat2_index = false - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'hisat2'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter          = false
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("kallisto_index = false - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'kallisto'
+                skip_gtf_filter          = false
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("gencode = true - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                gencode                  = true
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter          = false
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("featurecounts_group_type = 'gene_type' - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_type'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter          = false
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("skip_gtf_filter = true - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter          = true
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("skip_bbsplit = true - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter          = false
+                skip_bbsplit             = true
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("skip_alignment = true - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter          = false
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = true
+                skip_pseudo_alignment    = false
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+    test("skip_pseudoalignment = true - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                gencode                  = false
+                featurecounts_group_type = 'gene_biotype'
+                aligner                  = 'star_salmon'
+                pseudo_aligner           = 'salmon'
+                skip_gtf_filter          = false
+                skip_bbsplit             = false
+                ribo_removal_tool        = null
+                skip_alignment           = false
+                skip_pseudo_alignment    = true
+                use_sentieon_star        = false
+                use_parabricks_star      = false
+
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genome.fasta', checkIfExists: true)
+                input[1]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[2]  = file(params.pipelines_testdata_base_path + 'reference/genes.gff', checkIfExists: true)
+                input[3]  = file(params.pipelines_testdata_base_path + 'reference/gfp.fa', checkIfExists: true)
+                input[4]  = file(params.pipelines_testdata_base_path + 'reference/transcriptome.fasta', checkIfExists: true)
+                input[5]  = null
+                input[6]  = null
+                input[7]  = null  // kraken_db
+                input[8]  = gencode
+                input[9]  = false
+                input[10] = featurecounts_group_type
+                input[11] = aligner
+                input[12] = pseudo_aligner
+                input[13] = skip_gtf_filter
+                input[14] = ribo_removal_tool
+                input[15] = skip_alignment
+                input[16] = skip_pseudo_alignment
+                input[17] = use_sentieon_star
+                input[18] = null  // contaminant_screening
+                input[19] = false  // prokaryotic
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.chrom_sizes.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.fasta_fai.collect { _meta, f, fi -> [ file(f).exists() ? [ file(f).name, path(f).md5 ] : f.toString(), file(fi).exists() ? [ file(fi).name, path(fi).md5 ] : fi.toString() ] },
+                    workflow.out.gene_bed.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.gtf.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() },
+                    workflow.out.transcript_fasta.collect { p -> file(p).exists() ? [ file(p).name, path(p).md5 ] : p.toString() }
+                ).match() }
+            )
+        }
+
+        cleanup {
+            if (System.getenv("NFT_PROFILE")?.contains("docker")) {
+                "docker system prune -a -f --volumes".execute()
+            }
+            new File("${launchDir}").deleteDir()
+        }
+    }
+
+
+}

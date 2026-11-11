@@ -1,0 +1,3 @@
+#parent_id: 'sample-status'
+#parent_name: 'Sample status checks'
+#parent_description: 'Reports on sample strandedness status, and any failures in trimming or mapping'

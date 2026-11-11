@@ -1,0 +1,13 @@
+name: sample_check_failed
+description: Fails the run for a sample that did not pass a per-sample check, so that the failure honours the configured errorStrategy and workflow.failOnIgnore.
+keywords:
+  - qc
+  - check
+  - fail
+input:
+  - - id:
+        type: string
+        description: Sample identifier
+    - message:
+        type: string
+        description: Explanation of the failed check, reported as the task error

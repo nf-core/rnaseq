@@ -1,0 +1,410 @@
+nextflow_process {
+
+    name "Test Process STRINGTIE_STRINGTIE"
+    script "../main.nf"
+    process "STRINGTIE_STRINGTIE"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "stringtie"
+    tag "stringtie/stringtie"
+
+    test("sarscov2 [bam] - forward strandedness - short read assembly") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                            [ id:'test', strandedness:'forward' ], // meta map
+                            [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true) ],
+                            []
+                        ]
+                input[1] = []
+                input[2] = []
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["coverage_gtf", "abundance"])).match() }
+            )
+        }
+    }
+
+    test("sarscov2 [bam] - forward strandedness + reference annotation - short read assembly") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', strandedness:'forward' ], // meta map
+                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true) ],
+                    []
+                ]
+                input[1] = []
+                input[2] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["coverage_gtf", "abundance"])).match() }
+            )
+        }
+    }
+
+    test("sarscov2 [bam] - reverse strandedness - short read assembly") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                            [ id:'test', strandedness:'reverse' ], // meta map
+                            [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true) ],
+                            []
+                        ]
+                input[1] = []
+                input[2] = []
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["coverage_gtf", "abundance"])).match() }
+            )
+        }
+    }
+
+    test("sarscov2 [bam] - reverse strandedness + reference annotation - short read assembly") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                            [ id:'test', strandedness:'reverse' ], // meta map
+                            [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true) ],
+                            []
+                        ]
+                input[1] = []
+                input[2] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["coverage_gtf", "abundance"])).match() }
+            )
+        }
+    }
+
+    test("sarscov2 [bam] - forward strandedness - short read assembly -stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                            [ id:'test', strandedness:'forward' ], // meta map
+                            [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true) ],
+                            []
+                        ]
+                input[1] = []
+                input[2] = []
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(sanitizeOutput(process.out)).match() }
+            )
+        }
+    }
+
+    test("sarscov2 [bam] - forward strandedness + reference annotation - short read assembly -stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', strandedness:'forward' ], // meta map
+                    [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true) ],
+                    [],
+                ]
+                input[1] = []
+                input[2] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(sanitizeOutput(process.out)).match() }
+            )
+        }
+    }
+
+    test("sarscov2 [bam] - reverse strandedness - short read assembly -stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                            [ id:'test', strandedness:'reverse' ], // meta map
+                            [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true) ],
+                            [],
+                        ]
+                input[1] = []
+                input[2] = []
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(sanitizeOutput(process.out)).match() }
+            )
+        }
+    }
+
+    test("sarscov2 [bam] - reverse strandedness + reference annotation - short read assembly -stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                            [ id:'test', strandedness:'reverse' ], // meta map
+                            [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true) ],
+                            []
+                        ]
+                input[1] = []
+                input[2] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(sanitizeOutput(process.out)).match() }
+            )
+        }
+    }
+
+    test("mix-read-assembly bam + reference annotation - mix reads assembly") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                            [ id:'test', strandedness:'reverse' ], // meta map
+                            [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true) ],
+                            [ file(params.modules_testdata_base_path + "genomics/homo_sapiens/pacbio/bam/test_hifi_aligned_assembly.bam", checkIfExists: true) ]
+                        ]
+                input[1] = ["mix-reads-assembly"]
+                input[2] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["coverage_gtf", "abundance"])).match() }
+            )
+        }
+    }
+
+    test("mix-read-assembly bam + reference annotation - mix reads assembly -stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                            [ id:'test', strandedness:'reverse' ], // meta map
+                            [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true) ],
+                            [ file(params.modules_testdata_base_path + "genomics/homo_sapiens/pacbio/bam/test_hifi_aligned_assembly.bam", checkIfExists: true) ]
+                        ]
+                input[1] = ["mix-reads-assembly"]
+                input[2] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(sanitizeOutput(process.out)).match() }
+            )
+        }
+    }
+
+    test("long-read-assembly bam + reference annotation - long reads assembly (PacBio)") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                            [ id:'test', strandedness:'reverse' ], // meta map
+                            [],
+                            [ file(params.modules_testdata_base_path + "genomics/homo_sapiens/pacbio/bam/test_hifi_aligned_assembly.bam", checkIfExists: true) ]
+                        ]
+                input[1] = ["long-reads-assembly"]
+                input[2] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["coverage_gtf", "abundance"])).match() }
+            )
+        }
+    }
+
+    test("long-read-assembly bam + reference annotation - long reads assembly (PacBio) -stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                            [ id:'test', strandedness:'reverse' ], // meta map
+                            [],
+                            [ file(params.modules_testdata_base_path + "genomics/homo_sapiens/pacbio/bam/test_hifi_aligned_assembly.bam", checkIfExists: true) ]
+                        ]
+                input[1] = ["long-reads-assembly"]
+                input[2] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(sanitizeOutput(process.out)).match() }
+            )
+        }
+    }
+
+    test("long-read-assembly bam + reference annotation - long reads assembly (ONT)") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                            [ id:'test', strandedness:'reverse' ], // meta map
+                            [],
+                            [ file(params.modules_testdata_base_path + "genomics/homo_sapiens/nanopore/bam/test.sorted.bam", checkIfExists: true) ]
+                        ]
+                input[1] = ["long-reads-assembly"]
+                input[2] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["coverage_gtf", "abundance"])).match() }
+            )
+        }
+    }
+
+    test("long-read-assembly bam + reference annotation - long reads assembly (ONT) -stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                            [ id:'test', strandedness:'reverse' ], // meta map
+                            [],
+                            [ file(params.modules_testdata_base_path + "genomics/homo_sapiens/nanopore/bam/test.sorted.bam", checkIfExists: true) ]
+                        ]
+                input[1] = ["long-reads-assembly"]
+                input[2] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(sanitizeOutput(process.out)).match() }
+            )
+        }
+    }
+
+    test("mix-read-assembly pacbio bam + reference annotation - mix reads assembly (nascent aware)") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                            [ id:'test', strandedness:'reverse' ], // meta map
+                            [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true) ],
+                            [ file(params.modules_testdata_base_path + "genomics/homo_sapiens/pacbio/bam/test_hifi_aligned_assembly.bam", checkIfExists: true) ]
+                        ]
+                input[1] = ["mix-reads-assembly", "nascent-aware-assembly"]
+                input[2] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(sanitizeOutput(process.out, unstableKeys: ["coverage_gtf", "abundance"])).match() }
+            )
+        }
+    }
+
+    test("mix-read-assembly pacbio bam + reference annotation - mix reads assembly (nascent aware) -stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                            [ id:'test', strandedness:'reverse' ], // meta map
+                            [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true) ],
+                            [ file(params.modules_testdata_base_path + "genomics/homo_sapiens/pacbio/bam/test_hifi_aligned_assembly.bam", checkIfExists: true) ]
+                        ]
+                input[1] = ["mix-reads-assembly", "nascent-aware-assembly"]
+                input[2] = file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(sanitizeOutput(process.out)).match() }
+            )
+        }
+    }
+}

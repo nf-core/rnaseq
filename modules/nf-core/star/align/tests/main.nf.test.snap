@@ -1,0 +1,1708 @@
+{
+    "homo_sapiens - single_end - stub": {
+        "content": [
+            {
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        [
+                            "test.Aligned.sortedByCoord.out.bam",
+                            "test.sortedByCoord.out.bam",
+                            "testXd.out.bam"
+                        ]
+                    ]
+                ],
+                "bam_sorted": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.sortedByCoord.out.bam"
+                    ]
+                ],
+                "bam_sorted_aligned": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Aligned.sortedByCoord.out.bam"
+                    ]
+                ],
+                "bam_transcript": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.toTranscriptome.out.bam"
+                    ]
+                ],
+                "bam_unsorted": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Aligned.unsort.out.bam"
+                    ]
+                ],
+                "bedgraph": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Signal.UniqueMultiple.str1.out.bg:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "fastq": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        [
+                            "test.unmapped_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test.unmapped_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                        ]
+                    ]
+                ],
+                "junction": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Chimeric.out.junction"
+                    ]
+                ],
+                "log_final": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Log.final.out"
+                    ]
+                ],
+                "log_out": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Log.out"
+                    ]
+                ],
+                "log_progress": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Log.progress.out"
+                    ]
+                ],
+                "read_per_gene_tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "sam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.out.sam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "spl_junc_tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        [
+                            "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "versions_gawk": [
+                    [
+                        "STAR_ALIGN",
+                        "gawk",
+                        "5.1.0"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "STAR_ALIGN",
+                        "samtools",
+                        "1.21"
+                    ]
+                ],
+                "versions_star": [
+                    [
+                        "STAR_ALIGN",
+                        "star",
+                        "2.7.11b"
+                    ]
+                ],
+                "wig": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Signal.UniqueMultiple.str1.out.wig:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-10-16T15:34:13.984562",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.0"
+        }
+    },
+    "homo_sapiens - paired_end - arriba - stub": {
+        "content": [
+            {
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.Aligned.sortedByCoord.out.bam",
+                            "test.sortedByCoord.out.bam",
+                            "testXd.out.bam"
+                        ]
+                    ]
+                ],
+                "bam_sorted": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.sortedByCoord.out.bam"
+                    ]
+                ],
+                "bam_sorted_aligned": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Aligned.sortedByCoord.out.bam"
+                    ]
+                ],
+                "bam_transcript": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.toTranscriptome.out.bam"
+                    ]
+                ],
+                "bam_unsorted": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Aligned.unsort.out.bam"
+                    ]
+                ],
+                "bedgraph": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Signal.UniqueMultiple.str1.out.bg:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "fastq": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.unmapped_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test.unmapped_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                        ]
+                    ]
+                ],
+                "junction": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Chimeric.out.junction"
+                    ]
+                ],
+                "log_final": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.final.out"
+                    ]
+                ],
+                "log_out": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.out"
+                    ]
+                ],
+                "log_progress": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.progress.out"
+                    ]
+                ],
+                "read_per_gene_tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "sam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.out.sam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "spl_junc_tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "versions_gawk": [
+                    [
+                        "STAR_ALIGN",
+                        "gawk",
+                        "5.1.0"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "STAR_ALIGN",
+                        "samtools",
+                        "1.21"
+                    ]
+                ],
+                "versions_star": [
+                    [
+                        "STAR_ALIGN",
+                        "star",
+                        "2.7.11b"
+                    ]
+                ],
+                "wig": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Signal.UniqueMultiple.str1.out.wig:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-10-16T15:34:30.649663",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.0"
+        }
+    },
+    "homo_sapiens - single_end": {
+        "content": [
+            "9f76be49a6607613a64f760101bdddce",
+            "9f76be49a6607613a64f760101bdddce",
+            {
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Aligned.sortedByCoord.out.bam"
+                    ]
+                ],
+                "bam_sorted": [
+                    
+                ],
+                "bam_sorted_aligned": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Aligned.sortedByCoord.out.bam"
+                    ]
+                ],
+                "bam_transcript": [
+                    
+                ],
+                "bam_unsorted": [
+                    
+                ],
+                "bedgraph": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        [
+                            "test.Signal.Unique.str1.out.bg:md5,c56fc1472776fb927eaf62d973da5f9a",
+                            "test.Signal.UniqueMultiple.str1.out.bg:md5,e93373cf6f2a2a9506e2efdb260cdd4f"
+                        ]
+                    ]
+                ],
+                "fastq": [
+                    
+                ],
+                "junction": [
+                    
+                ],
+                "log_final": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Log.final.out"
+                    ]
+                ],
+                "log_out": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Log.out"
+                    ]
+                ],
+                "log_progress": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Log.progress.out"
+                    ]
+                ],
+                "read_per_gene_tab": [
+                    
+                ],
+                "sam": [
+                    
+                ],
+                "spl_junc_tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.SJ.out.tab:md5,75a516ab950fb958f40b29996474949c"
+                    ]
+                ],
+                "tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.SJ.out.tab:md5,75a516ab950fb958f40b29996474949c"
+                    ]
+                ],
+                "versions_gawk": [
+                    [
+                        "STAR_ALIGN",
+                        "gawk",
+                        "5.1.0"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "STAR_ALIGN",
+                        "samtools",
+                        "1.21"
+                    ]
+                ],
+                "versions_star": [
+                    [
+                        "STAR_ALIGN",
+                        "star",
+                        "2.7.11b"
+                    ]
+                ],
+                "wig": [
+                    
+                ]
+            }
+        ],
+        "timestamp": "2026-10-16T15:01:30.550482",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.2"
+        }
+    },
+    "homo_sapiens - paired_end": {
+        "content": [
+            "db9a8324b5163b025bcc0c33e848486",
+            "db9a8324b5163b025bcc0c33e848486",
+            {
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Aligned.sortedByCoord.out.bam"
+                    ]
+                ],
+                "bam_sorted": [
+                    
+                ],
+                "bam_sorted_aligned": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Aligned.sortedByCoord.out.bam"
+                    ]
+                ],
+                "bam_transcript": [
+                    
+                ],
+                "bam_unsorted": [
+                    
+                ],
+                "bedgraph": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.Signal.Unique.str1.out.bg:md5,d7bf8b70b436ca048a62513e1d0ece3a",
+                            "test.Signal.UniqueMultiple.str1.out.bg:md5,686d58493b9eb445b56ace4d67f76ef6"
+                        ]
+                    ]
+                ],
+                "fastq": [
+                    
+                ],
+                "junction": [
+                    
+                ],
+                "log_final": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.final.out"
+                    ]
+                ],
+                "log_out": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.out"
+                    ]
+                ],
+                "log_progress": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.progress.out"
+                    ]
+                ],
+                "read_per_gene_tab": [
+                    
+                ],
+                "sam": [
+                    
+                ],
+                "spl_junc_tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.SJ.out.tab:md5,844af19ab0fc8cd9a3f75228445aca0d"
+                    ]
+                ],
+                "tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.SJ.out.tab:md5,844af19ab0fc8cd9a3f75228445aca0d"
+                    ]
+                ],
+                "versions_gawk": [
+                    [
+                        "STAR_ALIGN",
+                        "gawk",
+                        "5.1.0"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "STAR_ALIGN",
+                        "samtools",
+                        "1.21"
+                    ]
+                ],
+                "versions_star": [
+                    [
+                        "STAR_ALIGN",
+                        "star",
+                        "2.7.11b"
+                    ]
+                ],
+                "wig": [
+                    
+                ]
+            }
+        ],
+        "timestamp": "2026-10-16T15:02:01.313813",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.2"
+        }
+    },
+    "homo_sapiens - paired_end - multiple - stub": {
+        "content": [
+            {
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.Aligned.sortedByCoord.out.bam",
+                            "test.sortedByCoord.out.bam",
+                            "testXd.out.bam"
+                        ]
+                    ]
+                ],
+                "bam_sorted": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.sortedByCoord.out.bam"
+                    ]
+                ],
+                "bam_sorted_aligned": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Aligned.sortedByCoord.out.bam"
+                    ]
+                ],
+                "bam_transcript": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.toTranscriptome.out.bam"
+                    ]
+                ],
+                "bam_unsorted": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Aligned.unsort.out.bam"
+                    ]
+                ],
+                "bedgraph": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Signal.UniqueMultiple.str1.out.bg:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "fastq": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.unmapped_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test.unmapped_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                        ]
+                    ]
+                ],
+                "junction": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Chimeric.out.junction"
+                    ]
+                ],
+                "log_final": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.final.out"
+                    ]
+                ],
+                "log_out": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.out"
+                    ]
+                ],
+                "log_progress": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.progress.out"
+                    ]
+                ],
+                "read_per_gene_tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "sam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.out.sam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "spl_junc_tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "versions_gawk": [
+                    [
+                        "STAR_ALIGN",
+                        "gawk",
+                        "5.1.0"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "STAR_ALIGN",
+                        "samtools",
+                        "1.21"
+                    ]
+                ],
+                "versions_star": [
+                    [
+                        "STAR_ALIGN",
+                        "star",
+                        "2.7.11b"
+                    ]
+                ],
+                "wig": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Signal.UniqueMultiple.str1.out.wig:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-10-16T15:34:46.669976",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.0"
+        }
+    },
+    "homo_sapiens - paired_end - multiple": {
+        "content": [
+            "3e54e45f5dc3e9c1f2fc55bc41531a87",
+            "3e54e45f5dc3e9c1f2fc55bc41531a87",
+            {
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Aligned.sortedByCoord.out.bam"
+                    ]
+                ],
+                "bam_sorted": [
+                    
+                ],
+                "bam_sorted_aligned": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Aligned.sortedByCoord.out.bam"
+                    ]
+                ],
+                "bam_transcript": [
+                    
+                ],
+                "bam_unsorted": [
+                    
+                ],
+                "bedgraph": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.Signal.Unique.str1.out.bg:md5,d7bf8b70b436ca048a62513e1d0ece3a",
+                            "test.Signal.UniqueMultiple.str1.out.bg:md5,686d58493b9eb445b56ace4d67f76ef6"
+                        ]
+                    ]
+                ],
+                "fastq": [
+                    
+                ],
+                "junction": [
+                    
+                ],
+                "log_final": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.final.out"
+                    ]
+                ],
+                "log_out": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.out"
+                    ]
+                ],
+                "log_progress": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.progress.out"
+                    ]
+                ],
+                "read_per_gene_tab": [
+                    
+                ],
+                "sam": [
+                    
+                ],
+                "spl_junc_tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.SJ.out.tab:md5,069877e053714e23010fe4e1c003b4a2"
+                    ]
+                ],
+                "tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.SJ.out.tab:md5,069877e053714e23010fe4e1c003b4a2"
+                    ]
+                ],
+                "versions_gawk": [
+                    [
+                        "STAR_ALIGN",
+                        "gawk",
+                        "5.1.0"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "STAR_ALIGN",
+                        "samtools",
+                        "1.21"
+                    ]
+                ],
+                "versions_star": [
+                    [
+                        "STAR_ALIGN",
+                        "star",
+                        "2.7.11b"
+                    ]
+                ],
+                "wig": [
+                    
+                ]
+            }
+        ],
+        "timestamp": "2026-10-16T15:06:13.204034",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.2"
+        }
+    },
+    "homo_sapiens - paired_end - stub": {
+        "content": [
+            {
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.Aligned.sortedByCoord.out.bam",
+                            "test.sortedByCoord.out.bam",
+                            "testXd.out.bam"
+                        ]
+                    ]
+                ],
+                "bam_sorted": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.sortedByCoord.out.bam"
+                    ]
+                ],
+                "bam_sorted_aligned": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Aligned.sortedByCoord.out.bam"
+                    ]
+                ],
+                "bam_transcript": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.toTranscriptome.out.bam"
+                    ]
+                ],
+                "bam_unsorted": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Aligned.unsort.out.bam"
+                    ]
+                ],
+                "bedgraph": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Signal.UniqueMultiple.str1.out.bg:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "fastq": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.unmapped_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test.unmapped_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                        ]
+                    ]
+                ],
+                "junction": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Chimeric.out.junction"
+                    ]
+                ],
+                "log_final": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.final.out"
+                    ]
+                ],
+                "log_out": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.out"
+                    ]
+                ],
+                "log_progress": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.progress.out"
+                    ]
+                ],
+                "read_per_gene_tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "sam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.out.sam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "spl_junc_tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "versions_gawk": [
+                    [
+                        "STAR_ALIGN",
+                        "gawk",
+                        "5.1.0"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "STAR_ALIGN",
+                        "samtools",
+                        "1.21"
+                    ]
+                ],
+                "versions_star": [
+                    [
+                        "STAR_ALIGN",
+                        "star",
+                        "2.7.11b"
+                    ]
+                ],
+                "wig": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Signal.UniqueMultiple.str1.out.wig:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-10-16T15:34:22.334123",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.0"
+        }
+    },
+    "homo_sapiens - paired_end - starfusion": {
+        "content": [
+            "caee9dcda13882d4913456973c25b57a",
+            {
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Aligned.out.bam"
+                    ]
+                ],
+                "bam_sorted": [
+                    
+                ],
+                "bam_sorted_aligned": [
+                    
+                ],
+                "bam_transcript": [
+                    
+                ],
+                "bam_unsorted": [
+                    
+                ],
+                "bedgraph": [
+                    
+                ],
+                "fastq": [
+                    
+                ],
+                "junction": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Chimeric.out.junction"
+                    ]
+                ],
+                "log_final": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.final.out"
+                    ]
+                ],
+                "log_out": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.out"
+                    ]
+                ],
+                "log_progress": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.progress.out"
+                    ]
+                ],
+                "read_per_gene_tab": [
+                    
+                ],
+                "sam": [
+                    
+                ],
+                "spl_junc_tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.SJ.out.tab:md5,19c3faa1bfa9a0cc5e4c45f17065b53a"
+                    ]
+                ],
+                "tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.SJ.out.tab:md5,19c3faa1bfa9a0cc5e4c45f17065b53a"
+                    ]
+                ],
+                "versions_gawk": [
+                    [
+                        "STAR_ALIGN",
+                        "gawk",
+                        "5.1.0"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "STAR_ALIGN",
+                        "samtools",
+                        "1.21"
+                    ]
+                ],
+                "versions_star": [
+                    [
+                        "STAR_ALIGN",
+                        "star",
+                        "2.7.11b"
+                    ]
+                ],
+                "wig": [
+                    
+                ]
+            }
+        ],
+        "timestamp": "2026-10-16T15:33:09.458067",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.0"
+        }
+    },
+    "homo_sapiens - paired_end - arriba": {
+        "content": [
+            "1a3abe88fb2490589c58497d39921bcc",
+            {
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Aligned.out.bam"
+                    ]
+                ],
+                "bam_sorted": [
+                    
+                ],
+                "bam_sorted_aligned": [
+                    
+                ],
+                "bam_transcript": [
+                    
+                ],
+                "bam_unsorted": [
+                    
+                ],
+                "bedgraph": [
+                    
+                ],
+                "fastq": [
+                    
+                ],
+                "junction": [
+                    
+                ],
+                "log_final": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.final.out"
+                    ]
+                ],
+                "log_out": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.out"
+                    ]
+                ],
+                "log_progress": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.progress.out"
+                    ]
+                ],
+                "read_per_gene_tab": [
+                    
+                ],
+                "sam": [
+                    
+                ],
+                "spl_junc_tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.SJ.out.tab:md5,5155c9fd1f787ad6d7d80987fb06219c"
+                    ]
+                ],
+                "tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.SJ.out.tab:md5,5155c9fd1f787ad6d7d80987fb06219c"
+                    ]
+                ],
+                "versions_gawk": [
+                    [
+                        "STAR_ALIGN",
+                        "gawk",
+                        "5.1.0"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "STAR_ALIGN",
+                        "samtools",
+                        "1.21"
+                    ]
+                ],
+                "versions_star": [
+                    [
+                        "STAR_ALIGN",
+                        "star",
+                        "2.7.11b"
+                    ]
+                ],
+                "wig": [
+                    
+                ]
+            }
+        ],
+        "timestamp": "2026-10-16T15:03:16.035386",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.2"
+        }
+    },
+    "homo_sapiens - single_end - uncompressed": {
+        "content": [
+            "9f76be49a6607613a64f760101bdddce",
+            {
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Aligned.sortedByCoord.out.bam"
+                    ]
+                ],
+                "bam_sorted": [
+                    
+                ],
+                "bam_sorted_aligned": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Aligned.sortedByCoord.out.bam"
+                    ]
+                ],
+                "bam_transcript": [
+                    
+                ],
+                "bam_unsorted": [
+                    
+                ],
+                "bedgraph": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        [
+                            "test.Signal.Unique.str1.out.bg:md5,c56fc1472776fb927eaf62d973da5f9a",
+                            "test.Signal.UniqueMultiple.str1.out.bg:md5,e93373cf6f2a2a9506e2efdb260cdd4f"
+                        ]
+                    ]
+                ],
+                "fastq": [
+                    
+                ],
+                "junction": [
+                    
+                ],
+                "log_final": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Log.final.out"
+                    ]
+                ],
+                "log_out": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Log.out"
+                    ]
+                ],
+                "log_progress": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.Log.progress.out"
+                    ]
+                ],
+                "read_per_gene_tab": [
+                    
+                ],
+                "sam": [
+                    
+                ],
+                "spl_junc_tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.SJ.out.tab:md5,75a516ab950fb958f40b29996474949c"
+                    ]
+                ],
+                "tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.SJ.out.tab:md5,75a516ab950fb958f40b29996474949c"
+                    ]
+                ],
+                "versions_gawk": [
+                    [
+                        "STAR_ALIGN",
+                        "gawk",
+                        "5.1.0"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "STAR_ALIGN",
+                        "samtools",
+                        "1.21"
+                    ]
+                ],
+                "versions_star": [
+                    [
+                        "STAR_ALIGN",
+                        "star",
+                        "2.7.11b"
+                    ]
+                ],
+                "wig": [
+                    
+                ]
+            }
+        ],
+        "timestamp": "2026-10-16T15:06:21.61758",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.2"
+        }
+    },
+    "homo_sapiens - paired_end - starfusion - stub": {
+        "content": [
+            {
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.Aligned.sortedByCoord.out.bam",
+                            "test.sortedByCoord.out.bam",
+                            "testXd.out.bam"
+                        ]
+                    ]
+                ],
+                "bam_sorted": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.sortedByCoord.out.bam"
+                    ]
+                ],
+                "bam_sorted_aligned": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Aligned.sortedByCoord.out.bam"
+                    ]
+                ],
+                "bam_transcript": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.toTranscriptome.out.bam"
+                    ]
+                ],
+                "bam_unsorted": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Aligned.unsort.out.bam"
+                    ]
+                ],
+                "bedgraph": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Signal.UniqueMultiple.str1.out.bg:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "fastq": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.unmapped_1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test.unmapped_2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                        ]
+                    ]
+                ],
+                "junction": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Chimeric.out.junction"
+                    ]
+                ],
+                "log_final": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.final.out"
+                    ]
+                ],
+                "log_out": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.out"
+                    ]
+                ],
+                "log_progress": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Log.progress.out"
+                    ]
+                ],
+                "read_per_gene_tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "sam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.out.sam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "spl_junc_tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "tab": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.ReadsPerGene.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.SJ.out.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "versions_gawk": [
+                    [
+                        "STAR_ALIGN",
+                        "gawk",
+                        "5.1.0"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "STAR_ALIGN",
+                        "samtools",
+                        "1.21"
+                    ]
+                ],
+                "versions_star": [
+                    [
+                        "STAR_ALIGN",
+                        "star",
+                        "2.7.11b"
+                    ]
+                ],
+                "wig": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.Signal.UniqueMultiple.str1.out.wig:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-10-16T15:34:37.447288",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.0"
+        }
+    }
+}

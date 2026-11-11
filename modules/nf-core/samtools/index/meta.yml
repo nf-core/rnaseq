@@ -1,0 +1,94 @@
+name: samtools_index
+description: Index SAM/BAM/CRAM file
+keywords:
+  - index
+  - bam
+  - sam
+  - cram
+tools:
+  - samtools:
+      description: |
+        SAMtools is a set of utilities for interacting with and post-processing
+        short DNA sequence read alignments in the SAM, BAM and CRAM formats, written by Heng Li.
+        These files are generated as output by short read aligners like BWA.
+      homepage: http://www.htslib.org/
+      documentation: http://www.htslib.org/doc/samtools.html
+      doi: 10.1093/bioinformatics/btp352
+      licence:
+        - "MIT"
+      identifier: biotools:samtools
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - input:
+        type: file
+        description: input file
+        ontologies: []
+output:
+  index:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.{bai,csi,crai}":
+          type: file
+          description: BAM/CRAM/SAM index file
+          pattern: "*.{bai,csi,crai}"
+          ontologies: []
+  versions_samtools:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - samtools:
+          type: string
+          description: The name of the tool
+      - samtools version | sed '1!d;s/.* //':
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - samtools:
+          type: string
+          description: The name of the tool
+      - samtools version | sed '1!d;s/.* //':
+          type: eval
+          description: The expression to obtain the version of the tool
+authors:
+  - "@drpatelh"
+  - "@ewels"
+  - "@maxulysse"
+maintainers:
+  - "@ewels"
+  - "@maxulysse"
+  - "@matthdsm"
+containers:
+  docker:
+    linux/amd64:
+      name: community.wave.seqera.io/library/htslib_samtools:1.25--704fb80d75745bd4
+      build_id: bd-704fb80d75745bd4_7
+      scan_id: sc-03641d545f6d3bac_1
+    linux/arm64:
+      name: community.wave.seqera.io/library/htslib_samtools:1.25--944a4060c62320c2
+      build_id: bd-944a4060c62320c2_8
+      scan_id: sc-6655c495363315c2_1
+  singularity:
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/htslib_samtools:1.25--2d67558d8613e11c
+      build_id: bd-2d67558d8613e11c_8
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/87/87660348a4d032cc08d6ac8101ff9d4d27164300d39c9472043bb5001f9ba801/data
+    linux/arm64:
+      name: oras://community.wave.seqera.io/library/htslib_samtools:1.25--3b9e70f96c37875a
+      build_id: bd-3b9e70f96c37875a_8
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/51/514f17bd9e1c013214957c34ea8bc446a86e4350bb6da41c126f55a27618932d/data
+  conda:
+    linux/amd64:
+      lock_file: modules/nf-core/samtools/index/.conda-lock/linux_amd64-bd-704fb80d75745bd4_7.txt
+    linux/arm64:
+      lock_file: modules/nf-core/samtools/index/.conda-lock/linux_arm64-bd-944a4060c62320c2_8.txt

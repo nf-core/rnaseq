@@ -1,0 +1,629 @@
+nextflow_function {
+
+    name "Test Functions"
+    script "../main.nf"
+
+    test("Test Function checkSamplesAfterGrouping success") {
+
+        function "checkSamplesAfterGrouping"
+
+        when {
+            function {
+                """
+                input[0] = [
+                    [],
+                    [
+                        [ id: 'test', strandedness: 'unstranded', single_end: true ],
+                        [ id: 'test', strandedness: 'unstranded', single_end: true ]
+                    ],
+                    [
+                        [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ],
+                        [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                    ]
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() }
+            )
+        }
+
+    }
+
+    test("Test Function checkSamplesAfterGrouping invalid strandedness") {
+
+        function "checkSamplesAfterGrouping"
+
+        when {
+            function {
+                """
+                input[0] = [
+                    [],
+                    [
+                        [ id: 'test', strandedness: 'unstranded', single_end: true ],
+                        [ id: 'test', strandedness: 'stranded', single_end: true ]
+                    ],
+                    [
+                        [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ],
+                        [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                    ]
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.failed },
+                { assert snapshot(function.result).match() }
+            )
+        }
+
+    }
+
+    test("Test Function checkSamplesAfterGrouping invalid endedness") {
+
+        function "checkSamplesAfterGrouping"
+
+        when {
+            function {
+                """
+                input[0] = [
+                    [],
+                    [
+                        [ id: 'test', strandedness: 'unstranded', single_end: true ],
+                        [ id: 'test', strandedness: 'unstranded', single_end: false ]
+                    ],
+                    [
+                        [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ],
+                        [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                    ]
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.failed },
+                { assert snapshot(function.result).match() }
+            )
+        }
+
+    }
+
+
+    test("Test Function validateInputParameters success") {
+        // Needs more tests here to check for all options but there are a lot!
+
+        function "validateInputParameters"
+
+        when {
+            params {
+                fasta                  = "genome.fasta"
+                gtf                    = "genome.gtf"
+                gff                    = "genome.gff"
+                transcript_fasta       = "transcripts.fasta"
+                skip_bbsplit           = true
+                bbsplit_fasta_list     = null
+                remove_ribo_rna        = false
+                ribo_database_manifest = null
+                with_umi               = false
+                skip_umi_extract       = false
+                skip_alignment         = false
+                aligner                = "star"
+                skip_pseudo_alignment  = false
+                pseudo_aligner         = "salmon"
+                rsem_index             = "rsem_index"
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() }
+            )
+        }
+
+    }
+
+    test("Test Function genomeExistsError finds genome") {
+
+        function "genomeExistsError"
+
+        when {
+            params {
+                genome = "myTest"
+                genomes {
+                    "myTest" {
+                        myAttribute = "myValue"
+                    }
+                }
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() }
+            )
+        }
+
+    }
+
+    test("Test Function genomeExistsError missing genome") {
+
+        function "genomeExistsError"
+
+        when {
+            params {
+                genome = "missingTest"
+                genomes {
+                    "myTest" {
+                        myAttribute = "myValue"
+                    }
+                }
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.failed },
+                { assert snapshot(function.result).match() }
+            )
+        }
+
+    }
+
+
+    test("Test Function toolCitationText") {
+
+        function "toolCitationText"
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() }
+            )
+        }
+
+    }
+
+    test("Test Function toolBibliographyText") {
+
+        function "toolBibliographyText"
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() }
+            )
+        }
+
+    }
+
+    test("Test Function gtfGffWarn") {
+
+        function "gtfGffWarn"
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() }
+            )
+        }
+
+    }
+
+
+
+    test("Test Function ncbiGenomeWarn") {
+
+        function "ncbiGenomeWarn"
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() }
+            )
+        }
+
+    }
+
+
+
+    test("Test Function ucscGenomeWarn") {
+
+        function "ucscGenomeWarn"
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() }
+            )
+        }
+
+    }
+
+
+
+    test("Test Function transcriptsFastaWarn") {
+
+        function "transcriptsFastaWarn"
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() }
+            )
+        }
+
+    }
+
+
+
+    test("Test Function skipAlignmentWarn") {
+
+        function "skipAlignmentWarn"
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() }
+            )
+        }
+
+    }
+
+
+
+    test("Test Function rsemStarIndexWarn") {
+
+        function "rsemStarIndexWarn"
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() }
+            )
+        }
+
+    }
+
+
+    test("Test Function rsemStarExtraArgumentsWarn") {
+
+        function "rsemStarExtraArgumentsWarn"
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() }
+            )
+        }
+
+    }
+
+
+    test("Test Function additionaFastaIndexWarn") {
+
+        function "additionaFastaIndexWarn"
+
+        when {
+            function {
+                """
+                input[0] = "mockIndex"
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() }
+            )
+        }
+
+    }
+
+    test("Test Function checkMaxContigSize") {
+
+        function "checkMaxContigSize"
+
+        when {
+            function {
+                """
+                input[0] = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() }
+            )
+        }
+
+    }
+
+    test("Test Function biotypeQcUsable success") {
+
+        function "biotypeQcUsable"
+
+        when {
+            function {
+                """
+                input[0] = [
+                    gtf: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf',
+                    gencode: false,
+                    featurecounts_group_type: 'gene_biotype',
+                    featurecounts_feature_type: 'exon',
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() }
+            )
+        }
+
+    }
+
+    test("Test Function biotypeQcUsable failed - attribute absent") {
+
+        function "biotypeQcUsable"
+
+        when {
+            function {
+                """
+                input[0] = [
+                    gtf: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf',
+                    gencode: false,
+                    featurecounts_group_type: 'NotAppearingInThisFile',
+                    featurecounts_feature_type: 'exon',
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() }
+            )
+        }
+
+    }
+
+    test("Test Function biotypeQcUsable failed - attribute only on gene rows") {
+
+        function "biotypeQcUsable"
+
+        when {
+            function {
+                """
+                def gtf_gene_level_only = file("\${workDir}/gene_level_biotype_only.gtf")
+                gtf_gene_level_only.text = [
+                    'chr1\\tunknown\\tgene\\t1\\t100\\t.\\t+\\t.\\tgene_id "GENE1"; gene_biotype "protein_coding";',
+                    'chr1\\tunknown\\texon\\t1\\t100\\t.\\t+\\t.\\tgene_id "GENE1"; transcript_id "TRANSCRIPT1";',
+                ].join('\\n') + '\\n'
+
+                input[0] = [
+                    gtf: gtf_gene_level_only.toString(),
+                    gencode: false,
+                    featurecounts_group_type: 'gene_biotype',
+                    featurecounts_feature_type: 'exon',
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() }
+            )
+        }
+
+    }
+
+    test("Test Function biotypeQcUsable success - gzipped GTF") {
+
+        function "biotypeQcUsable"
+
+        when {
+            function {
+                """
+                def gtf_gz = file("\${workDir}/exon_level_biotype.gtf.gz")
+                new java.util.zip.GZIPOutputStream(gtf_gz.newOutputStream()).withWriter { writer ->
+                    writer << ([
+                        'chr1\\tunknown\\tgene\\t1\\t100\\t.\\t+\\t.\\tgene_id "GENE1"; gene_biotype "protein_coding";',
+                        'chr1\\tunknown\\texon\\t1\\t100\\t.\\t+\\t.\\tgene_id "GENE1"; gene_biotype "protein_coding"; transcript_id "TRANSCRIPT1";',
+                    ].join('\\n') + '\\n')
+                }
+
+                input[0] = [
+                    gtf: gtf_gz.toString(),
+                    gencode: false,
+                    featurecounts_group_type: 'gene_biotype',
+                    featurecounts_feature_type: 'exon',
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() }
+            )
+        }
+
+    }
+
+    test("Test Function biotypeQcUsable failed - gzipped GTF with attribute only on gene rows") {
+
+        function "biotypeQcUsable"
+
+        when {
+            function {
+                """
+                def gtf_gz = file("\${workDir}/gene_level_biotype_only.gtf.gz")
+                new java.util.zip.GZIPOutputStream(gtf_gz.newOutputStream()).withWriter { writer ->
+                    writer << ([
+                        'chr1\\tunknown\\tgene\\t1\\t100\\t.\\t+\\t.\\tgene_id "GENE1"; gene_biotype "protein_coding";',
+                        'chr1\\tunknown\\texon\\t1\\t100\\t.\\t+\\t.\\tgene_id "GENE1"; transcript_id "TRANSCRIPT1";',
+                    ].join('\\n') + '\\n')
+                }
+
+                input[0] = [
+                    gtf: gtf_gz.toString(),
+                    gencode: false,
+                    featurecounts_group_type: 'gene_biotype',
+                    featurecounts_feature_type: 'exon',
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() }
+            )
+        }
+
+    }
+
+    test("Test Function getInferexperimentStrandedness reverse") {
+
+        function "getInferexperimentStrandedness"
+
+        when {
+            function {
+                """
+                def fileContents = [
+                    'This is PairEnd Data',
+                    'Fraction of reads failed to determine: 0.1565',
+                    'Fraction of reads explained by "1++,1--,2+-,2-+": 0.0075',
+                    'Fraction of reads explained by "1+-,1-+,2++,2--": 0.8361'
+                ]
+                def inferExperimentFile = file("${workDir}/inferExperimentFile.txt")
+                inferExperimentFile.withWriter{ out ->
+                    fileContents.each {out.println it}
+                }
+
+                input[0] = inferExperimentFile
+                input[1] = 0.8
+                input[2] = 0.1
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() }
+            )
+        }
+    }
+
+    test("Test Function undeterminedStrandednessMessage with inconclusive strand evidence") {
+
+        function "undeterminedStrandednessMessage"
+
+        when {
+            function {
+                """
+                input[0] = 'test'
+                input[1] = [inferred_strandedness: 'undetermined', forwardFragments: 65.0, reverseFragments: 35.0, unstrandedFragments: 0.0]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert function.result.contains("Sample 'test' failed the strandedness check") },
+                { assert function.result.contains("65.0% were forward and 35.0% reverse") },
+                { assert function.result.contains("genomic DNA contamination") },
+                { assert function.result.contains("Set strandedness explicitly in the samplesheet") }
+            )
+        }
+    }
+
+    test("Test Function undeterminedStrandednessMessage with no assigned fragments") {
+
+        function "undeterminedStrandednessMessage"
+
+        when {
+            function {
+                """
+                input[0] = 'test'
+                input[1] = [inferred_strandedness: 'undetermined', forwardFragments: Double.NaN, reverseFragments: Double.NaN, unstrandedFragments: Double.NaN]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert function.result.contains("Salmon assigned no fragments") },
+                { assert !function.result.contains("%") },
+                { assert function.result.contains("Set strandedness explicitly in the samplesheet") }
+            )
+        }
+    }
+
+    test("Test Function trimmedReadsMessage") {
+
+        function "trimmedReadsMessage"
+
+        when {
+            function {
+                """
+                input[0] = 'test'
+                input[1] = 5
+                input[2] = 10000
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert function.result == "Sample 'test' failed the trimmed reads check: 5 reads remained after trimming, which is not above the --min_trimmed_reads threshold (10000)." }
+            )
+        }
+    }
+
+    test("Test Function mappedReadsMessage") {
+
+        function "mappedReadsMessage"
+
+        when {
+            function {
+                """
+                input[0] = 'test'
+                input[1] = 42.5
+                input[2] = 5
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert function.result == "Sample 'test' failed the mapped reads check: 42.5% of reads mapped, below the --min_mapped_reads threshold (5%)." }
+            )
+        }
+    }
+}

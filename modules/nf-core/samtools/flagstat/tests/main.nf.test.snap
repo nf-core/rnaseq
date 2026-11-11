@@ -1,0 +1,56 @@
+{
+    "BAM - stub": {
+        "content": [
+            {
+                "flagstat": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.flagstat:md5,67394650dbae96d1a4fcc70484822159"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "SAMTOOLS_FLAGSTAT",
+                        "samtools",
+                        "1.25"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-10-28T07:04:28.234449",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.4"
+        }
+    },
+    "BAM": {
+        "content": [
+            {
+                "flagstat": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.flagstat:md5,4f7ffd1e6a5e85524d443209ac97d783"
+                    ]
+                ],
+                "versions_samtools": [
+                    [
+                        "SAMTOOLS_FLAGSTAT",
+                        "samtools",
+                        "1.25"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-10-28T07:04:24.410913",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.4"
+        }
+    }
+}

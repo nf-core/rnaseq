@@ -1,0 +1,85 @@
+name: "custom_gtffilter"
+description: Filter a gtf file to keep only regions that are located on a chromosome represented in a given fasta file
+keywords:
+  - gtf
+  - fasta
+  - filter
+tools:
+  - "gtffilter":
+      description: "Filter a gtf file to keep only regions that are located on a chromosome represented in a given fasta file"
+      tool_dev_url: "https://github.com/nf-core/modules/blob/master/modules/nf-core/custom/gtffilter/main.nf"
+
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'sample1' ]`
+    - gtf:
+        type: file
+        description: GTF file
+        pattern: "*.{gtf}"
+        ontologies: []
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'sample1' ]`
+    - fasta:
+        type: file
+        description: Genome fasta file
+        pattern: "*.{fasta,fa}"
+        ontologies: []
+output:
+  gtf:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'sample1' ]`
+      - ${prefix}.${suffix}:
+          type: file
+          description: Filtered GTF file
+          pattern: "*.{gtf}"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+topics:
+  versions:
+    - versions.yml:
+        type: string
+        description: The name of the process
+authors:
+  - "@nictru"
+maintainers:
+  - "@nictru"
+containers:
+  docker:
+    linux/arm64:
+      name: community.wave.seqera.io/library/python:3.14.5--63cd87da376d0b6e
+      build_id: bd-63cd87da376d0b6e_1
+      scan_id: sc-d6f25ed8585fa689_1
+    linux/amd64:
+      name: community.wave.seqera.io/library/python:3.14.5--de7566bbce1bfa41
+      build_id: bd-de7566bbce1bfa41_1
+      scan_id: sc-8d27fb74624d60a5_1
+  singularity:
+    linux/arm64:
+      name: oras://community.wave.seqera.io/library/python:3.14.5--9da127fe60f5d9e3
+      build_id: bd-9da127fe60f5d9e3_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/01/01e0e15b39748164d9a6dc87e4ffcfbecaac35dab3b8e6715d7c93b27914d039/data
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/python:3.14.5--c410ab7a0ef2f334
+      build_id: bd-c410ab7a0ef2f334_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/13/1340bf9bd68b2760272dfa0f7d62b3d6703505fd6899fd98407f2225e3917213/data
+  conda:
+    linux/amd64:
+      lock_file: modules/nf-core/custom/gtffilter/.conda-lock/linux_amd64-bd-de7566bbce1bfa41_1.txt
+    linux/arm64:
+      lock_file: modules/nf-core/custom/gtffilter/.conda-lock/linux_arm64-bd-63cd87da376d0b6e_1.txt

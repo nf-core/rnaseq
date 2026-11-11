@@ -1,0 +1,185 @@
+{
+    "Test Function multiqcSampleMergeYamlPattern escapes regex and YAML metacharacters": {
+        "content": [
+            "    - type: regex\n      pattern: '(?<=^foo\\.1\\$bar''baz)_2$'"
+        ],
+        "timestamp": "2026-05-06T12:53:23.486848495",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    },
+    "Test Function strandCheckSummaryYaml emits JSON keyed by sample id": {
+        "content": [
+            "6d6bfe594a0468fb488595e11423ffdf"
+        ],
+        "timestamp": "2026-05-07T11:54:31.102190125",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    },
+    "Test Function strandCompositionMap rounds fragment percentages": {
+        "content": [
+            {
+                "Sense": 9.1,
+                "Antisense": 86.3,
+                "Unstranded": 4.6
+            }
+        ],
+        "timestamp": "2026-05-06T12:56:11.703900566",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    },
+    "Test Function multiqcSampleMergeYaml PE samples with tricky IDs": {
+        "content": [
+            "table_sample_merge:\n  \"Read 1\":\n    - type: regex\n      pattern: '(?<=^foo\\.1)_1$'\n    - type: regex\n      pattern: '(?<=^sample_1)_1$'\n  \"Read 2\":\n    - type: regex\n      pattern: '(?<=^foo\\.1)_2$'\n    - type: regex\n      pattern: '(?<=^sample_1)_2$'\n"
+        ],
+        "timestamp": "2026-05-06T12:53:42.967228398",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    },
+    "Test Function multiqcSampleMergeYaml empty PE set": {
+        "content": [
+            "table_sample_merge: {}\n"
+        ],
+        "timestamp": "2026-05-06T12:53:33.318178809",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    },
+    "Test Function inferenceCertainty forward call": {
+        "content": [
+            80.0
+        ],
+        "timestamp": "2026-05-06T12:54:10.704411973",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    },
+    "Test Function strandCheckSummaryYaml sorts multi-sample rows by sample id": {
+        "content": [
+            "dca737b419d8f202cf81d15cd1ae1ab1"
+        ],
+        "timestamp": "2026-05-07T11:54:40.203882744",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    },
+    "Test Function loadMultiqcAsset drops underscore-prefixed anchor keys and resolves merge keys": {
+        "content": [
+            {
+                "id": "demo",
+                "headers": {
+                    "col_a": {
+                        "suffix": "%",
+                        "min": 0,
+                        "max": 100,
+                        "title": "A"
+                    },
+                    "col_b": {
+                        "title": "B"
+                    }
+                }
+            }
+        ],
+        "timestamp": "2026-05-06T12:53:52.226040123",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    },
+    "Test Function strandCheckCompositionYaml dual-method adds a data_labels switcher": {
+        "content": [
+            "{\n    \"id\": \"demo\",\n    \"pconfig\": {\n        \"id\": \"demo_bar\",\n        \"title\": \"Demo\",\n        \"ylab\": \"% of fragments\",\n        \"data_labels\": [\n            {\n                \"name\": \"RSeQC\",\n                \"ylab\": \"% of fragments\"\n            },\n            {\n                \"name\": \"Salmon\",\n                \"ylab\": \"% of fragments\"\n            }\n        ]\n    },\n    \"data\": [\n        {\n            \"WT_REP1\": {\n                \"Sense\": 9.1,\n                \"Antisense\": 86.3,\n                \"Unstranded\": 4.6\n            }\n        },\n        {\n            \"WT_REP1\": {\n                \"Sense\": 10.0,\n                \"Antisense\": 85.0,\n                \"Unstranded\": 5.0\n            }\n        }\n    ]\n}"
+        ],
+        "timestamp": "2026-05-06T12:56:30.220615991",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    },
+    "Test Function strandSummaryCells salmon-only falls back to dashes for rseqc": {
+        "content": [
+            {
+                "provided": "auto",
+                "salmon_inferred": "forward",
+                "salmon_pct": 86.3,
+                "salmon_s": 82.0,
+                "salmon_a": 13.0,
+                "salmon_u": 5.0,
+                "rseqc_inferred": "-",
+                "rseqc_pct": null,
+                "rseqc_s": null,
+                "rseqc_a": null,
+                "rseqc_u": null,
+                "status": "-"
+            }
+        ],
+        "timestamp": "2026-05-06T12:55:25.551479516",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    },
+    "Test Function strandCheckCompositionYaml single-method emits flat dataset without switcher": {
+        "content": [
+            "{\n    \"id\": \"demo\",\n    \"pconfig\": {\n        \"id\": \"demo_bar\",\n        \"title\": \"Demo\",\n        \"ylab\": \"% of fragments\"\n    },\n    \"data\": {\n        \"WT_REP1\": {\n            \"Sense\": 82.0,\n            \"Antisense\": 13.0,\n            \"Unstranded\": 5.0\n        }\n    }\n}"
+        ],
+        "timestamp": "2026-05-06T12:56:20.916541589",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    },
+    "Test Function multiqcSampleMergeYamlPattern plain id": {
+        "content": [
+            "    - type: regex\n      pattern: '(?<=^sample_1)_1$'"
+        ],
+        "timestamp": "2026-05-06T12:53:14.291522754",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    },
+    "Test Function inferenceCertainty reverse call": {
+        "content": [
+            90.0
+        ],
+        "timestamp": "2026-05-06T12:54:20.158723088",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    },
+    "Test Function strandSummaryCells with both salmon and rseqc": {
+        "content": [
+            {
+                "provided": "auto",
+                "salmon_inferred": "reverse",
+                "salmon_pct": 89.5,
+                "salmon_s": 10.0,
+                "salmon_a": 85.0,
+                "salmon_u": 5.0,
+                "rseqc_inferred": "reverse",
+                "rseqc_pct": 90.5,
+                "rseqc_s": 9.1,
+                "rseqc_a": 86.3,
+                "rseqc_u": 4.6,
+                "status": "pass"
+            }
+        ],
+        "timestamp": "2026-05-06T12:55:16.218893022",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    }
+}

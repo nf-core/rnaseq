@@ -1,0 +1,100 @@
+{
+    "featurecounts biotype counts - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.biotype_counts_mqc.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.biotype_counts_rrna_mqc.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    "versions.yml:md5,3cc6da489a0fecd2df301e36514b8817"
+                ],
+                "rrna": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.biotype_counts_rrna_mqc.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "tsv": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.biotype_counts_mqc.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,3cc6da489a0fecd2df301e36514b8817"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.4"
+        },
+        "timestamp": "2026-04-17T10:51:13.066694"
+    },
+    "featurecounts biotype counts": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.biotype_counts_mqc.tsv:md5,6b122075c66e5565fd82804095dfd68a"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.biotype_counts_rrna_mqc.tsv:md5,ac6ea1053b89872f745a73c4f61b5afe"
+                    ]
+                ],
+                "2": [
+                    "versions.yml:md5,3cc6da489a0fecd2df301e36514b8817"
+                ],
+                "rrna": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.biotype_counts_rrna_mqc.tsv:md5,ac6ea1053b89872f745a73c4f61b5afe"
+                    ]
+                ],
+                "tsv": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.biotype_counts_mqc.tsv:md5,6b122075c66e5565fd82804095dfd68a"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,3cc6da489a0fecd2df301e36514b8817"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.4"
+        },
+        "timestamp": "2026-04-17T10:50:58.059883"
+    }
+}

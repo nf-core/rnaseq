@@ -1,0 +1,114 @@
+nextflow_process {
+
+    name "Test Process STAR_GENOMEGENERATE"
+    script "../main.nf"
+    process "STAR_GENOMEGENERATE"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "star"
+    tag "star/genomegenerate"
+
+    test("homo_sapiens - fasta - gtf") {
+
+        when {
+            process {
+                """
+                input[0] = channel.of([
+                    [ id:'test_fasta' ],
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                ])
+                input[1] = channel.of([
+                    [ id:'test_gtf' ],
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    file(process.out.index[0][1]).listFiles().collect { index_file -> index_file.getName() }.sort().toString(),
+                    process.out.findAll { key, val -> key.startsWith('versions') })
+                .match() }
+            )
+        }
+    }
+
+    test("homo_sapiens - fasta") {
+
+        when {
+            process {
+                """
+                input[0] = channel.of([
+                    [ id:'test_fasta' ],
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                ])
+                input[1] = channel.of([ [], [] ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    file(process.out.index[0][1]).listFiles().collect { index_file -> index_file.getName() }.sort().toString(),
+                    process.out.findAll { key, val -> key.startsWith('versions') }
+                ).match() }
+            )
+        }
+    }
+
+    test("homo_sapiens - fasta - gtf - stub") {
+
+        options '-stub'
+
+        when {
+            process {
+                """
+                input[0] = channel.of([
+                    [ id:'test_fasta' ],
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                ])
+                input[1] = channel.of([
+                    [ id:'test_gtf' ],
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.gtf', checkIfExists: true) ]
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("homo_sapiens - fasta - stub") {
+
+        options '-stub'
+
+        when {
+            process {
+                """
+                input[0] = channel.of([
+                    [ id:'test_fasta' ],
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                ])
+                input[1] = channel.of([ [], [] ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+}

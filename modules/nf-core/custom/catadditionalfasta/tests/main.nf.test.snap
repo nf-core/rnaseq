@@ -1,0 +1,70 @@
+{
+    "sarscov2 - fastq - gtf": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "genome"
+                    },
+                    "genome.fasta:md5,6a20c1a2e465519320a0d01f338f5cb5"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "genome"
+                    },
+                    "genome.gtf:md5,bc88d95e7f27540e6b9906105d5be361"
+                ]
+            ],
+            [
+                "versions.yml:md5,5917ae30ad1ee71ad6b62659d5b628d1"
+            ],
+            {
+                "CUSTOM_CATADDITIONALFASTA": {
+                    "python": "3.12.2"
+                }
+            }
+        ],
+        "timestamp": "2026-04-22T08:32:17.633360221",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "sarscov2 - fastq - gtf - stub": {
+        "content": [
+            {
+                "fasta": [
+                    [
+                        {
+                            "id": "genome"
+                        },
+                        "genome.fasta:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "gtf": [
+                    [
+                        {
+                            "id": "genome"
+                        },
+                        "genome.gtf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,8ab7a953e43316a447ad37b2e29e9c75"
+                ]
+            },
+            {
+                "CUSTOM_CATADDITIONALFASTA": {
+                    "python": "3.12.2"
+                }
+            }
+        ],
+        "timestamp": "2026-04-22T08:32:25.68466616",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    }
+}

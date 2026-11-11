@@ -1,0 +1,108 @@
+nextflow_process {
+
+    name "Test Process RUSTQC"
+    script "../main.nf"
+    process "RUSTQC"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "rustqc"
+
+    test("homo_sapiens paired-end [bam]") {
+
+        config './nextflow.config'
+
+        when {
+            process {
+                """
+                input[0] = channel.of([
+                    [ id:'test', single_end:false ],
+                    file(params.modules_testdata_base_path + "genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true),
+                    file(params.modules_testdata_base_path + "genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam.bai", checkIfExists: true)
+                ])
+                input[1] = channel.of([
+                    [ id:'homo_sapiens' ],
+                    file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    // reproducible text outputs - full content
+                    process.out.featurecounts,
+                    process.out.preseq,
+                    process.out.rseqc[0][1].findAll { it.toString().endsWith("infer_experiment.txt") || it.toString().endsWith("tin.xls") || it.toString().endsWith("summary.txt") },
+
+                    // non-reproducible outputs - filenames only
+                    process.out.dupradar[0][1].collect { file(it).name }.sort(),
+                    process.out.samtools[0][1].collect { file(it).name }.sort(),
+                    process.out.qualimap[0][1].findAll { !file(it).isDirectory() }.collect { file(it).name }.sort(),
+                    process.out.rseqc[0][1].findAll {
+                        !file(it).isDirectory() &&
+                        !it.toString().endsWith("infer_experiment.txt") &&
+                        !it.toString().endsWith("tin.xls") &&
+                        !it.toString().endsWith("summary.txt")
+                    }.collect { file(it).name }.sort()
+                ).match() },
+
+                // versions
+                { assert snapshot(process.out.versions_rustqc).match("versions") },
+
+                // content assertions for non-snapshottable outputs
+                // samtools flagstat - 5644 total reads
+                { assert process.out.samtools[0][1].any {
+                    it.toString().endsWith(".flagstat") &&
+                    file(it).text.contains("5644 + 0 in total")
+                } },
+                // samtools idxstats - 5642 reads on chr22
+                { assert process.out.samtools[0][1].any {
+                    it.toString().endsWith(".idxstats") &&
+                    file(it).text.contains("chr22\t40001\t5642")
+                } },
+                // qualimap - 5,642 alignments, 23.55% exonic
+                { assert process.out.qualimap[0][1].any {
+                    it.toString().endsWith("rnaseq_qc_results.txt") &&
+                    file(it).text.contains("total alignments = 5,642") &&
+                    file(it).text.contains("exonic =  1,328 (23.55%)")
+                } },
+                // dupradar - 664 reads for ENSG00000239435
+                { assert process.out.dupradar[0][1].any {
+                    it.toString().endsWith("dupMatrix.txt") &&
+                    file(it).text.contains("ENSG00000239435\t3389\t664")
+                } }
+            )
+        }
+    }
+
+    test("homo_sapiens paired-end [bam] - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = channel.of([
+                    [ id:'test', single_end:false ],
+                    file(params.modules_testdata_base_path + "genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam", checkIfExists: true),
+                    file(params.modules_testdata_base_path + "genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam.bai", checkIfExists: true)
+                ])
+                input[1] = channel.of([
+                    [ id:'homo_sapiens' ],
+                    file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.gtf", checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+}

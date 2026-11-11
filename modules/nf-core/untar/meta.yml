@@ -1,0 +1,73 @@
+name: untar
+description: Extract files from tar, tar.gz, tar.bz2, tar.xz archives
+keywords:
+  - untar
+  - uncompress
+  - extract
+tools:
+  - untar:
+      description: |
+        Extract tar, tar.gz, tar.bz2, tar.xz files.
+      documentation: https://www.gnu.org/software/tar/manual/
+      licence: ["GPL-3.0-or-later"]
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - archive:
+        type: file
+        description: File to be untarred
+        pattern: "*.{tar,tar.gz,tar.bz2,tar.xz}"
+        ontologies:
+          - edam: http://edamontology.org/format_3981 # TAR format
+          - edam: http://edamontology.org/format_3989 # GZIP format
+output:
+  untar:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*/"
+      - ${prefix}:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*/"
+  versions_untar:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - untar:
+          type: string
+          description: The name of the tool
+      - tar --version 2>&1 | head -1 | sed "s/tar (GNU tar) //; s/ Copyright.*//":
+          type: eval
+          description: The expression to obtain the version of the tool
+
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - untar:
+          type: string
+          description: The name of the tool
+      - tar --version 2>&1 | head -1 | sed "s/tar (GNU tar) //; s/ Copyright.*//":
+          type: eval
+          description: The expression to obtain the version of the tool
+
+authors:
+  - "@joseespinosa"
+  - "@drpatelh"
+  - "@matthdsm"
+  - "@jfy133"
+maintainers:
+  - "@joseespinosa"
+  - "@drpatelh"
+  - "@matthdsm"
+  - "@jfy133"

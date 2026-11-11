@@ -626,4 +626,48 @@ nextflow_function {
             )
         }
     }
+
+    test("Test Function getHisat2PercentMapped parses the overall alignment rate") {
+
+        function "getHisat2PercentMapped"
+
+        when {
+            function {
+                """
+                def log_file = File.createTempFile('hisat2', '.summary.log')
+                log_file.text = 'HISAT2 summary stats:\\n\\tTotal pairs: 100\\n\\tOverall alignment rate: 96.84%\\n'
+                input[0] = log_file.toPath()
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert function.result == 96.84 }
+            )
+        }
+    }
+
+    test("Test Function getHisat2PercentMapped returns null when the rate is missing") {
+
+        function "getHisat2PercentMapped"
+
+        when {
+            function {
+                """
+                def log_file = File.createTempFile('hisat2', '.summary.log')
+                log_file.text = 'unexpected log format\\n'
+                input[0] = log_file.toPath()
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert function.result == null }
+            )
+        }
+    }
 }

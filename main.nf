@@ -154,9 +154,11 @@ workflow NFCORE_RNASEQ {
         PREPARE_GENOME_INDICES.out.splicesites,
         PREPARE_GENOME_REFERENCES.out.kraken_db,
         qc_tools,
-        params.fail_on_low_trimmed_reads,
-        params.fail_on_low_mapped_reads,
-        params.fail_on_undetermined_strandedness
+        // The v2 parser passes untyped CLI booleans as strings, so `--fail_on_x false` would otherwise be truthy.
+        // Remove once these params are declared with types in the `params {}` block.
+        params.fail_on_low_trimmed_reads.toString().toBoolean(),
+        params.fail_on_low_mapped_reads.toString().toBoolean(),
+        params.fail_on_undetermined_strandedness.toString().toBoolean()
     )
 
     emit:

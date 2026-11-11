@@ -830,16 +830,20 @@ def biotypeQcUsable(params) {
 }
 
 //
-// Function that parses HISAT2's summary log to get the overall percent mapped
+// Function that parses HISAT2's summary log (--new-summary format) to get the overall percent mapped.
+// Returns null when the rate is not found, so the sample is not filtered on --min_mapped_reads.
 //
 def getHisat2PercentMapped(align_log) {
-    def percent_aligned = 0
+    def percent_aligned = null
     def pattern = /Overall alignment rate:\s*([\d\.]+)%/
     align_log.eachLine { line ->
         def matcher = line =~ pattern
         if (matcher) {
             percent_aligned = matcher[0][1].toFloat()
         }
+    }
+    if (percent_aligned == null) {
+        log.warn "Could not find the overall alignment rate in HISAT2 summary '${align_log.name}'; the sample will not be filtered on --min_mapped_reads."
     }
     return percent_aligned
 }

@@ -463,7 +463,11 @@ workflow RNASEQ {
     ch_transcriptome_bam = ch_transcriptome_bam
         .map { meta, bam -> [ meta.id, meta, bam ] }
         .join(ch_genome_bam_bai_mapping.status, remainder: true)
-        .filter { row -> row[1] != null && row[-1] != false }
+        .filter { row ->
+            def has_transcriptome_bam = row[1] != null   // false for a status with no transcriptome BAM (e.g. HISAT2)
+            def failed_mapped_check   = row[-1] == false // null (no status) counts as passing
+            return has_transcriptome_bam && !failed_mapped_check
+        }
         .map { row -> [ row[1], row[2] ] }
 
     //

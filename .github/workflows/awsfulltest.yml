@@ -39,10 +39,10 @@ jobs:
           nextflow_config: |
             process {
               withName: '.*:QUANTIFY_RSEM:RSEM_CALCULATEEXPRESSION|.*:QUANTIFY_RSEM:SENTIEON_RSEMCALCULATEEXPRESSION' {
-                ext.args = '--estimate-rspd --no-bam-output --temporary-folder /tmp/rsem'
+                ext.args = { "--estimate-rspd --no-bam-output --temporary-folder /tmp/rsem_${meta.id}" }
               }
               withName: 'DUPRADAR' {
-                ext.args = '--tmp_dir /tmp/dupradar'
+                ext.args = { "--tmp_dir /tmp/dupradar_${meta.id}" }
               }
             }
             plugins {

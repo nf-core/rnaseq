@@ -3,6 +3,14 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## dev - xxxx-xx-xx
+
+### Credits
+
+### Enhancements and fixes
+
+- [PR #2002](https://github.com/nf-core/rnaseq/pull/2002) - Use per-sample temporary folders for RSEM and dupRadar in the AWS full test, so concurrent tasks on one instance no longer share `/tmp` and delete each other's RSEM temp files
+
 ## [[3.28.0](https://github.com/nf-core/rnaseq/releases/tag/3.28.0)] - 2026-11-10
 
 ### Credits

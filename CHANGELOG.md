@@ -10,8 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Enhancements and fixes
 
 - [PR #2002](https://github.com/nf-core/rnaseq/pull/2002) - Use per-sample temporary folders for RSEM and dupRadar in the AWS full test, so concurrent tasks on one instance no longer share `/tmp` and delete each other's RSEM temp files
+- [PR #2003](https://github.com/nf-core/rnaseq/pull/2003) - Bump version to 3.29.0dev after release 3.28.0; flip the MultiQC report links and RO-Crate URL/version back to dev, and correct the 3.28.0 release date
 
-## [[3.28.0](https://github.com/nf-core/rnaseq/releases/tag/3.28.0)] - 2026-11-10
+## [[3.28.0](https://github.com/nf-core/rnaseq/releases/tag/3.28.0)] - 2026-11-12
 
 ### Credits
 
